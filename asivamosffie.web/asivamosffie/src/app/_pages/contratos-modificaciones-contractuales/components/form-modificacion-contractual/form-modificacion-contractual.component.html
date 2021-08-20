@@ -128,6 +128,14 @@
         </div>
 
       </mat-expansion-panel>
+
+      <div class="text-center w-15">
+        <button mat-raised-button color="accent" class="btn-table"
+          (click)="getDdp( dataNovedad?.contrato?.contratacion?.disponibilidadPresupuestal[0].disponibilidadPresupuestalId, dataNovedad?.contrato?.contratacion?.disponibilidadPresupuestal[0].numeroDdp )">
+          Descargar DDP
+        </button>
+      </div>
+
     </mat-accordion>
   </div>
 

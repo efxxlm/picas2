@@ -2189,16 +2189,6 @@ namespace asivamosffie.services
                                                                                 .ThenInclude(x => x.CofinanciacionAportante)
                                                                         .FirstOrDefault();
 
-            //List<DisponibilidadPresupuestal> ListDP2 = await _context.DisponibilidadPresupuestal.
-            //    Where(r => !r.Eliminado && r.DisponibilidadPresupuestalId == 1).
-            //    Include(x => x.DisponibilidadPresupuestalProyecto).
-            //        ThenInclude(y => y.Proyecto).
-            //        ThenInclude(v => v.ProyectoAportante).
-            //        ThenInclude(c => c.Aportante).
-            //            ThenInclude(c => c.FuenteFinanciacion).
-            //    Include(x => x.DisponibilidadPresupuestalObservacion).
-            //    Include(x => x.Contratacion).ToListAsync();
-
             //validación multi
             if (detailDP != null)
             {
@@ -2256,14 +2246,20 @@ namespace asivamosffie.services
                 {
                     List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
 
-                    ppapor.ComponenteAportanteNovedad = ppapor.ComponenteAportanteNovedad.Where(x => x.Eliminado != true).ToList();
+                    ppapor.ComponenteAportanteNovedad = ppapor.ComponenteAportanteNovedad.Where(x => x.Eliminado != true && x.NovedadContractualAportanteId == ppapor.NovedadContractualAportanteId).ToList();
+                    
                     foreach (var componente in ppapor.ComponenteAportanteNovedad)
                     {
-                        componente.ComponenteFuenteNovedad = componente.ComponenteFuenteNovedad.Where(x => x.Eliminado != true).ToList();
+                        componente.ComponenteFuenteNovedad = componente.ComponenteFuenteNovedad.Where(x => x.Eliminado != true && x.ComponenteAportanteNovedadId == componente.ComponenteAportanteNovedadId).ToList();
+
+                        List<string> uso = new List<string>();
+                        List<decimal> usovalor = new List<decimal>();
+                        decimal total = 0;
+
                         foreach (var font in componente.ComponenteFuenteNovedad)
                         {
-                            font.ComponenteUsoNovedad = font.ComponenteUsoNovedad.Where(x => x.Eliminado != true).ToList();
-
+                            FuenteFinanciacion fuente = _context.FuenteFinanciacion.Find(font.FuenteFinanciacionId);
+                            font.ComponenteUsoNovedad = font.ComponenteUsoNovedad.Where(x => x.Eliminado != true && x.ComponenteFuenteNovedadId == font.ComponenteFuenteNovedadId).ToList();
 
                             //el saldo de la fuente realmente es lo que tengo en control de recursos
                             //var saldo = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x=>x.ValorConsignacion);
@@ -2281,9 +2277,10 @@ namespace asivamosffie.services
                                     .Where(x => x.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId &&
                                         x.FuenteFinanciacionId == font.FuenteFinanciacionId)
                                     .FirstOrDefault();
-
-                            var funtename = _context.Dominio.Where(x => x.Codigo == font.FuenteRecursosCodigo
+                            string codigoFuente = !string.IsNullOrEmpty(font.FuenteRecursosCodigo) ? font.FuenteRecursosCodigo : fuente != null ? fuente.FuenteRecursosCodigo : null;
+                            var funtename = _context.Dominio.Where(x => x.Codigo == codigoFuente
                                       && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion);
+
                             string namefuente = funtename.Any() ? funtename.FirstOrDefault().Nombre : "";
                             fuentes.Add(new GrillaFuentesFinanciacion
                             {
@@ -2296,6 +2293,32 @@ namespace asivamosffie.services
                                 Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldo : 0,
                                 Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActual : 0,
                             });
+
+                            foreach (var componenteUso in font.ComponenteUsoNovedad)
+                            {
+                                var usos = _context.Dominio.Where(x => x.Codigo == componenteUso.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
+
+                                uso.Add(usos.Count() > 0 ? usos.FirstOrDefault().Nombre : "");
+                                usovalor.Add(componenteUso.ValorUso);
+                                total += componenteUso.ValorUso;
+
+                                var dom = _context.Dominio.Where(x => x.Codigo == componente.TipoComponenteCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).ToList();
+                                grilla.Add(
+                                    new GrillaComponentes
+                                    {
+                                        ComponenteAportanteId = componente.ComponenteAportanteNovedadId,
+                                        Componente = dom.Count() > 0 ? dom.FirstOrDefault().Nombre : "",
+                                        ComponenteUsoCodigo = componente.TipoComponenteCodigo,
+                                        Fase = String.IsNullOrEmpty(componente.FaseCodigo) ? string.Empty : _context.Dominio.Where(r => r.Codigo == componente.FaseCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Fases).FirstOrDefault().Nombre,
+                                        Fuente = namefuente,
+                                        FuenteFinanciacionId = font.FuenteFinanciacionId,
+                                        Uso = uso,
+                                        ValorTotal = total,
+                                        ValorUso = usovalor,
+                                        cofinanciacionAportanteId = ppapor.CofinanciacionAportanteId.Value,
+                                        Aportante = getNombreAportante(ppapor.CofinanciacionAportante)
+                                    });
+                            }
                         }
                     }
 
@@ -2373,46 +2396,13 @@ namespace asivamosffie.services
                         //x.ContratacionProyectoAportante.CofinanciacionAportanteId == confinanciacion.CofinanciacionAportanteId)
                         //    .Include(x => x.ComponenteUso).ToList();
 
-                        foreach (var aportante in detailDP.NovedadContractual.NovedadContractualAportante)
-                        {
-                            foreach (var componente in aportante.ComponenteAportanteNovedad)
-                            {
-                                foreach (var fuente in componente.ComponenteFuenteNovedad)
-                                {
-                                    List<string> uso = new List<string>();
-                                    List<decimal> usovalor = new List<decimal>();
-                                    decimal total = 0;
-
-                                    foreach (var componenteUso in fuente.ComponenteUsoNovedad)
-                                    {
-                                        var usos = _context.Dominio.Where(x => x.Codigo == componenteUso.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
-                                        uso.Add(usos.Count() > 0 ? usos.FirstOrDefault().Nombre : "");
-                                        usovalor.Add(componenteUso.ValorUso);
-                                        total += componenteUso.ValorUso;
-
-                                        var dom = _context.Dominio.Where(x => x.Codigo == componente.TipoComponenteCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).ToList();
-                                        grilla.Add(
-                                            new GrillaComponentes
-                                            {
-                                                ComponenteAportanteId = componente.ComponenteAportanteNovedadId,
-                                                Componente = dom.Count() > 0 ? dom.FirstOrDefault().Nombre : "",
-                                                ComponenteUsoCodigo = componente.TipoComponenteCodigo,
-                                                Uso = uso,
-                                                ValorTotal = total,
-                                                ValorUso = usovalor,
-                                                cofinanciacionAportanteId = ppapor.CofinanciacionAportanteId.Value,
-
-                                            });
-                                    }
-                                }
-                            }
-                        }
-
-                        valorgestionado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && intfuentes.Contains(x.FuenteFinanciacionId)).Sum(x => x.ValorSolicitado);
-
-
+                        
                     }
+
+                    valorgestionado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && intfuentes.Contains(x.FuenteFinanciacionId)).Sum(x => x.ValorSolicitado);
+
                 }
+
                 proyecto.Add(new ProyectoGrilla
                 {
                     LlaveMen = proyectospp.Proyecto.LlaveMen,

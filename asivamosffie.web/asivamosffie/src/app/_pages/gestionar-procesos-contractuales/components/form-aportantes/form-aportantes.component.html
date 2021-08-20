@@ -11,43 +11,69 @@
       <p><b>Municipio</b>: {{ institucion.institucionEducativa.municipio.descripcion }}</p>
       <p ><b>Valor total de {{ tipoSolicitud === listaTipoSolicitud.obra ? 'obra' : 'interventoria' }} </b>: {{ tipoSolicitud === listaTipoSolicitud.obra ? ( institucion.valorObra | currency:'COP':'symbol-narrow':'.0-0' ) : ( institucion.valorInterventoria | currency:'COP':'symbol-narrow':'.0-0' ) }}</p>
       <h2 class="card-subTitle back-color">Aportantes</h2>
-
-      <div *ngFor="let proyectoAportante of institucion.proyectoAportante; index as i">
-
-        <mat-card class="border">
-          <mat-card-header class="header-card header-card--margin">
-            <mat-card-title class="header-card--text">
-              <b>Aportante {{ i+1 }}</b>
-            </mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <section *ngIf="proyectoAportante.aportante.tipoAportanteId === tiposAportante.ffie" style="margin-top: .5em;">
+      <div *ngIf="esNovedad !== true">
+        <div *ngFor="let proyectoAportante of institucion.proyectoAportante; index as i">
+          <mat-card class="border">
+            <mat-card-header class="header-card header-card--margin">
+              <mat-card-title class="header-card--text">
+                <b>Aportante {{ i+1 }}</b>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <section *ngIf="proyectoAportante.aportante.tipoAportanteId === tiposAportante.ffie" style="margin-top: .5em;">
+                  <p><b>Tipo de aportante</b>: {{ proyectoAportante.aportante.tipoAportanteString }}</p>
+                  <p><b>Nombre del aportante</b>: {{ proyectoAportante.aportante.tipoAportanteString }}</p>
+                  <p><b>Valor del aportante al proyecto</b>: {{ tipoSolicitud === listaTipoSolicitud.obra ? ( proyectoAportante.valorObra | currency:'COP':'symbol-narrow':'.0-0' ) : ( proyectoAportante.valorInterventoria | currency:'COP':'symbol-narrow':'.0-0' ) }}</p>
+              </section>
+              <section *ngIf="proyectoAportante.aportante.tipoAportanteId === tiposAportante.et" style="margin-top: .5em;">
                 <p><b>Tipo de aportante</b>: {{ proyectoAportante.aportante.tipoAportanteString }}</p>
-                <p><b>Nombre del aportante</b>: {{ proyectoAportante.aportante.tipoAportanteString }}</p>
+                <p><b>Nombre del aportante</b>: {{ getAportante( proyectoAportante.aportante.departamento !== undefined ? proyectoAportante.aportante.departamento.descripcion : undefined, proyectoAportante.aportante.municipio !== undefined ? proyectoAportante.aportante.municipio.descripcion : undefined ) }}</p>
                 <p><b>Valor del aportante al proyecto</b>: {{ tipoSolicitud === listaTipoSolicitud.obra ? ( proyectoAportante.valorObra | currency:'COP':'symbol-narrow':'.0-0' ) : ( proyectoAportante.valorInterventoria | currency:'COP':'symbol-narrow':'.0-0' ) }}</p>
             </section>
-            <section *ngIf="proyectoAportante.aportante.tipoAportanteId === tiposAportante.et" style="margin-top: .5em;">
+            <section *ngIf="proyectoAportante.aportante.tipoAportanteId === tiposAportante.tercero" style="margin-top: .5em;">
               <p><b>Tipo de aportante</b>: {{ proyectoAportante.aportante.tipoAportanteString }}</p>
-              <p><b>Nombre del aportante</b>: {{ getAportante( proyectoAportante.aportante.departamento !== undefined ? proyectoAportante.aportante.departamento.descripcion : undefined, proyectoAportante.aportante.municipio !== undefined ? proyectoAportante.aportante.municipio.descripcion : undefined ) }}</p>
+              <p><b>Nombre del aportante</b>: {{ proyectoAportante.aportante.nombreAportante.nombre }}</p>
               <p><b>Valor del aportante al proyecto</b>: {{ tipoSolicitud === listaTipoSolicitud.obra ? ( proyectoAportante.valorObra | currency:'COP':'symbol-narrow':'.0-0' ) : ( proyectoAportante.valorInterventoria | currency:'COP':'symbol-narrow':'.0-0' ) }}</p>
           </section>
-          <section *ngIf="proyectoAportante.aportante.tipoAportanteId === tiposAportante.tercero" style="margin-top: .5em;">
-            <p><b>Tipo de aportante</b>: {{ proyectoAportante.aportante.tipoAportanteString }}</p>
-            <p><b>Nombre del aportante</b>: {{ proyectoAportante.aportante.nombreAportante.nombre }}</p>
-            <p><b>Valor del aportante al proyecto</b>: {{ tipoSolicitud === listaTipoSolicitud.obra ? ( proyectoAportante.valorObra | currency:'COP':'symbol-narrow':'.0-0' ) : ( proyectoAportante.valorInterventoria | currency:'COP':'symbol-narrow':'.0-0' ) }}</p>
-        </section>
-            <section *ngFor="let fuente of proyectoAportante.aportante.fuenteFinanciacion; let j = index">
-              <section *ngFor="let fuentedef of fuente.gestionFuenteFinanciacion; let k = index">
-                <h3 style="margin-bottom: .2em;margin-top: 1em;"><b>Fuente {{ k+1 }}</b></h3>
+              <section *ngFor="let fuente of proyectoAportante.aportante.fuenteFinanciacion; let j = index">
+                <section *ngFor="let fuentedef of fuente.gestionFuenteFinanciacion; let k = index">
+                  <h3 style="margin-bottom: .2em;margin-top: 1em;"><b>Fuente {{ k+1 }}</b></h3>
+                  <div>
+                    <p><b>Fuente</b>: {{ fuentedef.fuenteNombre }}</p>
+                    <p><b>Valor solicitado de la fuente</b>: {{ fuentedef.valorSolicitado | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+                  </div>
+                </section>
+              </section>
+            </mat-card-content>
+          </mat-card>
+
+        </div>
+      </div>
+      <div *ngIf="esNovedad === true">
+        <div *ngFor="let proyectoAportante of disponibilidadPresupuestal?.gestionFuenteFinanciacion; index as i">
+          <mat-card class="border">
+            <mat-card-header class="header-card header-card--margin">
+              <mat-card-title class="header-card--text">
+                <b>Aportante {{ i+1 }}</b>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <section style="margin-top: .5em;">
+                  <p><b>Tipo de aportante</b>: {{ proyectoAportante?.tipoAportante }}</p>
+                  <p><b>Nombre del aportante</b>: {{ proyectoAportante?.aportanteNombre }}</p>
+                  <p><b>Valor del aportante al proyecto</b>: {{ proyectoAportante?.valorSolicitado | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+              </section>
+              <section >
+                <h3 style="margin-bottom: .2em;margin-top: 1em;"><b>Fuente 1</b></h3>
                 <div>
-                  <p><b>Fuente</b>: {{ fuentedef.fuenteNombre }}</p>
-                  <p><b>Valor solicitado de la fuente</b>: {{ fuentedef.valorSolicitado | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+                  <p><b>Fuente</b>: {{ proyectoAportante?.fuenteFinanciacion?.fuenteRecursosCodigo }}</p>
+                  <p><b>Valor solicitado de la fuente</b>: {{ proyectoAportante?.valorSolicitado | currency:'COP':'symbol-narrow':'.0-0' }}</p>
                 </div>
               </section>
-            </section>
-          </mat-card-content>
-        </mat-card>
+            </mat-card-content>
+          </mat-card>
 
+        </div>
       </div>
 
     </mat-card-content>

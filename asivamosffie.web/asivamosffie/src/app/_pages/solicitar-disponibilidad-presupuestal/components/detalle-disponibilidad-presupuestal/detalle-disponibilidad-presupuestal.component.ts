@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BudgetAvailabilityService } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { ProjectService } from 'src/app/core/_services/project/project.service';
+import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 import { TablaSolicitudNovedadContractualComponent } from 'src/app/_pages/registrar-solicitud-novedad-contractual/components/tabla-solicitud-novedad-contractual/tabla-solicitud-novedad-contractual.component';
 
 @Component({
@@ -33,14 +35,17 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
   ddpdetalle: any;
   tipoSolicitud: any;
   estadoSolicitudCodigo: string;
+  novedadContractualId: number = 0;
+  novedadContractual: NovedadContractual;
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private budgetAvailabilityService: BudgetAvailabilityService,
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private budgetAvailabilityService: BudgetAvailabilityService, private novedadContractualService: ContractualNoveltyService,
     private projectService: ProjectService) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
       console.log(param);
       this.tipoSolicitud = param.idTipoSolicitud;
+      this.novedadContractualId = param.idNovedad;
       this.cargarServicio1(param.idDisponibilidadPresupuestal);
     });
   }
@@ -65,6 +70,11 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
       }
       if (this.tipoSolicitud == 2) {
         this.novedadContractualComponent(data0.contratacionId);
+      }
+      if(this.novedadContractualId > 0){
+        this.novedadContractualService.getNovedadContractualById(this.novedadContractualId).subscribe(novedad=>{
+          this.novedadContractual = novedad;
+        });
       }
     });
   }

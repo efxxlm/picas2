@@ -867,13 +867,23 @@ namespace asivamosffie.services
                             .ToList();
 
                     DisponibilidadPresupuestal.GestionFuenteFinanciacion = ListGestionFuenteFinanciacion;
-
                     foreach (var GestionFuenteFinanciacion in DisponibilidadPresupuestal.GestionFuenteFinanciacion.Where(r => r.Eliminado != true).Distinct().ToList())
                     {
+                        if(GestionFuenteFinanciacion.NovedadContractualRegistroPresupuestalId > 0)
+                        {
+                            NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal.Find(GestionFuenteFinanciacion.NovedadContractualRegistroPresupuestalId);
+                            if(novedadContractualRegistroPresupuestal != null)
+                            {
+                                if (novedadContractualRegistroPresupuestal.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal || novedadContractualRegistroPresupuestal.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar)
+                                {
+                                    DisponibilidadPresupuestal.ValorSolicitud += GestionFuenteFinanciacion.ValorSolicitado;
+                                }
+                            }
+                        }
                         GestionFuenteFinanciacion.FuenteNombre = GestionFuenteFinanciacion.FuenteFinanciacion.FuenteRecursosCodigo;
                         GestionFuenteFinanciacion.AportanteNombre = _budgetAvailabilityService.getNombreAportante(GestionFuenteFinanciacion.FuenteFinanciacion.Aportante);
                         GestionFuenteFinanciacion.TipoAportante = GestionFuenteFinanciacion.FuenteFinanciacion.Aportante.TipoAportante.Nombre;
-                        GestionFuenteFinanciacion.ValorSolicitado = GestionFuenteFinanciacion.ValorSolicitado;
+                        GestionFuenteFinanciacion.ValorSolicitado = GestionFuenteFinanciacion.ValorSolicitado + _context.GestionFuenteFinanciacion.Where(r => r.FuenteFinanciacionId == GestionFuenteFinanciacion.FuenteFinanciacionId && r.EsNovedad != true && r.DisponibilidadPresupuestalProyectoId == GestionFuenteFinanciacion.DisponibilidadPresupuestalProyectoId).Sum(x => x.ValorSolicitado);
 
                         GestionFuenteFinanciacion.SaldoFuente = _context.GestionFuenteFinanciacion.Where(
                               x => x.FuenteFinanciacionId == GestionFuenteFinanciacion.FuenteFinanciacionId &&

@@ -544,25 +544,28 @@ namespace asivamosffie.services
             foreach (var RegistroPresupuestal in listRegistroPresupuestal)
             {
                 NovedadContractual novedadContractual = _context.NovedadContractual.Find(RegistroPresupuestal.NovedadContractualId);
+                if (novedadContractual.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado)
+                {
+                    RegistroPresupuestal.DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId = RegistroPresupuestal.NovedadContractualRegistroPresupuestalId;
+                    RegistroPresupuestal.DisponibilidadPresupuestal.NovedadContractualId = RegistroPresupuestal.NovedadContractualId;
+                    RegistroPresupuestal.DisponibilidadPresupuestal.EsNovedad = true;
+                    RegistroPresupuestal.DisponibilidadPresupuestal.RegistroCompleto = RegistroPresupuestal.RegistroCompleto;
+                    RegistroPresupuestal.DisponibilidadPresupuestal.NumeroSolicitud = RegistroPresupuestal.NumeroSolicitud;
+                    RegistroPresupuestal.DisponibilidadPresupuestal.ValorSolicitud = RegistroPresupuestal.ValorSolicitud;
+                    RegistroPresupuestal.DisponibilidadPresupuestal.EstadoSolicitudCodigo = RegistroPresupuestal.EstadoSolicitudCodigo;
+                    RegistroPresupuestal.DisponibilidadPresupuestal.Objeto = RegistroPresupuestal.Objeto;
+                    RegistroPresupuestal.DisponibilidadPresupuestal.FechaDdp = RegistroPresupuestal.FechaDdp;
+                    RegistroPresupuestal.DisponibilidadPresupuestal.NumeroDrp = RegistroPresupuestal.NumeroDrp;
+                    //RegistroPresupuestal.DisponibilidadPresupuestal.PlazoMeses = RegistroPresupuestal.PlazoMeses;
+                    //RegistroPresupuestal.DisponibilidadPresupuestal.PlazoDias = RegistroPresupuestal.PlazoDias;
+                    RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
+                    RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
+                    RegistroPresupuestal.DisponibilidadPresupuestal.NumeroOtroSi = novedadContractual != null ? novedadContractual.NumeroOtroSi : string.Empty;
 
-                RegistroPresupuestal.DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId = RegistroPresupuestal.NovedadContractualRegistroPresupuestalId;
-                RegistroPresupuestal.DisponibilidadPresupuestal.NovedadContractualId = RegistroPresupuestal.NovedadContractualId;
-                RegistroPresupuestal.DisponibilidadPresupuestal.EsNovedad = true;
-                RegistroPresupuestal.DisponibilidadPresupuestal.RegistroCompleto = RegistroPresupuestal.RegistroCompleto;
-                RegistroPresupuestal.DisponibilidadPresupuestal.NumeroSolicitud = RegistroPresupuestal.NumeroSolicitud;
-                RegistroPresupuestal.DisponibilidadPresupuestal.ValorSolicitud = RegistroPresupuestal.ValorSolicitud;
-                RegistroPresupuestal.DisponibilidadPresupuestal.EstadoSolicitudCodigo = RegistroPresupuestal.EstadoSolicitudCodigo;
-                RegistroPresupuestal.DisponibilidadPresupuestal.Objeto = RegistroPresupuestal.Objeto;
-                RegistroPresupuestal.DisponibilidadPresupuestal.FechaDdp = RegistroPresupuestal.FechaDdp;
-                RegistroPresupuestal.DisponibilidadPresupuestal.NumeroDrp = RegistroPresupuestal.NumeroDrp;
-                //RegistroPresupuestal.DisponibilidadPresupuestal.PlazoMeses = RegistroPresupuestal.PlazoMeses;
-                //RegistroPresupuestal.DisponibilidadPresupuestal.PlazoDias = RegistroPresupuestal.PlazoDias;
-                RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
-                RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
-                RegistroPresupuestal.DisponibilidadPresupuestal.NumeroOtroSi = novedadContractual != null ? novedadContractual.NumeroOtroSi : string.Empty;
+                    ListDisponibilidadPresupuestal.Remove(RegistroPresupuestal.DisponibilidadPresupuestal);
+                    ListDisponibilidadPresupuestal.Add(RegistroPresupuestal.DisponibilidadPresupuestal);
 
-                ListDisponibilidadPresupuestal.Remove(RegistroPresupuestal.DisponibilidadPresupuestal);
-                ListDisponibilidadPresupuestal.Add(RegistroPresupuestal.DisponibilidadPresupuestal);
+                }
             }
 
             List<DisponibilidadPresupuestalGrilla> ListDisponibilidadPresupuestalGrilla = new List<DisponibilidadPresupuestalGrilla>();
@@ -1272,14 +1275,6 @@ namespace asivamosffie.services
                     .Where(r => r.ContratacionId == pDisponibilidad.ContratacionId)
                     .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).FirstOrDefault();
 
-                //usos                    
-                var componenteAp = _context.ComponenteAportante
-                    .Where(x => x.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId == pDisponibilidad.ContratacionId)
-                    .Include(x => x.ComponenteUso)
-                    .Include(x => x.ContratacionProyectoAportante)
-                    .ThenInclude(x => x.ContratacionProyecto)
-                    .ThenInclude(x => x.Proyecto).
-                    Include(x => x.ContratacionProyectoAportante).ThenInclude(x => x.CofinanciacionAportante).ToList();
                 int registroNovedadId = 0;
 
                 if (pRegistro != null)
@@ -1310,107 +1305,67 @@ namespace asivamosffie.services
                                 tablafuentes += tr;
                             });
                         });
+
+                        if (esNovedad == true)
+                        {
+                            foreach (var componente in proyecto.ComponenteGrilla)
+                            {
+                                int i = 0;
+                                foreach (var uso in componente.Uso)
+                                {
+
+                                    var fuentestring = plantilla_uso.Replace("[LLAVEMEN2]", proyecto.LlaveMen).
+                                        Replace("[FASE]", componente.Fase).
+                                        Replace("[APORTANTE]", componente.Aportante).
+                                        Replace("[COMPONENTE]", componente.Componente).
+                                        Replace("[USO]", uso).
+                                        Replace("[VALOR_USO]", "$ " + String.Format("{0:n0}", componente.ValorUso[i]).ToString());
+                                    tablauso += fuentestring;
+
+                                    i++;
+                                }
+                            }
+                        }
                     });
                 }
-                /*foreach (var gestion in gestionfuentes)
+
+                //usos      
+
+                if (esNovedad != true)
                 {
-                    ProyectoAportante proyectoAportante = gestion.DisponibilidadPresupuestalProyecto.Proyecto.ProyectoAportante.Where(r => r.AportanteId == gestion.FuenteFinanciacion.Aportante.CofinanciacionAportanteId)?.FirstOrDefault();
+                    var componenteAp = _context.ComponenteAportante
+                        .Where(x => x.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId == pDisponibilidad.ContratacionId)
+                        .Include(x => x.ComponenteUso)
+                        .Include(x => x.ContratacionProyectoAportante)
+                        .ThenInclude(x => x.ContratacionProyecto)
+                        .ThenInclude(x => x.Proyecto).
+                        Include(x => x.ContratacionProyectoAportante).ThenInclude(x => x.CofinanciacionAportante).ToList();
 
-                    var gestionAlGuardar = _context.GestionFuenteFinanciacion
-                                    .Where(x => x.DisponibilidadPresupuestalProyectoId == gestion.DisponibilidadPresupuestalProyectoId &&
-                                        x.FuenteFinanciacionId == gestion.FuenteFinanciacionId && x.Eliminado != true)
-                                    .FirstOrDefault();
-
-                    decimal saldo =
-                                     proyectoAportante != null ? 
-                                     contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria ?
-                                     proyectoAportante.ValorInterventoria ?? 0 :
-                                     proyectoAportante.ValorObra ?? 0 : 0;
-
-
-                    //el saldo actual de la fuente son todas las solicitudes a la fuentes
-                    //var consignadoemnfuente = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorConsignacion);
-                    var consignadoemnfuente = _context.FuenteFinanciacion
-                        .Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId)
-                        .Sum(x => x.ValorFuente);
-
-                    var saldofuente = _context.GestionFuenteFinanciacion.Where(
-                        x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId &&
-                        x.DisponibilidadPresupuestalProyectoId != gestion.DisponibilidadPresupuestalProyectoId)
-                        .Sum(x => x.ValorSolicitado);
-
-                    var gestionFuente = _context.GestionFuenteFinanciacion.Where(
-                        x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId &&
-                        x.DisponibilidadPresupuestalProyectoId == gestion.DisponibilidadPresupuestalProyectoId)
-                        .FirstOrDefault();
-
-                    string fuenteNombre = _context.Dominio.Where(x => x.Codigo == gestion.FuenteFinanciacion.FuenteRecursosCodigo
-                            && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
-
-                    decimal? valorsolicitado =
-                        _context.GestionFuenteFinanciacion
-                        .Where(x => !(bool)x.Eliminado
-                            && x.DisponibilidadPresupuestalProyectoId == gestion.DisponibilidadPresupuestalProyectoId
-                            && x.FuenteFinanciacionId == gestion.FuenteFinanciacionId)
-                        .Sum(x => x.ValorSolicitado);
-
-                    decimal valorsolicitadoxotros = (decimal)_context.GestionFuenteFinanciacion
-                        .Where(x => !(bool)x.Eliminado &&
-                               x.DisponibilidadPresupuestalProyectoId != gestion.DisponibilidadPresupuestalProyectoId &&
-                               x.FuenteFinanciacionId == gestion.FuenteFinanciacionId)
-                        .Sum(x => x.ValorSolicitadoGenerado);
-
-
-
-                    saldototal += (decimal)consignadoemnfuente - saldofuente;
-
-                    string institucion = _context.InstitucionEducativaSede
-                        .Where(x => x.InstitucionEducativaSedeId ==
-                        gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.PadreId)
-                        .FirstOrDefault().Nombre;
-
-                    decimal ValorSaldoFuente = (saldo - valorsolicitadoxotros - valorsolicitado) ?? 0;
-                    decimal SaldoActualFuente = saldo - valorsolicitadoxotros;
-
-
-                    var tr = plantilla_fuentes
-                        .Replace("[LLAVEMEN]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.LlaveMen)
-                        .Replace("[INSTITUCION]", institucion)
-                        .Replace("[SEDE]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.Nombre)
-                        .Replace("[APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
-                        .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", proyectoAportante != null ? contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria ? proyectoAportante.ValorInterventoria : proyectoAportante.ValorObra : 0))
-                        .Replace("[FUENTE]", fuenteNombre)
-                        .Replace("[SALDO_FUENTE]", "$ " + String.Format("{0:n0}", proyectoAportante != null ? contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria ? proyectoAportante.ValorInterventoria : proyectoAportante.ValorObra : 0))
-                        .Replace("[VALOR_FUENTE]", "$ " + String.Format("{0:n0}", Math.Abs(SaldoActualFuente)).ToString())
-                        .Replace("[NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", Math.Abs(ValorSaldoFuente)).ToString());
-                    tablafuentes += tr;
-                }*/
-
-
-
-                foreach (var compAp in componenteAp)
-                {
-                    List<string> uso = new List<string>();
-                    List<decimal> usovalor = new List<decimal>();
-
-                    var dom = _context.Dominio.Where(x => x.Codigo == compAp.TipoComponenteCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).ToList();
-                    var strFase = _context.Dominio.Where(r => r.Codigo == compAp.FaseCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Fases).FirstOrDefault();
-                    string aportante = this.getNombreAportante(compAp.ContratacionProyectoAportante.CofinanciacionAportante);
-
-                    foreach (var comp in compAp.ComponenteUso)
+                    foreach (var compAp in componenteAp)
                     {
-                        var usos = _context.Dominio.Where(x => x.Codigo == comp.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
-                        uso.Add(usos.Count() > 0 ? usos.FirstOrDefault().Nombre : string.Empty);
-                        string llavemen = compAp.ContratacionProyectoAportante.ContratacionProyecto.Proyecto.LlaveMen;
-                        var fuentestring = plantilla_uso.Replace("[LLAVEMEN2]", llavemen).
-                            Replace("[FASE]", strFase.Nombre).
-                            Replace("[APORTANTE]", aportante).
-                            Replace("[COMPONENTE]", dom.FirstOrDefault().Nombre).
-                            Replace("[USO]", usos.FirstOrDefault().Nombre).
-                            Replace("[VALOR_USO]", "$ " + String.Format("{0:n0}", comp.ValorUso).ToString());
-                        tablauso += fuentestring;
+                        List<string> uso = new List<string>();
+                        List<decimal> usovalor = new List<decimal>();
+
+                        var dom = _context.Dominio.Where(x => x.Codigo == compAp.TipoComponenteCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).ToList();
+                        var strFase = _context.Dominio.Where(r => r.Codigo == compAp.FaseCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Fases).FirstOrDefault();
+                        string aportante = this.getNombreAportante(compAp.ContratacionProyectoAportante.CofinanciacionAportante);
+
+                        foreach (var comp in compAp.ComponenteUso)
+                        {
+                            var usos = _context.Dominio.Where(x => x.Codigo == comp.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
+                            uso.Add(usos.Count() > 0 ? usos.FirstOrDefault().Nombre : string.Empty);
+                            string llavemen = compAp.ContratacionProyectoAportante.ContratacionProyecto.Proyecto.LlaveMen;
+                            var fuentestring = plantilla_uso.Replace("[LLAVEMEN2]", llavemen).
+                                Replace("[FASE]", strFase.Nombre).
+                                Replace("[APORTANTE]", aportante).
+                                Replace("[COMPONENTE]", dom.FirstOrDefault().Nombre).
+                                Replace("[USO]", usos.FirstOrDefault().Nombre).
+                                Replace("[VALOR_USO]", "$ " + String.Format("{0:n0}", comp.ValorUso).ToString());
+                            tablauso += fuentestring;
+                        }
                     }
                 }
+                
             }
             else
             {

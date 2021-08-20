@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { ProcesosContractualesService } from 'src/app/core/_services/procesosContractuales/procesos-contractuales.service';
 import { TipoNovedadCodigo } from 'src/app/_interfaces/estados-novedad.interface';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
@@ -23,11 +24,13 @@ export class FormModificacionContractualComponent implements OnInit {
   esVerDetalle: boolean;
   tipoNovedad = TipoNovedadCodigo;
   adicionBoolean : boolean = false;
+  novedadContractualRegistroPresupuestalId: number = 0;
 
   constructor ( private fb: FormBuilder,
                 private activatedRoute: ActivatedRoute,
                 private procesosContractualesSvc: ProcesosContractualesService,
                 private commonSvc: CommonService,
+                private disponibilidadServices: DisponibilidadPresupuestalService
     ) {
     this.crearFormulario();
     this.getNovedadById( this.activatedRoute.snapshot.params.id );
@@ -58,7 +61,7 @@ export class FormModificacionContractualComponent implements OnInit {
       urlDocumentoSuscrita          : [ null ],
     });
   };
-  
+
   getNovedadById ( id: number ) {
 
     this.procesosContractualesSvc.getNovedadById( id )
@@ -76,6 +79,7 @@ export class FormModificacionContractualComponent implements OnInit {
             if(element.tipoNovedadCodigo === this.tipoNovedad.adicion)
               this.adicionBoolean = true;
         });
+        this.novedadContractualRegistroPresupuestalId = this.dataNovedad?.novedadContractualRegistroPresupuestal[0]?.novedadContractualRegistroPresupuestalId;
         this.commonSvc.modalidadesContrato()
         .subscribe( modalidadContrato => {
           if ( this.dataNovedad.contrato != null) {
@@ -86,5 +90,24 @@ export class FormModificacionContractualComponent implements OnInit {
       });
 
   };
+
+  getDdp(disponibilidadPresupuestalId: number, numeroDdp: string ) {
+    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId, true, this.novedadContractualRegistroPresupuestalId,false).subscribe((listas:any) => {
+      console.log(listas);
+      let documento = '';
+        if ( numeroDdp !== undefined ) {
+          documento = `${ numeroDdp }.pdf`;
+        } else {
+          documento = `DDP.pdf`;
+        };
+        const text = documento,
+          blob = new Blob([listas], { type: 'application/pdf' }),
+          anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+        anchor.click();
+    });
+  }
 
 }

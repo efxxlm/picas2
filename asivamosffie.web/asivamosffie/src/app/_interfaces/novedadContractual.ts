@@ -75,6 +75,8 @@ export interface NovedadContractual{
         tipoModificacion ?: string,
         adicionBoolean ?: boolean,
         vaComite ?: boolean,
+        novedadContractualRegistroPresupuestal?: any[],
+
 
 }
 

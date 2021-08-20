@@ -19,9 +19,9 @@
   <div align="left">
     <mat-card class="border">
       <mat-card-content>
-        <p><b>Número DDP</b>: {{ dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp || 'Sin DDP' }}</p>
+        <p><b>Número DDP del contrato</b>: {{ dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp || 'Sin DDP' }}</p>
         <section>
-          <b>Objeto</b>: <div [innerHTML]="innerObservacion( dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].objeto )">
+          <b>Objeto de la modificación</b>: <div [innerHTML]="innerObservacion( dataNovedad?.novedadContractualRegistroPresupuestal[0]?.objeto )">
           </div>
         </section>
         <div  *ngIf="dataNovedad['sesionComiteSolicitud'][0].comiteTecnicoFiduciario != 'undefined' && dataNovedad['sesionComiteSolicitud'][0].comiteTecnicoFiduciario != null">
@@ -166,10 +166,10 @@
           </mat-expansion-panel-header>
 
           <div class="text-center" style="margin-bottom: 2em;">
-            <p><b>Valor del DDP</b> {{ dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            <p><b>Valor del DDP</b> {{ this.contratacion?.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
           </div>
 
-          <app-form-aportantes *ngIf="contratacion != null" [data]="contratacion.contratacionProyecto" [tipoSolicitud]="dataNovedad.contrato.contratacion.tipoSolicitudCodigo"></app-form-aportantes>
+          <app-form-aportantes *ngIf="contratacion != null" [data]="contratacion.contratacionProyecto" [tipoSolicitud]="dataNovedad.contrato.contratacion.tipoSolicitudCodigo" [esNovedad]="true" [disponibilidadPresupuestal]="contratacion?.disponibilidadPresupuestal[0]"></app-form-aportantes>
 
         </mat-expansion-panel>
 

@@ -369,6 +369,7 @@ namespace asivamosffie.services
                                                                     .ThenInclude(r => r.NovedadContractualClausula)
                                                                 .Include(r => r.NovedadContractualDescripcion)
                                                                     .ThenInclude(r => r.NovedadContractualDescripcionMotivo)
+                                                                .Include(r => r.NovedadContractualRegistroPresupuestal)
                                                                 .Include(r => r.Contrato)
                                                                     .ThenInclude(r => r.Contratacion)
                                                                         .ThenInclude(r => r.DisponibilidadPresupuestal)

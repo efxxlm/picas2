@@ -24,12 +24,16 @@
     <mat-card class="shipping-card mainGris"  *ngIf="this.tipoSolicitud == 2">
         <mat-card-content align="left">
             <p>
-                <b>DDP:</b>
+                <b>DDP del contrato:</b>
                 {{ddpsolicitud}}
             </p>
             <p>
                 <b>Valor DDP:</b>
                 {{ddpvalor|currency:'':'symbol':'3.0'}}
+            </p>
+            <p>
+              <b>Valor DDP de la Novedad:</b>
+              {{ novedadContractual?.novedadContractualRegistroPresupuestal[0]?.valorSolicitud |currency:'':'symbol':'3.0'}}
             </p>
             <p class="mb-0">
                 <b>Detalle de la modificación:</b>
