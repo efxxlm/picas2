@@ -44,5 +44,6 @@ namespace asivamosffie.model.APIModels
         /*4.2.2*/
         public int ContratacionProyectoId { get; set; } 
         public int? ContratacionId { get; set; }
+        public decimal? ValorProyectoxComponente { get; set; }
     }
 }

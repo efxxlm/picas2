@@ -130,7 +130,7 @@ namespace asivamosffie.services
                                     AportanteID = intaportante,
                                     DisponibilidadPresupuestalProyecto = 0,
                                     ValorGestionado = 0,
-                                    ComponenteGrilla = null
+                                    ComponenteGrilla = null,
                                 });
                             }
                         }
@@ -323,8 +323,9 @@ namespace asivamosffie.services
                                 DisponibilidadPresupuestalProyecto = proyectospp.DisponibilidadPresupuestalProyectoId,
                                 ValorGestionado = valorgestionado,
                                 ComponenteGrilla = grilla,
-                                Aportantes = aportantesxProyecto
-                            });
+                                Aportantes = aportantesxProyecto,
+                                ValorProyectoxComponente = ListDP.Contratacion.TipoSolicitudCodigo == "2" ? proyectospp.Proyecto.ValorInterventoria : proyectospp.Proyecto.ValorObra
+                        });
                         }
 
                         #endregion Proyecto fisico
