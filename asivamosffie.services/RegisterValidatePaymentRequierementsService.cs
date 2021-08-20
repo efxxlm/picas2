@@ -1374,7 +1374,7 @@ namespace asivamosffie.services
 
         #region Get
 
-        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion , int pProyectoId )
+        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion , int pContratacionProyectoId )
         {
 
             try
@@ -1384,7 +1384,7 @@ namespace asivamosffie.services
                 decimal ValorTotalPorFase = (decimal)_context.VValorUsoXcontratoId.Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion).Sum(v => v.ValorUso);
 
                 decimal ValorPendientePorPagar = (decimal)_context.VValorFacturadoContratoXproyecto
-                    .Where(v => v.ContratoId == solicitudPago.ContratoId && v.ProyectoId == pProyectoId && v.EsPreconstruccion == EsPreConstruccion )
+                    .Where(v => v.ContratoId == solicitudPago.ContratoId && v.ContratacionProyectoId == pContratacionProyectoId && v.EsPreconstruccion == EsPreConstruccion )
                     .Sum(c => c.SaldoPresupuestal);
                  
                 if (ValorPendientePorPagar == 0)
