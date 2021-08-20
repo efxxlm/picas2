@@ -397,8 +397,9 @@ namespace asivamosffie.services
                         .Where(c => c.ContratoPolizaActualizacionId == pItem.ContratoPolizaActualizacionId)
                         .Update(c => new ContratoPolizaActualizacion
                         {
-                            EstadoActualizacion = ConstanCodigoEstadoActualizacionPoliza.Con_poliza_observada_y_devuelta
-                        });
+                            EstadoActualizacion = ConstanCodigoEstadoActualizacionPoliza.Con_poliza_observada_y_devuelta,
+                            RegistroCompleto = false,
+                        }); ;
             }
 
 
@@ -475,6 +476,7 @@ namespace asivamosffie.services
         {
             foreach (var pContratoPolizaActualizacion in ListContratoPolizaActualizacion)
             {
+                
                 if (
                         pContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro.Count() == 0
                      || pContratoPolizaActualizacion.ContratoPolizaActualizacionListaChequeo.Count() == 0
@@ -514,10 +516,11 @@ namespace asivamosffie.services
             {
                 return await _context.Contrato
                                .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
-                               .Include(c => c.ContratoPoliza).ThenInclude(c => c.ContratoPolizaActualizacion)
+                               .Include(c => c.ContratoPoliza)
+                               //.ThenInclude(c => c.ContratoPolizaActualizacion)
                                .Where(c => c.NumeroContrato.ToLower().Trim().Contains(pNumeroContrato.ToLower().Trim())
                                    && c.ContratoPoliza.Count() > 0
-                                   && c.ContratoPoliza.All(r => r.ContratoPolizaActualizacion.Count() == 0)
+                                //   && c.ContratoPoliza.All(r => r.ContratoPolizaActualizacion.Count() == 0)
                                    )
                                       .Select(r => new
                                       {
