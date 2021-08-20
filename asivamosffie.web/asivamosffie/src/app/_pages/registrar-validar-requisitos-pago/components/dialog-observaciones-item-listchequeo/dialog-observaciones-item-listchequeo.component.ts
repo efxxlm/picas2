@@ -56,7 +56,7 @@ export class DialogObservacionesItemListchequeoComponent implements OnInit {
 
     onSubmit() {
       this.estaEditando = true;
-      this.matDialogRef.close( this.addressForm.get( 'observaciones' ).value );
+      this.matDialogRef.close({obs : this.addressForm.get( 'observaciones' ).value, estaEditando: true});
     }
 
 }
