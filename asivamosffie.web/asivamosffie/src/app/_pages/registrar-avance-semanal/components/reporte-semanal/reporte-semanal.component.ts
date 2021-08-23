@@ -25,6 +25,7 @@ export class ReporteSemanalComponent implements OnInit {
   gestionCalidad: any;
   gestionSST: any;
   gestionSocial: any;
+  actividadesARealizar: any;
   gestionAmbientalId = 0; // ID gestion ambiental.
   manejoMaterialInsumoId = 0; // ID manejo de materiales  e insumos.
   residuosConstruccionId = 0; // ID residuos de construccion.
@@ -133,6 +134,7 @@ export class ReporteSemanalComponent implements OnInit {
           this.gestionCalidad = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraCalidad[0];
           this.gestionSST = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
           this.gestionSocial = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial[0];
+          this.actividadesARealizar = this.dataReporteSemanal.seguimientoSemanalReporteActividad[0];
       }
     })
   }
