@@ -16,10 +16,13 @@ export class ReporteSemanalComponent implements OnInit {
   contratacionProyectoId: string;
   seguimientoSemanalId: string;
   dataReporteSemanal: any;
+  infoGeneralObra: any;
+  infoGeneralInterventoria: any;
   seguimientoSemanalGestionObraId: number;
   cantidadActividades = 0;
   gestionObraAmbiental: any;
   gestionAmbiental: boolean;
+  gestionCalidad: any;
   gestionSST: any;
   gestionSocial: any;
   gestionAmbientalId = 0; // ID gestion ambiental.
@@ -52,6 +55,8 @@ export class ReporteSemanalComponent implements OnInit {
       response => {
         this.dataReporteSemanal = response;
         if ( this.dataReporteSemanal !== undefined ) {
+          this.infoGeneralObra = this.dataReporteSemanal.informacionGeneral[0];
+          this.infoGeneralInterventoria = this.dataReporteSemanal.informacionGeneral[1];
           this.seguimientoSemanalId = this.dataReporteSemanal.seguimientoSemanalId;
           this.seguimientoSemanalGestionObraId =  this.dataReporteSemanal.seguimientoSemanalGestionObra.length > 0 ?
           this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraId : 0;
@@ -125,6 +130,7 @@ export class ReporteSemanalComponent implements OnInit {
                   }
               }
           }
+          this.gestionCalidad = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraCalidad[0];
           this.gestionSST = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
           this.gestionSocial = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial[0];
       }
