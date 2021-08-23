@@ -31,6 +31,8 @@ export class VerdetalleValidfspComponent implements OnInit {
     displayedColumns: string[] = [
         'drp',
         'numDrp',
+        'ProyectoLLaveMen',
+        'NombreUso',
         'valor',
         'saldo'
     ];

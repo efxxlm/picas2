@@ -68,6 +68,8 @@ export class FormAutorizarSolicitudComponent implements OnInit {
     displayedColumns: string[] = [
         'drp',
         'numDrp',
+        'ProyectoLLaveMen',
+        'NombreUso',
         'valor',
         'saldo'
     ];

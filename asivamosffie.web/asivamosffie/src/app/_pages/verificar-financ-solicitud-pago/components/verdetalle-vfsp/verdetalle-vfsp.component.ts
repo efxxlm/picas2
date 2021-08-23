@@ -31,6 +31,8 @@ export class VerdetalleVfspComponent implements OnInit {
     displayedColumns: string[] = [
         'drp',
         'numDrp',
+        'ProyectoLLaveMen',
+        'NombreUso',
         'valor',
         'saldo'
     ];
