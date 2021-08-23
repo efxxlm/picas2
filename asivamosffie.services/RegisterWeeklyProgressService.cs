@@ -309,7 +309,7 @@ namespace asivamosffie.services
                                                     Capitulo = item.Programacion.Actividad,
                                                     Programacion = dcFlujoInversion,
                                                     Ejectutado = item.AvanceFisicoCapitulo,
-                                                    Desviacion = ((item.AvanceFisicoCapitulo / dcFlujoInversion * -100)) / 100
+                                                    Desviacion = ((item.AvanceFisicoCapitulo / dcFlujoInversion  -100)) / 100
                                                 }
                                                 );
 

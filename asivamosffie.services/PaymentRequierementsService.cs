@@ -637,7 +637,7 @@ namespace asivamosffie.services
                 ///4.1.8
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_apoyo_a_la_supervision)
                 {
-                    ArchivarSolicitudPagoObservacion(pSolicitudPago);
+                    //ArchivarSolicitudPagoObservacion(pSolicitudPago);
                     await SendEmailToDeclineVerify(pSolicitudPago.SolicitudPagoId);
                 }
 
@@ -652,7 +652,7 @@ namespace asivamosffie.services
                 ///4.1.9
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_coordinardor)
                 {
-                    ArchivarSolicitudPagoObservacion(pSolicitudPago);
+                   // ArchivarSolicitudPagoObservacion(pSolicitudPago);
                     await SendEmailToDeclineValidate(pSolicitudPago.SolicitudPagoId);
                 }
 
