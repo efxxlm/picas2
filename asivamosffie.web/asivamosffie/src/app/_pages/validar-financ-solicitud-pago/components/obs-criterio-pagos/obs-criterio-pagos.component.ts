@@ -98,7 +98,7 @@ export class ObsCriterioPagosComponent implements OnInit {
                         if ( LISTA_CRITERIOS_FORMA_PAGO.length > 0 && this.esVerDetalle === false ) {
                             if ( fase.solicitudPagoFaseCriterio.length > 0 ) {
                                 // tipoCriterioCodigo
-                                if ( criterioAnticipo !== null ) {
+                                if ( criterioAnticipo ) {
                                     const anticipoFind = fase.solicitudPagoFaseCriterio.find( value => value.tipoCriterioCodigo === criterioAnticipo.codigo )
 
                                     if ( anticipoFind !== undefined ) {
