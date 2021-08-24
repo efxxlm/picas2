@@ -10333,766 +10333,180 @@ white-space: normal;border-right: 1pt solid black; width: 1360pt">
       <td class="xl81"></td>
       <td class="xl81"></td>
     </tr>
-    <tr class="xl81" height="33" style="mso-height-source: userset; height: 24.75pt">
-      <td height="33" class="xl81" style="height: 24.75pt"></td>
-      <td colspan="5" class="xl369" style="font-size: 6pt; text-align: center; font-weight: 700;">Control de Inspeccion
-        de Ensayos:</td>
-      <td colspan="8" class="xl91" style="font-size: 6pt; ">¿Se realizaron ensayos de laboratorio durante la semana?
+    <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+      <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td colspan="32" class="xl528" width="1817"
+        style="font-size: 6pt;border-right: 1pt solid black; border-top: 1pt solid black; border-bottom: 0.5pt solid black; width: 1360pt; font-weight: 700;">
+        Control de Inspeccion de Ensayos:
       </td>
-      <td colspan="2" class="xl100" style="font-size: 6pt; border-bottom: 0.5pt solid black;">&nbsp;<div
-          *ngIf="this.gestionCalidad.seRealizaronEnsayosLaboratorio==true">Sí</div>
+    </tr>
+    <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+      <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td colspan="18" class="xl280" width="862"
+        style="font-size: 6pt;width: 645pt; border-bottom: 0.5pt solid black; font-weight: 700; border-right: 0.5pt solid black;">
+        ¿Se realizaron ensayos de laboratorio durante la semana?</td>
+      <td class="xl262" width="61" colspan="6"
+        style="font-size: 6pt;border-top: 0px; border-bottom: 0.5pt solid black; width: 46pt; border-right: 0.5pt solid black;">
+        &nbsp;<div *ngIf="this.gestionCalidad.seRealizaronEnsayosLaboratorio==true">Sí</div>
         <div *ngIf="this.gestionCalidad.seRealizaronEnsayosLaboratorio==false">No</div>
       </td>
-      <td colspan="11" class="xl91" style="font-size: 6pt; font-weight: 700;"
-        *ngIf="this.gestionCalidad.seRealizaronEnsayosLaboratorio==true">&nbsp;(Si la respuestas es Si, se continuarán
-        con los
-        siguientes campos)</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl87">&nbsp;</td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
+      <td colspan="8"
+        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
+        &nbsp;(Si la respuestas es Si, se continuarán con los siguientes campos)</td>
     </tr>
-    <tr class="xl81" height="33" style="mso-height-source: userset; height: 24.75pt">
-      <td height="33" class="xl81" style="height: 24.75pt"></td>
-      <td colspan="5" class="xl89">&nbsp;</td>
-      <td colspan="8" class="xl91" style="font-size: 6pt; ">Cantidad de ensayos de laboratorio realizados en la semana:
+    <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+      <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td colspan="18" class="xl280" width="862"
+        style="font-size: 6pt;width: 645pt; border-bottom: 0.5pt solid black; font-weight: 700; border-right: 0.5pt solid black;">
+        Cantidad de ensayos de laboratorio realizados en la semana:</td>
+      <td class="xl262" width="61" colspan="6"
+        style="font-size: 6pt;border-top: 0px; border-bottom: 0.5pt solid black; width: 46pt; border-right: 0.5pt solid black;">
+        &nbsp;{{this.gestionCalidad.gestionObraCalidadEnsayoLaboratorio.length}}
       </td>
-      <td colspan="2" class="xl100" style="font-size: 6pt; border-bottom: 0.5pt solid black;">
-        &nbsp;{{this.gestionCalidad.gestionObraCalidadEnsayoLaboratorio.length}}</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl87">&nbsp;</td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
-      <td class="xl81"></td>
+      <td colspan="8" style="border-bottom: 0.5pt solid black; border-right: 0.5pt solid black;">
+      </td>
     </tr>
     <ng-container *ngFor="let ensayo of this.gestionCalidad.gestionObraCalidadEnsayoLaboratorio; let i = index">
-      <tr class="xl81" height="33" style="mso-height-source: userset; height: 24.75pt">
-        <td height="33" colspan="6" class="xl94" style="height: 24.75pt"></td>
-        <td colspan="4" class="xl94" style="font-size: 9pt; border-left: 0px; text-align: center; font-weight: 700;">
-          &nbsp;Ensayo {{i+1}}</td>
-        <td colspan="4" class="xl152">
+      <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+        <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+        <td colspan="18" class="xl280" width="862"
+          style="border-top: 0.5pt solid black; font-size: 6pt;width: 645pt; font-weight: 700; border-right: 0.5pt solid black;">
+          Ensayo {{i+1}}</td>
+        <td class="xl262" width="61" colspan="6"
+          style="border-top: 0px; border-bottom: 0.5pt solid black; width: 46pt; border-right: 0.5pt solid black;">
           <div style="font-size: 10px;">Tipo de ensayo</div>
         </td>
-        <td colspan="7" class="xl100" style="font-size: 6pt; border-bottom: 0.5pt solid black;">
-          {{ensayo.tipoEnsayoCodigo}}</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl87">&nbsp;</td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
+        <td colspan="8" style="font-size: 10px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black;">
+          {{ensayo.tipoEnsayoCodigo}}
+        </td>
       </tr>
-      <tr class="xl81" height="33" style="mso-height-source: userset; height: 24.75pt">
-        <td height="33" colspan="6" class="xl94" style="height: 24.75pt"></td>
-        <td colspan="4" class="xl94" style="border-left: 0px;">&nbsp;</td>
-        <td colspan="4" class="xl152">
+      <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+        <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+        <td colspan="18" class="xl213" width="862"
+          style="font-size: 6pt;width: 645pt; font-weight: 700; border-right: 0.5pt solid black;">
+        </td>
+        <td class="xl262" width="61" colspan="6"
+          style="border-top: 0px; border-bottom: 0.5pt solid black; width: 46pt; border-right: 0.5pt solid black;">
           <div style="font-size: 10px;">Número de muestras</div>
         </td>
-        <td colspan="7" class="xl100" style="font-size: 6pt; border-bottom: 0.5pt solid black;">
-          {{ensayo.numeroMuestras}}</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl87">&nbsp;</td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
+        <td colspan="8" style="font-size: 10px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black;">
+          {{ensayo.numeroMuestras}}
+        </td>
       </tr>
-      <tr class="xl81" height="33" style="mso-height-source: userset; height: 24.75pt">
-        <td height="33" colspan="6" class="xl94" style="height: 24.75pt"></td>
-        <td colspan="4" class="xl94" style="border-left: 0px;">&nbsp;</td>
-        <td colspan="4" class="xl152">
+      <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+        <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+        <td colspan="18" class="xl213" width="862"
+          style="font-size: 6pt;width: 645pt; font-weight: 700; border-right: 0.5pt solid black;">
+        </td>
+        <td class="xl262" width="61" colspan="6"
+          style="border-top: 0px; border-bottom: 0.5pt solid black; width: 46pt; border-right: 0.5pt solid black;">
           <div style="font-size: 10px;">Fecha de toma</div>
         </td>
-        <td colspan="7" class="xl100" style="font-size: 6pt; border-bottom: 0.5pt solid black;">
-          {{ensayo.fechaTomaMuestras | date: 'dd/MM/yyyy'}}</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl87">&nbsp;</td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
+        <td colspan="8" style="font-size: 10px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black;">
+          {{ensayo.fechaTomaMuestras | date: 'dd/MM/yyyy'}}
+        </td>
       </tr>
-      <tr class="xl81" height="33" style="mso-height-source: userset; height: 24.75pt">
-        <td height="33" colspan="6" class="xl94" style="height: 24.75pt"></td>
-        <td colspan="4" class="xl94" style="border-left: 0px;">&nbsp;</td>
-        <td colspan="4" class="xl152">
+      <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+        <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+        <td colspan="18" class="xl213" width="862"
+          style="font-size: 6pt;width: 645pt; font-weight: 700; border-right: 0.5pt solid black;">
+        </td>
+        <td class="xl262" width="61" colspan="6"
+          style="border-top: 0px; border-bottom: 0.5pt solid black; width: 46pt; border-right: 0.5pt solid black;">
           <div style="font-size: 10px;">Entrega proyectada de resultados</div>
         </td>
-        <td colspan="7" class="xl100" style="font-size: 6pt; border-bottom: 0.5pt solid black;">
-          {{ensayo.fechaEntregaResultados | date: 'dd/MM/yyyy'}}</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl87">&nbsp;</td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
+        <td colspan="8" style="font-size: 10px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black;">
+          {{ensayo.fechaEntregaResultados | date: 'dd/MM/yyyy'}}
+        </td>
       </tr>
-      <tr class="xl81" height="33" style="mso-height-source: userset; height: 24.75pt">
-        <td height="33" colspan="6" class="xl94" style="height: 24.75pt"></td>
-        <td colspan="4" class="xl94" style="border-left: 0px;">&nbsp;</td>
-        <td colspan="4" class="xl152">
+      <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+        <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+        <td colspan="18" class="xl213" width="862"
+          style="font-size: 6pt;width: 645pt; font-weight: 700; border-right: 0.5pt solid black;">
+        </td>
+        <td class="xl262" width="61" colspan="6"
+          style="border-top: 0px; border-bottom: 0.5pt solid black; width: 46pt; border-right: 0.5pt solid black;">
           <div style="font-size: 10px;">URL soporte de la gestión de calidad</div>
         </td>
-        <td colspan="7" class="xl100" style="font-size: 6pt; border-bottom: 0.5pt solid black;">
-          {{ensayo.urlSoporteGestion}}</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl87">&nbsp;</td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
+        <td colspan="8" style="font-size: 10px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black;">
+          {{ensayo.urlSoporteGestion}}
+        </td>
       </tr>
-      <tr class="xl81" height="33" style="mso-height-source: userset; height: 24.75pt">
-        <td height="33" colspan="6" class="xl94" style="height: 24.75pt"></td>
-        <td colspan="4" class="xl94" style="border-left: 0px;">&nbsp;</td>
-        <td colspan="4" class="xl152">
+      <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+        <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+        <td colspan="18" class="xl213" width="862"
+          style="font-size: 6pt;width: 645pt; font-weight: 700; border-right: 0.5pt solid black;">
+        </td>
+        <td class="xl262" width="61" colspan="6"
+          style="border-top: 0px; border-bottom: 0.5pt solid black; width: 46pt; border-right: 0.5pt solid black;">
           <div style="font-size: 10px;">Control de Equipos de Medición</div>
         </td>
-        <td colspan="7" class="xl100" style="font-size: 6pt; border-bottom: 0.5pt solid black;">
+        <td colspan="8" style="font-size: 10px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black;">
           <div *ngIf="ensayo.realizoControlMedicion==true">Sí</div>
           <div *ngIf="ensayo.realizoControlMedicion==false">No</div>
         </td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl87">&nbsp;</td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
       </tr>
-      <tr class="xl81" height="33" style="mso-height-source: userset; height: 24.75pt"
+      <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt"
         *ngIf="ensayo.realizoControlMedicion==true">
-        <td height="33" colspan="6" class="xl94" style="height: 24.75pt"></td>
-        <td colspan="4" class="xl94" style="border-left: 0px;">&nbsp;</td>
-        <td colspan="4" class="xl152">
+        <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+        <td colspan="18" class="xl213" width="862"
+          style="font-size: 6pt;width: 645pt; font-weight: 700; border-right: 0.5pt solid black;">
+        </td>
+        <td class="xl262" width="61" colspan="6"
+          style="border-top: 0px; border-bottom: 0.5pt solid black; width: 46pt; border-right: 0.5pt solid black;">
           <div style="font-size: 10px;">Observaciones</div>
         </td>
-        <td colspan="7" class="xl100" style="font-size: 6pt; border-bottom: 0.5pt solid black;">
+        <td colspan="8" style="font-size: 10px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black;">
           <div [innerHTML]="ensayo.observacion"></div>
         </td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl89">&nbsp;</td>
-        <td class="xl87">&nbsp;</td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
-        <td class="xl81"></td>
       </tr>
       <ng-container *ngFor="let muestra of ensayo.ensayoLaboratorioMuestra; let j = index">
-        <tr class="xl81" height="33" style="mso-height-source: userset; height: 24.75pt">
-          <td height="33" colspan="6" class="xl94" style="height: 24.75pt"></td>
-          <td colspan="4" class="xl94" style="font-size: 9pt; border-left: 0px;">Resultados Muestra {{j+1}}</td>
-          <td colspan="4" class="xl152">
+        <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+          <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+          <td colspan="18" class="xl280" width="862"
+            style="border-top: 0.5pt solid black; font-size: 6pt;width: 645pt; font-weight: 700; border-right: 0.5pt solid black;">
+            Resultados Muestra {{j+1}}
+          </td>
+          <td class="xl262" width="61" colspan="6"
+            style="border-top: 0px; border-bottom: 0.5pt solid black; width: 46pt; border-right: 0.5pt solid black;">
             <div style="font-size: 10px;">Fecha de entrega de la muestra</div>
           </td>
-          <td colspan="7" class="xl100" style="font-size: 6pt; border-bottom: 0.5pt solid black;">
-            {{muestra.fechaEntregaResultado | date: 'dd/MM/yyyy'}}</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl87">&nbsp;</td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-        </tr>
-        <tr class="xl81" height="33" style="mso-height-source: userset; height: 24.75pt">
-          <td height="33" colspan="6" class="xl94" style="height: 24.75pt"></td>
-          <td colspan="4" class="xl94" style="border-left: 0px;">&nbsp;</td>
-          <td colspan="4" class="xl152">
-            <div style="font-size: 10px;">Nombre de la muestra</div>
+          <td colspan="8" style="font-size: 10px;  border-bottom: 0.5pt solid black; border-right: 0.5pt solid black;">
+            {{muestra.fechaEntregaResultado | date: 'dd/MM/yyyy'}}
           </td>
-          <td colspan="7" class="xl100" style="font-size: 6pt; border-bottom: 0.5pt solid black;">
-            {{muestra.nombreMuestra}}</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl87">&nbsp;</td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
         </tr>
-        <tr class="xl81" height="33" style="mso-height-source: userset; height: 24.75pt">
-          <td height="33" colspan="6" class="xl94" style="height: 24.75pt"></td>
-          <td colspan="4" class="xl94" style="border-left: 0px;">&nbsp;</td>
-          <td colspan="4" class="xl152">
+        <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+          <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+          <td colspan="18" class="xl212" width="862"
+            style="font-size: 6pt;width: 645pt; font-weight: 700; border-right: 0.5pt solid black;">
+          </td>
+          <td class="xl262" width="61" colspan="6"
+            style="border-top: 0px; border-bottom: 0.5pt solid black; width: 46pt; border-right: 0.5pt solid black;">
+            <div style="font-size: 10px;">Fecha de entrega de la muestra</div>
+          </td>
+          <td colspan="8" style="font-size: 10px;  border-bottom: 0.5pt solid black; border-right: 0.5pt solid black;">
+            {{muestra.nombreMuestra}}
+          </td>
+        </tr>
+        <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+          <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+          <td colspan="18" class="xl212" width="862"
+            style="font-size: 6pt;width: 645pt; font-weight: 700; border-right: 0.5pt solid black;">
+          </td>
+          <td class="xl262" width="61" colspan="6"
+            style="border-top: 0px; border-bottom: 0.5pt solid black; width: 46pt; border-right: 0.5pt solid black;">
             <div style="font-size: 10px;">Observaciones frente a los resultados</div>
           </td>
-          <td colspan="7" class="xl100" style="font-size: 6pt; border-bottom: 0.5pt solid black;">
+          <td colspan="8" style="font-size: 10px;  border-bottom: 0.5pt solid black; border-right: 0.5pt solid black;">
             <div [innerHTML]="muestra.observacion"></div>
           </td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl89">&nbsp;</td>
-          <td class="xl87">&nbsp;</td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
-          <td class="xl81"></td>
         </tr>
       </ng-container>
     </ng-container>
-    <tr class="xl89" height="26" style="mso-height-source: userset; height: 19.95pt">
-      <td height="26" class="xl89" style="height: 19.95pt">&nbsp;</td>
-      <td class="xl93">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl91">&nbsp;</td>
-      <td class="xl92">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
-      <td class="xl89">&nbsp;</td>
+    <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+      <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td colspan="32" class="xl261" width="398"
+        style="border-top: 0.5pt solid black; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt;"></td>
     </tr>
     <tr class="xl81" height="37" style="mso-height-source: userset; height: 27.75pt">
       <td height="37" class="xl81" style="height: 27.75pt"></td>
@@ -11678,68 +11092,83 @@ white-space: normal;border-right: 1pt solid black; width: 1360pt">
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="19" class="xl261" width="398"
-      style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: center; border-right: 0.5pt solid black;">OBSERVACIONES</td>
+        style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: center; border-right: 0.5pt solid black;">
+        OBSERVACIONES</td>
       <td colspan="13" class="xl261" width="398"
-      style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;"> INTERVENTORIA</td>
+        style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;">
+        INTERVENTORIA</td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="19" class="xl261" width="398"
-      style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: center; border-right: 0.5pt solid black;"></td>
+        style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: center; border-right: 0.5pt solid black;">
+      </td>
       <td colspan="6" class="xl261" width="398"
-      style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;">Coordinador Firma</td>
+        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;">
+        Coordinador Firma</td>
       <td colspan="7" class="xl261" width="398"
-      style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;"></td>
+        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;"></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="19" class="xl261" width="398"
-      style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: center; border-right: 0.5pt solid black;"></td>
+        style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: center; border-right: 0.5pt solid black;">
+      </td>
       <td colspan="6" class="xl261" width="398"
-      style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;">Nombre</td>
+        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;">Nombre
+      </td>
       <td colspan="7" class="xl261" width="398"
-      style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;"></td>
+        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;"></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="19" class="xl261" width="398"
-      style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: center; border-right: 0.5pt solid black;"></td>
+        style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: center; border-right: 0.5pt solid black;">
+      </td>
       <td colspan="6" class="xl261" width="398"
-      style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;">No de Matricula</td>
+        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;">No de
+        Matricula</td>
       <td colspan="7" class="xl261" width="398"
-      style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;"></td>
+        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;"></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="19" class="xl261" width="398"
-      style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: center; border-right: 0.5pt solid black;"></td>
+        style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: center; border-right: 0.5pt solid black;">
+      </td>
       <td colspan="6" class="xl261" width="398"
-      style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;">Residenter Firma</td>
+        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;">
+        Residenter Firma</td>
       <td colspan="7" class="xl261" width="398"
-      style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;"></td>
+        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;"></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="19" class="xl261" width="398"
-      style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: center; border-right: 0.5pt solid black;"></td>
+        style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: center; border-right: 0.5pt solid black;">
+      </td>
       <td colspan="6" class="xl261" width="398"
-      style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;">Nombre</td>
+        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;">Nombre
+      </td>
       <td colspan="7" class="xl261" width="398"
-      style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;"></td>
+        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;"></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="19" class="xl261" width="398"
-      style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: center; border-right: 0.5pt solid black;"></td>
+        style="font-size: 6pt; font-weight: 700; border-top: 0.5pt solid black; text-align: center; border-right: 0.5pt solid black;">
+      </td>
       <td colspan="6" class="xl261" width="398"
-      style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;">No de Matricula</td>
+        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;">No de
+        Matricula</td>
       <td colspan="7" class="xl261" width="398"
-      style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;"></td>
+        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black;"></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="32" class="xl261" width="398"
-        style="border-bottom: 0.5pt solid black; border-top: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt;"></td>
+        style="border-bottom: 0.5pt solid black; border-top: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt;">
+      </td>
     </tr>
     <tr class="xl89" height="30" style="mso-height-source: userset; height: 22.95pt">
       <td height="30" class="xl89" style="height: 22.95pt">&nbsp;</td>
@@ -11781,65 +11210,65 @@ white-space: normal;border-right: 1pt solid black; width: 1360pt">
       <td class="xl89">&nbsp;</td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
-    <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
-    <td colspan="10" class="xl528" width="173"
-      style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-right: 0.5pt solid black;">
-      URL con soporte</td>
-    <td class="xl96" width="35"
-      style="font-size: 6pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
-      colspan="22">&nbsp;</td>
-  </tr>
-  <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
-    <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
-    <td colspan="10" class="xl528" width="173"
-      style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-right: 0.5pt solid black;">
-      Observaciones</td>
-    <td class="xl96" width="35"
-      style="font-size: 6pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
-      colspan="22">&nbsp;</td>
-  </tr>
-  <tr class="xl89" height="150" style="mso-height-source: userset; height: 13.2pt">
-    <td height="150" class="xl89" style="height: 13.2pt">&nbsp;</td>
-    <td class="xl96" width="35"
-      style="font-size: 6pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
-      colspan="32">&nbsp;</td>
-  </tr>
-  <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
-    <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
-    <td colspan="32" class="xl528" width="173"
-      style="font-size: 6pt;width: 130pt; border-right: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
-      FIRMA INTERVENTOR ( DIRECTOR DE INTERVENTORÍA)</td>
-  </tr>
-  <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
-    <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
-    <td colspan="32" class="xl528" width="173"
-      style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
-      NOMBRE:</td>
-  </tr>
-  <tr class="xl89" height="150" style="mso-height-source: userset; height: 13.2pt">
-    <td height="150" class="xl89" style="height: 13.2pt">&nbsp;</td>
-    <td class="xl96" width="35"
-      style="font-size: 6pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
-      colspan="32">&nbsp;</td>
-  </tr>
-  <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
-    <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
-    <td colspan="32" class="xl528" width="173"
-      style="font-size: 6pt;width: 130pt; border-right: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
-      * VoBo SUPERVISOR (FIRMA)</td>
-  </tr>
-  <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
-    <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
-    <td colspan="32" class="xl528" width="173"
-      style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
-      NOMBRE SUPERVISOR: </td>
-  </tr>
-  <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
-    <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
-    <td colspan="32" class="xl528" width="173"
-      style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
-      * Una vez  sea revisado y aceptado este informe, el supervisor deberá evidenciar la aceptación con su firma  </td>
-  </tr>
+      <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td colspan="10" class="xl528" width="173"
+        style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-right: 0.5pt solid black;">
+        URL con soporte</td>
+      <td class="xl96" width="35"
+        style="font-size: 6pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
+        colspan="22">&nbsp;</td>
+    </tr>
+    <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+      <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td colspan="10" class="xl528" width="173"
+        style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-right: 0.5pt solid black;">
+        Observaciones</td>
+      <td class="xl96" width="35"
+        style="font-size: 6pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
+        colspan="22">&nbsp;</td>
+    </tr>
+    <tr class="xl89" height="150" style="mso-height-source: userset; height: 13.2pt">
+      <td height="150" class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td class="xl96" width="35"
+        style="font-size: 6pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
+        colspan="32">&nbsp;</td>
+    </tr>
+    <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+      <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td colspan="32" class="xl528" width="173"
+        style="font-size: 6pt;width: 130pt; border-right: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
+        FIRMA INTERVENTOR ( DIRECTOR DE INTERVENTORÍA)</td>
+    </tr>
+    <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+      <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td colspan="32" class="xl528" width="173"
+        style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
+        NOMBRE:</td>
+    </tr>
+    <tr class="xl89" height="150" style="mso-height-source: userset; height: 13.2pt">
+      <td height="150" class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td class="xl96" width="35"
+        style="font-size: 6pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
+        colspan="32">&nbsp;</td>
+    </tr>
+    <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+      <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td colspan="32" class="xl528" width="173"
+        style="font-size: 6pt;width: 130pt; border-right: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
+        * VoBo SUPERVISOR (FIRMA)</td>
+    </tr>
+    <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+      <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td colspan="32" class="xl528" width="173"
+        style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
+        NOMBRE SUPERVISOR: </td>
+    </tr>
+    <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+      <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td colspan="32" class="xl528" width="173"
+        style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
+        * Una vez sea revisado y aceptado este informe, el supervisor deberá evidenciar la aceptación con su firma </td>
+    </tr>
   </table>
 </div>
 
