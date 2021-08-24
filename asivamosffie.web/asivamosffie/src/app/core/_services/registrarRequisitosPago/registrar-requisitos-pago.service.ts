@@ -41,8 +41,8 @@ export class RegistrarRequisitosPagoService {
     return this.http.get<any>( `${ this.apiUrl }/GetMontoMaximo?SolicitudPagoId=${ solicitudPagoId }&EsPreConstruccion=${ esPreConstruccion }` )
   }
 
-  getMontoMaximoMontoPendiente( SolicitudPagoId: number, strFormaPago: string, EsPreConstruccion: string, contratacionProyectoId: number ) {
-    return this.http.get<{ montoMaximo: number, valorPendientePorPagar: number }>( `${ this.apiUrl }/GetMontoMaximoMontoPendiente?SolicitudPagoId=${ SolicitudPagoId }&strFormaPago=${ strFormaPago }&EsPreConstruccion=${ EsPreConstruccion }&pContratacionProyectoId=${ contratacionProyectoId }` );
+  getMontoMaximoMontoPendiente( SolicitudPagoId: number, strFormaPago: string, EsPreConstruccion: string, contratacionProyectoId: number, pCriterioCodigo: string, pConceptoCodigo: string ) {
+    return this.http.get<{ montoMaximo: number, valorPendientePorPagar: number }>( `${ this.apiUrl }/GetMontoMaximoMontoPendiente?SolicitudPagoId=${ SolicitudPagoId }&strFormaPago=${ strFormaPago }&EsPreConstruccion=${ EsPreConstruccion }&pContratacionProyectoId=${ contratacionProyectoId }&pCriterioCodigo=${ pCriterioCodigo }&pConceptoCodigo=${ pConceptoCodigo }` );
   }
 
   getCriterioByFormaPagoCodigo( pFormaPagoCodigo: string ) {
