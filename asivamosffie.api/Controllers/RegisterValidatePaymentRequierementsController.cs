@@ -30,9 +30,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetMontoMaximoMontoPendiente")]
-        public async Task<IActionResult> GetMontoMaximoMontoPendiente([FromQuery] int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion , int pContratacionProyectoId)
+        public async Task<IActionResult> GetMontoMaximoMontoPendiente([FromQuery] int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion , int pContratacionProyectoId, string pConceptoCodigo)
         {
-            return Ok(await _registerValidatePaymentRequierementsService.GetMontoMaximoMontoPendiente(SolicitudPagoId, strFormaPago, EsPreConstruccion , pContratacionProyectoId));
+            return Ok(await _registerValidatePaymentRequierementsService.GetMontoMaximoMontoPendiente(SolicitudPagoId, strFormaPago, EsPreConstruccion , pContratacionProyectoId, pConceptoCodigo));
         }
 
         [HttpGet]

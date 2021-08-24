@@ -1374,18 +1374,21 @@ namespace asivamosffie.services
 
         #region Get
 
-        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion , int pContratacionProyectoId )
-        {
-
+        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion , int pContratacionProyectoId , string pConceptoCodigo)
+        { 
             try
             {
                 SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(SolicitudPagoId);
 
                 decimal ValorTotalPorFase = (decimal)_context.VValorUsoXcontratoId.Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion).Sum(v => v.ValorUso);
 
-                decimal ValorPendientePorPagar = (decimal)_context.VValorFacturadoContratoXproyecto
-                    .Where(v => v.ContratoId == solicitudPago.ContratoId && v.ContratacionProyectoId == pContratacionProyectoId && v.EsPreconstruccion == EsPreConstruccion )
-                    .Sum(c => c.SaldoPresupuestal);
+                decimal ValorPendientePorPagar = (decimal)_context.VValorFacturadoContratoXproyectoXuso
+                                                                                                        .Where(v => v.ContratoId == solicitudPago.ContratoId 
+                                                                                                            && v.ContratacionProyectoId == pContratacionProyectoId 
+                                                                                                            && v.EsPreconstruccion == EsPreConstruccion
+                                                                                                            && v.ConceptoCodigo == pConceptoCodigo 
+                                                                                                            )
+                                                                                                        .Sum(c => c.SaldoPresupuestal);
                  
                 if (ValorPendientePorPagar == 0)
                     ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
@@ -1664,7 +1667,7 @@ namespace asivamosffie.services
 
         public dynamic GetDrpContrato(int pContratacionId)
         {
-            List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).ToList();
+            List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).OrderBy(r=> r.FechaCreacion).ToList();
 
             var ListDrp = List.GroupBy(drp => drp.NumeroDrp)
                               .Select(d =>
@@ -1720,32 +1723,34 @@ namespace asivamosffie.services
 
                         decimal Saldo = ListPagos
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
-                                                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
+                                                          && r.Pagado == false
+                                                         )
                                                 .Sum(r => r.SaldoUso) ?? 0;
 
 
                         decimal ValorUsoResta = ValorUso;
                         foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                                && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
-                        {
-
+                        { 
                             if (ValorUsoResta > item.SaldoUso)
                             {
                                 ValorUsoResta -= (decimal)item.SaldoUso;
-                                item.SaldoUso = ValorUsoResta;
-                            }
+                                item.SaldoUso = ValorUsoResta; 
+                                item.Pagado = true;
+                            } 
                             else
                             {
                                 item.SaldoUso -= ValorUsoResta;
-                            }
-
+                          
+                            } 
                         }
 
                         ListDyUsos.Add(new
                         {
                             Uso.Nombre,
                             ValorUso = String.Format("{0:n0}", ValorUso),
-                            Saldo = String.Format("{0:n0}", ValorUso >= Saldo ? ValorUso - Saldo : Saldo - ValorUso)
+                            Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo :  0 )
                         });
                     }
 

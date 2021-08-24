@@ -5,6 +5,7 @@ namespace asivamosffie.model.Models
 {
     public partial class VDrpXproyectoXusos
     {
+        public DateTime? FechaCreacion { get; set; }
         public int ContratacionId { get; set; }
         public string LlaveMen { get; set; }
         public int ProyectoId { get; set; }
