@@ -1374,7 +1374,7 @@ namespace asivamosffie.services
 
         #region Get
 
-        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion , int pContratacionProyectoId , string pConceptoCodigo)
+        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion , int pContratacionProyectoId ,string pCriterioCodigo, string pConceptoCodigo)
         { 
             try
             {

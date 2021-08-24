@@ -30,9 +30,21 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetMontoMaximoMontoPendiente")]
-        public async Task<IActionResult> GetMontoMaximoMontoPendiente([FromQuery] int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion , int pContratacionProyectoId, string pConceptoCodigo)
+        public async Task<IActionResult> GetMontoMaximoMontoPendiente([FromQuery] 
+        int SolicitudPagoId, 
+            string strFormaPago, 
+            bool EsPreConstruccion, 
+            int pContratacionProyectoId, 
+            string pCriterioCodigo, 
+            string pConceptoCodigo)
         {
-            return Ok(await _registerValidatePaymentRequierementsService.GetMontoMaximoMontoPendiente(SolicitudPagoId, strFormaPago, EsPreConstruccion , pContratacionProyectoId, pConceptoCodigo));
+            return Ok(await _registerValidatePaymentRequierementsService.GetMontoMaximoMontoPendiente(
+                SolicitudPagoId,
+                strFormaPago,
+                EsPreConstruccion,
+                pContratacionProyectoId,
+                pCriterioCodigo,
+                pConceptoCodigo));
         }
 
         [HttpGet]
@@ -140,9 +152,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetFormaPagoCodigoByFase")]
-        public async Task<IActionResult> GetFormaPagoCodigoByFase([FromQuery] bool pEsPreconstruccion , int pContratoId)
+        public async Task<IActionResult> GetFormaPagoCodigoByFase([FromQuery] bool pEsPreconstruccion, int pContratoId)
         {
-            return Ok(await _registerValidatePaymentRequierementsService.GetFormaPagoCodigoByFase(pEsPreconstruccion , pContratoId));
+            return Ok(await _registerValidatePaymentRequierementsService.GetFormaPagoCodigoByFase(pEsPreconstruccion, pContratoId));
         }
 
 

@@ -15,7 +15,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion);
 
-        Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion , int pContratacionProyectoId ,string pConceptoCodigo);
+        Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion , int pContratacionProyectoId, string pCriterioCodigo, string pConceptoCodigo);
 
         Task<Respuesta> ReturnSolicitudPago(SolicitudPago pSolicitudPago);
 
