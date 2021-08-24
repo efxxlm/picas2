@@ -531,7 +531,7 @@ namespace asivamosffie.services
                         ObservacioensCancelacion = _context.DisponibilidadPresupuestalObservacion.Where(x => x.DisponibilidadPresupuestalId == ListDP.DisponibilidadPresupuestalId && x.EsNovedad == esNovedad && x.NovedadContractualRegistroPresupuestalId == RegistroNovedadId).ToList(),
                         EsNovedad = false,
                         NovedadContractual = ListDP.NovedadContractualId != null ? _context.NovedadContractual.Where(x => x.NovedadContractualId == ListDP.NovedadContractualId).Include(x => x.NovedadContractualDescripcion).FirstOrDefault() : null,
-                        EstadoRegistro = true,
+                        EstadoRegistro = blnEstado,
                         SesionComiteSolicitud = sesionComiteSolicitud
                     };
 
@@ -2543,7 +2543,7 @@ namespace asivamosffie.services
                     EsNovedad = true,
                     NovedadContractualRegistroPresupuestalId = detailDP.NovedadContractualRegistroPresupuestalId,
                     NovedadContractual = detailDP.NovedadContractualId != null ? _context.NovedadContractual.Where(x => x.NovedadContractualId == detailDP.NovedadContractualId).Include(x => x.NovedadContractualDescripcion).FirstOrDefault() : null,
-                    EstadoRegistro = blnEstado
+                    EstadoRegistro = true
                 };
                 ListDetailValidarDisponibilidadPresupuesal.Add(detailDisponibilidadPresupuesal);
             }
