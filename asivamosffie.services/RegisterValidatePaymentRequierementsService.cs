@@ -1374,58 +1374,58 @@ namespace asivamosffie.services
 
         #region Get
 
-        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion , int pContratacionProyectoId ,string pCriterioCodigo, string pConceptoCodigo)
-        { 
+        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion, int pContratacionProyectoId, string pCriterioCodigo, string pConceptoCodigo)
+        {
             try
             {
-                SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(SolicitudPagoId);
+                SolicitudPago solicitudPago = await _context.SolicitudPago
+                    .Where(r => r.SolicitudPagoId == SolicitudPagoId)
+                    .Include(r => r.Contrato)
+                    .FirstOrDefaultAsync();
 
-                decimal ValorTotalPorFase = (decimal)_context.VValorUsoXcontratoId.Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion).Sum(v => v.ValorUso);
+                VValorFacturadoContratoXproyectoXuso VValorFacturadoContratoXproyectoXuso = _context.VValorFacturadoContratoXproyectoXuso
+                                                                                                     .Where(v => v.ContratoId == solicitudPago.ContratoId
+                                                                                                               && v.ContratacionProyectoId == pContratacionProyectoId
+                                                                                                               && v.EsPreconstruccion == EsPreConstruccion
+                                                                                                               && v.ConceptoCodigo == pConceptoCodigo)
+                                                                                                     .FirstOrDefault();
 
-                decimal ValorPendientePorPagar = (decimal)_context.VValorFacturadoContratoXproyectoXuso
-                                                                                                        .Where(v => v.ContratoId == solicitudPago.ContratoId 
-                                                                                                            && v.ContratacionProyectoId == pContratacionProyectoId 
-                                                                                                            && v.EsPreconstruccion == EsPreConstruccion
-                                                                                                            && v.ConceptoCodigo == pConceptoCodigo 
-                                                                                                            )
-                                                                                                        .Sum(c => c.SaldoPresupuestal);
-                 
-                if (ValorPendientePorPagar == 0)
-                    ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
-                else
-                    ValorTotalPorFase = ValorPendientePorPagar;
+                decimal dcCriterioPagoPorcentaje = decimal.Parse(_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && r.Codigo == pCriterioCodigo).FirstOrDefault().Descripcion ?? "1");
 
-                if (ValorTotalPorFase < 0)
-                    ValorTotalPorFase *= -1;
+                if (VValorFacturadoContratoXproyectoXuso == null)
+                {
+                    ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Find(pContratacionProyectoId);
+                    decimal ValorTotalPorFase = (decimal)_context.VDrpXcontratacionXproyectoXfaseXconceptoXusos
+                           .Where(r => r.ContratacionId == solicitudPago.Contrato.ContratacionId
+                                    && r.ProyectoId == contratacionProyecto.ContratacionProyectoId
+                                    && r.EsPreConstruccion == EsPreConstruccion
+                                    && r.ConceptoPagoCodigo == pConceptoCodigo)
+                           .Sum(v => v.ValorUso);
+                    return new
+                    {
+                        MontoMaximo = ValorTotalPorFase,
+                        ValorPendientePorPagar = 0
+                    };
+                }
 
-                //string strNombreFormaPago = (_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Formas_Pago && r.Codigo == strFormaPago).FirstOrDefault().Nombre).Replace("%", ""); ;
 
-                //List<string> FormasPago = strNombreFormaPago.Split("/").ToList();
-                //decimal MontoMaximo = 0;
-                //TODO:VALIDAR 
-                //foreach (var PorcentajePago in FormasPago)
-                //{
-                //    if (Convert.ToUInt32(PorcentajePago) == 100)
-                //        MontoMaximo = ValorPendientePorPagar;
-                //    else
-                //    {
-                //        MontoMaximo = ValorTotalPorFase * Convert.ToUInt32(PorcentajePago);
-                //        MontoMaximo /= 100;
-                //        if (ValorPendientePorPagar != ValorTotalPorFase)
-                //            MontoMaximo = ValorPendientePorPagar - MontoMaximo;
+                VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal =
+                                                                         VValorFacturadoContratoXproyectoXuso.ValorSolicitudDdp
+                                                                       - (decimal)_context.VValorFacturadoContratoXproyectoXuso
+                                                                                                                               .Where(v => v.ContratoId == solicitudPago.ContratoId
+                                                                                                                                   && v.ContratacionProyectoId == pContratacionProyectoId
+                                                                                                                                   && v.EsPreconstruccion == EsPreConstruccion
+                                                                                                                                   && v.Uso == VValorFacturadoContratoXproyectoXuso.Uso
+                                                                                                                                   )
+                                                                                                                               .Sum(c => c.ValorFacturado);
 
-                //        if (MontoMaximo < 0)
-                //            MontoMaximo = ValorTotalPorFase;
 
-                //        if (MontoMaximo < ValorPendientePorPagar)
-                //            break;
-                //    }
-                //}
+                VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal *= dcCriterioPagoPorcentaje;
 
                 return new
                 {
-                    MontoMaximo = ValorPendientePorPagar,
-                    ValorPendientePorPagar
+                    MontoMaximo = VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal,
+                    VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal
                 };
             }
             catch (Exception e)
@@ -1667,7 +1667,7 @@ namespace asivamosffie.services
 
         public dynamic GetDrpContrato(int pContratacionId)
         {
-            List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).OrderBy(r=> r.FechaCreacion).ToList();
+            List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).OrderBy(r => r.FechaCreacion).ToList();
 
             var ListDrp = List.GroupBy(drp => drp.NumeroDrp)
                               .Select(d =>
@@ -1732,25 +1732,25 @@ namespace asivamosffie.services
                         decimal ValorUsoResta = ValorUso;
                         foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                                && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
-                        { 
+                        {
                             if (ValorUsoResta > item.SaldoUso)
                             {
                                 ValorUsoResta -= (decimal)item.SaldoUso;
-                                item.SaldoUso = ValorUsoResta; 
+                                item.SaldoUso = ValorUsoResta;
                                 item.Pagado = true;
-                            } 
+                            }
                             else
                             {
                                 item.SaldoUso -= ValorUsoResta;
-                          
-                            } 
+
+                            }
                         }
 
                         ListDyUsos.Add(new
                         {
                             Uso.Nombre,
                             ValorUso = String.Format("{0:n0}", ValorUso),
-                            Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo :  0 )
+                            Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
                         });
                     }
 

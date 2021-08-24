@@ -255,6 +255,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VDisponibilidadPresupuestal> VDisponibilidadPresupuestal { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
         public virtual DbSet<VDrpNovedadXfaseContratacionId> VDrpNovedadXfaseContratacionId { get; set; }
+        public virtual DbSet<VDrpXcontratacionXproyectoXfaseXconceptoXusos> VDrpXcontratacionXproyectoXfaseXconceptoXusos { get; set; }
         public virtual DbSet<VDrpXfaseContratacionId> VDrpXfaseContratacionId { get; set; }
         public virtual DbSet<VDrpXfaseXcontratacionIdXnovedad> VDrpXfaseXcontratacionIdXnovedad { get; set; }
         public virtual DbSet<VDrpXproyectoXusos> VDrpXproyectoXusos { get; set; }
@@ -8783,6 +8784,41 @@ namespace asivamosffie.model.Models
                 entity.ToView("V_DrpNovedadXFaseContratacionId");
 
                 entity.Property(e => e.ValorDrp).HasColumnType("numeric(38, 2)");
+            });
+
+            modelBuilder.Entity<VDrpXcontratacionXproyectoXfaseXconceptoXusos>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DrpXContratacionXProyectoXFaseXConceptoXUsos");
+
+                entity.Property(e => e.ConceptoPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.NumeroDrp)
+                    .HasColumnName("NumeroDRP")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Saldo).HasColumnType("numeric(21, 2)");
+
+                entity.Property(e => e.TipoUsoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VDrpXfaseContratacionId>(entity =>
