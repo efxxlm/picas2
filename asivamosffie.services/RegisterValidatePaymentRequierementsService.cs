@@ -1646,22 +1646,20 @@ namespace asivamosffie.services
             decimal ValorAnterior = 0;
             decimal Drp = 0;
             int Count = 1;
+            decimal dcDecimalValorFacturado = 0;
             foreach (var item in vContratoPagosRealizados)
             {
-                if (Count == 1)
-                {
-                    ValorAnterior = item.SaldoPorPagar ?? 0;
-                    Drp = item.ValorSolicitud ?? 1;
-                }
-                else
-                {
-                    item.ValorSolicitud = ValorAnterior;
-                    item.SaldoPorPagar = item.ValorSolicitud - item.ValorFacturado;
-                    item.PorcentajeFacturado = 100 - ((item.SaldoPorPagar / Drp) * 100);
-                    item.PorcentajePorPagar = (item.SaldoPorPagar / Drp) * 100;
-                }
-                Count++;
+                dcDecimalValorFacturado += item.ValorFacturado;
+
+                item.SaldoPorPagar = item.ValorSolicitud - dcDecimalValorFacturado;
+                ValorAnterior = item.SaldoPorPagar ?? 0;
+                Drp = item.ValorSolicitud ?? 1; 
+                item.SaldoPorPagar = item.ValorSolicitud - dcDecimalValorFacturado;
+                item.PorcentajeFacturado = item.PorcentajeFacturado;
+                item.PorcentajePorPagar = item.PorcentajePorPagar;
             }
+            Count++;
+
             return vContratoPagosRealizados;
         }
 
