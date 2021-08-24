@@ -113,7 +113,7 @@
                                         type="button"
                                         [disabled]="ensayo.get('tieneObservaciones').value === null"
                                         (click)="guardarEnsayo( ensayo )">
-                                    <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                                    <img src="assets/img/icon/guardar.svg" alt="Guardar">
                                 </button>
                             </div>
                             <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="ensayo.get( 'historial' ).value.length > 0">
@@ -226,7 +226,7 @@
                             type="submit"
                             [disabled]="formGestionCalidad.get('tieneObservaciones').value === null"
                             (click)="guardar()">
-                        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                        <img src="assets/img/icon/guardar.svg" alt="Guardar">
                     </button>
                 </div>
             </form>

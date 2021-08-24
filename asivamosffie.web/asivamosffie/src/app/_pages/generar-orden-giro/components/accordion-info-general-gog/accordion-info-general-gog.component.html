@@ -39,7 +39,7 @@
                 <p style="margin-left: 2em;">Valor del DDP: <b> {{ solicitudPago.contratoSon.contratacion.disponibilidadPresupuestal[ 0 ].valorSolicitud | currency:'':'symbol-narrow':'.0-0' }} </b></p>
             </div>
 
-            <div class="table-responsive mt-1em">
+            <!-- <div class="table-responsive mt-1em">
                 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
                     <ng-container matColumnDef="drp">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> DRP </th>
@@ -60,8 +60,8 @@
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
-            </div>
-            <app-tabla-datos-ddp-gog *ngIf="solicitudPago.tablaUsoFuenteAportante !== undefined && solicitudPago.tablaUsoFuenteAportante.usos.length > 0" [tablaUsoFuenteAportante]="solicitudPago.tablaUsoFuenteAportante.usos"></app-tabla-datos-ddp-gog>
+            </div> -->
+            <app-tabla-datos-ddp-gog *ngIf="solicitudPago.tablaUsoFuenteAportante !== undefined && solicitudPago.tablaUsoFuenteAportante.usos.length > 0" [tablaUsoFuenteAportante]="solicitudPago.tablaUsoFuenteAportante.usos" [tablaDrpUso]="solicitudPago.tablaDrpUso"></app-tabla-datos-ddp-gog>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
