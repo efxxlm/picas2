@@ -33,10 +33,38 @@
     
                                 <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j ).controls; index as k">
                                     <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ k + 1 }} </mat-card-title>
-                                    <p><b>Tipo de aportante: </b> {{ aportante.get( 'tipoAportante' ).value.nombre }} </p>
-                                    <p><b>Nombre del aportante: </b> {{ aportante.get( 'nombreAportante' ).value.nombreAportante }} </p>
-                                    <p><b>Fuente de los recursos: </b> {{ firstLetterUpperCase( aportante.get( 'fuenteRecursos' ).value.nombre ) }} </p>
-                                    <p><b>Valor facturado por el concepto para el aportante: </b> {{ aportante.get( 'valorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }} </p>
+                                    <p>
+                                        <b>
+                                            Tipo de aportante:
+                                        </b>
+                                        <span *ngIf="aportante.get( 'tipoAportante' ).value">
+                                            {{ aportante.get( 'tipoAportante' ).value.nombre }}
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <b>
+                                            Nombre del aportante:
+                                        </b>
+                                        <span *ngIf="aportante.get( 'nombreAportante' ).value">
+                                            {{ aportante.get( 'nombreAportante' ).value.nombreAportante }}
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <b>
+                                            Fuente de los recursos:                                        
+                                        </b>
+                                        <span *ngIf="aportante.get( 'fuenteRecursos' ).value">
+                                            {{ firstLetterUpperCase( aportante.get( 'fuenteRecursos' ).value.nombre ) }}
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <b>
+                                            Valor facturado por el concepto para el aportante:                                        
+                                        </b>
+                                        <span *ngIf="aportante.get( 'valorDescuento' ).value">
+                                            {{ aportante.get( 'valorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }}
+                                        </span>
+                                    </p>
                                 </div>
 
                                 <div>
@@ -541,7 +569,7 @@
                                     [disabled]="criterio.dirty === false"
                                     type="button"
                                     (click)="onSubmit( i )">
-                                    <img src="assets/img/icon/guardar.svg" alt="Guardar">
+                                    <img src="assets/img/icon/guardar.svg" alt="Regresar">
                             </button>
                         </div>
                 </mat-expansion-panel> 
