@@ -14,6 +14,9 @@ namespace asivamosffie.model.Models
     public partial class SolicitudPago
     {
         [NotMapped]
+        public dynamic TablaDrpUso { get; set; }
+
+        [NotMapped]
         public Contrato ContratoSon { get; set; }
 
         [NotMapped]
