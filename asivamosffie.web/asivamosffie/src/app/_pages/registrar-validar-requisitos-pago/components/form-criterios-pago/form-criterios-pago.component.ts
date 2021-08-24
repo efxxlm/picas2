@@ -242,47 +242,53 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 const conceptosDePagoSeleccionados = [];
                                 // Get conceptos de pago
                                 if ( criterio.solicitudPagoFaseCriterioConceptoPago.length > 0 ) {
-                                    criterio.solicitudPagoFaseCriterioConceptoPago.forEach( async solicitudPagoFaseCriterioConceptoPago => {
+                                    criterio.solicitudPagoFaseCriterioConceptoPago.forEach( solicitudPagoFaseCriterioConceptoPago => {
                                         const conceptoFind = conceptosDePago.find( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio );
 
                                         if ( conceptoFind !== undefined ) {
-                                            const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, FORMA_PAGO_CODIGO, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterio?.tipoCriterioCodigo, conceptoFind?.codigo ).toPromise();
-                                            conceptosDePagoSeleccionados.push( conceptoFind );
-                                            conceptoDePagoArray.push(
-                                                this.fb.group(
-                                                    {
-                                                        solicitudPagoFaseCriterioConceptoPagoId: [ solicitudPagoFaseCriterioConceptoPago.solicitudPagoFaseCriterioConceptoPagoId ],
-                                                        solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
-                                                        conceptoPagoCriterioNombre: [ conceptoFind.nombre ],
-                                                        conceptoPagoCriterio: [ solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ],
-                                                        valorFacturadoConcepto: [ solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto !== undefined ? solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto : null ],
-                                                        montoMaximo: montoMaximoPendienteNew?.montoMaximo
-                                                    }
-                                                )
+                                          this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, FORMA_PAGO_CODIGO, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterio?.tipoCriterioCodigo, conceptoFind?.codigo )
+                                            .subscribe(
+                                                response => {
+                                                  conceptosDePagoSeleccionados.push( conceptoFind );
+                                                  conceptoDePagoArray.push(
+                                                      this.fb.group(
+                                                          {
+                                                              solicitudPagoFaseCriterioConceptoPagoId: [ solicitudPagoFaseCriterioConceptoPago.solicitudPagoFaseCriterioConceptoPagoId ],
+                                                              solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
+                                                              conceptoPagoCriterioNombre: [ conceptoFind.nombre ],
+                                                              conceptoPagoCriterio: [ solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ],
+                                                              valorFacturadoConcepto: [ solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto !== undefined ? solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto : null ],
+                                                              montoMaximo: response?.montoMaximo
+                                                          }
+                                                      )
+                                                  );
+
+                                                  const montoMaximo = this.montoMaximoPendiente !== 0 ? ( this.montoMaximoPendiente * criterioSeleccionado[0].porcentaje ) : 0;
+
+                                                  this.criterios.push(
+                                                      this.fb.group(
+                                                          {
+                                                              solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
+                                                              solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
+                                                              montoMaximo: [ montoMaximo ],
+                                                              tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
+                                                              nombreCriterio: [ criterioSeleccionado[0].nombre ],
+                                                              tiposDePago: [ tiposDePago ],
+                                                              tipoPago: [ tipoDePago.length > 0 ? tipoDePago[0] : null ],
+                                                              conceptosDePago: [ conceptosDePago ],
+                                                              conceptoPago: [ conceptosDePagoSeleccionados, Validators.required ],
+                                                              conceptos: this.fb.array( conceptoDePagoArray ),
+                                                              valorFacturado: [ { value: criterio.valorFacturado !== undefined ? criterio.valorFacturado : null, disabled: true }, Validators.required ]
+                                                          }
+                                                      )
+                                                  );
+                                                }
                                             );
                                         }
                                     } );
                                 }
 
-                                const montoMaximo = this.montoMaximoPendiente !== 0 ? ( this.montoMaximoPendiente * criterioSeleccionado[0].porcentaje ) : 0;
 
-                                this.criterios.push(
-                                    this.fb.group(
-                                        {
-                                            solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
-                                            solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
-                                            montoMaximo: [ montoMaximo ],
-                                            tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
-                                            nombreCriterio: [ criterioSeleccionado[0].nombre ],
-                                            tiposDePago: [ tiposDePago ],
-                                            tipoPago: [ tipoDePago.length > 0 ? tipoDePago[0] : null ],
-                                            conceptosDePago: [ conceptosDePago ],
-                                            conceptoPago: [ conceptosDePagoSeleccionados, Validators.required ],
-                                            conceptos: this.fb.array( conceptoDePagoArray ),
-                                            valorFacturado: [ { value: criterio.valorFacturado !== undefined ? criterio.valorFacturado : null, disabled: true }, Validators.required ]
-                                        }
-                                    )
-                                );
                             }
 
                             if ( this.esVerDetalle === false ) {
