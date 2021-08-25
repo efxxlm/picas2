@@ -76,12 +76,8 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
 
   textoJustificacion() {
     this.addressForm.get('justificacionTrasladoAportanteFuente').valueChanges.subscribe(value => {
-      console.log(value);
-      
       if (value == null) this.justificacionTrasladoAportanteFuenteEsTrue = true;
       else this.justificacionTrasladoAportanteFuenteEsTrue = false
-      console.log(this.justificacionTrasladoAportanteFuenteEsTrue);
-      
     });
   }
   
