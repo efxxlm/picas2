@@ -123,7 +123,7 @@ export class TerceroCausacionGogComponent implements OnInit {
         if ( this.solicitudPagoFaseFacturaDescuento.length > 0 ) {
             this.solicitudPagoFaseFacturaDescuento.forEach( descuento => this.valorNetoGiro -= descuento.valorDescuento );
         }
-        this.solicitudPago.ordenGiro.ordenGiroDetalle[0].ordenGiroDetalleTerceroCausacion[0].ordenGiroDetalleTerceroCausacionDescuento
+        //this.solicitudPago.ordenGiro.ordenGiroDetalle[0].ordenGiroDetalleTerceroCausacion[0].ordenGiroDetalleTerceroCausacionDescuento
         this.solicitudPago.ordenGiro.ordenGiroDetalle.forEach( ordengiro => {
             ordengiro.ordenGiroDetalleTerceroCausacion.forEach(tercero => {
                 tercero.ordenGiroDetalleTerceroCausacionDescuento.forEach(descuento => {
