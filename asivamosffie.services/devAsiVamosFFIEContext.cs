@@ -257,6 +257,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VDominio> VDominio { get; set; }
         public virtual DbSet<VDrpNovedadXfaseContratacionId> VDrpNovedadXfaseContratacionId { get; set; }
         public virtual DbSet<VDrpXcontratacionXproyectoXfaseXconceptoXusos> VDrpXcontratacionXproyectoXfaseXconceptoXusos { get; set; }
+        public virtual DbSet<VDrpXcontratoXaportante> VDrpXcontratoXaportante { get; set; }
         public virtual DbSet<VDrpXfaseContratacionId> VDrpXfaseContratacionId { get; set; }
         public virtual DbSet<VDrpXfaseXcontratacionIdXnovedad> VDrpXfaseXcontratacionIdXnovedad { get; set; }
         public virtual DbSet<VDrpXproyectoXusos> VDrpXproyectoXusos { get; set; }
@@ -327,6 +328,15 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -7661,6 +7671,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.OrdenGiroDetalleTerceroCausacionId).HasComment("Llave primaria de la tabla");
 
+                entity.Property(e => e.ConceptoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.ConceptoPagoCriterio)
                     .HasMaxLength(2)
                     .IsUnicode(false)
@@ -13679,8 +13693,6 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_Aportante_Fuente");
 
-                entity.Property(e => e.FuenteRecursos).HasMaxLength(250);
-
                 entity.Property(e => e.FuenteRecursosCodigo)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -13700,11 +13712,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Nombre).HasMaxLength(250);
 
-                entity.Property(e => e.TipoUso)
+                entity.Property(e => e.TipoUsoCodigo)
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<VAportantesXcriterio>(entity =>
@@ -14105,6 +14117,20 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
+            });
+
+            modelBuilder.Entity<VDrpXcontratoXaportante>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DrpXContratoXAportante");
+
+                entity.Property(e => e.NumeroDrp)
+                    .HasColumnName("NumeroDRP")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<VDrpXfaseContratacionId>(entity =>

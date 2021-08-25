@@ -53,8 +53,8 @@ namespace asivamosffie.services
                                                   v.TipoDescuentoCodigo,
                                                   v.Nombre
                                               })
-            }; 
-        } 
+            };
+        }
 
         public async Task<dynamic> GetValorConceptoByAportanteId(int pAportanteId, int pSolicitudPagoId, string pConceptoPago)
         {
@@ -212,7 +212,7 @@ namespace asivamosffie.services
                         .Include(d => d.SolicitudPago)
                     .AsNoTracking()
                     .FirstOrDefault();
-                 
+
                 foreach (var OrdenGiroDetalle in SolicitudPago.OrdenGiro.OrdenGiroDetalle)
                 {
                     if (OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Count > 0)
@@ -237,7 +237,7 @@ namespace asivamosffie.services
             try
             {
                 SolicitudPago.TablaDrpUso = GetDrpContrato(SolicitudPago.ContratoSon.ContratacionId);
-                
+
                 SolicitudPago.TablaDRP = GetDrpContrato(SolicitudPago);
                 SolicitudPago.TablaUsoFuenteAportante = GetTablaUsoFuenteAportante(SolicitudPago);
 
@@ -253,43 +253,43 @@ namespace asivamosffie.services
 
         private dynamic GetTablaInformacionFuenteRecursos(SolicitudPago solicitudPago)
         {
-
             List<dynamic> List = new List<dynamic>();
 
             List<VDescuentosOdgxFuenteFinanciacionXaportante> ListDescuentos =
-                _context.VDescuentosOdgxFuenteFinanciacionXaportante.Where(r => r.OrdenGiroId == solicitudPago.OrdenGiroId).ToList();
+                                                                            _context.VDescuentosOdgxFuenteFinanciacionXaportante
+                                                                            .Where(r => r.OrdenGiroId == solicitudPago.OrdenGiroId)
+                                                                            .ToList();
 
-            foreach (var Fuentes in ListDescuentos)
+            List<VAportanteFuente> vAportanteFuenteUsos = _context.VAportanteFuente
+                                                              .Where(r => r.ContratoId == solicitudPago.ContratoId)
+                                                              .ToList();
+
+            List<Dominio> FuenteRecursos = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).ToList();
+            foreach (var item in vAportanteFuenteUsos)
             {
-
-                decimal ValorDrpXaportante =
-                    _context.VAportanteFuenteUso
-                    .Where(r => r.FuenteRecursosCodigo == Fuentes.TipoRecursosCodigo
-                        && r.CofinanciacionAportanteId == Fuentes.AportanteId
-                        && r.ContratoId == Fuentes.ContratoId
-                        )
-                    .Sum(v => v.ValorUso);
+                decimal Descuento = ListDescuentos.Where(r => r.AportanteId == item.CofinanciacionAportanteId).Sum(r => r.ValorDescuento) ?? 0;
 
                 string NombreAportante =
-                    _budgetAvailabilityService
-                    .getNombreAportante(_context.CofinanciacionAportante.Find(Fuentes.AportanteId));
+                 _budgetAvailabilityService
+                 .getNombreAportante(_context.CofinanciacionAportante.Find(item.CofinanciacionAportanteId));
 
                 List<dynamic> List2 = new List<dynamic>();
                 List.Add(new
                 {
-                    FuenteRecursos = Fuentes.Nombre,
+                    FuenteRecursos = FuenteRecursos.Where(r => r.Codigo == item.FuenteRecursosCodigo).FirstOrDefault().Nombre,
                     NombreAportante = NombreAportante,
-                    SaldoActual = ValorDrpXaportante,
-                    SaldoAfectado = ValorDrpXaportante - Fuentes.ValorDescuento
+                    SaldoActual = item.Valor,
+                    SaldoAfectado = item.Valor
                 });
             }
+
             return List;
         }
 
         private dynamic GetTablaPorcentajeParticipacion(SolicitudPago solicitudPago)
         {
             List<VRpsPorContratacion> vRpsPorContratacions = _context.VRpsPorContratacion.Where(r => r.ContratacionId == solicitudPago.ContratoSon.ContratacionId).ToList();
-            List<VAportanteFuenteUso> ListVAportanteFuenteUso = _context.VAportanteFuenteUso.Where(f => f.ContratoId == solicitudPago.ContratoSon.ContratoId).ToList();
+            List<VDrpXcontratoXaportante> ListVDrpXcontratoXaportante = _context.VDrpXcontratoXaportante.Where(f => f.ContratoId == solicitudPago.ContratoSon.ContratoId).ToList();
 
             List<dynamic> List = new List<dynamic>();
             int Enum = 1;
@@ -299,26 +299,24 @@ namespace asivamosffie.services
 
                 decimal ValorDRP = drp.ValorSolicitud;
 
-                List<CofinanciacionAportante> ListCofinanciacion = new List<CofinanciacionAportante>();
-                foreach (var aportantes in ListVAportanteFuenteUso)
+                List<VDrpXcontratoXaportante> VDrpXcontratoXaportante = ListVDrpXcontratoXaportante.Where(r => r.NumeroDrp.Equals(drp.NumeroDrp)).ToList();
+
+
+                foreach (var aportantes in VDrpXcontratoXaportante)
                 {
                     CofinanciacionAportante cofinanciacionAportante = _context.CofinanciacionAportante.Find(aportantes.CofinanciacionAportanteId);
-                    if (ListCofinanciacion.Count() == 0 || !ListCofinanciacion.Any(r => r.CofinanciacionAportanteId == aportantes.CofinanciacionAportanteId))
+                     
+                    string NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(aportantes.CofinanciacionAportanteId));
+                    decimal ValorAportante = VDrpXcontratoXaportante.Where(r => r.CofinanciacionAportanteId == aportantes.CofinanciacionAportanteId).Sum(r => r.ValorUso) ?? 0;
+
+                    decimal TotalParticipacion = (ValorAportante / ValorDRP) * 100;
+                    string NomTotalParticipacion = String.Format("{0:n0}", (TotalParticipacion)) + "%";
+                    ListAportantes.Add(new
                     {
-                        ListCofinanciacion.Add(cofinanciacionAportante);
+                        NombreAportante,
+                        NomTotalParticipacion
+                    });
 
-
-                        string NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(aportantes.CofinanciacionAportanteId));
-                        decimal ValorAportante = ListVAportanteFuenteUso.Where(r => r.CofinanciacionAportanteId == aportantes.CofinanciacionAportanteId).Sum(r => r.ValorUso);
-
-                        decimal TotalParticipacion = (ValorAportante / ValorDRP) * 100;
-                        string NomTotalParticipacion = String.Format("{0:n0}", (TotalParticipacion)) + "%";
-                        ListAportantes.Add(new
-                        {
-                            NombreAportante,
-                            NomTotalParticipacion
-                        });
-                    }
                 }
                 List.Add(new
                 {
@@ -421,7 +419,7 @@ namespace asivamosffie.services
                                             && r.CofinanciacionAportanteId == Aportante.AportanteId
                                               )
                                         .Select(s => s.ValorUso)
-                                        .FirstOrDefault();
+                                        .FirstOrDefault() ?? 0;
 
                                     decimal Descuento = _context.VOrdenGiroPagosXusoAportante.Where(v => v.AportanteId == Aportante.AportanteId && v.TipoUsoCodigo == usos.TipoUsoCodigo).Sum(v => v.ValorDescuento) ?? 0;
 
@@ -475,7 +473,7 @@ namespace asivamosffie.services
             }
             return ListTablaDrp;
         }
-         
+
         public dynamic GetDrpContrato(int pContratacionId)
         {
             List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).OrderBy(r => r.FechaCreacion).ToList();
@@ -492,6 +490,7 @@ namespace asivamosffie.services
                     _context.VPagosSolicitudXcontratacionXproyectoXuso.Where(v => v.ContratacionId == pContratacionId)
                                                                       .ToList();
 
+            bool blDescontarSaldoDrp = _context.SolicitudPago.Where(r => r.Contrato.ContratacionId == pContratacionId).Include(r => r.OrdenGiro).FirstOrDefault()?.OrdenGiro?.RegistroCompletoAprobar ?? false;
 
             foreach (var Drp in ListDrp)
             {
@@ -544,15 +543,22 @@ namespace asivamosffie.services
                         foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                                && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
                         {
-                            if (ValorUsoResta > item.SaldoUso)
+                            if (blDescontarSaldoDrp)
                             {
-                                ValorUsoResta -= (decimal)item.SaldoUso;
-                                item.SaldoUso = ValorUsoResta;
-                                item.Pagado = true;
+                                if (ValorUsoResta > item.SaldoUso)
+                                {
+                                    ValorUsoResta -= (decimal)item.SaldoUso;
+                                    item.SaldoUso = ValorUsoResta;
+                                    item.Pagado = true;
+                                }
+                                else
+                                {
+                                    item.SaldoUso -= ValorUsoResta;
+                                }
                             }
                             else
                             {
-                                item.SaldoUso -= ValorUsoResta; 
+                                item.SaldoUso = Saldo;
                             }
                         }
 
@@ -815,7 +821,7 @@ namespace asivamosffie.services
 
 
             }
-  
+
 
             if (pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion.Count() == 0)
                 return false;

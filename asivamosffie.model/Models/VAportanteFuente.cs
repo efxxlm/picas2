@@ -10,6 +10,5 @@ namespace asivamosffie.model.Models
         public decimal? Valor { get; set; }
         public int? FuenteFinanciacionId { get; set; }
         public string FuenteRecursosCodigo { get; set; }
-        public string FuenteRecursos { get; set; }
     }
 }

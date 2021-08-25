@@ -1205,7 +1205,7 @@ namespace asivamosffie.services
                                     decimal ValorUso = ListVAportanteFuenteUso3
                                         .Where(r => r.Nombre == usos.NombreUso
                                         && r.CofinanciacionAportanteId == Aportante.AportanteId
-                                        ).Select(s => s.ValorUso).FirstOrDefault();
+                                        ).Select(s => s.ValorUso).FirstOrDefault() ?? 0;
 
                                     decimal Descuento = _context.VOrdenGiroPagosXusoAportante.Where(v => v.AportanteId == Aportante.AportanteId && v.TipoUsoCodigo == usos.TipoUsoCodigo).Sum(v => v.ValorDescuento) ?? 0;
 
