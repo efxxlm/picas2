@@ -53,6 +53,7 @@ export class PlantillaComponent implements OnInit {
     aportantes: this.fb.array([])
   });
   infoPlantilla: any;
+  tablaOrdenGiro = [];
 
   get aportantes() {
     return this.formOrigen.get('aportantes') as FormArray;
@@ -71,10 +72,39 @@ export class PlantillaComponent implements OnInit {
   ngOnInit(): void {}
 
   async getOrdenGiro() {
-    const solicitudPago = await this.ordenGiroSvc
+    let solicitudPago;
+    solicitudPago = await this.ordenGiroSvc
       .getSolicitudPagoBySolicitudPagoId(this.activatedRoute.snapshot.params.id)
       .toPromise();
     console.log(solicitudPago);
+    for (let i = 0; i < solicitudPago.contratoSon.contratacion.contratacionProyecto[0].contratacionProyectoAportante[0].cofinanciacionAportante.fuenteFinanciacion.length; i++) {
+      const element = solicitudPago.contratoSon.contratacion.contratacionProyecto[0].contratacionProyectoAportante[0].cofinanciacionAportante.fuenteFinanciacion[i];
+
+      let datosTabla = {
+        consecutivoOrigen: solicitudPago.ordenGiro.consecutivoOrigen,
+        nombreCuentaBanco: element.cuentaBancaria[0].nombreCuentaBanco,
+        numeroCuentaBanco: element.cuentaBancaria[0].numeroCuentaBanco,
+        bancoCodigo: element.cuentaBancaria[0].bancoCodigo,
+        tipoCuentaCodigo: element.cuentaBancaria[0].tipoCuentaCodigo,
+        codigoSifi: element.cuentaBancaria[0].codigoSifi,
+        numeroIdentificacion: solicitudPago.contratoSon.contratacion.contratista.numeroIdentificacion,
+        nombre: solicitudPago.contratoSon.contratacion.contratista.nombre,
+        numero: solicitudPago.solicitudPagoFactura[0].numero,
+        conceptoPagoCriterio: solicitudPago.contratoSon.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioConceptoPago[0].conceptoPagoCriterio,
+        valorFacturadoConcepto: solicitudPago.contratoSon.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioConceptoPago[0].valorFacturadoConcepto
+      }
+
+      this.tablaOrdenGiro.push(datosTabla)
+    }
+    for (let i = 0; i < solicitudPago.ordenGiro.ordenGiroTercero.length; i++) {
+      const element = solicitudPago.ordenGiro.ordenGiroTercero[i];
+      
+      this.tablaOrdenGiro[i].esCuentaAhorros = element.ordenGiroTerceroTransferenciaElectronica[0].esCuentaAhorros ? 'Ahorros' : 'Corriente';
+      this.tablaOrdenGiro[i].bancoCodigo = element.ordenGiroTerceroTransferenciaElectronica[0].bancoCodigo;
+      this.tablaOrdenGiro[i].numeroCuenta = element.ordenGiroTerceroTransferenciaElectronica[0].numeroCuenta;
+      this.tablaOrdenGiro[i].titularNumeroIdentificacion = element.ordenGiroTerceroTransferenciaElectronica[0].titularNumeroIdentificacion;
+      this.tablaOrdenGiro[i].titularCuenta = element.ordenGiroTerceroTransferenciaElectronica[0].titularCuenta;
+    }
     this.bancosArray = await this.commonSvc.listaBancos().toPromise();
     this.solicitudPago = solicitudPago;
 
@@ -87,8 +117,6 @@ export class PlantillaComponent implements OnInit {
   getInfoPlantilla(ordenGiroId) {
     this.ordenGiroSvc.getInfoPlantilla(ordenGiroId).subscribe(response => {
       this.infoPlantilla = response;
-      console.log(this.infoPlantilla);
-      console.log(this.infoPlantilla == [[]]);
     });
   }
 
@@ -343,31 +371,41 @@ export class PlantillaComponent implements OnInit {
   }
 
   getHtmlToPdf() {
-    const pdfHTML = document.getElementById('pdf').innerHTML;
 
-    const pdf = {
-      EsHorizontal: true,
-      MargenArriba: 2,
-      MargenAbajo: 2,
-      MargenDerecha: 2,
-      MargenIzquierda: 2,
-      Contenido: pdfHTML
-    };
+    window.print()
 
-    this.commonSvc.GetHtmlToPdf(pdf).subscribe(
-      response => {
-        const documento = `OrdernGiro.pdf`;
-        const text = documento,
-          blob = new Blob([response], { type: 'application/pdf' }),
-          anchor = document.createElement('a');
-        anchor.download = documento;
-        anchor.href = window.URL.createObjectURL(blob);
-        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
-        anchor.click();
-      },
-      e => {
-        console.log(e);
-      }
-    );
+    // const pdfHTML = document.getElementById('pdf').innerHTML;
+    // const w = window.open();
+    // w.document.write(pdfHTML);
+    // w.document.close();
+    // w.focus();
+    // w.print();
+    // w.close();
+    // return true;
+
+    // const pdf = {
+    //   EsHorizontal: true,
+    //   MargenArriba: 2,
+    //   MargenAbajo: 2,
+    //   MargenDerecha: 2,
+    //   MargenIzquierda: 2,
+    //   Contenido: pdfHTML
+    // };
+
+    // this.commonSvc.GetHtmlToPdf(pdf).subscribe(
+    //   response => {
+    //     const documento = `OrdernGiro.pdf`;
+    //     const text = documento,
+    //       blob = new Blob([response], { type: 'application/pdf' }),
+    //       anchor = document.createElement('a');
+    //     anchor.download = documento;
+    //     anchor.href = window.URL.createObjectURL(blob);
+    //     anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+    //     anchor.click();
+    //   },
+    //   e => {
+    //     console.log(e);
+    //   }
+    // );
   }
 }

@@ -1,8 +1,18 @@
-<div style="font-family: Arial; width: fit-content;" id="pdf" *ngIf="solicitudPago !== undefined">
+<div style="font-family: Arial; width: fit-content; font-size: 11px" id="pdf" *ngIf="solicitudPago !== undefined">
+  <div class="d-flex">
+    <p class="text-center" style="margin: auto">
+      FONDO DE FINANCIAMIENTO DE INFRAESTRUCTURA EDUCATIVA - FFIE MINISTERIO DE EDUCACIÓN
+    </p>
+    <img
+      src="assets/img/pdf/informe-esmanal/image001.png"
+      alt="Fondo de financiamiento de infraestructura educativa"
+      style="height: 50px; margin-right: 10px;"
+    />
+  </div>
   <h1 style="text-align: center; font-size: 20px; font-weight: 700">
     ALIANZA FIDUCIARIA S.A. FORMATO DE ORDEN DE GIRO - TRANSACCIONES ELECTRÓNICAS
   </h1>
-  <section style="text-align: center; height: 100px; font-size: 12px">
+  <section style="text-align: center; height: 100px">
     <div style="float: left">
       <table style="border-collapse: collapse">
         <tbody>
@@ -27,7 +37,7 @@
           </tr>
           <tr>
             <th style="background-color: #deeaf6; border: solid 1px #000; font-weight: 700">CONVENIO</th>
-            <td style="border: solid 1px #000" style="border: solid 1px #000; font-weight: 700;">
+            <td style="border: solid 1px #000" style="border: solid 1px #000; font-weight: 700">
               <!-- {{ solicitudPago.tablaPorcentajeParticipacion[0].listAportantes[0].nombreAportante }} -->
               FFIE
             </td>
@@ -40,7 +50,7 @@
         style="
           border: solid 1px #000;
           font-weight: 700;
-          
+
           height: 72px;
           padding: 0 10px;
           display: flex;
@@ -114,38 +124,110 @@
   <section style="text-align: center; margin-bottom: 32px">
     <table style="border-collapse: collapse">
       <tbody>
+        <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="5">ORIGEN</td>
+        <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="4">
+          TERCERO DE CAUSACIÓN
+        </td>
+        <td colspan="7"></td>
+        <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="5">TERCERO DE GIRO</td>
         <tr>
-          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="5">ORIGEN</td>
-          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="4">
-            TERCERO DE CAUSACIÓN
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">
+            CONSECUTIVO FFIE
           </td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">
+            NOMBRE DE LA CUENTA
+          </td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">N° CTA</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">BANCO</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">TIPO CTA</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CÓDIGO SIFI</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">
+            IDENTIFICACIÓN
+          </td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">NOMBRE</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">No. FACTURA</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">
+            DESCRIPCIÓN DEL PAGO
+          </td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONCEPTO</td>
+          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" rowspan="2">VALOR TOTAL</td>
+          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="3">DESCUENTOS</td>
+          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" rowspan="2">
+            VALOR NETO DEL GIRO
+          </td>
+          <td style="border: solid 1px #000" colspan="5">INFORMACIÓN DEL GIRO</td>
         </tr>
         <tr>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">CONSECUTIVO FFIE</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">NOMBRE DE LA CUENTA</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">N° CTA</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">BANCO</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">TIPO CTA</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">CÓDIGO SIFI</td>
+          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">RETE GARANTÍA</td>
+          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">
+            DESCUENTO POR RETRASO - ANS
+          </td>
+          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">OTROS DESCUENTOS</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">
+            TIPO DE CUENTA (CTE-AHO) / FONDO
+          </td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">ENTIDAD / FONDO</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">NUMERO DE CUENTA / FONDO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">IDENTIFICACIÓN</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">NOMBRE</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">No. FACTURA</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">DESCRIPCIÓN DEL PAGO</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">CONCEPTO</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">TITULAR</td>
         </tr>
-        <tr *ngFor="let data of solicitudPago.contratoSon.contratacion.contratacionProyecto[0].contratacionProyectoAportante[0].cofinanciacionAportante.fuenteFinanciacion">
-          <td style="border: solid 1px #000">{{ solicitudPago.ordenGiro.consecutivoOrigen }}</td>
-          <td style="border: solid 1px #000;">{{ data.cuentaBancaria[0].nombreCuentaBanco }} </td>
-          <td style="border: solid 1px #000;">{{ data.cuentaBancaria[0].numeroCuentaBanco }}</td>
-          <td style="border: solid 1px #000;">{{ getBanco(data.cuentaBancaria[0].bancoCodigo) }}</td>
-          <td style="border: solid 1px #000;">{{ data.cuentaBancaria[0].tipoCuentaCodigo }}</td>
-          <td style="border: solid 1px #000;">{{ data.cuentaBancaria[0].codigoSifi }}</td>
-          <td style="border: solid 1px #000;">{{ solicitudPago.contratoSon.contratacion.contratista.numeroIdentificacion }}</td>
-          <td style="border: solid 1px #000;">{{ solicitudPago.contratoSon.contratacion.contratista.nombre }}</td>
+        <tr *ngFor="let data of tablaOrdenGiro; let i = indexo">
+          <td style="border: solid 1px #000">{{ data.consecutivoOrigen }}</td>
+          <td style="border: solid 1px #000">{{ data.nombreCuentaBanco }}</td>
+          <td style="border: solid 1px #000">{{ data.numeroCuentaBanco }}</td>
+          <td style="border: solid 1px #000">{{ getBanco(data.bancoCodigo) }}</td>
+          <td style="border: solid 1px #000">{{ data.tipoCuentaCodigo }}</td>
+          <td style="border: solid 1px #000">{{ data.codigoSifi }}</td>
+          <td style="border: solid 1px #000">{{ data.numeroIdentificacion }}</td>
+          <td style="border: solid 1px #000">{{ data.nombre }}</td>
+          <td style="border: solid 1px #000">{{ data.numero }}</td>
+          <td style="border: solid 1px #000">{{ this.getConceptos(data.conceptoPagoCriterio) }}</td>
+          <td style="border: solid 1px #000">
+            {{ data.valorFacturadoConcepto | currency: '':'symbol-narrow':'.0-0' }}
+          </td>
+          <td style="border: solid 1px #000">
+            <span *ngIf="infoPlantilla && infoPlantilla[0] != false; else cero">{{
+              infoPlantilla[i][2]
+                ? infoPlantilla[i][2].valorDescuento
+                : 0 + infoPlantilla[i][1]
+                ? infoPlantilla[i][1].valorDescuento
+                : 0 + infoPlantilla[i][0]
+                ? infoPlantilla[i][0].valorDescuento
+                : (0 | currency: '':'symbol-narrow':'.0-0')
+            }}</span
+            ><ng-template #cero>$0</ng-template>
+          </td>
+          <td style="border: solid 1px #000">
+            <span *ngIf="infoPlantilla && infoPlantilla[0] != false; else cero">{{
+              infoPlantilla[i][0] ? infoPlantilla[i][0].valorDescuento : (0 | currency: '':'symbol-narrow':'.0-0')
+            }}</span
+            ><ng-template #cero>$0</ng-template>
+          </td>
+          <td style="border: solid 1px #000">
+            <span *ngIf="infoPlantilla && infoPlantilla[0] != false; else cero">{{
+              infoPlantilla[i][1] ? infoPlantilla[i][1].valorDescuento : (0 | currency: '':'symbol-narrow':'.0-0')
+            }}</span
+            ><ng-template #cero>$0</ng-template>
+          </td>
+          <td style="border: solid 1px #000">
+            <span *ngIf="infoPlantilla && infoPlantilla[0] != false; else cero">{{
+              infoPlantilla[i][2] ? infoPlantilla[i][2].valorDescuento : (0 | currency: '':'symbol-narrow':'.0-0')
+            }}</span
+            ><ng-template #cero>$0</ng-template>
+          </td>
+          <td style="border: solid 1px #000">
+            <span *ngIf="solicitudPago.ordenGiro.valorNetoGiro">{{
+              solicitudPago.ordenGiro.valorNetoGiro | currency: '':'symbol-narrow':'.0-0'
+            }}</span>
+          </td>
 
-          <td style="border: solid 1px #000">{{ solicitudPago.solicitudPagoFactura[0].numero }}</td>
-          <td style="border: solid 1px #000">{{ getConceptos(solicitudPago.contratoSon.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioConceptoPago[0].conceptoPagoCriterio) }}</td>
-          <td style="border: solid 1px #000">{{ solicitudPago.contratoSon.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioConceptoPago[0].valorFacturadoConcepto | currency:'':'symbol-narrow':'.0-0' }}</td>
+          <!-- <tr *ngFor="let tercero of solicitudPago.ordenGiro.ordenGiroTercero"> -->
+          <td style="border: solid 1px #000">{{ data.esCuentaAhorros }}</td>
+          <td style="border: solid 1px #000">{{ getBanco(data.bancoCodigo) }}</td>
+          <td style="border: solid 1px #000">{{ data.numeroCuenta }}</td>
+          <td style="border: solid 1px #000">{{ data.titularNumeroIdentificacion }}</td>
+          <td style="border: solid 1px #000">{{ data.titularCuenta }}</td>
+          <!-- </tr> -->
         </tr>
         <!-- <tr>
           <td style="border: solid 1px #000; height: 21px"></td>
@@ -189,122 +271,51 @@
         </tr> -->
         <tr>
           <td style="border: solid 1px #000" colspan="10">FIRMAS AUTORIZADAS</td>
-          <td style="border: solid 1px #000">{{ solicitudPago.contratoSon.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioConceptoPago[0].valorFacturadoConcepto | currency:'':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000">
+            {{
+              solicitudPago.contratoSon.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0]
+                .solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioConceptoPago[0].valorFacturadoConcepto
+                | currency: '':'symbol-narrow':'.0-0'
+            }}
+          </td>
+          <td style="border: solid 1px #000">
+            <span *ngIf="infoPlantilla && infoPlantilla[0] != false; else cero">{{
+              infoPlantilla[0][2]
+                ? infoPlantilla[0][2].valorDescuento
+                : 0 + infoPlantilla[0][1]
+                ? infoPlantilla[0][1].valorDescuento
+                : 0 + infoPlantilla[0][0]
+                ? infoPlantilla[0][0].valorDescuento
+                : (0 | currency: '':'symbol-narrow':'.0-0')
+            }}</span
+            ><ng-template #cero>$0</ng-template>
+          </td>
+          <td style="border: solid 1px #000">
+            <span *ngIf="infoPlantilla && infoPlantilla[0] != false; else cero">{{
+              infoPlantilla[0][0] ? infoPlantilla[0][0].valorDescuento : (0 | currency: '':'symbol-narrow':'.0-0')
+            }}</span
+            ><ng-template #cero>$0</ng-template>
+          </td>
+          <td style="border: solid 1px #000">
+            <span *ngIf="infoPlantilla && infoPlantilla[0] != false; else cero">{{
+              infoPlantilla[0][1] ? infoPlantilla[0][1].valorDescuento : (0 | currency: '':'symbol-narrow':'.0-0')
+            }}</span
+            ><ng-template #cero>$0</ng-template>
+          </td>
+          <td style="border: solid 1px #000">
+            <span *ngIf="infoPlantilla && infoPlantilla[0] != false; else cero">{{
+              infoPlantilla[0][2] ? infoPlantilla[0][2].valorDescuento : (0 | currency: '':'symbol-narrow':'.0-0')
+            }}</span
+            ><ng-template #cero>$0</ng-template>
+          </td>
+          <td style="border: solid 1px #000">
+            <span>{{ solicitudPago.ordenGiro.valorNetoGiro | currency: '':'symbol-narrow':'.0-0' }}</span>
+          </td>
         </tr>
       </tbody>
     </table>
   </section>
-  <section style="text-align: center; margin-bottom: 32px">
-    <table style="border-collapse: collapse">
-      <tbody>
-        <tr>
-          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" rowspan="2">VALOR TOTAL</td>
-          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="3">DESCUENTOS</td>
-          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" rowspan="2">
-            VALOR NETO DEL GIRO
-          </td>
-        </tr>
-        <tr>
-          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">
-            RETE GARANTÍA (727959501047)
-          </td>
-          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">
-            DESCUENTO POR RETRASO -ANS (cuenta 718 crédito)
-          </td>
-          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">OTROS DESCUENTOS</td>
-        </tr>
-          <tr *ngFor="let data of infoPlantilla">
-            <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ data[2] ? data[2].valorDescuento : 0 + data[1] ? data[1].valorDescuento : 0 + data[0] ? data[0].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
-            <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ data[0] ? data[0].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
-            <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ data[1] ? data[1].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
-            <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ data[2] ? data[2].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
-            <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ solicitudPago.ordenGiro.valorNetoGiro | currency:'':'symbol-narrow':'.0-0' }}</td>
-          </tr>
-        <tr>
-          <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ infoPlantilla[0][2] ? infoPlantilla[0][2].valorDescuento : 0 + infoPlantilla[0][1] ? infoPlantilla[0][1].valorDescuento : 0 + infoPlantilla[0][0] ? infoPlantilla[0][0].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
-          <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ infoPlantilla[0][0] ? infoPlantilla[0][0].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
-          <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ infoPlantilla[0][1] ? infoPlantilla[0][1].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
-          <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ infoPlantilla[0][2] ? infoPlantilla[0][2].valorDescuento : 0 | currency:'':'symbol-narrow':'.0-0' }}</td>
-          <td style="border: solid 1px #000" *ngIf="infoPlantilla && infoPlantilla[0] != false">{{ solicitudPago.ordenGiro.valorNetoGiro | currency:'':'symbol-narrow':'.0-0' }}</td>
-        </tr>
-        <!-- <tr>
-          <td style="border: solid 1px #000">
-            {{
-              this.terceroGiroForm.get('medioPagoGiroContrato').value === listaMediosPagoCodigo.transferenciaElectronica
-                ? terceroGiroForm.get('transferenciaElectronica').get('esCuentaAhorros').value === true
-                  ? 'Ahorros'
-                  : 'Corriente'
-                : ''
-            }}
-          </td>
-          <td style="border: solid 1px #000">
-            {{
-              this.terceroGiroForm.get('medioPagoGiroContrato').value === listaMediosPagoCodigo.transferenciaElectronica
-                ? firstLetterUpperCase(
-                    getBanco(terceroGiroForm.get('transferenciaElectronica').get('bancoCodigo').value)
-                  )
-                : ''
-            }}
-          </td>
-          <td style="border: solid 1px #000">
-            {{
-              this.terceroGiroForm.get('medioPagoGiroContrato').value === listaMediosPagoCodigo.transferenciaElectronica
-                ? terceroGiroForm.get('transferenciaElectronica').get('numeroCuenta').value
-                : ''
-            }}
-          </td>
-          <td style="border: solid 1px #000">
-            {{
-              this.terceroGiroForm.get('medioPagoGiroContrato').value === listaMediosPagoCodigo.transferenciaElectronica
-                ? terceroGiroForm.get('transferenciaElectronica').get('titularNumeroIdentificacion').value
-                : terceroGiroForm.get('chequeGerencia').get('numeroIdentificacionBeneficiario').value
-            }}
-          </td>
-          <td style="border: solid 1px #000">
-            {{
-              this.terceroGiroForm.get('medioPagoGiroContrato').value === listaMediosPagoCodigo.transferenciaElectronica
-                ? terceroGiroForm.get('transferenciaElectronica').get('titularCuenta').value
-                : terceroGiroForm.get('chequeGerencia').get('nombreBeneficiario').value
-            }}
-          </td>
-        </tr> -->
-        <!--
-          <tr>
-            <td style="border: solid 1px #000; height: 21px;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;">  </td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-            <td style="border: solid 1px #000;"></td>
-          </tr>
-          -->
-        <!-- <tr>
-          <td style="border: solid 1px #000">$ -</td>
-          <td style="border: solid 1px #000">$ -</td>
-          <td style="border: solid 1px #000">$ -</td>
-          <td style="border: solid 1px #000">$ -</td>
-          <td style="border: solid 1px #000">$ -</td>
-          <td colspan="5"></td>
-        </tr> -->
-      </tbody>
-    </table>
-  </section>
-  <section style="text-align: center; margin-bottom: 32px">
+  <!-- <section style="text-align: center; margin-bottom: 32px">
     <table style="border-collapse: collapse">
       <tbody>
         <tr>
@@ -332,9 +343,9 @@
         </tr>
       </tbody>
     </table>
-  </section>
+  </section> -->
   <div style="display: flex; justify-content: space-between; margin-bottom: 32px">
-    <div style="display: flex; justify-content: space-between; width: 3062px">
+    <div style="display: flex; justify-content: space-between; width: 1062px">
       <section>
         <table style="border-collapse: collapse">
           <tbody>
@@ -349,60 +360,6 @@
               <td style="border-top: solid 1px #000; border-left: solid 1px #000">APROBÓ</td>
               <td style="border-top: solid 1px #000"></td>
               <td style="border-top: solid 1px #000; border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000"></td>
-              <td style="border-right: solid 1px #000"></td>
-              <td style="border-left: solid 1px #000"></td>
-              <td style="border-right: solid 1px #000"></td>
-              <td style="border-left: solid 1px #000"></td>
-              <td></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000"></td>
-              <td style="border-right: solid 1px #000"></td>
-              <td style="border-left: solid 1px #000"></td>
-              <td style="border-right: solid 1px #000"></td>
-              <td style="border-left: solid 1px #000"></td>
-              <td></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style="border-right: solid 1px #000"></td>
-              <td style="border-left: solid 1px #000"></td>
-              <td style="border-right: solid 1px #000"></td>
-              <td style="border-left: solid 1px #000"></td>
-              <td></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style="border-right: solid 1px #000"></td>
-              <td style="border-left: solid 1px #000"></td>
-              <td style="border-right: solid 1px #000"></td>
-              <td style="border-left: solid 1px #000"></td>
-              <td></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style="border-right: solid 1px #000"></td>
-              <td style="border-left: solid 1px #000"></td>
-              <td style="border-right: solid 1px #000"></td>
-              <td style="border-left: solid 1px #000"></td>
-              <td></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style="border-right: solid 1px #000"></td>
-              <td style="border-left: solid 1px #000"></td>
-              <td style="border-right: solid 1px #000"></td>
-              <td style="border-left: solid 1px #000"></td>
-              <td></td>
-              <td style="border-right: solid 1px #000"></td>
             </tr>
             <tr>
               <td style="border-left: solid 1px #000; height: 21px"></td>
@@ -448,61 +405,6 @@
               <td style="border-right: solid 1px #000"></td>
             </tr>
             <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; border-right: solid 1px #000; text-align: center" colspan="3">
-                <!-- aaaaaaaaaaaaaaa -->
-              </td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
               <td style="border-left: solid 1px #000">CARGO:</td>
               <td style="">CARGO</td>
               <td style="border-right: solid 1px #000"></td>
@@ -519,62 +421,9 @@
         <table style="border-collapse: collapse">
           <tbody>
             <tr>
-              <td style="border: solid 1px #000; text-align: center;margin-right: 40em;" colspan="3">APROBADO - FIRMA AUTORIZADA 1</td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; border-right: solid 1px #000; text-align: center" colspan="3">
-                <!-- aaaaaaaaaaaaaaa -->
+              <td style="border: solid 1px #000; text-align: center; margin-right: 40em" colspan="3">
+                APROBADO - FIRMA AUTORIZADA 1
               </td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
-            </tr>
-            <tr>
-              <td style="border-left: solid 1px #000; height: 21px"></td>
-              <td style=""></td>
-              <td style="border-right: solid 1px #000"></td>
             </tr>
             <tr>
               <td style="border-left: solid 1px #000; height: 21px"></td>
@@ -627,61 +476,6 @@
             <td style="border-right: solid 1px #000"></td>
           </tr>
           <tr>
-            <td style="border-left: solid 1px #000; height: 21px"></td>
-            <td style=""></td>
-            <td style="border-right: solid 1px #000"></td>
-          </tr>
-          <tr>
-            <td style="border-left: solid 1px #000; height: 21px"></td>
-            <td style=""></td>
-            <td style="border-right: solid 1px #000"></td>
-          </tr>
-          <tr>
-            <td style="border-left: solid 1px #000; height: 21px"></td>
-            <td style=""></td>
-            <td style="border-right: solid 1px #000"></td>
-          </tr>
-          <tr>
-            <td style="border-left: solid 1px #000; border-right: solid 1px #000; text-align: center" colspan="3">
-              <!-- aaaaaaaaaaaaaaa -->
-            </td>
-          </tr>
-          <tr>
-            <td style="border-left: solid 1px #000; height: 21px"></td>
-            <td style=""></td>
-            <td style="border-right: solid 1px #000"></td>
-          </tr>
-          <tr>
-            <td style="border-left: solid 1px #000; height: 21px"></td>
-            <td style=""></td>
-            <td style="border-right: solid 1px #000"></td>
-          </tr>
-          <tr>
-            <td style="border-left: solid 1px #000; height: 21px"></td>
-            <td style=""></td>
-            <td style="border-right: solid 1px #000"></td>
-          </tr>
-          <tr>
-            <td style="border-left: solid 1px #000; height: 21px"></td>
-            <td style=""></td>
-            <td style="border-right: solid 1px #000"></td>
-          </tr>
-          <tr>
-            <td style="border-left: solid 1px #000; height: 21px"></td>
-            <td style=""></td>
-            <td style="border-right: solid 1px #000"></td>
-          </tr>
-          <tr>
-            <td style="border-left: solid 1px #000; height: 21px"></td>
-            <td style=""></td>
-            <td style="border-right: solid 1px #000"></td>
-          </tr>
-          <tr>
-            <td style="border-left: solid 1px #000; height: 21px"></td>
-            <td style=""></td>
-            <td style="border-right: solid 1px #000"></td>
-          </tr>
-          <tr>
             <td style="border-left: solid 1px #000">CARGO:</td>
             <td style="">CARGO</td>
             <td style="border-right: solid 1px #000"></td>
@@ -716,7 +510,7 @@
           </tr>
         </table>
 
-        <table style="border-collapse: collapse; margin: 0 200px">
+        <table style="border-collapse: collapse; margin: 0 20px">
           <tr>
             <td>Elaborado Por</td>
             <td style="border-bottom: solid 1px #000"></td>
@@ -743,7 +537,7 @@
           </tr>
         </table>
 
-        <table style="border-collapse: collapse; margin-right: 100px">
+        <table style="border-collapse: collapse; margin-right: 20px">
           <tr>
             <td style="font-weight: 700; border-top: solid 1px #000; border-bottom: solid 1px #000">OBSERVACIONES:</td>
           </tr>
@@ -770,18 +564,18 @@
       </div>
     </section>
 
-    <section style="font-weight: 700; font-size: 18px; padding-right: 32px">
+    <section style="font-weight: 700; font-size: 12px; padding-right: 32px; margin-left: 20px; width: 384px">
       <p style="text-align: center; padding-bottom: 0">FONDO DE FINANCIAMIENTO DE LA INFRAESTRUCTURA</p>
       <p style="text-align: center">EDUCATIVA</p>
       <p>RADICADO EE: __________________________________________</p>
       <p>HORA: _________________________________________________</p>
       <p>FECHA: ________________________________________________</p>
-      <p>FOLIOS: _______________________________________________</p>
+      <p>FOLIOS: ________________________________________________</p>
       <p>ANEXOS: _______________________________________________</p>
     </section>
   </div>
 </div>
 
-<div class="text-center mt-2em" style="padding-bottom: 2em">
-  <button mat-raised-button color="accent" (click)="getHtmlToPdf()">downloadPDF</button>
+<div class="text-center mt-2em print-d-none" style="padding-bottom: 2em">
+  <button mat-raised-button color="accent" (click)="getHtmlToPdf()">Guardar</button>
 </div>

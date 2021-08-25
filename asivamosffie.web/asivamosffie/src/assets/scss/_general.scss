@@ -437,3 +437,12 @@ input[type='number']::-webkit-outer-spin-button {
 iframe {
   border: none;
 }
+
+@media print {
+  nav,
+  header,
+  footer,
+  .print-d-none {
+    display: none !important;
+  }
+}
