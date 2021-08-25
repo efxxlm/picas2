@@ -40,6 +40,7 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
   };
   estaEditando = false;
   noPermitirGuardarOtraVez: boolean;
+  justificacionTrasladoAportanteFuenteEsTrue = true;
   constructor(private fb: FormBuilder, public dialog: MatDialog,private financialBalanceService: FinancialBalanceService,
     ) { }
   validateNumberKeypress(event: KeyboardEvent) {
@@ -69,6 +70,19 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+
+    this.textoJustificacion()
+  }
+
+  textoJustificacion() {
+    this.addressForm.get('justificacionTrasladoAportanteFuente').valueChanges.subscribe(value => {
+      console.log(value);
+      
+      if (value == null) this.justificacionTrasladoAportanteFuenteEsTrue = true;
+      else this.justificacionTrasladoAportanteFuenteEsTrue = false
+      console.log(this.justificacionTrasladoAportanteFuenteEsTrue);
+      
+    });
   }
   
   formtieneOrdenGiro() {

@@ -85,9 +85,9 @@
     <div class="text-center mb-2em mt-2em" *ngIf="!noPermitirGuardarOtraVez">
         <button mat-button color="warn" class="btn-guardar" type="submit"
           [disabled]="
-            addressForm.get('requiereTransladoRecursos').value === true && 
-            addressForm.get('justificacionTrasladoAportanteFuente').invalid ||
-            !addressForm.get('requiereTransladoRecursos').value === false
+            addressForm.get('requiereTransladoRecursos').value === null ||
+            addressForm.get('requiereTransladoRecursos').value === true &&
+            justificacionTrasladoAportanteFuenteEsTrue
           "
           >
             <img src="assets/img/icon/guardar.svg" alt="Guardar">
