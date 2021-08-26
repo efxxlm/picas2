@@ -187,7 +187,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                         fuente.aportante.forEach( aportante => {
                                                             dataAportantes.listaNombreAportante.find( nombreAportante => {
                                                                 if ( nombreAportante.cofinanciacionAportanteId === aportante.aportanteId ) {
-                                                                    nombreAportante.valorActual = Number( aportante.valorUso[ 0 ].valorActual.split( '.' ).join( '' ) )
+                                                                    nombreAportante.valorActual = Number( aportante.valor.split( '.' ).join( '' ) )
                                                                 }
                                                             } )
                                                         } )
@@ -605,9 +605,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                     totalValueAportante += aportanteControl.get( 'valorDescuento' ).value;
                 }
             } )
-
             if ( this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'nombreAportante' ).value !== null ) {
-                if ( value > this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'nombreAportante' ).value.valorActual ) {
+                if ( value > this.getConceptos( index ).controls[ jIndex ].get( 'valorTotalUso' ).value ) {
                     this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
                     this.openDialog( '', `<b>El valor facturado por el concepto para el aportante no puede ser mayor al valor asignado por DRP al aportante.</b>` )
                     return
