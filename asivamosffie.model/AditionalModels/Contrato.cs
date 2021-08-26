@@ -91,8 +91,7 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public dynamic TablaDRPODG { get; set; }
-
-
+         
         [NotMapped]
         public DateTime? FechaEstimadaFinalizacion { get; set; }
 
