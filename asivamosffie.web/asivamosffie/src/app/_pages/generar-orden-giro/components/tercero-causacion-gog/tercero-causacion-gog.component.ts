@@ -1029,20 +1029,18 @@ export class TerceroCausacionGogComponent implements OnInit {
                         valorFacturadoConcepto: conceptoControl.get( 'valorFacturadoConcepto' ).value,
                     }
                     this.getAportantes( indexCriterio, indexConcepto ).controls.forEach( aportanteControl => {
-                      if ( aportanteControl.dirty === true ) {
-                          if(aportanteControl.get( 'nombreAportante' ).value != null){
-                           ordenGiroDetalleTerceroCausacionAportante.push(
-                                {
-                                    ordenGiroDetalleTerceroCausacionId: conceptoControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
-                                    ordenGiroDetalleTerceroCausacionAportanteId: aportanteControl.get( 'ordenGiroDetalleTerceroCausacionAportanteId' ).value,
-                                    fuenteRecursoCodigo: aportanteControl.get( 'fuenteRecursos' ).value?.codigo,
-                                    fuenteFinanciacionId: aportanteControl.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId,
-                                    aportanteId: aportanteControl.get( 'nombreAportante' ).value?.cofinanciacionAportanteId,
-                                    conceptoPagoCodigo: conceptoControl.get( 'conceptoPagoCriterio' ).value,
-                                    valorDescuento: aportanteControl.get( 'valorDescuento' ).value <= aportanteControl.get( 'valorDescuentoTecnica' ).value ? aportanteControl.get( 'valorDescuento' ).value : aportanteControl.get( 'valorDescuento' ).value - aportanteControl.get( 'valorDescuentoTecnica' ).value
-                                }
-                            )
-                          }
+                        if(aportanteControl.get( 'nombreAportante' ).value != null){
+                          ordenGiroDetalleTerceroCausacionAportante.push(
+                              {
+                                  ordenGiroDetalleTerceroCausacionId: conceptoControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
+                                  ordenGiroDetalleTerceroCausacionAportanteId: aportanteControl.get( 'ordenGiroDetalleTerceroCausacionAportanteId' ).value,
+                                  fuenteRecursoCodigo: aportanteControl.get( 'fuenteRecursos' ).value?.codigo,
+                                  fuenteFinanciacionId: aportanteControl.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId,
+                                  aportanteId: aportanteControl.get( 'nombreAportante' ).value?.cofinanciacionAportanteId,
+                                  conceptoPagoCodigo: conceptoControl.get( 'conceptoPagoCriterio' ).value,
+                                  valorDescuento: aportanteControl.get( 'valorDescuento' ).value <= aportanteControl.get( 'valorDescuentoTecnica' ).value ? aportanteControl.get( 'valorDescuento' ).value : aportanteControl.get( 'valorDescuento' ).value - aportanteControl.get( 'valorDescuentoTecnica' ).value
+                              }
+                          )
                         }
                     } )
 
