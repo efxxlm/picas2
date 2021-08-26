@@ -1,3 +1,9 @@
+<div class="container text-right print-d-none">
+  <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+    <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+  </a>
+</div>
+
 <div style="font-family: Arial; width: fit-content; font-size: 11px" id="pdf" *ngIf="solicitudPago !== undefined">
   <div class="d-flex">
     <p class="text-center" style="margin: auto">
@@ -93,7 +99,7 @@
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="2">PROYECTO</td>
           <td style="border: solid 1px #000" colspan="2">
             <div *ngFor="let proyecto of solicitudPago.contratoSon.tablaDRPODG[0].listDyProyectos">
-              <p style="margin-bottom: 0;">{{ proyecto.nombre }}</p>
+              <p style="margin-bottom: 0">{{ proyecto.nombre }}</p>
             </div>
           </td>
           <td style="border: solid 1px #000" colspan="3" rowspan="2"></td>
@@ -101,8 +107,8 @@
         <tr>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="2">LLAVE MEN</td>
           <td style="border: solid 1px #000" colspan="2">
-            <div *ngFor="let contratacionProyecto of solicitudPago.contratoSon.contratacion.contratacionProyecto">
-              <p style="margin-bottom: 0;">{{ contratacionProyecto.proyecto.llaveMen }}</p>
+            <div *ngFor="let proyecto of solicitudPago.contratoSon.tablaDRPODG[0].listDyProyectos">
+              <p style="margin-bottom: 0">{{ proyecto.llaveMen }}</p>
             </div>
           </td>
         </tr>
