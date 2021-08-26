@@ -307,7 +307,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                               )
                           }
                             for ( const aportante of terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.filter(r => r.conceptoPagoCodigo == concepto.codigo)) {
-                                const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
+                              const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
 
                                 if ( nombreAportante !== undefined ) {
                                     const tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
@@ -337,6 +337,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                     //     dataAportantes.listaTipoAportante.splice( tipoAportanteIndex, 1 )
                                     // }
                                 }else{
+
                                   listaAportantes.push(
                                     this.fb.group(
                                         {
@@ -552,7 +553,7 @@ export class TerceroCausacionGogComponent implements OnInit {
         const descuentoIndex = listaDescuento.findIndex( descuento => descuento.codigo === codigo );
 
         if ( descuentoIndex !== -1 ) {
-            listaDescuento.splice( descuentoIndex, 1 );
+            //listaDescuento.splice( descuentoIndex, 1 );
             this.getConceptos( index ).controls[ jIndex ].get( 'tipoDescuentoArray' ).setValue( listaDescuento );
         }
     }
@@ -683,10 +684,6 @@ export class TerceroCausacionGogComponent implements OnInit {
         const aportanteIndex = listaAportantes.findIndex( aportante => aportante.codigo === aportanteSeleccionado.codigo );
         const listaNombreAportantes: any[] = this.getConceptos( index ).controls[ jIndex ].get( 'nombreDeAportantes' ).value;
         const filterAportantesDominioId = listaNombreAportantes.filter( aportante => aportante.tipoAportanteId === aportanteSeleccionado.dominioId );
-
-        if ( aportanteIndex !== -1 ) {
-            listaAportantes.splice( aportanteIndex, 1 )
-        }
 
         if ( filterAportantesDominioId.length > 0 ) {
             this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'listaNombreAportantes' ).setValue( filterAportantesDominioId );
