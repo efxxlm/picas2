@@ -439,7 +439,9 @@ export class TerceroCausacionGogComponent implements OnInit {
                         // Set formulario criterios
                         // Get observaciones
                         if(terceroCausacionxCriterio?.length > 0){
+
                           const totalTerceroCriterio = terceroCausacionxCriterio?.length;
+
                           terceroCausacionxCriterio.forEach(element => {
                             if(element.registroCompleto === true){
                               totalCompleto++;
@@ -1024,6 +1026,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                         ordenGiroDetalleTerceroCausacionDescuento: [],
                         ordenGiroDetalleTerceroCausacionAportante: [],
                         conceptoCodigo: conceptoControl.get( 'conceptoPagoCriterio' ).value,
+                        valorFacturadoConcepto: conceptoControl.get( 'valorFacturadoConcepto' ).value,
                     }
                     this.getAportantes( indexCriterio, indexConcepto ).controls.forEach( aportanteControl => {
                       if ( aportanteControl.dirty === true ) {
