@@ -424,7 +424,7 @@ namespace asivamosffie.services
                                     decimal Descuento = _context.VOrdenGiroPagosXusoAportante.Where(v => v.AportanteId == Aportante.AportanteId && v.TipoUsoCodigo == usos.TipoUsoCodigo).Sum(v => v.ValorDescuento) ?? 0;
 
                                     Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
-
+                                    Aportante.Valor = String.Format("{0:n0}", (ValorUso - Descuento));
                                     if (Aportante.ValorUso == null)
                                         Aportante.ValorUso = new List<ValorUso>();
 

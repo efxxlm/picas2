@@ -30,6 +30,7 @@ namespace asivamosffie.model.Models
         public int? FuenteFinanciacionId { get; set; }
         public int? AportanteId { get; set; }
         public string NombreAportante { get; set; }
+        public string Valor { get; set; }
         public List<ValorUso> ValorUso { get; set; }
         public List<SaldoActualUso> SaldoActualUso { get; set; }
     }
