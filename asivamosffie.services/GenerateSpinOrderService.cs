@@ -425,6 +425,7 @@ namespace asivamosffie.services
 
                                     Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
                                     Aportante.Valor = String.Format("{0:n0}", (ValorUso - Descuento));
+
                                     if (Aportante.ValorUso == null)
                                         Aportante.ValorUso = new List<ValorUso>();
 
