@@ -149,6 +149,7 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
         this.estaEditando = true;
         this.addressForm.markAllAsTouched();
         const pSolicitudPago = {
+            esFactura: this.contrato.solicitudPagoOnly.esFactura,
             solicitudPagoId: this.solicitudPagoId,
             tipoSolicitudCodigo: this.addressForm.get( 'tipoSolicitud' ).value.codigo,
             contratoId: this.contrato.contratoId

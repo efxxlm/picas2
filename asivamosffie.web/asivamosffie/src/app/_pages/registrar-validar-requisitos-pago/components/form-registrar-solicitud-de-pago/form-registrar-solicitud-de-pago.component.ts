@@ -46,7 +46,6 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     tieneConstruccion = false;
     manejoAnticipoRequiere: boolean;
     dataSource = new MatTableDataSource();
-    solicitudPago: any;
     displayedColumns: string[] = [
       'faseContrato',
       'valorFacturado',
@@ -99,7 +98,6 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     { }
 
     ngOnInit(): void {
-        this.solicitudPago = this.contrato.solicitudPagoOnly
         this.getRegistroFase();
     }
 
@@ -256,7 +254,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
         this.addressForm.markAllAsTouched();
 
         const pSolicitudPago = {
-            esFactura: this.solicitudPago.esFactura,
+            esFactura: this.contrato.solicitudPagoOnly.esFactura,
             solicitudPagoId: this.solicitudPagoId,
             contratoId: this.contrato.contratoId,
             solicitudPagoRegistrarSolicitudPago: [
