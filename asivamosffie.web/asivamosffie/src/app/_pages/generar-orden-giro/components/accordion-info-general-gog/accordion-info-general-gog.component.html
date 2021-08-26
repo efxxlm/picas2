@@ -87,7 +87,14 @@
                     Tercero de giro
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-tercero-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="esVerDetalle" (tieneObservacion)="semaforoInfoGeneral = 'en-proceso'; tieneObservacion.emit( true )"></app-form-tercero-giro-gog>
+            <app-form-tercero-giro-gog
+                [solicitudPago]="solicitudPago"
+                [esVerDetalle]="esVerDetalle"
+                (tieneObservacion)="semaforoInfoGeneral = 'en-proceso'; tieneObservacion.emit( true )"
+                (observacionesVerificar)="obseVerificar($event)"
+                (observacionesAprobar)="obsAprobar($event)"
+                (observacionesTramitar)="obsTramitar($event)"
+            ></app-form-tercero-giro-gog>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

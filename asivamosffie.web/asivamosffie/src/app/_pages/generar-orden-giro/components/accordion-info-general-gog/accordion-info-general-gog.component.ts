@@ -15,6 +15,9 @@ export class AccordionInfoGeneralGogComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Output() tieneObservacion = new EventEmitter<boolean>();
+    @Output() observacionesVerificar = new EventEmitter<any>();
+    @Output() observacionesAprobar = new EventEmitter<any>();
+    @Output() observacionesTramitar = new EventEmitter<any>();
     listaTipoSolicitud: TipoSolicitud = TipoSolicitudes;
     listaTipoSolicitudContrato: Dominio[] = [];
     valorTotalFactura = 0;
@@ -111,4 +114,13 @@ export class AccordionInfoGeneralGogComponent implements OnInit {
       this.dataSource.filter = filterValue.trim().toLowerCase();
     };
 
+    obseVerificar(event) {
+        this.observacionesVerificar.emit(event)
+    }
+    obsAprobar(event) {
+        this.observacionesAprobar.emit(event)
+    }
+    obsTramitar(event) {
+        this.observacionesTramitar.emit(event)
+    }
 }

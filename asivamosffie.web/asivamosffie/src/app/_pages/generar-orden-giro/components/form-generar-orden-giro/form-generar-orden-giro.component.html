@@ -51,9 +51,14 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-accordion-info-general-gog [solicitudPago]="solicitudPago"
-                                            [esVerDetalle]="esVerDetalle"
-                                            (tieneObservacion)="semaforoInfoGeneral = 'en-proceso'">
+            <app-accordion-info-general-gog
+                [solicitudPago]="solicitudPago"
+                [esVerDetalle]="esVerDetalle"
+                (tieneObservacion)="semaforoInfoGeneral = 'en-proceso'"
+                (observacionesVerificar)="observacionesVerificar($event)"
+                (observacionesAprobar)="observacionesAprobar($event)"
+                (observacionesTramitar)="observacionesTramitar($event)"
+            >
             </app-accordion-info-general-gog>
         </mat-expansion-panel>
 
@@ -113,4 +118,49 @@
         </mat-expansion-panel>
         -->
     </mat-accordion>
+
+    <div *ngIf="obsVerificar !== undefined || obsAprobar !== undefined || obsTramitar !== undefined" class="mt-3em">
+        <mat-card class="shipping-card border" align="left" *ngIf="obsVerificar !== undefined">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text card-title-detalle">
+                    Verificación de la coordinación financiera
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p style="margin-left: 2em;"><b> {{ obsVerificar.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                <p style="margin-left: 2em;" *ngIf="obsVerificar.tieneObservacion === true"><b>¿Desde la coordinación financiera tiene observaciones al Tercero de giro?</b>: Si</p>
+                <p style="margin-left: 2em;" *ngIf="obsVerificar.tieneObservacion === false"><b>¿Desde la coordinación financiera tiene observaciones al Tercero de giro?</b>: No</p>
+                <section [innerHTML]="obsVerificar.observacion" style="margin-left: 2em;" *ngIf="obsVerificar.tieneObservacion === true"></section>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="shipping-card border" align="left" *ngIf="obsAprobar !== undefined">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text card-title-detalle">
+                    Aprobación de la dirección financiera
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p style="margin-left: 2em;"><b> {{ obsAprobar.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                <p style="margin-left: 2em;" *ngIf="obsAprobar.tieneObservacion === true"><b>¿Desde la dirección financiera tiene observaciones al Tercero de giro?</b>: Si</p>
+                <p style="margin-left: 2em;" *ngIf="obsAprobar.tieneObservacion === false"><b>¿Desde la dirección financiera tiene observaciones al Tercero de giro?</b>: No</p>
+                <section [innerHTML]="obsAprobar.observacion" style="margin-left: 2em;" *ngIf="obsAprobar.tieneObservacion === true"></section>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="shipping-card border" align="left" *ngIf="obsTramitar !== undefined">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text card-title-detalle">
+                    Observaciones de fiduciaria
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p style="margin-left: 2em;"><b> {{ obsTramitar.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                <p style="margin-left: 2em;" *ngIf="obsTramitar.tieneObservacion === true"><b>¿Desde la fiduciaria tiene observaciones al tercero de giro?</b>: Si</p>
+                <p style="margin-left: 2em;" *ngIf="obsTramitar.tieneObservacion === false"><b>¿Desde la fiduciaria tiene observaciones al tercero de giro?</b>: No</p>
+                <section [innerHTML]="obsTramitar.observacion" style="margin-left: 2em;" *ngIf="obsTramitar.tieneObservacion === true"></section>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
 </section>

@@ -18,6 +18,9 @@ export class FormTerceroGiroGogComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Output() tieneObservacion = new EventEmitter<boolean>();
+    @Output() observacionesVerificar = new EventEmitter<any>();
+    @Output() observacionesAprobar = new EventEmitter<any>();
+    @Output() observacionesTramitar = new EventEmitter<any>();
     obsVerificar: any;
     obsAprobar: any;
     obsTramitar: any;
@@ -175,12 +178,15 @@ export class FormTerceroGiroGogComponent implements OnInit {
 
                                     if ( this.obsVerificar !== undefined ) {
                                         this.tieneObservacion.emit( true );
+                                        this.observacionesVerificar.emit(this.obsVerificar);
                                     }
                                     if ( this.obsAprobar !== undefined ) {
                                         this.tieneObservacion.emit( true );
+                                        this.observacionesAprobar.emit(this.obsAprobar);
                                     }
                                     if ( this.obsTramitar !== undefined ) {
                                         this.tieneObservacion.emit( true );
+                                        this.observacionesTramitar.emit(this.obsTramitar);
                                     }
                                 }
                             }
