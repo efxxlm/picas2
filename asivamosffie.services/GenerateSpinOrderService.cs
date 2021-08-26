@@ -305,7 +305,7 @@ namespace asivamosffie.services
                 foreach (var aportantes in VDrpXcontratoXaportante)
                 {
                     CofinanciacionAportante cofinanciacionAportante = _context.CofinanciacionAportante.Find(aportantes.CofinanciacionAportanteId);
-                     
+
                     string NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(aportantes.CofinanciacionAportanteId));
                     decimal ValorAportante = VDrpXcontratoXaportante.Where(r => r.CofinanciacionAportanteId == aportantes.CofinanciacionAportanteId).Sum(r => r.ValorUso) ?? 0;
 
@@ -691,6 +691,17 @@ namespace asivamosffie.services
             if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() == 0)
                 return false;
 
+
+            if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Count() == 0)
+                return false;
+
+
+            foreach (var item in pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante)
+            {
+                if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportante(item))
+                    return false;
+            }
+             
             foreach (var item in pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento)
             {
                 if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(item))
