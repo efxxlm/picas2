@@ -1390,20 +1390,24 @@ namespace asivamosffie.services
                                                                                                                && v.ConceptoCodigo == pConceptoCodigo)
                                                                                                      .FirstOrDefault();
 
-                decimal dcCriterioPagoPorcentaje = decimal.Parse(_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && r.Codigo == pCriterioCodigo).FirstOrDefault().Descripcion ?? "1");
+                float dcCriterioPagoPorcentaje = float.Parse(_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && r.Codigo == pCriterioCodigo).FirstOrDefault().Descripcion ?? "1");
 
                 if (VValorFacturadoContratoXproyectoXuso == null)
                 {
                     ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Find(pContratacionProyectoId);
-                    decimal ValorTotalPorFase = (decimal)_context.VDrpXcontratacionXproyectoXfaseXconceptoXusos
+                    float ValorTotalPorFase = (float)_context.VDrpXcontratacionXproyectoXfaseXconceptoXusos
                            .Where(r => r.ContratacionId == solicitudPago.Contrato.ContratacionId
-                                    && r.ProyectoId == contratacionProyecto.ContratacionProyectoId
+                                    && r.ProyectoId == contratacionProyecto.ProyectoId
                                     && r.EsPreConstruccion == EsPreConstruccion
                                     && r.ConceptoPagoCodigo == pConceptoCodigo)
                            .Sum(v => v.ValorUso);
+
+
+
+
                     return new
                     {
-                        MontoMaximo = ValorTotalPorFase,
+                        MontoMaximo = ValorTotalPorFase * dcCriterioPagoPorcentaje,
                         ValorPendientePorPagar = 0
                     };
                 }
@@ -1419,8 +1423,9 @@ namespace asivamosffie.services
                                                                                                                                    )
                                                                                                                                .Sum(c => c.ValorFacturado);
 
+                float MontoMaximo = 0;
 
-                VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal *= dcCriterioPagoPorcentaje;
+                MontoMaximo = ((float)VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal * dcCriterioPagoPorcentaje);
 
                 return new
                 {
