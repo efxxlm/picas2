@@ -54,6 +54,8 @@ export class PlantillaComponent implements OnInit {
   });
   infoPlantilla: any;
   tablaOrdenGiro = [];
+  valorNetoGiro = 0;
+  descuentos = { valorTotal: 0, retegarantia: 0, ans: 0, otrosDescuentos: 0 };
 
   get aportantes() {
     return this.formOrigen.get('aportantes') as FormArray;
@@ -65,11 +67,11 @@ export class PlantillaComponent implements OnInit {
     private ordenGiroSvc: OrdenPagoService,
     private fb: FormBuilder,
     private registrarPagosSvc: RegistrarRequisitosPagoService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.getOrdenGiro();
   }
-
-  ngOnInit(): void {}
 
   async getOrdenGiro() {
     let solicitudPago;
@@ -77,8 +79,28 @@ export class PlantillaComponent implements OnInit {
       .getSolicitudPagoBySolicitudPagoId(this.activatedRoute.snapshot.params.id)
       .toPromise();
     console.log(solicitudPago);
-    for (let i = 0; i < solicitudPago.contratoSon.contratacion.contratacionProyecto[0].contratacionProyectoAportante[0].cofinanciacionAportante.fuenteFinanciacion.length; i++) {
-      const element = solicitudPago.contratoSon.contratacion.contratacionProyecto[0].contratacionProyectoAportante[0].cofinanciacionAportante.fuenteFinanciacion[i];
+    // solicitudPago.contratoSon.solicitudPagoOnly.forEach(
+    //   criterio => (this.valorNetoGiro += criterio.valorFacturado)
+    // );
+    this.valorNetoGiro = solicitudPago.contratoSon.solicitudPagoOnly.valorFacturado;
+    if (
+      solicitudPago.contratoSon.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0]
+        .solicitudPagoFaseFacturaDescuento.length > 0
+    ) {
+      solicitudPago.contratoSon.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFacturaDescuento.forEach(
+        descuento => (this.valorNetoGiro -= descuento.valorDescuento)
+      );
+    }
+    for (
+      let i = 0;
+      i <
+      solicitudPago.contratoSon.contratacion.contratacionProyecto[0].contratacionProyectoAportante[0]
+        .cofinanciacionAportante.fuenteFinanciacion.length;
+      i++
+    ) {
+      const element =
+        solicitudPago.contratoSon.contratacion.contratacionProyecto[0].contratacionProyectoAportante[0]
+          .cofinanciacionAportante.fuenteFinanciacion[i];
 
       let datosTabla = {
         consecutivoOrigen: solicitudPago.ordenGiro.consecutivoOrigen,
@@ -90,19 +112,26 @@ export class PlantillaComponent implements OnInit {
         numeroIdentificacion: solicitudPago.contratoSon.contratacion.contratista.numeroIdentificacion,
         nombre: solicitudPago.contratoSon.contratacion.contratista.nombre,
         numero: solicitudPago.solicitudPagoFactura[0].numero,
-        conceptoPagoCriterio: solicitudPago.contratoSon.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioConceptoPago[0].conceptoPagoCriterio,
-        valorFacturadoConcepto: solicitudPago.contratoSon.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioConceptoPago[0].valorFacturadoConcepto
-      }
+        conceptoPagoCriterio:
+          solicitudPago.contratoSon.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0]
+            .solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioConceptoPago[0].conceptoPagoCriterio,
+        valorFacturadoConcepto:
+          solicitudPago.contratoSon.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0]
+            .solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioConceptoPago[0].valorFacturadoConcepto
+      };
 
-      this.tablaOrdenGiro.push(datosTabla)
+      this.tablaOrdenGiro.push(datosTabla);
     }
     for (let i = 0; i < solicitudPago.ordenGiro.ordenGiroTercero.length; i++) {
       const element = solicitudPago.ordenGiro.ordenGiroTercero[i];
-      
-      this.tablaOrdenGiro[i].esCuentaAhorros = element.ordenGiroTerceroTransferenciaElectronica[0].esCuentaAhorros ? 'Ahorros' : 'Corriente';
+
+      this.tablaOrdenGiro[i].esCuentaAhorros = element.ordenGiroTerceroTransferenciaElectronica[0].esCuentaAhorros
+        ? 'Ahorros'
+        : 'Corriente';
       this.tablaOrdenGiro[i].bancoCodigo = element.ordenGiroTerceroTransferenciaElectronica[0].bancoCodigo;
       this.tablaOrdenGiro[i].numeroCuenta = element.ordenGiroTerceroTransferenciaElectronica[0].numeroCuenta;
-      this.tablaOrdenGiro[i].titularNumeroIdentificacion = element.ordenGiroTerceroTransferenciaElectronica[0].titularNumeroIdentificacion;
+      this.tablaOrdenGiro[i].titularNumeroIdentificacion =
+        element.ordenGiroTerceroTransferenciaElectronica[0].titularNumeroIdentificacion;
       this.tablaOrdenGiro[i].titularCuenta = element.ordenGiroTerceroTransferenciaElectronica[0].titularCuenta;
     }
     this.bancosArray = await this.commonSvc.listaBancos().toPromise();
@@ -117,6 +146,14 @@ export class PlantillaComponent implements OnInit {
   getInfoPlantilla(ordenGiroId) {
     this.ordenGiroSvc.getInfoPlantilla(ordenGiroId).subscribe(response => {
       this.infoPlantilla = response;
+      console.log(this.infoPlantilla);
+      this.infoPlantilla.forEach(element => {
+        if (element[0].nombre === 'ANS') this.descuentos.retegarantia += element[0].valorDescuento;
+        else if (element[0].nombre === 'Retegarantia') this.descuentos.ans += element[0].valorDescuento;
+        else this.descuentos.otrosDescuentos += element[0].valorDescuento;
+
+        this.descuentos.valorTotal += element[0].valorDescuento;
+      });
     });
   }
 
@@ -371,8 +408,7 @@ export class PlantillaComponent implements OnInit {
   }
 
   getHtmlToPdf() {
-
-    window.print()
+    window.print();
 
     // const pdfHTML = document.getElementById('pdf').innerHTML;
     // const w = window.open();
