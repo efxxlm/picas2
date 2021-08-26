@@ -90,6 +90,10 @@ namespace asivamosffie.model.Models
         public dynamic TablaDRP { get; set; }
 
         [NotMapped]
+        public dynamic TablaDRPODG { get; set; }
+
+
+        [NotMapped]
         public DateTime? FechaEstimadaFinalizacion { get; set; }
 
         [NotMapped]
