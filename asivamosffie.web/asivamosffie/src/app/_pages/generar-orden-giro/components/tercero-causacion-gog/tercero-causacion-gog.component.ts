@@ -205,6 +205,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                         this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
                         // Get data del guardado de tercero de causacion
                         for ( const criterio of listCriterios ) {
+                          let totalCompleto  = 0;
+                          let totalIncompleto = 0;
                           let terceroCausacionxCriterio;
                           if(this.ordenGiroDetalleTerceroCausacion != null){
                             terceroCausacionxCriterio = this.ordenGiroDetalleTerceroCausacion.filter( tercero => tercero.conceptoPagoCriterio === criterio.tipoCriterioCodigo && tercero.esPreconstruccion === this.esPreconstruccion && tercero.contratacionProyectoId === this.solicitudPagoFase.contratacionProyectoId );
@@ -437,7 +439,24 @@ export class TerceroCausacionGogComponent implements OnInit {
                         // Set formulario criterios
                         // Get observaciones
                         if(terceroCausacionxCriterio?.length > 0){
-                          let estadoSemaforo = terceroCausacionxCriterio[0].registroCompleto === true ? 'completo' : 'en-proceso';
+                          const totalTerceroCriterio = terceroCausacionxCriterio?.length;
+                          terceroCausacionxCriterio.forEach(element => {
+                            if(element.registroCompleto === true){
+                              totalCompleto++;
+                            }else{
+                              totalIncompleto++;
+                            }
+                          });
+                          let estadoSemaforo = 'en-proceso';
+
+                          if(totalCompleto == totalTerceroCriterio){
+                            estadoSemaforo = 'completo';
+                          }else if(totalIncompleto == totalTerceroCriterio){
+                            estadoSemaforo = 'sin-diligenciar';
+                          }else{
+                            estadoSemaforo = 'en-proceso';
+                          }
+                          console.log(estadoSemaforo);
                           let obsVerificar = undefined;
                           let obsAprobar = undefined;
                           let obsTramitar = undefined;
