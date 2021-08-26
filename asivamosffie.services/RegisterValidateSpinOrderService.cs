@@ -504,7 +504,7 @@ namespace asivamosffie.services
             return await _context.OrdenGiroObservacion
                                            .Where(s => s.MenuId == pMenuId
                                                && s.OrdenGiroId == pOrdenGiroId
-                                               && s.IdPadre == pPadreId
+                                             //  && s.IdPadre == pPadreId
                                                && s.TipoObservacionCodigo == pTipoObservacionCodigo)
                                             .Select(p => new
                                             {
