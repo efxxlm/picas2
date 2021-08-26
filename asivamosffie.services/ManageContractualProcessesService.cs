@@ -739,42 +739,32 @@ namespace asivamosffie.services
                 List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
 
                 Contratacion contratacion = await
-                    _context.Contratacion
-                    .Where(r => r.ContratacionId == pContratacionId)
-                    .Include(r => r.DisponibilidadPresupuestal)
-                       .ThenInclude(r => r.GestionFuenteFinanciacion)
-                           .ThenInclude(x => x.FuenteFinanciacion)
-                               .ThenInclude(x => x.Aportante)
-                                  .ThenInclude(x => x.CofinanciacionDocumento)
+                                               _context.Contratacion
+                                               .Where(r => r.ContratacionId == pContratacionId)
+                                               .Include(r => r.DisponibilidadPresupuestal)
+                                                  .ThenInclude(r => r.GestionFuenteFinanciacion)
+                                                      .ThenInclude(x => x.FuenteFinanciacion)
+                                                          .ThenInclude(x => x.Aportante)
+                                                             .ThenInclude(x => x.CofinanciacionDocumento)
 
-                    .Include(r => r.ContratacionProyecto)
-                       .ThenInclude(r => r.Proyecto)
-                           .ThenInclude(r => r.ProyectoAportante)
-                               .ThenInclude(r => r.Aportante)
-                                .ThenInclude(r => r.DisponibilidadPresupuestal)
-                       .ThenInclude(r => r.GestionFuenteFinanciacion)
-                           .ThenInclude(x => x.FuenteFinanciacion)
-                               .ThenInclude(x => x.Aportante)
-                                  .ThenInclude(x => x.CofinanciacionDocumento)
-                                   .ThenInclude(r => r.FuenteFinanciacion)
-                   .Include(r => r.PlazoContratacion)
-                   .Include(r => r.Contratista)
-                   .Include(r => r.Contrato)
-                   .Include(r => r.ContratacionProyecto)
-                     .ThenInclude(r => r.Proyecto)
-                         .ThenInclude(r => r.ProyectoAportante)
-                             .ThenInclude(r => r.Aportante)
-                                 .ThenInclude(r => r.FuenteFinanciacion)
-                                     .ThenInclude(r => r.AportanteFuenteFinanciacion)
-                                         .ThenInclude(r => r.FuenteFinanciacion)
+                                              .Include(r => r.PlazoContratacion)
+                                              .Include(r => r.Contratista)
+                                              .Include(r => r.Contrato)
+                                              .Include(r => r.ContratacionProyecto)
+                                                .ThenInclude(r => r.Proyecto)
+                                                    .ThenInclude(r => r.ProyectoAportante)
+                                                        .ThenInclude(r => r.Aportante)
+                                                            .ThenInclude(r => r.FuenteFinanciacion)
 
-                          .Include(r => r.ContratacionProyecto)
-                              .ThenInclude(r => r.Proyecto)
-                                  .ThenInclude(r => r.InstitucionEducativa)
-                          .Include(r => r.ContratacionProyecto)
-                              .ThenInclude(r => r.Proyecto)
-                                   .ThenInclude(r => r.Sede)
-                     .FirstOrDefaultAsync();
+                                                     .Include(r => r.ContratacionProyecto)
+                                                         .ThenInclude(r => r.Proyecto)
+                                                             .ThenInclude(r => r.InstitucionEducativa)
+                                                     .Include(r => r.ContratacionProyecto)
+                                                         .ThenInclude(r => r.Proyecto)
+                                                              .ThenInclude(r => r.Sede)
+                                                .FirstOrDefaultAsync();
+ 
+
 
                 List<SesionComiteSolicitud> sesionComiteSolicitud = _context.SesionComiteSolicitud
                      .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion && !(bool)r.Eliminado)
@@ -849,24 +839,27 @@ namespace asivamosffie.services
                     }
                 }
 
-                //Logica tomada de _budgetAvailabilityService  ReemplazarDatosDDP "FABER"
+                //List<GestionFuenteFinanciacion> ListGestionFuenteFinanciacion =
+                //                 _context.GestionFuenteFinanciacion
+                //                 .Where(d => d.Eliminado != true)
+                //                        .Include(x => x.FuenteFinanciacion)
+                //                             .ThenInclude(x => x.Aportante)
+                //                             .ThenInclude(x => x.CofinanciacionDocumento)
+                //                                    .Include(x => x.FuenteFinanciacion)
+                //                             .ThenInclude(x => x.Aportante)
+                //                                 .ThenInclude(x => x.TipoAportante)
+                //                             .ThenInclude(x => x.CofinanciacionDocumento)
+                //                       .Include(x => x.DisponibilidadPresupuestalProyecto)
+                //                     .ToList();
 
                 foreach (var DisponibilidadPresupuestal in contratacion.DisponibilidadPresupuestal.Where(r => r.Eliminado != true).Distinct().ToList())
                 {
-                    List<GestionFuenteFinanciacion> ListGestionFuenteFinanciacion =
-                        _context.GestionFuenteFinanciacion
-                        .Where(d => d.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && d.Eliminado != true)
-                               .Include(x => x.FuenteFinanciacion)
-                                    .ThenInclude(x => x.Aportante)
-                                        .ThenInclude(x => x.CofinanciacionDocumento)
-                              .Include(x => x.FuenteFinanciacion)
-                                              .ThenInclude(x => x.Aportante)
-                                                  .ThenInclude(x => x.TipoAportante)
-                                                      .ThenInclude(x => x.CofinanciacionDocumento)
-                              .Include(x => x.DisponibilidadPresupuestalProyecto)
-                            .ToList();
+                    //DisponibilidadPresupuestal.GestionFuenteFinanciacion =
+                    //                                                        ListGestionFuenteFinanciacion
+                    //                                                        .Where(d => d.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && d.Eliminado != true) 
+                    //                                                        .ToList();
 
-                    DisponibilidadPresupuestal.GestionFuenteFinanciacion = ListGestionFuenteFinanciacion;
+           
                     foreach (var GestionFuenteFinanciacion in DisponibilidadPresupuestal.GestionFuenteFinanciacion.Where(r => r.Eliminado != true).Distinct().ToList())
                     {
                         if(GestionFuenteFinanciacion.NovedadContractualRegistroPresupuestalId > 0)
@@ -893,27 +886,19 @@ namespace asivamosffie.services
                     }
                 }
 
+     
+
                 foreach (var ContratacionProyecto in contratacion.ContratacionProyecto.Where(r => r.Eliminado != true).Distinct().ToList())
                 {
                     foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante.Where(r => r.Eliminado != true).Distinct().ToList())
                     {
                         foreach (var DisponibilidadPresupuestal in ProyectoAportante.Aportante.DisponibilidadPresupuestal.Where(r => r.Eliminado != true).Distinct().ToList())
                         {
-                            List<GestionFuenteFinanciacion> ListGestionFuenteFinanciacion =
-                                                   _context.GestionFuenteFinanciacion
-                                                   .Where(d => d.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && d.Eliminado != true)
-                                                          .Include(x => x.FuenteFinanciacion)
-                                                               .ThenInclude(x => x.Aportante)
-                                                               .ThenInclude(x => x.CofinanciacionDocumento)
-                                                                      .Include(x => x.FuenteFinanciacion)
-                                                               .ThenInclude(x => x.Aportante)
-                                                                   .ThenInclude(x => x.TipoAportante)
-                                                               .ThenInclude(x => x.CofinanciacionDocumento)
-                                                         .Include(x => x.DisponibilidadPresupuestalProyecto)
-                                                       .ToList();
-
-                            DisponibilidadPresupuestal.GestionFuenteFinanciacion = ListGestionFuenteFinanciacion;
-
+                            //DisponibilidadPresupuestal.GestionFuenteFinanciacion =
+                            //ListGestionFuenteFinanciacion
+                            //       .Where(d => d.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && d.Eliminado != true) 
+                            //                                   .ToList();
+                             
                             foreach (var GestionFuenteFinanciacion in DisponibilidadPresupuestal.GestionFuenteFinanciacion.Where(r => r.Eliminado != true).Distinct().ToList())
                             {
                                 GestionFuenteFinanciacion.FuenteNombre = GestionFuenteFinanciacion.FuenteFinanciacion.FuenteRecursosCodigo;
