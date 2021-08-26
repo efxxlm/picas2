@@ -125,7 +125,7 @@ namespace asivamosffie.services
             }
         }
         #endregion
-        //5# Traer Uso Por Concepto de pago
+        //5# Traer Uso Por Concepto de pago 2 Orden Giro
         public async Task<dynamic> GetUsoByConceptoPagoCodigo(string pConceptoPagoCodigo)
         {
             try
@@ -133,7 +133,7 @@ namespace asivamosffie.services
                 List<dynamic> ListDynamics = new List<dynamic>();
                 List<string> strCriterios = _context.ConceptoPagoUso.Where(r => r.ConceptoPagoCodigo == pConceptoPagoCodigo).Select(r => r.Uso).ToList();
                 List<Dominio> ListUsos = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Usos);
-                 
+
                 strCriterios.ForEach(l =>
                 {
                     ListDynamics.Add(new
@@ -141,8 +141,8 @@ namespace asivamosffie.services
                         Codigo = l,
                         Nombre = ListUsos.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
                     });
-                }); 
-                  return ListDynamics;
+                });
+                return ListDynamics;
             }
             catch (Exception ex)
             {
@@ -1415,24 +1415,22 @@ namespace asivamosffie.services
                                                                                                                && v.ConceptoCodigo == pConceptoCodigo)
                                                                                                      .FirstOrDefault();
 
-                float dcCriterioPagoPorcentaje = float.Parse(_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && r.Codigo == pCriterioCodigo).FirstOrDefault().Descripcion ?? "1");
+                decimal Porcentaje = decimal.Parse(_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && r.Codigo == pCriterioCodigo).FirstOrDefault().Descripcion ?? "100");
+ 
 
                 if (VValorFacturadoContratoXproyectoXuso == null)
                 {
                     ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Find(pContratacionProyectoId);
-                    float ValorTotalPorFase = (float)_context.VDrpXcontratacionXproyectoXfaseXconceptoXusos
+                    decimal ValorTotalPorFase = (decimal)_context.VDrpXcontratacionXproyectoXfaseXconceptoXusos
                            .Where(r => r.ContratacionId == solicitudPago.Contrato.ContratacionId
                                     && r.ProyectoId == contratacionProyecto.ProyectoId
                                     && r.EsPreConstruccion == EsPreConstruccion
                                     && r.ConceptoPagoCodigo == pConceptoCodigo)
                            .Sum(v => v.ValorUso);
-
-
-
-
+                     
                     return new
                     {
-                        MontoMaximo = ValorTotalPorFase * dcCriterioPagoPorcentaje,
+                        MontoMaximo = (ValorTotalPorFase * Porcentaje) / 100,
                         ValorPendientePorPagar = 0
                     };
                 }
@@ -1448,13 +1446,13 @@ namespace asivamosffie.services
                                                                                                                                    )
                                                                                                                                .Sum(c => c.ValorFacturado);
 
-                float MontoMaximo = 0;
+                decimal MontoMaximo = 0;
 
-                MontoMaximo = ((float)VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal * dcCriterioPagoPorcentaje);
+                MontoMaximo = ((decimal)VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal * Porcentaje)/100;
 
                 return new
                 {
-                    MontoMaximo = VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal,
+                    MontoMaximo = MontoMaximo,
                     VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal
                 };
             }
@@ -1683,7 +1681,7 @@ namespace asivamosffie.services
 
                 item.SaldoPorPagar = item.ValorSolicitud - dcDecimalValorFacturado;
                 ValorAnterior = item.SaldoPorPagar ?? 0;
-                Drp = item.ValorSolicitud ?? 1; 
+                Drp = item.ValorSolicitud ?? 1;
                 item.SaldoPorPagar = item.ValorSolicitud - dcDecimalValorFacturado;
                 item.PorcentajeFacturado = item.PorcentajeFacturado;
                 item.PorcentajePorPagar = item.PorcentajePorPagar;
