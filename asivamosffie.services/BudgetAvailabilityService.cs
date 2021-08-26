@@ -541,32 +541,6 @@ namespace asivamosffie.services
                                                                                                             .ThenInclude(x => x.GestionFuenteFinanciacion)
                                                                                                         .ToListAsync();
 
-            foreach (var RegistroPresupuestal in listRegistroPresupuestal)
-            {
-                NovedadContractual novedadContractual = _context.NovedadContractual.Find(RegistroPresupuestal.NovedadContractualId);
-                if (novedadContractual.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado)
-                {
-                    RegistroPresupuestal.DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId = RegistroPresupuestal.NovedadContractualRegistroPresupuestalId;
-                    RegistroPresupuestal.DisponibilidadPresupuestal.NovedadContractualId = RegistroPresupuestal.NovedadContractualId;
-                    RegistroPresupuestal.DisponibilidadPresupuestal.EsNovedad = true;
-                    RegistroPresupuestal.DisponibilidadPresupuestal.RegistroCompleto = RegistroPresupuestal.RegistroCompleto;
-                    RegistroPresupuestal.DisponibilidadPresupuestal.NumeroSolicitud = RegistroPresupuestal.NumeroSolicitud;
-                    RegistroPresupuestal.DisponibilidadPresupuestal.ValorSolicitud = RegistroPresupuestal.ValorSolicitud;
-                    RegistroPresupuestal.DisponibilidadPresupuestal.EstadoSolicitudCodigo = RegistroPresupuestal.EstadoSolicitudCodigo;
-                    RegistroPresupuestal.DisponibilidadPresupuestal.Objeto = RegistroPresupuestal.Objeto;
-                    RegistroPresupuestal.DisponibilidadPresupuestal.FechaDdp = RegistroPresupuestal.FechaDdp;
-                    RegistroPresupuestal.DisponibilidadPresupuestal.NumeroDrp = RegistroPresupuestal.NumeroDrp;
-                    //RegistroPresupuestal.DisponibilidadPresupuestal.PlazoMeses = RegistroPresupuestal.PlazoMeses;
-                    //RegistroPresupuestal.DisponibilidadPresupuestal.PlazoDias = RegistroPresupuestal.PlazoDias;
-                    RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
-                    RegistroPresupuestal.DisponibilidadPresupuestal.FechaDrp = RegistroPresupuestal.FechaDrp;
-                    RegistroPresupuestal.DisponibilidadPresupuestal.NumeroOtroSi = novedadContractual != null ? novedadContractual.NumeroOtroSi : string.Empty;
-
-                    ListDisponibilidadPresupuestal.Remove(RegistroPresupuestal.DisponibilidadPresupuestal);
-                    ListDisponibilidadPresupuestal.Add(RegistroPresupuestal.DisponibilidadPresupuestal);
-
-                }
-            }
 
             List<DisponibilidadPresupuestalGrilla> ListDisponibilidadPresupuestalGrilla = new List<DisponibilidadPresupuestalGrilla>();
             List<Dominio> ListEstados = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal).ToList();
@@ -643,6 +617,36 @@ namespace asivamosffie.services
 
                 ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalGrilla);
             }
+
+            foreach (var RegistroPresupuestal in listRegistroPresupuestal)
+            {
+                NovedadContractual novedadContractual = _context.NovedadContractual.Find(RegistroPresupuestal.NovedadContractualId);
+                if (novedadContractual.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado)
+                {
+                    DisponibilidadPresupuestalGrilla ddpNovedad = ListDisponibilidadPresupuestalGrilla.Where(r => r.DisponibilidadPresupuestalId == RegistroPresupuestal.DisponibilidadPresupuestalId).FirstOrDefault();
+
+                    DisponibilidadPresupuestalGrilla disponibilidadPresupuestalNovedadGrilla = new DisponibilidadPresupuestalGrilla
+                    {
+                        FechaSolicitud = ddpNovedad.FechaSolicitud,
+                        EstadoRegistro = ddpNovedad.EstadoRegistro,
+                        TipoSolicitud = ddpNovedad.TipoSolicitud,
+                        TipoSolicitudEspecial = ConstanStringTipoSolicitudContratacion.novedadContractual,
+                        DisponibilidadPresupuestalId = ddpNovedad.DisponibilidadPresupuestalId,
+                        NumeroSolicitud = RegistroPresupuestal.NumeroSolicitud,
+                        FechaFirmaContrato = ddpNovedad.FechaFirmaContrato,
+                        NumeroContrato = ddpNovedad.NumeroContrato,
+                        Estado = ListEstados.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal &&
+                             x.Codigo == RegistroPresupuestal.EstadoSolicitudCodigo).FirstOrDefault().Nombre,
+                        NovedadContractualRegistroPresupuestalId = RegistroPresupuestal.NovedadContractualRegistroPresupuestalId,
+                        EsNovedad = true,
+                        NumeroOtroSi = novedadContractual != null ? novedadContractual.NumeroOtroSi : string.Empty,
+                    };
+
+                    ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalNovedadGrilla);
+
+                }
+            }
+
             return ListDisponibilidadPresupuestalGrilla.OrderByDescending(r => r.DisponibilidadPresupuestalId).ToList();
 
         }
@@ -1689,7 +1693,6 @@ namespace asivamosffie.services
                 pStrContenido = pStrContenido.Replace("[REGISTROS_ANEXOS]", string.Empty);
             }
 
-
             foreach (var place in placeholders)
             {
                 switch (place.Codigo)
@@ -1747,7 +1750,7 @@ namespace asivamosffie.services
 
                     //drp
                     case ConstanCodigoVariablesPlaceHolders.NUMEROCONTRATO: pStrContenido = pStrContenido.Replace(place.Nombre, contrato == null ? "" : contrato.NumeroContrato); break;
-                    case ConstanCodigoVariablesPlaceHolders.DRP_NO: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.NumeroDrp); break;
+                    case ConstanCodigoVariablesPlaceHolders.DRP_NO: pStrContenido = pStrContenido.Replace(place.Nombre, esNovedad == true ? string.IsNullOrEmpty(pRegistro?.NumeroDrp) ? pDisponibilidad.NumeroDrp : pRegistro?.NumeroDrp : pDisponibilidad.NumeroDrp); break;
                     case ConstanCodigoVariablesPlaceHolders.FECHACONTRATO: pStrContenido = pStrContenido.Replace(place.Nombre, contrato == null ? "" : contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : ""); break;
                     case ConstanCodigoVariablesPlaceHolders.TABLAFUENTES:
                         pStrContenido = pStrContenido.Replace(place.Nombre, tablafuentes); break;
