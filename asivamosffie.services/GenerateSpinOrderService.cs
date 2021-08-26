@@ -1091,6 +1091,7 @@ namespace asivamosffie.services
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pUsuarioCreacion,
                                 ConceptoCodigo = pOrdenGiroDetalleTerceroCausacion.ConceptoCodigo,
+                                ValorFacturadoConcepto = pOrdenGiroDetalleTerceroCausacion.ValorFacturadoConcepto,
                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion)
                             });
                 }

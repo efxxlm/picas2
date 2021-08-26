@@ -13,7 +13,7 @@ namespace asivamosffie.model.Models
 {
     public partial class OrdenGiroDetalleTerceroCausacion
     {
-        [NotMapped]
-        public decimal ValorFacturadoConcepto { get; set; } 
+       
+    
     }
 }
