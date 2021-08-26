@@ -677,17 +677,12 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion)
         {
+            if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Where(r => r.Eliminado != true).Sum(r => r.ValorDescuento) != pOrdenGiroDetalleTerceroCausacion.ValorFacturadoConcepto)
+                return false;
 
 
-            //if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Where(r => r.Eliminado != true).Sum(r => r.ValorDescuento)
-            //    != 
-                
-            //    )
-
-
-
-                if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == false)
-                    return true;
+            if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == false)
+                return true;
 
             if (pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
                || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.ConceptoPagoCriterio)
