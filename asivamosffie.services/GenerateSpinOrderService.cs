@@ -682,6 +682,7 @@ namespace asivamosffie.services
 
             if (pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
                || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.ConceptoPagoCriterio)
+               || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.ConceptoCodigo)
                || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.TipoPagoCodigo)
                || pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
                || !pOrdenGiroDetalleTerceroCausacion.TieneDescuento.HasValue
@@ -1074,6 +1075,7 @@ namespace asivamosffie.services
                                 EsPreconstruccion = pOrdenGiroDetalleTerceroCausacion.EsPreconstruccion,
                                 FechaModificacion = DateTime.Now,
                                 UsuarioModificacion = pUsuarioCreacion,
+                                ConceptoCodigo = pOrdenGiroDetalleTerceroCausacion.ConceptoCodigo,
                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion)
                             });
                 }

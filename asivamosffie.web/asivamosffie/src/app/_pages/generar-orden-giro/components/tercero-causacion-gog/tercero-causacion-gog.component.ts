@@ -124,6 +124,7 @@ export class TerceroCausacionGogComponent implements OnInit {
             this.solicitudPagoFaseFacturaDescuento.forEach( descuento => this.valorNetoGiro -= descuento.valorDescuento );
         }
         //this.solicitudPago.ordenGiro.ordenGiroDetalle[0].ordenGiroDetalleTerceroCausacion[0].ordenGiroDetalleTerceroCausacionDescuento
+
         this.solicitudPago.ordenGiro.ordenGiroDetalle.forEach( ordengiro => {
             ordengiro.ordenGiroDetalleTerceroCausacion.forEach(tercero => {
                 tercero.ordenGiroDetalleTerceroCausacionDescuento.forEach(descuento => {
@@ -204,395 +205,300 @@ export class TerceroCausacionGogComponent implements OnInit {
                         this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
                         // Get data del guardado de tercero de causacion
                         for ( const criterio of listCriterios ) {
+                          let terceroCausacionxCriterio;
+                          if(this.ordenGiroDetalleTerceroCausacion != null){
+                            terceroCausacionxCriterio = this.ordenGiroDetalleTerceroCausacion.filter( tercero => tercero.conceptoPagoCriterio === criterio.tipoCriterioCodigo && tercero.esPreconstruccion === this.esPreconstruccion && tercero.contratacionProyectoId === this.solicitudPagoFase.contratacionProyectoId );
+                          }
+                          const conceptosDePago = [];
+                          for ( const concepto of criterio.listConceptos ) {
+                            // debo crear un ordenGiroDetalleTerceroCausacion x conceptoCriterio
+                            let terceroCausacion;
+                            if(terceroCausacionxCriterio != null){
+                              terceroCausacion = terceroCausacionxCriterio.find(r => r.conceptoCodigo == concepto.codigo);
+                            }
                             const listDescuento = [ ...this.tipoDescuentoArray ];
+                            const listaDescuentos = [];
                             const listaAportanteDescuentos = [];
+                            //el ordenGiroDetalleTerceroCausacion tiene por debajo aportantes y descuentos
+                            /**Descuentos */
+                            if(terceroCausacion != null){
+                              if ( terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
+                                for ( const descuento of listDescuento ) {
+                                    const ordenGiroDetalleTerceroCausacionDescuento: any[] = terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.filter( ordenGiroDetalleTerceroCausacionDescuento => ordenGiroDetalleTerceroCausacionDescuento.tipoDescuentoCodigo === descuento.codigo );
+                                    const listaAportanteDescuentos = [];
 
-                            if ( this.ordenGiroDetalleTerceroCausacion !== undefined ) {
-                                const terceroCausacion = this.ordenGiroDetalleTerceroCausacion.find( tercero => tercero.conceptoPagoCriterio === criterio.tipoCriterioCodigo && tercero.esPreconstruccion === this.esPreconstruccion && tercero.contratacionProyectoId === this.solicitudPagoFase.contratacionProyectoId );
-                                const listaDescuentos = [];
-                                const conceptosDePago = [];
-
-                                if ( terceroCausacion !== undefined ) {
-                                    if ( terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
-                                        for ( const descuento of listDescuento ) {
-                                            const ordenGiroDetalleTerceroCausacionDescuento: any[] = terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.filter( ordenGiroDetalleTerceroCausacionDescuento => ordenGiroDetalleTerceroCausacionDescuento.tipoDescuentoCodigo === descuento.codigo );
-                                            const listaAportanteDescuentos = [];
-
-                                            if ( ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
-                                                for ( const terceroCausacionDescuento of ordenGiroDetalleTerceroCausacionDescuento ) {
-                                                    const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === terceroCausacionDescuento.aportanteId );
-                                                    let listaFuenteRecursos: any[];
-                                                    let fuente: any;
-                                                    if ( nombreAportante !== undefined ) {
-                                                        listaFuenteRecursos = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
-                                                        fuente = listaFuenteRecursos.find( fuente => fuente.codigo === terceroCausacionDescuento.fuenteRecursosCodigo );
-                                                    }
-
-                                                    listaAportanteDescuentos.push(
-                                                        this.fb.group(
-                                                            {
-                                                                ordenGiroDetalleTerceroCausacionDescuentoId: [ terceroCausacionDescuento.ordenGiroDetalleTerceroCausacionDescuentoId ],
-                                                                nombreAportante: [ nombreAportante !== undefined ? nombreAportante : null, Validators.required ],
-                                                                valorDescuento: [ terceroCausacionDescuento.valorDescuento, Validators.required ],
-                                                                fuente: [ { value: fuente !== undefined ? fuente : null, disabled: true }, Validators.required ]
-                                                            }
-                                                        )
-                                                    )
-                                                }
-
-                                                if ( listaAportanteDescuentos.length === 0 )  {
-                                                    listaAportanteDescuentos.push(
-                                                        this.fb.group(
-                                                            {
-                                                                ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
-                                                                nombreAportante: [ null, Validators.required ],
-                                                                valorDescuento: [ null, Validators.required ],
-                                                                fuente: [ { value: null, disabled: true }, Validators.required ]
-                                                            }
-                                                        )
-                                                    )
-                                                }
-
-                                                listaDescuentos.push(
-                                                    this.fb.group(
-                                                        {
-                                                            tipoDescuento: [ descuento.codigo, Validators.required ],
-                                                            aportantesDescuento: this.fb.array( listaAportanteDescuentos )
-                                                        }
-                                                    )
-                                                );
+                                    if ( ordenGiroDetalleTerceroCausacionDescuento.length > 0 ) {
+                                        for ( const terceroCausacionDescuento of ordenGiroDetalleTerceroCausacionDescuento ) {
+                                            const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === terceroCausacionDescuento.aportanteId );
+                                            let listaFuenteRecursos: any[];
+                                            let fuente: any;
+                                            if ( nombreAportante !== undefined ) {
+                                                listaFuenteRecursos = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
+                                                fuente = listaFuenteRecursos.find( fuente => fuente.codigo === terceroCausacionDescuento.fuenteRecursosCodigo );
                                             }
-                                        }
 
-                                        terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.forEach( descuento => {
-
-                                            if ( descuento.tipoDescuentoCodigo !== undefined ) {
-                                                const descuentoIndex = listDescuento.findIndex( descuentoIndex => descuentoIndex.codigo === descuento.tipoDescuentoCodigo );
-
-                                                if ( descuentoIndex !== -1 ) {
-                                                    listDescuento.splice( descuentoIndex, 1 );
-                                                }
-                                            }
-                                        } )
-                                    }
-                                    // Get lista de aportantes
-                                    // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
-                                    this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
-
-
-                                    for ( const concepto of criterio.listConceptos ) {
-                                      const listaAportantes = [];
-                                       console.log(concepto,listaAportantes,terceroCausacion);
-                                      if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
-                                          for ( const aportante of terceroCausacion.ordenGiroDetalleTerceroCausacionAportante ) {
-                                            if(aportante?.conceptoPagoCodigo == concepto?.codigo){
-                                              const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
-
-                                              if ( nombreAportante !== undefined ) {
-                                                  const tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
-                                                  const tipoAportanteIndex = dataAportantes.listaTipoAportante.findIndex( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
-                                                  let listaFuenteRecursos: any[] = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
-                                                  const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === aportante.fuenteRecursoCodigo );
-                                                  listaAportanteDescuentos.push( nombreAportante )
-
-                                                  listaAportantes.push(
-                                                      this.fb.group(
-                                                          {
-                                                              ordenGiroDetalleTerceroCausacionAportanteId: [ aportante.ordenGiroDetalleTerceroCausacionAportanteId ],
-                                                              tipoAportante: [ tipoAportante, Validators.required ],
-                                                              listaNombreAportantes: [ [ nombreAportante ] ],
-                                                              nombreAportante: [ nombreAportante, Validators.required ],
-                                                              fuenteDeRecursos: [ listaFuenteRecursos ],
-                                                              fuenteRecursos: [ fuente, Validators.required ],
-                                                              fuenteFinanciacionId: [ fuente.fuenteFinanciacionId ],
-                                                              valorDescuento: [ aportante.valorDescuento, Validators.required ],
-                                                              valorDescuentoTecnica: [ null ]
-                                                          }
-                                                      )
-                                                  )
-
-                                                  // if ( tipoAportanteIndex !== -1 ) {
-                                                  //     dataAportantes.listaTipoAportante.splice( tipoAportanteIndex, 1 )
-                                                  // }
-                                              }else{
-                                                listaAportantes.push(
-                                                  this.fb.group(
-                                                      {
-                                                          ordenGiroDetalleTerceroCausacionAportanteId: [ 0 ],
-                                                          tipoAportante: [ null, Validators.required ],
-                                                          listaNombreAportantes: [ null ],
-                                                          nombreAportante: [ null, Validators.required ],
-                                                          fuenteDeRecursos: [ null ],
-                                                          fuenteRecursos: [ null, Validators.required ],
-                                                          fuenteFinanciacionId: [ null ],
-                                                          valorDescuento: [ null, Validators.required ],
-                                                          valorDescuentoTecnica: [ null ]
-                                                      }
-                                                  )
-                                                )
-                                              }
-                                            }else{
-                                              listaAportantes.push(
+                                            listaAportanteDescuentos.push(
                                                 this.fb.group(
                                                     {
-                                                        ordenGiroDetalleTerceroCausacionAportanteId: [ 0 ],
-                                                        tipoAportante: [ null, Validators.required ],
-                                                        listaNombreAportantes: [ null ],
-                                                        nombreAportante: [ null, Validators.required ],
-                                                        fuenteDeRecursos: [ null ],
-                                                        fuenteRecursos: [ null, Validators.required ],
-                                                        fuenteFinanciacionId: [ null ],
-                                                        valorDescuento: [ null, Validators.required ],
-                                                        valorDescuentoTecnica: [ null ]
+                                                        ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
+                                                        ordenGiroDetalleTerceroCausacionDescuentoId: [ terceroCausacionDescuento.ordenGiroDetalleTerceroCausacionDescuentoId ],
+                                                        nombreAportante: [ nombreAportante !== undefined ? nombreAportante : null, Validators.required ],
+                                                        valorDescuento: [ terceroCausacionDescuento.valorDescuento, Validators.required ],
+                                                        fuente: [ { value: fuente !== undefined ? fuente : null, disabled: true }, Validators.required ]
                                                     }
                                                 )
                                             )
-                                            }
-                                          }
-                                      } else {
-                                          listaAportantes.push(
-                                              this.fb.group(
-                                                  {
-                                                      ordenGiroDetalleTerceroCausacionAportanteId: [ 0 ],
-                                                      tipoAportante: [ null, Validators.required ],
-                                                      listaNombreAportantes: [ null ],
-                                                      nombreAportante: [ null, Validators.required ],
-                                                      fuenteDeRecursos: [ null ],
-                                                      fuenteRecursos: [ null, Validators.required ],
-                                                      fuenteFinanciacionId: [ null ],
-                                                      valorDescuento: [ null, Validators.required ],
-                                                      valorDescuentoTecnica: [ null ]
-                                                  }
-                                              )
-                                          )
-                                      }
-                                        /*
-                                        Validacion del uso por concepto
-
-                                        const usoByConcepto = await this.registrarPagosSvc.getUsoByConceptoPagoCriterioCodigo( concepto.codigo, this.solicitudPago.contratoId );
-                                        let valorTotalUso = 0;
-                                        if ( usoByConcepto.length > 0 ) {
-                                            usoByConcepto.forEach( uso => valorTotalUso += uso.valorUso );
-                                        }
-                                        */
-
-                                        const usoByConcepto = await this.registrarPagosSvc.getUsoByConceptoPagoCriterioCodigo( concepto.codigo, this.solicitudPago.contratoId );
-                                        let valorTotalUso = 0;
-                                        if ( usoByConcepto.length > 0 ) {
-                                            usoByConcepto.forEach( uso => valorTotalUso += uso.valorUso );
-                                        }
-                                         console.log();
-                                        conceptosDePago.push( this.fb.group(
-                                            {
-                                                conceptoPagoCriterio: [ concepto.codigo ],
-                                                nombre: [ concepto.nombre ],
-                                                valorTotalUso: [ valorTotalUso ],
-                                                valorFacturadoConcepto: [ concepto.valorFacturadoConcepto ],
-                                                tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
-                                                nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
-                                                tipoDescuentoArray: [ listDescuento ],
-                                                descuento: this.fb.group(
-                                                    {
-                                                        aplicaDescuentos:[ terceroCausacion.tieneDescuento, Validators.required ],
-                                                        numeroDescuentos: [ listaDescuentos.length > 0 ? listaDescuentos.length : null, Validators.required ],
-                                                        listaAportanteDescuentos: [ listaAportanteDescuentos, Validators.required ],
-                                                        descuentos: this.fb.array( listaDescuentos )
-                                                    }
-                                                ),
-                                                aportantes: this.fb.array( listaAportantes )
-                                            }
-                                        ) )
-                                    }
-
-                                    // Set formulario criterios
-                                    // Get observaciones
-                                    let estadoSemaforo = terceroCausacion.registroCompleto === true ? 'completo' : 'en-proceso';
-                                    let obsVerificar = undefined;
-                                    let obsAprobar = undefined;
-                                    let obsTramitar = undefined;
-
-                                    const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
-                                        this.listaMenu.verificarOrdenGiro,
-                                        this.ordenGiroId,
-                                        terceroCausacion.ordenGiroDetalleTerceroCausacionId,
-                                        this.tipoObservaciones.terceroCausacion );
-                                    const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
-                                        this.listaMenu.aprobarOrdenGiro,
-                                        this.ordenGiroId,
-                                        terceroCausacion.ordenGiroDetalleTerceroCausacionId,
-                                        this.tipoObservaciones.terceroCausacion );
-                                    const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
-                                            this.listaMenu.tramitarOrdenGiro,
-                                            this.ordenGiroId,
-                                            terceroCausacion.ordenGiroDetalleTerceroCausacionId,
-                                            this.tipoObservaciones.terceroCausacion );
-                                    // Get lista de observacion y observacion actual
-                                    if ( listaObservacionVerificar.find( obs => obs.archivada === false ) !== undefined ) {
-                                        if ( listaObservacionVerificar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
-                                            obsVerificar = listaObservacionVerificar.find( obs => obs.archivada === false );
-                                        }
-                                    }
-                                    if ( listaObservacionAprobar.find( obs => obs.archivada === false ) !== undefined ) {
-                                        if ( listaObservacionAprobar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
-                                            obsAprobar = listaObservacionAprobar.find( obs => obs.archivada === false );
-                                        }
-                                    }
-                                    if ( listaObservacionTramitar.find( obs => obs.archivada === false ) !== undefined ) {
-                                        if ( listaObservacionTramitar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
-                                            obsTramitar = listaObservacionTramitar.find( obs => obs.archivada === false );
-                                        }
-                                    }
-
-                                    /*
-                                    if ( obsVerificar !== undefined ) {
-                                        estadoSemaforo = 'en-proceso';
-                                        this.tieneObservacion.emit( true );
-                                    }
-                                    if ( obsAprobar !== undefined ) {
-                                        estadoSemaforo = 'en-proceso';
-                                        this.tieneObservacion.emit( true );
-                                    }
-                                    if ( obsTramitar !== undefined ) {
-                                        estadoSemaforo = 'en-proceso';
-                                        this.tieneObservacion.emit( true );
-                                    }
-                                    */
-
-                                    this.criterios.push( this.fb.group(
-                                        {
-                                            estadoSemaforo,
-                                            obsVerificar: [ obsVerificar ],
-                                            obsAprobar: [ obsAprobar ],
-                                            obsTramitar: [ obsTramitar ],
-                                            ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
-                                            tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
-                                            nombre: [ criterio.nombre ],
-                                            tipoPagoCodigo: [ criterio.tipoPagoCodigo ],
-                                            conceptos: this.fb.array( conceptosDePago )
-                                        }
-                                    ) )
-                                } else {
-                                    const conceptosDePago = [];
-                                    for ( const concepto of criterio.listConceptos ) {
-                                        const usoByConcepto = await this.registrarPagosSvc.getUsoByConceptoPagoCriterioCodigo( concepto.codigo, this.solicitudPago.contratoId );
-                                        let valorTotalUso = 0;
-                                        if ( usoByConcepto.length > 0 ) {
-                                            usoByConcepto.forEach( uso => valorTotalUso += uso.valorUso );
                                         }
 
-                                        conceptosDePago.push( this.fb.group(
-                                            {
-                                                conceptoPagoCriterio: [ concepto.codigo ],
-                                                nombre: [ concepto.nombre ],
-                                                valorTotalUso: [ valorTotalUso ],
-                                                valorFacturadoConcepto: [ concepto.valorFacturadoConcepto ],
-                                                tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
-                                                nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
-                                                tipoDescuentoArray: [ this.tipoDescuentoArray ],
-                                                descuento: this.fb.group(
-                                                    {
-                                                        aplicaDescuentos:[ null, Validators.required ],
-                                                        numeroDescuentos: [ null, Validators.required ],
-                                                        listaAportanteDescuentos: [ [], Validators.required ],
-                                                        descuentos: this.fb.array( [] )
-                                                    }
-                                                ),
-                                                aportantes: this.fb.array( [
-                                                    this.fb.group(
-                                                        {
-                                                            ordenGiroDetalleTerceroCausacionAportanteId: [ 0 ],
-                                                            tipoAportante: [ null, Validators.required ],
-                                                            listaNombreAportantes: [ null ],
-                                                            nombreAportante: [ null, Validators.required ],
-                                                            fuenteDeRecursos: [ null ],
-                                                            fuenteRecursos: [ null, Validators.required ],
-                                                            fuenteFinanciacionId: [ null ],
-                                                            valorDescuento: [ null, Validators.required ],
-                                                            valorDescuentoTecnica: [ null ]
-                                                        }
-                                                    )
-                                                ] )
-                                            }
-                                        ) )
-                                    }
-
-                                    // Set formulario criterios
-                                    this.criterios.push( this.fb.group(
-                                        {
-                                            estadoSemaforo: [ 'sin-diligenciar' ],
-                                            obsVerificar: [ null ],
-                                            obsAprobar: [ null ],
-                                            obsTramitar: [ null ],
-                                            ordenGiroDetalleTerceroCausacionId: [ 0 ],
-                                            tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
-                                            nombre: [ criterio.nombre ],
-                                            tipoPagoCodigo: [ criterio.tipoPagoCodigo ],
-                                            conceptos: this.fb.array( conceptosDePago )
-                                        }
-                                    ) )
-                                }
-                            } else {
-                                const conceptosDePago = [];
-                                for ( const concepto of criterio.listConceptos ) {
-                                    const usoByConcepto = await this.registrarPagosSvc.getUsoByConceptoPagoCriterioCodigo( concepto.codigo, this.solicitudPago.contratoId );
-                                    let valorTotalUso = 0;
-                                    if ( usoByConcepto.length > 0 ) {
-                                        usoByConcepto.forEach( uso => valorTotalUso += uso.valorUso );
-                                    }
-
-                                    conceptosDePago.push( this.fb.group(
-                                        {
-                                            conceptoPagoCriterio: [ concepto.codigo ],
-                                            nombre: [ concepto.nombre ],
-                                            valorTotalUso: [ valorTotalUso ],
-                                            valorFacturadoConcepto: [ concepto.valorFacturadoConcepto ],
-                                            tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
-                                            nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
-                                            tipoDescuentoArray: [ this.tipoDescuentoArray ],
-                                            descuento: this.fb.group(
-                                                {
-                                                    aplicaDescuentos:[ null, Validators.required ],
-                                                    numeroDescuentos: [ null, Validators.required ],
-                                                    listaAportanteDescuentos: [ [], Validators.required ],
-                                                    descuentos: this.fb.array( [] )
-                                                }
-                                            ),
-                                            aportantes: this.fb.array( [
+                                        if ( listaAportanteDescuentos.length === 0 )  {
+                                            listaAportanteDescuentos.push(
                                                 this.fb.group(
                                                     {
-                                                        ordenGiroDetalleTerceroCausacionAportanteId: [ 0 ],
-                                                        tipoAportante: [ null, Validators.required ],
-                                                        listaNombreAportantes: [ null ],
+                                                        ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
+                                                        ordenGiroDetalleTerceroCausacionDescuentoId: [ 0 ],
                                                         nombreAportante: [ null, Validators.required ],
-                                                        fuenteDeRecursos: [ null ],
-                                                        fuenteRecursos: [ null, Validators.required ],
-                                                        fuenteFinanciacionId: [ null ],
                                                         valorDescuento: [ null, Validators.required ],
-                                                        valorDescuentoTecnica: [ null ]
+                                                        fuente: [ { value: null, disabled: true }, Validators.required ]
                                                     }
                                                 )
-                                            ] )
+                                            )
                                         }
-                                    ) )
+
+                                        listaDescuentos.push(
+                                            this.fb.group(
+                                                {
+                                                    tipoDescuento: [ descuento.codigo, Validators.required ],
+                                                    aportantesDescuento: this.fb.array( listaAportanteDescuentos )
+                                                }
+                                            )
+                                        );
+                                    }
                                 }
 
-                                // Set formulario criterios
-                                this.criterios.push( this.fb.group(
-                                    {
-                                        estadoSemaforo: [ 'sin-diligenciar' ],
-                                        obsVerificar: [ null ],
-                                        obsAprobar: [ null ],
-                                        obsTramitar: [ null ],
-                                        ordenGiroDetalleTerceroCausacionId: [ 0 ],
-                                        tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
-                                        nombre: [ criterio.nombre ],
-                                        tipoPagoCodigo: [ criterio.tipoPagoCodigo ],
-                                        conceptos: this.fb.array( conceptosDePago )
-                                    }
-                                ) )
-                            }
-                        }
+                                terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.forEach( descuento => {
 
+                                    if ( descuento.tipoDescuentoCodigo !== undefined ) {
+                                        const descuentoIndex = listDescuento.findIndex( descuentoIndex => descuentoIndex.codigo === descuento.tipoDescuentoCodigo );
+
+                                        if ( descuentoIndex !== -1 ) {
+                                            listDescuento.splice( descuentoIndex, 1 );
+                                        }
+                                    }
+                                });
+                              }
+                                /**Aportantes */
+                            const listaAportantes = [];
+                            if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.filter(r => r.conceptoPagoCodigo == concepto.codigo).length === 0 )  {
+                              listaAportantes.push(
+                                this.fb.group(
+                                    {
+                                        ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
+                                        ordenGiroDetalleTerceroCausacionAportanteId: [ 0 ],
+                                        tipoAportante: [ null, Validators.required ],
+                                        listaNombreAportantes: [ null ],
+                                        nombreAportante: [ null, Validators.required ],
+                                        fuenteDeRecursos: [ null ],
+                                        fuenteRecursos: [ null, Validators.required ],
+                                        fuenteFinanciacionId: [ null ],
+                                        valorDescuento: [ null, Validators.required ],
+                                        valorDescuentoTecnica: [ null ]
+                                    }
+                                )
+                              )
+                          }
+                            for ( const aportante of terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.filter(r => r.conceptoPagoCodigo == concepto.codigo)) {
+                                const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
+
+                                if ( nombreAportante !== undefined ) {
+                                    const tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
+                                    const tipoAportanteIndex = dataAportantes.listaTipoAportante.findIndex( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
+                                    let listaFuenteRecursos: any[] = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
+                                    const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === aportante.fuenteRecursoCodigo );
+                                    listaAportanteDescuentos.push( nombreAportante )
+
+                                    listaAportantes.push(
+                                        this.fb.group(
+                                            {
+                                                ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
+                                                ordenGiroDetalleTerceroCausacionAportanteId: [ aportante.ordenGiroDetalleTerceroCausacionAportanteId ],
+                                                tipoAportante: [ tipoAportante, Validators.required ],
+                                                listaNombreAportantes: [ [ nombreAportante ] ],
+                                                nombreAportante: [ nombreAportante, Validators.required ],
+                                                fuenteDeRecursos: [ listaFuenteRecursos ],
+                                                fuenteRecursos: [ fuente, Validators.required ],
+                                                fuenteFinanciacionId: [ fuente.fuenteFinanciacionId ],
+                                                valorDescuento: [ aportante.valorDescuento, Validators.required ],
+                                                valorDescuentoTecnica: [ null ]
+                                            }
+                                        )
+                                    )
+
+                                    // if ( tipoAportanteIndex !== -1 ) {
+                                    //     dataAportantes.listaTipoAportante.splice( tipoAportanteIndex, 1 )
+                                    // }
+                                }else{
+                                  listaAportantes.push(
+                                    this.fb.group(
+                                        {
+                                            ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
+                                            ordenGiroDetalleTerceroCausacionAportanteId: [ 0 ],
+                                            tipoAportante: [ null, Validators.required ],
+                                            listaNombreAportantes: [ null ],
+                                            nombreAportante: [ null, Validators.required ],
+                                            fuenteDeRecursos: [ null ],
+                                            fuenteRecursos: [ null, Validators.required ],
+                                            fuenteFinanciacionId: [ null ],
+                                            valorDescuento: [ null, Validators.required ],
+                                            valorDescuentoTecnica: [ null ]
+                                        }
+                                    )
+                                  )
+                                }
+                            }
+                            //
+                            const usoByConcepto = await this.registrarPagosSvc.getUsoByConceptoPagoCriterioCodigo( concepto.codigo, this.solicitudPago.contratoId );
+                            let valorTotalUso = 0;
+                            if ( usoByConcepto.length > 0 ) {
+                                usoByConcepto.forEach( uso => valorTotalUso += uso.valorUso );
+                            }
+
+                            conceptosDePago.push( this.fb.group(
+                              {
+                                  ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
+                                  conceptoPagoCriterio: [ concepto.codigo ],
+                                  nombre: [ concepto.nombre ],
+                                  valorTotalUso: [ valorTotalUso ],
+                                  valorFacturadoConcepto: [ concepto.valorFacturadoConcepto ],
+                                  tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
+                                  nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
+                                  tipoDescuentoArray: [ listDescuento ],
+                                  descuento: this.fb.group(
+                                      {
+                                          ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
+                                          aplicaDescuentos:[ terceroCausacion.tieneDescuento, Validators.required ],
+                                          numeroDescuentos: [ listaDescuentos.length > 0 ? listaDescuentos.length : null, Validators.required ],
+                                          listaAportanteDescuentos: [ listaAportanteDescuentos, Validators.required ],
+                                          descuentos: this.fb.array( listaDescuentos )
+                                      }
+                                  ),
+                                  aportantes: this.fb.array( listaAportantes )
+                              }
+                            ))
+                            }else {
+                              const usoByConcepto = await this.registrarPagosSvc.getUsoByConceptoPagoCriterioCodigo( concepto.codigo, this.solicitudPago.contratoId );
+                              let valorTotalUso = 0;
+                              if ( usoByConcepto.length > 0 ) {
+                                  usoByConcepto.forEach( uso => valorTotalUso += uso.valorUso );
+                              }
+
+                              conceptosDePago.push( this.fb.group(
+                                {
+                                    ordenGiroDetalleTerceroCausacionId: [ 0 ],
+                                    conceptoPagoCriterio: [ concepto.codigo ],
+                                    nombre: [ concepto.nombre ],
+                                    valorTotalUso: [ valorTotalUso ],
+                                    valorFacturadoConcepto: [ concepto.valorFacturadoConcepto ],
+                                    tipoDeAportantes: [ dataAportantes.listaTipoAportante ],
+                                    nombreDeAportantes: [ dataAportantes.listaNombreAportante ],
+                                    tipoDescuentoArray: [ this.tipoDescuentoArray ],
+                                    descuento: this.fb.group(
+                                        {
+                                            ordenGiroDetalleTerceroCausacionId: [ 0 ],
+                                            aplicaDescuentos:[ null, Validators.required ],
+                                            numeroDescuentos: [ null, Validators.required ],
+                                            listaAportanteDescuentos: [ [], Validators.required ],
+                                            descuentos: this.fb.array( [] )
+                                        }
+                                    ),
+                                    aportantes: this.fb.array( [
+                                        this.fb.group(
+                                            {
+                                                ordenGiroDetalleTerceroCausacionId: [ 0 ],
+                                                ordenGiroDetalleTerceroCausacionAportanteId: [ 0 ],
+                                                tipoAportante: [ null, Validators.required ],
+                                                listaNombreAportantes: [ null ],
+                                                nombreAportante: [ null, Validators.required ],
+                                                fuenteDeRecursos: [ null ],
+                                                fuenteRecursos: [ null, Validators.required ],
+                                                fuenteFinanciacionId: [ null ],
+                                                valorDescuento: [ null, Validators.required ],
+                                                valorDescuentoTecnica: [ null ]
+                                            }
+                                        )
+                                    ] )
+                                }
+                            ) )
+                          }
+
+                          }
+                          //acaaa?
+                          //
+                        // Set formulario criterios
+                        // Get observaciones
+                        if(terceroCausacionxCriterio?.length > 0){
+                          let estadoSemaforo = terceroCausacionxCriterio[0].registroCompleto === true ? 'completo' : 'en-proceso';
+                          let obsVerificar = undefined;
+                          let obsAprobar = undefined;
+                          let obsTramitar = undefined;
+
+                          const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                              this.listaMenu.verificarOrdenGiro,
+                              this.ordenGiroId,
+                              terceroCausacionxCriterio[0].ordenGiroDetalleTerceroCausacionId,
+                              this.tipoObservaciones.terceroCausacion );
+                          const listaObservacionAprobar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                              this.listaMenu.aprobarOrdenGiro,
+                              this.ordenGiroId,
+                              terceroCausacionxCriterio[0].ordenGiroDetalleTerceroCausacionId,
+                              this.tipoObservaciones.terceroCausacion );
+                          const listaObservacionTramitar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
+                                  this.listaMenu.tramitarOrdenGiro,
+                                  this.ordenGiroId,
+                                  terceroCausacionxCriterio[0].ordenGiroDetalleTerceroCausacionId,
+                                  this.tipoObservaciones.terceroCausacion );
+                          // Get lista de observacion y observacion actual
+                          if ( listaObservacionVerificar.find( obs => obs.archivada === false ) !== undefined ) {
+                              if ( listaObservacionVerificar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                  obsVerificar = listaObservacionVerificar.find( obs => obs.archivada === false );
+                              }
+                          }
+                          if ( listaObservacionAprobar.find( obs => obs.archivada === false ) !== undefined ) {
+                              if ( listaObservacionAprobar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                  obsAprobar = listaObservacionAprobar.find( obs => obs.archivada === false );
+                              }
+                          }
+                          if ( listaObservacionTramitar.find( obs => obs.archivada === false ) !== undefined ) {
+                              if ( listaObservacionTramitar.find( obs => obs.archivada === false ).tieneObservacion === true ) {
+                                  obsTramitar = listaObservacionTramitar.find( obs => obs.archivada === false );
+                              }
+                          }
+                          this.criterios.push( this.fb.group(
+                            {
+                                estadoSemaforo,
+                                obsVerificar: [ obsVerificar ],
+                                obsAprobar: [ obsAprobar ],
+                                obsTramitar: [ obsTramitar ],
+                                tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
+                                nombre: [ criterio.nombre ],
+                                tipoPagoCodigo: [ criterio.tipoPagoCodigo ],
+                                conceptos: this.fb.array( conceptosDePago )
+                            }
+                        ) )
+                        }else{
+                          this.criterios.push( this.fb.group(
+                            {
+                                estadoSemaforo: [ 'sin-diligenciar' ],
+                                obsVerificar: [ null ],
+                                obsAprobar: [ null ],
+                                obsTramitar: [ null ],
+                                tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
+                                nombre: [ criterio.nombre ],
+                                tipoPagoCodigo: [ criterio.tipoPagoCodigo ],
+                                conceptos: this.fb.array( conceptosDePago )
+                            }
+                        ) )
+                        }
+                        }
                     const totalRegistrosCompletos = this.criterios.controls.filter( control => control.get( 'estadoSemaforo' ).value === 'completo' ).length
                     const totalRegistrosEnProceso = this.criterios.controls.filter( control => control.get( 'estadoSemaforo' ).value === 'en-proceso' ).length
 
@@ -1071,10 +977,8 @@ export class TerceroCausacionGogComponent implements OnInit {
             this.openDialog( '', `<b>Debe diligenciar como minimo los aportantes seleccionados en el acordeon descuentos de dirección tecnica - ${ this.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }.</b>` );
             return
         }
-
         const getOrdenGiroDetalleTerceroCausacion = ( ) => {
             const listaTerceroCausacion = [];
-
             this.criterios.controls.forEach( ( criterioControl, indexCriterio ) => {
                 this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
                     if ( this.getDescuentos( indexCriterio, indexConcepto ).length > 0 && conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value === true ) {
@@ -1090,9 +994,11 @@ export class TerceroCausacionGogComponent implements OnInit {
             this.criterios.controls.forEach( ( criterioControl, indexCriterio ) => {
                 let terceroCausacion: any;
                 this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
+                  const ordenGiroDetalleTerceroCausacionAportante = [];
+
                     terceroCausacion = {
                         contratacionProyectoId: this.solicitudPagoFase.contratacionProyectoId,
-                        ordenGiroDetalleTerceroCausacionId: criterioControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
+                        ordenGiroDetalleTerceroCausacionId: conceptoControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
                         valorNetoGiro: this.valorNetoGiro,
                         ordenGiroDetalleId: this.ordenGiroDetalleId,
                         esPreconstruccion: this.esPreconstruccion,
@@ -1100,21 +1006,24 @@ export class TerceroCausacionGogComponent implements OnInit {
                         tipoPagoCodigo: criterioControl.get( 'tipoPagoCodigo' ).value,
                         tieneDescuento: conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value,
                         ordenGiroDetalleTerceroCausacionDescuento: [],
-                        ordenGiroDetalleTerceroCausacionAportante: []
+                        ordenGiroDetalleTerceroCausacionAportante: [],
+                        conceptoCodigo: conceptoControl.get( 'conceptoPagoCriterio' ).value,
                     }
                     this.getAportantes( indexCriterio, indexConcepto ).controls.forEach( aportanteControl => {
-                        if ( aportanteControl.dirty === true ) {
-                            terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.push(
+                      if ( aportanteControl.dirty === true ) {
+                          if(aportanteControl.get( 'nombreAportante' ).value != null){
+                           ordenGiroDetalleTerceroCausacionAportante.push(
                                 {
-                                    ordenGiroDetalleTerceroCausacionId: criterioControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
+                                    ordenGiroDetalleTerceroCausacionId: conceptoControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
                                     ordenGiroDetalleTerceroCausacionAportanteId: aportanteControl.get( 'ordenGiroDetalleTerceroCausacionAportanteId' ).value,
-                                    fuenteRecursoCodigo: aportanteControl.get( 'fuenteRecursos' ).value.codigo,
-                                    fuenteFinanciacionId: aportanteControl.get( 'fuenteRecursos' ).value.fuenteFinanciacionId,
-                                    aportanteId: aportanteControl.get( 'nombreAportante' ).value.cofinanciacionAportanteId,
+                                    fuenteRecursoCodigo: aportanteControl.get( 'fuenteRecursos' ).value?.codigo,
+                                    fuenteFinanciacionId: aportanteControl.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId,
+                                    aportanteId: aportanteControl.get( 'nombreAportante' ).value?.cofinanciacionAportanteId,
                                     conceptoPagoCodigo: conceptoControl.get( 'conceptoPagoCriterio' ).value,
                                     valorDescuento: aportanteControl.get( 'valorDescuento' ).value <= aportanteControl.get( 'valorDescuentoTecnica' ).value ? aportanteControl.get( 'valorDescuento' ).value : aportanteControl.get( 'valorDescuento' ).value - aportanteControl.get( 'valorDescuentoTecnica' ).value
                                 }
                             )
+                          }
                         }
                     } )
 
@@ -1124,7 +1033,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                             this.getAportanteDescuentos( indexCriterio, indexConcepto, indexDescuento ).controls.forEach( aportanteDescuento => {
                                 terceroCausacion.ordenGiroDetalleTerceroCausacionDescuento.push(
                                     {
-                                        ordenGiroDetalleTerceroCausacionId: criterioControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
+                                        ordenGiroDetalleTerceroCausacionId: conceptoControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
                                         ordenGiroDetalleTerceroCausacionDescuentoId: aportanteDescuento.get( 'ordenGiroDetalleTerceroCausacionDescuentoId' ).value,
                                         tipoDescuentoCodigo: descuentoControl.get( 'tipoDescuento' ).value,
                                         aportanteId: aportanteDescuento.get( 'nombreAportante' ).value.cofinanciacionAportanteId,
@@ -1136,11 +1045,10 @@ export class TerceroCausacionGogComponent implements OnInit {
                             } )
                         } )
                     }
+                  terceroCausacion.ordenGiroDetalleTerceroCausacionAportante = ordenGiroDetalleTerceroCausacionAportante;
+                  listaTerceroCausacion.push( terceroCausacion );
                 } )
-
-                listaTerceroCausacion.push( terceroCausacion );
             } );
-
             return listaTerceroCausacion.length > 0 ? listaTerceroCausacion : null;
         }
 
@@ -1156,7 +1064,6 @@ export class TerceroCausacionGogComponent implements OnInit {
                 }
             ]
         }
-
         this.ordenGiroSvc.createEditOrdenGiro( pOrdenGiro )
             .subscribe(
                 response => {
