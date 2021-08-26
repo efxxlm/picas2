@@ -238,7 +238,7 @@ namespace asivamosffie.services
             {
                 SolicitudPago.TablaDrpUso = GetDrpContrato(SolicitudPago.ContratoSon.ContratacionId);
 
-                SolicitudPago.TablaDRP = GetDrpContrato(SolicitudPago);
+                //SolicitudPago.TablaDRP = GetDrpContrato(SolicitudPago);
                 SolicitudPago.TablaUsoFuenteAportante = GetTablaUsoFuenteAportante(SolicitudPago);
 
                 SolicitudPago.TablaPorcentajeParticipacion = GetTablaPorcentajeParticipacion(SolicitudPago);
@@ -677,8 +677,17 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion)
         {
-            if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == false)
-                return true;
+
+
+            //if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Where(r => r.Eliminado != true).Sum(r => r.ValorDescuento)
+            //    != 
+                
+            //    )
+
+
+
+                if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == false)
+                    return true;
 
             if (pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
                || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.ConceptoPagoCriterio)
@@ -687,7 +696,6 @@ namespace asivamosffie.services
                || pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
                || !pOrdenGiroDetalleTerceroCausacion.TieneDescuento.HasValue
                 ) return false;
-
             if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() == 0)
                 return false;
 
@@ -701,7 +709,7 @@ namespace asivamosffie.services
                 if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportante(item))
                     return false;
             }
-             
+
             foreach (var item in pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento)
             {
                 if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(item))
@@ -911,7 +919,6 @@ namespace asivamosffie.services
                                                                                         {
                                                                                             FechaModificacion = DateTime.Now,
                                                                                             UsuarioModificacion = pOrdenGiro.UsuarioCreacion,
-
                                                                                             OrdenGiroId = pOrdenGiro.OrdenGiroId
                                                                                         });
                 }
