@@ -115,7 +115,7 @@ export class FormCargarFormaDePagoComponent implements OnInit {
         this.estaEditando = true;
         this.addressForm.markAllAsTouched();
         const pSolicitudPago = {
-            esFactura: this.contrato.solicitudPagoOnly.esFactura,
+            esFactura: this.contrato.solicitudPagoOnly && this.contrato.solicitudPagoOnly.esFactura ? this.contrato.solicitudPagoOnly.esFactura : null,
             solicitudPagoId: this.solicitudPagoId,
             tipoSolicitudCodigo: this.tipoSolicitud,
             contratoId: this.contrato.contratoId,
