@@ -277,7 +277,7 @@ namespace asivamosffie.services
                 List.Add(new
                 {
                     CofinanciacionAportanteId = item.CofinanciacionAportanteId,
-                    TipoAportante = cofinanciacionAportante.TipoAportante,
+                    TipoAportanteId = cofinanciacionAportante.TipoAportanteId,
                     FuenteRecursos = FuenteRecursos.Where(r => r.Codigo == item.FuenteRecursosCodigo).FirstOrDefault().Nombre,
                     NombreAportante = NombreAportante,
                     SaldoActual = item.Valor,
