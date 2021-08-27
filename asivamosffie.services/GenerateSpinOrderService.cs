@@ -41,19 +41,9 @@ namespace asivamosffie.services
         /// 
 
 
-        public async Task<dynamic> GetInfoPlantilla(int pOrdenGiroId)
-        {
-
-            return new List<dynamic>
-            {
-                _context.VDescuentosXordenGiro.Where(r => r.OrdenGiroId == pOrdenGiroId)
-                                              .Select(v => new
-                                              {
-                                                  v.ValorDescuento,
-                                                  v.TipoDescuentoCodigo,
-                                                  v.Nombre
-                                              })
-            };
+        public async Task<List<VPlantillaOrdenGiro>> GetInfoPlantilla(int pOrdenGiroId)
+        { 
+            return await _context.VPlantillaOrdenGiro.Where(r => r.OrdenGiroId == pOrdenGiroId).OrderBy(r => r.LlaveMen).ToListAsync();
         }
 
         public async Task<dynamic> GetValorConceptoByAportanteId(int pAportanteId, int pSolicitudPagoId, string pConceptoPago)

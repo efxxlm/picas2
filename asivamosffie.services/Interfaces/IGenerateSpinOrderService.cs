@@ -9,7 +9,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IGenerateSpinOrderService
     {
-        Task<dynamic> GetInfoPlantilla(int pOrdenGiroId);
+        Task<List<VPlantillaOrdenGiro>> GetInfoPlantilla(int pOrdenGiroId);
 
         TablaUsoFuenteAportante GetTablaUsoFuenteAportante(SolicitudPago solicitudPago);
 

@@ -24,7 +24,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetInfoPlantilla")]
         [HttpGet]
-        public async Task<dynamic> GetInfoPlantilla([FromQuery] int pOrdenGiroId)
+        public async Task<List<VPlantillaOrdenGiro>> GetInfoPlantilla([FromQuery] int pOrdenGiroId)
         {
             try
             {
