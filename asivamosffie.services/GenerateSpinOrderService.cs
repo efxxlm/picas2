@@ -569,7 +569,13 @@ namespace asivamosffie.services
 
                         if (OrdenGiroAprobada)
                         {
-
+                            ListDyUsos.Add(new
+                            {
+                                Uso.Nombre,
+                                ValorUso = String.Format("{0:n0}", ValorUso),
+                                Saldo = String.Format("{0:n0}", ValorUso)
+                                // Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
+                            });
                         }
                         else
                         {

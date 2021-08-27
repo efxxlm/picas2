@@ -253,6 +253,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VDescuentosOdgxFuenteFinanciacionXaportante> VDescuentosOdgxFuenteFinanciacionXaportante { get; set; }
         public virtual DbSet<VDescuentosXordenGiro> VDescuentosXordenGiro { get; set; }
         public virtual DbSet<VDescuentosXordenGiroAportante> VDescuentosXordenGiroAportante { get; set; }
+        public virtual DbSet<VDescuentosXordenGiroXproyectoXaportanteXconcepto> VDescuentosXordenGiroXproyectoXaportanteXconcepto { get; set; }
         public virtual DbSet<VDisponibilidadPresupuestal> VDisponibilidadPresupuestal { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
         public virtual DbSet<VDrpNovedadXfaseContratacionId> VDrpNovedadXfaseContratacionId { get; set; }
@@ -270,15 +271,18 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VListCompromisosTemas> VListCompromisosTemas { get; set; }
         public virtual DbSet<VListaContratacionModificacionContractual> VListaContratacionModificacionContractual { get; set; }
         public virtual DbSet<VListaProyectos> VListaProyectos { get; set; }
+        public virtual DbSet<VNombreCuentaXodgXaportanteXconcepto> VNombreCuentaXodgXaportanteXconcepto { get; set; }
         public virtual DbSet<VNovedadContractual> VNovedadContractual { get; set; }
         public virtual DbSet<VNovedadContractualReporteHist> VNovedadContractualReporteHist { get; set; }
         public virtual DbSet<VOrdenGiro> VOrdenGiro { get; set; }
         public virtual DbSet<VOrdenGiroPagosXusoAportante> VOrdenGiroPagosXusoAportante { get; set; }
+        public virtual DbSet<VOrdenGiroPagosXusoAportanteXproyecto> VOrdenGiroPagosXusoAportanteXproyecto { get; set; }
         public virtual DbSet<VOrdenGiroXproyecto> VOrdenGiroXproyecto { get; set; }
         public virtual DbSet<VPagosSolicitudXcontratacionXproyectoXuso> VPagosSolicitudXcontratacionXproyectoXuso { get; set; }
         public virtual DbSet<VPagosSolicitudXodgXcontratacionXproyectoXuso> VPagosSolicitudXodgXcontratacionXproyectoXuso { get; set; }
         public virtual DbSet<VParametricas> VParametricas { get; set; }
         public virtual DbSet<VPermisosMenus> VPermisosMenus { get; set; }
+        public virtual DbSet<VPlantillaOrdenGiro> VPlantillaOrdenGiro { get; set; }
         public virtual DbSet<VProcesoSeleccionIntegrante> VProcesoSeleccionIntegrante { get; set; }
         public virtual DbSet<VProcesoSeleccionReporteHist> VProcesoSeleccionReporteHist { get; set; }
         public virtual DbSet<VProgramacionBySeguimientoSemanal> VProgramacionBySeguimientoSemanal { get; set; }
@@ -329,14 +333,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -7717,6 +7713,8 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false)
                     .HasComment("usuario que realiza modificación del registro");
 
+                entity.Property(e => e.ValorFacturadoConcepto).HasColumnType("decimal(25, 3)");
+
                 entity.Property(e => e.ValorNetoGiro)
                     .HasColumnType("decimal(25, 3)")
                     .HasComment("Representa la cantidad de dinero del campo correspondiente");
@@ -13996,9 +13994,11 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_DescuentosXOrdenGiro");
 
-                entity.Property(e => e.Nombre)
-                    .IsRequired()
-                    .HasMaxLength(250);
+                entity.Property(e => e.Nombre).HasMaxLength(250);
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoDescuentoCodigo)
                     .HasMaxLength(2)
@@ -14012,6 +14012,25 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_DescuentosXOrdenGiroAportante");
+            });
+
+            modelBuilder.Entity<VDescuentosXordenGiroXproyectoXaportanteXconcepto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DescuentosXOrdenGiroXProyectoXAportanteXConcepto");
+
+                entity.Property(e => e.Nombre).HasMaxLength(250);
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoDescuentoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<VDisponibilidadPresupuestal>(entity =>
@@ -14432,6 +14451,38 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoIntervencion).HasMaxLength(250);
             });
 
+            modelBuilder.Entity<VNombreCuentaXodgXaportanteXconcepto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_NombreCuentaXOdgXAportanteXConcepto");
+
+                entity.Property(e => e.CodigoSifi)
+                    .HasColumnName("CodigoSIFI")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ConceptoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NombreBanco)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.NombreCuenta)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroCuenta)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoCuenta)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<VNovedadContractual>(entity =>
             {
                 entity.HasNoKey();
@@ -14637,6 +14688,17 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<VOrdenGiroPagosXusoAportanteXproyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_OrdenGiroPagosXUsoAportanteXProyecto");
+
+                entity.Property(e => e.TipoUsoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<VOrdenGiroXproyecto>(entity =>
             {
                 entity.HasNoKey();
@@ -14740,6 +14802,92 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.RutaFormulario)
                     .HasMaxLength(400)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VPlantillaOrdenGiro>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_PlantillaOrdenGiro");
+
+                entity.Property(e => e.CodigoSifi)
+                    .HasColumnName("CodigoSIFI")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Concepto)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.ConsecutivoFfie)
+                    .HasColumnName("ConsecutivoFFIE")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.DescuentoAns).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.DescuentoOtros).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.DescuentoReteFuente).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.FormaPago)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.IdentificacionTercero)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.InstitucionEducativa)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NombreBanco).HasMaxLength(250);
+
+                entity.Property(e => e.NombreBancoTercero).HasMaxLength(250);
+
+                entity.Property(e => e.NombreCuenta)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroCuenta)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroCuentaTercero)
+                    .HasMaxLength(70)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Numerofactura)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TerceroCausasionIdentificacion)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TerceroCausasionNombre)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoCuenta)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TitularTercero)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorConcepto).HasColumnType("decimal(25, 3)");
+
+                entity.Property(e => e.ValorNetoGiro).HasColumnType("decimal(25, 3)");
             });
 
             modelBuilder.Entity<VProcesoSeleccionIntegrante>(entity =>
