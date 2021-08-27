@@ -72,12 +72,13 @@ export class FormOrigenComponent implements OnInit {
                             let totalCuenta = 0;
                             let totalEnProceso = 0;
                             let totalCompleto = 0;
+                            let totalInCompleto = 0;
 
                             this.ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
                                 if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
                                     terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.forEach( aportante => {
+                                        aportante.registroCompleto = aportante.cuentaBancariaId > 0 ? true : false;
                                         const aportanteFind = this.listaAportantes.find( value => value.aportanteId === aportante.aportanteId )
-
                                         if ( aportanteFind === undefined ) {
                                             this.listaAportantes.push( aportante );
                                         }
@@ -96,10 +97,8 @@ export class FormOrigenComponent implements OnInit {
                                             const cuenta = aportante.fuenteFinanciacion.cuentaBancaria.find( cuenta => cuenta.cuentaBancariaId === aportante.cuentaBancariaId );
 
                                             if ( cuenta !== undefined ) {
-                                                totalCompleto++;
                                                 return cuenta;
                                             } else {
-                                                totalEnProceso++;
                                                 return null;
                                             }
                                         } else {
@@ -112,6 +111,11 @@ export class FormOrigenComponent implements OnInit {
 
                                 if ( aportante.fuenteFinanciacion.cuentaBancaria.length === 1 ) {
                                     totalCuenta++;
+                                }
+                                if(aportante.registroCompleto == true){
+                                  totalCompleto++;
+                                }else if(aportante.registroCompleto == false){
+                                  totalInCompleto++;
                                 }
 
                                 this.aportantes.push(
@@ -127,11 +131,12 @@ export class FormOrigenComponent implements OnInit {
                                 );
                             }
 
-                            if ( totalEnProceso > 0 && totalEnProceso === this.listaAportantes.length ) {
-                                this.estadoSemaforo.emit( 'en-proceso' );
-                            }
                             if ( totalCompleto > 0 && totalCompleto === this.listaAportantes.length ) {
                                 this.estadoSemaforo.emit( 'completo' );
+                            }else if ( totalInCompleto > 0 && totalInCompleto === this.listaAportantes.length ) {
+                              this.estadoSemaforo.emit( 'sin-diligenciar' );
+                            }else{
+                              this.estadoSemaforo.emit( 'en-proceso' );
                             }
                             if ( totalCuenta === this.listaAportantes.length ) {
                                 this.esUnicaCuenta = true;
