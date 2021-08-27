@@ -78,7 +78,7 @@ export class PlantillaComponent implements OnInit {
     solicitudPago = await this.ordenGiroSvc
       .getSolicitudPagoBySolicitudPagoId(this.activatedRoute.snapshot.params.id)
       .toPromise();
-    console.log(solicitudPago);
+    // console.log(solicitudPago);
     // solicitudPago.contratoSon.solicitudPagoOnly.forEach(
     //   criterio => (this.valorNetoGiro += criterio.valorFacturado)
     // );
@@ -146,7 +146,7 @@ export class PlantillaComponent implements OnInit {
   getInfoPlantilla(ordenGiroId) {
     this.ordenGiroSvc.getInfoPlantilla(ordenGiroId).subscribe(response => {
       this.infoPlantilla = response;
-      // console.log(this.infoPlantilla);
+      console.log(this.infoPlantilla);
       // this.infoPlantilla[0].forEach(element => {
       //   if (element.nombre == 'ANS') this.descuentos.ans += element.valorDescuento;
       //   else if (element.nombre == 'Retegarantia') this.descuentos.retegarantia += element.valorDescuento;
@@ -215,7 +215,7 @@ export class PlantillaComponent implements OnInit {
         this.listaDetalleGiro.push(PROYECTO);
       }
     }
-    console.log(this.listaDetalleGiro);
+    // console.log(this.listaDetalleGiro);
   }
 
   getDataTerceroGiro() {
@@ -363,7 +363,7 @@ export class PlantillaComponent implements OnInit {
                     cuentaBancariaId: [cuentaBancaria(), Validators.required]
                   })
                 );
-                console.log(this.aportantes);
+                // console.log(this.aportantes);
               }
             }
           }

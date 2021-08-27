@@ -134,15 +134,13 @@
   <section style="text-align: center; margin-bottom: 32px; font-size: 10px">
     <table style="border-collapse: collapse">
       <tbody>
-        <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="5">ORIGEN</td>
-        <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="5">
+        <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="6">ORIGEN</td>
+        <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="8">
           TERCERO DE CAUSACIÓN
         </td>
-        <td colspan="8"></td>
+        <td colspan="4"></td>
         <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="5">TERCERO DE GIRO</td>
         <tr>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">PROYECTO</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">LLAVE MEN</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONSECUTIVO FFIE</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">NOMBRE DE LA CUENTA</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">N° CTA</td>
@@ -152,8 +150,10 @@
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">IDENTIFICACIÓN</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">NOMBRE</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">No. FACTURA</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">DESCRIPCIÓN DEL PAGO</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONCEPTO</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">PROYECTO</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">LLAVE MEN</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">TIPO DE PAGO</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONCEPTO DE PAGO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">VALOR TOTAL</td>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="3">DESCUENTOS</td>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" rowspan="2">VALOR NETO DEL GIRO</td>
@@ -170,8 +170,6 @@
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">TITULAR</td>
         </tr>
         <tr *ngFor="let data of this.infoPlantilla; let i = indexo">
-          <td style="border: solid 1px #000">{{ data.institucionEducativa }}</td>
-          <td style="border: solid 1px #000">{{ data.llaveMen }}</td>
           <td style="border: solid 1px #000">{{ data.consecutivoFfie }}</td>
           <td style="border: solid 1px #000">{{ data.nombreCuenta }}</td>
           <td style="border: solid 1px #000">{{ data.numeroCuenta }}</td>
@@ -181,6 +179,8 @@
           <td style="border: solid 1px #000">{{ data.identificacionTercero }}</td>
           <td style="border: solid 1px #000">{{ data.terceroCausasionNombre }}</td>
           <td style="border: solid 1px #000">{{ data.numerofactura }}</td>
+          <td style="border: solid 1px #000">{{ data.institucionEducativa }}</td>
+          <td style="border: solid 1px #000">{{ data.llaveMen }}</td>
           <td style="border: solid 1px #000">{{ data.formaPago }}</td>
           <td style="border: solid 1px #000">{{ data.concepto }}</td>
           <td style="border: solid 1px #000">{{ data.valorConcepto | currency: '':'symbol-narrow':'.0-0' }}</td>
