@@ -173,7 +173,9 @@ export class TerceroCausacionGogComponent implements OnInit {
                         }
                     }
 
-                    const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
+                    //const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
+                    const dataAportantes = await this.ordenGiroSvc.getAportantesNew( this.solicitudPago );
+                    console.log(dataAportantes);
 
                     if ( this.solicitudPago.tablaUsoFuenteAportante !== undefined ) {
                         if ( this.solicitudPago.tablaUsoFuenteAportante.usos !== undefined ) {

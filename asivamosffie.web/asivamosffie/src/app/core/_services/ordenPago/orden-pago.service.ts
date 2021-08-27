@@ -185,6 +185,32 @@ export class OrdenPagoService {
         }
     }
 
+    async getAportantesNew( solicitudPago: any ) {
+      if ( solicitudPago !== undefined ) {
+          // constantes y variables
+          const tablaInformacionFuenteRecursos: any[] = solicitudPago.tablaInformacionFuenteRecursos;
+          const aportantes: any[] = [];
+          const listaNombreAportante: { tipoAportanteId: number, cofinanciacionAportanteId: number, nombreAportante: string }[] = [];
+          const listaTipoAportanteTmp = await this.commonSvc.listaTipoAportante().toPromise();
+          const listaTipoAportante = [];
+          // Get lista de aportantes
+          for ( const aportante of tablaInformacionFuenteRecursos ) {
+            aportantes.push( aportante );
+
+            listaNombreAportante.push(
+              {
+                  tipoAportanteId: aportante.tipoAportanteId,
+                  cofinanciacionAportanteId: aportante.cofinanciacionAportanteId,
+                  nombreAportante: aportante.nombreAportante
+              }
+            );
+            listaTipoAportante.push(listaTipoAportanteTmp.find(r => r.dominioId == aportante.tipoAportanteId));
+          }
+
+          return new Promise<{ listaTipoAportante, listaNombreAportante }>( resolve => resolve ( { listaTipoAportante, listaNombreAportante } ) );
+      }
+  }
+
     firstLetterUpperCase( texto:string ) {
         if ( texto !== undefined ) {
             return humanize.capitalize( String( texto ).toLowerCase() );
