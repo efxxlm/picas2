@@ -95,7 +95,7 @@
             {{ solicitudPago.ordenGiro.fechaCreacion | date: 'dd/MM/yyyy' }}
           </td>
         </tr>
-        <tr>
+        <!-- <tr>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="2">PROYECTO</td>
           <td style="border: solid 1px #000" colspan="2">
             <div *ngFor="let proyecto of solicitudPago.contratoSon.tablaDRPODG[0].listDyProyectos">
@@ -103,15 +103,15 @@
             </div>
           </td>
           <td style="border: solid 1px #000" colspan="3" rowspan="2"></td>
-        </tr>
-        <tr>
+        </tr> -->
+        <!-- <tr>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="2">LLAVE MEN</td>
           <td style="border: solid 1px #000" colspan="2">
             <div *ngFor="let proyecto of solicitudPago.contratoSon.tablaDRPODG[0].listDyProyectos">
               <p style="margin-bottom: 0">{{ proyecto.llaveMen }}</p>
             </div>
           </td>
-        </tr>
+        </tr> -->
         <tr>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="2">
             ORDEN DE SERVICIO / CONTRATO
@@ -131,16 +131,22 @@
       </tbody>
     </table>
   </section>
-  <section style="text-align: center; margin-bottom: 32px">
+  <section style="text-align: center; margin-bottom: 32px; font-size: 10px">
     <table style="border-collapse: collapse">
       <tbody>
         <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="5">ORIGEN</td>
-        <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="4">
+        <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="5">
           TERCERO DE CAUSACIÓN
         </td>
-        <td colspan="7"></td>
+        <td colspan="8"></td>
         <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="5">TERCERO DE GIRO</td>
         <tr>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">
+            PROYECTO
+          </td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">
+            LLAVE MEN
+          </td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">
             CONSECUTIVO FFIE
           </td>
@@ -160,7 +166,7 @@
             DESCRIPCIÓN DEL PAGO
           </td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONCEPTO</td>
-          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" rowspan="2">VALOR TOTAL</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">VALOR TOTAL</td>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="3">DESCUENTOS</td>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" rowspan="2">
             VALOR NETO DEL GIRO
@@ -181,98 +187,31 @@
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">IDENTIFICACIÓN</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">TITULAR</td>
         </tr>
-        <tr *ngFor="let data of tablaOrdenGiro; let i = indexo">
-          <td style="border: solid 1px #000">{{ data.consecutivoOrigen }}</td>
-          <td style="border: solid 1px #000">{{ data.nombreCuentaBanco }}</td>
-          <td style="border: solid 1px #000">{{ data.numeroCuentaBanco }}</td>
-          <td style="border: solid 1px #000">{{ getBanco(data.bancoCodigo) }}</td>
-          <td style="border: solid 1px #000">{{ data.tipoCuentaCodigo }}</td>
-          <td style="border: solid 1px #000">{{ data.codigoSifi }}</td>
-          <td style="border: solid 1px #000">{{ data.numeroIdentificacion }}</td>
-          <td style="border: solid 1px #000">{{ data.nombre }}</td>
-          <td style="border: solid 1px #000">{{ data.numero }}</td>
-          <td style="border: solid 1px #000">{{ this.getConceptos(data.conceptoPagoCriterio) }}</td>
-          <td style="border: solid 1px #000">
-            {{ data.valorFacturadoConcepto | currency: '':'symbol-narrow':'.0-0' }}
-          </td>
-          <td style="border: solid 1px #000">
-            <span *ngIf="infoPlantilla && infoPlantilla[0] != false; else cero">{{
-              descuentos.valorTotal | currency: '':'symbol-narrow':'.0-0'
-            }}</span
-            ><ng-template #cero>$0</ng-template>
-          </td>
-          <td style="border: solid 1px #000">
-            <span *ngIf="infoPlantilla && infoPlantilla[0] != false; else cero">{{
-              descuentos.retegarantia | currency: '':'symbol-narrow':'.0-0'
-            }}</span
-            ><ng-template #cero>$0</ng-template>
-          </td>
-          <td style="border: solid 1px #000">
-            <span *ngIf="infoPlantilla && infoPlantilla[0] != false; else cero">{{
-              descuentos.ans | currency: '':'symbol-narrow':'.0-0'
-            }}</span
-            ><ng-template #cero>$0</ng-template>
-          </td>
-          <td style="border: solid 1px #000">
-            <span *ngIf="infoPlantilla && infoPlantilla[0] != false; else cero">{{
-              descuentos.otrosDescuentos | currency: '':'symbol-narrow':'.0-0'
-            }}</span
-            ><ng-template #cero>$0</ng-template>
-          </td>
-          <td style="border: solid 1px #000">
-            <span *ngIf="solicitudPago.ordenGiro.valorNetoGiro">{{
-              valorNetoGiro | currency: '':'symbol-narrow':'.0-0'
-            }}</span>
-          </td>
-
-          <!-- <tr *ngFor="let tercero of solicitudPago.ordenGiro.ordenGiroTercero"> -->
-          <td style="border: solid 1px #000">{{ data.esCuentaAhorros }}</td>
-          <td style="border: solid 1px #000">{{ getBanco(data.bancoCodigo) }}</td>
+        <tr *ngFor="let data of this.infoPlantilla; let i = indexo">
+          <td style="border: solid 1px #000">{{ data.institucionEducativa }}</td>
+          <td style="border: solid 1px #000">{{ data.llaveMen }}</td>
+          <td style="border: solid 1px #000">{{ data.consecutivoFfie }}</td>
+          <td style="border: solid 1px #000">{{ data.nombreCuenta }}</td>
           <td style="border: solid 1px #000">{{ data.numeroCuenta }}</td>
-          <td style="border: solid 1px #000">{{ data.titularNumeroIdentificacion }}</td>
-          <td style="border: solid 1px #000">{{ data.titularCuenta }}</td>
-          <!-- </tr> -->
+          <td style="border: solid 1px #000">{{ data.nombreBanco }}</td>
+          <td style="border: solid 1px #000">{{ data.tipoCuenta }}</td>
+          <td style="border: solid 1px #000">{{ data.codigoSifi }}</td>
+          <td style="border: solid 1px #000">{{ data.identificacionTercero }}</td>
+          <td style="border: solid 1px #000">{{ data.terceroCausasionNombre }}</td>
+          <td style="border: solid 1px #000">{{ data.numerofactura }}</td>
+          <td style="border: solid 1px #000">{{ data.formaPago }}</td>
+          <td style="border: solid 1px #000">{{ data.concepto }}</td>
+          <td style="border: solid 1px #000">{{ data.valorConcepto | currency: '':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000">{{ data.descuentoReteFuente | currency: '':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000">{{ data.descuentoAns | currency: '':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000">{{ data.descuentoOtros | currency: '':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000">{{ data.valorNetoGiro | currency: '':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000">{{ data.esCuentaAhorros === true ? 'Ahorros' : data.esCuentaAhorros === false ? 'Corriente': '' }}</td>
+          <td style="border: solid 1px #000">{{ data.nombreBancoTercero }}</td>
+          <td style="border: solid 1px #000">{{ data.numeroCuentaTercero }}</td>
+          <td style="border: solid 1px #000">{{ data.identificacionTercero }}</td>
+          <td style="border: solid 1px #000">{{ data.titularTercero }}</td>
         </tr>
-        <!-- <tr>
-          <td style="border: solid 1px #000; height: 21px"></td>
-          <td style="border: solid 1px #000" *ngIf="aportantes.length > 0">
-            <div *ngFor="let aportante of aportantes.controls">
-              {{ firstLetterUpperCase(aportante.get('cuentaBancariaId').value.nombreCuentaBanco) }}
-            </div>
-          </td>
-          <td style="border: solid 1px #000" *ngIf="aportantes.length > 0">
-            <div *ngFor="let aportante of aportantes.controls">
-              {{ aportante.get('cuentaBancariaId').value.numeroCuentaBanco }}
-            </div>
-          </td>
-          <td style="border: solid 1px #000" *ngIf="aportantes.length > 0">
-            <div *ngFor="let aportante of aportantes.controls">
-              {{ firstLetterUpperCase(getBanco(aportante.get('cuentaBancariaId').value.bancoCodigo)) }}
-            </div>
-          </td>
-          <td style="border: solid 1px #000" *ngIf="aportantes.length > 0">
-            <div *ngFor="let aportante of aportantes.controls">
-              {{ aportante.get('cuentaBancariaId').value.tipoCuentaCodigo }}
-            </div>
-          </td>
-          <td style="border: solid 1px #000" *ngIf="aportantes.length > 0">
-            <div *ngFor="let aportante of aportantes.controls">
-              {{ aportante.get('cuentaBancariaId').value.codigoSifi }}
-            </div>
-          </td>
-          <td style="border: solid 1px #000">
-            {{ solicitudPago.contratoSon.contratacion.contratista.numeroIdentificacion }}
-          </td>
-          <td style="border: solid 1px #000">{{ solicitudPago.contratoSon.contratacion.contratista.nombre }}</td>
-          <td style="border: solid 1px #000">{{ solicitudPago.solicitudPagoFactura[0].numero }}</td>
-          <td style="border: solid 1px #000"></td>
-          <td style="border: solid 1px #000"></td>
-          <td style="border: solid 1px #000"></td>
-          <td style="border: solid 1px #000"></td>
-          <td style="border: solid 1px #000"></td>
-          <td style="border: solid 1px #000"></td>
-          <td style="border: solid 1px #000"></td>
-        </tr> -->
         <tr>
           <td style="border: solid 1px #000" colspan="10">FIRMAS AUTORIZADAS</td>
         </tr>

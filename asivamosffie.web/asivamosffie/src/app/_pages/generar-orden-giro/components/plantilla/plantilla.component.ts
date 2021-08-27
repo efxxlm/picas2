@@ -146,14 +146,14 @@ export class PlantillaComponent implements OnInit {
   getInfoPlantilla(ordenGiroId) {
     this.ordenGiroSvc.getInfoPlantilla(ordenGiroId).subscribe(response => {
       this.infoPlantilla = response;
-      console.log(this.infoPlantilla);
-      this.infoPlantilla[0].forEach(element => {
-        if (element.nombre == 'ANS') this.descuentos.ans += element.valorDescuento;
-        else if (element.nombre == 'Retegarantia') this.descuentos.retegarantia += element.valorDescuento;
-        else this.descuentos.otrosDescuentos += element.valorDescuento;
+      // console.log(this.infoPlantilla);
+      // this.infoPlantilla[0].forEach(element => {
+      //   if (element.nombre == 'ANS') this.descuentos.ans += element.valorDescuento;
+      //   else if (element.nombre == 'Retegarantia') this.descuentos.retegarantia += element.valorDescuento;
+      //   else this.descuentos.otrosDescuentos += element.valorDescuento;
 
-        this.descuentos.valorTotal += element.valorDescuento;
-      });
+      //   this.descuentos.valorTotal += element.valorDescuento;
+      // });
     });
   }
 
