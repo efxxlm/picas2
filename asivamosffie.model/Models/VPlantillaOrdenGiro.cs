@@ -7,7 +7,7 @@ namespace asivamosffie.model.Models
     {
         public string InstitucionEducativa { get; set; }
         public string LlaveMen { get; set; }
-        public int OrdenGiroId { get; set; }
+        public int? OrdenGiroId { get; set; }
         public string ConsecutivoFfie { get; set; }
         public string NombreCuenta { get; set; }
         public string NumeroCuenta { get; set; }

@@ -334,6 +334,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -14815,9 +14816,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Concepto)
-                    .IsRequired()
-                    .HasMaxLength(250);
+                entity.Property(e => e.Concepto).HasMaxLength(250);
 
                 entity.Property(e => e.ConsecutivoFfie)
                     .HasColumnName("ConsecutivoFFIE")
@@ -14829,16 +14828,13 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.DescuentoReteFuente).HasColumnType("decimal(38, 0)");
 
-                entity.Property(e => e.FormaPago)
-                    .IsRequired()
-                    .HasMaxLength(250);
+                entity.Property(e => e.FormaPago).HasMaxLength(250);
 
                 entity.Property(e => e.IdentificacionTercero)
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
                 entity.Property(e => e.InstitucionEducativa)
-                    .IsRequired()
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
@@ -14868,12 +14864,10 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.TerceroCausasionIdentificacion)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TerceroCausasionNombre)
-                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
