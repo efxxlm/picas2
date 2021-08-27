@@ -141,47 +141,29 @@
         <td colspan="8"></td>
         <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="5">TERCERO DE GIRO</td>
         <tr>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">
-            PROYECTO
-          </td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">
-            LLAVE MEN
-          </td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">
-            CONSECUTIVO FFIE
-          </td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">
-            NOMBRE DE LA CUENTA
-          </td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">PROYECTO</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">LLAVE MEN</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONSECUTIVO FFIE</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">NOMBRE DE LA CUENTA</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">N° CTA</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">BANCO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">TIPO CTA</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CÓDIGO SIFI</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">
-            IDENTIFICACIÓN
-          </td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">IDENTIFICACIÓN</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">NOMBRE</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">No. FACTURA</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">
-            DESCRIPCIÓN DEL PAGO
-          </td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">DESCRIPCIÓN DEL PAGO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONCEPTO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">VALOR TOTAL</td>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="3">DESCUENTOS</td>
-          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" rowspan="2">
-            VALOR NETO DEL GIRO
-          </td>
+          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" rowspan="2">VALOR NETO DEL GIRO</td>
           <td style="border: solid 1px #000" colspan="5">INFORMACIÓN DEL GIRO</td>
         </tr>
         <tr>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">RETE GARANTÍA</td>
-          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">
-            DESCUENTO POR RETRASO - ANS
-          </td>
+          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">DESCUENTO POR RETRASO - ANS</td>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">OTROS DESCUENTOS</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">
-            TIPO DE CUENTA (CTE-AHO) / FONDO
-          </td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">TIPO DE CUENTA (CTE-AHO) / FONDO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">ENTIDAD / FONDO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">NUMERO DE CUENTA / FONDO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">IDENTIFICACIÓN</td>
@@ -206,7 +188,10 @@
           <td style="border: solid 1px #000">{{ data.descuentoAns | currency: '':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000">{{ data.descuentoOtros | currency: '':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000">{{ data.valorNetoGiro | currency: '':'symbol-narrow':'.0-0' }}</td>
-          <td style="border: solid 1px #000">{{ data.esCuentaAhorros === true ? 'Ahorros' : data.esCuentaAhorros === false ? 'Corriente': '' }}</td>
+          <td style="border: solid 1px #000">
+            <span *ngIf="data.esCuentaAhorros === true">Ahorros</span>
+            <span *ngIf="data.esCuentaAhorros === false">Corriente</span>
+          </td>
           <td style="border: solid 1px #000">{{ data.nombreBancoTercero }}</td>
           <td style="border: solid 1px #000">{{ data.numeroCuentaTercero }}</td>
           <td style="border: solid 1px #000">{{ data.identificacionTercero }}</td>
