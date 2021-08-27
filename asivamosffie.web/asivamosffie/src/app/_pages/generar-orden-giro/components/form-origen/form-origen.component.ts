@@ -55,7 +55,7 @@ export class FormOrigenComponent implements OnInit {
     }
 
     async getOrigen() {
-        const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
+        const dataAportantes = await this.ordenGiroSvc.getAportantesNew( this.solicitudPago );
 
         // Get IDs
         if ( this.solicitudPago.ordenGiro !== undefined ) {
@@ -94,7 +94,7 @@ export class FormOrigenComponent implements OnInit {
                                     if ( aportante.fuenteFinanciacion.cuentaBancaria.length > 1 ) {
                                         if ( aportante.cuentaBancariaId !== undefined ) {
                                             const cuenta = aportante.fuenteFinanciacion.cuentaBancaria.find( cuenta => cuenta.cuentaBancariaId === aportante.cuentaBancariaId );
-                                            
+
                                             if ( cuenta !== undefined ) {
                                                 totalCompleto++;
                                                 return cuenta;
@@ -194,7 +194,7 @@ export class FormOrigenComponent implements OnInit {
     }
 
     guardar() {
-        
+
         this.aportantes.controls.forEach( control => {
             this.ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
                 terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.forEach( aportante => {
@@ -205,7 +205,7 @@ export class FormOrigenComponent implements OnInit {
             } )
         } )
 
-        
+
         const pOrdenGiro = {
             solicitudPagoId: this.solicitudPago.solicitudPagoId,
             ordenGiroId: this.ordenGiroId,
