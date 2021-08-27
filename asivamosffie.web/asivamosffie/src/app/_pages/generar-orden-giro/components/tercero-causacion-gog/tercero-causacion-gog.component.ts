@@ -561,11 +561,13 @@ export class TerceroCausacionGogComponent implements OnInit {
 
     getTipoDescuento( codigo: string ): Dominio[] {
         if ( this.listaTipoDescuento.length > 0 ) {
-            const descuento = this.listaTipoDescuento.find( descuento => descuento.codigo === codigo );
+
+            /*const descuento = this.listaTipoDescuento.find( descuento => descuento.codigo === codigo );
 
             if ( descuento !== undefined ) {
                 return [ descuento ];
-            }
+            }*/
+            return this.listaTipoDescuento;
         }
     }
 
@@ -573,10 +575,10 @@ export class TerceroCausacionGogComponent implements OnInit {
         const listaDescuento: Dominio[] = this.getConceptos( index ).controls[ jIndex ].get( 'tipoDescuentoArray' ).value;
         const descuentoIndex = listaDescuento.findIndex( descuento => descuento.codigo === codigo );
 
-        if ( descuentoIndex !== -1 ) {
+        /*if ( descuentoIndex !== -1 ) {
             //listaDescuento.splice( descuentoIndex, 1 );
-            this.getConceptos( index ).controls[ jIndex ].get( 'tipoDescuentoArray' ).setValue( listaDescuento );
-        }
+        }*/
+        this.getConceptos( index ).controls[ jIndex ].get( 'tipoDescuentoArray' ).setValue( listaDescuento );
     }
 
     checkTotalValueAportantes( cb: { ( totalValueAportantes: number ): void } ) {

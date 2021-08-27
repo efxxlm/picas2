@@ -21,7 +21,7 @@
                             {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-        
+
                         <mat-card formArrayName="conceptos" class="shipping-card" *ngFor="let concepto of getConceptos( i ).controls; index as j">
                             <mat-card-header class="header-card header-card--margin">
                                 <mat-card-title class="header-card--text">
@@ -30,7 +30,7 @@
                             </mat-card-header>
                             <mat-card-content style="text-align: left;" [formGroup]="concepto">
                                 <p><strong>Valor facturado por concepto: </strong> {{ concepto.get( 'valorFacturadoConcepto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
-    
+
                                 <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j ).controls; index as k">
                                     <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ k + 1 }} </mat-card-title>
                                     <p>
@@ -51,7 +51,7 @@
                                     </p>
                                     <p>
                                         <b>
-                                            Fuente de los recursos:                                        
+                                            Fuente de los recursos:
                                         </b>
                                         <span *ngIf="aportante.get( 'fuenteRecursos' ).value">
                                             {{ firstLetterUpperCase( aportante.get( 'fuenteRecursos' ).value.nombre ) }}
@@ -59,7 +59,7 @@
                                     </p>
                                     <p>
                                         <b>
-                                            Valor facturado por el concepto para el aportante:                                        
+                                            Valor facturado por el concepto para el aportante:
                                         </b>
                                         <span *ngIf="aportante.get( 'valorDescuento' ).value">
                                             {{ aportante.get( 'valorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }}
@@ -68,7 +68,7 @@
                                 </div>
 
                                 <div>
-    
+
                                     <h2 class="card-subTitle">Descuentos Dirección financiera</h2>
 
                                     <div [formGroup]="getConceptos( i ).controls[ j ].get( 'descuento' )">
@@ -100,7 +100,7 @@
                                 </div>
                             </mat-card-content>
                         </mat-card>
-                </mat-expansion-panel> 
+                </mat-expansion-panel>
             </mat-accordion>
         </form>
     </ng-container>
@@ -113,7 +113,7 @@
                             {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-        
+
                         <mat-card formArrayName="conceptos" class="shipping-card" *ngFor="let concepto of getConceptos( i ).controls; index as j">
                             <mat-card-header class="header-card header-card--margin">
                                 <mat-card-title class="header-card--text">
@@ -122,7 +122,7 @@
                             </mat-card-header>
                             <mat-card-content style="text-align: left;" [formGroup]="concepto">
                                 <p><strong>Valor facturado por concepto: </strong> {{ concepto.get( 'valorFacturadoConcepto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
-    
+
                                 <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j ).controls; index as k">
                                     <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ k + 1 }} </mat-card-title>
                                     <div class="row" style="padding-left: 0em !important;">
@@ -139,7 +139,7 @@
                                                         </div>
                                                         <div class="col">
                                                             <mat-form-field class="select-width">
-                                                                <ng-container *ngIf=" aportante.get( 'tipoAportante' ).value !== null; else elseTemplate">
+                                                                <!--<ng-container *ngIf=" aportante.get( 'tipoAportante' ).value !== null; else elseTemplate">
                                                                     <mat-select formControlName="tipoAportante" required>
                                                                         <mat-option [value]="aportante.get( 'tipoAportante' ).value">
                                                                             {{ aportante.get( 'tipoAportante' ).value.nombre }}
@@ -152,7 +152,12 @@
                                                                             {{ aportante.nombre }}
                                                                         </mat-option>
                                                                     </mat-select>
-                                                                </ng-template>
+                                                                </ng-template>-->
+                                                                <mat-select formControlName="tipoAportante" required (ngModelChange)="valuePendingTipoAportante( $event, i, j, k )">
+                                                                  <mat-option *ngFor="let aportante of concepto.get( 'tipoDeAportantes' ).value" [value]="aportante">
+                                                                      {{ aportante.nombre }}
+                                                                  </mat-option>
+                                                                </mat-select>
                                                             </mat-form-field>
                                                         </div>
                                                         <span class="icon-incompleto">
@@ -296,12 +301,12 @@
                                         </button>
                                     </div>
                                 </div>
-    
+
                                 <div>
                                     <div>
-    
+
                                         <h2 class="card-subTitle">Descuentos Dirección financiera</h2>
-    
+
                                         <div [formGroup]="getConceptos( i ).controls[ j ].get( 'descuento' )">
                                             <div class="row">
                                                 <div class="col-md-8">
@@ -332,7 +337,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-    
+
                                             <div class="d-flex mt-1em animatedDown" *ngIf="getConceptos( i ).controls[ j ].get( 'descuento' ).get('aplicaDescuentos').value === true">
                                                 <label  class="mr-label label-left"
                                                         [ngClass]="{ 'color-secondaryColor': (getConceptos( i ).controls[ j ].get( 'descuento' ).get('numeroDescuentos').invalid && getConceptos( i ).controls[ j ].get( 'descuento' ).get('numeroDescuentos').touched) || (getConceptos( i ).controls[ j ].get( 'descuento' ).get('numeroDescuentos').invalid && estaEditando) }">
@@ -532,7 +537,7 @@
                                     <section [innerHTML]="criterio.get( 'obsVerificar' ).value.observacion" style="margin-left: 2em;" *ngIf="criterio.get( 'obsVerificar' ).value.tieneObservacion === true"></section>
                                 </mat-card-content>
                             </mat-card>
-                
+
                             <mat-card class="shipping-card border" align="left" *ngIf="criterio.get( 'obsAprobar' ).value !== null">
                                 <mat-card-header class="header-card">
                                     <mat-card-title class="header-card--text card-title-detalle">
@@ -546,7 +551,7 @@
                                     <section [innerHTML]="criterio.get( 'obsAprobar' ).value.observacion" style="margin-left: 2em;" *ngIf="criterio.get( 'obsAprobar' ).value.tieneObservacion === true"></section>
                                 </mat-card-content>
                             </mat-card>
-                
+
                             <mat-card class="shipping-card border" align="left" *ngIf="criterio.get( 'obsTramitar' ).value !== null">
                                 <mat-card-header class="header-card">
                                     <mat-card-title class="header-card--text card-title-detalle">
@@ -572,9 +577,9 @@
                                     <img src="assets/img/icon/guardar.svg" alt="Regresar">
                             </button>
                         </div>
-                </mat-expansion-panel> 
+                </mat-expansion-panel>
             </mat-accordion>
         </form>
     </ng-template>
-    
+
 </section>

@@ -194,12 +194,11 @@ export class FormOrigenComponent implements OnInit {
     }
 
     guardar() {
-
         this.aportantes.controls.forEach( control => {
             this.ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
                 terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.forEach( aportante => {
                     if ( control.get( 'nombreAportante' ).value.cofinanciacionAportanteId === aportante.aportanteId ) {
-                        aportante.cuentaBancariaId = control.get( 'cuentaBancariaId' ).value.cuentaBancariaId;
+                      aportante.cuentaBancariaId = control.get( 'cuentaBancariaId' )?.value?.cuentaBancariaId;
                     }
                 } )
             } )
