@@ -7461,57 +7461,55 @@ white-space: normal;border-right: 1pt solid black; width: 1360pt">
       <td class="xl89"></td>
       <td class="xl89"></td>
     </tr>
-    <tr class="xl89" style=" height: 15.75pt">
-      <td class="xl89" style="height: 15.75pt"></td>
-      <td class="xl249" style="      font-size: 10pt;      font-weight: 700;      font-family: Arial, sans-serif;       border-top: 1pt solid black;      border-right: 1pt solid black;      border-bottom: 0.5pt solid black;
-      border-left: 1pt solid black;"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl211"></td>
-      <td class="xl212"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-      <td class="xl89"></td>
-    </tr>
     <tr class="xl89" style=" height: 13.2pt">
       <td class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black">01</td>
+      <td class="xl208" style="border-top: 1pt solid black;background: white;"></td>
+      <td colspan="8" class="xl292" width="346" style="
+      color: black;
+      font-size: 6pt;
+      font-weight: 700;
+      font-family: Arial, sans-serif;
+      text-align: left;
+      vertical-align: middle;
+      background: white;
+      border: 0.5pt solid black;
+      white-space: normal; width: 259pt"></td>
+      <td colspan="4" class="xl287" style="
+      color: black;
+      font-size: 6pt;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      font-weight: 700;
+      vertical-align: middle;
+      border: 0.5pt solid black;
+      background: white;">Programación</td>
+      <td colspan="4" class="xl293" width="267" style="
+      color: black;
+      font-size: 6pt;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      vertical-align: middle;
+      border: 0.5pt solid black;
+      background: white;
+      font-weight: 700;
+      white-space: normal;border-left: none; width: 200pt">Ejecutado</td>
+      <td colspan="3" class="xl209" width="69" style="
+      border-top: 1px solid black;
+    color: black;
+    font-size: 6pt;
+    font-weight: 700;
+    font-family: Arial, sans-serif;
+    vertical-align: middle;
+    border: 0.5pt solid black;
+    background: white;
+    font-weight: 700;
+    white-space: normal;
+      text-align: right;border-top: 1px solid black; border-left: none; width: 52pt">Desv.</td>
+      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
+    </tr>
+    <tr class="xl89" style=" height: 13.2pt" *ngFor="let avance of this.avanceFisico; let i = index">
+      <td class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black">{{ avance.num | number:'2.0' }}</td>
       <td colspan="8" class="xl292" width="346" style="
       color: black;
       font-size: 6pt;
@@ -7521,7 +7519,7 @@ white-space: normal;border-right: 1pt solid black; width: 1360pt">
       vertical-align: middle;
       border: 0.5pt solid black;
       background: #bfbfbf;
-      white-space: normal; width: 259pt">PRELIMINARES</td>
+      white-space: normal; width: 259pt">{{ avance.capitulo }} </td>
       <td colspan="4" class="xl287" style="
       color: red;
       font-size: 6pt;
@@ -7529,7 +7527,7 @@ white-space: normal;border-right: 1pt solid black; width: 1360pt">
       text-align: center;
       vertical-align: middle;
       border: 0.5pt solid black;
-      background: white;">$ 5,00</td>
+      background: white;">${{avance.programacion| currency:' ':'symbol-narrow':'.0-0' }}</td>
       <td colspan="4" class="xl293" width="267" style="
       color: black;
       font-size: 6pt;
@@ -7538,7 +7536,8 @@ white-space: normal;border-right: 1pt solid black; width: 1360pt">
       vertical-align: middle;
       border: 0.5pt solid black;
       background: white;
-      white-space: normal;border-left: none; width: 200pt">$ 3</td>
+      white-space: normal;border-left: none; width: 200pt">${{avance.ejectutado| currency:' ':'symbol-narrow':'.0-0' }}
+      </td>
       <td colspan="3" class="xl209" width="69" style="
       border-top: 1px solid black;
     color: black;
@@ -7549,747 +7548,8 @@ white-space: normal;border-right: 1pt solid black; width: 1360pt">
     border: 0.5pt solid black;
     background: white;
     white-space: normal;
-      text-align: right;border-top: 1px solid black; border-left: none; width: 52pt">-40%</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">02</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt;
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">CIMENTACIÓN</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 10,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">$ 5</td>
-      <td colspan="3" class="xl209" width="69" style="
-      border-top: 1px solid black;
-    color: black;
-    font-size: 6pt; 
-    font-weight: 700;
-    font-family: Arial, sans-serif;
-    vertical-align: middle;
-    border: 0.5pt solid black;
-    background: white;
-    white-space: normal;
-      text-align: right;border-top: 0px; border-left: none; width: 52pt">-50%</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">03</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">DESAGUES</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 11,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">$ 8</td>
-      <td colspan="3" class="xl209" width="69" style="
-      border-top: 1px solid black;
-    color: black;
-    font-size: 6pt; 
-    font-weight: 700;
-    font-family: Arial, sans-serif;
-    vertical-align: middle;
-    border: 0.5pt solid black;
-    background: white;
-    white-space: normal;
-      text-align: right;border-top: 0px; border-left: none; width: 52pt">-27%</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">04</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">ESTRUCTURA CONCRETO</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 103,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">$ 10</td>
-      <td colspan="3" class="xl209" width="69" style="
-      border-top: 1px solid black;
-    color: black;
-    font-size: 6pt; 
-    font-weight: 700;
-    font-family: Arial, sans-serif;
-    vertical-align: middle;
-    border: 0.5pt solid black;
-    background: white;
-    white-space: normal;
-      text-align: right;border-top: 0px; border-left: none; width: 52pt">-90%</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">05</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">MAMPOSTERIAS</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 30,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">$ 5</td>
-      <td colspan="3" class="xl209" width="69" style="
-      border-top: 1px solid black;
-    color: black;
-    font-size: 6pt; 
-    font-weight: 700;
-    font-family: Arial, sans-serif;
-    vertical-align: middle;
-    border: 0.5pt solid black;
-    background: white;
-    white-space: normal;
-      text-align: right;border-top: 0px; border-left: none; width: 52pt">-83%</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="44" style=" height: 13.2pt">
-      <td height="44" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl210" style="font-size: 6pt; border-top: 0px">06</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">PREFABRICADOS EN CONCRETO</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 6,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">&nbsp;</td>
-      <td colspan="3" class="xl209" width="69" style="border-top: 0px; border-left: none; width: 52pt">&nbsp;</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="48" style="height: 13.2pt">
-      <td height="48" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">07</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">INSTALACIONES SANITARIAS</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 18,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">$ 4</td>
-      <td colspan="3" class="xl209" width="69" style="
-      border-top: 1px solid black;
-    color: black;
-    font-size: 6pt; 
-    font-weight: 700;
-    font-family: Arial, sans-serif;
-    vertical-align: middle;
-    border: 0.5pt solid black;
-    background: white;
-    white-space: normal;
-      text-align: right;border-top: 0px; border-left: none; width: 52pt">-78%</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">08</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">INSTALACIONES ELÉCTRICAS</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 12,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">$ 3</td>
-      <td colspan="3" class="xl209" width="69" style="
-      border-top: 1px solid black;
-    color: black;
-    font-size: 6pt; 
-    font-weight: 700;
-    font-family: Arial, sans-serif;
-    vertical-align: middle;
-    border: 0.5pt solid black;
-    background: white;
-    white-space: normal;
-      text-align: right;border-top: 0px; border-left: none; width: 52pt">-75%</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">09</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">PAÑETES</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 9,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">&nbsp;</td>
-      <td colspan="3" class="xl209" width="69" style="border-top: 0px; border-left: none; width: 52pt">&nbsp;</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">10</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">PISOS</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 7,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">&nbsp;</td>
-      <td colspan="3" class="xl209" width="69" style="border-top: 0px; border-left: none; width: 52pt">&nbsp;</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">11</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">CUBIERTAS</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 6,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">&nbsp;</td>
-      <td colspan="3" class="xl209" width="69" style="border-top: 0px; border-left: none; width: 52pt">&nbsp;</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">12</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">CARPINTERIA METÁLICA</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 8,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">&nbsp;</td>
-      <td colspan="3" class="xl209" width="69" style="border-top: 0px; border-left: none; width: 52pt">&nbsp;</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">13</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">CARPINTERIA EN MADERA</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 3,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">&nbsp;</td>
-      <td colspan="3" class="xl209" width="69" style="border-top: 0px; border-left: none; width: 52pt">&nbsp;</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">14</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">ENCHAPES</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 5,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">&nbsp;</td>
-      <td colspan="3" class="xl209" width="69" style="border-top: 0px; border-left: none; width: 52pt">&nbsp;</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">15</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">ILUMINACIÓN</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 7,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">&nbsp;</td>
-      <td colspan="3" class="xl209" width="69" style="border-top: 0px; border-left: none; width: 52pt">&nbsp;</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">16</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">APARATOS SANITARIOS</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 7,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">&nbsp;</td>
-      <td colspan="3" class="xl209" width="69" style="border-top: 0px; border-left: none; width: 52pt">&nbsp;</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">17</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">CIELO RASO</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 5,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">&nbsp;</td>
-      <td colspan="3" class="xl209" width="69" style="border-top: 0px; border-left: none; width: 52pt">&nbsp;</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl89" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">18</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">PINTURA</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 7,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">&nbsp;</td>
-      <td colspan="3" class="xl209" width="69" style="border-top: 0px; border-left: none; width: 52pt">&nbsp;</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl81" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl81" style="height: 13.2pt"></td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">19</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">CERRADURAS Y VIDRIOS</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 5,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">&nbsp;</td>
-      <td colspan="3" class="xl209" width="69" style="border-top: 0px; border-left: none; width: 52pt">&nbsp;</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl82" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl82" style="height: 13.2pt"></td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">20</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">OBRAS EXTERIORES</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 9,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">&nbsp;</td>
-      <td colspan="3" class="xl209" width="69" style="
-      border-top: 1px solid black;
-    color: black;
-    font-size: 6pt; 
-    font-weight: 700;
-    font-family: Arial, sans-serif;
-    vertical-align: middle;
-    border: 0.5pt solid black;
-    background: white;
-    white-space: normal;
-      text-align: right;border-top: 0px; border-left: none; width: 52pt">0%</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
-    </tr>
-    <tr class="xl81" height="18" style=" height: 13.2pt">
-      <td height="18" class="xl81" style="height: 13.2pt"></td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black ">21</td>
-      <td colspan="8" class="xl292" width="346" style="
-      color: black;
-      font-size: 6pt; 
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      text-align: left;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: #bfbfbf;
-      white-space: normal; width: 259pt">EQUIPOS ESPECIALES</td>
-      <td colspan="4" class="xl287" style="
-      color: red;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;">$ 7,00</td>
-      <td colspan="4" class="xl293" width="267" style="
-      color: black;
-      font-size: 6pt; 
-      font-family: Arial, sans-serif;
-      text-align: center;
-      vertical-align: middle;
-      border: 0.5pt solid black;
-      background: white;
-      white-space: normal;border-left: none; width: 200pt">&nbsp;</td>
-      <td colspan="3" class="xl209" width="69" style="
-      border-top: 1px solid black;
-    color: black;
-    font-size: 6pt; 
-    font-weight: 700;
-    font-family: Arial, sans-serif;
-    vertical-align: middle;
-    border: 0.5pt solid black;
-    background: white;
-    white-space: normal;
-      text-align: right;border-top: 0px; border-left: none; width: 52pt">&nbsp;</td>
+      text-align: right;border-top: 1px solid black; border-left: none; width: 52pt">{{avance.desviacion.toFixed(2)}}%
+      </td>
       <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;"></td>
     </tr>
     <tr class="xl81" height="26" style=" height: 19.5pt">
@@ -10506,7 +9766,8 @@ white-space: normal;border-right: 1pt solid black; width: 1360pt">
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="32" class="xl261" width="398"
-        style="border-top: 0.5pt solid black; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt;"></td>
+        style="border-top: 0.5pt solid black; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt;">
+      </td>
     </tr>
     <tr class="xl81" height="37" style="mso-height-source: userset; height: 27.75pt">
       <td height="37" class="xl81" style="height: 27.75pt"></td>
@@ -11212,20 +10473,22 @@ white-space: normal;border-right: 1pt solid black; width: 1360pt">
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="10" class="xl528" width="173"
-        style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-right: 0.5pt solid black;">
+        style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black;">
         URL con soporte</td>
       <td class="xl96" width="35"
         style="font-size: 6pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
-        colspan="22">&nbsp;</td>
+        colspan="22">{{this.registroFotografico.urlSoporteFotografico}}</td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="10" class="xl528" width="173"
-        style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-right: 0.5pt solid black;">
+        style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black;">
         Observaciones</td>
       <td class="xl96" width="35"
         style="font-size: 6pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
-        colspan="22">&nbsp;</td>
+        colspan="22">
+        <div [innerHTML]="this.registroFotografico.descripcion"></div>
+      </td>
     </tr>
     <tr class="xl89" height="150" style="mso-height-source: userset; height: 13.2pt">
       <td height="150" class="xl89" style="height: 13.2pt">&nbsp;</td>
@@ -11236,13 +10499,13 @@ white-space: normal;border-right: 1pt solid black; width: 1360pt">
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="32" class="xl528" width="173"
-        style="font-size: 6pt;width: 130pt; border-right: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
+        style="font-size: 6pt;width: 130pt; border-right: 0.5pt solid black; font-weight: 700;">
         FIRMA INTERVENTOR ( DIRECTOR DE INTERVENTORÍA)</td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="32" class="xl528" width="173"
-        style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
+        style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
         NOMBRE:</td>
     </tr>
     <tr class="xl89" height="150" style="mso-height-source: userset; height: 13.2pt">
@@ -11254,19 +10517,19 @@ white-space: normal;border-right: 1pt solid black; width: 1360pt">
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="32" class="xl528" width="173"
-        style="font-size: 6pt;width: 130pt; border-right: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
+        style="font-size: 6pt;width: 130pt; border-right: 0.5pt solid black; font-weight: 700;">
         * VoBo SUPERVISOR (FIRMA)</td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="32" class="xl528" width="173"
-        style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
+        style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
         NOMBRE SUPERVISOR: </td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td colspan="32" class="xl528" width="173"
-        style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
+        style="font-size: 6pt;width: 130pt;border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700;">
         * Una vez sea revisado y aceptado este informe, el supervisor deberá evidenciar la aceptación con su firma </td>
     </tr>
   </table>

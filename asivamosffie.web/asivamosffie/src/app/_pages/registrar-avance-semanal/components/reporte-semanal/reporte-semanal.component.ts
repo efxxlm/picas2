@@ -18,6 +18,7 @@ export class ReporteSemanalComponent implements OnInit {
   dataReporteSemanal: any;
   infoGeneralObra: any;
   infoGeneralInterventoria: any;
+  avanceFisico: any[] = [];
   seguimientoSemanalGestionObraId: number;
   cantidadActividades = 0;
   gestionObraAmbiental: any;
@@ -26,11 +27,13 @@ export class ReporteSemanalComponent implements OnInit {
   gestionSST: any;
   gestionSocial: any;
   actividadesARealizar: any;
+  registroFotografico: any;
   gestionAmbientalId = 0; // ID gestion ambiental.
   manejoMaterialInsumoId = 0; // ID manejo de materiales  e insumos.
   residuosConstruccionId = 0; // ID residuos de construccion.
   residuosPeligrososId = 0; // ID residuos peligrosos.
   manejoOtrosId = 0; // ID manejo de otros.
+  public sumaTotal;
 
   constructor(
     private router: Router,
@@ -59,6 +62,8 @@ export class ReporteSemanalComponent implements OnInit {
           this.infoGeneralObra = this.dataReporteSemanal.informacionGeneral[0];
           this.infoGeneralInterventoria = this.dataReporteSemanal.informacionGeneral[1];
           this.seguimientoSemanalId = this.dataReporteSemanal.seguimientoSemanalId;
+          this.avanceFisico = this.dataReporteSemanal.avanceFisico;
+          this.calcularTotal(this.avanceFisico);
           this.seguimientoSemanalGestionObraId =  this.dataReporteSemanal.seguimientoSemanalGestionObra.length > 0 ?
           this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraId : 0;
           if ( this.dataReporteSemanal.seguimientoSemanalGestionObra.length > 0 && this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental.length > 0 ) {
@@ -135,10 +140,19 @@ export class ReporteSemanalComponent implements OnInit {
           this.gestionSST = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
           this.gestionSocial = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial[0];
           this.actividadesARealizar = this.dataReporteSemanal.seguimientoSemanalReporteActividad[0];
+          this.registroFotografico = this.dataReporteSemanal.seguimientoSemanalRegistroFotografico[0];
       }
     })
   }
-
+  calcularTotal(data){
+    let total = 0;
+    data.forEach(element => {
+      console.log(element);
+      total += element.programacion;
+      this.sumaTotal = total;
+    });
+    console.log(this.sumaTotal);
+  }
   downloadPDF() {
     /*
    html2canvas( document.getElementById( 'example-pdf' ) ).then(canvas => {
