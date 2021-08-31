@@ -748,11 +748,12 @@ namespace asivamosffie.services
                 List<GestionFuenteFinanciacion> gestionFuenteFinanciacion = _context.GestionFuenteFinanciacion
                                                                                     .Where(x => !(bool)x.Eliminado &&
                                                                                            x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
-                                                                                           x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid)
+                                                                                           x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid &&
+                                                                                           x.Eliminado != true)
                                                                                     .ToList();
                 var gestionAlGuardar = _context.GestionFuenteFinanciacion
                     .Where(x => x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid &&
-                                x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId)
+                                x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.Eliminado != true)
                     .FirstOrDefault();
 
                 decimal valorDisponible = 0;
@@ -794,15 +795,15 @@ namespace asivamosffie.services
                     Valor_solicitado_de_la_fuente = valorsolicitado,
                     GestionFuenteFinanciacionID = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId
                      && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Select(x => x.GestionFuenteFinanciacionId).FirstOrDefault(),
-                    Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldoGenerado ?? 0 : 0,
-                    Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActualGenerado ?? 0 : 0,
+                    Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldo : 0,
+                    Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActual : 0,
 
                 });
             }
             return ListaRetorno;
         }
 
-        public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(int disponibilidadPresupuestalProyectoid, int aportanteID, bool esNovedad, int novedadContractualRegistroPresupuestalId)
+        public List<GrillaFuentesFinanciacion> GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(int disponibilidadPresupuestalProyectoid, int aportanteID, bool esNovedad, int novedadContractualRegistroPresupuestalId)
         {
             List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();
             List<int> listaFuentesProyecto = new List<int>();
@@ -854,14 +855,17 @@ namespace asivamosffie.services
                                                                                     .Where(x => x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
                                                                                            x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid &&
                                                                                            x.EsNovedad == esNovedad &&
-                                                                                           x.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestalId
+                                                                                           x.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestalId &&
+                                                                                           x.Eliminado != true
                                                                                            )
                                                                                     .ToList();
                 var gestionAlGuardar = _context.GestionFuenteFinanciacion
                     .Where(x => x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid &&
                                 x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
                                 x.EsNovedad == esNovedad &&
-                                x.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestalId)
+                                x.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestalId &&
+                                x.Eliminado != true
+                                )
                     .FirstOrDefault();
 
                 decimal valorDisponible = 0;
@@ -878,7 +882,8 @@ namespace asivamosffie.services
                                                                                         .Where(x => x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
                                                                                                x.DisponibilidadPresupuestalProyectoId != disponibilidadPresupuestalProyectoid &&
                                                                                                x.EsNovedad == esNovedad &&
-                                                                                               x.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestalId)
+                                                                                               x.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestalId &&
+                                                                                               x.Eliminado != true)
                                                                                         .Sum(x => x.ValorSolicitado);
                 }
 
@@ -904,8 +909,8 @@ namespace asivamosffie.services
                     Valor_solicitado_de_la_fuente = valorsolicitado,
                     GestionFuenteFinanciacionID = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId
                      && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Select(x => x.GestionFuenteFinanciacionId).FirstOrDefault(),
-                    Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldoGenerado ?? 0 : 0,
-                    Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActualGenerado ?? 0 : 0,
+                    Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldo  : 0,
+                    Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActual : 0,
 
                 });
             }
@@ -1110,7 +1115,7 @@ namespace asivamosffie.services
                 }
                 var gestionAlGuardar = _context.GestionFuenteFinanciacion
                     .Where(x => x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestaId &&
-                        x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId)
+                        x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.Eliminado != true)
                     .FirstOrDefault();
                 decimal valor = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
                 decimal valorSolicitado = 0;
@@ -1157,14 +1162,14 @@ namespace asivamosffie.services
                     Nuevo_saldo_de_la_fuente = saldoFuente.Value - valor - valorSolicitado,
                     Saldo_actual_de_la_fuente = saldoFuente.Value - valor,
                     Valor_solicitado_de_la_fuente = valorSolicitado,
-                    Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldoGenerado ?? 0 : 0,
-                    Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActualGenerado ?? 0 : 0,
+                    Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldo  : 0,
+                    Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActual : 0,
                 });
             }
             return ListaRetorno;
         }
 
-        public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestald(int disponibilidadPresupuestaId, bool esNovedad, int novedadContractualRegistroPresupuestalId)
+        public List<GrillaFuentesFinanciacion> GetListFuentesFinanciacionByDisponibilidadPresupuestald(int disponibilidadPresupuestaId, bool esNovedad, int novedadContractualRegistroPresupuestalId)
         {
             List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();
             var gestion = _context.GestionFuenteFinanciacion.Where(x => x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestaId && x.EsNovedad == esNovedad && x.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestalId).Select(x => x.FuenteFinanciacionId).ToList();
@@ -1243,7 +1248,8 @@ namespace asivamosffie.services
                     .Where(x => x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestaId &&
                         x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
                         x.EsNovedad == esNovedad &&
-                        x.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestalId)
+                        x.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestalId &&
+                        x.Eliminado != true)
                     .FirstOrDefault();
                 decimal valor = _context.GestionFuenteFinanciacion.Where(x => x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestaId && x.EsNovedad == esNovedad && x.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestalId).Sum(x => x.ValorSolicitado);
                 decimal valorSolicitado = 0;
@@ -1290,8 +1296,8 @@ namespace asivamosffie.services
                     Nuevo_saldo_de_la_fuente = saldoFuente.Value - valor - valorSolicitado,
                     Saldo_actual_de_la_fuente = saldoFuente.Value - valor,
                     Valor_solicitado_de_la_fuente = valorSolicitado,
-                    Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldoGenerado ?? 0 : 0,
-                    Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActualGenerado ?? 0 : 0,
+                    Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldo : 0,
+                    Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActual : 0,
                 });
             }
             return ListaRetorno;

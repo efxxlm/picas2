@@ -122,7 +122,7 @@ namespace asivamosffie.services
             {
                 foreach (var novedadesxContrato in contratacion?.Contrato)
                 {
-                    List<NovedadContractual> novedadContractuals = _context.NovedadContractual.Where(r => r.ContratoId == novedadesxContrato.ContratoId).ToList();
+                    List<NovedadContractual> novedadContractuals = _context.NovedadContractual.Where(r => r.ContratoId == novedadesxContrato.ContratoId && r.EsAplicadaAcontrato == true).ToList();
 
                     novedadContractuals.ForEach(async p =>
                     {
@@ -133,10 +133,13 @@ namespace asivamosffie.services
                 }
                 foreach (var novedadesxProyectos in contratacion?.ContratacionProyecto)
                 {
-                    List<NovedadContractual> novedadContractuals = _context.NovedadContractual.Where(r => r.ProyectoId == novedadesxProyectos.ProyectoId).ToList();
+                    List<NovedadContractual> novedadContractuals = _context.NovedadContractual.Where(r => r.ProyectoId == novedadesxProyectos.ProyectoId && r.EsAplicadaAcontrato != true).ToList();
                     novedadContractuals.ForEach(async p =>
                     {
-                        novedades.Add(await _ContractualNoveltyService.GetNovedadContractualById(p.NovedadContractualId));
+                        if (!novedades.Any(r => r.NovedadContractualId == p.NovedadContractualId))
+                        {
+                            novedades.Add(await _ContractualNoveltyService.GetNovedadContractualById(p.NovedadContractualId));
+                        }
                     });
                 }
             }

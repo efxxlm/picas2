@@ -361,6 +361,8 @@ namespace asivamosffie.services
 
             List<GestionFuenteFinanciacion> ListGestionFuenteFinanciacion = _context.GestionFuenteFinanciacion.ToList();
             List<ProyectoAportante> ListProyectoAportante = _context.ProyectoAportante.ToList();
+            List<NovedadContractualAportante> ListProyectoAportantexNovedad = _context.NovedadContractualAportante.ToList();
+
             List<Contratacion> ListContratacion = _context.Contratacion.ToList();
             List<Contrato> ListContrato = _context.Contrato.ToList();
 
@@ -375,9 +377,10 @@ namespace asivamosffie.services
                 foreach (var DisponibilidadPresupuestal in ListDisponibilidadPresupuestal)
                 {
                     List<DisponibilidadPresupuestalProyecto> disponibilidadPresupuestalProyecto = new List<DisponibilidadPresupuestalProyecto>();
+                    NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal.Where(r => r.NovedadContractualRegistroPresupuestalId == DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId).Include(r => r.NovedadContractual).FirstOrDefault();
+
                     if (DisponibilidadPresupuestal?.EsNovedad == true)
                     {
-                        NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal.Where(r => r.NovedadContractualRegistroPresupuestalId == DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId).Include(r => r.NovedadContractual).FirstOrDefault();
                         if (novedadContractualRegistroPresupuestal?.NovedadContractual != null)
                         {
                             if (novedadContractualRegistroPresupuestal?.NovedadContractual.EsAplicadaAcontrato != true)
@@ -445,16 +448,19 @@ namespace asivamosffie.services
                             {
                                 if (ListGestionFuenteFinanciacion
                                     .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad != true &&
-                                           ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
+                                           ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId) && x.Eliminado != true)
                                     .Count() == aportantes.Count() && aportantes.Count() > 0)
                                     blnEstado = true;
                             }
                             else
                             {
+                                //toma los aportantes de novedadcontractual
+                                var aportantesxNovedad = ListProyectoAportantexNovedad.Where(x => x.NovedadContractualId == novedadContractualRegistroPresupuestal.NovedadContractual.NovedadContractualId && x.Eliminado != true).ToList();
+
                                 if (ListGestionFuenteFinanciacion
                                     .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId && x.Eliminado != true &&
                                            ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
-                                    .Count() == aportantes.Count() && aportantes.Count() > 0)
+                                    .Count() == aportantesxNovedad.Count() && aportantesxNovedad.Count() > 0)
                                     blnEstado = true;
                             }
                         }

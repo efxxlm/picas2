@@ -17,7 +17,7 @@ export class RegistrarLiquidacionContratoComponent implements OnInit {
     listaAcordeonLiquidado: any[] = [];
     semaforoSinRegistro = 'sin-diligenciar';
     semaforoEnProceso = 'sin-diligenciar';
-    semaforoLiquidacion = 'completo';
+    semaforoLiquidacion = 'sin-diligenciar';
 
     constructor(
         private commonSvc: CommonService,
@@ -46,7 +46,7 @@ export class RegistrarLiquidacionContratoComponent implements OnInit {
                     this.semaforoEnProceso = 'completo';
                 }
             } );
-        
+
     }
 
     ngOnInit(): void {
