@@ -921,7 +921,7 @@ namespace asivamosffie.services
         {
             List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();
             List<int> listaIds = new List<int>();
-
+            bool esFfie = true;
             NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal
                                                                                                         .Where(x => x.NovedadContractualRegistroPresupuestalId == NovedadContractualRegistroPresupuestalId)
                                                                                                         .Include(x => x.NovedadContractual)
@@ -938,6 +938,12 @@ namespace asivamosffie.services
            {
                if (aportante.CofinanciacionAportanteId == aportanteID)
                {
+                   CofinanciacionAportante cofinanciacionAportante = _context.CofinanciacionAportante.Find(aportante.CofinanciacionAportanteId);
+                   if (cofinanciacionAportante != null)
+                   {
+                       if (cofinanciacionAportante.TipoAportanteId != ConstanTipoAportante.Ffie)
+                           esFfie = false;
+                   }
                    aportante.ComponenteAportanteNovedad = aportante.ComponenteAportanteNovedad.Where(x => x.Eliminado != true).ToList();
                    aportante.ComponenteAportanteNovedad.ToList().ForEach(componente =>
                   {
@@ -958,11 +964,30 @@ namespace asivamosffie.services
 
             foreach (var financiacion in financiaciones)
             {
-                var valorDisponible = (decimal)financiacion.ValorFuente - _context.GestionFuenteFinanciacion
-                                                                                        .Where(x => !(bool)x.Eliminado &&
-                                                                                               x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
-                                                                                               x.NovedadContractualRegistroPresupuestalId != NovedadContractualRegistroPresupuestalId)
-                                                                                        .Sum(x => x.ValorSolicitado);
+                decimal valorDisponible = 0;
+
+                if (esFfie)
+                {
+                    valorDisponible = (decimal)financiacion.ValorFuente - _context.GestionFuenteFinanciacion
+                                                                        .Where(x => !(bool)x.Eliminado &&
+                                                                               x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
+                                                                               x.NovedadContractualRegistroPresupuestalId != NovedadContractualRegistroPresupuestalId)
+                                                                        .Sum(x => x.ValorSolicitado);
+                }
+                else
+                {
+                    var controlRcurso = _context.ControlRecurso.Where(x => x.Eliminado != true &&
+                                                                               x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId)
+                                                                        .Sum(x => x.ValorConsignacion);
+
+                    valorDisponible = controlRcurso - _context.GestionFuenteFinanciacion
+                                                                        .Where(x => !(bool)x.Eliminado &&
+                                                                               x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
+                                                                               x.NovedadContractualRegistroPresupuestalId != NovedadContractualRegistroPresupuestalId)
+                                                                        .Sum(x => x.ValorSolicitado);
+                }
+
+
 
                 var valorsolicitado = _context.GestionFuenteFinanciacion
                                                     .Where(x => !(bool)x.Eliminado &&
