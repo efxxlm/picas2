@@ -920,6 +920,21 @@ namespace asivamosffie.services
             return fechaFinalizacion;
         }
 
+        public decimal GetValorTotalDisponibilidad(int pDisponibilidadPresupuestalId)
+        {
+            decimal valorSolicitud = 0;
+            DisponibilidadPresupuestal disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Find(pDisponibilidadPresupuestalId);
+            //no encontré los helpers, sorry
+            if (disponibilidadPresupuestal != null)
+            {
+                valorSolicitud = disponibilidadPresupuestal.ValorSolicitud;
+                valorSolicitud += _context.NovedadContractualRegistroPresupuestal.Where(r => r.DisponibilidadPresupuestalId == disponibilidadPresupuestal.DisponibilidadPresupuestalId &&
+                    (r.EstadoSolicitudCodigo == "5" || r.EstadoSolicitudCodigo == "8")).Sum(r => r.ValorSolicitud);
+            }
+
+            return valorSolicitud;
+        }
+
     }
 
 }

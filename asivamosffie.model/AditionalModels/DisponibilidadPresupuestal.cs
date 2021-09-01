@@ -34,5 +34,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string NumeroOtroSi { get; set; }
+
+        [NotMapped]
+        public decimal ValorTotalDisponibilidad { get; set; }
     }
 }

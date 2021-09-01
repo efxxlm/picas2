@@ -115,5 +115,8 @@ namespace asivamosffie.services.Interfaces
         Task<List<Usuario>> GetUsuariosByPerfil(int pIdPerfil);
         DateTime? GetFechaEstimadaFinalizacion(int pContratoId);
 
+        decimal GetValorTotalDisponibilidad(int pDisponibilidadPresupuestalId);
+
+
     }
 }

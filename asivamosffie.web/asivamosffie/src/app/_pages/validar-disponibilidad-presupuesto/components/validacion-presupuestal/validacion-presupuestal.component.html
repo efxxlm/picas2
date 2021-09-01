@@ -54,11 +54,11 @@
             </p>
             <p *ngIf="detailavailabilityBudget?.novedadContractual">
                 <strong>Valor después de la modificación:</strong>
-                {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}
+                {{detailavailabilityBudget?.valorTotalDisponibilidad + detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}
             </p>
             <p *ngIf="detailavailabilityBudget?.novedadContractual?.novedadContractualDescripcion[0].plazoAdicionalMeses">
                 <strong>Plazo  de la modificación:</strong>
-                
+
                 {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].plazoAdicionalMeses}} meses /
                 {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].plazoAdicionalDias}} dias
             </p>
@@ -163,38 +163,38 @@
     *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_administrativo"></app-tabla-gestionar-validacion-administrativo>
     -->
     <div class="botones">
-        <button mat-raised-button 
-                color="accent" 
+        <button mat-raised-button
+                color="accent"
                 (click)="download()"
                 *ngIf="detailavailabilityBudget?.numeroDDP">
         Descargar DDP
         </button>
 
-        <button mat-raised-button 
-                color="accent" 
-                (click)="validar()" 
+        <button mat-raised-button
+                color="accent"
+                (click)="validar()"
                 [disabled]="!sePuedeValidarFuente() ">
         Validar solicitud
         </button>
 
-        <button mat-raised-button 
+        <button mat-raised-button
                 color="accent"
                 (click)="openDialogDevolver(0,detailavailabilityBudget?.numeroSolicitud,detailavailabilityBudget?.tipoSolicitudText)">
         Devolver por <br> validación presupuestal
         </button>
 
-        <button mat-raised-button 
+        <button mat-raised-button
                 color="accent"
                 (click)="openDialogDevolver(1,detailavailabilityBudget?.numeroSolicitud,detailavailabilityBudget?.tipoSolicitudText)">
         Rechazar por <br> validación presupuestal
         </button>
 
-        <button mat-raised-button 
+        <button mat-raised-button
                 color="accent"
                 *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_administrativo || detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial"
                 (click)="gestionarFuentes(detailavailabilityBudget)">
         Gestionar fuentes
     </button>
-    
+
     </div>
 </section>

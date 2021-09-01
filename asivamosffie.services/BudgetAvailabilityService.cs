@@ -1265,7 +1265,7 @@ namespace asivamosffie.services
                 var plantilla_uso = _context.Plantilla.Where(x => x.Codigo == codtablauso.ToString()).FirstOrDefault().Contenido;
                 //empiezo con fuentes
                 var gestionfuentes = _context.GestionFuenteFinanciacion
-                    .Where(x => x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId).
+                    .Where(x => x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId && x.Eliminado != true).
                     Include(x => x.FuenteFinanciacion).
                         ThenInclude(x => x.Aportante).
                             ThenInclude(x => x.CofinanciacionDocumento).
@@ -1398,7 +1398,7 @@ namespace asivamosffie.services
                 Include(x => x.DisponibilidadPresupuestalProyecto).
                     ThenInclude(x => x.Proyecto).
                         ThenInclude(x => x.Sede)
-                .Where(x => x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId && x.EsNovedad != true).
+                .Where(x => x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId && x.EsNovedad != true && x.Eliminado != true).
                 ToList();
 
                 if (esNovedad)
@@ -1452,7 +1452,7 @@ namespace asivamosffie.services
                     var consignadoemnfuente = _context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorFuente);
                     var saldofuente = _context.GestionFuenteFinanciacion.Where(
                         x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId &&
-                        x.DisponibilidadPresupuestalProyectoId != gestion.DisponibilidadPresupuestalProyectoId).Sum(x => x.ValorSolicitado);
+                        x.DisponibilidadPresupuestalProyectoId != gestion.DisponibilidadPresupuestalProyectoId && x.Eliminado != true).Sum(x => x.ValorSolicitado);
                     string fuenteNombre = _context.Dominio.Where(x => x.Codigo == gestion.FuenteFinanciacion.FuenteRecursosCodigo
                             && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
                     //(decimal)font.FuenteFinanciacion.ValorFuente,

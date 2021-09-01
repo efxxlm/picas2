@@ -16,7 +16,9 @@ import { TablaSolicitudNovedadContractualComponent } from 'src/app/_pages/regist
 export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
   numeroSolicitud: any;
   objeto: any;
+  objetoNovedad: any;
   observaciones: any[];
+  observacionesNovedad: any[];
   aportantesList: any;
   tipoSolicitudColdigo: string;
   public listaProyectos;
@@ -74,6 +76,16 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
       if(this.novedadContractualId > 0){
         this.novedadContractualService.getNovedadContractualById(this.novedadContractualId).subscribe(novedad=>{
           this.novedadContractual = novedad;
+          if(this.novedadContractual?.novedadContractualDescripcion.length > 0){
+            this.novedadContractual?.novedadContractualDescripcion.forEach(novedad => {
+              if(novedad.tipoNovedadCodigo == '3'){
+                this.objetoNovedad = novedad.resumenJustificacion;
+              }
+            });
+          }
+          if(this.novedadContractual?.novedadContractualObservaciones.length > 0){
+            this.observacionesNovedad = this.novedadContractual?.novedadContractualObservaciones;
+          }
         });
       }
     });

@@ -25,7 +25,8 @@
                 {{detailavailabilityBudget?.rubroPorFinanciar}}
             </p>
             <p>
-                <strong>Valor de la solicitud:</strong>
+                <strong *ngIf="this.esNovedad != true">Valor de la solicitud:</strong>
+                <strong *ngIf="this.esNovedad == true">Valor de la solicitud de adición:</strong>
                 {{detailavailabilityBudget?.valorSolicitud | currency:'':'symbol':'3.0'}}
             </p>
             <p  *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
@@ -138,7 +139,9 @@
                         {{aportante.nombre}}
                     </p>
                     <p>
-                        <strong>Valor del aportante al proyecto:</strong>
+                        <strong *ngIf="this.esNovedad != true">Valor del aportante al proyecto:</strong>
+                        <strong *ngIf="this.esNovedad == true">Valor de adición del aportante al proyecto:</strong>
+
                          {{aportante.valorAportanteAlProyecto| currency:'':'symbol':'3.0'}}
                     </p>
                     <p *ngIf="detailavailabilityBudget?.urlConSoporte">
