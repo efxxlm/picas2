@@ -83,7 +83,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <div align="center">
-                <b>Consecutivo: {{ordenGiro !== undefined ? ordenGiro.consecutivoOrigen : '' }} </b>
+                <b>Consecutivo: {{ solicitudPago.ordenGiro !== undefined ? solicitudPago.ordenGiro.consecutivoOrigen : '' }} </b>
             </div>
 
             <app-form-origen    [solicitudPago]="solicitudPago"
