@@ -158,7 +158,7 @@
                   <strong>
                     Vigencia actualizada de la póliza:
                   </strong>
-                  {{ seguro?.seguroPoliza?.vigencia | date: 'dd/MM/yyyy' }}
+                  {{ seguro.fechaSeguro | date: 'dd/MM/yyyy' }}
                 </p>
               </div>
               <div class="mb-2em" *ngIf="seguro.tieneFechaAmparo === true">
