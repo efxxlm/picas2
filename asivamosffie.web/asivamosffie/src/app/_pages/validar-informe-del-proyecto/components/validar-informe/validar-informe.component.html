@@ -23,5 +23,6 @@
   <app-detalle-observaciones-recibo-satisfaccion *ngIf="report && mostrarDetalleObservacionesRecibo" [report]="report" [existeObservacionSupervision]="existeObservacionSupervision"></app-detalle-observaciones-recibo-satisfaccion>
   <app-tabla-informe-final-anexos *ngIf="report && !mostrarDetalleAnexos" [id]="report.proyecto.informeFinal[0].informeFinalId" [llaveMen]="report.proyecto.llaveMen"></app-tabla-informe-final-anexos>
   <app-tabla-detalle-informe-anexos *ngIf="report && mostrarDetalleAnexos" [id]="report.proyecto.informeFinal[0].informeFinalId" [llaveMen]="report.proyecto.llaveMen"></app-tabla-detalle-informe-anexos>
+  <!-- bug 378 <app-tabla-historial-observaciones></app-tabla-historial-observaciones> -->
 
 </section>

@@ -17,6 +17,7 @@ import { DialogObservacionesComponent } from './components/dialog-observaciones/
 import { FormObservacionesReciboSatisfaccionComponent } from './components/form-observaciones-recibo-satisfaccion/form-observaciones-recibo-satisfaccion.component';
 import { VerDetalleInformeFinalComponent } from './components/ver-detalle-informe-final/ver-detalle-informe-final.component';
 import { TablaDetalleComponent } from './components/tabla-detalle/tabla-detalle.component';
+import { TablaHistorialObservacionesComponent } from './components/tabla-historial-observaciones/tabla-historial-observaciones.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { TablaDetalleComponent } from './components/tabla-detalle/tabla-detalle.
     DialogObservacionesComponent,
     FormObservacionesReciboSatisfaccionComponent,
     VerDetalleInformeFinalComponent,
-    TablaDetalleComponent
+    TablaDetalleComponent,
+    TablaHistorialObservacionesComponent
   ],
   imports: [
     CommonModule,
