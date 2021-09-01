@@ -701,7 +701,6 @@ namespace asivamosffie.services
         {
             List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();
             List<int> listaFuentesProyecto = new List<int>();
-            bool esFfie = true;
 
             DisponibilidadPresupuestalProyecto disponibilidadProyecto = _context.DisponibilidadPresupuestalProyecto.Find(disponibilidadPresupuestalProyectoid);
 
@@ -724,11 +723,6 @@ namespace asivamosffie.services
                                                                             .ThenInclude(x => x.ComponenteUso)
                                                                         .FirstOrDefault();
                 CofinanciacionAportante cofinanciacionAportante = _context.CofinanciacionAportante.Find(aportanteID);
-                if (cofinanciacionAportante != null)
-                {
-                    if (cofinanciacionAportante.TipoAportanteId != ConstanTipoAportante.Ffie)
-                        esFfie = false;
-                }
 
                 if (aportante != null)
                 {
@@ -764,35 +758,8 @@ namespace asivamosffie.services
                     .FirstOrDefault();
 
                 decimal valorDisponible = 0;
-                if (esFfie)
-                {
-                    // cuando ya se guardó
-                    if (gestionFuenteFinanciacion.Count() > 0)
-                    {
-                        valorDisponible = gestionFuenteFinanciacion
-                                                        .Sum(x => x.SaldoActual);
-                    }
-                    else
-                    {
-                        valorDisponible = (decimal)financiacion.ValorFuente - _context.GestionFuenteFinanciacion
-                                                                                            .Where(x => !(bool)x.Eliminado &&
-                                                                                                   x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
-                                                                                                   x.DisponibilidadPresupuestalProyectoId != disponibilidadPresupuestalProyectoid)
-                                                                                            .Sum(x => x.ValorSolicitado);
-                    }
-                }
-                else
-                {
-                    var controlRcurso = _context.ControlRecurso.Where(x => x.Eliminado != true &&
-                                                           x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId)
-                                                    .Sum(x => x.ValorConsignacion);
-
-                    valorDisponible = controlRcurso - _context.GestionFuenteFinanciacion
-                                                                                            .Where(x => !(bool)x.Eliminado &&
-                                                                                                   x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
-                                                                                                   x.DisponibilidadPresupuestalProyectoId != disponibilidadPresupuestalProyectoid)
-                                                                                            .Sum(x => x.ValorSolicitado);
-                }
+                VSaldosFuenteXaportanteId saldo = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
+                valorDisponible = saldo != null ? (decimal)saldo.SaldoActual : 0;
 
                 decimal valorsolicitado = 0;
 
@@ -824,7 +791,6 @@ namespace asivamosffie.services
         {
             List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();
             List<int> listaFuentesProyecto = new List<int>();
-            bool esFfie = true;
 
             DisponibilidadPresupuestalProyecto disponibilidadProyecto = _context.DisponibilidadPresupuestalProyecto.Find(disponibilidadPresupuestalProyectoid);
 
@@ -846,12 +812,6 @@ namespace asivamosffie.services
                                                                         .Include(x => x.ComponenteAportante)
                                                                             .ThenInclude(x => x.ComponenteUso)
                                                                         .FirstOrDefault();
-                CofinanciacionAportante cofinanciacionAportante = _context.CofinanciacionAportante.Find(aportanteID);
-                if (cofinanciacionAportante != null)
-                {
-                    if (cofinanciacionAportante.TipoAportanteId != ConstanTipoAportante.Ffie)
-                        esFfie = false;
-                }
                 if (aportante != null)
                 {
                     aportante.ComponenteAportante.ToList().ForEach(ca =>
@@ -893,42 +853,9 @@ namespace asivamosffie.services
 
                 decimal valorDisponible = 0;
 
-                if (esFfie)
-                {
-
-                    // cuando ya se guardó
-                    if (gestionFuenteFinanciacion.Count() > 0)
-                    {
-                        valorDisponible = gestionFuenteFinanciacion
-                                                        .Sum(x => x.SaldoActual);
-                    }
-                    else
-                    {
-                        valorDisponible = (decimal)financiacion.ValorFuente - _context.GestionFuenteFinanciacion
-                                                                                            .Where(x => x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
-                                                                                                   x.DisponibilidadPresupuestalProyectoId != disponibilidadPresupuestalProyectoid &&
-                                                                                                   x.EsNovedad == esNovedad &&
-                                                                                                   x.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestalId &&
-                                                                                                   x.Eliminado != true)
-                                                                                            .Sum(x => x.ValorSolicitado);
-                    }
-                }
-                else
-                {
-                    var controlRcurso = _context.ControlRecurso.Where(x => x.Eliminado != true &&
-                                                                               x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId)
-                                                                        .Sum(x => x.ValorConsignacion);
-
-                    valorDisponible = controlRcurso - _context.GestionFuenteFinanciacion
-                                                                                            .Where(x => x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
-                                                                                                   x.DisponibilidadPresupuestalProyectoId != disponibilidadPresupuestalProyectoid &&
-                                                                                                   x.EsNovedad == esNovedad &&
-                                                                                                   x.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestalId &&
-                                                                                                   x.Eliminado != true)
-                                                                                            .Sum(x => x.ValorSolicitado);
-                }
-
-
+                VSaldosFuenteXaportanteId saldo = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
+                
+                valorDisponible = saldo != null ? (decimal)saldo.SaldoActual : 0;
 
                 decimal valorsolicitado = 0;
 
@@ -962,7 +889,6 @@ namespace asivamosffie.services
         {
             List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();
             List<int> listaIds = new List<int>();
-            bool esFfie = true;
             NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal
                                                                                                         .Where(x => x.NovedadContractualRegistroPresupuestalId == NovedadContractualRegistroPresupuestalId)
                                                                                                         .Include(x => x.NovedadContractual)
@@ -979,12 +905,6 @@ namespace asivamosffie.services
            {
                if (aportante.CofinanciacionAportanteId == aportanteID)
                {
-                   CofinanciacionAportante cofinanciacionAportante = _context.CofinanciacionAportante.Find(aportante.CofinanciacionAportanteId);
-                   if (cofinanciacionAportante != null)
-                   {
-                       if (cofinanciacionAportante.TipoAportanteId != ConstanTipoAportante.Ffie)
-                           esFfie = false;
-                   }
                    aportante.ComponenteAportanteNovedad = aportante.ComponenteAportanteNovedad.Where(x => x.Eliminado != true).ToList();
                    aportante.ComponenteAportanteNovedad.ToList().ForEach(componente =>
                   {
@@ -1006,29 +926,8 @@ namespace asivamosffie.services
             foreach (var financiacion in financiaciones)
             {
                 decimal valorDisponible = 0;
-
-                if (esFfie)
-                {
-                    valorDisponible = (decimal)financiacion.ValorFuente - _context.GestionFuenteFinanciacion
-                                                                        .Where(x => !(bool)x.Eliminado &&
-                                                                               x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
-                                                                               x.NovedadContractualRegistroPresupuestalId != NovedadContractualRegistroPresupuestalId)
-                                                                        .Sum(x => x.ValorSolicitado);
-                }
-                else
-                {
-                    var controlRcurso = _context.ControlRecurso.Where(x => x.Eliminado != true &&
-                                                                               x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId)
-                                                                        .Sum(x => x.ValorConsignacion);
-
-                    valorDisponible = controlRcurso - _context.GestionFuenteFinanciacion
-                                                                        .Where(x => !(bool)x.Eliminado &&
-                                                                               x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
-                                                                               x.NovedadContractualRegistroPresupuestalId != NovedadContractualRegistroPresupuestalId)
-                                                                        .Sum(x => x.ValorSolicitado);
-                }
-
-
+                VSaldosFuenteXaportanteId saldo = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
+                valorDisponible = saldo != null ? (decimal) saldo.SaldoActual : 0;
 
                 var valorsolicitado = _context.GestionFuenteFinanciacion
                                                     .Where(x => !(bool)x.Eliminado &&
