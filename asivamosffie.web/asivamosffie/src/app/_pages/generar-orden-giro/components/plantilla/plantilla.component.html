@@ -187,7 +187,7 @@
           <td style="border: solid 1px #000">{{ data.descuentoReteFuente | currency: '':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000">{{ data.descuentoAns | currency: '':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000">{{ data.descuentoOtros | currency: '':'symbol-narrow':'.0-0' }}</td>
-          <td style="border: solid 1px #000">{{ data.valorNetoGiro | currency: '':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000">{{ data.valorConcepto - data.descuentoReteFuente - data.descuentoAns - data.descuentoOtros | currency: '':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000">
             <span *ngIf="data.esCuentaAhorros === true">Ahorros</span>
             <span *ngIf="data.esCuentaAhorros === false">Corriente</span>
