@@ -39,11 +39,23 @@ export class RegistrarLiquidacionContratoComponent implements OnInit {
                         enProceso++;
                     }
                 } )
+                let liquidado = 0;
+                this.listaAcordeonLiquidado.forEach( registro => {
+                  if ( registro.estadoSolicitudCodigo === this.estadoLiquidacionCodigo.liquidado) {
+                    liquidado++;
+                  }
+              } )
                 if ( enProceso > 0 && ( enProceso < this.listaAcordeonEnProcesoFirma.length || enProceso === this.listaAcordeonEnProcesoFirma.length ) ) {
                     this.semaforoEnProceso = 'en-proceso';
                 }
                 if ( enProceso === 0 && ( this.listaAcordeonEnProcesoFirma.length === 0 || this.listaAcordeonEnProcesoFirma.length > 0 ) ) {
                     this.semaforoEnProceso = 'completo';
+                }
+                if ( liquidado > 0 && ( liquidado < this.listaAcordeonLiquidado.length || liquidado === this.listaAcordeonLiquidado.length ) ) {
+                  this.semaforoLiquidacion = 'en-proceso';
+                }
+                if ( enProceso === 0 && ( this.listaAcordeonLiquidado.length === 0 || this.listaAcordeonLiquidado.length > 0 ) ) {
+                    this.semaforoLiquidacion = 'completo';
                 }
             } );
 

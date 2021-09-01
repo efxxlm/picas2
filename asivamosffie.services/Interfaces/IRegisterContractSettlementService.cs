@@ -13,5 +13,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<dynamic>> GetListContractSettlemen();
 
         Task<Respuesta> CreateEditContractSettlement(Contratacion pContratacion);
+
+        Task<Respuesta> ChangeStateContractSettlement(int pContratacionId, string user);
     }
 }

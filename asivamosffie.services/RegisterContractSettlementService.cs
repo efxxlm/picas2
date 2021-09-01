@@ -113,18 +113,12 @@ namespace asivamosffie.services
             bool RegistroCompleto = ValidateCompleteRecordContractSettlement(pContratacion);
             if (!RegistroCompleto)
             {
-                if (
-                          pContratacion.FechaFirmaEnvioContratista.HasValue
-                      && !pContratacion.FechaFirmaEnvioFiduciaria.HasValue)
-                    estadoSolicitud = ConstanCodigoEstadoSolicitudContratacion.En_proceso_de_firmas;
-
-                if (
-                     pContratacion.FechaFirmaEnvioFiduciaria.HasValue)
-                    estadoSolicitud = ConstanCodigoEstadoSolicitudContratacion.En_firma_fiduciaria;
+                estadoSolicitud = ConstanCodigoEstadoSolicitudContratacion.LiquidacionEnProcesoDeFirma;
             }
             else
-                estadoSolicitud = ConstanCodigoEstadoSolicitudContratacion.Liquidado;
-
+            {
+                estadoSolicitud = ConstanCodigoEstadoSolicitudContratacion.En_firma_fiduciaria;
+            } 
 
             return estadoSolicitud;
         }
@@ -143,6 +137,63 @@ namespace asivamosffie.services
              ) return false;
 
             return true;
+        }
+
+        public async Task<Respuesta> ChangeStateContractSettlement(int pContratacionId, string user)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Liquidacion_Contrato, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                Contratacion contratacion = _context.Contratacion.Find(pContratacionId);
+                string estadoSolicitud = ConstanCodigoEstadoSolicitudContratacion.En_firma_fiduciaria;
+                if (ValidateCompleteRecordContractSettlement(contratacion))
+                {
+                    estadoSolicitud = ConstanCodigoEstadoSolicitudContratacion.Liquidado;
+                }
+
+                await _context.Set<Contratacion>()
+                              .Where(c => c.ContratacionId == contratacion.ContratacionId)
+                              .UpdateAsync(c => new Contratacion
+                              {
+                                  EstadoSolicitudCodigo = estadoSolicitud,
+                                  UsuarioModificacion = user,
+                                  FechaModificacion = DateTime.Now
+                              });
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                               (int)enumeratorMenu.Registrar_liquidacion_contrato,
+                                               GeneralCodes.OperacionExitosa,
+                                               idAccion,
+                                               contratacion.UsuarioModificacion,
+                                               ConstantCommonMessages.ContractSettlement.CREAR_LIQUIDACION)
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = false,
+                         IsException = true,
+                         IsValidation = false,
+                         Code = GeneralCodes.Error,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                             (int)enumeratorMenu.Registrar_liquidacion_contrato,
+                             GeneralCodes.Error,
+                             idAccion,
+                             user,
+                             ex.InnerException.ToString())
+                     };
+            }
         }
 
     }
