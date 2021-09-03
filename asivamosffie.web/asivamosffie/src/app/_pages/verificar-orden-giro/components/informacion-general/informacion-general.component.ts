@@ -249,7 +249,7 @@ export class InformacionGeneralComponent implements OnInit {
 
     getBanco( codigo: string ) {
         if ( this.listaBancos.length > 0 ) {
-            const banco = this.listaMedioPago.find( banco => banco.codigo === codigo );
+            const banco = this.listaBancos.find( banco => banco.codigo === codigo );
 
             if ( banco !== undefined ) {
                 return banco.nombre;
