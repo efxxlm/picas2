@@ -254,6 +254,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VDescuentosXordenGiro> VDescuentosXordenGiro { get; set; }
         public virtual DbSet<VDescuentosXordenGiroAportante> VDescuentosXordenGiroAportante { get; set; }
         public virtual DbSet<VDescuentosXordenGiroXproyectoXaportanteXconcepto> VDescuentosXordenGiroXproyectoXaportanteXconcepto { get; set; }
+        public virtual DbSet<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso { get; set; }
         public virtual DbSet<VDisponibilidadPresupuestal> VDisponibilidadPresupuestal { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
         public virtual DbSet<VDrpNovedadXfaseContratacionId> VDrpNovedadXfaseContratacionId { get; set; }
@@ -332,7 +333,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -14021,6 +14021,16 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_DescuentosXOrdenGiroXProyectoXAportanteXConcepto");
 
+                entity.Property(e => e.ConceptoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CriterioCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
                 entity.Property(e => e.Nombre).HasMaxLength(250);
 
                 entity.Property(e => e.NumeroContrato)
@@ -14029,6 +14039,51 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.TipoDescuentoCodigo)
                     .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
+            });
+
+            modelBuilder.Entity<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DescuentosXOrdenGiroXProyectoXAportanteXConceptoXUso");
+
+                entity.Property(e => e.ConceptoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CriterioCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Nombre).HasMaxLength(250);
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoDescuentoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Uso)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.UsoCodigo)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
@@ -14731,6 +14786,11 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_PagosSolicitudXContratacionXProyectoXUso");
 
+                entity.Property(e => e.ConceptoPagoCriterio)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.NumeroDrp)
                     .IsRequired()
                     .HasColumnName("NumeroDRP")
@@ -15378,7 +15438,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroSolicitud)
-                    .HasMaxLength(10)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoContrato)

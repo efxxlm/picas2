@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class VDescuentosXordenGiroXproyectoXaportanteXconcepto
+    public partial class VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso
     {
         public int? ContratacionId { get; set; }
         public int EsTerceroCausacion { get; set; }
@@ -14,6 +14,8 @@ namespace asivamosffie.model.Models
         public int? AportanteId { get; set; }
         public int? ContratacionProyectoId { get; set; }
         public int? ProyectoId { get; set; }
+        public string Uso { get; set; }
+        public string UsoCodigo { get; set; }
         public string ConceptoCodigo { get; set; }
         public string CriterioCodigo { get; set; }
         public decimal ValorDescuento { get; set; }

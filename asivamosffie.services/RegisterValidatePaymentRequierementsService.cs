@@ -1665,6 +1665,7 @@ namespace asivamosffie.services
             return contrato;
 
         }
+
         public dynamic GetListProyectos(int pContratacionId)
         { 
             return _context.ContratacionProyecto
@@ -1704,6 +1705,8 @@ namespace asivamosffie.services
 
         public dynamic GetDrpContrato(int pContratacionId)
         {
+            bool OrdenGiroAprobada = _context.OrdenGiro.Where(r => r.SolicitudPago.FirstOrDefault().Contrato.ContratacionId == pContratacionId).FirstOrDefault()?.RegistroCompletoAprobar ?? false;
+
             List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).OrderBy(r => r.FechaCreacion).ToList();
 
             var ListDrp = List.GroupBy(drp => drp.NumeroDrp)
@@ -1718,6 +1721,7 @@ namespace asivamosffie.services
                     _context.VPagosSolicitudXcontratacionXproyectoXuso.Where(v => v.ContratacionId == pContratacionId)
                                                                       .ToList();
 
+            List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
 
             foreach (var Drp in ListDrp)
             {
@@ -1766,29 +1770,53 @@ namespace asivamosffie.services
                                                 .Sum(r => r.SaldoUso) ?? 0;
 
 
-                        decimal ValorUsoResta = ValorUso;
-                        foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
-                                                               && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
-                        {
-                            if (ValorUsoResta > item.SaldoUso)
-                            {
-                                ValorUsoResta -= (decimal)item.SaldoUso;
-                                item.SaldoUso = ValorUsoResta;
-                                item.Pagado = true;
-                            }
-                            else
-                            {
-                                item.SaldoUso -= ValorUsoResta;
+                        decimal Descuentos = DescuentosOrdenGiro
+                                                            .Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                             && r.UsoCodigo == TipoUso.TipoUsoCodigo
+                                                             )
+                                                .Sum(r => r.ValorDescuento);
 
-                            }
+                        decimal ValorUsoResta = ValorUso - Descuentos;
+
+                        if (OrdenGiroAprobada)
+                        {
+                            foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                            && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
+                            {
+                                if (OrdenGiroAprobada)
+                                {
+                                    if (ValorUsoResta > item.SaldoUso)
+                                    {
+                                        ValorUsoResta -= (decimal)item.SaldoUso;
+                                        item.SaldoUso = ValorUsoResta;
+                                        item.Pagado = true;
+                                    }
+                                    else
+                                    {
+                                        item.SaldoUso -= ValorUsoResta;
+                                    }
+                                }
+                                else
+                                {
+                                    item.SaldoUso = Saldo;
+                                }
+                            } 
+                            ListDyUsos.Add(new
+                            {
+                                Uso.Nombre,
+                                ValorUso = String.Format("{0:n0}", ValorUso),
+                                Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
+                            });
                         }
-
-                        ListDyUsos.Add(new
+                        else
                         {
-                            Uso.Nombre,
-                            ValorUso = String.Format("{0:n0}", ValorUso),
-                            Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
-                        });
+                            ListDyUsos.Add(new
+                            {
+                                Uso.Nombre,
+                                ValorUso = String.Format("{0:n0}", ValorUso),
+                                Saldo = String.Format("{0:n0}", ValorUso)
+                            });
+                        }
                     }
 
                     ListDyProyectos.Add(new
@@ -1811,6 +1839,8 @@ namespace asivamosffie.services
 
         public dynamic GetDrpContratoODG(int pContratacionId)
         {
+            bool OrdenGiroAprobada = _context.OrdenGiro.Where(r => r.SolicitudPago.FirstOrDefault().Contrato.ContratacionId == pContratacionId).FirstOrDefault()?.RegistroCompletoAprobar ?? false;
+
             List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).OrderBy(r => r.FechaCreacion).ToList();
 
             var ListDrp = List.GroupBy(drp => drp.NumeroDrp)
@@ -1825,6 +1855,7 @@ namespace asivamosffie.services
                     _context.VPagosSolicitudXcontratacionXproyectoXuso.Where(v => v.ContratacionId == pContratacionId)
                                                                       .ToList();
 
+            List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
 
             foreach (var Drp in ListDrp)
             {
@@ -1873,31 +1904,54 @@ namespace asivamosffie.services
                                                 .Sum(r => r.SaldoUso) ?? 0;
 
 
-                        decimal ValorUsoResta = ValorUso;
+                        decimal Descuentos = DescuentosOrdenGiro
+                                                            .Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                             && r.UsoCodigo == TipoUso.TipoUsoCodigo
+                                                             )
+                                                .Sum(r => r.ValorDescuento);
+
+                        decimal ValorUsoResta = ValorUso - Descuentos;
                         foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                                && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
                         {
-                            if (ValorUsoResta > item.SaldoUso)
+                            if (OrdenGiroAprobada)
                             {
-                                ValorUsoResta -= (decimal)item.SaldoUso;
-                                item.SaldoUso = ValorUsoResta;
-                                item.Pagado = true;
+                                if (ValorUsoResta > item.SaldoUso)
+                                {
+                                    ValorUsoResta -= (decimal)item.SaldoUso;
+                                    item.SaldoUso = ValorUsoResta;
+                                    item.Pagado = true;
+                                }
+                                else
+                                {
+                                    item.SaldoUso -= ValorUsoResta;
+                                }
                             }
                             else
                             {
-                                item.SaldoUso -= ValorUsoResta;
-
+                                item.SaldoUso = Saldo;
                             }
                         }
 
-                        ListDyUsos.Add(new
+                        if (OrdenGiroAprobada)
                         {
-                            Uso.Nombre,
-                            ValorUso = String.Format("{0:n0}", ValorUso),
-                            Saldo = String.Format("{0:n0}", ValorUso )
-                        });
-                    }
-
+                            ListDyUsos.Add(new
+                            {
+                                Uso.Nombre,
+                                ValorUso = String.Format("{0:n0}", ValorUso), 
+                                Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
+                            });
+                        }
+                        else
+                        {
+                            ListDyUsos.Add(new
+                            {
+                                Uso.Nombre,
+                                ValorUso = String.Format("{0:n0}", ValorUso),
+                                Saldo = String.Format("{0:n0}", ValorUso) 
+                            });
+                        }
+                    } 
                     ListDyProyectos.Add(new
                     {
                         proyecto.InstitucionEducativa.Nombre,

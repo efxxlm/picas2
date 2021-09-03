@@ -484,8 +484,8 @@ namespace asivamosffie.services
             List<VPagosSolicitudXcontratacionXproyectoXuso> ListPagos =
                     _context.VPagosSolicitudXcontratacionXproyectoXuso.Where(v => v.ContratacionId == pContratacionId)
                                                                       .ToList();
-
-            bool blDescontarSaldoDrp = _context.SolicitudPago.Where(r => r.Contrato.ContratacionId == pContratacionId).Include(r => r.OrdenGiro).FirstOrDefault()?.OrdenGiro?.RegistroCompletoAprobar ?? false;
+              
+            List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
 
             foreach (var Drp in ListDrp)
             {
@@ -534,37 +534,43 @@ namespace asivamosffie.services
                                                 .Sum(r => r.SaldoUso) ?? 0;
 
 
-                        decimal ValorUsoResta = ValorUso;
-                        foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
-                                                               && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
+                        decimal Descuentos = DescuentosOrdenGiro
+                                                            .Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                             && r.UsoCodigo == TipoUso.TipoUsoCodigo 
+                                                             )
+                                                .Sum(r => r.ValorDescuento);
+
+                        decimal ValorUsoResta = ValorUso - Descuentos;
+                     
+                        if (OrdenGiroAprobada)
                         {
-                            if (blDescontarSaldoDrp)
+                            foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                            && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
                             {
-                                if (ValorUsoResta > item.SaldoUso)
+                                if (OrdenGiroAprobada)
                                 {
-                                    ValorUsoResta -= (decimal)item.SaldoUso;
-                                    item.SaldoUso = ValorUsoResta;
-                                    item.Pagado = true;
+                                    if (ValorUsoResta > item.SaldoUso)
+                                    {
+                                        ValorUsoResta -= (decimal)item.SaldoUso;
+                                        item.SaldoUso = ValorUsoResta;
+                                        item.Pagado = true;
+                                    }
+                                    else
+                                    {
+                                        item.SaldoUso -= ValorUsoResta;
+                                    }
                                 }
                                 else
                                 {
-                                    item.SaldoUso -= ValorUsoResta;
+                                    item.SaldoUso = Saldo;
                                 }
                             }
-                            else
-                            {
-                                item.SaldoUso = Saldo;
-                            }
-                        }
-
-                        if (OrdenGiroAprobada)
-                        {
+                             
                             ListDyUsos.Add(new
                             {
                                 Uso.Nombre,
-                                ValorUso = String.Format("{0:n0}", ValorUso),
-                                Saldo = String.Format("{0:n0}", ValorUso)
-                                // Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
+                                ValorUso = String.Format("{0:n0}", ValorUso), 
+                                Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
                             });
                         }
                         else
@@ -573,8 +579,7 @@ namespace asivamosffie.services
                             {
                                 Uso.Nombre,
                                 ValorUso = String.Format("{0:n0}", ValorUso),
-                                Saldo = String.Format("{0:n0}", ValorUso)
-                                // Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
+                                Saldo = String.Format("{0:n0}", ValorUso) 
                             });
                         }
                     }
