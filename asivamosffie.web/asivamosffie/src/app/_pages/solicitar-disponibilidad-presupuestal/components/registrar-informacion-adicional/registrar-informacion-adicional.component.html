@@ -45,9 +45,9 @@
 
       <section style="width: 80%; margin: auto">
         <p class="text-center color-mainColor departamento">
-          {{ proyecto.localizacionIdMunicipio }} 
+          {{ proyecto.localizacionIdMunicipio }}
           <strong>Plazo Meses:</strong>
-          {{ tipoSolicitudCodigo === '1' ? proyecto.plazoMesesObra : proyecto.plazoMesesInterventoria }} 
+          {{ tipoSolicitudCodigo === '1' ? proyecto.plazoMesesObra : proyecto.plazoMesesInterventoria }}
           <strong>Plazo Días:</strong>
           {{ tipoSolicitudCodigo === '1' ? proyecto.plazoDiasObra : proyecto.plazoDiasInterventoria }}
 
@@ -92,7 +92,48 @@
     </mat-expansion-panel>
   </mat-accordion>
 
-  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">    
+  <mat-accordion *ngIf="novedadContractual?.novedadContractualAportante.length > 0">
+    <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+               <span>Aportantes de la novedad {{ novedadContractual?.numeroSolicitud }}</span>
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <section style="width: 80%;margin: auto;">
+            <mat-card class="shipping-card var-main-gris sub-card" style="margin-top: 2em;">
+                <mat-card-header class="header-card">
+                    <mat-card-title class="header-card--text">
+                        Aportantes
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-md-6 mb-1em" *ngFor="let novedadAportante of novedadContractual.novedadContractualAportante; index as i" style="margin-top: .5em; text-align: left;">
+                            <p class="mb1-em" style="font-size: 1.2em;"><b>Aportante {{ i+1 }} </b></p>
+
+                            <p style="margin-top: .5em;">
+                                <b>Tipo de aportante:</b>
+                                {{novedadAportante?.tipoAportante}}
+                            </p>
+                            <p >
+                                <b>Aportante:</b>
+                                {{novedadAportante?.nombreAportante}}
+                            </p>
+                            <p>
+                                <b>Valor del aportante:</b>
+                                {{ novedadAportante?.valorAporte | currency }}
+                            </p>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </section>
+
+    </mat-expansion-panel>
+
+</mat-accordion>
+
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
     <div class="d-flex mt-2em align-items-center">
       <div
         class="text-area-quill"

@@ -244,6 +244,20 @@ namespace asivamosffie.api.Controllers
             return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
         }
 
+        [Route("GetValorTotalDisponibilidad")]
+        [HttpGet]
+        public decimal GetValorTotalDisponibilidad([FromQuery] int pDisponibilidadPresupuestalId)
+        {
+            try
+            {
+                return common.GetValorTotalDisponibilidad(pDisponibilidadPresupuestalId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
     }
 }

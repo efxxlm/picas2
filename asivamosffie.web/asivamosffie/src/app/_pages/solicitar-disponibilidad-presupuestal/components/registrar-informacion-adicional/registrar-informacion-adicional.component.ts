@@ -9,6 +9,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 import { ProjectService, Proyecto } from 'src/app/core/_services/project/project.service';
 import { Contratacion } from 'src/app/_interfaces/project-contracting';
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
+import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 
 @Component({
   selector: 'app-registrar-informacion-adicional',
@@ -20,6 +22,9 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   objetoDisponibilidad: DisponibilidadPresupuestal = {};
   listaProyectos: Proyecto[] = [];
   idNovedad: number;
+  novedadContractual: NovedadContractual;
+  objetoNovedad: any;
+  observacionesNovedad: any[];
 
   addressForm = this.fb.group({
     // plazoMeses: [null, Validators.required],
@@ -55,6 +60,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     private router: Router,
     private projectContractingService: ProjectContractingService,
     private projectService: ProjectService,
+    private novedadContractualService: ContractualNoveltyService
 
   ) {
     this.activatedroute.params.subscribe((params: Params) => {
@@ -70,7 +76,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       } else {
         this.cargarDisponibilidadNueva();
       }
-
+      this.getNovedad(this.idNovedad);
     });
   }
 
@@ -130,7 +136,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
             cp.proyecto.contratacionProyectoAportante = cp.contratacionProyectoAportante;
 
             this.listaProyectos.push(cp.proyecto);
-            
+
             let plazoMesesObra = 0;
               let plazoMesesInterventoria = 0;
               let plazoDiasObra = 0;
@@ -150,7 +156,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
             //   this.addressForm.get("plazoMeses").setValue(plazoMesesObra);
             //   this.addressForm.get("plazoDias").setValue(plazoDiasObra);
             // } else {
-              
+
             //   contratacion.contratacionProyecto.forEach(cp => {
             //     if (plazoDiasInterventoria < cp.proyecto.plazoDiasInterventoria)
             //       plazoDiasInterventoria = cp.proyecto.plazoDiasInterventoria;
@@ -180,7 +186,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
                   res = res.filter(x => x.novedadContractualId == this.idNovedad);
 
                   this.ddpsolicitud = res[0].contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp;
-                  this.ddpvalor = res[0].contrato.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
+                  this.ddpvalor = res[0].contrato.contratacion.disponibilidadPresupuestal[0].valorTotalDisponibilidad;
                   this.ddpdetalle = res[0].novedadContractualDescripcion[0].resumenJustificacion;
                   this.objetoDisponibilidad.novedadContractualId = res[0].novedadContractualId;
                   this.objetoDisponibilidad.esNovedadContractual = true;
@@ -214,7 +220,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
                     // this.addressForm.get("plazoMeses").setValue(plazoMesesNovedad !== 0 ? plazoMesesNovedad : plazoMesesObra);
                     // this.addressForm.get("plazoDias").setValue(plazoDiasNovedad !== 0 ? plazoDiasNovedad : plazoDiasObra);
                   } else {
-                    
+
                     contratacion.contratacionProyecto.forEach(cp => {
                       if (plazoDiasInterventoria < cp.proyecto.plazoDiasInterventoria)
                         plazoDiasInterventoria = cp.proyecto.plazoDiasInterventoria;
@@ -251,14 +257,14 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   ngOnInit(): void {
   }
 
- 
+
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
     }
   }
-  
+
 
   // textoLimpio(texto: string) {
   //   let saltosDeLinea = 0;
@@ -351,7 +357,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       this.objetoDisponibilidad.objeto = this.addressForm.get('objeto').value;
       // this.objetoDisponibilidad.plazoMeses = this.addressForm.get('plazoMeses').value;
       // this.objetoDisponibilidad.plazoDias = this.addressForm.get('plazoDias').value;
-      
+
       console.log(this.objetoDisponibilidad);
 
       if ( this.objetoDisponibilidad.esNovedadContractual === true ){
@@ -369,7 +375,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
         numeroDrp: this.objetoDisponibilidad.numeroDrp,
         plazoMeses: this.contratacion.plazoContratacion.plazoMeses,
         plazoDias: this.contratacion.plazoContratacion.plazoDias
-        
+
         }
 
         this.budgetAvailabilityService.createOrEditInfoAdditionalNoveltly(registroPresupuesta, this.objetoDisponibilidad.contratacionId)
@@ -387,7 +393,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
             this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional']);
         })
       }
-      
+
 
     }
     else {
@@ -395,6 +401,24 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     }
 
     console.log(this.objetoDisponibilidad);
+  }
+
+  getNovedad(novedadContractualId){
+    if(novedadContractualId > 0){
+      this.novedadContractualService.getNovedadContractualById(novedadContractualId).subscribe(novedad=>{
+        this.novedadContractual = novedad;
+        if(this.novedadContractual?.novedadContractualDescripcion.length > 0){
+          this.novedadContractual?.novedadContractualDescripcion.forEach(novedad => {
+            if(novedad.tipoNovedadCodigo == '3'){
+              this.objetoNovedad = novedad.resumenJustificacion;
+            }
+          });
+        }
+        if(this.novedadContractual?.novedadContractualObservaciones.length > 0){
+          this.observacionesNovedad = this.novedadContractual?.novedadContractualObservaciones;
+        }
+      });
+    }
   }
 
 }

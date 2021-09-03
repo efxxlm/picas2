@@ -96,7 +96,7 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
       res => {
         console.log(res);
         this.ddpsolicitud=res[0].contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp;
-        this.ddpvalor=res[0].contrato.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
+        this.ddpvalor=res[0].contrato.contratacion.disponibilidadPresupuestal[0].valorTotalDisponibilidad;
         this.ddpdetalle=res[0].novedadContractualDescripcion[0].resumenJustificacion;
       },
       err => {

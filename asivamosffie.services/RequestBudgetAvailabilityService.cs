@@ -468,8 +468,8 @@ namespace asivamosffie.services
                     }
                     else
                     {
-                        List<int> proyectosId = ListDP.DisponibilidadPresupuestalProyecto.Where(x => x.ProyectoId > 0).Select(x => (int)x.ProyectoId).ToList();
-                        List<int> ddpproyectosId = ListDP.DisponibilidadPresupuestalProyecto.Select(x => (int)x.DisponibilidadPresupuestalProyectoId).ToList();
+                        List<int> proyectosId = ListDPP.Where(x => x.ProyectoId > 0).Select(x => (int)x.ProyectoId).ToList();
+                        List<int> ddpproyectosId = ListDPP.Select(x => (int)x.DisponibilidadPresupuestalProyectoId).ToList();
                         var aportantesEstado = _context.ProyectoAportante.Where(x => proyectosId.Contains(x.ProyectoId)).ToList();
                         //var fuentes = _context.FuenteFinanciacion.Where(x => aportantes.Contains(x.AportanteId)).Count();
 
@@ -2174,6 +2174,7 @@ namespace asivamosffie.services
             List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = new List<DetailValidarDisponibilidadPresupuesal>();
             List<GestionFuenteFinanciacion> ListGestionFuenteFinanciacion = _context.GestionFuenteFinanciacion.ToList();
             List<ProyectoAportante> ListProyectoAportante = _context.ProyectoAportante.ToList();
+            List<NovedadContractualAportante> ListProyectoAportantexNovedad = _context.NovedadContractualAportante.ToList();
 
             NovedadContractualRegistroPresupuestal detailDP = _context.NovedadContractualRegistroPresupuestal
                                                                         .Where(x => x.NovedadContractualRegistroPresupuestalId == RegistroNovedadId)
@@ -2497,19 +2498,17 @@ namespace asivamosffie.services
                 {
                     List<int> proyectosId = detailDP.DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Where(x => x.ProyectoId > 0).Select(x => (int)x.ProyectoId).ToList();
                     List<int> ddpproyectosId = detailDP.DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Select(x => (int)x.DisponibilidadPresupuestalProyectoId).ToList();
-                    var aportantesEstado = ListProyectoAportante.Where(x => proyectosId.Contains(x.ProyectoId)).ToList();
-                    //var fuentes = _context.FuenteFinanciacion.Where(x => aportantes.Contains(x.AportanteId)).Count();
-                    int cunt = ListGestionFuenteFinanciacion
-                            .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == RegistroNovedadId &&
-                                   ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
-                            .Count();
+                    //toma los aportantes de novedadcontractual
+                    var aportantesxNovedad = ListProyectoAportantexNovedad.Where(x => x.NovedadContractualId == detailDP.NovedadContractual.NovedadContractualId && x.Eliminado != true).ToList();
 
                     if (ListGestionFuenteFinanciacion
-                        .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == RegistroNovedadId && x.Eliminado != true &&
+                        .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad == true && x.NovedadContractualRegistroPresupuestalId == detailDP.NovedadContractualRegistroPresupuestalId && x.Eliminado != true &&
                                ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId))
-                        .Count() == aportantesEstado.Count())
+                        .Count() == aportantesxNovedad.Count() && aportantesxNovedad.Count() > 0)
                         blnEstado = true;
+
                 }
+
                 decimal ValorTotalDisponibilidad = 0;
                 if (detailDP.DisponibilidadPresupuestalId != null)
                     ValorTotalDisponibilidad = _commonService.GetValorTotalDisponibilidad((int) detailDP.DisponibilidadPresupuestalId);
@@ -2555,7 +2554,7 @@ namespace asivamosffie.services
                     EsNovedad = true,
                     NovedadContractualRegistroPresupuestalId = detailDP.NovedadContractualRegistroPresupuestalId,
                     NovedadContractual = detailDP.NovedadContractualId != null ? _context.NovedadContractual.Where(x => x.NovedadContractualId == detailDP.NovedadContractualId).Include(x => x.NovedadContractualDescripcion).FirstOrDefault() : null,
-                    EstadoRegistro = true,
+                    EstadoRegistro = blnEstado,
                     ValorTotalDisponibilidad = ValorTotalDisponibilidad
                 };
                 ListDetailValidarDisponibilidadPresupuesal.Add(detailDisponibilidadPresupuesal);
@@ -3229,7 +3228,7 @@ namespace asivamosffie.services
 
         public async Task<dynamic> getNovedadContractualByContratacionId(int contratacionId)
         {
-            return await _context.NovedadContractual.Where(x => x.Contrato.ContratacionId == contratacionId).
+            List<NovedadContractual> novedades = await _context.NovedadContractual.Where(x => x.Contrato.ContratacionId == contratacionId).
                 Include(x => x.Contrato).
                     ThenInclude(x => x.Contratacion).
                     ThenInclude(x => x.DisponibilidadPresupuestal).
@@ -3237,6 +3236,28 @@ namespace asivamosffie.services
                 Include(x => x.NovedadContractualAportante).
                     ThenInclude(x => x.ComponenteAportanteNovedad)
                .ToListAsync();
+            if(novedades.Count() > 0)
+            {
+                //solo a una
+                decimal valorSolicitud = 0;
+                DisponibilidadPresupuestal dpp = novedades.FirstOrDefault().Contrato?.Contratacion?.DisponibilidadPresupuestal.FirstOrDefault();
+                if (dpp != null)
+                {
+                    valorSolicitud = _commonService.GetValorTotalDisponibilidad(dpp.DisponibilidadPresupuestalId);
+                }
+
+                novedades.ForEach(r =>
+                {
+                    foreach (var ddp in r.Contrato.Contratacion.DisponibilidadPresupuestal)
+                    {
+                        ddp.ValorTotalDisponibilidad = valorSolicitud;
+                    }
+                });
+
+
+            }
+
+            return novedades;
         }
     }
 }

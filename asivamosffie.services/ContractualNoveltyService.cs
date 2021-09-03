@@ -526,6 +526,16 @@ namespace asivamosffie.services
                     }
                 }
 
+                if (novedadContractual.Contrato?.Contratacion?.DisponibilidadPresupuestal != null)
+                {
+                    decimal valorSolicitud = 0;
+                    DisponibilidadPresupuestal ddp = novedadContractual.Contrato?.Contratacion?.DisponibilidadPresupuestal.FirstOrDefault();
+                    valorSolicitud = _commonService.GetValorTotalDisponibilidad(ddp.DisponibilidadPresupuestalId);
+                    foreach (var disponibilidad in novedadContractual.Contrato?.Contratacion?.DisponibilidadPresupuestal)
+                    {
+                        disponibilidad.ValorTotalDisponibilidad = valorSolicitud;
+                    }
+                }
 
                 bool vaComite = false;
 
