@@ -83,13 +83,7 @@
         </span>
     </div>
     <div class="text-center mb-2em mt-2em" *ngIf="!noPermitirGuardarOtraVez">
-        <button mat-button color="warn" class="btn-guardar" type="submit"
-          [disabled]="
-            addressForm.get('requiereTransladoRecursos').value === null ||
-            addressForm.get('requiereTransladoRecursos').value === true &&
-            justificacionTrasladoAportanteFuenteEsTrue
-          "
-          >
+        <button mat-button color="warn" class="btn-guardar" type="submit">
             <img src="assets/img/icon/guardar.svg" alt="Guardar">
         </button>
     </div>

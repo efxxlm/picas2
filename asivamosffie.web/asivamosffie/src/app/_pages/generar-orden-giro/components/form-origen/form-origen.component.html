@@ -14,8 +14,8 @@
                                 <p><strong>Fuente: </strong> {{ aportante.get( 'fuente' ).value.nombre }} </p>
                             </div>
                             <ng-container *ngIf="aportante.get( 'listaCuentaBancaria' ).value.length > 1; else elseTemplate">
-                                <p><b>Nombre de la Cuenta: </b> <span *ngIf="aportante.get( 'cuentaBancariaId' ).value">{{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }}</span> </p>
                                 <div class="animatedDown" *ngIf="aportante.get( 'cuentaBancariaId' ).value !== null" style="margin-left: .5em;">
+                                    <p><b>Nombre de la Cuenta: </b> <span *ngIf="aportante.get( 'cuentaBancariaId' ).value">{{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }}</span> </p>
                                     <p><strong>Número de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.numeroCuentaBanco }} </p>
                                     <p><strong>Banco: </strong> {{ firstLetterUpperCase( getBanco( aportante.get( 'cuentaBancariaId' ).value.bancoCodigo ) ) }} </p>
                                     <p><strong>Tipo de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.tipoCuentaCodigo }} </p>
@@ -23,8 +23,8 @@
                                 </div>
                             </ng-container>
                             <ng-template #elseTemplate>
-                                <p style="margin-left: .5em;"><strong>Nombre de la Cuenta: </strong> {{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }} </p>
                                 <div class="animatedDown" *ngIf="aportante.get( 'cuentaBancariaId' ).value !== null" style="margin-left: .5em;">
+                                    <p><strong>Nombre de la Cuenta: </strong> {{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }} </p>
                                     <p><strong>Número de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.numeroCuentaBanco }} </p>
                                     <p><strong>Banco: </strong> {{ firstLetterUpperCase( getBanco( aportante.get( 'cuentaBancariaId' ).value.bancoCodigo ) ) }} </p>
                                     <p><strong>Tipo de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.tipoCuentaCodigo }} </p>
