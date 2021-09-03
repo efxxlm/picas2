@@ -480,7 +480,7 @@ namespace asivamosffie.services
             Descuentos += ordenGiro.OrdenGiroDetalle?.Sum(r => r.OrdenGiroDetalleDescuentoTecnica?.Sum(r => r.OrdenGiroDetalleDescuentoTecnicaAportante?.Sum(r => r.ValorDescuento)));
 
 
-            UrlSoporte = "<a href=' target='_blank'" + UrlSoporte + "'>Link</a>";
+            UrlSoporte = "<a href='" + UrlSoporte + "' target='_blank'>Link</a>";
             try
             {
                 pContenido = pContenido
