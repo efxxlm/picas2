@@ -1,5 +1,5 @@
 <section *ngIf="solicitudPago !== undefined">
-    <mat-accordion>
+    <!-- <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title ">
@@ -9,8 +9,8 @@
 
             <app-tabla-porcntj-partic-gog *ngIf="solicitudPago.tablaPorcentajeParticipacion !== undefined && solicitudPago.tablaPorcentajeParticipacion.length > 0" [tablaPorcentajeParticipacion]="solicitudPago.tablaPorcentajeParticipacion"></app-tabla-porcntj-partic-gog>
         </mat-expansion-panel>
-    </mat-accordion>
-    <mat-accordion>
+    </mat-accordion> -->
+    <!-- <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title ">
@@ -20,7 +20,7 @@
 
             <app-tabla-info-fuenterec-gog *ngIf="solicitudPago.tablaInformacionFuenteRecursos !== undefined && solicitudPago.tablaInformacionFuenteRecursos.length > 0" [tablaInformacionFuenteRecursos]="solicitudPago.tablaInformacionFuenteRecursos"></app-tabla-info-fuenterec-gog>
         </mat-expansion-panel>
-    </mat-accordion>
+    </mat-accordion> -->
     <!--
         Se comenta el acordeon Estrategia de pagos por cambios de orden de giro a flujo multiproyecto 08/07/2021
         Los acordeones comentados suben al componente papa form-generar-orden-giro.component.html

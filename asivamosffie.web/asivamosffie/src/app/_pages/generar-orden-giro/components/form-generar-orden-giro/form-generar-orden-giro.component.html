@@ -118,6 +118,25 @@
 
         </mat-expansion-panel>
         -->
+
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title ">
+                    Porcentajes de participación
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            
+            <app-tabla-porcntj-partic-gog *ngIf="solicitudPago.tablaPorcentajeParticipacion !== undefined && solicitudPago.tablaPorcentajeParticipacion.length > 0" [tablaPorcentajeParticipacion]="solicitudPago.tablaPorcentajeParticipacion"></app-tabla-porcntj-partic-gog>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title ">
+                    Información fuente de recursos
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-tabla-info-fuenterec-gog *ngIf="solicitudPago.tablaInformacionFuenteRecursos !== undefined && solicitudPago.tablaInformacionFuenteRecursos.length > 0" [tablaInformacionFuenteRecursos]="solicitudPago.tablaInformacionFuenteRecursos"></app-tabla-info-fuenterec-gog>
+        </mat-expansion-panel>
     </mat-accordion>
 
     <div *ngIf="obsVerificar !== undefined || obsAprobar !== undefined || obsTramitar !== undefined" class="mt-3em">
