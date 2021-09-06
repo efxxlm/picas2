@@ -127,12 +127,12 @@ export class AccordionInfoGeneralGogComponent implements OnInit {
     }
 
     sumarValorDelDDP() {
-        this.solicitudPago.tablaDrpUso.forEach(el => {
-            el.listDyProyectos.forEach(el2 => {
-                el2.listDyUsos.forEach(el3 => {
-                    this.valorDelDDP = this.valorDelDDP + parseInt(el3.valorUso.replace(/,/g, ""));
-                });
-            });
+      this.solicitudPago.tablaDrpUso.forEach(el => {
+        el.listDyProyectos.forEach(el2 => {
+          el2.listDyUsos.forEach(el3 => {
+            this.valorDelDDP += parseInt(el3.valorUso.replaceAll('.', '').replaceAll(',', ''));
+          });
         });
+      });
     }
 }

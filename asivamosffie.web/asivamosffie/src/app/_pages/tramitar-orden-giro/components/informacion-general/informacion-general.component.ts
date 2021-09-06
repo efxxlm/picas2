@@ -25,6 +25,7 @@ export class InformacionGeneralComponent implements OnInit {
     ordenGiroObservacionId = 0;
     ordenGiroId: 0;
     ordenGiroTerceroId: 0;
+    valorDelDDP = 0;
     tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
     listaMediosPagoCodigo: ListaMediosPagoCodigo = MediosPagoCodigo;
     listaTipoSolicitud: TipoSolicitud = TipoSolicitudes;
@@ -86,6 +87,7 @@ export class InformacionGeneralComponent implements OnInit {
         }
 
         this.getDataTerceroGiro();
+        this.sumarValorDelDDP();
 
         this.dataSource = new MatTableDataSource( this.solicitudPago.tablaDRP );
     }
@@ -213,6 +215,16 @@ export class InformacionGeneralComponent implements OnInit {
                     }
                 } );
         } );
+    }
+
+    sumarValorDelDDP() {
+      this.solicitudPago.tablaDrpUso.forEach(el => {
+        el.listDyProyectos.forEach(el2 => {
+          el2.listDyUsos.forEach(el3 => {
+            this.valorDelDDP += parseInt(el3.valorUso.replaceAll('.', '').replaceAll(',', ''));
+          });
+        });
+      });
     }
 
     crearFormulario() {
