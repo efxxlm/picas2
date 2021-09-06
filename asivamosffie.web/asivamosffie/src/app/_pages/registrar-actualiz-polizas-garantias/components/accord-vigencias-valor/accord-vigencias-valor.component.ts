@@ -71,6 +71,8 @@ export class AccordVigenciasValorComponent implements OnInit {
                                     {
                                         semaforo,
                                         seguroPoliza,
+                                        contratoPolizaActualizacionId: [ seguro.contratoPolizaActualizacionId !== undefined ? seguro.contratoPolizaActualizacionId : null, Validators.required ],
+                                        contratoPolizaActualizacionSeguroId: [ seguro.contratoPolizaActualizacionSeguroId !== undefined ? seguro.contratoPolizaActualizacionSeguroId : null, Validators.required ],
                                         nombre: [ this.polizasYSegurosArray.find( poliza => poliza.codigo === seguro.tipoSeguroCodigo ).nombre ],
                                         codigo: [ seguro.tipoSeguroCodigo ],
                                         tieneSeguro: [ seguro.tieneFechaSeguro ],
@@ -106,11 +108,11 @@ export class AccordVigenciasValorComponent implements OnInit {
         this.estaEditando = true;
         const listaContratoPolizaActualizacionSeguro = [ ...this.contratoPolizaActualizacionSeguro ];
         const actualizacionDiligenciadas = [];
-        
+
 
         this.seguros.controls.forEach( control => {
-            const seguro = listaContratoPolizaActualizacionSeguro.find( seguro => seguro.tipoSeguroCodigo === control.get( 'codigo' ).value );
-
+            const seguro = listaContratoPolizaActualizacionSeguro.find( seguro => seguro.tipoSeguroCodigo === control.get( 'codigo' ).value && seguro.contratoPolizaActualizacionSeguroId === control.get( 'contratoPolizaActualizacionSeguroId' ).value);
+            console.log(listaContratoPolizaActualizacionSeguro);
             if ( seguro !== undefined ) {
                 seguro.fechaSeguro = control.get( 'fechaSeguro' ).value !== null ? new Date( control.get( 'fechaSeguro' ).value ).toISOString() : control.get( 'fechaSeguro' ).value;
                 seguro.fechaVigenciaAmparo = control.get( 'fechaAmparo' ).value !== null ? new Date( control.get( 'fechaAmparo' ).value ).toISOString() : control.get( 'fechaAmparo' ).value;
@@ -121,7 +123,6 @@ export class AccordVigenciasValorComponent implements OnInit {
         } );
 
         this.contratoPolizaActualizacion.contratoPolizaActualizacionSeguro = actualizacionDiligenciadas;
-        console.log( this.contratoPolizaActualizacion )
 
         this.actualizarPolizaSvc.createorUpdateCofinancing( this.contratoPolizaActualizacion )
             .subscribe(
