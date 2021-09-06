@@ -42,7 +42,7 @@ namespace asivamosffie.services
 
 
         public async Task<List<VPlantillaOrdenGiro>> GetInfoPlantilla(int pOrdenGiroId)
-        { 
+        {
             return await _context.VPlantillaOrdenGiro.Where(r => r.OrdenGiroId == pOrdenGiroId).OrderBy(r => r.LlaveMen).ToListAsync();
         }
 
@@ -484,7 +484,7 @@ namespace asivamosffie.services
             List<VPagosSolicitudXcontratacionXproyectoXuso> ListPagos =
                     _context.VPagosSolicitudXcontratacionXproyectoXuso.Where(v => v.ContratacionId == pContratacionId)
                                                                       .ToList();
-              
+
             List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
 
             foreach (var Drp in ListDrp)
@@ -536,12 +536,12 @@ namespace asivamosffie.services
 
                         decimal Descuentos = DescuentosOrdenGiro
                                                             .Where(r => r.ProyectoId == ProyectoId.ProyectoId
-                                                             && r.UsoCodigo == TipoUso.TipoUsoCodigo 
+                                                             && r.UsoCodigo == TipoUso.TipoUsoCodigo
                                                              )
                                                 .Sum(r => r.ValorDescuento);
 
                         decimal ValorUsoResta = ValorUso - Descuentos;
-                     
+
                         if (OrdenGiroAprobada)
                         {
                             foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
@@ -565,11 +565,11 @@ namespace asivamosffie.services
                                     item.SaldoUso = Saldo;
                                 }
                             }
-                             
+
                             ListDyUsos.Add(new
                             {
                                 Uso.Nombre,
-                                ValorUso = String.Format("{0:n0}", ValorUso), 
+                                ValorUso = String.Format("{0:n0}", ValorUso),
                                 Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
                             });
                         }
@@ -579,7 +579,7 @@ namespace asivamosffie.services
                             {
                                 Uso.Nombre,
                                 ValorUso = String.Format("{0:n0}", ValorUso),
-                                Saldo = String.Format("{0:n0}", ValorUso) 
+                                Saldo = String.Format("{0:n0}", ValorUso)
                             });
                         }
                     }
@@ -676,6 +676,16 @@ namespace asivamosffie.services
 
             return true;
         }
+
+
+        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportanteOrigen(OrdenGiroDetalleTerceroCausacionAportante terceroCausacionAportante)
+        {
+            if (terceroCausacionAportante.CuentaBancariaId == null)
+                return false;
+
+            return true;
+        }
+
 
         private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(OrdenGiroDetalleTerceroCausacionDescuento ordenGiroDetalleTerceroCausacionDescuento)
         {
@@ -908,8 +918,6 @@ namespace asivamosffie.services
         #endregion
         #region C R U D
 
-
-
         #region Create
         public async Task<Respuesta> CreateEditOrdenGiro(OrdenGiro pOrdenGiro)
         {
@@ -1132,39 +1140,26 @@ namespace asivamosffie.services
                     TerceroCausacionAportante.Eliminado = false;
                     TerceroCausacionAportante.FechaCreacion = DateTime.Now;
                     TerceroCausacionAportante.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportante(TerceroCausacionAportante);
+                    TerceroCausacionAportante.RegistroCompletoOrigen = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportanteOrigen(TerceroCausacionAportante);
                     _context.OrdenGiroDetalleTerceroCausacionAportante.Add(TerceroCausacionAportante);
                 }
                 else
                 {
-                    if (TerceroCausacionAportante.CuentaBancariaId != null)
-                    {
-                        _context.Set<OrdenGiroDetalleTerceroCausacionAportante>()
-                                 .Where(r => r.OrdenGiroDetalleTerceroCausacionAportanteId == TerceroCausacionAportante.OrdenGiroDetalleTerceroCausacionAportanteId)
-                                 .Update(r => new OrdenGiroDetalleTerceroCausacionAportante
-                                 {
-                                     FechaModificacion = DateTime.Now,
-                                     UsuarioModificacion = pUsuarioCreacion,
-                                     CuentaBancariaId = TerceroCausacionAportante.CuentaBancariaId,
-                                     RegistroCompletoOrigen = TerceroCausacionAportante.CuentaBancariaId > 0
-                                 });
-                    }
-                    else
-                    {
-                        _context.Set<OrdenGiroDetalleTerceroCausacionAportante>()
-                                .Where(r => r.OrdenGiroDetalleTerceroCausacionAportanteId == TerceroCausacionAportante.OrdenGiroDetalleTerceroCausacionAportanteId)
-                                .Update(r => new OrdenGiroDetalleTerceroCausacionAportante
-                                {
-                                    FechaModificacion = DateTime.Now,
-                                    UsuarioModificacion = pUsuarioCreacion,
-                                    CuentaBancariaId = TerceroCausacionAportante.CuentaBancariaId,
-                                    FuenteRecursoCodigo = TerceroCausacionAportante.FuenteRecursoCodigo,
-                                    AportanteId = TerceroCausacionAportante.AportanteId,
-                                    ConceptoPagoCodigo = TerceroCausacionAportante.ConceptoPagoCodigo,
-                                    ValorDescuento = TerceroCausacionAportante.ValorDescuento,
-                                    FuenteFinanciacionId = TerceroCausacionAportante.FuenteFinanciacionId,
-                                    RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportante(TerceroCausacionAportante)
-                                });
-                    }
+                    _context.Set<OrdenGiroDetalleTerceroCausacionAportante>()
+                            .Where(r => r.OrdenGiroDetalleTerceroCausacionAportanteId == TerceroCausacionAportante.OrdenGiroDetalleTerceroCausacionAportanteId)
+                            .Update(r => new OrdenGiroDetalleTerceroCausacionAportante
+                            {
+                                FechaModificacion = DateTime.Now,
+                                UsuarioModificacion = pUsuarioCreacion,
+                                CuentaBancariaId = TerceroCausacionAportante.CuentaBancariaId,
+                                FuenteRecursoCodigo = TerceroCausacionAportante.FuenteRecursoCodigo,
+                                AportanteId = TerceroCausacionAportante.AportanteId,
+                                ConceptoPagoCodigo = TerceroCausacionAportante.ConceptoPagoCodigo,
+                                ValorDescuento = TerceroCausacionAportante.ValorDescuento,
+                                FuenteFinanciacionId = TerceroCausacionAportante.FuenteFinanciacionId,
+                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportante(TerceroCausacionAportante),
+                                RegistroCompletoOrigen = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportanteOrigen(TerceroCausacionAportante)
+                            }); 
                 }
             }
         }
