@@ -91,8 +91,10 @@ export class FormOrigenComponent implements OnInit {
                                 const tipoAportante = dataAportantes.listaTipoAportante.find( tipoAportante => tipoAportante.dominioId === nombreAportante.tipoAportanteId );
                                 const fuente = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
                                 const fuenteRecurso = fuente.find( fuenteValue => fuenteValue.codigo === aportante.fuenteRecursoCodigo );
+                                console.log(this.listaAportantes)
+                                console.log(aportante.cuentaBancaria)
                                 const cuentaBancaria = ( ) => {
-                                    if ( aportante.fuenteFinanciacion.cuentaBancaria.length > 1 ) {
+                                    // if ( aportante.fuenteFinanciacion.cuentaBancaria.length > 1 ) {
                                         if ( aportante.cuentaBancariaId !== undefined ) {
                                             const cuenta = aportante.fuenteFinanciacion.cuentaBancaria.find( cuenta => cuenta.cuentaBancariaId === aportante.cuentaBancariaId );
 
@@ -104,9 +106,9 @@ export class FormOrigenComponent implements OnInit {
                                         } else {
                                             return null;
                                         }
-                                    } else {
-                                        return null;
-                                    }
+                                    // } else {
+                                        // return null;
+                                    // }
                                 }
 
                                 if ( aportante.fuenteFinanciacion.cuentaBancaria.length === 1 ) {
