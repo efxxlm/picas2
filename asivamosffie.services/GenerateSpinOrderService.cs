@@ -244,6 +244,7 @@ namespace asivamosffie.services
         private dynamic GetTablaInformacionFuenteRecursos(SolicitudPago solicitudPago)
         {
             List<dynamic> List = new List<dynamic>();
+            bool OrdenGiroAprobada = _context.OrdenGiro.Where(r => r.SolicitudPago.FirstOrDefault().Contrato.ContratoId == solicitudPago.ContratoId).FirstOrDefault()?.RegistroCompletoAprobar ?? false;
 
             List<VDescuentosOdgxFuenteFinanciacionXaportante> ListDescuentos =
                                                                             _context.VDescuentosOdgxFuenteFinanciacionXaportante
@@ -259,11 +260,13 @@ namespace asivamosffie.services
             {
                 decimal Descuento = ListDescuentos.Where(r => r.AportanteId == item.CofinanciacionAportanteId).Sum(r => r.ValorDescuento) ?? 0;
                 CofinanciacionAportante cofinanciacionAportante = _context.CofinanciacionAportante.Find(item.CofinanciacionAportanteId);
-                string NombreAportante =
-                 _budgetAvailabilityService
-                 .getNombreAportante(cofinanciacionAportante);
+                string NombreAportante = _budgetAvailabilityService.getNombreAportante(cofinanciacionAportante);
 
                 List<dynamic> List2 = new List<dynamic>();
+
+                Decimal SaldoAfectado = item.Valor ?? 0;
+                if (OrdenGiroAprobada)
+                    SaldoAfectado -= Descuento;
                 List.Add(new
                 {
                     CofinanciacionAportanteId = item.CofinanciacionAportanteId,
@@ -271,7 +274,7 @@ namespace asivamosffie.services
                     FuenteRecursos = FuenteRecursos.Where(r => r.Codigo == item.FuenteRecursosCodigo).FirstOrDefault().Nombre,
                     NombreAportante = NombreAportante,
                     SaldoActual = item.Valor,
-                    SaldoAfectado = item.Valor
+                    SaldoAfectado = SaldoAfectado
                 });
             }
 
@@ -729,7 +732,7 @@ namespace asivamosffie.services
                     return false;
 
                 if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportanteOrigen(item))
-                      return false;
+                    return false;
             }
 
             foreach (var item in pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento)

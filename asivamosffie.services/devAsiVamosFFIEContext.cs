@@ -335,6 +335,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -14879,8 +14880,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Concepto).HasMaxLength(250);
 
                 entity.Property(e => e.ConsecutivoFfie)
+                    .IsRequired()
                     .HasColumnName("ConsecutivoFFIE")
-                    .HasMaxLength(50);
+                    .HasMaxLength(17)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.DescuentoAns).HasColumnType("decimal(38, 0)");
 
@@ -15931,21 +15934,15 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_TablaOdgFacturado");
 
-                entity.Property(e => e.ConceptoPago)
-                    .IsRequired()
-                    .HasMaxLength(250);
+                entity.Property(e => e.ConceptoPago).HasMaxLength(250);
 
                 entity.Property(e => e.ConceptoPagoCodigo)
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TipoPago)
-                    .IsRequired()
-                    .HasMaxLength(250);
+                entity.Property(e => e.TipoPago).HasMaxLength(250);
 
-                entity.Property(e => e.Uso)
-                    .IsRequired()
-                    .HasMaxLength(250);
+                entity.Property(e => e.Uso).HasMaxLength(250);
 
                 entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 0)");
             });
@@ -15956,13 +15953,9 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_TablaOdgOtroDescuento");
 
-                entity.Property(e => e.ConceptoPago)
-                    .IsRequired()
-                    .HasMaxLength(250);
+                entity.Property(e => e.ConceptoPago).HasMaxLength(250);
 
-                entity.Property(e => e.Descuento)
-                    .IsRequired()
-                    .HasMaxLength(250);
+                entity.Property(e => e.Descuento).HasMaxLength(250);
 
                 entity.Property(e => e.DescuentoCodigo)
                     .HasMaxLength(100)
