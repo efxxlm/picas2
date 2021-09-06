@@ -10,6 +10,7 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Input() proyecto: any;
+    @Input() contratacionProyectoId: number;
     @Output() estadoSemaforo = new EventEmitter<any>();
     ordenGiro: any;
     listaSemaforos = {
@@ -68,7 +69,7 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
 
     checkTieneDescuentos( esPreconstruccion: boolean ) {
         const solicitudPagoFase = this.proyecto.fases.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === esPreconstruccion );
-        
+
         if ( solicitudPagoFase !== undefined ) {
             if ( solicitudPagoFase.tieneDescuento === true ) {
                 return true;
@@ -203,25 +204,25 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
             if ( this.ordenGiro.ordenGiroDetalle !== undefined ) {
                 if ( this.ordenGiro.ordenGiroDetalle.length > 0 ) {
                     const ordenGiroDetalle = this.ordenGiro.ordenGiroDetalle[0];
-    
+
                     if ( ordenGiroDetalle.ordenGiroDetalleTerceroCausacion !== undefined ) {
                         if ( ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.length > 0 ) {
                             const ordenGiroDetalleTerceroCausacion = ordenGiroDetalle.ordenGiroDetalleTerceroCausacion.filter( terceroCausacion => terceroCausacion.esPreconstruccion === esPreconstruccion );
                             let enProceso = 0;
                             let completo = 0;
-    
+
                             if ( ordenGiroDetalleTerceroCausacion.length > 0 ) {
                                 ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
                                     if ( terceroCausacion.registroCompleto === false ) {
                                         enProceso++;
                                     }
-    
+
                                     if ( terceroCausacion.registroCompleto === true ) {
                                         completo++;
                                     }
                                 } )
                             }
-    
+
                             if ( enProceso > 0 && enProceso === ordenGiroDetalleTerceroCausacion.length ) {
                                 semaforo = 'en-proceso';
                             }

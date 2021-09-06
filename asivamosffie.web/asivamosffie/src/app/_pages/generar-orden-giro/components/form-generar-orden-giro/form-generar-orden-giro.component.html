@@ -21,9 +21,9 @@
                 Ver detalle/Editar orden de giro
             </h1>
         </ng-template>
-        
+
     </ng-template>
-    
+
 
     <p class="info-sub-title">
         <span>Número de contrato <b> {{ contrato.numeroContrato }} </b></span>
@@ -82,6 +82,7 @@
             <app-accordion-detalle-giro-gog [solicitudPago]="solicitudPago"
                                             [esVerDetalle]="esVerDetalle"
                                             [proyecto]="proyecto"
+                                            [contratacionProyectoId]="proyecto.contratacionProyectoId"
                                             (estadoSemaforo)="proyecto.semaforoDetalle = $event">
             </app-accordion-detalle-giro-gog>
         </mat-expansion-panel>

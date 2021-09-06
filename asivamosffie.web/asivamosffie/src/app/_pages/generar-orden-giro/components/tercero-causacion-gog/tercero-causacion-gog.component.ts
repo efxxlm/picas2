@@ -23,6 +23,8 @@ export class TerceroCausacionGogComponent implements OnInit {
     @Input() esPreconstruccion: boolean;
     @Input() solicitudPagoFase: any;
     @Output() estadoSemaforo = new EventEmitter<string>();
+    @Input() contratacionProyectoId: number;
+
     listaMenu: ListaMenu = ListaMenuId;
     tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
     addressForm: FormGroup;
@@ -124,13 +126,11 @@ export class TerceroCausacionGogComponent implements OnInit {
             this.solicitudPagoFaseFacturaDescuento.forEach( descuento => this.valorNetoGiro -= descuento.valorDescuento );
         }
         //this.solicitudPago.ordenGiro.ordenGiroDetalle[0].ordenGiroDetalleTerceroCausacion[0].ordenGiroDetalleTerceroCausacionDescuento
-
         this.solicitudPago.ordenGiro.ordenGiroDetalle.forEach( ordengiro => {
-            ordengiro.ordenGiroDetalleTerceroCausacion.forEach(tercero => {
+            ordengiro.ordenGiroDetalleTerceroCausacion.filter(r => r.contratacionProyectoId == this.contratacionProyectoId).forEach(tercero => {
                 tercero.ordenGiroDetalleTerceroCausacionDescuento.forEach(descuento => {
                     this.valorNetoGiro -= descuento.valorDescuento
                 });
-
             });
         } );
         /*

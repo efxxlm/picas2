@@ -5,9 +5,9 @@
             <p><b>Nombre de contratista:</b> <i> {{ solicitudPago.contratoSon.contratacion.contratista.nombre }} </i> </p>
         </mat-card-content>
     </mat-card>
-    
+
     <div class="mt-1em text-center">
-        <p>Valor neto de giro: <b> {{ valorNetoGiro | currency: '':'symbol-narrow':'.0-0' }} </b></p>
+        <p>Valor neto de giro: <b> {{ valorNetoGiroTercero | currency: '':'symbol-narrow':'.0-0' }} </b></p>
     </div>
 
     <form [formGroup]="addressForm" (ngSubmit)="guardar()">
@@ -18,7 +18,7 @@
                         {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-    
+
                     <mat-card formArrayName="conceptos" class="shipping-card" *ngFor="let concepto of getConceptos( i ).controls; index as j">
                         <mat-card-header class="header-card header-card--margin">
                             <mat-card-title class="header-card--text">
@@ -83,7 +83,7 @@
                                 <section [innerHTML]="criterio.get( 'observacionVerificar' ).value.observacion" style="margin-left: 2em;" *ngIf="criterio.get( 'observacionVerificar' ).value.tieneObservacion === true"></section>
                             </mat-card-content>
                         </mat-card>
-        
+
                         <mat-card class="shipping-card border" align="left">
                             <mat-card-header class="header-card">
                               <mat-card-title class="header-card--text card-title-detalle">
@@ -172,7 +172,7 @@
                                     <img src="assets/img/icon/guardar.svg">
                                 </button>
                             </div>
-            
+
                             <section class="text-center table-responsive tabla-gris" style="margin-top: 2em;" *ngIf="criterio.get( 'historialObservaciones' ).value.length > 0">
                                 <table mat-table [dataSource]="getDataSource( criterio.get( 'historialObservaciones' ).value )" matSort>
 
@@ -205,7 +205,7 @@
                             </section>
                     </ng-template>
                     -->
-            </mat-expansion-panel> 
+            </mat-expansion-panel>
         </mat-accordion>
     </form>
 </section>
