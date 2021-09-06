@@ -105,7 +105,7 @@ export class FormOrigenComponent implements OnInit {
                                             return null;
                                         }
                                     } else {
-                                        return aportante.fuenteFinanciacion.cuentaBancaria[ 0 ];
+                                        return null;
                                     }
                                 }
 

@@ -141,6 +141,7 @@
         <td colspan="4"></td>
         <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="5">TERCERO DE GIRO</td>
         <tr>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">Número DDP</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONSECUTIVO FFIE</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">NOMBRE DE LA CUENTA</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">N° CTA</td>
@@ -169,7 +170,8 @@
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">IDENTIFICACIÓN</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">TITULAR</td>
         </tr>
-        <tr *ngFor="let data of this.infoPlantilla; let i = indexo">
+        <tr *ngFor="let data of infoPlantilla; let i = indexo">
+          <td style="border: solid 1px #000">{{ data.numeroDdp }}</td>
           <td style="border: solid 1px #000">{{ data.consecutivoFfie }}</td>
           <td style="border: solid 1px #000">{{ data.nombreCuenta }}</td>
           <td style="border: solid 1px #000">{{ data.numeroCuenta }}</td>
@@ -196,6 +198,15 @@
           <td style="border: solid 1px #000">{{ data.numeroCuentaTercero }}</td>
           <td style="border: solid 1px #000">{{ data.identificacionTercero }}</td>
           <td style="border: solid 1px #000">{{ data.titularTercero }}</td>
+        </tr>
+        <tr>
+          <td style="border: solid 1px #000" colspan="13"></td>
+          <td style="border: solid 1px #000"><b>SUMA</b></td>
+          <td style="border: solid 1px #000">{{ valorConcepto | currency: '':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000">{{ descuentoReteFuente | currency: '':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000">{{ descuentoAns | currency: '':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000">{{ descuentoOtros | currency: '':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000">{{ valorTotal | currency: '':'symbol-narrow':'.0-0' }}</td>
         </tr>
         <tr>
           <td style="border: solid 1px #000" colspan="10">FIRMAS AUTORIZADAS</td>
@@ -379,7 +390,7 @@
   </div>
 
   <div style="display: flex; justify-content: space-between">
-    <section style="background-color: #dadada; border: solid 1px #000">
+    <section style="background-color: #dadada; border: solid 1px #000; width: 650px;">
       <p style="font-weight: 700">PARA DILIGENCIAR POR LA FIDUCIARIA</p>
 
       <div style="display: flex; justify-content: space-between">
@@ -425,7 +436,7 @@
           </tr>
         </table>
 
-        <table style="border-collapse: collapse; margin-right: 20px">
+        <!-- <table style="border-collapse: collapse; margin-right: 20px">
           <tr>
             <td style="font-weight: 700; border-top: solid 1px #000; border-bottom: solid 1px #000">OBSERVACIONES:</td>
           </tr>
@@ -448,7 +459,7 @@
               autorizada 1 y firma autorizada 2, respectivamente.
             </td>
           </tr>
-        </table>
+        </table> -->
       </div>
     </section>
 

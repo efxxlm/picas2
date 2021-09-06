@@ -24,6 +24,7 @@ export class AccordionInfoGeneralGogComponent implements OnInit {
     solicitudPagoFase: any;
     ordenGiroTercero: any;
     semaforoInfoGeneral = 'sin-diligenciar';
+    valorDelDDP = 0;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -42,6 +43,7 @@ export class AccordionInfoGeneralGogComponent implements OnInit {
 
     ngOnInit(): void {
         this.getSolicitudPago();
+        this.sumarValorDelDDP();
     };
 
     getSolicitudPago() {
@@ -122,5 +124,15 @@ export class AccordionInfoGeneralGogComponent implements OnInit {
     }
     obsTramitar(event) {
         this.observacionesTramitar.emit(event)
+    }
+
+    sumarValorDelDDP() {
+        this.solicitudPago.tablaDrpUso.forEach(el => {
+            el.listDyProyectos.forEach(el2 => {
+                el2.listDyUsos.forEach(el3 => {
+                    this.valorDelDDP = this.valorDelDDP + parseInt(el3.valorUso.replace(/,/g, ""));
+                });
+            });
+        });
     }
 }

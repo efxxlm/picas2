@@ -16,6 +16,11 @@ import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrar
 export class PlantillaComponent implements OnInit {
   solicitudPago = undefined;
   ordenGiroTercero = undefined;
+  valorConcepto = 0;
+  descuentoReteFuente = 0;
+  descuentoAns = 0;
+  descuentoOtros = 0;
+  valorTotal = 0;
   tipoSolicitudCodigo = TipoSolicitudCodigo;
   listaMediosPagoCodigo = MediosPagoCodigo;
   bancosArray: Dominio[] = [];
@@ -147,13 +152,15 @@ export class PlantillaComponent implements OnInit {
     this.ordenGiroSvc.getInfoPlantilla(ordenGiroId).subscribe(response => {
       this.infoPlantilla = response;
       console.log(this.infoPlantilla);
-      // this.infoPlantilla[0].forEach(element => {
-      //   if (element.nombre == 'ANS') this.descuentos.ans += element.valorDescuento;
-      //   else if (element.nombre == 'Retegarantia') this.descuentos.retegarantia += element.valorDescuento;
-      //   else this.descuentos.otrosDescuentos += element.valorDescuento;
+      this.infoPlantilla.forEach(element => {
+        this.valorConcepto += element.valorConcepto;
+        this.descuentoReteFuente += element.descuentoReteFuente;
+        this.descuentoAns += element.descuentoAns;
+        this.descuentoOtros += element.descuentoOtros;
 
-      //   this.descuentos.valorTotal += element.valorDescuento;
-      // });
+        this.valorTotal += element.valorConcepto + element.descuentoReteFuente + element.descuentoAns + element.descuentoOtros
+        console.log(this.valorTotal)
+      });
     });
   }
 

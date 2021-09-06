@@ -36,7 +36,7 @@
 
             <div class="d-flex justify-content-center colorMainColor mt-1em">
                 <p>Número de DDP: <b> {{ solicitudPago.contratoSon.contratacion.disponibilidadPresupuestal[ 0 ].numeroDdp }} </b></p>
-                <p style="margin-left: 2em;">Valor del DDP: <b> {{ solicitudPago.contratoSon.contratacion.disponibilidadPresupuestal[ 0 ].valorSolicitud | currency:'':'symbol-narrow':'.0-0' }} </b></p>
+                <p style="margin-left: 2em;">Valor del DDP: <b> {{ valorDelDDP | currency:'':'symbol-narrow':'.0-0' }} </b></p>
             </div>
 
             <!-- <div class="table-responsive mt-1em">
