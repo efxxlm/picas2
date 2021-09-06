@@ -5,6 +5,8 @@ namespace asivamosffie.model.Models
 {
     public partial class VEjecucionFinancieraXproyecto
     {
+        public int ContratoId { get; set; }
+        public int ContratacionId { get; set; }
         public string TipoSolicitudCodigo { get; set; }
         public int ProyectoId { get; set; }
         public string Nombre { get; set; }

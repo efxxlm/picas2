@@ -14286,11 +14286,11 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(250);
 
-                entity.Property(e => e.OrdenadoGirarAntesImpuestos).HasColumnType("numeric(38, 6)");
+                entity.Property(e => e.OrdenadoGirarAntesImpuestos).HasColumnType("decimal(19, 0)");
 
                 entity.Property(e => e.PorcentajeEjecucionFinanciera).HasColumnType("numeric(38, 6)");
 
-                entity.Property(e => e.Saldo).HasColumnType("numeric(38, 6)");
+                entity.Property(e => e.Saldo).HasColumnType("decimal(20, 0)");
 
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()
@@ -14310,13 +14310,13 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_EjecucionPresupuestalXProyecto");
 
-                entity.Property(e => e.FacturadoAntesImpuestos).HasColumnType("numeric(38, 6)");
+                entity.Property(e => e.FacturadoAntesImpuestos).HasColumnType("decimal(18, 0)");
 
                 entity.Property(e => e.Nombre).HasMaxLength(250);
 
-                entity.Property(e => e.PorcentajeEjecucionPresupuestal).HasColumnType("numeric(38, 6)");
+                entity.Property(e => e.PorcentajeEjecucionPresupuestal).HasColumnType("decimal(38, 16)");
 
-                entity.Property(e => e.Saldo).HasColumnType("numeric(38, 6)");
+                entity.Property(e => e.Saldo).HasColumnType("decimal(19, 0)");
 
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()
@@ -14917,6 +14917,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.NumeroCuentaTercero)
                     .HasMaxLength(70)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroDdp)
+                    .HasColumnName("NumeroDDP")
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Numerofactura)
