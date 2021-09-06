@@ -33,6 +33,7 @@ namespace asivamosffie.services
                                          .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
                                                                                                          .Update(r => new SolicitudPago()
                                                                                                          {
+                                                                                                             UrlSoporteFinanciera = pSolicitudPago.UrlSoporteFinanciera,
                                                                                                              FechaRadicacionSacFinanciera = pSolicitudPago.FechaRadicacionSacFinanciera,
                                                                                                              NumeroRadicacionSacFinanciera = pSolicitudPago.NumeroRadicacionSacFinanciera,
                                                                                                              FechaAsignacionSacFinanciera = DateTime.Now
