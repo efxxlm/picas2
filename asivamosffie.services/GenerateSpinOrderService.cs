@@ -680,7 +680,7 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportanteOrigen(OrdenGiroDetalleTerceroCausacionAportante terceroCausacionAportante)
         {
-            if (terceroCausacionAportante.CuentaBancariaId == null)
+            if (terceroCausacionAportante.CuentaBancariaId == null || terceroCausacionAportante.CuentaBancariaId == 0)
                 return false;
 
             return true;
@@ -727,6 +727,9 @@ namespace asivamosffie.services
             {
                 if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportante(item))
                     return false;
+
+                if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportanteOrigen(item))
+                      return false;
             }
 
             foreach (var item in pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento)
@@ -1159,7 +1162,7 @@ namespace asivamosffie.services
                                 FuenteFinanciacionId = TerceroCausacionAportante.FuenteFinanciacionId,
                                 RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportante(TerceroCausacionAportante),
                                 RegistroCompletoOrigen = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionAportanteOrigen(TerceroCausacionAportante)
-                            }); 
+                            });
                 }
             }
         }
