@@ -1,0 +1,35 @@
+<section class="d-flex justify-content-center table-responsive tabla-gris mt-3em">
+  <table mat-table [dataSource]="dataSource" matSort style="width: 90%">
+
+      <ng-container matColumnDef="drp">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> DRP </th>
+        <td mat-cell *matCellDef="let element; index as i" align="center"> <b>{{ i + 1 }}</b> </td>
+      </ng-container>
+
+      <ng-container matColumnDef="numeroDRP">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20 back-color"> Número DRP </th>
+        <td mat-cell *matCellDef="let element; index as i" align="center"> {{ element.numeroDrp }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nombreAportante">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20 back-color" style="width: 28%;"> Nombre del aportante </th>
+          <td mat-cell *matCellDef="let element" align="center" class="color-text" class="padding-0em border-color-detalle">
+            <div class="sub-item-table flex-table justify-content-center align-items-center h-3em color-text" *ngFor="let listAportantes of element.listAportantes">
+              {{ listAportantes.nombreAportante }}
+            </div>
+          </td>
+      </ng-container>
+
+      <ng-container matColumnDef="porcParticipacion">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20 back-color" style="width: 28%;"> Porcentaje de participación </th>
+          <td mat-cell *matCellDef="let element" align="center" class="color-text" class="padding-0em border-color-detalle">
+            <div class="sub-item-table flex-table justify-content-center align-items-center h-3em color-text" *ngFor="let listAportantes of element.listAportantes">
+              {{ listAportantes.nomTotalParticipacion }}
+            </div>
+          </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</section>

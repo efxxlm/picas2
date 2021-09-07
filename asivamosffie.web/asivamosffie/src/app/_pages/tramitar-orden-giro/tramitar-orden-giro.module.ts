@@ -18,10 +18,12 @@ import { QuillModule } from 'ngx-quill';
 import { MaterialModule } from 'src/app/material/material.module';
 import { DialogDescargarOrdenGiroComponent } from './components/dialog-descargar-orden-giro/dialog-descargar-orden-giro.component';
 import { FormOrigenComponent } from './components/form-origen/form-origen.component';
+import { TablaPorcntjParticGogComponent } from './components/tabla-porcntj-partic-gog/tabla-porcntj-partic-gog.component';
+import { TablaInfoFuenterecGogComponent } from './components/tabla-info-fuenterec-gog/tabla-info-fuenterec-gog.component';
 
 
 @NgModule({
-  declarations: [ FormEstrategPagosGogComponent, TerceroCausacionComponent, TablaDatosSolicitudComponent, TablaAportantesComponent, SoporteOrdenGiroComponent, InformacionGeneralComponent, DetalleGiroComponent, DescuentosDireccionTecnicaComponent, TramitarOrdenGiroComponent, TablaTramitarOrdenGiroComponent, FormTramitarOrdenGiroComponent, DialogDescargarOrdenGiroComponent, FormOrigenComponent],
+  declarations: [ FormEstrategPagosGogComponent, TerceroCausacionComponent, TablaDatosSolicitudComponent, TablaAportantesComponent, SoporteOrdenGiroComponent, InformacionGeneralComponent, DetalleGiroComponent, DescuentosDireccionTecnicaComponent, TramitarOrdenGiroComponent, TablaTramitarOrdenGiroComponent, FormTramitarOrdenGiroComponent, DialogDescargarOrdenGiroComponent, FormOrigenComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent],
   imports: [
     CommonModule,
     FormsModule,
