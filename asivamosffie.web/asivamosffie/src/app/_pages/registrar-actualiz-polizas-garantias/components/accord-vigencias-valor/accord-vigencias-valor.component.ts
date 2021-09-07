@@ -131,7 +131,7 @@ export class AccordVigenciasValorComponent implements OnInit {
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [
-                                '/registrarActualizacionesPolizasYGarantias/verDetalleEditarPoliza', this.contratoPoliza.contratoPolizaId
+                                '/registrarActualizacionesPolizasYGarantias/verDetalleEditarPoliza',  response.data
                             ]
                         )
                     );

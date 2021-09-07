@@ -137,7 +137,7 @@ export class RevisionAprobacionRapgComponent implements OnInit {
             return humanize.capitalize( String( texto ).toLowerCase() );
         }
     }
-  
+
     maxLength( e: any, n: number ) {
         if (e.editor.getLength() > n) {
             e.editor.deleteText(n - 1, e.editor.getLength());
@@ -167,7 +167,7 @@ export class RevisionAprobacionRapgComponent implements OnInit {
             data: { modalTitle, modalText }
         });
     }
-  
+
     onSubmit() {
         this.estaEditando = true;
 
@@ -198,7 +198,7 @@ export class RevisionAprobacionRapgComponent implements OnInit {
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [
-                                '/registrarActualizacionesPolizasYGarantias/verDetalleEditarPoliza', this.contratoPoliza.contratoPolizaId
+                                '/registrarActualizacionesPolizasYGarantias/verDetalleEditarPoliza', response.data
                             ]
                         )
                     );
