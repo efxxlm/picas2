@@ -88,7 +88,7 @@ export class ActualizacionPolizaRlcComponent implements OnInit {
         this.razonActualizacionArray = await this.commonSvc.listaRazonActualizacion().toPromise();
         this.tipoActualizacionArray = await this.commonSvc.listaTipoActualizacion().toPromise();
 
-        this.actualizarPolizaSvc.getContratoPoliza( this.contrato.contratoPoliza[ 0 ].contratoPolizaId , true)
+        this.actualizarPolizaSvc.getContratoPoliza( this.contrato.contratoPoliza[ 0 ].contratoPolizaId , false)
             .subscribe(
                 response => {
                     this.contratoPoliza = response;
