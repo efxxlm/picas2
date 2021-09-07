@@ -127,18 +127,18 @@ export class PlantillaComponent implements OnInit {
 
       this.tablaOrdenGiro.push(datosTabla);
     }
-    for (let i = 0; i < solicitudPago.ordenGiro.ordenGiroTercero.length; i++) {
-      const element = solicitudPago.ordenGiro.ordenGiroTercero[i];
+    // for (let i = 0; i < solicitudPago.ordenGiro.ordenGiroTercero.length; i++) {
+    //   const element = solicitudPago.ordenGiro.ordenGiroTercero[i];
 
-      this.tablaOrdenGiro[i].esCuentaAhorros = element.ordenGiroTerceroTransferenciaElectronica[0].esCuentaAhorros
-        ? 'Ahorros'
-        : 'Corriente';
-      this.tablaOrdenGiro[i].bancoCodigo = element.ordenGiroTerceroTransferenciaElectronica[0].bancoCodigo;
-      this.tablaOrdenGiro[i].numeroCuenta = element.ordenGiroTerceroTransferenciaElectronica[0].numeroCuenta;
-      this.tablaOrdenGiro[i].titularNumeroIdentificacion =
-        element.ordenGiroTerceroTransferenciaElectronica[0].titularNumeroIdentificacion;
-      this.tablaOrdenGiro[i].titularCuenta = element.ordenGiroTerceroTransferenciaElectronica[0].titularCuenta;
-    }
+    //   this.tablaOrdenGiro[i].esCuentaAhorros = element.ordenGiroTerceroTransferenciaElectronica[0].esCuentaAhorros
+    //     ? 'Ahorros'
+    //     : 'Corriente';
+    //   this.tablaOrdenGiro[i].bancoCodigo = element.ordenGiroTerceroTransferenciaElectronica[0].bancoCodigo;
+    //   this.tablaOrdenGiro[i].numeroCuenta = element.ordenGiroTerceroTransferenciaElectronica[0].numeroCuenta;
+    //   this.tablaOrdenGiro[i].titularNumeroIdentificacion =
+    //     element.ordenGiroTerceroTransferenciaElectronica[0].titularNumeroIdentificacion;
+    //   this.tablaOrdenGiro[i].titularCuenta = element.ordenGiroTerceroTransferenciaElectronica[0].titularCuenta;
+    // }
     this.bancosArray = await this.commonSvc.listaBancos().toPromise();
     this.solicitudPago = solicitudPago;
 

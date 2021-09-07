@@ -141,13 +141,13 @@
         <td colspan="4"></td>
         <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="5">TERCERO DE GIRO</td>
         <tr>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">Número DDP</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONSECUTIVO FFIE</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">NOMBRE DE LA CUENTA</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">N° CTA</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">BANCO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">TIPO CTA</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CÓDIGO SIFI</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">Número DDP</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">IDENTIFICACIÓN</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">NOMBRE</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">No. FACTURA</td>
@@ -171,13 +171,13 @@
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">TITULAR</td>
         </tr>
         <tr *ngFor="let data of infoPlantilla; let i = indexo">
-          <td style="border: solid 1px #000">{{ data.numeroDdp }}</td>
           <td style="border: solid 1px #000">{{ data.consecutivoFfie }}</td>
           <td style="border: solid 1px #000">{{ data.nombreCuenta }}</td>
           <td style="border: solid 1px #000">{{ data.numeroCuenta }}</td>
           <td style="border: solid 1px #000">{{ data.nombreBanco }}</td>
           <td style="border: solid 1px #000">{{ data.tipoCuenta }}</td>
           <td style="border: solid 1px #000">{{ data.codigoSifi }}</td>
+          <td style="border: solid 1px #000">{{ data.numeroDdp }}</td>
           <td style="border: solid 1px #000">{{ data.identificacionTercero }}</td>
           <td style="border: solid 1px #000">{{ data.terceroCausasionNombre }}</td>
           <td style="border: solid 1px #000">{{ data.numerofactura }}</td>
@@ -201,7 +201,7 @@
         </tr>
         <tr>
           <td style="border: solid 1px #000" colspan="13"></td>
-          <td style="border: solid 1px #000"><b>SUMA</b></td>
+          <td style="border: solid 1px #000"><b>TOTAL</b></td>
           <td style="border: solid 1px #000">{{ valorConcepto | currency: '':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000">{{ descuentoReteFuente | currency: '':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000">{{ descuentoAns | currency: '':'symbol-narrow':'.0-0' }}</td>
