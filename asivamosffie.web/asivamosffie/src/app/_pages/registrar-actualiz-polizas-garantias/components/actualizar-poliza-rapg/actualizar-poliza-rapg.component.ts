@@ -16,7 +16,7 @@ import { EstadosRevision, PerfilCodigo } from 'src/app/_interfaces/estados-actua
 export class ActualizarPolizaRapgComponent implements OnInit {
 
     contratoPoliza: any;
-    esRegistroNuevo: boolean;
+    esRegistroNuevo: boolean = false;
     esVerDetalle: boolean;
     contratoPolizaActualizacion: any;
     estadosRevision = EstadosRevision;
@@ -84,7 +84,7 @@ export class ActualizarPolizaRapgComponent implements OnInit {
         this.listaTipoSolicitudContrato = await this.commonSvc.listaTipoSolicitudContrato().toPromise();
         this.listaTipoDocumento = await this.commonSvc.listaTipodocumento().toPromise();
 
-        this.actualizarPolizaSvc.getContratoPoliza( this.activatedRoute.snapshot.params.id, true )
+        this.actualizarPolizaSvc.getContratoPoliza( this.activatedRoute.snapshot.params.id, this.esRegistroNuevo )
             .subscribe(
                 response => {
                     this.contratoPoliza = response;
