@@ -555,24 +555,27 @@ namespace asivamosffie.services
                                                                               .AsNoTracking()
                                                                               .ToListAsync();
 
-                              contratoPoliza = await _context.ContratoPoliza
-                                             .Where(c => c.ContratoPolizaId == contratoPolizaActualizacion.FirstOrDefault().ContratoPolizaId)
-                                             .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contratista)
-                                             .Include(c => c.PolizaGarantia)
-                                             .Include(c => c.PolizaListaChequeo)
-                                             .Include(c => c.PolizaObservacion)
-                                             .FirstOrDefaultAsync();
-                 
+                contratoPoliza = await _context.ContratoPoliza
+                               .Where(c => c.ContratoPolizaId == contratoPolizaActualizacion.FirstOrDefault().ContratoPolizaId)
+                               .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contratista)
+                               .Include(c => c.PolizaGarantia)
+                               .Include(c => c.PolizaListaChequeo)
+                               .Include(c => c.PolizaObservacion)
+                               .AsNoTracking()
+                               .FirstOrDefaultAsync();
+
             }
             else
-            { 
-                             contratoPoliza = await _context.ContratoPoliza
-                                 .Where(c => c.ContratoPolizaId == pContratoPolizaId)
-                                 .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contratista)
-                                 .Include(c => c.PolizaGarantia)
-                                 .Include(c => c.PolizaListaChequeo)
-                                 .Include(c => c.PolizaObservacion)
-                                 .FirstOrDefaultAsync(); 
+            {
+                contratoPoliza = await _context.ContratoPoliza
+                    .Where(c => c.ContratoPolizaId == pContratoPolizaId)
+                    .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contratista)
+                    .Include(c => c.PolizaGarantia)
+                    .Include(c => c.PolizaListaChequeo)
+                    .Include(c => c.PolizaObservacion)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+
             }
 
             contratoPoliza.ContratoPolizaActualizacion = contratoPolizaActualizacion;
