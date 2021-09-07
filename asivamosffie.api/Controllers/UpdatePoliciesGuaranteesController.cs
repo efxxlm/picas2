@@ -21,9 +21,9 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetContratoPoliza")]
         [HttpGet]
-        public async Task<dynamic> GetContratoPoliza([FromQuery] int pContratoPolizaId)
+        public async Task<dynamic> GetContratoPoliza([FromQuery] int pContratoPolizaId, bool? pEsNueva)
         {
-            var respuesta = await _updatePoliciesGuaranteesService.GetContratoPoliza(pContratoPolizaId);
+            var respuesta = await _updatePoliciesGuaranteesService.GetContratoPoliza(pContratoPolizaId, pEsNueva);
             return respuesta;
         }
 

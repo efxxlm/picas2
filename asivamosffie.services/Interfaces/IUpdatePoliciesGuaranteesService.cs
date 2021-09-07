@@ -11,7 +11,7 @@ namespace asivamosffie.services.Interfaces
     {
         Task<Respuesta> DeleteContratoPolizaActualizacion(ContratoPolizaActualizacion pContratoPolizaActualizacion);
 
-        Task<ContratoPoliza> GetContratoPoliza(int pContratoPolizaId);
+        Task<ContratoPoliza> GetContratoPoliza(int pContratoPolizaId, bool? pEsNueva);
 
         Task<Respuesta> DeleteContratoPolizaActualizacionSeguro(ContratoPolizaActualizacionSeguro pContratoPolizaActualizacionSeguro);
 

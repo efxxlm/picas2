@@ -58,7 +58,7 @@
           mat-raised-button
           color="accent"
           class="btn-table"
-          [routerLink]="['verDetalleEditarPoliza', element.contratoPolizaId]"
+          [routerLink]="['verDetalleEditarPoliza', element.contratoPolizaActualizacionId]"
           *ngIf="
             estadosActualizacionPoliza.enRevisionActualizacionPoliza === element.estadoActualizacion ||
             getEstadoRegistro(element.estadoActualizacion) == 'Con póliza observada y devuelta'
@@ -93,7 +93,7 @@
           color="accent"
           class="btn-table"
           *ngIf="estadosActualizacionPoliza.conAprobacionActualizacionPoliza === element.estadoActualizacion"
-          [routerLink]="['verDetallePoliza', element.contratoPolizaId]"
+          [routerLink]="['verDetallePoliza', element.contratoPolizaActualizacionId]"
         >
           Ver detalle
         </button>
