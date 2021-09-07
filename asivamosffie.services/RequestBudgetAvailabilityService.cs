@@ -2264,7 +2264,7 @@ namespace asivamosffie.services
                         {
                             FuenteFinanciacion fuente = _context.FuenteFinanciacion.Find(font.FuenteFinanciacionId);
                             font.ComponenteUsoNovedad = font.ComponenteUsoNovedad.Where(x => x.Eliminado != true && x.ComponenteFuenteNovedadId == font.ComponenteFuenteNovedadId).ToList();
-
+                            var fuenteSaldo = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == componente.CofinanciacionAportanteId).FirstOrDefault();
                             //el saldo de la fuente realmente es lo que tengo en control de recursos
                             //var saldo = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x=>x.ValorConsignacion);
                             decimal saldo = Convert.ToDecimal(_context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x => x.ValorFuente));
@@ -2299,8 +2299,8 @@ namespace asivamosffie.services
                                 Estado_de_las_fuentes = "",
                                 FuenteFinanciacionID = font.FuenteFinanciacionId,
                                 Valor_solicitado_de_la_fuente = valorsolicitado,
-                                Nuevo_saldo_de_la_fuente = saldo - valorsolicitadoxotros - valorsolicitado,
-                                Saldo_actual_de_la_fuente = saldo - valorsolicitadoxotros,
+                                Nuevo_saldo_de_la_fuente = fuenteSaldo != null ? (decimal) fuenteSaldo.SaldoActual - valorsolicitado : 0,
+                                Saldo_actual_de_la_fuente = fuenteSaldo != null ? (decimal) fuenteSaldo.SaldoActual : 0,
                                 Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldo : 0,
                                 Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActual : 0,
                             });

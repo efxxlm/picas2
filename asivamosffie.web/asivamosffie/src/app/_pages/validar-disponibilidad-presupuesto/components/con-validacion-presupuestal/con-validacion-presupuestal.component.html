@@ -118,52 +118,49 @@
           <div [innerHtml]="detailavailabilityBudget?.limitacion"></div>
         </div>
       </div>
-      <div *ngIf="detailavailabilityBudget?.aportantes.length > 0">
-        <h2 class="card-subTitle">Aportantes</h2>
-        <div *ngFor="let aportante of detailavailabilityBudget?.aportantes; index as i">
-          <mat-card-title class="header-card--text sub-text"> Aportante {{ i + 1 }} </mat-card-title>
-          <p>
-            <strong>Tipo de aportante:</strong>
-            {{ aportante.tipoAportante }}
-          </p>
-          <p>
-            <strong>Nombre del aportante:</strong>
-            {{ aportante.nombre }}
-          </p>
-          <p>
-            <strong>Valor del aportante al proyecto:</strong>
-            {{ aportante.valorAportanteAlProyecto | currency: '':'symbol':'3.0'  }}
-          </p>
-          <p *ngIf="detailavailabilityBudget?.urlConSoporte">
-            <strong>URL con soporte:</strong>
-            {{ detailavailabilityBudget?.urlConSoporte }}
-          </p>
-          <mat-card-title class="header-card--text sub-text"> Fuente </mat-card-title>
-          <!--*ngIf="detailavailabilityBudget?.tipoSolicitudCodigo != pTipoDDP.DDP_especial"-->
-          <div>
-            <div *ngFor="let fuente of aportante.fuentesFinanciacion; index as ii">
-              <p>
-                <strong>Fuente {{ ii + 1 }}:</strong>
-                {{ fuente.fuente }}
-              </p>
-              <p>
-                <strong>Saldo actual de la fuente:</strong>
-                {{ fuente.saldo_actual_de_la_fuente | currency: '':'symbol':'3.0' }}
-              </p>
-              <p>
-                <strong>Valor solicitado de la fuente:</strong>
-                {{ fuente.valor_solicitado_de_la_fuente | currency: '':'symbol':'3.0' }}
-              </p>
-              <p>
-                <strong>Nuevo saldo de la fuente:</strong>
-                {{ fuente.nuevo_saldo_de_la_fuente | currency: '':'symbol':'3.0' }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
     </mat-card-content>
   </mat-card>
+  <mat-accordion>
+    <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
+        <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of detailavailabilityBudget?.proyectos">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    {{proyecto.llaveMen}} - {{proyecto.institucionEducativa}} - {{proyecto.sede}}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card class="var-main-gris">
+              <mat-card-content>
+                <h2 class="card-subTitle">Aportantes</h2>
+                <div *ngFor="let apo of proyecto.aportantes;index as i">
+                  <mat-card-title class="header-card--text sub-text textoGris">Aportante {{i+1}}</mat-card-title>
+                  <p><strong>Tipo de aportante: </strong>{{apo.tipoAportante}}</p>
+                  <p><strong>Nombre del aportante: </strong>{{apo.nombre}}</p>
+                  <p><strong>Valor del aportante al proyecto: </strong>{{apo.valorAportanteAlProyecto| currency:'':'symbol':'3.0'}}</p>
+                  <mat-card-title class="header-card--text sub-text textoGris">Fuentes {{i+1}}</mat-card-title>
+                  <div *ngFor="let fuente of apo.fuentesFinanciacion;index as j">
+                    <p>
+                    <strong>Fuente:</strong>
+                    {{fuente.fuente}}
+                    </p>
+                    <p>
+                    <strong>Saldo actual de la fuente:</strong>
+                    {{fuente.saldo_actual_de_la_fuente| currency:'':'symbol':'3.0'}}
+                    </p>
+                    <p>
+                    <strong>Valor solicitado de la fuente:</strong>
+                    {{fuente.valor_solicitado_de_la_fuente| currency:'':'symbol':'3.0'}}
+                    </p>
+                    <p>
+                    <strong>Nuevo saldo de la fuente:</strong>
+                    {{fuente.nuevo_saldo_de_la_fuente| currency:'':'symbol':'3.0'}}
+                    </p>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+        </mat-expansion-panel>
+    </div>
+</mat-accordion>
   <mat-card class="shipping-card var-main-gris" *ngIf="detailavailabilityBudget?.observaciones">
     <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text"> Observaciones </mat-card-title>

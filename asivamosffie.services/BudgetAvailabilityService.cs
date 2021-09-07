@@ -1390,7 +1390,6 @@ namespace asivamosffie.services
 
                 List<GestionFuenteFinanciacion> gestionfuentes = new List<GestionFuenteFinanciacion>();
 
-
                 gestionfuentes = _context.GestionFuenteFinanciacion
                  .Include(x => x.FuenteFinanciacion).
                     ThenInclude(x => x.Aportante).
@@ -1448,6 +1447,7 @@ namespace asivamosffie.services
                 {
                     //el saldo actual de la fuente son todas las solicitudes a la fuentes
                     //var consignadoemnfuente = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorConsignacion);
+                    var fuente = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.Aportante.CofinanciacionAportanteId).FirstOrDefault();
                     var consignadoemnfuente = _context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorFuente);
                     var saldofuente = _context.GestionFuenteFinanciacion.Where(
                         x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId &&
@@ -1465,9 +1465,9 @@ namespace asivamosffie.services
                         .Replace("[DDP_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
                         .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x => x.ValorDocumento)).ToString())
                         .Replace("[DDP_FUENTE]", fuenteNombre)
-                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", gestion.SaldoActual).ToString())
+                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", fuente?.SaldoActual).ToString())
                         .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
-                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", gestion.NuevoSaldo).ToString());
+                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", fuente?.SaldoActual - gestion.ValorSolicitado).ToString());
 
                     //.Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", saldototal).ToString())
                     //.Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
@@ -1793,7 +1793,7 @@ namespace asivamosffie.services
                 decimal total = 0;
                 foreach (var gestion in gestionfuentes)
                 {
-
+                    var fuente = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.Aportante.CofinanciacionAportanteId).FirstOrDefault();
                     var consignadoemnfuente = _context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorFuente);
                     var saldofuente = _context.GestionFuenteFinanciacion.Where(
                         x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId &&
@@ -1811,9 +1811,9 @@ namespace asivamosffie.services
                         .Replace("[DDP_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
                         .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x => x.ValorDocumento)).ToString())
                         .Replace("[DDP_FUENTE]", fuenteNombre)
-                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", gestion.SaldoActual).ToString())
+                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", fuente?.SaldoActual).ToString())
                         .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
-                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", gestion.NuevoSaldo).ToString());
+                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", fuente?.SaldoActual - gestion.ValorSolicitado).ToString());
 
                     tablaproyecto += tr;
 
