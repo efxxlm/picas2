@@ -83,8 +83,10 @@ export class InformacionGeneralComponent implements OnInit {
         if ( this.solicitudPago.tipoSolicitudCodigo !== this.listaTipoSolicitud.expensas && this.solicitudPago.tipoSolicitudCodigo !== this.listaTipoSolicitud.otrosCostos ) {
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
 
-            this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( criterio => this.valorTotalFactura += criterio.valorFacturado );
+            //this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( criterio => this.valorTotalFactura += criterio.valorFacturado );
         }
+
+        this.valorTotalFactura = this.solicitudPago?.valorFacturado;
 
         this.getDataTerceroGiro();
         this.sumarValorDelDDP();
@@ -103,7 +105,7 @@ export class InformacionGeneralComponent implements OnInit {
 
                     if ( this.solicitudPago.ordenGiro !== undefined ) {
                         this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
-            
+
                         if ( this.solicitudPago.ordenGiro.ordenGiroTercero !== undefined ) {
                             if ( this.solicitudPago.ordenGiro.ordenGiroTercero.length > 0 ) {
                                 this.ordenGiroTercero = this.solicitudPago.ordenGiro.ordenGiroTercero[0];
@@ -133,12 +135,12 @@ export class InformacionGeneralComponent implements OnInit {
                                 if ( listaObservacionTramitar.length > 0 ) {
                                     listaObservacionTramitar.forEach( obs => obs.menuId = this.listaMenu.tramitarOrdenGiro )
                                 }
-                                // Get lista de observacion y observacion actual    
+                                // Get lista de observacion y observacion actual
                                 const observacion = listaObservacionTramitar.find( obs => obs.archivada === false )
 
                                 if ( observacion !== undefined ) {
                                     this.ordenGiroObservacionId = observacion.ordenGiroObservacionId;
-                                    
+
                                     if ( observacion.registroCompleto === false ) {
                                         this.semaforoTerceroGiro = 'en-proceso';
                                         this.estadoSemaforo.emit( 'en-proceso' );
@@ -199,7 +201,7 @@ export class InformacionGeneralComponent implements OnInit {
                                 if ( this.ordenGiroTercero.ordenGiroTerceroChequeGerencia !== undefined ) {
                                     if ( this.ordenGiroTercero.ordenGiroTerceroChequeGerencia.length > 0 ) {
                                         const ordenGiroTerceroChequeGerencia = this.ordenGiroTercero.ordenGiroTerceroChequeGerencia[0];
-                                        
+
                                         this.addressForm.get( 'chequeGerencia' ).setValue(
                                             {
                                                 ordenGiroTerceroId: this.ordenGiroTerceroId,
@@ -279,7 +281,7 @@ export class InformacionGeneralComponent implements OnInit {
 
         if ( this.listaTipoSolicitudContrato.length > 0 ) {
             const solicitud = this.listaTipoSolicitudContrato.find( solicitud => solicitud.codigo === tipoSolicitudCodigo );
-            
+
             if ( solicitud !== undefined ) {
                 return solicitud.nombre;
             }
