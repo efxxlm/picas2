@@ -207,9 +207,11 @@ namespace asivamosffie.services
 
                 return new Respuesta
                 {
+
+                    Data = pContratoPolizaActualizacion.ContratoPolizaActualizacionId,
                     IsSuccessful = true,
                     IsException = false,
-                    IsValidation = false,
+                    IsValidation = false, 
                     Code = GeneralCodes.OperacionExitosa,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
                                                                                                (int)enumeratorMenu.Registrar_actualizacion_de_polizas_y_garantias,
@@ -346,7 +348,7 @@ namespace asivamosffie.services
         {
             try
             {
-                ContratoPoliza contratoPoliza = await this.GetContratoPoliza(GetContratoPoliza);
+                ContratoPoliza contratoPoliza = await this.GetContratoPoliza(GetContratoPoliza, false);
 
                 foreach (var item in contratoPoliza.ContratoPolizaActualizacion)
                 {
@@ -540,20 +542,6 @@ namespace asivamosffie.services
 
         public async Task<ContratoPoliza> GetContratoPoliza(int pContratoPolizaId, bool? pEsNueva)
         {
-            //ContratoPoliza contratoPoliza = await _context.ContratoPoliza
-            //    .Where(c => c.ContratoPolizaId == pContratoPolizaId)
-            //    .Include(c => c.PolizaGarantia)
-            //    .Include(c => c.PolizaGarantiaActualizacion)
-            //    .Include(c => c.PolizaListaChequeo)
-
-            //    .Include(c => c.PolizaObservacion) 
-            //    .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contratista)
-            //    .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionSeguro)
-            //    .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionListaChequeo)
-            //    .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionRevisionAprobacionObservacion)
-            //    .AsNoTracking()
-            //    .FirstOrDefaultAsync();
-            //GetRemoveDeleteItems(contratoPoliza);
             List<ContratoPolizaActualizacion> contratoPolizaActualizacion = new List<ContratoPolizaActualizacion>();
             if (pEsNueva != true)
             {
