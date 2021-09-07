@@ -203,7 +203,7 @@ namespace asivamosffie.services
                     CreateEditContratoPolizaActualizacionListaChequeo(pContratoPolizaActualizacion.ContratoPolizaActualizacionListaChequeo, pContratoPolizaActualizacion.UsuarioCreacion);
 
                 _context.SaveChanges();
-                await ValidarRegistroCompletoContratoPolizaActualizacion((int)pContratoPolizaActualizacion.ContratoPolizaId);
+                await ValidarRegistroCompletoContratoPolizaActualizacion((int)pContratoPolizaActualizacion.ContratoPolizaActualizacionId);
 
                 return new Respuesta
                 {
@@ -211,7 +211,7 @@ namespace asivamosffie.services
                     Data = pContratoPolizaActualizacion.ContratoPolizaActualizacionId,
                     IsSuccessful = true,
                     IsException = false,
-                    IsValidation = false, 
+                    IsValidation = false,
                     Code = GeneralCodes.OperacionExitosa,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
                                                                                                (int)enumeratorMenu.Registrar_actualizacion_de_polizas_y_garantias,
@@ -542,6 +542,8 @@ namespace asivamosffie.services
 
         public async Task<ContratoPoliza> GetContratoPoliza(int pContratoPolizaId, bool? pEsNueva)
         {
+
+            ContratoPoliza contratoPoliza = new ContratoPoliza();
             List<ContratoPolizaActualizacion> contratoPolizaActualizacion = new List<ContratoPolizaActualizacion>();
             if (pEsNueva != true)
             {
@@ -552,17 +554,29 @@ namespace asivamosffie.services
                                                                               .Include(c => c.ContratoPolizaActualizacionRevisionAprobacionObservacion)
                                                                               .AsNoTracking()
                                                                               .ToListAsync();
-            } 
-            ContratoPoliza contratoPoliza = await _context.ContratoPoliza
-                .Where(c => c.ContratoPolizaId == contratoPolizaActualizacion.FirstOrDefault().ContratoPolizaId)
-                .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contratista)
-                .Include(c => c.PolizaGarantia)
-                .Include(c => c.PolizaListaChequeo)
-                .Include(c => c.PolizaObservacion)
-                .FirstOrDefaultAsync();
+
+                              contratoPoliza = await _context.ContratoPoliza
+                                             .Where(c => c.ContratoPolizaId == contratoPolizaActualizacion.FirstOrDefault().ContratoPolizaId)
+                                             .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contratista)
+                                             .Include(c => c.PolizaGarantia)
+                                             .Include(c => c.PolizaListaChequeo)
+                                             .Include(c => c.PolizaObservacion)
+                                             .FirstOrDefaultAsync();
+                 
+            }
+            else
+            { 
+                             contratoPoliza = await _context.ContratoPoliza
+                                 .Where(c => c.ContratoPolizaId == pContratoPolizaId)
+                                 .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contratista)
+                                 .Include(c => c.PolizaGarantia)
+                                 .Include(c => c.PolizaListaChequeo)
+                                 .Include(c => c.PolizaObservacion)
+                                 .FirstOrDefaultAsync(); 
+            }
 
             contratoPoliza.ContratoPolizaActualizacion = contratoPolizaActualizacion;
-              
+
             GetRemoveDeleteItems(contratoPoliza);
 
             return contratoPoliza;
