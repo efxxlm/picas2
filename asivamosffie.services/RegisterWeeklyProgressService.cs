@@ -241,7 +241,7 @@ namespace asivamosffie.services
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
                           .ThenInclude(r => r.SeguimientoSemanalAvanceFisicoProgramacion)
                                 .ThenInclude(r => r.Programacion)
-                                .    ThenInclude(r => r.FlujoInversion)
+                                .ThenInclude(r => r.FlujoInversion)
                        //Gestion Obra
                        //Gestion Obra Ambiental
                        .Include(r => r.SeguimientoSemanalGestionObra)
@@ -296,25 +296,28 @@ namespace asivamosffie.services
         {
             List<dynamic> TablaInversionPorCapitulos = new List<dynamic>();
             int Count = 1;
-            foreach (var item in seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoProgramacion)
+            if (seguimientoSemanal?.SeguimientoSemanalAvanceFisico.Count() > 0)
             {
+                foreach (var item in seguimientoSemanal?.SeguimientoSemanalAvanceFisico?.FirstOrDefault()?.SeguimientoSemanalAvanceFisicoProgramacion)
+                {
 
-                decimal dcFlujoInversion = seguimientoSemanal.FlujoInversion.Where(r => r.ProgramacionId == item.Programacion.ProgramacionId).FirstOrDefault().Valor ?? 0;
-
-
-                TablaInversionPorCapitulos.Add(
-                                                new
-                                                {
-                                                    Num = Count,
-                                                    Capitulo = item.Programacion.Actividad,
-                                                    Programacion = dcFlujoInversion,
-                                                    Ejectutado = item.AvanceFisicoCapitulo,
-                                                    Desviacion = ((item.AvanceFisicoCapitulo / dcFlujoInversion  -100)) / 100
-                                                }
-                                                );
+                    decimal dcFlujoInversion = seguimientoSemanal.FlujoInversion.Where(r => r.ProgramacionId == item.Programacion.ProgramacionId).FirstOrDefault().Valor ?? 0;
 
 
-                Count++;
+                    TablaInversionPorCapitulos.Add(
+                                                    new
+                                                    {
+                                                        Num = Count,
+                                                        Capitulo = item.Programacion.Actividad,
+                                                        Programacion = dcFlujoInversion,
+                                                        Ejectutado = item.AvanceFisicoCapitulo,
+                                                        Desviacion = ((item.AvanceFisicoCapitulo / dcFlujoInversion - 100)) / 100
+                                                    }
+                                                    );
+
+
+                    Count++;
+                }
             }
 
             seguimientoSemanal.AvanceFisico = TablaInversionPorCapitulos;
@@ -473,7 +476,7 @@ namespace asivamosffie.services
 
             if (ListProgramacion.Count() > 0)
             {
-                seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion) > 0  ? ListProgramacion.Sum(r => r.Duracion) : 0;
+                seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion) > 0 ? ListProgramacion.Sum(r => r.Duracion) : 0;
             }
 
             seguimientoSemanal.AvanceAcumulado = ListProgramacion
