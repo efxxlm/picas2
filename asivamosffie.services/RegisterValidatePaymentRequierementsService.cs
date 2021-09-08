@@ -1757,13 +1757,13 @@ namespace asivamosffie.services
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
                                                 .FirstOrDefault();
 
-                        decimal ValorUso = List
+                        decimal? ValorUso = List
                                                 .Where(r => r.NumeroDrp == Drp.NumeroDrp
                                                          && r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
                                                 .Sum(v => v.ValorUso) ?? 0;
 
-                        decimal Saldo = ListPagos
+                        decimal? Saldo = ListPagos
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
                                                           && r.Pagado == false
@@ -1777,7 +1777,7 @@ namespace asivamosffie.services
                                                              )
                                                 .Sum(r => r.ValorDescuento);
 
-                        decimal ValorUsoResta = ValorUso - Descuentos;
+                        decimal ValorUsoResta = ValorUso ?? 0 - Descuentos;
 
                         if (OrdenGiroAprobada)
                         {
@@ -1891,13 +1891,13 @@ namespace asivamosffie.services
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
                                                 .FirstOrDefault();
 
-                        decimal ValorUso = List
+                        decimal? ValorUso = List
                                                 .Where(r => r.NumeroDrp == Drp.NumeroDrp
                                                          && r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
                                                 .Sum(v => v.ValorUso) ?? 0;
 
-                        decimal Saldo = ListPagos
+                        decimal? Saldo = ListPagos
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
                                                           && r.Pagado == false
@@ -1905,13 +1905,13 @@ namespace asivamosffie.services
                                                 .Sum(r => r.SaldoUso) ?? 0;
 
 
-                        decimal Descuentos = DescuentosOrdenGiro
+                        decimal? Descuentos = DescuentosOrdenGiro
                                                             .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                              && r.UsoCodigo == TipoUso.TipoUsoCodigo
                                                              )
                                                 .Sum(r => r.ValorDescuento);
 
-                        decimal ValorUsoResta = ValorUso - Descuentos;
+                        decimal ValorUsoResta = (decimal)(ValorUso ?? 0 - Descuentos);
                         foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                                && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
                         {
