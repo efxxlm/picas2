@@ -238,10 +238,11 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 const tipoDePago = tiposDePago.filter( value => value.codigo === criterio.tipoPagoCodigo );
                                 // GET conceptos de pago
                                 const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( criterio.tipoPagoCodigo );
-                                const conceptoDePagoArray = [];
+                                // const conceptoDePagoArray = [];
                                 const conceptosDePagoSeleccionados = [];
                                 // Get conceptos de pago
                                 if ( criterio.solicitudPagoFaseCriterioConceptoPago.length > 0 ) {
+                                    console.log(criterio.solicitudPagoFaseCriterioConceptoPago);
                                     criterio.solicitudPagoFaseCriterioConceptoPago.forEach( solicitudPagoFaseCriterioConceptoPago => {
                                         const conceptoFind = conceptosDePago.find( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio );
 
@@ -249,6 +250,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                           this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, FORMA_PAGO_CODIGO, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterio?.tipoCriterioCodigo, conceptoFind?.codigo )
                                             .subscribe(
                                                 response => {
+                                                  const conceptoDePagoArray = [];
                                                   conceptosDePagoSeleccionados.push( conceptoFind );
                                                   conceptoDePagoArray.push(
                                                       this.fb.group(
@@ -631,12 +633,12 @@ export class FormCriteriosPagoComponent implements OnInit {
         return dialogRef.afterClosed();
     }
 
-    deleteCriterio( index: number, solicitudPagoFaseCriterioId: number, tipoCriterioCodigo: string ) {
+    deleteCriterio( index: number, pSolicitudPagoFaseCriterioConceptoId: number, tipoCriterioCodigo: string ) {
         this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
             .subscribe(
                 value => {
                     if ( value === true ) {
-                        if ( solicitudPagoFaseCriterioId === 0 ) {
+                        if ( pSolicitudPagoFaseCriterioConceptoId === 0 ) {
                             this.criterios.removeAt( index );
                             const criteriosSeleccionados = this.addressForm.get( 'criterioPago' ).value;
                             if ( criteriosSeleccionados !== null && criteriosSeleccionados.length > 0 ) {
@@ -659,7 +661,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 } );
                             }
                             this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionados );
-                            this.registrarPagosSvc.deleteSolicitudPagoFaseCriterio( solicitudPagoFaseCriterioId )
+                            this.registrarPagosSvc.DeleteSolicitudPagoFaseCriterioConceptoPago( pSolicitudPagoFaseCriterioConceptoId )
                                 .subscribe(
                                     () => this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' ),
                                     err => this.openDialog( '', `<b>${ err.message }</b>` )
