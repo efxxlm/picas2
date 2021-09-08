@@ -527,7 +527,7 @@ namespace asivamosffie.services
                                                 .Where(r => r.NumeroDrp == Drp.NumeroDrp
                                                          && r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
-                                                .Sum(v => v.ValorUso);
+                                                .Sum(v => v.ValorUso) ?? 0;
 
                         decimal Saldo = ListPagos
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
@@ -535,8 +535,7 @@ namespace asivamosffie.services
                                                           && r.Pagado == false
                                                          )
                                                 .Sum(r => r.SaldoUso) ?? 0;
-
-
+                         
                         decimal Descuentos = DescuentosOrdenGiro
                                                             .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                              && r.UsoCodigo == TipoUso.TipoUsoCodigo
@@ -576,6 +575,7 @@ namespace asivamosffie.services
                                 Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
                             });
                         }
+
                         else
                         {
                             ListDyUsos.Add(new

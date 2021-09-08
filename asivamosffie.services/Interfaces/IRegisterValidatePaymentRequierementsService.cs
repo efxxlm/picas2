@@ -9,6 +9,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterValidatePaymentRequierementsService
     {
+        Task<Respuesta> DeleteSolicitudPagoFaseCriterioConceptoPago(int pSolicitudPagoFaseCriterioConceptoId, string pUsuarioModificacion);
+
         Task<dynamic> GetUsoByConceptoPagoCodigo(string pConceptoPagoCodigo);
 
         Task<dynamic> GetMontoMaximo(int SolicitudPagoId, bool EsPreConstruccion);
