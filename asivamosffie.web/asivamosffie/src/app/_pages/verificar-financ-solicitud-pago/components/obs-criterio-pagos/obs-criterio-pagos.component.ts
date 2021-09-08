@@ -231,7 +231,7 @@ export class ObsCriterioPagosComponent implements OnInit {
                                 const tipoDePago = tiposDePago.filter( value => value.codigo === criterio.tipoPagoCodigo );
                                 // GET conceptos de pago
                                 const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( criterio.tipoPagoCodigo );
-                                const conceptoDePagoArray = [];
+                                let conceptoDePagoArray = [];
                                 const conceptosDePagoSeleccionados = [];
                                 // Get conceptos de pago
                                 if ( criterio.solicitudPagoFaseCriterioConceptoPago.length > 0 ) {
@@ -274,6 +274,7 @@ export class ObsCriterioPagosComponent implements OnInit {
                                         }
                                     )
                                 );
+                                conceptoDePagoArray = []
                             }
                         }
 
