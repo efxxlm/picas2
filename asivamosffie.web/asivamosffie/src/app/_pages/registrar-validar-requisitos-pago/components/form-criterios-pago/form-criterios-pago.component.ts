@@ -663,7 +663,10 @@ export class FormCriteriosPagoComponent implements OnInit {
                             this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionados );
                             this.registrarPagosSvc.DeleteSolicitudPagoFaseCriterioConceptoPago( pSolicitudPagoFaseCriterioConceptoId )
                                 .subscribe(
-                                    () => this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' ),
+                                    () => {
+                                        this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                                        location.reload();
+                                    },
                                     err => this.openDialog( '', `<b>${ err.message }</b>` )
                                 )
                         }
