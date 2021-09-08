@@ -404,11 +404,31 @@ namespace asivamosffie.services
                 await _context.Set<SolicitudPagoFaseCriterioConceptoPago>()
                                                                            .Where(r => r.SolicitudPagoFaseCriterioConceptoPagoId == pSolicitudPagoFaseCriterioConceptoId)
                                                                                                            .UpdateAsync(r => new SolicitudPagoFaseCriterioConceptoPago
-                                                                                                           { 
+                                                                                                           {
                                                                                                                Eliminado = true,
                                                                                                            });
- 
-                 
+
+                SolicitudPagoFaseCriterioConceptoPago solicitudPagoFaseCriterioConceptoPagoOld =
+                                                                    _context.SolicitudPagoFaseCriterioConceptoPago.Where(r => r.SolicitudPagoFaseCriterioConceptoPagoId == pSolicitudPagoFaseCriterioConceptoId)
+                                                                                                                  .AsNoTracking()
+                                                                                                                  .FirstOrDefault();
+
+                SolicitudPagoFaseCriterio solicitudPagoFaseCriterioOld = _context.SolicitudPagoFaseCriterio.Where(r => r.SolicitudPagoFaseCriterioId == solicitudPagoFaseCriterioConceptoPagoOld.SolicitudPagoFaseCriterioId)
+                                                                                                           .AsNoTracking()
+                                                                                                           .FirstOrDefault();
+
+                solicitudPagoFaseCriterioOld.ValorFacturado -= solicitudPagoFaseCriterioConceptoPagoOld.ValorFacturadoConcepto;
+
+
+                await _context.Set<SolicitudPagoFaseCriterio>()
+                                                        .Where(r => r.SolicitudPagoFaseCriterioId == solicitudPagoFaseCriterioOld.SolicitudPagoFaseCriterioId)
+                                                                                                                                                    .UpdateAsync(r => new SolicitudPagoFaseCriterio
+                                                                                                                                                    {
+                                                                                                                                                        FechaModificacion = DateTime.Now,
+                                                                                                                                                        UsuarioModificacion = pUsuarioModificacion,
+                                                                                                                                                        ValorFacturado = solicitudPagoFaseCriterioOld.ValorFacturado
+                                                                                                                                                    });
+
                 return
                      new Respuesta
                      {
@@ -416,7 +436,7 @@ namespace asivamosffie.services
                          IsException = false,
                          IsValidation = false,
                          Code = GeneralCodes.OperacionExitosa,
-                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR SOLICITUD PAGO FASE CRITERIO")
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR SOLICITUD PAGO FASE CRITERIO CONCEPTO PAGO")
                      };
             }
             catch (Exception ex)
@@ -1729,12 +1749,11 @@ namespace asivamosffie.services
             decimal dcDecimalValorFacturado = 0;
             foreach (var item in vContratoPagosRealizados)
             {
-                dcDecimalValorFacturado += item.ValorFacturado;
-
-                item.SaldoPorPagar = item.ValorSolicitud - dcDecimalValorFacturado;
+                dcDecimalValorFacturado += item.ValorFacturado; 
+                //item.SaldoPorPagar = item.ValorSolicitud - dcDecimalValorFacturado;
                 ValorAnterior = item.SaldoPorPagar ?? 0;
                 Drp = item.ValorSolicitud ?? 1;
-                item.SaldoPorPagar = item.ValorSolicitud - dcDecimalValorFacturado;
+                //item.SaldoPorPagar = item.ValorSolicitud - dcDecimalValorFacturado;
                 item.PorcentajeFacturado = item.PorcentajeFacturado;
                 item.PorcentajePorPagar = item.PorcentajePorPagar;
             }
