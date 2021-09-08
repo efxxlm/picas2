@@ -523,7 +523,7 @@ namespace asivamosffie.services
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
                                                 .FirstOrDefault();
 
-                        decimal ValorUso = List
+                        decimal? ValorUso = List
                                                 .Where(r => r.NumeroDrp == Drp.NumeroDrp
                                                          && r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
@@ -543,7 +543,7 @@ namespace asivamosffie.services
                                                              )
                                                 .Sum(r => r.ValorDescuento);
 
-                        decimal ValorUsoResta = ValorUso - Descuentos;
+                        decimal ValorUsoResta = ValorUso ?? 0 - Descuentos;
 
                         if (OrdenGiroAprobada)
                         {
