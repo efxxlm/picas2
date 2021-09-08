@@ -352,11 +352,19 @@ namespace asivamosffie.services
 
                 foreach (var item in contratoPoliza.ContratoPolizaActualizacion)
                 {
+
+                    bool EstaCompleto = ValidarRegistroCompletoContratoPolizaActualizacionList(contratoPoliza.ContratoPolizaActualizacion);
+                    string EstadoCodigo = item.EstadoActualizacion;
+
+                    if (EstaCompleto)
+                        EstadoCodigo = ConstanCodigoEstadoActualizacionPoliza.En_revision_de_actualizacion_de_poliza;
+
                     _context.Set<ContratoPolizaActualizacion>()
                             .Where(r => r.ContratoPolizaActualizacionId == item.ContratoPolizaActualizacionId)
                             .Update(r => new ContratoPolizaActualizacion
                             {
-                                RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionList(contratoPoliza.ContratoPolizaActualizacion)
+                                RegistroCompleto = EstaCompleto,
+                                EstadoActualizacion = EstadoCodigo
                             });
                 }
             }
@@ -478,13 +486,12 @@ namespace asivamosffie.services
         {
             foreach (var pContratoPolizaActualizacion in ListContratoPolizaActualizacion)
             {
-
                 if (
                         pContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro.Count() == 0
                      || pContratoPolizaActualizacion.ContratoPolizaActualizacionListaChequeo.Count() == 0
                      || pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion.Count() == 0
                      || pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion.Count(r => r.Archivada == false) == 0
-                     )
+                    )
                     return false;
 
                 foreach (var item in pContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro)
