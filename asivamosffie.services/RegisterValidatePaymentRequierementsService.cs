@@ -394,6 +394,45 @@ namespace asivamosffie.services
         //    }
         //}
 
+
+        public async Task<Respuesta> DeleteSolicitudPagoFaseCriterioConceptoPago(int pSolicitudPagoFaseCriterioConceptoId, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Criterio_Pago, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                await _context.Set<SolicitudPagoFaseCriterioConceptoPago>()
+                                                                           .Where(r => r.SolicitudPagoFaseCriterioConceptoPagoId == pSolicitudPagoFaseCriterioConceptoId)
+                                                                                                           .UpdateAsync(r => new SolicitudPagoFaseCriterioConceptoPago
+                                                                                                           { 
+                                                                                                               Eliminado = true,
+                                                                                                           });
+ 
+                 
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = true,
+                         IsException = false,
+                         IsValidation = false,
+                         Code = GeneralCodes.OperacionExitosa,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR SOLICITUD PAGO FASE CRITERIO")
+                     };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
         public async Task<Respuesta> DeleteSolicitudPagoFaseCriterio(int pSolicitudPagoFaseCriterioId, string pUsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Criterio_Pago, (int)EnumeratorTipoDominio.Acciones);
