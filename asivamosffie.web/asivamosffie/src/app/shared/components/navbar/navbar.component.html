@@ -1,11 +1,23 @@
 <nav class="navbar">
-    <a mat-button routerLink="/home" routerLinkActive="active">
+    <!-- <a mat-button routerLink="/home" routerLinkActive="active"> -->
+    <a mat-button routerLink="/home">
+        <img class="navbar--icon" src="assets/img/icon/navbar/menu.svg" alt="Menú principal">
         Menú principal
     </a>
-    <a mat-button routerLink="/cambiarContrasena" routerLinkActive="active">
+    <a mat-button routerLink="/home">
+        <img class="navbar--icon" src="assets/img/icon/navbar/manuales.svg" alt="Manuales instructivos">
+        Manuales instructivos
+    </a>
+    <a mat-button routerLink="/home">
+        <img class="navbar--icon" src="assets/img/icon/navbar/Video-tutorial.svg" alt="Video tutoriales">
+        Video tutoriales
+    </a>
+    <a mat-button routerLink="/cambiarContrasena">
+        <img class="navbar--icon" src="assets/img/icon/navbar/cambiar-contraseña.svg" alt="Cambiar contraseña">
         Cambiar contraseña
     </a>
     <button mat-button (click)="logout()">
+        <img class="navbar--icon" src="assets/img/icon/navbar/cerrar-sesion.svg" alt="Cerrar sesión">
         Cerrar sesión
     </button>
 </nav>
