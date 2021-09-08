@@ -1667,14 +1667,15 @@ namespace asivamosffie.services
         }
 
         public dynamic GetListProyectos(int pContratacionId)
-        { 
+        {
             return _context.ContratacionProyecto
                                                 .Where(cp => cp.ContratacionId == pContratacionId)
                                                 .Include(p => p.Proyecto).ThenInclude(i => i.InstitucionEducativa)
-                                                .Select(s=> new {  
-                                                            s.Proyecto.InstitucionEducativa.Nombre,
-                                                            s.Proyecto.LlaveMen 
-                                                }) .ToList(); 
+                                                .Select(s => new
+                                                {
+                                                    s.Proyecto.InstitucionEducativa.Nombre,
+                                                    s.Proyecto.LlaveMen
+                                                }).ToList();
         }
 
         private List<VContratoPagosRealizados> GetValidarContratoPagosRealizados(int pContratoId, int pSolicitudPago)
@@ -1760,7 +1761,7 @@ namespace asivamosffie.services
                                                 .Where(r => r.NumeroDrp == Drp.NumeroDrp
                                                          && r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
-                                                .Sum(v => v.ValorUso);
+                                                .Sum(v => v.ValorUso) ?? 0;
 
                         decimal Saldo = ListPagos
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
@@ -1800,7 +1801,7 @@ namespace asivamosffie.services
                                 {
                                     item.SaldoUso = Saldo;
                                 }
-                            } 
+                            }
                             ListDyUsos.Add(new
                             {
                                 Uso.Nombre,
@@ -1894,7 +1895,7 @@ namespace asivamosffie.services
                                                 .Where(r => r.NumeroDrp == Drp.NumeroDrp
                                                          && r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
-                                                .Sum(v => v.ValorUso);
+                                                .Sum(v => v.ValorUso) ?? 0;
 
                         decimal Saldo = ListPagos
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
@@ -1938,7 +1939,7 @@ namespace asivamosffie.services
                             ListDyUsos.Add(new
                             {
                                 Uso.Nombre,
-                                ValorUso = String.Format("{0:n0}", ValorUso), 
+                                ValorUso = String.Format("{0:n0}", ValorUso),
                                 Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
                             });
                         }
@@ -1948,10 +1949,10 @@ namespace asivamosffie.services
                             {
                                 Uso.Nombre,
                                 ValorUso = String.Format("{0:n0}", ValorUso),
-                                Saldo = String.Format("{0:n0}", ValorUso) 
+                                Saldo = String.Format("{0:n0}", ValorUso)
                             });
                         }
-                    } 
+                    }
                     ListDyProyectos.Add(new
                     {
                         proyecto.InstitucionEducativa.Nombre,

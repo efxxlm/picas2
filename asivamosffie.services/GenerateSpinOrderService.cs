@@ -527,7 +527,7 @@ namespace asivamosffie.services
                                                 .Where(r => r.NumeroDrp == Drp.NumeroDrp
                                                          && r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
-                                                .Sum(v => v.ValorUso);
+                                                .Sum(v => v.ValorUso)??0;
 
                         decimal Saldo = ListPagos
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
