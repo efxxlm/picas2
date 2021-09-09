@@ -158,8 +158,8 @@ export class PlantillaComponent implements OnInit {
         this.descuentoAns += element.descuentoAns;
         this.descuentoOtros += element.descuentoOtros;
 
-        this.valorTotal += element.valorConcepto + element.descuentoReteFuente + element.descuentoAns + element.descuentoOtros
-        console.log(this.valorTotal)
+        const valorAcumulado = element.valorConcepto - element.descuentoReteFuente - element.descuentoAns - element.descuentoOtros;
+        this.valorTotal += valorAcumulado;
       });
     });
   }
