@@ -1780,7 +1780,9 @@ namespace asivamosffie.services
                     _context.VPagosSolicitudXcontratacionXproyectoXuso.Where(v => v.ContratacionId == pContratacionId)
                                                                       .ToList();
 
-            List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
+          //  List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
+
+            List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = new List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso>();
 
             foreach (var Drp in ListDrp)
             {
@@ -1829,20 +1831,16 @@ namespace asivamosffie.services
                                                 .Sum(r => r.SaldoUso) ?? 0;
 
 
-                        decimal Descuentos = DescuentosOrdenGiro
-                                                            .Where(r => r.ProyectoId == ProyectoId.ProyectoId
-                                                             && r.UsoCodigo == TipoUso.TipoUsoCodigo
-                                                             )
-                                                .Sum(r => r.ValorDescuento);
+                        decimal Descuentos = 0;
 
                         decimal ValorUsoResta = ValorUso ?? 0 - Descuentos;
 
-                        if (OrdenGiroAprobada)
+                        if (true)
                         {
                             foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                             && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
                             {
-                                if (OrdenGiroAprobada)
+                                if (true)
                                 {
                                     if (ValorUsoResta > item.SaldoUso)
                                     {
