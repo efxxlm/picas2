@@ -1037,10 +1037,7 @@ namespace asivamosffie.services
 
             if (pOrdenGiroDetalle?.OrdenGiroSoporte?.Count() > 0)
                 CreateEditOrdenGiroSoporte(pOrdenGiroDetalle.OrdenGiroSoporte.FirstOrDefault(), pUsuarioCreacion);
-
-            if (pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago.Count() > 0)
-                CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pUsuarioCreacion);
-
+             
             if (pOrdenGiroDetalle?.OrdenGiroDetalleDescuentoTecnica.Count() > 0)
                 CreateEditOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.ToList(), pUsuarioCreacion);
 
@@ -1192,6 +1189,8 @@ namespace asivamosffie.services
                             .Where(o => o.OrdenGiroDetalleTerceroCausacionDescuentoId == OrdenGiroDetalleTerceroCausacionDescuento.OrdenGiroDetalleTerceroCausacionDescuentoId)
                             .Update(o => new OrdenGiroDetalleTerceroCausacionDescuento
                             {
+                                UsuarioModificacion = pUsuarioCreacion,
+                                FechaModificacion = DateTime.Now,
                                 FuenteFinanciacionId = OrdenGiroDetalleTerceroCausacionDescuento.FuenteFinanciacionId,
                                 FuenteRecursosCodigo = OrdenGiroDetalleTerceroCausacionDescuento.FuenteRecursosCodigo,
                                 AportanteId = OrdenGiroDetalleTerceroCausacionDescuento.AportanteId,

@@ -34,8 +34,10 @@ namespace asivamosffie.services
             _commonService = commonService;
             _registerValidatePaymentRequierementsService = registerValidatePaymentRequierementsService;
         }
-
         #endregion
+
+        #region balance
+
         #region C R U D
 
         #region create
@@ -164,12 +166,16 @@ namespace asivamosffie.services
 
                 CreateEditBalanceFinancieroTrasladoValor(BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor, pAuthor);
 
+
+                BalanceFinancieroTraslado.OrdenGiro.ValorNetoGiroTraslado = 
+           //     await CreateEditOrdenGiroTraslado(BalanceFinancieroTraslado.OrdenGiro);
+
                 _context.Set<OrdenGiro>()
                              .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
                              .Update(o => new OrdenGiro
                              {
                                  ValorNetoGiroTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado) ?? 0
-                                 //  TieneTraslado = true
+                                 // , TieneTraslado = true
                              });
             }
         }
@@ -280,6 +286,7 @@ namespace asivamosffie.services
             return string.Empty;
         }
         #endregion
+
         #region Get
 
         public async Task<OrdenGiro> SeeDetailOdg(int pOrdenGiroId)
@@ -1309,6 +1316,122 @@ namespace asivamosffie.services
         }
         #endregion
 
+        #endregion
 
+        #region Save ODG
+        public async Task CreateEditOrdenGiroTraslado(OrdenGiro pOrdenGiro)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                _context.Set<OrdenGiro>()
+                        .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
+                        .Update(o => new OrdenGiro
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pOrdenGiro.UsuarioCreacion
+                        });
+
+                if (pOrdenGiro?.OrdenGiroDetalle.Count() > 0)
+                    CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
+
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
+        private void CreateEditOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle, string pUsuarioCreacion)
+        {
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleDescuentoTecnica.Count() > 0)
+                CreateEditOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.ToList(), pUsuarioCreacion);
+
+            if (pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.Count() > 0)
+                CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.ToList(), pUsuarioCreacion);
+
+
+        }
+        private void CreateEditOrdenGiroDetalleDescuentoTecnica(List<OrdenGiroDetalleDescuentoTecnica> pListOrdenGiroDetalleDescuentoTecnica, string pUsuarioCreacion)
+        {
+            foreach (var pOrdenGiroDetalleDescuentoTecnica in pListOrdenGiroDetalleDescuentoTecnica)
+            {
+                CreateEditOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante, pUsuarioCreacion);
+            }
+        }
+
+        private void CreateEditOrdenGiroDetalleDescuentoTecnicaAportante(ICollection<OrdenGiroDetalleDescuentoTecnicaAportante> pOrdenGiroDetalleDescuentoTecnicaAportanteList, string pUsuarioCreacion)
+        {
+            foreach (var pOrdenGiroDetalleDescuentoTecnicaAportante in pOrdenGiroDetalleDescuentoTecnicaAportanteList)
+            {
+                _context.Set<OrdenGiroDetalleDescuentoTecnicaAportante>()
+                             .Where(o => o.OrdenGiroDetalleDescuentoTecnicaAportanteId == pOrdenGiroDetalleDescuentoTecnicaAportante.OrdenGiroDetalleDescuentoTecnicaAportanteId)
+                             .Update(r => new OrdenGiroDetalleDescuentoTecnicaAportante()
+                             {
+                                 FechaModificacion = DateTime.Now,
+                                 UsuarioModificacion = pUsuarioCreacion,
+
+                                 ValorDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento
+                             });
+            }
+        }
+
+        private void CreateEditOrdenGiroDetalleTerceroCausacion(List<OrdenGiroDetalleTerceroCausacion> pListOrdenGiroDetalleTerceroCausacion, string pUsuarioCreacion)
+        {
+            foreach (var pOrdenGiroDetalleTerceroCausacion in pListOrdenGiroDetalleTerceroCausacion)
+            {
+                _context.Set<OrdenGiroDetalleTerceroCausacion>()
+                        .Where(o => o.OrdenGiroDetalleTerceroCausacionId == pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId)
+                        .Update(r => new OrdenGiroDetalleTerceroCausacion()
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioCreacion,
+
+                            ValorFacturadoConcepto = pOrdenGiroDetalleTerceroCausacion.ValorFacturadoConcepto
+                        });
+
+
+                if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() > 0)
+                    CreateEditOrdenGiroDetalleTerceroCausacionDescuento(pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento, pUsuarioCreacion);
+
+                if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Count() > 0)
+                    CreateEditOrdenGiroDetalleTerceroCausacionAportante(pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante, pUsuarioCreacion);
+            }
+        }
+
+        private void CreateEditOrdenGiroDetalleTerceroCausacionDescuento(ICollection<OrdenGiroDetalleTerceroCausacionDescuento> pListOrdenGiroDetalleTerceroCausacionDescuento, string pUsuarioCreacion)
+        {
+            foreach (var OrdenGiroDetalleTerceroCausacionDescuento in pListOrdenGiroDetalleTerceroCausacionDescuento)
+            {
+                _context.Set<OrdenGiroDetalleTerceroCausacionDescuento>()
+                        .Where(o => o.OrdenGiroDetalleTerceroCausacionDescuentoId == OrdenGiroDetalleTerceroCausacionDescuento.OrdenGiroDetalleTerceroCausacionDescuentoId)
+                        .Update(o => new OrdenGiroDetalleTerceroCausacionDescuento
+                        {
+                            UsuarioModificacion = pUsuarioCreacion,
+                            FechaModificacion = DateTime.Now,
+                            ValorDescuento = OrdenGiroDetalleTerceroCausacionDescuento.ValorDescuento
+                        });
+            }
+        }
+
+        private void CreateEditOrdenGiroDetalleTerceroCausacionAportante(ICollection<OrdenGiroDetalleTerceroCausacionAportante> pOrdenGiroDetalleTerceroCausacionAportante, string pUsuarioCreacion)
+        {
+            foreach (var TerceroCausacionAportante in pOrdenGiroDetalleTerceroCausacionAportante)
+            {
+                _context.Set<OrdenGiroDetalleTerceroCausacionAportante>()
+                        .Where(r => r.OrdenGiroDetalleTerceroCausacionAportanteId == TerceroCausacionAportante.OrdenGiroDetalleTerceroCausacionAportanteId)
+                        .Update(r => new OrdenGiroDetalleTerceroCausacionAportante
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioCreacion,
+
+                            ValorDescuento = TerceroCausacionAportante.ValorDescuento
+                        });
+            }
+        }
+
+
+        #endregion
     }
 }
