@@ -23,7 +23,7 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
   options: any[] = [];
 
   novedadesArray = [
-    { name: 'Contrato', value: true },
+   /* { name: 'Contrato', value: true },*/
     { name: 'Proyecto', value: false }
   ];
   estaEditando = false;
