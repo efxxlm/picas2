@@ -1671,6 +1671,7 @@ namespace asivamosffie.services
             {
                 Anexos = await ReemplazarDatosDDPAsyncDuplicate(PlantillaFichaDDPAnexos, pDisponibilidad, pRegistro);
                 pStrContenido = pStrContenido.Replace("[REGISTROS_ANEXOS]", Anexos);
+                pStrContenido = pStrContenido.Replace("Este recurso se compromete conforme a la siguiente información:", String.Empty);
             }
             else
             {
@@ -1714,14 +1715,14 @@ namespace asivamosffie.services
                     case ConstanCodigoVariablesPlaceHolders.DDP_TABLAAPORTANTES: pStrContenido = pStrContenido.Replace(place.Nombre, tablaaportantes); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_TOTAL_DE_RECURSOS: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_TOTAL_DE_RECURSOSLETRAS: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
-                    case ConstanCodigoVariablesPlaceHolders.DDP_TABLA_PROYECTOS: pStrContenido = pStrContenido.Replace(place.Nombre, proyecto); break;
+                    case ConstanCodigoVariablesPlaceHolders.DDP_TABLA_PROYECTOS: pStrContenido = pStrContenido.Replace(place.Nombre, esNovedad && !esValidar ? string.Empty : proyecto); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_LIMITACION_ESPECIAL: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.LimitacionEspecial); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_NOMBRE_APORTANTE: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_FUENTE_APORTANTE: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_VALOR_NUMERO: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_VALOR_LETRAS: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
                     case ConstanCodigoVariablesPlaceHolders.CABECERAPROYECTOS:
-                        pStrContenido = pStrContenido.Replace(place.Nombre, pStrCabeceraProyectos); break;
+                        pStrContenido = pStrContenido.Replace(place.Nombre, esNovedad && !esValidar ? string.Empty :  pStrCabeceraProyectos); break;
 
 
                     case ConstanCodigoVariablesPlaceHolders.DDP_LLAVE_MEN: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
