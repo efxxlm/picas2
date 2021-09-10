@@ -255,7 +255,7 @@
                                                                         [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                                                                         (ngModelChange)="validateDiscountAportanteValue( $event, i, j, k )"
                                                                         formControlName="valorDescuento"
-                                                                        onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                                                                        onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''">
                                                             </mat-form-field>
                                                             <span   class="contador"
                                                                     [matTooltipPosition]="'above'"
@@ -350,7 +350,7 @@
                                                                 maxlength="2"
                                                                 (keypress)="validateNumberKeypress($event)"
                                                                 #numeroDescuento
-                                                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                                                onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                                                 (ngModelChange)="getCantidadDescuentos( $event, i, j )"
                                                                 formControlName="numeroDescuentos"
                                                                 required>
@@ -465,7 +465,7 @@
                                                                                                     required
                                                                                                     formControlName="valorDescuento"
                                                                                                     (keypress)="validateNumberKeypress($event)"
-                                                                                                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                                                                                    onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                                                                                     (ngModelChange)="validateDiscountValue( $event, i, j , k, l )"
                                                                                                     oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                                                                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">

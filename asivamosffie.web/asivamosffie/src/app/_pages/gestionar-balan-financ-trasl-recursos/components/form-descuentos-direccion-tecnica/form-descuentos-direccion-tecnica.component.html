@@ -87,7 +87,7 @@
                                                                                                 formControlName="nuevoValorDescuento"
                                                                                                 (keypress)="validateNumberKeypress($event)"
                                                                                                 (ngModelChange)="checkValue( $event, i, j, k, l, m )"
-                                                                                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                                                                                onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                                                                                 oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                                                                 [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                                                                                     </mat-form-field>

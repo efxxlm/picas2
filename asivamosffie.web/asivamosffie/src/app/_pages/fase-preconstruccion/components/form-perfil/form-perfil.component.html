@@ -27,7 +27,7 @@
               formControlName="numeroPerfiles"
               #cantidadPerfiles
               required
-              onKeyPress="if(this.value.length>=this.maxLength) return false;"
+              onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
               oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
             />
           </mat-form-field>
@@ -139,7 +139,7 @@
                       max="999"
                       #cantidadHvRequeridas
                       (keypress)="validateNumberKeypress($event)"
-                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                       oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       formControlName="cantidadHvRequeridas"
                       required
@@ -198,7 +198,7 @@
                       max="999"
                       #cantidadHvRecibidas
                       (keypress)="validateNumberKeypress($event)"
-                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                       oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       formControlName="cantidadHvRecibidas"
                       required
@@ -257,7 +257,7 @@
                       max="999"
                       #cantidadHvAprobadas
                       (keypress)="validateNumberKeypress($event)"
-                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                       oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       formControlName="cantidadHvAprobadas"
                       required

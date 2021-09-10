@@ -88,7 +88,7 @@
                     type="number"
                     maxlength="3"
                     (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                     oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     formControlName="numAportes"
                   />
@@ -361,7 +361,7 @@
                             type="number"
                             (keypress)="validateNumberKeypress($event)"
                             formControlName="cauntosDocumentos"
-                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                            onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                             oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                           />
                           <input formControlName="cofinanciacionId" type="hidden" />
@@ -543,7 +543,7 @@
                             required
                             [(ngModel)]="documento.valorDocumento"
                             maxLength="28"
-                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                            onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                             [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                           />
                         </mat-form-field>
@@ -655,7 +655,7 @@
                             type="number"
                             (keypress)="validateNumberKeypress($event)"
                             [(ngModel)]="documento.numeroActa"
-                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                            onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                             oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                           />
                         </mat-form-field>
@@ -776,7 +776,7 @@
                             type="number"
                             (keypress)="validateNumberKeypress($event)"
                             [(ngModel)]="documento.numeroAcuerdo"
-                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                            onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                             oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                           />
                         </mat-form-field>

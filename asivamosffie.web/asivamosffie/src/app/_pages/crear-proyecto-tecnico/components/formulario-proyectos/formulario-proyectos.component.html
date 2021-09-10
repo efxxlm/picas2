@@ -89,7 +89,7 @@
                   required
                   [disabled]="!bitPuedoEditar"
                   (keypress)="number($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   type="number"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
@@ -375,7 +375,7 @@
                   readonly
                   [disabled]="!bitPuedoEditar"
                   (keypress)="number($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   [matTooltipPosition]="'above'"
                   matTooltip="Espacio diligenciado por el sistema"
@@ -433,7 +433,7 @@
                   #codigoDane2
                   readonly
                   (keypress)="number($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   [matTooltipPosition]="'above'"
                   matTooltip="Espacio diligenciado por el sistema"
@@ -576,7 +576,7 @@
                   (keyup)="evaluopredios()"
                   maxlength="3"
                   (keypress)="number($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   min="1"
                   max="99"
@@ -681,7 +681,7 @@
                   maxlength="10"
                   min="1"
                   max="99"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   required
                   appOchoDecimales
                   (click)="valueVacioLatitud()"
@@ -736,7 +736,7 @@
                   [disabled]="!bitPuedoEditar"
                   min="1"
                   max="99"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   required
                   appOchoDecimales
                   [matTooltipPosition]="'above'"
@@ -1143,7 +1143,7 @@
                   (keyup)="evaluoaportantes()"
                   maxlength="2"
                   (keypress)="number($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   min="1"
                   max="99"
@@ -1401,7 +1401,7 @@
                     (keyup)="valorTotal(aportantes)"
                     maxlength="28"
                     (keypress)="number($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                     required
                     currencyMask
                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
@@ -1453,7 +1453,7 @@
                     (keyup)="valorTotal(aportantes)"
                     maxlength="28"
                     (keypress)="number($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                     required
                     currencyMask
                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
@@ -1504,7 +1504,7 @@
                     maxlength="54"
                     required
                     (keypress)="number($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                     currencyMask
                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                     readonly
@@ -1574,7 +1574,7 @@
                   max="99"
                   required
                   (keypress)="number($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   type="number"
                   [matTooltipPosition]="'above'"
@@ -1611,7 +1611,7 @@
                   required
                   (keypress)="number($event)"
                   onkeyup="if(this.value>29) this.value = 29;"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   [matTooltipPosition]="'above'"
                   matTooltip="Campo numérico igual o menor a 29 días"
@@ -1655,7 +1655,7 @@
                   min="1"
                   max="99"
                   (keypress)="number($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   required
                   type="number"
@@ -1693,7 +1693,7 @@
                   required
                   (keypress)="number($event)"
                   onkeyup="if(this.value>29) this.value = 29;"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   [matTooltipPosition]="'above'"
                   matTooltip="Campo numérico igual o menor a 29 días"
@@ -1778,7 +1778,7 @@
                     max="9999"
                     required
                     (keypress)="number($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                     oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number"
                   />

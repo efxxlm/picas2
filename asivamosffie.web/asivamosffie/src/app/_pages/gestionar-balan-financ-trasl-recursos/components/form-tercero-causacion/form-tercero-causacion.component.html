@@ -126,7 +126,7 @@
                                 formControlName="nuevoValorDescuento"
                                 (keypress)="validateNumberKeypress($event)"
                                 (ngModelChange)="checkValueAportante($event, i, j, k, l, 'aportante')"
-                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                 oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                               />
@@ -261,7 +261,7 @@
                                               (ngModelChange)="
                                                 checkValueAportante($event, i, j, k, l, m, 'descuentoFinanciera')
                                               "
-                                              onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                              onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                               oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                               [options]="{
                                                 prefix: '$ ',
@@ -352,7 +352,7 @@
                                                                                             formControlName="nuevoValorDescuento"
                                                                                             (keypress)="validateNumberKeypress($event)"
                                                                                             (ngModelChange)="checkValueAportante( $event, i, j, k, l, 'descuentoTecnica' )"
-                                                                                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                                                                            onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                                                                             oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                                                             [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                                                                                 </mat-form-field>

@@ -83,7 +83,7 @@
                               type="number"
                               min="0"
                               maxlength="3"
-                              onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                              onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                               max="100"
                               [(ngModel)]="programacionCapitulo.programacionCapitulo"
                               required
@@ -106,7 +106,7 @@
                                   type="number"
                                   min="0"
                                   maxlength="4"
-                                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                   [max]="avanceFisicoCapitulo.programacionCapitulo"
                                   [(ngModel)]="avanceFisicoCapitulo.avanceFisicoCapitulo"
                                   required

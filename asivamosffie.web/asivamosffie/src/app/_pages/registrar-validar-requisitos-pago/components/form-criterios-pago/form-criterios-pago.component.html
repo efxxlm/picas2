@@ -180,7 +180,7 @@
                                     currencyMask
                                     maxlength="20"
                                     formControlName="valorFacturadoConcepto" (keypress)="validateNumberKeypress($event)"
-                                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                    onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                                     (ngModelChange)="getValorTotalConceptos( i, j, $event )">
                         </mat-form-field>
@@ -229,7 +229,7 @@
                                       maxlength="20"
                                       formControlName="valorFacturado"
                                       (keypress)="validateNumberKeypress($event)"
-                                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                      onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                       (ngModelChange)="verifyValorTotalConceptos( i )"
                                       [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                         </mat-form-field>

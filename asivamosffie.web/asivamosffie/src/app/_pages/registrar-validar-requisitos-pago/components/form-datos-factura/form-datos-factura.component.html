@@ -132,7 +132,7 @@
               <mat-form-field class="full-width">
                 <input matInput #valorDescuento currencyMask maxlength="20" required formControlName="valorDescuento"
                   (keypress)="validateNumberKeypress($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
               </mat-form-field>
               <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
@@ -160,7 +160,7 @@
               <mat-form-field class="full-width">
                 <input matInput #valorAPagarDespues currencyMask maxlength="20" required
                   formControlName="valorAPagarDespues" (keypress)="validateNumberKeypress($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
               </mat-form-field>
               <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"

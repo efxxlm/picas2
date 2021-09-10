@@ -141,7 +141,7 @@
                   formControlName="numRadicadoSac"
                   #numRadicadoSac
                   maxlength="20"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   required
                 />

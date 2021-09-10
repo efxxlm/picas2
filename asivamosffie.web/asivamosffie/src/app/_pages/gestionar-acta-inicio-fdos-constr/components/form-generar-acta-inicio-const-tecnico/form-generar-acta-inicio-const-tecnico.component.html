@@ -237,7 +237,7 @@
                     max="99"
                     required
                     (keypress)="number($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                     oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number"
                     formControlName="mesPlazoEjFase2"
@@ -285,7 +285,7 @@
                     max="29"
                     required
                     (keypress)="number($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                     oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     type="number"
                     formControlName="diasPlazoEjFase2"

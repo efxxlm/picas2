@@ -279,7 +279,7 @@
                                                                                           [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                                                                                           formControlName="valorDescuento"
                                                                                           (ngModelChange)="checkValueDescuento( $event, i, j, k, l ); checkTotalDiscountValues( i, j, k, l );"
-                                                                                          onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                                                                                          onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''">
                                                                               </mat-form-field>
                                                                               <span   class="contador"
                                                                                       [matTooltipPosition]="'above'"

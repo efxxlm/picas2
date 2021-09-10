@@ -107,7 +107,7 @@
                                                 type="number"
                                                 maxlength="20"
                                                 #numeroIdentificacion
-                                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                                onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                                 formControlName="numeroIdentificacion"
                                                 required>
                                     </mat-form-field>
@@ -182,7 +182,7 @@
                                                 type="number"
                                                 maxlength="20"
                                                 #numIdentificacionTitular
-                                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                                onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                                 formControlName="titularNumeroIdentificacion"
                                                 required>
                                     </mat-form-field>
@@ -357,7 +357,7 @@
                                                 type="number"
                                                 maxlength="20"
                                                 #numeroIdentificacion
-                                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                                onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                                 formControlName="numeroIdentificacion"
                                                 required>
                                     </mat-form-field>
