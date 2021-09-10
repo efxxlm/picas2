@@ -13,9 +13,11 @@ export class DatosDdpDrpGbftrecComponent implements OnInit {
     dataSource = new MatTableDataSource();
     displayedColumns: string[] = [
         'drp',
-        'numeroDrp',
-        'valorSolicitudDdp',
-        'saldoPresupuestal'
+        'numDrp',
+        'ProyectoLLaveMen',
+        'NombreUso',
+        'valor',
+        'saldo'
     ];
 
     constructor() { }
@@ -25,7 +27,7 @@ export class DatosDdpDrpGbftrecComponent implements OnInit {
     }
 
     loadDataSource() {
-        this.dataSource = new MatTableDataSource( this.solicitudPago.tablaDRP );
+        this.dataSource = new MatTableDataSource( this.solicitudPago.tablaDrpUso );
     }
 
 }
