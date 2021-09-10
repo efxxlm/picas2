@@ -5,6 +5,7 @@ import { Dominio, CommonService } from 'src/app/core/_services/common/common.ser
 import { MediosPagoCodigo } from 'src/app/_interfaces/estados-solicitudPago-ordenGiro.interface';
 import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
 import { ActivatedRoute, Params } from '@angular/router';
+import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 
 @Component({
   selector: 'app-form-orden-giro-seleccionada',
@@ -30,13 +31,16 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
   semaforoTerceroCausacion: string;
   semaforoDescuentos: string;
   solicitudPagoId: number;
+  contrato: any;
+  listaDetalleGiro: { contratacionProyectoId: number, llaveMen: string, fases: any[], semaforoDetalle: string }[] = [];
 
   constructor(
     private ordenPagoSvc: OrdenPagoService,
     private commonSvc: CommonService,
     private balanceSvc: FinancialBalanceService,
     private fb: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private registrarPagosSvc: RegistrarRequisitosPagoService
   ) {
     this.addressForm = this.crearFormulario();
   }
@@ -48,16 +52,57 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
     this.listaBancos = await this.commonSvc.listaBancos().toPromise();
     if (this.solicitudPagoId) {
       this.solicitudPago = await this.ordenPagoSvc.getSolicitudPagoBySolicitudPagoId(this.solicitudPagoId).toPromise();
+
+      this.getListaDetalleGiro(this.solicitudPago)
     } else {
       this.solicitudPago = await this.ordenPagoSvc
         .getSolicitudPagoBySolicitudPagoId(this.ordenGiro.get('solicitudPagoId').value)
         .toPromise();
+
+      this.getListaDetalleGiro(this.solicitudPago)
     }
 
     // console.log(this.solicitudPago);
     this.getDataTerceroGiro();
   }
 
+  async getListaDetalleGiro(response) {
+    this.solicitudPago = response;
+    this.contrato = response[ 'contratoSon' ];
+    console.log( this.solicitudPago );
+    /*
+        Se crea un arreglo de proyectos asociados a una fase y unos criterios que estan asociados a esa fase y al proyecto para
+        el nuevo flujo de Orden de Giro el cual los acordeones de "Estrategia de pagos, Observaciones y Soporte de orden de giro" ya no son hijos del acordeon
+        "Detalle de giro" y el detalle de giro se diligencia por proyectos el cual tendra como hijo directo las fases y los criterios asociados a esa fase y al proyecto.
+    */
+    // Peticion asincrona de los proyectos por contratoId
+    const getProyectosByIdContrato: any[] = await this.registrarPagosSvc.getProyectosByIdContrato( this.solicitudPago.contratoId ).toPromise();
+    const LISTA_PROYECTOS: any[] = getProyectosByIdContrato[1];
+    const solicitudPagoFase: any[] = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase;
+
+    LISTA_PROYECTOS.forEach( proyecto => {
+        // Objeto Proyecto que se agregara al array listaDetalleGiro
+        const PROYECTO = {
+            semaforoDetalle: 'sin-diligenciar',
+            contratacionProyectoId: proyecto.contratacionProyectoId,
+            llaveMen: proyecto.llaveMen,
+            fases: []
+        }
+
+        const listFase = solicitudPagoFase.filter( fase => fase.contratacionProyectoId === proyecto.contratacionProyectoId )
+        if ( listFase.length > 0 ) {
+            listFase.forEach( fase => {
+                fase.estadoSemaforo = 'sin-diligenciar'
+                fase.estadoSemaforoCausacion = 'sin-diligenciar'
+            })
+        }
+        PROYECTO.fases = listFase
+
+        if ( PROYECTO.fases.length > 0 ) {
+            this.listaDetalleGiro.push( PROYECTO )
+        }
+    } )
+  }
   crearFormulario() {
     return this.fb.group({
       medioPagoGiroContrato: [null, Validators.required],

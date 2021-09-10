@@ -1,0 +1,53 @@
+<section *ngIf="listaCriterios.length > 0">
+  <div style="margin-top: 1em;">
+      <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
+          A continuación encontrará los tipos de pago asociados a la factura para que usted determine la distribución de los descuentos
+          identificados por la Dirección Técnica.
+      </div>
+  </div>
+  
+  <section class="table-responsive tabla-gris mt-1em">
+      <table mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="tipoDescuento">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Tipo de descuento </th>
+            <td mat-cell *matCellDef="let element" align="center" class="color-text" class="padding-0em border-color-detalle">
+              <div class="sub-item-table flex-table justify-content-center align-items-center h-3em color-text" *ngFor="let descuento of element.listaDescuentos">
+                {{ getTipoDescuento( descuento.tipoDescuentoCodigo ) }}
+              </div>
+            </td>
+          </ng-container>
+    
+          <ng-container matColumnDef="valorDescuento">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20 back-color"> Valor del descuento </th>
+            <td mat-cell *matCellDef="let element" align="center" class="color-text" class="padding-0em border-color-detalle">
+              <div class="sub-item-table flex-table justify-content-center align-items-center h-3em color-text" *ngFor="let descuento of element.listaDescuentos">
+                {{ descuento.valorDescuento | currency: '': 'symbol-narrow':'.0-0' }}
+              </div>
+            </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="valorTotalDescuentos">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor total de descuentos </th>
+              <td mat-cell *matCellDef="let element" align="center"> {{ element.valorTotalDescuentos | currency:'':'symbol-narrow':'.0-0' }} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="valorNetoGiro">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor neto de giro </th>
+              <td mat-cell *matCellDef="let element" align="center"> {{ element.valorNetoGiro | currency:'':'symbol-narrow':'.0-0' }} </td>
+          </ng-container>
+      
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+  </section>
+
+  <app-form-descuentos-gog    [solicitudPagoFaseCriterio]="solicitudPagoFaseCriterio"
+                              [listaCriterios]="listaCriterios"
+                              [solicitudPagoFaseFacturaDescuento]="solicitudPagoFaseFacturaDescuento"
+                              [valorNetoGiro]="listData.valorNetoGiro"
+                              [solicitudPago]="solicitudPago"
+                              [esVerDetalle]="true"
+                              [esPreconstruccion]="esPreconstruccion"
+                              [solicitudPagoFase]="solicitudPagoFase">
+  </app-form-descuentos-gog>
+</section>

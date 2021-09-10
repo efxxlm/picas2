@@ -1,0 +1,88 @@
+<ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+  <mat-card class="shipping-card">
+      <mat-card-header class="header-card header-card--margin">
+          <mat-card-title class="header-card--text">
+              Observaciones a la orden de giro
+          </mat-card-title>
+      </mat-card-header>
+      <mat-card-content style="text-align: left;">
+          <div [innerHTML]="addressForm.get( 'observaciones' ).value !== null ? addressForm.get( 'observaciones' ).value : ''"></div>
+      </mat-card-content>
+  </mat-card>
+</ng-container>
+<ng-template #noEsVerDetalle>
+  <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+      <div class="d-flex align-items-center mtop">
+          <div class="text-area-quill izqTitle" [ngClass]="{
+              'color-secondaryColor':
+              (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+              (addressForm.get('observaciones').invalid && estaEditando)
+            }">
+              <label for="observaciones" class="text-area-quill--label" [ngClass]="{
+                                  'colorMainColor':
+                                    !((addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                                    (addressForm.get('observaciones').invalid && estaEditando))
+                                }">Observaciones a la orden de giro</label>
+              <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required 
+                  (onContentChanged)="maxLength($event, 3000)" formControlName="observaciones" #observaciones></quill-editor>
+          </div>
+          <span class="contador miles" *ngIf="addressForm.get( 'observaciones' ).value">
+              {{ 3000 - (textoLimpio(observaciones.quillEditor,3000)) }}
+          </span>
+          <span class="contador miles" *ngIf="addressForm.get( 'observaciones' ).value === null">
+              3000
+          </span>
+          <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                *ngIf="
+                (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
+                (addressForm.get('observaciones').invalid && estaEditando)
+                "
+              />
+            </span>
+      </div>
+
+      <div class="mt-1em" *ngIf="obsVerificar !== undefined || obsAprobar !== undefined">
+          <mat-card class="shipping-card border" align="left" *ngIf="obsVerificar !== undefined">
+              <mat-card-header class="header-card">
+                  <mat-card-title class="header-card--text card-title-detalle">
+                      Verificación de la coordinación financiera
+                  </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                  <p style="margin-left: 2em;"><b> {{ obsVerificar.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                  <p style="margin-left: 2em;" *ngIf="obsVerificar.tieneObservacion === true"><b>¿Desde la coordinación financiera tiene observaciones a esta sección de la orden de giro?</b>: Si</p>
+                  <p style="margin-left: 2em;" *ngIf="obsVerificar.tieneObservacion === false"><b>¿Desde la coordinación financiera tiene observaciones a esta sección de la orden de giro?</b>: No</p>
+                  <section [innerHTML]="obsVerificar.observacion" style="margin-left: 2em;" *ngIf="obsVerificar.tieneObservacion === true"></section>
+              </mat-card-content>
+          </mat-card>
+
+          <mat-card class="shipping-card border" align="left" *ngIf="obsAprobar !== undefined">
+              <mat-card-header class="header-card">
+                  <mat-card-title class="header-card--text card-title-detalle">
+                      Aprobación de la dirección financiera
+                  </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                  <p style="margin-left: 2em;"><b> {{ obsAprobar.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                  <p style="margin-left: 2em;" *ngIf="obsAprobar.tieneObservacion === true"><b>¿Desde la dirección financiera tiene observaciones a esta sección de la orden de giro?</b>: Si</p>
+                  <p style="margin-left: 2em;" *ngIf="obsAprobar.tieneObservacion === false"><b>¿Desde la dirección financiera tiene observaciones a esta sección de la orden de giro?</b>: No</p>
+                  <section [innerHTML]="obsAprobar.observacion" style="margin-left: 2em;" *ngIf="obsAprobar.tieneObservacion === true"></section>
+              </mat-card-content>
+          </mat-card>
+      </div>
+
+      <button mat-button color="warn"
+              class="btn-guardar"
+              type="submit"
+              [disabled]="addressForm.dirty === false">
+              <img src="assets/img/icon/guardar.svg" alt="Guardar">
+      </button>
+  </form>
+</ng-template>

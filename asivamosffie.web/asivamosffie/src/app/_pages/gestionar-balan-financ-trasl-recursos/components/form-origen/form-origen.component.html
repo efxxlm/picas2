@@ -1,0 +1,111 @@
+<section *ngIf="aportantes.length > 0">
+  <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+      <form [formGroup]="formOrigen" (ngSubmit)="guardar()">
+          <mat-card class="shipping-card var-main-gris">
+              <mat-card-content align="left">
+                  <div formArrayName="aportantes" *ngFor="let aportante of aportantes.controls; index as i">
+                      <mat-card-title class="header-card--text sub-text" style="margin-left: .5em;">
+                          Aportante {{ i + 1 }}
+                      </mat-card-title>
+                      <div class="mt-1em" [formGroup]="aportante">
+                          <div style="margin-left: .5em;">
+                              <p><strong>Tipo de aportante: </strong> {{ aportante.get( 'tipoAportante' ).value.nombre }} </p>
+                              <p><strong>Nombre del aportante: </strong> {{ aportante.get( 'nombreAportante' ).value.nombreAportante }} </p>
+                              <p><strong>Fuente: </strong> {{ aportante.get( 'fuente' ).value.nombre }} </p>
+                          </div>
+                          <ng-container *ngIf="aportante.get( 'listaCuentaBancaria' ).value.length > 1; else elseTemplate">
+                              <div class="animatedDown" *ngIf="aportante.get( 'cuentaBancariaId' ).value !== null" style="margin-left: .5em;">
+                                  <p><b>Nombre de la Cuenta: </b> <span *ngIf="aportante.get( 'cuentaBancariaId' ).value">{{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }}</span> </p>
+                                  <p><strong>Número de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.numeroCuentaBanco }} </p>
+                                  <p><strong>Banco: </strong> {{ firstLetterUpperCase( getBanco( aportante.get( 'cuentaBancariaId' ).value.bancoCodigo ) ) }} </p>
+                                  <p><strong>Tipo de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.tipoCuentaCodigo }} </p>
+                                  <p><strong>Código de negocio SIFI para radicación: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.codigoSifi }} </p>
+                              </div>
+                          </ng-container>
+                          <ng-template #elseTemplate>
+                              <div class="animatedDown" *ngIf="aportante.get( 'cuentaBancariaId' ).value !== null" style="margin-left: .5em;">
+                                  <p><strong>Nombre de la Cuenta: </strong> {{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }} </p>
+                                  <p><strong>Número de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.numeroCuentaBanco }} </p>
+                                  <p><strong>Banco: </strong> {{ firstLetterUpperCase( getBanco( aportante.get( 'cuentaBancariaId' ).value.bancoCodigo ) ) }} </p>
+                                  <p><strong>Tipo de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.tipoCuentaCodigo }} </p>
+                                  <p><strong>Código de negocio SIFI para radicación: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.codigoSifi }} </p>
+                              </div>
+                          </ng-template>
+                      </div>
+                  </div>
+              </mat-card-content>
+          </mat-card>
+      </form>
+  </ng-container>
+  <ng-template #noEsVerDetalle>
+      <form [formGroup]="formOrigen" (ngSubmit)="guardar()">
+          <mat-card class="shipping-card var-main-gris">
+              <mat-card-content align="left">
+                  <div formArrayName="aportantes" *ngFor="let aportante of aportantes.controls; index as i">
+                      <mat-card-title class="header-card--text sub-text" style="margin-left: .5em;">
+                          Aportante {{ i + 1 }}
+                      </mat-card-title>
+                      <div class="mt-1em" [formGroup]="aportante">
+                          <div style="margin-left: .5em;">
+                              <p><strong>Tipo de aportante: </strong> {{ aportante.get( 'tipoAportante' ).value.nombre }} </p>
+                              <p><strong>Nombre del aportante: </strong> {{ aportante.get( 'nombreAportante' ).value.nombreAportante }} </p>
+                              <p><strong>Fuente: </strong> {{ aportante.get( 'fuente' ).value.nombre }} </p>
+                          </div>
+                          <ng-container >
+                              <div class="row">
+                                  <div class="col-md-6">
+                                      <div class="row">
+                                          <div class="pr-1">
+                                              <label  class="label-left"
+                                                      for="cuentaBancariaId"
+                                                      [ngClass]="{ 'color-secondaryColor': (formOrigen.get('cuentaBancariaId')?.invalid && formOrigen.get('cuentaBancariaId').touched) || (formOrigen.get('cuentaBancariaId')?.invalid ) }">
+                                                      Nombre de la Cuenta
+                                              </label>
+                                          </div>
+                                          <div class="col">
+                                              <mat-form-field class="select-width w-75">
+                                                  <mat-select formControlName="cuentaBancariaId" required>
+                                                      <mat-option *ngFor="let cuenta of aportante.get( 'listaCuentaBancaria' ).value" [value]="cuenta">
+                                                          {{ cuenta.nombreCuentaBanco }}
+                                                      </mat-option>
+                                                  </mat-select>
+                                              </mat-form-field>
+                                          </div>
+                                          <span class="icon-incompleto">
+                                              <img
+                                                class="icon-incompleto--img"
+                                                src="assets/img/icon/incompleto.svg"
+                                                alt="este campo es requerido"
+                                                [matTooltipPosition]="'above'"
+                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                matTooltipClass="info-tooltip"
+                                                *ngIf="(formOrigen.get('cuentaBancariaId')?.invalid && formOrigen.get('cuentaBancariaId').touched) || (formOrigen.get('cuentaBancariaId')?.invalid )">
+                                            </span>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="animatedDown" *ngIf="aportante.get( 'cuentaBancariaId' ).value !== null" style="margin-left: .5em;">
+                                  <p><strong>Número de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.numeroCuentaBanco }} </p>
+                                  <p><strong>Banco: </strong> {{ firstLetterUpperCase( getBanco( aportante.get( 'cuentaBancariaId' ).value.bancoCodigo ) ) }} </p>
+                                  <p><strong>Tipo de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.tipoCuentaCodigo }} </p>
+                                  <p><strong>Código de negocio SIFI para radicación: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.codigoSifi }} </p>
+                              </div>
+                          </ng-container>
+                      </div>
+                  </div>
+              </mat-card-content>
+          </mat-card>
+
+          <div class="text-center mb-2em">
+              <button mat-button
+                      color="warn"
+                      class="btn-guardar"
+                      type="submit"
+                      >
+                      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+              </button>
+          </div>
+      </form>
+  </ng-template>
+
+</section>

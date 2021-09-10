@@ -119,7 +119,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
         for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase ) {
             // Get Tablas
             const solicitudPagoFaseCriterio = solicitudPagoFase.solicitudPagoFaseCriterio;
-            const solicitudPagoFaseFactura = solicitudPagoFase.solicitudPagoFaseFactura[0];
+            const solicitudPagoFaseFactura = solicitudPagoFase.solicitudPagoFaseFactura ? solicitudPagoFase.solicitudPagoFaseFactura[0] : null;
             const descuentos = [];
             let nuevoValorRegistrado = 0;
             const listData = {
@@ -128,7 +128,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
                 valorTotalDescuentos: 0
             };
 
-            if ( solicitudPagoFaseFactura.tieneDescuento === true ) {
+            if ( solicitudPagoFaseFactura && solicitudPagoFaseFactura.tieneDescuento === true ) {
             /*
                 get listaCriterios para lista desplegable
                 Se reutilizan los servicios del CU 4.1.7 "Solicitud de pago"
