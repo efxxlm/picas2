@@ -93,7 +93,11 @@ namespace asivamosffie.services
         public async Task<dynamic> GetConceptoPagoCriterioCodigoByTipoPagoCodigo(string TipoPagoCodigo)
         {
             List<dynamic> ListDynamics = new List<dynamic>();
-            List<string> strCriterios = _context.TipoPagoConceptoPagoCriterio.Where(r => r.TipoPagoCodigo == TipoPagoCodigo).Select(r => r.ConceptoPagoCriterioCodigo).ToList();
+            List<string> strCriterios = _context.TipoPagoConceptoPagoCriterio
+                                                                            .Where(r => r.TipoPagoCodigo == TipoPagoCodigo)
+                                                                            .Select(r => r.ConceptoPagoCriterioCodigo)
+                                                                            .ToList();
+
             List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Concepto_Pago_Criterio_Obra_Interventoria);
 
             strCriterios.ForEach(l =>

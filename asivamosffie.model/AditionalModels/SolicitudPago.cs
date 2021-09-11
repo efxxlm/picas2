@@ -42,6 +42,9 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public OrdenGiroTerceroTransferenciaElectronica PrimerOrdenGiroTerceroTransferenciaElectronica { get; set; }
+         
+        [NotMapped]
+        public dynamic ValorXProyectoXFaseXAportanteXConcepto { get; set; }
     }
 
 }

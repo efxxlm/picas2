@@ -183,6 +183,7 @@ namespace asivamosffie.services
             {
                 SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, SolicitudPagoId);
                 SolicitudPago.ContratoSon.ListProyectos = await _registerValidatePayment.GetProyectosByIdContrato((int)SolicitudPago.ContratoId);
+                SolicitudPago.ValorXProyectoXFaseXAportanteXConcepto = GetInfoValorValorXProyectoXFaseXAportanteXConcepto(SolicitudPago.ContratoSon.ContratacionId);
             }
             ValidateTerceroGiro(SolicitudPago);
 
@@ -239,6 +240,20 @@ namespace asivamosffie.services
             {
             }
             return SolicitudPago;
+        }
+
+        private dynamic GetInfoValorValorXProyectoXFaseXAportanteXConcepto(int contratacionId)
+        { 
+            return _context.VDrpXcontratacionXproyectoXaportanteXfaseXcriterioXconceptoXusos.Where(r => r.ContratacionId == contratacionId)
+                .Select(r => new  
+                {
+                    r.ProyectoId,
+                    r.EsPreConstruccion,
+                    r.AportanteId,
+                    r.ConceptoCodigo,
+                    r.ConceptoNombre,
+                    r.Saldo 
+                }); 
         }
 
         private dynamic GetTablaInformacionFuenteRecursos(SolicitudPago solicitudPago)

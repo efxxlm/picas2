@@ -255,9 +255,11 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VDescuentosXordenGiroAportante> VDescuentosXordenGiroAportante { get; set; }
         public virtual DbSet<VDescuentosXordenGiroXproyectoXaportanteXconcepto> VDescuentosXordenGiroXproyectoXaportanteXconcepto { get; set; }
         public virtual DbSet<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso { get; set; }
+        public virtual DbSet<VDescuentosXordenGiroXproyectoXfaseXaportanteXconcepto> VDescuentosXordenGiroXproyectoXfaseXaportanteXconcepto { get; set; }
         public virtual DbSet<VDisponibilidadPresupuestal> VDisponibilidadPresupuestal { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
         public virtual DbSet<VDrpNovedadXfaseContratacionId> VDrpNovedadXfaseContratacionId { get; set; }
+        public virtual DbSet<VDrpXcontratacionXproyectoXaportanteXfaseXcriterioXconceptoXusos> VDrpXcontratacionXproyectoXaportanteXfaseXcriterioXconceptoXusos { get; set; }
         public virtual DbSet<VDrpXcontratacionXproyectoXfaseXconceptoXusos> VDrpXcontratacionXproyectoXfaseXconceptoXusos { get; set; }
         public virtual DbSet<VDrpXcontratoXaportante> VDrpXcontratoXaportante { get; set; }
         public virtual DbSet<VDrpXfaseContratacionId> VDrpXfaseContratacionId { get; set; }
@@ -334,7 +336,14 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -13910,9 +13919,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(16)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PorcentajeFacturado).HasColumnType("decimal(33, 19)");
+                entity.Property(e => e.PorcentajeFacturado).HasColumnType("decimal(38, 16)");
 
-                entity.Property(e => e.PorcentajePorPagar).HasColumnType("decimal(34, 19)");
+                entity.Property(e => e.PorcentajePorPagar).HasColumnType("decimal(38, 16)");
 
                 entity.Property(e => e.SaldoPorPagar).HasColumnType("decimal(19, 0)");
 
@@ -14090,6 +14099,41 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
             });
 
+            modelBuilder.Entity<VDescuentosXordenGiroXproyectoXfaseXaportanteXconcepto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DescuentosXOrdenGiroXProyectoXFaseXAportanteXConcepto");
+
+                entity.Property(e => e.ConceptoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CriterioCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EsPreconstruccion).HasColumnName("esPreconstruccion");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Nombre).HasMaxLength(250);
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoDescuentoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
+            });
+
             modelBuilder.Entity<VDisponibilidadPresupuestal>(entity =>
             {
                 entity.HasNoKey();
@@ -14158,6 +14202,49 @@ namespace asivamosffie.model.Models
                 entity.ToView("V_DrpNovedadXFaseContratacionId");
 
                 entity.Property(e => e.ValorDrp).HasColumnType("numeric(38, 2)");
+            });
+
+            modelBuilder.Entity<VDrpXcontratacionXproyectoXaportanteXfaseXcriterioXconceptoXusos>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DrpXContratacionXProyectoXAportanteXFaseXCriterioXConceptoXUsos");
+
+                entity.Property(e => e.ConceptoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ConceptoNombre)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.ConceptoPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.NumeroDrp)
+                    .HasColumnName("NumeroDRP")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Saldo).HasColumnType("numeric(19, 2)");
+
+                entity.Property(e => e.TipoUsoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VDrpXcontratacionXproyectoXfaseXconceptoXusos>(entity =>
@@ -14287,11 +14374,11 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(250);
 
-                entity.Property(e => e.OrdenadoGirarAntesImpuestos).HasColumnType("decimal(19, 0)");
+                entity.Property(e => e.OrdenadoGirarAntesImpuestos).HasColumnType("decimal(18, 0)");
 
                 entity.Property(e => e.PorcentajeEjecucionFinanciera).HasColumnType("numeric(38, 6)");
 
-                entity.Property(e => e.Saldo).HasColumnType("decimal(20, 0)");
+                entity.Property(e => e.Saldo).HasColumnType("decimal(19, 0)");
 
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()
@@ -14947,7 +15034,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorConcepto).HasColumnType("decimal(25, 3)");
+                entity.Property(e => e.ValorConcepto).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.ValorNetoGiro).HasColumnType("decimal(25, 3)");
             });
