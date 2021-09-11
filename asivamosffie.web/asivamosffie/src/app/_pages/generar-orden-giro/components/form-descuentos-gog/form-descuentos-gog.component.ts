@@ -117,6 +117,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                             const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( descuento.criterioCodigo );
                             const tipoPago = tiposDePago.find( tipoPago => tipoPago.codigo === descuento.tipoPagoCodigo );
                             const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPago.codigo );
+                            const conceptoP = [];
                             // Get data del formulario de los conceptos seleccionados
                             const listaConceptos = [];
                             const formArrayConceptos = [];
@@ -196,6 +197,14 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                             aportantes: this.fb.array( formArrayAportantes.length > 0 ? formArrayAportantes : [] )
                                         }
                                     ) );
+
+                                    if (concepto) {
+                                        conceptosDePago.forEach(element => {
+                                            if (element.nombre === concepto.nombre) {
+                                                conceptoP.push(element)
+                                            }
+                                        });
+                                    }
                                 }
                             }
 
@@ -208,7 +217,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                         criterioCodigo: [ descuento.criterioCodigo !== undefined ? this.criteriosArray.find( criterio => criterio.codigo === descuento.criterioCodigo ).codigo : null ],
                                         tipoPagoNombre: [ tipoPago !== undefined ? tipoPago.nombre : null ],
                                         tipoPagoCodigo: [ tipoPago !== undefined ? tipoPago.codigo : null ],
-                                        conceptosDePago: [ conceptosDePago ],
+                                        conceptosDePago: [ conceptoP ],
                                         concepto: [ listaConceptos.length > 0 ? listaConceptos : null, Validators.required ],
                                         conceptos: this.fb.array( formArrayConceptos.length > 0 ? formArrayConceptos : [] )
                                     }
