@@ -608,7 +608,10 @@ export class TerceroCausacionGogComponent implements OnInit {
                 }
             } )
             if ( this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'nombreAportante' ).value !== null ) {
-                if ( value > this.getConceptos( index ).controls[ jIndex ].get( 'valorTotalUso' ).value ) {
+                if (
+                    value > this.getConceptos( index ).controls[ jIndex ].get( 'valorTotalUso' ).value ||
+                    value > this.getConceptoCodigo(this.getConceptos( index ).controls[ jIndex ].get('conceptoPagoCriterio').value)
+                ) {
                     this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
                     this.openDialog( '', `<b>El valor facturado por el concepto para el aportante no puede ser mayor al valor asignado por DRP al aportante.</b>` )
                     return
@@ -656,7 +659,7 @@ export class TerceroCausacionGogComponent implements OnInit {
             this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuentoTecnica' ).setValue( totalDescuentoAportante );
             if ( totalValueAportante > this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).value ) {
                 this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
-                this.openDialog( '', `<b>La suma total del valor facturado por el concepto para el aportante no puede ser mayor al valor facturado por concepto.</b>` )
+                this.openDialog( '', `<b>La suma total del valor facturado por el concepto para el aportante no puede ser mayor al valor facturado por concepto o al valor aportante para el concepto.</b>` )
             }
         }
     }
@@ -1119,4 +1122,12 @@ export class TerceroCausacionGogComponent implements OnInit {
             );
     }
 
+    getConceptoCodigo(codigo: string) {
+      if (this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.length > 0) {
+        const conceptoCodigo = this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.find(
+          conceptoCodigo => conceptoCodigo.conceptoCodigo === codigo
+        );
+        if (conceptoCodigo) return conceptoCodigo.saldo;
+      }
+    }
 }

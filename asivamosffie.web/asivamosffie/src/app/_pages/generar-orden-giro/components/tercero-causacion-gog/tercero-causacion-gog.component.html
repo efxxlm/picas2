@@ -29,8 +29,14 @@
                                 </mat-card-title>
                             </mat-card-header>
                             <mat-card-content style="text-align: left;" [formGroup]="concepto">
-                                <p><strong>Valor facturado por concepto: </strong> {{ concepto.get( 'valorFacturadoConcepto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
-
+                                <p>
+                                    <strong>Valor facturado por concepto:</strong>
+                                    {{ concepto.get( 'valorFacturadoConcepto' ).value | currency:'':'symbol-narrow':'.0-0' }}
+                                </p>
+                                <p>
+                                    <strong>Valor aportante para el concepto:</strong>
+                                    {{ getConceptoCodigo(concepto.get('conceptoPagoCriterio').value) | currency: '':'symbol-narrow':'.0-0' }}
+                                </p>
                                 <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j ).controls; index as k">
                                     <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ k + 1 }} </mat-card-title>
                                     <p>
@@ -121,7 +127,14 @@
                                 </mat-card-title>
                             </mat-card-header>
                             <mat-card-content style="text-align: left;" [formGroup]="concepto">
-                                <p><strong>Valor facturado por concepto: </strong> {{ concepto.get( 'valorFacturadoConcepto' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                                <p>
+                                    <strong>Valor facturado por concepto: </strong>
+                                    {{ concepto.get('valorFacturadoConcepto').value | currency: '':'symbol-narrow':'.0-0' }}
+                                </p>
+                                <p>
+                                    <strong>Valor aportante para el concepto:</strong>
+                                    {{ getConceptoCodigo(concepto.get('conceptoPagoCriterio').value) | currency: '':'symbol-narrow':'.0-0' }}
+                                </p>
 
                                 <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j ).controls; index as k">
                                     <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ k + 1 }} </mat-card-title>
