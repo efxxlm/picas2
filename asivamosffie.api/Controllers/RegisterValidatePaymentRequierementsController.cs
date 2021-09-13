@@ -82,7 +82,9 @@ namespace asivamosffie.api.Controllers
             bool EsPreConstruccion, 
             int pContratacionProyectoId, 
             string pCriterioCodigo, 
-            string pConceptoCodigo)
+            string pConceptoCodigo,
+             string pUsoCodigo
+            )
         {
             return Ok(await _registerValidatePaymentRequierementsService.GetMontoMaximoMontoPendiente(
                 SolicitudPagoId,
@@ -90,7 +92,9 @@ namespace asivamosffie.api.Controllers
                 EsPreConstruccion,
                 pContratacionProyectoId,
                 pCriterioCodigo,
-                pConceptoCodigo));
+                pConceptoCodigo,
+                pUsoCodigo
+                ));
         }
 
         [HttpGet]

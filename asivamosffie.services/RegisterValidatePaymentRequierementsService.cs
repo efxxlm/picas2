@@ -1464,7 +1464,14 @@ namespace asivamosffie.services
 
         #region Get
 
-        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion, int pContratacionProyectoId, string pCriterioCodigo, string pConceptoCodigo)
+        public async Task<dynamic> GetMontoMaximoMontoPendiente(
+            int SolicitudPagoId,
+            string strFormaPago, 
+            bool EsPreConstruccion, 
+            int pContratacionProyectoId, 
+            string pCriterioCodigo, 
+            string pConceptoCodigo ,
+            string pUsoCodigo)
         {
             try
             {
@@ -1477,8 +1484,8 @@ namespace asivamosffie.services
                                                                                                      .Where(v => v.ContratoId == solicitudPago.ContratoId
                                                                                                                && v.ContratacionProyectoId == pContratacionProyectoId
                                                                                                                && v.EsPreconstruccion == EsPreConstruccion
-                                                                                                               && v.ConceptoCodigo == pConceptoCodigo)
-
+                                                                                                               && v.ConceptoCodigo == pConceptoCodigo
+                                                                                                               && v.UsoCodigo == pUsoCodigo)
                                                                                                      .FirstOrDefault();
 
 

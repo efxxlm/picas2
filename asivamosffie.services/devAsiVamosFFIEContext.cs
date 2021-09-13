@@ -16286,6 +16286,14 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(250);
 
+                entity.Property(e => e.UsoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsoDrpCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.ValorFacturado).HasColumnType("decimal(30, 0)");
 
                 entity.Property(e => e.ValorSolicitudDdp)
