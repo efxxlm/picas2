@@ -131,7 +131,7 @@
                   <div class="col">
                     <mat-form-field class="select-width">
                       <mat-select formControlName="conceptoPago" multiple
-                        (selectionChange)="getvaluesConcepto( $event.value, i, criterio.get('tipoCriterioCodigo')?.value )">
+                        (selectionChange)="getvaluesConceptoPagoCodigo( $event.value )">
                         <mat-option *ngFor="let concepto of criterio.get( 'conceptosDePago' ).value" [value]="concepto">
                           {{ concepto.nombre }}
                         </mat-option>
@@ -149,6 +149,48 @@
                       *ngIf="
                       (criterio.get('conceptoPago').invalid && criterio.get('conceptoPago').touched) ||
                       (criterio.get('conceptoPago').invalid && estaEditando)
+                      "
+                    />
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left" for="pConceptoPagoCodigo"
+                    [ngClass]="{
+                      'color-secondaryColor':
+                        (criterio.get('pConceptoPagoCodigo').invalid && criterio.get('pConceptoPagoCodigo').touched) ||
+                        (criterio.get('pConceptoPagoCodigo').invalid && estaEditando)
+                    }">
+                      Uso para el concepto de pago
+                  </label>
+                  </div>
+                  <div class="col">
+                    <mat-form-field class="select-width">
+                      <mat-select
+                        formControlName="pConceptoPagoCodigo"
+                        (selectionChange)="getvaluesConcepto( criterio.get('conceptoPago').value, i, criterio.get('tipoCriterioCodigo')?.value, $event.value )"
+                      >
+                        <mat-option *ngFor="let uso of usosParaElConceoto" [value]="uso">
+                          {{ uso.nombre }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="
+                      (criterio.get('pConceptoPagoCodigo').invalid && criterio.get('pConceptoPagoCodigo').touched) ||
+                      (criterio.get('pConceptoPagoCodigo').invalid && estaEditando)
                       "
                     />
                   </span>

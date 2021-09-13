@@ -49,6 +49,7 @@ export class FormCriteriosPagoComponent implements OnInit {
     criteriosArray: { codigo: string, nombre: string, porcentaje: number }[] = [];
     estaEditando = false;
     forma_pago_codigo: string;
+    usosParaElConceoto: []
 
     get criterios() {
         return this.addressForm.get( 'criterios' ) as FormArray;
@@ -246,8 +247,10 @@ export class FormCriteriosPagoComponent implements OnInit {
                                     criterio.solicitudPagoFaseCriterioConceptoPago.forEach( solicitudPagoFaseCriterioConceptoPago => {
                                         const conceptoFind = conceptosDePago.find( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio );
 
+                                        const pConceptoPagoCodigo = '';
+
                                         if ( conceptoFind !== undefined ) {
-                                          this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, FORMA_PAGO_CODIGO, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterio?.tipoCriterioCodigo, conceptoFind?.codigo )
+                                          this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, FORMA_PAGO_CODIGO, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterio?.tipoCriterioCodigo, conceptoFind?.codigo, pConceptoPagoCodigo )
                                             .subscribe(
                                                 response => {
                                                   const conceptoDePagoArray = [];
@@ -279,6 +282,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                                               tipoPago: [ tipoDePago.length > 0 ? tipoDePago[0] : null ],
                                                               conceptosDePago: [ conceptosDePago ],
                                                               conceptoPago: [ conceptosDePagoSeleccionados, Validators.required ],
+                                                              pConceptoPagoCodigo: [ null, Validators.required ],
                                                               conceptos: this.fb.array( conceptoDePagoArray ),
                                                               valorFacturado: [ { value: criterio.valorFacturado !== undefined ? criterio.valorFacturado : null, disabled: true }, Validators.required ]
                                                           }
@@ -462,6 +466,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 tipoPago: [ null, Validators.required ],
                                 conceptosDePago: [ [], Validators.required ],
                                 conceptoPago: [ null ],
+                                pConceptoPagoCodigo: [ null ],
                                 conceptos: this.fb.array( [] ),
                                 valorFacturado: [ { value: null, disabled: true }, Validators.required ]
                             }
@@ -501,6 +506,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                     tipoPago: [ null, Validators.required ],
                                     conceptosDePago: [ [], Validators.required ],
                                     conceptoPago: [ null ],
+                                    pConceptoPagoCodigo: [ null ],
                                     conceptos: this.fb.array( [] ),
                                     valorFacturado: [ { value: null, disabled: true }, Validators.required ]
                                 }
@@ -527,6 +533,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                     tipoPago: [ null, Validators.required ],
                                     conceptosDePago: [ [], Validators.required ],
                                     conceptoPago: [ null ],
+                                    pConceptoPagoCodigo: [ null ],
                                     conceptos: this.fb.array( [] ),
                                     valorFacturado: [ { value: null, disabled: true }, Validators.required ]
                                 }
@@ -545,7 +552,17 @@ export class FormCriteriosPagoComponent implements OnInit {
         this.criterios.controls[ index ].get( 'conceptosDePago' ).setValue( conceptosDePago );
     }
 
-    getvaluesConcepto( conceptos: any[], index: number, criterioCodigo: any ) {
+    getvaluesConceptoPagoCodigo(e) {
+        this.registrarPagosSvc.getUsoByConceptoPagoCodigo( e[0].codigo )
+        .subscribe(response => {
+            this.usosParaElConceoto = response;
+            console.log(this.usosParaElConceoto);
+        })
+    }
+
+    getvaluesConcepto( conceptos: any[], index: number, criterioCodigo: any, e ) {
+        
+        console.log(conceptos)
         const conceptosArray = [ ...conceptos ];
         if ( conceptosArray.length > 0 ) {
             if ( this.criterios.controls[ index ].get( 'conceptos' ).dirty === true ) {
@@ -569,7 +586,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                 }
 
                 conceptosArray.forEach( async concepto => {
-                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo ).toPromise();
+                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e.pUsoCodigo ).toPromise();
                     this.getConceptos( index ).push(
                         this.fb.group(
                             {
@@ -606,7 +623,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                 }
 
                 conceptosArray.forEach( async concepto => {
-                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo ).toPromise();
+                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e.pUsoCodigo ).toPromise();
                     this.getConceptos( index ).push(
                         this.fb.group(
                             {
