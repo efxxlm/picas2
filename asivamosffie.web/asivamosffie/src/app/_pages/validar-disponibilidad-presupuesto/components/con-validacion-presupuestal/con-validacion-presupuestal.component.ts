@@ -17,6 +17,8 @@ export class ConValidacionPresupuestalComponent implements OnInit {
 
   esRechazada:boolean=false;
   esNovedad: boolean = false;
+  esGenerar: boolean = false;
+
   constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
     private router: Router,private sanitized: DomSanitizer,
@@ -25,6 +27,9 @@ export class ConValidacionPresupuestalComponent implements OnInit {
       this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
         if ( urlSegment.path === 'rechazada' ) {
             this.esRechazada = true;
+            return;
+        }else if(urlSegment.path === 'conDisponibilidadPresupuestal'){
+            this.esGenerar = true;
             return;
         }
     } );
@@ -36,10 +41,11 @@ export class ConValidacionPresupuestalComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     const esNovedad = this.route.snapshot.paramMap.get('esNovedad');
+    const esGenerar = this.esGenerar === true ? 'true':'false';
     this.esNovedad = esNovedad == "true" ? true : false;
     const novedadId = this.route.snapshot.paramMap.get('novedadId');
     if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, esNovedad, novedadId,'true')
+      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, esNovedad, novedadId,this.esGenerar)
         .subscribe(listas => {
           console.log(listas);
           this.detailavailabilityBudget=listas[0];

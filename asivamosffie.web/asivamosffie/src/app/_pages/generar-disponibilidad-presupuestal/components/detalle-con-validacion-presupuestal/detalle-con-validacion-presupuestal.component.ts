@@ -49,7 +49,7 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
     this.novedadId = this.route.snapshot.paramMap.get('novedadId');
 
     if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, this.esNovedad, this.novedadId, 'true')
+      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, this.esNovedad, this.novedadId, true)
         .subscribe(listas => {
           console.log(listas);
           if (listas.length > 0) {

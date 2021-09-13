@@ -47,6 +47,10 @@ const routes: Routes = [
     path: 'rechazada/:id/:esNovedad/:novedadId',
     component: ConValidacionPresupuestalComponent
   },
+  {
+    path: 'conDisponibilidadPresupuestal/:id/:esNovedad/:novedadId',
+    component: ConValidacionPresupuestalComponent
+  },
 ];
 
 @NgModule({

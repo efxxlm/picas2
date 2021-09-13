@@ -23,6 +23,8 @@ export interface PeriodicElement {
 export class TablaConValidacionComponent implements OnInit {
 
   @Input()disponibilidadPresupuestal: any;
+  @Input()esGenerar: boolean;
+
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'estadoRegistro', 'id'];
   dataSource = new MatTableDataSource();
 
@@ -69,7 +71,11 @@ export class TablaConValidacionComponent implements OnInit {
 
   verDetalle(id: number, esNovedad, novedadId) {
     console.log(id, esNovedad, novedadId);
-    this.router.navigate(['validarDisponibilidadPresupuesto/conValidacionPresupuestal', id, esNovedad, novedadId ? novedadId : 0]);
+    if(this.esGenerar == true){
+      this.router.navigate(['validarDisponibilidadPresupuesto/conDisponibilidadPresupuestal', id, esNovedad, novedadId ? novedadId : 0]);
+    }else{
+      this.router.navigate(['validarDisponibilidadPresupuesto/conValidacionPresupuestal', id, esNovedad, novedadId ? novedadId : 0]);
+    }
   }
 
 }
