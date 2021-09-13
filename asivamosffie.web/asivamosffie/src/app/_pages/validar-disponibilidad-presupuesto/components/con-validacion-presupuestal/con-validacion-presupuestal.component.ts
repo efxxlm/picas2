@@ -6,6 +6,7 @@ import { TipoDDP } from 'src/app/core/_services/budgetAvailability/budget-availa
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { FuenteFinanciacionService } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { CancelarDdpComponent } from '../cancelar-ddp/cancelar-ddp.component';
 
 @Component({
   selector: 'app-con-validacion-presupuestal',
@@ -90,4 +91,16 @@ export class ConValidacionPresupuestalComponent implements OnInit {
     });
   }
 
+  openDialogCancelarDDP() {
+    let dialogRef = this.dialog.open(CancelarDdpComponent, {
+      width: '70em'
+    });
+    dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
+    dialogRef.componentInstance.tipo = this.detailavailabilityBudget.tipoSolicitudEspecial;
+    dialogRef.componentInstance.nSolicitud = this.detailavailabilityBudget.numeroSolicitud;
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(["/generarDisponibilidadPresupuestal"], {});
+    });
+
+  }
 }
