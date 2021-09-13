@@ -1477,8 +1477,8 @@ namespace asivamosffie.services
                                                                                                                && v.ConceptoCodigo == pConceptoCodigo)
                                                                                                      .FirstOrDefault();
 
-                decimal Porcentaje = decimal.Parse(_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && r.Codigo == pCriterioCodigo).FirstOrDefault().Descripcion ?? "100");
-
+                //  decimal Porcentaje = decimal.Parse(_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && r.Codigo == pCriterioCodigo).FirstOrDefault().Descripcion ?? "100");
+                decimal Porcentaje = 100;
 
                 if (VValorFacturadoContratoXproyectoXuso == null)
                 {
@@ -1514,7 +1514,7 @@ namespace asivamosffie.services
 
                 return new
                 {
-                    MontoMaximo = MontoMaximo,
+                    MontoMaximo = MontoMaximo < 0 ? VValorFacturadoContratoXproyectoXuso.ValorSolicitudDdp : MontoMaximo,
                     VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal
                 };
             }
