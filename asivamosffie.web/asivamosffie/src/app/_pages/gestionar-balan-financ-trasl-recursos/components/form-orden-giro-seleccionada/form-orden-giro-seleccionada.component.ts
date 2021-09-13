@@ -33,6 +33,7 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
   solicitudPagoId: number;
   contrato: any;
   listaDetalleGiro: { contratacionProyectoId: number, llaveMen: string, fases: any[], semaforoDetalle: string }[] = [];
+  valorTotalPagado = 0;
 
   constructor(
     private ordenPagoSvc: OrdenPagoService,
@@ -62,6 +63,9 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
       this.getListaDetalleGiro(this.solicitudPago)
     }
 
+    this.solicitudPago.ordenGiro.ordenGiroDetalle[0].ordenGiroDetalleTerceroCausacion.forEach(element => {
+      this.valorTotalPagado += element.valorNetoGiro
+    });
     // console.log(this.solicitudPago);
     this.getDataTerceroGiro();
   }
