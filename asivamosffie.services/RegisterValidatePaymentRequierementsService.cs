@@ -955,6 +955,7 @@ namespace asivamosffie.services
                                     .Update(s => new SolicitudPagoFaseCriterioConceptoPago
                                     {
                                         ConceptoPagoCriterio = SolicitudPagoFaseCriterioConceptoPago.ConceptoPagoCriterio,
+                                        UsoCodigo = SolicitudPagoFaseCriterioConceptoPago.UsoCodigo,
                                         ValorFacturadoConcepto = SolicitudPagoFaseCriterioConceptoPago.ValorFacturadoConcepto
                                     });
                         }
@@ -963,6 +964,8 @@ namespace asivamosffie.services
                             SolicitudPagoFaseCriterioConceptoPago.Eliminado = false;
                             SolicitudPagoFaseCriterioConceptoPago.UsuarioCreacion = strUsuarioCreacion;
                             SolicitudPagoFaseCriterioConceptoPago.FechaCreacion = DateTime.Now;
+                            SolicitudPagoFaseCriterioConceptoPago.ConceptoPagoCriterio = SolicitudPagoFaseCriterioConceptoPago.ConceptoPagoCriterio;
+                            SolicitudPagoFaseCriterioConceptoPago.UsoCodigo = SolicitudPagoFaseCriterioConceptoPago.UsoCodigo;
                             _context.SolicitudPagoFaseCriterioConceptoPago.Add(SolicitudPagoFaseCriterioConceptoPago);
                         }
 
@@ -1473,10 +1476,11 @@ namespace asivamosffie.services
                 VValorFacturadoContratoXproyectoXuso VValorFacturadoContratoXproyectoXuso = _context.VValorFacturadoContratoXproyectoXuso
                                                                                                      .Where(v => v.ContratoId == solicitudPago.ContratoId
                                                                                                                && v.ContratacionProyectoId == pContratacionProyectoId
-                                                                                                               && v.EsPreconstruccion == EsPreConstruccion 
+                                                                                                               && v.EsPreconstruccion == EsPreConstruccion
                                                                                                                && v.ConceptoCodigo == pConceptoCodigo)
 
                                                                                                      .FirstOrDefault();
+
 
                 //  decimal Porcentaje = decimal.Parse(_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && r.Codigo == pCriterioCodigo).FirstOrDefault().Descripcion ?? "100");
                 decimal Porcentaje = 100;
