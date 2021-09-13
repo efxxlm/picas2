@@ -189,20 +189,38 @@ namespace asivamosffie.services
 
                                 foreach (var fuente in fuentesNew)
                                 {
-
-                                    fuentes.Add(new GrillaFuentesFinanciacion
+                                    if (proyectospp.DisponibilidadPresupuestal.EstadoSolicitudCodigo != "5" && proyectospp.DisponibilidadPresupuestal.EstadoSolicitudCodigo != "8")
                                     {
-                                        Fuente = ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().NombreFuente,
-                                        Estado_de_las_fuentes = string.Empty,
-                                        FuenteFinanciacionID = ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteFinanciacionId,
-                                        //Saldo_actual_de_la_fuente = SaldoActualFuente,
-                                        Saldo_actual_de_la_fuente = fuente.SaldoActual,
-                                        Valor_solicitado_de_la_fuente = fuente.ValorSolicitado,
-                                        //Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
-                                        Nuevo_saldo_de_la_fuente = fuente.NuevoSaldo,
-                                        Nuevo_saldo_de_la_fuente_al_guardar = fuente.NuevoSaldo,
-                                        Saldo_actual_de_la_fuente_al_guardar = fuente.SaldoActual,
-                                    });
+                                        fuentes.Add(new GrillaFuentesFinanciacion
+                                        {
+                                            Fuente = ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().NombreFuente,
+                                            Estado_de_las_fuentes = string.Empty,
+                                            FuenteFinanciacionID = ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteFinanciacionId,
+                                            //Saldo_actual_de_la_fuente = SaldoActualFuente,
+                                            Saldo_actual_de_la_fuente = fuente.SaldoActual,
+                                            Valor_solicitado_de_la_fuente = fuente.ValorSolicitado,
+                                            //Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
+                                            Nuevo_saldo_de_la_fuente = fuente.NuevoSaldo,
+                                            Nuevo_saldo_de_la_fuente_al_guardar = fuente.NuevoSaldo,
+                                            Saldo_actual_de_la_fuente_al_guardar = fuente.SaldoActual,
+                                        });
+                                    }
+                                    else
+                                    {
+                                        fuentes.Add(new GrillaFuentesFinanciacion
+                                        {
+                                            Fuente = ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().NombreFuente,
+                                            Estado_de_las_fuentes = string.Empty,
+                                            FuenteFinanciacionID = ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteFinanciacionId,
+                                            //Saldo_actual_de_la_fuente = SaldoActualFuente,
+                                            Saldo_actual_de_la_fuente = fuente.SaldoActualGenerado ?? 0,
+                                            Valor_solicitado_de_la_fuente = fuente.ValorSolicitadoGenerado ?? 0,
+                                            //Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
+                                            Nuevo_saldo_de_la_fuente = fuente.NuevoSaldoGenerado ?? 0,
+                                            Nuevo_saldo_de_la_fuente_al_guardar = fuente.NuevoSaldo,
+                                            Saldo_actual_de_la_fuente_al_guardar = fuente.SaldoActual,
+                                        });
+                                    }
                                 }
                                 if (ListDP.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Tradicional)
                                 {
