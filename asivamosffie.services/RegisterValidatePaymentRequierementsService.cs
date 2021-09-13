@@ -1498,7 +1498,8 @@ namespace asivamosffie.services
                     decimal ValorTotalPorFase = (decimal)_context.VDrpXcontratacionXproyectoXfaseXconceptoXusos
                            .Where(r => r.ContratacionId == solicitudPago.Contrato.ContratacionId
                                     && r.ProyectoId == contratacionProyecto.ProyectoId
-                                    && r.EsPreConstruccion == EsPreConstruccion
+                                    && r.EsPreConstruccion == EsPreConstruccion  
+                                    && r.TipoUsoCodigo == pUsoCodigo
                                     && r.ConceptoPagoCodigo == pConceptoCodigo)
                            .Sum(v => v.ValorUso);
 
