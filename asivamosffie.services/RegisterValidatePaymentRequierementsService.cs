@@ -1473,8 +1473,9 @@ namespace asivamosffie.services
                 VValorFacturadoContratoXproyectoXuso VValorFacturadoContratoXproyectoXuso = _context.VValorFacturadoContratoXproyectoXuso
                                                                                                      .Where(v => v.ContratoId == solicitudPago.ContratoId
                                                                                                                && v.ContratacionProyectoId == pContratacionProyectoId
-                                                                                                               && v.EsPreconstruccion == EsPreConstruccion
+                                                                                                               && v.EsPreconstruccion == EsPreConstruccion 
                                                                                                                && v.ConceptoCodigo == pConceptoCodigo)
+
                                                                                                      .FirstOrDefault();
 
                 //  decimal Porcentaje = decimal.Parse(_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && r.Codigo == pCriterioCodigo).FirstOrDefault().Descripcion ?? "100");
@@ -1753,7 +1754,7 @@ namespace asivamosffie.services
             decimal dcDecimalValorFacturado = 0;
             foreach (var item in vContratoPagosRealizados)
             {
-                dcDecimalValorFacturado += item.ValorFacturado; 
+                dcDecimalValorFacturado += item.ValorFacturado;
                 //item.SaldoPorPagar = item.ValorSolicitud - dcDecimalValorFacturado;
                 ValorAnterior = item.SaldoPorPagar ?? 0;
                 Drp = item.ValorSolicitud ?? 1;
@@ -1784,7 +1785,7 @@ namespace asivamosffie.services
                     _context.VPagosSolicitudXcontratacionXproyectoXuso.Where(v => v.ContratacionId == pContratacionId)
                                                                       .ToList();
 
-          //  List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
+            //  List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
 
             List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = new List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso>();
 
@@ -2165,8 +2166,16 @@ namespace asivamosffie.services
                 foreach (var SolicitudPagoFase in SolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase)
                 {
                     if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
+                    {
                         SolicitudPagoFase.SolicitudPagoFaseCriterio = SolicitudPagoFase.SolicitudPagoFaseCriterio.Where(r => r.Eliminado != true).ToList();
 
+                        foreach (var SolicitudPagoFaseCriterio in SolicitudPagoFase.SolicitudPagoFaseCriterio)
+                        {
+                            if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioConceptoPago.Count() > 0)
+
+                                SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioConceptoPago = SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioConceptoPago.Where(r => r.Eliminado != true).ToList();
+                        }
+                    }
                     if (SolicitudPagoFase.SolicitudPagoFaseFacturaDescuento.Count() > 0)
                         SolicitudPagoFase.SolicitudPagoFaseFacturaDescuento = SolicitudPagoFase.SolicitudPagoFaseFacturaDescuento.Where(r => r.Eliminado != true).ToList();
 
