@@ -355,11 +355,22 @@ export class FormCriteriosPagoComponent implements OnInit {
     async getValorTotalConceptos( index: number, jIndex: number, valorConcepto: number ) {
       const usoByConcepto = await this.registrarPagosSvc.getUsoByConceptoPagoCriterioCodigo( this.getConceptos( index ).controls[ jIndex ].get( 'conceptoPagoCriterio' ).value, this.solicitudPago.contratoId );
 
+      let sumaValoresConcepto = 0;
+      this.criterios.controls.forEach(criterios => {
+          criterios.get('conceptos').value.forEach(concepto => {
+              sumaValoresConcepto += concepto.valorFacturadoConcepto
+          });
+      });
+
+
         if(valorConcepto < 0){
           this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
         }
 
-        if ( valorConcepto > this.getConceptos( index ).controls[ jIndex ].get( 'montoMaximo' ).value ) {
+        if (
+            valorConcepto > this.getConceptos( index ).controls[ jIndex ].get( 'montoMaximo' ).value ||
+            sumaValoresConcepto > this.getConceptos( index ).controls[ jIndex ].get( 'montoMaximo' ).value
+        ) {
             this.openDialog( '', `El valor facturado al concepto no puede ser mayor al <b>Monto pendiente por facturar.</b>` );
             this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
         }
