@@ -1423,9 +1423,9 @@ namespace asivamosffie.services
 
                                     if (positionGestion > -1)
                                     {
-                                        gestionfuentes[positionGestion].SaldoActual = gestionfuentes[positionGestion].SaldoActual + gfa.SaldoActual;
-                                        gestionfuentes[positionGestion].ValorSolicitado = gestionfuentes[positionGestion].ValorSolicitado + gfa.ValorSolicitado;
-                                        gestionfuentes[positionGestion].NuevoSaldo = gestionfuentes[positionGestion].NuevoSaldo + gfa.NuevoSaldo;
+                                        gestionfuentes[positionGestion].SaldoActual = gestionfuentes[positionGestion].SaldoActualGenerado ?? 0 + gfa.SaldoActualGenerado ?? 0;
+                                        gestionfuentes[positionGestion].ValorSolicitado = gestionfuentes[positionGestion].ValorSolicitadoGenerado ?? 0 + gfa.ValorSolicitadoGenerado ?? 0;
+                                        gestionfuentes[positionGestion].NuevoSaldo = gestionfuentes[positionGestion].NuevoSaldoGenerado ?? 0 + gfa.NuevoSaldoGenerado ?? 0;
                                         gestionfuentes[positionGestion].SaldoActualGenerado = gestionfuentes[positionGestion].SaldoActualGenerado + gfa.SaldoActualGenerado;
                                         gestionfuentes[positionGestion].ValorSolicitadoGenerado = gestionfuentes[positionGestion].ValorSolicitadoGenerado + gfa.ValorSolicitadoGenerado;
                                         gestionfuentes[positionGestion].NuevoSaldoGenerado = gestionfuentes[positionGestion].NuevoSaldoGenerado + gfa.NuevoSaldoGenerado;
@@ -1443,7 +1443,12 @@ namespace asivamosffie.services
                 //empiezo con fuentes
 
                 decimal total = 0;
-                foreach (var gestion in gestionfuentes)
+                bool esGenerado = false;
+
+                if (pDisponibilidad.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal || pDisponibilidad.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar)
+                    esGenerado = true;
+
+                    foreach (var gestion in gestionfuentes)
                 {
                     //el saldo actual de la fuente son todas las solicitudes a la fuentes
                     //var consignadoemnfuente = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorConsignacion);
@@ -1465,9 +1470,9 @@ namespace asivamosffie.services
                         .Replace("[DDP_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
                         .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x => x.ValorDocumento)).ToString())
                         .Replace("[DDP_FUENTE]", fuenteNombre)
-                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", gestion?.SaldoActual).ToString())
-                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
-                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", gestion?.NuevoSaldo).ToString());
+                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", esGenerado ? gestion?.SaldoActualGenerado : gestion?.SaldoActual).ToString())
+                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", esGenerado ? gestion.ValorSolicitadoGenerado : gestion.ValorSolicitado).ToString())
+                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", esGenerado ? gestion?.NuevoSaldoGenerado : gestion?.NuevoSaldo).ToString());
 
                     //.Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", saldototal).ToString())
                     //.Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
