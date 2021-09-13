@@ -252,9 +252,10 @@ export class FormCriteriosPagoComponent implements OnInit {
                                         if ( conceptoFind !== undefined ) {
                                           this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, FORMA_PAGO_CODIGO, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterio?.tipoCriterioCodigo, conceptoFind?.codigo, pConceptoPagoCodigo )
                                             .subscribe(
-                                                response => {
+                                                async response => {
                                                   const conceptoDePagoArray = [];
                                                   conceptosDePagoSeleccionados.push( conceptoFind );
+                                                  await this.getvaluesConceptoPagoCodigo(conceptosDePagoSeleccionados)
                                                   conceptoDePagoArray.push(
                                                       this.fb.group(
                                                           {
@@ -282,7 +283,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                                               tipoPago: [ tipoDePago.length > 0 ? tipoDePago[0] : null ],
                                                               conceptosDePago: [ conceptosDePago ],
                                                               conceptoPago: [ conceptosDePagoSeleccionados, Validators.required ],
-                                                              pConceptoPagoCodigo: [ null, Validators.required ],
+                                                              pConceptoPagoCodigo: [ criterio.solicitudPagoFaseCriterioConceptoPago[0].usoCodigo, Validators.required ],
                                                               conceptos: this.fb.array( conceptoDePagoArray ),
                                                               valorFacturado: [ { value: criterio.valorFacturado !== undefined ? criterio.valorFacturado : null, disabled: true }, Validators.required ]
                                                           }
@@ -563,6 +564,7 @@ export class FormCriteriosPagoComponent implements OnInit {
         
         console.log(conceptos)
         const conceptosArray = [ ...conceptos ];
+        console.log(conceptosArray)
         if ( conceptosArray.length > 0 ) {
             if ( this.criterios.controls[ index ].get( 'conceptos' ).dirty === true ) {
 
@@ -586,6 +588,8 @@ export class FormCriteriosPagoComponent implements OnInit {
 
                 conceptosArray.forEach( async concepto => {
                   const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e.codigo ).toPromise();
+                  console.log(montoMaximoPendienteNew);
+                  
                     this.getConceptos( index ).push(
                         this.fb.group(
                             {
@@ -622,7 +626,9 @@ export class FormCriteriosPagoComponent implements OnInit {
                 }
 
                 conceptosArray.forEach( async concepto => {
-                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e.codigo ).toPromise();
+                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e ).toPromise();
+                  console.log(montoMaximoPendienteNew);
+                  
                     this.getConceptos( index ).push(
                         this.fb.group(
                             {

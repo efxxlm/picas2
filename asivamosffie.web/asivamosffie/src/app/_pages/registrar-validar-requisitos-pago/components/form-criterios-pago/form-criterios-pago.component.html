@@ -174,7 +174,7 @@
                         formControlName="pConceptoPagoCodigo"
                         (selectionChange)="getvaluesConcepto( criterio.get('conceptoPago').value, i, criterio.get('tipoCriterioCodigo')?.value, $event.value )"
                       >
-                        <mat-option *ngFor="let uso of usosParaElConceoto" [value]="uso">
+                        <mat-option *ngFor="let uso of usosParaElConceoto" [value]="uso.codigo">
                           {{ uso.nombre }}
                         </mat-option>
                       </mat-select>
