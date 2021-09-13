@@ -556,7 +556,6 @@ export class FormCriteriosPagoComponent implements OnInit {
         this.registrarPagosSvc.getUsoByConceptoPagoCodigo( e[0].codigo )
         .subscribe(response => {
             this.usosParaElConceoto = response;
-            console.log(this.usosParaElConceoto);
         })
     }
 
@@ -586,7 +585,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                 }
 
                 conceptosArray.forEach( async concepto => {
-                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e.pUsoCodigo ).toPromise();
+                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e.codigo ).toPromise();
                     this.getConceptos( index ).push(
                         this.fb.group(
                             {
@@ -623,7 +622,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                 }
 
                 conceptosArray.forEach( async concepto => {
-                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e.pUsoCodigo ).toPromise();
+                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e.codigo ).toPromise();
                     this.getConceptos( index ).push(
                         this.fb.group(
                             {
