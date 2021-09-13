@@ -34,7 +34,7 @@ namespace asivamosffie.services
             _connectionString = configuration.GetConnectionString("asivamosffieDatabase");
         }
 
-        public async Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyectNew(int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId)
+        public async Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyectNew(int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId,bool esGenerar)
         {
             List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = new List<DetailValidarDisponibilidadPresupuesal>();
             List<SesionComiteSolicitud> sesionComiteSolicitud = new List<SesionComiteSolicitud>();
@@ -189,11 +189,14 @@ namespace asivamosffie.services
 
                                 foreach (var fuente in fuentesNew)
                                 {
-                                    if (proyectospp.DisponibilidadPresupuestal.EstadoSolicitudCodigo != "5" && proyectospp.DisponibilidadPresupuestal.EstadoSolicitudCodigo != "8")
+                                    string fuenteNombre = _context.Dominio.Where(x => x.Codigo == ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteRecursosCodigo
+                                                    && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+
+                                    if (!esGenerar)
                                     {
                                         fuentes.Add(new GrillaFuentesFinanciacion
                                         {
-                                            Fuente = ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().NombreFuente,
+                                            Fuente = fuenteNombre,
                                             Estado_de_las_fuentes = string.Empty,
                                             FuenteFinanciacionID = ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteFinanciacionId,
                                             //Saldo_actual_de_la_fuente = SaldoActualFuente,
@@ -207,16 +210,18 @@ namespace asivamosffie.services
                                     }
                                     else
                                     {
+                                        var saldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == ppapor.Aportante.CofinanciacionAportanteId).FirstOrDefault();
+                                        decimal valor = saldoActual != null ? (decimal)saldoActual.SaldoActual : 0;
                                         fuentes.Add(new GrillaFuentesFinanciacion
                                         {
-                                            Fuente = ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().NombreFuente,
+                                            Fuente = fuenteNombre,
                                             Estado_de_las_fuentes = string.Empty,
                                             FuenteFinanciacionID = ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteFinanciacionId,
                                             //Saldo_actual_de_la_fuente = SaldoActualFuente,
-                                            Saldo_actual_de_la_fuente = fuente.SaldoActualGenerado ?? 0,
-                                            Valor_solicitado_de_la_fuente = fuente.ValorSolicitadoGenerado ?? 0,
+                                            Saldo_actual_de_la_fuente = fuente.SaldoActualGenerado ?? valor,
+                                            Valor_solicitado_de_la_fuente = fuente.ValorSolicitadoGenerado ?? fuente.ValorSolicitado,
                                             //Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
-                                            Nuevo_saldo_de_la_fuente = fuente.NuevoSaldoGenerado ?? 0,
+                                            Nuevo_saldo_de_la_fuente = fuente.NuevoSaldoGenerado ?? valor - fuente.ValorSolicitado,
                                             Nuevo_saldo_de_la_fuente_al_guardar = fuente.NuevoSaldo,
                                             Saldo_actual_de_la_fuente_al_guardar = fuente.SaldoActual,
                                         });

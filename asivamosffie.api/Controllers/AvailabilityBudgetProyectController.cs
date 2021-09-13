@@ -31,11 +31,11 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetDetailAvailabilityBudgetProyectNew")]
-        public async Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyectNew([FromQuery] int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId)
+        public async Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyectNew([FromQuery] int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId, bool esGenerar)
         {
             try
             {
-                return await _availabilityBudgetProyectService.GetDetailAvailabilityBudgetProyectNew(disponibilidadPresupuestalId, esNovedad, RegistroNovedadId);
+                return await _availabilityBudgetProyectService.GetDetailAvailabilityBudgetProyectNew(disponibilidadPresupuestalId, esNovedad, RegistroNovedadId, esGenerar);
 
             }
             catch (Exception ex)

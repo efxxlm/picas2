@@ -758,7 +758,9 @@ namespace asivamosffie.services
                     .FirstOrDefault();
 
                 decimal valorDisponible = 0;
-                VSaldosFuenteXaportanteId saldo = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
+                //VSaldosFuenteXaportanteId saldo = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
+                var saldo = _context.GestionFuenteFinanciacion.Where(r => r.Eliminado != true && r.FuenteFinanciacionId == financiacion.FuenteFinanciacionId).OrderByDescending(r => r.GestionFuenteFinanciacionId).FirstOrDefault();
+                
                 valorDisponible = saldo != null ? (decimal)saldo.SaldoActual : 0;
 
                 decimal valorsolicitado = 0;

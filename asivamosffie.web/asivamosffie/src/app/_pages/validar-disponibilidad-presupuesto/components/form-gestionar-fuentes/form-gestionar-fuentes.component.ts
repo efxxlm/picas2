@@ -69,18 +69,18 @@ export class FormGestionarFuentesComponent implements OnInit {
     if (this.esNovedad === true) {
       this.fuenteFinanciacionService.GetListFuentesFinanciacionByNovedadContractualRegistroPresupuestal(this.novedadContractualRegistroPresupuestalId, this.data.elemento.id)
       .subscribe(lista => {
-        this.cargarInformacion( lista );      
+        this.cargarInformacion( lista );
 
       });
     }else{
       this.fuenteFinanciacionService.GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(this.disponibilidadPresupuestalProyectoid, this.data.elemento.id)
       .subscribe(lista => {
-        this.cargarInformacion( lista );      
+        this.cargarInformacion( lista );
 
       });
     }
 
-    
+
   }
 
   cargarInformacion( lista: any[] ){
@@ -103,7 +103,7 @@ export class FormGestionarFuentesComponent implements OnInit {
               let fuent = this.crearFuente();
               //let fuentesel = this.fuentesArray.find(m => m.value == element.fuenteFinanciacionID)
 
-              
+
 
               fuent.get('fuentecampo').setValue(element.fuenteFinanciacionID);
               fuent.get('saldoActual').setValue(element.saldo_actual_de_la_fuente);
@@ -238,15 +238,23 @@ export class FormGestionarFuentesComponent implements OnInit {
     // console.log(this.addressForm.controls.fuentes.value);
     let mensaje = "";
     let valorSolicitado: number = 0;
+    let saldoActual: number = 0;
+
     console.log(this.addressForm.controls.fuentes.value);
 
     this.addressForm.controls.fuentes.value.forEach(fuente => {
-      valorSolicitado = valorSolicitado + fuente.valorSolicitado;  
+      valorSolicitado = valorSolicitado + fuente.valorSolicitado;
+      saldoActual = saldoActual + fuente.saldoActual;
     });
 
-    console.log( valorSolicitado, this.valorAportante )
     if ( valorSolicitado != this.valorAportante ){
       this.openDialog('', '<b>El valor solicitado es diferente al valor del aportante.</b>', false);
+      return false;
+    }
+    console.log( saldoActual )
+
+    if ( saldoActual < valorSolicitado ){
+      this.openDialog('', '<b>El valor de la fuente es insuficiente.</b>', false);
       return false;
     }
 

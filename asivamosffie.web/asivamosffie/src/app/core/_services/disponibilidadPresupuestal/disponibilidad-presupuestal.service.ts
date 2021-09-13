@@ -30,9 +30,9 @@ export class DisponibilidadPresupuestalService {
   {
     return this.http.get<any[]>(`${environment.apiUrl}/AvailabilityBudgetProyect/GetDetailAvailabilityBudgetProyect?disponibilidadPresupuestalId=${id}&esNovedad=${esNovedad}&RegistroNovedadId=${RegistroNovedadId}`);
   }
-  GetDetailAvailabilityBudgetProyectNew(id, esNovedad='false', RegistroNovedadId='0')
+  GetDetailAvailabilityBudgetProyectNew(id, esNovedad='false', RegistroNovedadId='0',  esGenerar='false')
   {
-    return this.http.get<any[]>(`${environment.apiUrl}/AvailabilityBudgetProyect/GetDetailAvailabilityBudgetProyectNew?disponibilidadPresupuestalId=${id}&esNovedad=${esNovedad}&RegistroNovedadId=${RegistroNovedadId}`);
+    return this.http.get<any[]>(`${environment.apiUrl}/AvailabilityBudgetProyect/GetDetailAvailabilityBudgetProyectNew?disponibilidadPresupuestalId=${id}&esNovedad=${esNovedad}&RegistroNovedadId=${RegistroNovedadId}&esGenerar=${esGenerar}`);
   }
 
 

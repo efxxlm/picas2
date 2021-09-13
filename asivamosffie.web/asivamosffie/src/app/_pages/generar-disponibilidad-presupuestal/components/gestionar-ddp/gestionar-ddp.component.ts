@@ -40,7 +40,7 @@ export class GestionarDdpComponent implements OnInit {
     this.esNovedad = this.route.snapshot.paramMap.get('esNovedad');
     this.novedadId = this.route.snapshot.paramMap.get('novedadId');
     if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, this.esNovedad, this.novedadId)
+      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, this.esNovedad, this.novedadId, 'true')
         .subscribe(listas => {
           console.log(listas);
           if (listas.length > 0) {
@@ -53,7 +53,7 @@ export class GestionarDdpComponent implements OnInit {
         });
     }
   }
-  
+
   generarddp() {
     this.disponibilidadServices.CreateDDP(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId)
       .subscribe(listas => {
