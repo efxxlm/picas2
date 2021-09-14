@@ -817,6 +817,12 @@ namespace asivamosffie.services
                         //gestion.SaldoActualGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Saldo_actual_de_la_fuente;
                         //gestion.NuevoSaldoGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Nuevo_saldo_de_la_fuente_al_guardar;
                         //gestion.SaldoActualGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Saldo_actual_de_la_fuente_al_guardar;
+                        var vSaldosFuenteXaportanteId = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId).FirstOrDefault();
+                        decimal saldoActual = vSaldosFuenteXaportanteId.SaldoActual ?? 0;
+                        decimal valorSolicitado = gestion.ValorSolicitado;
+                        gestion.SaldoActualGenerado = saldoActual;
+                        gestion.ValorSolicitadoGenerado = valorSolicitado;
+                        gestion.NuevoSaldoGenerado = saldoActual - valorSolicitado;
 
                         _context.GestionFuenteFinanciacion.Update(gestion);
                     }
@@ -866,16 +872,18 @@ namespace asivamosffie.services
                         gestion.FechaModificacion = DateTime.Now;
                         gestion.UsuarioModificacion = pUsuarioModificacion.ToUpper();
 
-
                         foreach (var DetailValidarDisponibilidadPresupuesal in ListDetailValidarDisponibilidadPresupuesal)
                         {
                             foreach (var Aportantes in DetailValidarDisponibilidadPresupuesal.Aportantes)
                             {
                                 if (Aportantes.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId)
                                 {
-                                    gestion.SaldoActualGenerado = Aportantes.FuentesFinanciacion.Where(r => r.FuenteFinanciacionID == gestion.FuenteFinanciacionId).Select(r => r.Saldo_actual_de_la_fuente).FirstOrDefault();
-                                    gestion.ValorSolicitadoGenerado = Aportantes.FuentesFinanciacion.Where(r => r.FuenteFinanciacionID == gestion.FuenteFinanciacionId).Select(r => r.Valor_solicitado_de_la_fuente).FirstOrDefault();
-                                    gestion.NuevoSaldoGenerado = Aportantes.FuentesFinanciacion.Where(r => r.FuenteFinanciacionID == gestion.FuenteFinanciacionId).Select(r => r.Nuevo_saldo_de_la_fuente).FirstOrDefault();
+                                    var vSaldosFuenteXaportanteId = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId).FirstOrDefault();
+                                    decimal saldoActual = vSaldosFuenteXaportanteId.SaldoActual ?? 0;
+                                    decimal valorSolicitado = Aportantes.FuentesFinanciacion.Where(r => r.FuenteFinanciacionID == gestion.FuenteFinanciacionId).Select(r => r.Valor_solicitado_de_la_fuente).FirstOrDefault();
+                                    gestion.SaldoActualGenerado = saldoActual;
+                                    gestion.ValorSolicitadoGenerado = valorSolicitado;
+                                    gestion.NuevoSaldoGenerado = saldoActual - valorSolicitado;
 
                                     _context.GestionFuenteFinanciacion.Update(gestion);
                                 }
@@ -1443,8 +1451,13 @@ namespace asivamosffie.services
                 //empiezo con fuentes
 
                 decimal total = 0;
+                bool cumpleDdp = false;
+                if (pDisponibilidad.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal || pDisponibilidad.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar)
+                {
+                    cumpleDdp = true;
+                }
 
-                    foreach (var gestion in gestionfuentes)
+                foreach (var gestion in gestionfuentes)
                 {
                     //el saldo actual de la fuente son todas las solicitudes a la fuentes
                     //var consignadoemnfuente = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorConsignacion);
@@ -1466,26 +1479,27 @@ namespace asivamosffie.services
                         .Replace("[DDP_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
                         .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x => x.ValorDocumento)).ToString())
                         .Replace("[DDP_FUENTE]", fuenteNombre)
-                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar ? gestion?.SaldoActualGenerado : gestion?.SaldoActual).ToString())
-                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar ? gestion.ValorSolicitadoGenerado : gestion.ValorSolicitado).ToString())
-                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar ? gestion?.NuevoSaldoGenerado : gestion?.NuevoSaldo).ToString());
+                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar || cumpleDdp ? gestion?.SaldoActualGenerado : gestion?.SaldoActual).ToString())
+                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar || cumpleDdp ? gestion.ValorSolicitadoGenerado : gestion.ValorSolicitado).ToString())
+                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar || cumpleDdp ? gestion?.NuevoSaldoGenerado : gestion?.NuevoSaldo).ToString());
 
                     //.Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", saldototal).ToString())
                     //.Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
                     //.Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", (saldototal - gestion.ValorSolicitado)).ToString());
                     tablaproyecto += tr;
 
+                    decimal valorSolicitadoApo = !esValidar || cumpleDdp ? (decimal)gestion?.ValorSolicitadoGenerado : (decimal)gestion.ValorSolicitado;
                     var tr2 = plantilla_fuentes
                         .Replace("[NOMBRE_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
                         .Replace("[FUENTE_APORTANTE]", fuenteNombre)
-                        .Replace("[VALOR_NUMERO]", "$ " + String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
+                        .Replace("[VALOR_NUMERO]", "$ " + String.Format("{0:n0}", valorSolicitadoApo).ToString())
                         .Replace("[VALOR_LETRAS]",
                         CultureInfo.CurrentCulture.TextInfo
                                                         .ToTitleCase(Conversores
-                                                        .NumeroALetras(gestion.ValorSolicitado)
+                                                        .NumeroALetras(valorSolicitadoApo)
                                                         .ToLower()));
                     tablafuentes += tr2;
-                    total += gestion.ValorSolicitado;
+                    total += valorSolicitadoApo;
                 }
 
                 if (pDisponibilidad.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Tradicional)

@@ -758,8 +758,7 @@ namespace asivamosffie.services
                     .FirstOrDefault();
 
                 decimal valorDisponible = 0;
-                //VSaldosFuenteXaportanteId saldo = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
-                var saldo = _context.GestionFuenteFinanciacion.Where(r => r.Eliminado != true && r.FuenteFinanciacionId == financiacion.FuenteFinanciacionId).OrderByDescending(r => r.GestionFuenteFinanciacionId).FirstOrDefault();
+                VSaldosFuenteXaportanteIdValidar saldo = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
                 
                 valorDisponible = saldo != null ? (decimal)saldo.SaldoActual : 0;
 
@@ -928,7 +927,7 @@ namespace asivamosffie.services
             foreach (var financiacion in financiaciones)
             {
                 decimal valorDisponible = 0;
-                VSaldosFuenteXaportanteId saldo = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
+                VSaldosFuenteXaportanteIdValidar saldo = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
                 valorDisponible = saldo != null ? (decimal) saldo.SaldoActual : 0;
 
                 var valorsolicitado = _context.GestionFuenteFinanciacion

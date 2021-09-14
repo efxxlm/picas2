@@ -45,6 +45,7 @@ export class GestionarDdpComponent implements OnInit {
           console.log(listas);
           if (listas.length > 0) {
             this.detailavailabilityBudget = listas[0];
+            this.validarBotonGenerarDDp(this.detailavailabilityBudget?.proyectos);
           }
           else {
             this.openDialog('', 'Error al intentar recuperar los datos de la solicitud, por favor intenta nuevamente.');
@@ -52,6 +53,31 @@ export class GestionarDdpComponent implements OnInit {
 
         });
     }
+  }
+
+  validarBotonGenerarDDp(proyectos: any[]){
+    let cumpleCondiciones = true;
+    if(proyectos != null){
+      if(proyectos.length > 0){
+        proyectos.forEach(proyecto => {
+          proyecto.aportantes.forEach(apo => {
+            apo.fuentesFinanciacion.forEach(fuente => {
+              if(fuente.saldo_actual_de_la_fuente < fuente.valor_solicitado_de_la_fuente){
+                cumpleCondiciones = false;
+                return cumpleCondiciones;
+              }
+            });
+          });
+        });
+      }else{
+        cumpleCondiciones = false;
+        return cumpleCondiciones;
+      }
+    }else{
+      cumpleCondiciones = false;
+      return cumpleCondiciones;
+    }
+    return cumpleCondiciones;
   }
 
   generarddp() {
