@@ -27,7 +27,7 @@ export class FuentesUsosGbftrecComponent implements OnInit {
   }
   
   getTablaUsoFuenteAportanteXContratoId() {
-    this.financialBalanceService.getTablaUsoFuenteAportanteXContratoId(this.contratoId, this.pProyectoId).subscribe(data => {
+    this.financialBalanceService.getTablaUsoFuenteAportanteXContratoIdXProyectoId(this.contratoId, this.pProyectoId).subscribe(data => {
       this.data = data.usos;
       if (this.data) {
         this.data.forEach( registro => {
