@@ -135,7 +135,7 @@ namespace asivamosffie.api.Controllers
         
         [HttpGet]
         [Route("GetTablaUsoFuenteAportanteXContratoIdXProyectoId")]
-        public async Task<TablaUsoFuenteAportante> GetTablaUsoFuenteAportanteXContratoId([FromQuery] int pContratoId, int pProyectoId)
+        public async Task<TablaUsoFuenteAportante> GetTablaUsoFuenteAportanteXContratoIdXProyectoId([FromQuery] int pContratoId, int pProyectoId)
         {
             try
             {

@@ -1129,7 +1129,7 @@ namespace asivamosffie.services
             return Tabla;
         }
 
-        public async Task<TablaUsoFuenteAportante> GetTablaUsoFuenteAportanteXContratoId(int pContratoId ,int pProyectoId)
+        public async Task<TablaUsoFuenteAportante> GetTablaUsoFuenteAportanteXContratoId(int pContratoId, int pProyectoId)
         {
             SolicitudPago solicitudPago = _context.SolicitudPago.Where(r => r.ContratoId == pContratoId)
                 .Include(r => r.Contrato)
@@ -1178,9 +1178,11 @@ namespace asivamosffie.services
                                FuenteFinanciacionId = x.FuenteFinanciacionId
                            }).ToList()
             };
-            List<VAportanteFuenteUso> ListVAportanteFuenteUso = _context.VAportanteFuenteUso
-                  .Where(f => f.ContratoId == solicitudPago.ContratoId)
-                  .ToList();
+            List<VAportanteFuenteUsoProyecto> ListVAportanteFuenteUso =
+                                                                        _context.VAportanteFuenteUsoProyecto
+                                                                              .Where(f => f.ContratoId == solicitudPago.ContratoId
+                                                                                       && f.ProyectoId == pProyectoId)
+                                                                              .ToList();
 
             List<Usos> ListUsos = new List<Usos>();
 
@@ -1198,21 +1200,22 @@ namespace asivamosffie.services
                                                         .ToList();
 
                     usos.Fuentes = List2
-                            .ConvertAll(x => new Fuentes
-                            {
-                                TipoUsoCodigo = usos.TipoUsoCodigo,
-                                FuenteFinanciacionId = x.FuenteFinanciacionId,
-                                NombreFuente = x.FuenteFinanciacion,
-                                NombreUso = usos.NombreUso
-                            });
+                                        .ConvertAll(x => new Fuentes
+                                        {
+                                            TipoUsoCodigo = usos.TipoUsoCodigo,
+                                            FuenteFinanciacionId = x.FuenteFinanciacionId,
+                                            NombreFuente = x.FuenteFinanciacion,
+                                            NombreUso = usos.NombreUso
+                                        });
 
 
                     foreach (var Fuentes in usos.Fuentes)
                     {
 
-                        List<VAportanteFuenteUso> ListVAportanteFuenteUso2 =
-                            ListVAportanteFuenteUso
-                            .Where(r => r.FuenteFinanciacionId == Fuentes.FuenteFinanciacionId).ToList();
+                        List<VAportanteFuenteUsoProyecto> ListVAportanteFuenteUso2 =
+                                                                ListVAportanteFuenteUso
+                                                                .Where(r => r.FuenteFinanciacionId == Fuentes.FuenteFinanciacionId)
+                                                                .ToList();
 
                         foreach (var item in ListVAportanteFuenteUso2)
                         {
@@ -1223,7 +1226,7 @@ namespace asivamosffie.services
                                     Fuentes.Aportante = new List<Aportante>();
 
 
-                                List<VAportanteFuenteUso> ListVAportanteFuenteUso3 =
+                                List<VAportanteFuenteUsoProyecto> ListVAportanteFuenteUso3 =
                                     ListVAportanteFuenteUso.Where(r => r.CofinanciacionAportanteId == item.CofinanciacionAportanteId).ToList();
 
                                 Fuentes.Aportante.Add(new Aportante
@@ -1235,11 +1238,15 @@ namespace asivamosffie.services
                                 foreach (var Aportante in Fuentes.Aportante)
                                 {
                                     decimal ValorUso = ListVAportanteFuenteUso3
-                                        .Where(r => r.Nombre == usos.NombreUso
-                                        && r.CofinanciacionAportanteId == Aportante.AportanteId
-                                        ).Select(s => s.ValorUso).FirstOrDefault() ?? 0;
+                                                                            .Where(r => r.Nombre == usos.NombreUso
+                                                                                     && r.CofinanciacionAportanteId == Aportante.AportanteId)
+                                                                            .Select(s => s.ValorUso)
+                                                                            .FirstOrDefault() ?? 0;
 
-                                    decimal Descuento = _context.VOrdenGiroPagosXusoAportante.Where(v => v.AportanteId == Aportante.AportanteId && v.TipoUsoCodigo == usos.TipoUsoCodigo).Sum(v => v.ValorDescuento) ?? 0;
+                                    decimal Descuento = _context.VOrdenGiroPagosXusoAportante
+                                                                                            .Where(v => v.AportanteId == Aportante.AportanteId
+                                                                                                     && v.TipoUsoCodigo == usos.TipoUsoCodigo)
+                                                                                            .Sum(v => v.ValorDescuento) ?? 0;
 
                                     Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
 

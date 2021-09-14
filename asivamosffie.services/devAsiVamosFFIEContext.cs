@@ -238,6 +238,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VAjusteProgramacion> VAjusteProgramacion { get; set; }
         public virtual DbSet<VAportanteFuente> VAportanteFuente { get; set; }
         public virtual DbSet<VAportanteFuenteUso> VAportanteFuenteUso { get; set; }
+        public virtual DbSet<VAportanteFuenteUsoProyecto> VAportanteFuenteUsoProyecto { get; set; }
         public virtual DbSet<VAportantesXcriterio> VAportantesXcriterio { get; set; }
         public virtual DbSet<VComponenteUsoNovedad> VComponenteUsoNovedad { get; set; }
         public virtual DbSet<VCompromisoSeguimiento> VCompromisoSeguimiento { get; set; }
@@ -13714,6 +13715,25 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_Aportante_Fuente_Uso");
+
+                entity.Property(e => e.FuenteRecursosCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nombre).HasMaxLength(250);
+
+                entity.Property(e => e.TipoUsoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(38, 2)");
+            });
+
+            modelBuilder.Entity<VAportanteFuenteUsoProyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_Aportante_Fuente_Uso_Proyecto");
 
                 entity.Property(e => e.FuenteRecursosCodigo)
                     .HasMaxLength(100)
