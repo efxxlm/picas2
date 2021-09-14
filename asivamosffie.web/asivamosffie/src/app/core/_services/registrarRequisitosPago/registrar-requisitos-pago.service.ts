@@ -42,7 +42,7 @@ export class RegistrarRequisitosPagoService {
   }
 
   getMontoMaximoMontoPendiente( SolicitudPagoId: number, strFormaPago: string, EsPreConstruccion: string, contratacionProyectoId: number, pCriterioCodigo: string, pConceptoCodigo: string ) {
-    return this.http.get<{ montoMaximo: number, valorPendientePorPagar: number }>( `${ this.apiUrl }/GetMontoMaximoMontoPendiente?SolicitudPagoId=${ SolicitudPagoId }&strFormaPago=${ strFormaPago }&EsPreConstruccion=${ EsPreConstruccion }&pContratacionProyectoId=${ contratacionProyectoId }&pCriterioCodigo=${ pCriterioCodigo }&pConceptoCodigo=${ pConceptoCodigo }&pUsoCodigo=${pUsoCodigo}` );
+    return this.http.get<{ montoMaximo: number, valorPendientePorPagar: number }>( `${ this.apiUrl }/GetMontoMaximoMontoPendiente?SolicitudPagoId=${ SolicitudPagoId }&strFormaPago=${ strFormaPago }&EsPreConstruccion=${ EsPreConstruccion }&pContratacionProyectoId=${ contratacionProyectoId }&pCriterioCodigo=${ pCriterioCodigo }&pConceptoCodigo=${ pConceptoCodigo }` );
   }
 
   getUsoByConceptoPagoCodigo(  pConceptoPagoCodigo: string ) {
