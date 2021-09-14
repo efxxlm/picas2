@@ -13,6 +13,7 @@ export class RecursosCompromAccordGbftrecComponent implements OnInit {
   @Input() contratacionProyecto: any[] = [];
   @Input() contratoId: any[] = [];
   @Input() tablaRecursosComprometidos: any;
+  @Input() proyectoId: number;
   dataTable: any[] = [];
   aportante: any[] = [];
   valorAportante: any[] = [];

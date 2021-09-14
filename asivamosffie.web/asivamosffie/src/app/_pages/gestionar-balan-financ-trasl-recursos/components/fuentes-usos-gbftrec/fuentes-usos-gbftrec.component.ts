@@ -11,6 +11,7 @@ import { FinancialBalanceService } from 'src/app/core/_services/financialBalance
 export class FuentesUsosGbftrecComponent implements OnInit {
 
   @Input() contratoId: any[] = [];
+  @Input() pProyectoId: number;
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   displayedColumns: string[] = ['uso', 'fuente', 'aportante', 'valorUso', 'saldoActualUso'];
@@ -26,7 +27,7 @@ export class FuentesUsosGbftrecComponent implements OnInit {
   }
   
   getTablaUsoFuenteAportanteXContratoId() {
-    this.financialBalanceService.getTablaUsoFuenteAportanteXContratoId(this.contratoId).subscribe(data => {
+    this.financialBalanceService.getTablaUsoFuenteAportanteXContratoId(this.contratoId, this.pProyectoId).subscribe(data => {
       this.data = data.usos;
       if (this.data) {
         this.data.forEach( registro => {
