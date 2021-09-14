@@ -97,6 +97,10 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public bool? EsMultiProyecto { get; set; }
+
+
+        [NotMapped]
+        public dynamic TablaRecursosComprometidos { get; set; }
     }
 
 

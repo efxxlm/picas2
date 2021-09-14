@@ -167,8 +167,8 @@ namespace asivamosffie.services
                 CreateEditBalanceFinancieroTrasladoValor(BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor, pAuthor);
 
 
-                BalanceFinancieroTraslado.OrdenGiro.ValorNetoGiroTraslado = 
-           //     await CreateEditOrdenGiroTraslado(BalanceFinancieroTraslado.OrdenGiro);
+                BalanceFinancieroTraslado.OrdenGiro.ValorNetoGiroTraslado =
+                //     await CreateEditOrdenGiroTraslado(BalanceFinancieroTraslado.OrdenGiro);
 
                 _context.Set<OrdenGiro>()
                              .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
@@ -1088,6 +1088,9 @@ namespace asivamosffie.services
 
                     contrato.ValorPagadoContratista = contrato.SolicitudPago.Sum(r => r.ValorFacturado);
 
+                    contrato.TablaRecursosComprometidos = GetTablaRecursosComprometidos(contrato.ContratacionId, pProyectoId);
+
+
                     ListContratos.Add(new
                     {
                         tablaOrdenGiroValorTotal = GetTablaOrdenGiroValorTotal(contrato.SolicitudPago),
@@ -1104,6 +1107,28 @@ namespace asivamosffie.services
             }
         }
 
+        private dynamic GetTablaRecursosComprometidos(int pContratacionId, int pProyectoId)
+        {
+            List<VDrpXcontratacionXproyectoXaportante> ListVDrpXcontratacionXproyectoXaportante =
+                                                                                                _context.VDrpXcontratacionXproyectoXaportante
+                                                                                                            .Where(r => r.ContratacionId == pContratacionId && r.ProyectoId == pProyectoId)
+                                                                                                            .ToList();
+
+            List<dynamic> Tabla = new List<dynamic>();
+
+            foreach (var item in ListVDrpXcontratacionXproyectoXaportante)
+            {
+                Tabla.Add(new
+                {
+                    Aportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(item.AportanteId)),
+                    ValorAportante = item.ValorAporte,
+                    ValorTotalAportantes = ListVDrpXcontratacionXproyectoXaportante.Sum(r => r.ValorAporte)
+                });
+            }
+
+            return Tabla;
+        }
+
         public async Task<TablaUsoFuenteAportante> GetTablaUsoFuenteAportanteXContratoId(int pContratoId)
         {
             SolicitudPago solicitudPago = _context.SolicitudPago.Where(r => r.ContratoId == pContratoId)
@@ -1112,6 +1137,7 @@ namespace asivamosffie.services
 
             if (solicitudPago == null)
                 return new TablaUsoFuenteAportante();
+
             solicitudPago.OrdenGiro = await _context.OrdenGiro
                     .Where(o => o.OrdenGiroId == solicitudPago.OrdenGiroId)
                         .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)

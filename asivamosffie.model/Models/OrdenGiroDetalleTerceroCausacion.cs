@@ -26,8 +26,8 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoOrigen { get; set; }
         public bool? EsPreconstruccion { get; set; }
         public int? ContratacionProyectoId { get; set; }
-        public decimal? ValorFacturadoConcepto { get; set; }
         public string ConceptoCodigo { get; set; }
+        public decimal? ValorFacturadoConcepto { get; set; }
 
         public virtual OrdenGiroDetalle OrdenGiroDetalle { get; set; }
         public virtual ICollection<OrdenGiroDetalleTerceroCausacionAportante> OrdenGiroDetalleTerceroCausacionAportante { get; set; }
