@@ -243,17 +243,17 @@ namespace asivamosffie.services
         }
 
         private dynamic GetInfoValorValorXProyectoXFaseXAportanteXConcepto(int contratacionId)
-        { 
+        {
             return _context.VDrpXcontratacionXproyectoXaportanteXfaseXcriterioXconceptoXusos.Where(r => r.ContratacionId == contratacionId)
-                .Select(r => new  
+                .Select(r => new
                 {
                     r.ProyectoId,
                     r.EsPreConstruccion,
                     r.AportanteId,
                     r.ConceptoCodigo,
                     r.ConceptoNombre,
-                    r.Saldo 
-                }); 
+                    r.Saldo
+                });
         }
 
         private dynamic GetTablaInformacionFuenteRecursos(SolicitudPago solicitudPago)
@@ -550,7 +550,7 @@ namespace asivamosffie.services
                                                           && r.Pagado == false
                                                          )
                                                 .Sum(r => r.SaldoUso) ?? 0;
-                         
+
                         decimal Descuentos = DescuentosOrdenGiro
                                                             .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                              && r.UsoCodigo == TipoUso.TipoUsoCodigo
@@ -1052,7 +1052,7 @@ namespace asivamosffie.services
 
             if (pOrdenGiroDetalle?.OrdenGiroSoporte?.Count() > 0)
                 CreateEditOrdenGiroSoporte(pOrdenGiroDetalle.OrdenGiroSoporte.FirstOrDefault(), pUsuarioCreacion);
-             
+
             if (pOrdenGiroDetalle?.OrdenGiroDetalleDescuentoTecnica.Count() > 0)
                 CreateEditOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.ToList(), pUsuarioCreacion);
 
@@ -1459,6 +1459,24 @@ namespace asivamosffie.services
                             UsuarioModificacion = pAuthor,
                             FechaModificacion = DateTime.Now
                         });
+
+
+                OrdenGiroDetalleTerceroCausacionAportante ordenGiroDetalleTerceroCausacionAportante =
+                                                                                              _context.OrdenGiroDetalleTerceroCausacionAportante
+                                                                                                                                     .Where(r => r.OrdenGiroDetalleTerceroCausacionAportanteId == pOrdenGiroDetalleTerceroCausacionAportanteId)
+                                                                                                                                     .AsNoTracking()
+                                                                                                                                     .FirstOrDefault();
+
+
+                List<OrdenGiroDetalleTerceroCausacionDescuento> ListOrdenGiroDetalleTerceroCausacionDescuento =
+                                                                  _context.OrdenGiroDetalleTerceroCausacionDescuento
+                                                                                                        .Where(o => o.AportanteId == ordenGiroDetalleTerceroCausacionAportante.AportanteId
+                                                                                                                 && o.OrdenGiroDetalleTerceroCausacionId == ordenGiroDetalleTerceroCausacionAportante.OrdenGiroDetalleTerceroCausacionId)
+                                                                                                        .ToList();
+
+                ///Eliminar Descuentos del aportante eliminado
+                await DeleteOrdenGiroDetalleTerceroCausacionDescuento(ListOrdenGiroDetalleTerceroCausacionDescuento.Select(r => r.OrdenGiroDetalleTerceroCausacionDescuentoId).ToList(), pAuthor);
+
 
                 return new Respuesta
                 {
