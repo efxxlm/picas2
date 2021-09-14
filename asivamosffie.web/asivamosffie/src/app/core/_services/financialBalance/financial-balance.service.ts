@@ -61,7 +61,7 @@ export class FinancialBalanceService {
     }
 
     getTablaUsoFuenteAportanteXContratoIdXProyectoId(contratoId: any, pProyectoId: number) {
-      return this.http.get<any>( `${ this.apiUrl }/GetTablaUsoFuenteAportanteXContratoId?pContratoId=${ contratoId }&pProyectoId=${ pProyectoId }` );
+      return this.http.get<any>( `${ this.apiUrl }/getTablaUsoFuenteAportanteXContratoIdXProyectoId?pContratoId=${ contratoId }&pProyectoId=${ pProyectoId }` );
     }
 
     getEjecucionFinancieraXProyectoId(pProyectoId: any) {
