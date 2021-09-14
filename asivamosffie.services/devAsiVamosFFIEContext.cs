@@ -14215,7 +14215,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorAporte).HasColumnType("numeric(25, 9)");
+                entity.Property(e => e.ValorAporte).HasColumnType("numeric(38, 9)");
             });
 
             modelBuilder.Entity<VDrpXcontratacionXproyectoXaportanteXfaseXcriterioXconceptoXusos>(entity =>
@@ -14459,7 +14459,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<VGestionarGarantiasPolizas>(entity =>
