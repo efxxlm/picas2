@@ -131,6 +131,20 @@ namespace asivamosffie.api.Controllers
             {
                 return new TablaUsoFuenteAportante();
             }
+        }    
+        
+        [HttpGet]
+        [Route("GetTablaUsoFuenteAportanteXContratoId")]
+        public async Task<TablaUsoFuenteAportante> GetTablaUsoFuenteAportanteXContratoId([FromQuery] int pContratoId, int pProyectoId)
+        {
+            try
+            {
+                return await _finalBalanceService.GetTablaUsoFuenteAportanteXContratoId(pContratoId , pProyectoId);
+            }
+            catch (Exception e)
+            {
+                return new TablaUsoFuenteAportante();
+            }
         }
 
         [HttpGet]

@@ -1129,6 +1129,138 @@ namespace asivamosffie.services
             return Tabla;
         }
 
+        public async Task<TablaUsoFuenteAportante> GetTablaUsoFuenteAportanteXContratoId(int pContratoId ,int pProyectoId)
+        {
+            SolicitudPago solicitudPago = _context.SolicitudPago.Where(r => r.ContratoId == pContratoId)
+                .Include(r => r.Contrato)
+                .FirstOrDefault();
+
+            if (solicitudPago == null)
+                return new TablaUsoFuenteAportante();
+
+            solicitudPago.OrdenGiro = await _context.OrdenGiro
+                    .Where(o => o.OrdenGiroId == solicitudPago.OrdenGiroId)
+                        .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroChequeGerencia)
+                        .Include(t => t.OrdenGiroTercero).ThenInclude(o => o.OrdenGiroTerceroTransferenciaElectronica)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleEstrategiaPago)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionDescuento)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r => r.FuenteFinanciacion).ThenInclude(r => r.CuentaBancaria)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleTerceroCausacion).ThenInclude(r => r.OrdenGiroDetalleTerceroCausacionAportante).ThenInclude(r => r.CuentaBancaria)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroSoporte)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleObservacion)
+                        .Include(d => d.OrdenGiroDetalle).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnica).ThenInclude(e => e.OrdenGiroDetalleDescuentoTecnicaAportante)
+                        .Include(d => d.SolicitudPago)
+                    .AsNoTracking().FirstOrDefaultAsync();
+
+            List<VFuentesUsoXcontratoIdXproyecto> ListaCompleta =
+                                               _context.VFuentesUsoXcontratoIdXproyecto
+                                               .Where(c => c.ContratoId == solicitudPago.ContratoId && c.ProyectoId == pProyectoId)
+                                               .ToList();
+
+            List<VFuentesUsoXcontratoIdXproyecto> ListVFuentesUsoXcontratoId = new List<VFuentesUsoXcontratoIdXproyecto>();
+
+            foreach (var item in ListaCompleta)
+            {
+                if (!ListVFuentesUsoXcontratoId.Any(r => r.TipoUso == item.TipoUso && r.FuenteFinanciacion == item.FuenteFinanciacion))
+                {
+                    ListVFuentesUsoXcontratoId.Add(item);
+                }
+            }
+
+            TablaUsoFuenteAportante tabla = new TablaUsoFuenteAportante
+            {
+                Usos = ListVFuentesUsoXcontratoId
+                           .ConvertAll(x => new Usos
+                           {
+                               NombreUso = x.NombreUso,
+                               TipoUsoCodigo = x.TipoUso,
+                               FuenteFinanciacion = x.FuenteFinanciacion,
+                               FuenteFinanciacionId = x.FuenteFinanciacionId
+                           }).ToList()
+            };
+            List<VAportanteFuenteUso> ListVAportanteFuenteUso = _context.VAportanteFuenteUso
+                  .Where(f => f.ContratoId == solicitudPago.ContratoId)
+                  .ToList();
+
+            List<Usos> ListUsos = new List<Usos>();
+
+            foreach (var usos in tabla.Usos)
+            {
+                if (!ListUsos.Any(r => r.TipoUsoCodigo == usos.TipoUsoCodigo && r.FuenteFinanciacion == usos.FuenteFinanciacion))
+                {
+                    ListUsos.Add(usos);
+
+                    List<VFuentesUsoXcontratoIdXproyecto> List2 =
+                                                        ListaCompleta
+                                                        .Where(r => r.NombreUso == usos.NombreUso
+                                                        && r.FuenteFinanciacion == usos.FuenteFinanciacion
+                                                        )
+                                                        .ToList();
+
+                    usos.Fuentes = List2
+                            .ConvertAll(x => new Fuentes
+                            {
+                                TipoUsoCodigo = usos.TipoUsoCodigo,
+                                FuenteFinanciacionId = x.FuenteFinanciacionId,
+                                NombreFuente = x.FuenteFinanciacion,
+                                NombreUso = usos.NombreUso
+                            });
+
+
+                    foreach (var Fuentes in usos.Fuentes)
+                    {
+
+                        List<VAportanteFuenteUso> ListVAportanteFuenteUso2 =
+                            ListVAportanteFuenteUso
+                            .Where(r => r.FuenteFinanciacionId == Fuentes.FuenteFinanciacionId).ToList();
+
+                        foreach (var item in ListVAportanteFuenteUso2)
+                        {
+                            if (Fuentes.Aportante == null || !Fuentes.Aportante.Any(r => r.AportanteId == item.CofinanciacionAportanteId))
+                            {
+
+                                if (Fuentes.Aportante == null)
+                                    Fuentes.Aportante = new List<Aportante>();
+
+
+                                List<VAportanteFuenteUso> ListVAportanteFuenteUso3 =
+                                    ListVAportanteFuenteUso.Where(r => r.CofinanciacionAportanteId == item.CofinanciacionAportanteId).ToList();
+
+                                Fuentes.Aportante.Add(new Aportante
+                                {
+                                    FuenteFinanciacionId = Fuentes.FuenteFinanciacionId,
+                                    AportanteId = item.CofinanciacionAportanteId
+
+                                });
+                                foreach (var Aportante in Fuentes.Aportante)
+                                {
+                                    decimal ValorUso = ListVAportanteFuenteUso3
+                                        .Where(r => r.Nombre == usos.NombreUso
+                                        && r.CofinanciacionAportanteId == Aportante.AportanteId
+                                        ).Select(s => s.ValorUso).FirstOrDefault() ?? 0;
+
+                                    decimal Descuento = _context.VOrdenGiroPagosXusoAportante.Where(v => v.AportanteId == Aportante.AportanteId && v.TipoUsoCodigo == usos.TipoUsoCodigo).Sum(v => v.ValorDescuento) ?? 0;
+
+                                    Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
+
+                                    if (Aportante.ValorUso == null)
+                                        Aportante.ValorUso = new List<ValorUso>();
+
+                                    Aportante.ValorUso.Add(new ValorUso
+                                    {
+                                        AportanteId = Aportante.AportanteId,
+                                        Valor = String.Format("{0:n0}", ValorUso),
+                                        ValorActual = String.Format("{0:n0}", (ValorUso - Descuento))
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return tabla;
+        }
+
         public async Task<TablaUsoFuenteAportante> GetTablaUsoFuenteAportanteXContratoId(int pContratoId)
         {
             SolicitudPago solicitudPago = _context.SolicitudPago.Where(r => r.ContratoId == pContratoId)
@@ -1161,8 +1293,7 @@ namespace asivamosffie.services
 
             foreach (var item in ListaCompleta)
             {
-                if (!ListVFuentesUsoXcontratoId
-               .Any(r => r.TipoUso == item.TipoUso && r.FuenteFinanciacion == item.FuenteFinanciacion))
+                if (!ListVFuentesUsoXcontratoId.Any(r => r.TipoUso == item.TipoUso && r.FuenteFinanciacion == item.FuenteFinanciacion))
                 {
                     ListVFuentesUsoXcontratoId.Add(item);
                 }

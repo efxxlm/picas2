@@ -270,6 +270,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VEjecucionFinancieraXproyecto> VEjecucionFinancieraXproyecto { get; set; }
         public virtual DbSet<VEjecucionPresupuestalXproyecto> VEjecucionPresupuestalXproyecto { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoId> VFuentesUsoXcontratoId { get; set; }
+        public virtual DbSet<VFuentesUsoXcontratoIdXproyecto> VFuentesUsoXcontratoIdXproyecto { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
         public virtual DbSet<VListCompromisosComiteTecnico> VListCompromisosComiteTecnico { get; set; }
         public virtual DbSet<VListCompromisosTemas> VListCompromisosTemas { get; set; }
@@ -14442,6 +14443,23 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoUso)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VFuentesUsoXcontratoIdXproyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FuentesUsoXContratoIdXProyecto");
+
+                entity.Property(e => e.FuenteFinanciacion).HasMaxLength(250);
+
+                entity.Property(e => e.NombreUso).HasMaxLength(250);
+
+                entity.Property(e => e.TipoUso)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VGestionarGarantiasPolizas>(entity =>
