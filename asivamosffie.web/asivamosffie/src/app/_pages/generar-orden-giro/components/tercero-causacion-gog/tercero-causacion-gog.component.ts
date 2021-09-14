@@ -795,11 +795,11 @@ export class TerceroCausacionGogComponent implements OnInit {
                                     )
                             } else {
                                 this.getAportantes( index, jIndex ).removeAt( kIndex );
-                                this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                                this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>', true );
                             }
                         } else {
                             this.getAportantes( index, jIndex ).removeAt( kIndex );
-                            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>', true );
                         }
                     }
                 }
@@ -937,11 +937,16 @@ export class TerceroCausacionGogComponent implements OnInit {
         )
     }
 
-    openDialog(modalTitle: string, modalText: string) {
+    openDialog(modalTitle: string, modalText: string, refrescar: boolean = false) {
         const dialogRef = this.dialog.open( ModalDialogComponent, {
           width: '28em',
           data: { modalTitle, modalText }
         });
+        if (refrescar) {
+          dialogRef.afterClosed().subscribe(result => {
+            location.reload();
+          });
+        }
     }
 
     openDialogTrueFalse(modalTitle: string, modalText: string) {
