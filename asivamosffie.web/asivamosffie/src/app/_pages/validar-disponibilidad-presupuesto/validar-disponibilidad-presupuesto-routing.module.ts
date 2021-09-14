@@ -24,6 +24,10 @@ const routes: Routes = [
     component: ConValidacionPresupuestalComponent
   },
   {
+    path: 'conDisponibilidadCancelada/:id/:esNovedad/:novedadId',
+    component: ConValidacionPresupuestalComponent
+  },
+  {
     path: 'conDisponibilidadPresupuestal/:id',
     component: ConDisponibilidadComponent
   },

@@ -42,7 +42,7 @@ namespace asivamosffie.services
 
             if (esNovedad == true)
             {
-                ListDetailValidarDisponibilidadPresupuesal = await GetDetailAvailabilityBudgetProyectNovelty(RegistroNovedadId);
+                ListDetailValidarDisponibilidadPresupuesal = await GetDetailAvailabilityBudgetProyectNovelty(RegistroNovedadId, esGenerar);
             }
             else
             {
@@ -514,7 +514,7 @@ namespace asivamosffie.services
                     {
                         plazoContratacion = _context.PlazoContratacion.Find(contratacionDP.PlazoContratacionId);
                     }
-
+                    int existeNovedad = _context.NovedadContractualRegistroPresupuestal.Where(r => r.Eliminado != true && r.DisponibilidadPresupuestalId == ListDP.DisponibilidadPresupuestalId).Count();
                     DetailValidarDisponibilidadPresupuesal detailDisponibilidadPresupuesal = new DetailValidarDisponibilidadPresupuesal
                     {
                         //TODO:Traer estos campos { Tipo de modificacion, Valor despues de la modificacion, Plazo despues de la modificacion, Detalle de la modificacion) => se toma del caso de uso de novedades contractuales
@@ -560,7 +560,8 @@ namespace asivamosffie.services
                         NovedadContractual = ListDP.NovedadContractualId != null ? _context.NovedadContractual.Where(x => x.NovedadContractualId == ListDP.NovedadContractualId).Include(x => x.NovedadContractualDescripcion).FirstOrDefault() : null,
                         EstadoRegistro = blnEstado,
                         SesionComiteSolicitud = sesionComiteSolicitud,
-                        ValorTotalDisponibilidad = ListDP.ValorTotalDisponibilidad
+                        ValorTotalDisponibilidad = ListDP.ValorTotalDisponibilidad,
+                        TieneNovedad = existeNovedad > 0 ? true : false
                     };
 
                     ListDetailValidarDisponibilidadPresupuesal.Add(detailDisponibilidadPresupuesal);
@@ -2195,7 +2196,7 @@ namespace asivamosffie.services
             return ListGrillaDisponibilidadPresupuestal;
         }
 
-        private async Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyectNovelty(int RegistroNovedadId)
+        private async Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyectNovelty(int RegistroNovedadId, bool esGenerar)
         {
             List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = new List<DetailValidarDisponibilidadPresupuesal>();
             List<GestionFuenteFinanciacion> ListGestionFuenteFinanciacion = _context.GestionFuenteFinanciacion.ToList();
@@ -2294,10 +2295,10 @@ namespace asivamosffie.services
                             //el saldo de la fuente realmente es lo que tengo en control de recursos
                             //var saldo = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x=>x.ValorConsignacion);
                             decimal saldo = Convert.ToDecimal(_context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x => x.ValorFuente));
-                            decimal valorsolicitado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado &&
+                            GestionFuenteFinanciacion fuenteRegistro = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado &&
                                                        x.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId &&
                                                        x.EsNovedad == true &&
-                                                       x.NovedadContractualRegistroPresupuestalId == detailDP.NovedadContractualRegistroPresupuestalId && x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);
+                                                       x.NovedadContractualRegistroPresupuestalId == detailDP.NovedadContractualRegistroPresupuestalId && x.FuenteFinanciacionId == font.FuenteFinanciacionId).FirstOrDefault();
 
                             decimal valorsolicitadoxotros = _context.GestionFuenteFinanciacion
                                 .Where(x => !(bool)x.Eliminado &&
@@ -2319,17 +2320,36 @@ namespace asivamosffie.services
                                       && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion);
 
                             string namefuente = funtename.Any() ? funtename.FirstOrDefault().Nombre : "";
-                            fuentes.Add(new GrillaFuentesFinanciacion
+                            if (!esGenerar)
                             {
-                                Fuente = namefuente,
-                                Estado_de_las_fuentes = "",
-                                FuenteFinanciacionID = font.FuenteFinanciacionId,
-                                Valor_solicitado_de_la_fuente = valorsolicitado,
-                                Nuevo_saldo_de_la_fuente = fuenteSaldo != null ? (decimal) fuenteSaldo.SaldoActual - valorsolicitado : 0,
-                                Saldo_actual_de_la_fuente = fuenteSaldo != null ? (decimal) fuenteSaldo.SaldoActual : 0,
-                                Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldo : 0,
-                                Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActual : 0,
-                            });
+                                fuentes.Add(new GrillaFuentesFinanciacion
+                                {
+                                    Fuente = namefuente,
+                                    Estado_de_las_fuentes = "",
+                                    FuenteFinanciacionID = font.FuenteFinanciacionId,
+                                    Valor_solicitado_de_la_fuente = fuenteRegistro != null ? fuenteRegistro.ValorSolicitado: 0,
+                                    Nuevo_saldo_de_la_fuente = fuenteRegistro != null ? fuenteRegistro.NuevoSaldo : 0,
+                                    Saldo_actual_de_la_fuente = fuenteRegistro != null ? fuenteRegistro.SaldoActual : 0,
+                                    Nuevo_saldo_de_la_fuente_al_guardar = fuenteRegistro != null ? fuenteRegistro.NuevoSaldo : 0,
+                                    Saldo_actual_de_la_fuente_al_guardar = fuenteRegistro != null ? fuenteRegistro.SaldoActual : 0,
+                                });
+                            }
+                            else
+                            {
+                                var saldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == componente.CofinanciacionAportanteId).FirstOrDefault();
+                                decimal valor = saldoActual != null ? (decimal)saldoActual.SaldoActual : 0;
+                                fuentes.Add(new GrillaFuentesFinanciacion
+                                {
+                                    Fuente = namefuente,
+                                    Estado_de_las_fuentes = "",
+                                    FuenteFinanciacionID = font.FuenteFinanciacionId,
+                                    Valor_solicitado_de_la_fuente = fuenteRegistro != null ? fuenteRegistro.ValorSolicitadoGenerado ?? fuenteRegistro.ValorSolicitado: 0,
+                                    Nuevo_saldo_de_la_fuente = fuenteRegistro != null ? fuenteRegistro.NuevoSaldoGenerado ?? valor - fuenteRegistro.ValorSolicitado : 0,
+                                    Saldo_actual_de_la_fuente = fuenteRegistro != null ? fuenteRegistro.SaldoActualGenerado ?? valor : 0,
+                                    Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldo : 0,
+                                    Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActual : 0,
+                                });
+                            }
 
                             foreach (var componenteUso in font.ComponenteUsoNovedad)
                             {
@@ -2596,7 +2616,7 @@ namespace asivamosffie.services
 
             if (esNovedad == true)
             {
-                ListDetailValidarDisponibilidadPresupuesal = await GetDetailAvailabilityBudgetProyectNovelty(RegistroNovedadId);
+                ListDetailValidarDisponibilidadPresupuesal = await GetDetailAvailabilityBudgetProyectNovelty(RegistroNovedadId,false);
             }
             else
             {

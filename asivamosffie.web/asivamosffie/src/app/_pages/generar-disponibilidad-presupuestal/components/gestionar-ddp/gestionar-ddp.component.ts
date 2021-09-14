@@ -127,6 +127,9 @@ export class GestionarDdpComponent implements OnInit {
     dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
     dialogRef.componentInstance.tipo = this.detailavailabilityBudget.tipoSolicitudEspecial;
     dialogRef.componentInstance.nSolicitud = this.detailavailabilityBudget.numeroSolicitud;
+    dialogRef.componentInstance.esNovedad = this.esNovedad;
+    dialogRef.componentInstance.registroPresupuestalId = this.novedadId;
+
     dialogRef.afterClosed().subscribe(result => {
       this.router.navigate(["/generarDisponibilidadPresupuestal"], {});
     });

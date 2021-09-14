@@ -32,7 +32,12 @@
       <mat-expansion-panel-header class="expansion-style--header"
       *ngIf="listaestado.includes(disponibilidad.nombreEstado)">
         <mat-panel-title class="expansion-style--title "
-          [ngClass]="{'sin-diligenciar':disponibilidad['class']===0,'en-proceso':disponibilidad['class']===1,'completo':disponibilidad['class']===2}"><!----->
+          [ngClass]="{
+            '':(disponibilidad.nombreEstado=='Con disponibilidad cancelada'||disponibilidad.nombreEstado=='Rechazada por validación presupuestal'),
+            'sin-diligenciar':disponibilidad['class']===0 && (disponibilidad.nombreEstado!='Con disponibilidad cancelada'&& disponibilidad.nombreEstado!='Rechazada por validación presupuestal'),
+            'en-proceso':disponibilidad['class']===1&& (disponibilidad.nombreEstado!='Con disponibilidad cancelada'&& disponibilidad.nombreEstado!='Rechazada por validación presupuestal'),
+            'completo':disponibilidad['class']===2&& (disponibilidad.nombreEstado!='Con disponibilidad cancelada'&& disponibilidad.nombreEstado!='Rechazada por validación presupuestal')
+          }"><!----->
           {{disponibilidad.nombreEstado}}
         </mat-panel-title>
       </mat-expansion-panel-header>

@@ -85,7 +85,12 @@ export class CancelarDdpComponent implements OnInit {
 
   devolverSolicitud() {
     console.log(this.observaciones.value);
-    let DisponibilidadPresupuestalObservacion={DisponibilidadPresupuestalId:this.id,Observacion:this.observaciones.value};
+    let DisponibilidadPresupuestalObservacion={
+      DisponibilidadPresupuestalId:this.id,
+      Observacion:this.observaciones.value,
+      esNovedad: this.esNovedad,
+      novedadContractualRegistroPresupuestalId: this.registroPresupuestalId
+    };
     this.disponibilidadServices.SetCancelDDP(DisponibilidadPresupuestalObservacion).subscribe(listas => {
       console.log(listas);
       this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');

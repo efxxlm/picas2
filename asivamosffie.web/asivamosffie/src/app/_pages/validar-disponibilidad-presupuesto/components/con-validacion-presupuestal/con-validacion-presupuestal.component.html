@@ -170,12 +170,12 @@
     </mat-card-content>
   </mat-card>
 
-  <div class="botones" *ngIf="!esRechazada">
+  <div class="botones" *ngIf="!esRechazada && !esCancelada">
     <button mat-raised-button color="accent" (click)="download()" *ngIf="detailavailabilityBudget?.numeroDDP">
       Descargar DDP
     </button>
 
-    <button mat-raised-button color="accent" (click)="openDialogCancelarDDP()">Cancelar solicitud DDP</button>
+    <button [disabled]="detailavailabilityBudget?.tieneNovedad == true && esNovedad == false" mat-raised-button color="accent" (click)="openDialogCancelarDDP()">Cancelar solicitud DDP</button>
 
   </div>
 </section>

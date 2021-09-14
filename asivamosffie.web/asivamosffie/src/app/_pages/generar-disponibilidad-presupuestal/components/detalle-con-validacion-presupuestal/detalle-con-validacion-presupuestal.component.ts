@@ -19,6 +19,7 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
   esNovedad;
   novedadId;
   esRechazadaFiduciaria = false;
+  esCancelada = false;
 
   constructor(public dialog: MatDialog, private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
@@ -27,6 +28,9 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
             if ( urlSegment.path === 'detalleRechazadaFiduciaria' ) {
                 this.esRechazadaFiduciaria = true;
                 return;
+            }else if ( urlSegment.path === 'detalleConDisponibilidadCancelada' ){
+              this.esCancelada = true;
+              return;
             }
         } );
     }

@@ -687,7 +687,7 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
             try
             {
-                if (DisponibilidadCancelar.ContratacionId != null)
+                if (DisponibilidadCancelar.ContratacionId != null && pDisponibilidadPresObservacion.EsNovedad != true)
                 {
                     Contratacion contratacionCancelar = _context.Contratacion.Find(DisponibilidadCancelar.ContratacionId);
                     if (contratacionCancelar != null)
@@ -718,13 +718,29 @@ namespace asivamosffie.services
                 }
 
                 int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Con_disponibilidad_cancelada;
-                DisponibilidadCancelar.FechaModificacion = DateTime.Now;
-                DisponibilidadCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
-                DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
+                string numeroSolicitud = string.Empty;
+                if (pDisponibilidadPresObservacion.EsNovedad != true)
+                {
+                    DisponibilidadCancelar.FechaModificacion = DateTime.Now;
+                    DisponibilidadCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                    DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
+                    numeroSolicitud = DisponibilidadCancelar.NumeroSolicitud;
+                }
+                //es novedad
+                else if (pDisponibilidadPresObservacion.EsNovedad == true && pDisponibilidadPresObservacion.NovedadContractualRegistroPresupuestalId > 0)
+                {
+                    var novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal.Find(pDisponibilidadPresObservacion.NovedadContractualRegistroPresupuestalId);
+                    novedadContractualRegistroPresupuestal.FechaModificacion = DateTime.Now;
+                    novedadContractualRegistroPresupuestal.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
+                    novedadContractualRegistroPresupuestal.EstadoSolicitudCodigo = estado.ToString();
+                    numeroSolicitud = novedadContractualRegistroPresupuestal.NumeroSolicitud;
+                }
+
                 pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
                 pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
                 _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
                 _context.SaveChanges();
+
                 //envio correo
                 var usuarioJuridico = _context.UsuarioPerfil
                     .Where(x => (x.PerfilId == (int)EnumeratorPerfil.Juridica ||  x.PerfilId == (int)EnumeratorPerfil.Tecnica))
@@ -736,12 +752,12 @@ namespace asivamosffie.services
                 string template = TemplateRecoveryPassword.Contenido;
 
                 template = template.Replace("_LinkF_", urlDestino);
-                template = template.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroSolicitud);
+                template = template.Replace("[NUMERODISPONIBILIDAD]", numeroSolicitud);
                 foreach (var usuario in usuarioJuridico)
                 {
                     blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Usuario.Email, "DRP Cancelada", template, pSentender, pPassword, pMailServer, pMailPort);
                 }
-                this.EliminarGestion(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId);
+                this.EliminarGestion(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId, pDisponibilidadPresObservacion.EsNovedad ?? false, pDisponibilidadPresObservacion.NovedadContractualRegistroPresupuestalId ?? 0);
                 return
                 new Respuesta
                 {
@@ -972,7 +988,7 @@ namespace asivamosffie.services
                 pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
                 pDisponibilidadPresObservacion.EstadoSolicitudCodigo = ((int)EnumeratorEstadoSolicitudPresupuestal.Devuelta_por_coordinacion_financiera).ToString();
                 _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
-                this.EliminarGestion(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId);
+                this.EliminarGestion(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId,false,0);
 
                 _context.SaveChanges();
 
@@ -1000,14 +1016,14 @@ namespace asivamosffie.services
             }
         }
 
-        private bool EliminarGestion(int DisponibilidadPresupuestalId)
+        private bool EliminarGestion(int DisponibilidadPresupuestalId, bool esNovedad, int novedadContractualRegistroPresupuestalId )
         {
             DisponibilidadPresupuestal DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(DisponibilidadPresupuestalId);
             bool retorno = false;
             if (DisponibilidadCancelar.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)
             {
                 _context.Set<GestionFuenteFinanciacion>()
-                       .Where(g => g.DisponibilidadPresupuestalId == DisponibilidadPresupuestalId)
+                       .Where(g => g.DisponibilidadPresupuestalId == DisponibilidadPresupuestalId && g.EsNovedad == esNovedad && g.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestalId)
                        .Update(g => new GestionFuenteFinanciacion
                        {
                            Eliminado = true,
@@ -1030,7 +1046,7 @@ namespace asivamosffie.services
 
 
                 _context.Set<GestionFuenteFinanciacion>()
-                        .Where(g => g.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadPresupuestalId)
+                        .Where(g => g.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadPresupuestalId && g.EsNovedad == esNovedad && g.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestalId)
                         .Update(g => new GestionFuenteFinanciacion
                         {
                             Eliminado = true,
@@ -2164,7 +2180,7 @@ namespace asivamosffie.services
                 template = template.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroSolicitud).
                     Replace("_LinkF_", pDominioFront);
                 bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioTecnico.Usuario.Email, "SDP Devuelto por validación presupuestal", template, pSentender, pPassword, pMailServer, pMailPort);
-                this.EliminarGestion(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId);
+                this.EliminarGestion(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId,false,0);
                 return
                 new Respuesta
                 {
@@ -2276,7 +2292,7 @@ namespace asivamosffie.services
                 template = template.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroSolicitud).
                     Replace("_LinkF_", pDominioFront);
                 bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioTecnico.Usuario.Email, "SDP rechazado por validación presupuestal", template, pSentender, pPassword, pMailServer, pMailPort);
-                this.EliminarGestion(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId);
+                this.EliminarGestion(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId,false,0);
                 return
                 new Respuesta
                 {
@@ -2529,7 +2545,7 @@ namespace asivamosffie.services
                 {
                     blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Usuario.Email, "DDP Cancelada", template, pSentender, pPassword, pMailServer, pMailPort);
                 }
-                this.EliminarGestion(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId);
+                this.EliminarGestion(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId,false,0);
                 return
                 new Respuesta
                 {

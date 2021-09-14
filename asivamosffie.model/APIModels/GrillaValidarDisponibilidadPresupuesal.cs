@@ -76,6 +76,7 @@ namespace asivamosffie.model.APIModels
         public NovedadContractual? NovedadContractual { get; set; }
         public List<SesionComiteSolicitud> SesionComiteSolicitud { get; set; }
         public decimal ValorTotalDisponibilidad { get; set; }
+        public bool TieneNovedad { get; set; }
 
     }
 }

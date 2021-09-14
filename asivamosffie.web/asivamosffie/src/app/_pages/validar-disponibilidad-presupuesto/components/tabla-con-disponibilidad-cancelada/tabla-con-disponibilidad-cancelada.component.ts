@@ -21,7 +21,7 @@ export interface PeriodicElement {
 })
 export class TablaConDisponibilidadCanceladaComponent implements OnInit {
   @Input()disponibilidadPresupuestal: any;
-  displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'estadoRegistro', 'id'];
+  displayedColumns: string[] = ['fecha', 'numero', 'tipo','id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -63,10 +63,10 @@ export class TablaConDisponibilidadCanceladaComponent implements OnInit {
     };
     this.paginator._intl.previousPageLabel = 'Anterior';
   }
- 
+
   verDetalle(id: number, esNovedad, novedadId) {
     console.log(id);
-    this.router.navigate(['validarDisponibilidadPresupuesto/conValidacionPresupuestal', id, esNovedad, novedadId]);
+    this.router.navigate(['validarDisponibilidadPresupuesto/conDisponibilidadCancelada', id, esNovedad, novedadId]);
   }
 
 }

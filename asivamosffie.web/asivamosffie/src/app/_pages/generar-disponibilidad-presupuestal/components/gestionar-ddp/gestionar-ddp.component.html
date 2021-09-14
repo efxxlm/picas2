@@ -362,7 +362,7 @@
         <!-- <button mat-raised-button color="accent">Actualizar DDP</button> -->
         <button mat-raised-button color="accent" (click)="openDialogDevolver()">Devolver a <br> validación
             financiera</button>
-        <button mat-raised-button color="accent" (click)="openDialogCancelarDDP()">Cancelar solicitud DDP</button>
+        <button [disabled]="detailavailabilityBudget?.tieneNovedad == true && esNovedad == false" mat-raised-button color="accent" (click)="openDialogCancelarDDP()">Cancelar solicitud DDP</button>
     </div>
 
 </section>

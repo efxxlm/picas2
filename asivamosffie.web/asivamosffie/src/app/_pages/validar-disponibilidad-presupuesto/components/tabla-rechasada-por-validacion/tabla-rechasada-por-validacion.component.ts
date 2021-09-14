@@ -21,7 +21,7 @@ export interface PeriodicElement {
 })
 export class TablaRechasadaPorValidacionComponent implements OnInit {
   @Input()disponibilidadPresupuestal: any;
-  displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'estadoRegistro', 'id'];
+  displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

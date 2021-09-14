@@ -18,6 +18,8 @@ export class ConValidacionPresupuestalComponent implements OnInit {
   esRechazada:boolean=false;
   esNovedad: boolean = false;
   esGenerar: boolean = false;
+  esCancelada: boolean = false;
+  novedadId;
 
   constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
@@ -31,6 +33,9 @@ export class ConValidacionPresupuestalComponent implements OnInit {
         }else if(urlSegment.path === 'conDisponibilidadPresupuestal'){
             this.esGenerar = true;
             return;
+        }else if(urlSegment.path === 'conDisponibilidadCancelada'){
+          this.esCancelada = true;
+          return;
         }
     } );
     }
@@ -44,6 +49,7 @@ export class ConValidacionPresupuestalComponent implements OnInit {
     const esGenerar = this.esGenerar === true ? 'true':'false';
     this.esNovedad = esNovedad == "true" ? true : false;
     const novedadId = this.route.snapshot.paramMap.get('novedadId');
+    this.novedadId = this.route.snapshot.paramMap.get('novedadId');
     if (id) {
       this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, esNovedad, novedadId,this.esGenerar)
         .subscribe(listas => {
@@ -104,6 +110,9 @@ export class ConValidacionPresupuestalComponent implements OnInit {
     dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
     dialogRef.componentInstance.tipo = this.detailavailabilityBudget.tipoSolicitudEspecial;
     dialogRef.componentInstance.nSolicitud = this.detailavailabilityBudget.numeroSolicitud;
+    dialogRef.componentInstance.esNovedad = this.esNovedad;
+    dialogRef.componentInstance.registroPresupuestalId = this.novedadId;
+
     dialogRef.afterClosed().subscribe(result => {
       this.router.navigate(["/generarDisponibilidadPresupuestal"], {});
     });
