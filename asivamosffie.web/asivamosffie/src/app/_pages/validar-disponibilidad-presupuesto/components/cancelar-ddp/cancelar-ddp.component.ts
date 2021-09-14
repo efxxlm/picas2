@@ -30,6 +30,8 @@ export class CancelarDdpComponent implements OnInit {
   id: any;
   tipo: any;
   nSolicitud: any;
+  esNovedad: any;
+  registroPresupuestalId: any;
 
   constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,private router: Router) {
     this.declararOnservaciones();
