@@ -80,6 +80,7 @@ export class TerceroCausacionGogComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        console.log(this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto);
         this.getTerceroCausacion();
     }
 
@@ -1133,6 +1134,20 @@ export class TerceroCausacionGogComponent implements OnInit {
           conceptoCodigo => conceptoCodigo.conceptoCodigo === codigo
         );
         if (conceptoCodigo) return conceptoCodigo.saldo;
+      }
+    }
+
+    getValorAportante(codigo: string, aportanteId: any) {
+      if (this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.length > 0) {
+        const conceptoCodigo = this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.filter(
+          conceptoCodigo => conceptoCodigo.conceptoCodigo === codigo
+        );
+
+        const valorAportante = conceptoCodigo.find(
+          conceptoCodigo => conceptoCodigo.aportanteId === aportanteId.codigo
+        );
+
+        if (valorAportante) return valorAportante.saldo;
       }
     }
 }
