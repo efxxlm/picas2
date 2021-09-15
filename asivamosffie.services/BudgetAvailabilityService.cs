@@ -631,24 +631,28 @@ namespace asivamosffie.services
                 {
                     DisponibilidadPresupuestalGrilla ddpNovedad = ListDisponibilidadPresupuestalGrilla.Where(r => r.DisponibilidadPresupuestalId == RegistroPresupuestal.DisponibilidadPresupuestalId).FirstOrDefault();
 
-                    DisponibilidadPresupuestalGrilla disponibilidadPresupuestalNovedadGrilla = new DisponibilidadPresupuestalGrilla
+                    if (ddpNovedad != null)
                     {
-                        FechaSolicitud = ddpNovedad.FechaSolicitud,
-                        EstadoRegistro = ddpNovedad.EstadoRegistro,
-                        TipoSolicitud = ddpNovedad.TipoSolicitud,
-                        TipoSolicitudEspecial = ConstanStringTipoSolicitudContratacion.novedadContractual,
-                        DisponibilidadPresupuestalId = ddpNovedad.DisponibilidadPresupuestalId,
-                        NumeroSolicitud = RegistroPresupuestal.NumeroSolicitud,
-                        FechaFirmaContrato = ddpNovedad.FechaFirmaContrato,
-                        NumeroContrato = ddpNovedad.NumeroContrato,
-                        Estado = ListEstados.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal &&
-                             x.Codigo == RegistroPresupuestal.EstadoSolicitudCodigo).FirstOrDefault().Nombre,
-                        NovedadContractualRegistroPresupuestalId = RegistroPresupuestal.NovedadContractualRegistroPresupuestalId,
-                        EsNovedad = true,
-                        NumeroOtroSi = novedadContractual != null ? novedadContractual.NumeroOtroSi : string.Empty,
-                    };
+                        DisponibilidadPresupuestalGrilla disponibilidadPresupuestalNovedadGrilla = new DisponibilidadPresupuestalGrilla
+                        {
+                            FechaSolicitud = ddpNovedad.FechaSolicitud,
+                            EstadoRegistro = ddpNovedad.EstadoRegistro,
+                            TipoSolicitud = ddpNovedad.TipoSolicitud,
+                            TipoSolicitudEspecial = ConstanStringTipoSolicitudContratacion.novedadContractual,
+                            DisponibilidadPresupuestalId = ddpNovedad.DisponibilidadPresupuestalId,
+                            NumeroSolicitud = RegistroPresupuestal.NumeroSolicitud,
+                            FechaFirmaContrato = ddpNovedad.FechaFirmaContrato,
+                            NumeroContrato = ddpNovedad.NumeroContrato,
+                            Estado = ListEstados.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal &&
+                                 x.Codigo == RegistroPresupuestal.EstadoSolicitudCodigo).FirstOrDefault().Nombre,
+                            NovedadContractualRegistroPresupuestalId = RegistroPresupuestal.NovedadContractualRegistroPresupuestalId,
+                            EsNovedad = true,
+                            NumeroOtroSi = novedadContractual != null ? novedadContractual.NumeroOtroSi : string.Empty,
+                        };
+                        ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalNovedadGrilla);
+                    }
 
-                    ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalNovedadGrilla);
+                   
 
                 }
             }
