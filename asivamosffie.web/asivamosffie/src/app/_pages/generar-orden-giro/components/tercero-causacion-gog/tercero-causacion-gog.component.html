@@ -36,6 +36,10 @@
                                 <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j ).controls; index as k">
                                     <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ k + 1 }} </mat-card-title>
                                     <p>
+                                        <strong>Valor aportante para el concepto:</strong>
+                                        {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('tipoAportante').value.aportanteId) | currency: '' :'symbol-narrow':'.0-0' }}
+                                    </p>
+                                    <p>
                                         <b>
                                             Tipo de aportante:
                                         </b>
@@ -127,10 +131,6 @@
                                     <strong>Valor facturado por concepto: </strong>
                                     {{ concepto.get('valorFacturadoConcepto').value | currency: '':'symbol-narrow':'.0-0' }}
                                 </p>
-                                <p>
-                                    <strong>Valor aportante para el concepto:</strong>
-                                    {{ concepto.get('conceptoPagoCriterio').value }}
-                                </p>
                                 <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j ).controls; index as k">
                                     <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ k + 1 }} </mat-card-title>
                                     <div class="row" style="padding-left: 0em !important;">
@@ -140,7 +140,7 @@
                                                     <div class="row">
                                                         <p>
                                                             <strong>Valor aportante para el concepto:</strong>
-                                                            {{ getConceptoCodigo(concepto.get('conceptoPagoCriterio').value) | currency: '':'symbol-narrow':'.0-0' }}
+                                                            {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('tipoAportante').value.aportanteId) | currency: '' :'symbol-narrow':'.0-0' }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -282,7 +282,7 @@
                                                                     {{ 20 - valorDescuento.value.length }}
                                                             </span>
                                                         </div>
-                                                        <span class="icon-incompleto">
+                                                        <span class="icon-incompleto pl-2em">
                                                             <img    class="icon-incompleto--img"
                                                                     src="assets/img/icon/incompleto.svg"
                                                                     alt="este campo es requerido"

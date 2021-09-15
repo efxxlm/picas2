@@ -134,6 +134,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                 });
             });
         } );
+        console.log(this.solicitudPago.ordenGiro.ordenGiroDetalle);
+        console.log(this.valorNetoGiro);
         /*
             get listaCriterios para lista desplegable
             Se reutilizan los servicios del CU 4.1.7 "Solicitud de pago"
@@ -176,6 +178,13 @@ export class TerceroCausacionGogComponent implements OnInit {
 
                     //const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
                     const dataAportantes = await this.ordenGiroSvc.getAportantesNew( this.solicitudPago );
+                    
+                    for (let i = 0; i < dataAportantes.listaTipoAportante.length; i++) {
+                        const element = dataAportantes.listaTipoAportante[i];
+                        const element2 = this.solicitudPago.tablaInformacionFuenteRecursos[i];
+                        element.aportanteId = element2.cofinanciacionAportanteId
+                    }
+                    console.log(this.solicitudPago);
                     console.log(dataAportantes);
 
                     if ( this.solicitudPago.tablaUsoFuenteAportante !== undefined ) {
@@ -608,10 +617,17 @@ export class TerceroCausacionGogComponent implements OnInit {
                     totalValueAportante += aportanteControl.get( 'valorDescuento' ).value;
                 }
             } )
+
+            if (
+                value > this.getValorAportante(this.getConceptos( index ).controls[ jIndex ].get('conceptoPagoCriterio').value, this.getAportantes( index, jIndex ).controls[ kIndex ].get('tipoAportante').value.aportanteId)
+            ) {
+                this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
+                this.openDialog( '', `<b>El valor facturado por el concepto para el aportante no puede ser mayor al valor aportante para el concepto.</b>` )
+                return
+            }
             if ( this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'nombreAportante' ).value !== null ) {
                 if (
-                    value > this.getConceptos( index ).controls[ jIndex ].get( 'valorTotalUso' ).value ||
-                    value > this.getConceptoCodigo(this.getConceptos( index ).controls[ jIndex ].get('conceptoPagoCriterio').value)
+                    value > this.getConceptos( index ).controls[ jIndex ].get( 'valorTotalUso' ).value
                 ) {
                     this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
                     this.openDialog( '', `<b>El valor facturado por el concepto para el aportante no puede ser mayor al valor asignado por DRP al aportante.</b>` )
@@ -1019,6 +1035,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                 } )
             } );
 
+            console.log(this.valorNetoGiro);
+
             this.criterios.controls.forEach( ( criterioControl, indexCriterio ) => {
                 let terceroCausacion: any;
                 this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
@@ -1144,7 +1162,7 @@ export class TerceroCausacionGogComponent implements OnInit {
         );
 
         const valorAportante = conceptoCodigo.find(
-          conceptoCodigo => conceptoCodigo.aportanteId === aportanteId.codigo
+          conceptoCodigo => conceptoCodigo.aportanteId === aportanteId
         );
 
         if (valorAportante) return valorAportante.saldo;

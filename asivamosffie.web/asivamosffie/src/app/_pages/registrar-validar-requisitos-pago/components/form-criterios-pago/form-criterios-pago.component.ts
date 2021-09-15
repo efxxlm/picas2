@@ -247,10 +247,10 @@ export class FormCriteriosPagoComponent implements OnInit {
                                     criterio.solicitudPagoFaseCriterioConceptoPago.forEach( solicitudPagoFaseCriterioConceptoPago => {
                                         const conceptoFind = conceptosDePago.find( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio );
 
-                                        const pConceptoPagoCodigo = '';
+                                        const usoCodigo = '';
 
                                         if ( conceptoFind !== undefined ) {
-                                          this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, FORMA_PAGO_CODIGO, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterio?.tipoCriterioCodigo, conceptoFind?.codigo, pConceptoPagoCodigo )
+                                          this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, FORMA_PAGO_CODIGO, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterio?.tipoCriterioCodigo, conceptoFind?.codigo, usoCodigo )
                                             .subscribe(
                                                 async response => {
                                                   const conceptoDePagoArray = [];
@@ -283,7 +283,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                                               tipoPago: [ tipoDePago.length > 0 ? tipoDePago[0] : null ],
                                                               conceptosDePago: [ conceptosDePago ],
                                                               conceptoPago: [ conceptosDePagoSeleccionados, Validators.required ],
-                                                              pConceptoPagoCodigo: [ criterio.solicitudPagoFaseCriterioConceptoPago[0].usoCodigo, Validators.required ],
+                                                              usoCodigo: [ criterio.solicitudPagoFaseCriterioConceptoPago[0].usoCodigo, Validators.required ],
                                                               conceptos: this.fb.array( conceptoDePagoArray ),
                                                               valorFacturado: [ { value: criterio.valorFacturado !== undefined ? criterio.valorFacturado : null, disabled: true }, Validators.required ]
                                                           }
@@ -467,7 +467,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 tipoPago: [ null, Validators.required ],
                                 conceptosDePago: [ [], Validators.required ],
                                 conceptoPago: [ null ],
-                                pConceptoPagoCodigo: [ null ],
+                                usoCodigo: [ null ],
                                 conceptos: this.fb.array( [] ),
                                 valorFacturado: [ { value: null, disabled: true }, Validators.required ]
                             }
@@ -507,7 +507,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                     tipoPago: [ null, Validators.required ],
                                     conceptosDePago: [ [], Validators.required ],
                                     conceptoPago: [ null ],
-                                    pConceptoPagoCodigo: [ null ],
+                                    usoCodigo: [ null ],
                                     conceptos: this.fb.array( [] ),
                                     valorFacturado: [ { value: null, disabled: true }, Validators.required ]
                                 }
@@ -534,7 +534,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                     tipoPago: [ null, Validators.required ],
                                     conceptosDePago: [ [], Validators.required ],
                                     conceptoPago: [ null ],
-                                    pConceptoPagoCodigo: [ null ],
+                                    usoCodigo: [ null ],
                                     conceptos: this.fb.array( [] ),
                                     valorFacturado: [ { value: null, disabled: true }, Validators.required ]
                                 }

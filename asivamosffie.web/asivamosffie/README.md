@@ -45,6 +45,14 @@ luego en el modulo de pone
 
     npm run compilar
 
+## Compilar un servidor local por wifi
+
+en el cmd
+    ipconfig
+
+con la ip local
+    npm run compilar --host="ip local" --disable-host-check
+
 ## Desplegar en [asivamos.ffie.com.co](https://asivamos.ffie.com.co)
 
 cuenta cambiar en proxy.conf.json

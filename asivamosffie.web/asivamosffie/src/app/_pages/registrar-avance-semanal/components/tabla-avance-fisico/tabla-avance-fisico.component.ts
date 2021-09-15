@@ -206,7 +206,7 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
                         {
                             semanaNumero: this.seguimientoSemanal.numeroSemana,
                             periodoReporte: `${ this.datePipe.transform( this.seguimientoSemanal.fechaInicio, 'dd/MM/yyyy' ) } - ${ this.datePipe.transform( this.seguimientoSemanal.fechaFin, 'dd/MM/yyyy' ) }`,
-                            programacionSemana: this.verifyInteger( ( duracionProgramacion / (cantidadTotalDiasActividades == 0 ? 1 : (cantidadTotalDiasActividades + 1)) ) * 100, false ),
+                            programacionSemana: this.verifyInteger( ( this.seguimientoSemanal.seguimientoDiario.length / (cantidadTotalDiasActividades + 1) ) * 100, false ),
                             avancePorCapitulo,
                             avanceFisicoSemana: this.seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0 ?
                                                 this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].avanceFisicoSemanal : 0
