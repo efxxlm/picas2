@@ -799,7 +799,7 @@ namespace asivamosffie.services
                                                          .FirstOrDefault(x => x.DisponibilidadPresupuestalId == pId);
 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
-            int consecutivo = _context.DisponibilidadPresupuestal.Where(x => x.NumeroDdp != null).Count() + 1;
+            int consecutivo = _context.DisponibilidadPresupuestal.Where(x => string.IsNullOrEmpty(x.NumeroDdp)).Count() + 1;
             /*busco usuario Juridico*/
             var usuarioJuridico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Juridica).Include(y => y.Usuario).ToList();
             int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Con_disponibilidad_presupuestal;
@@ -866,6 +866,7 @@ namespace asivamosffie.services
                     {
                         tipo = "ESP";
                     }
+                    
                     DisponibilidadCancelar.NumeroDdp = "DDP_" + tipo + "_" + consecutivo.ToString();
 
                     //
