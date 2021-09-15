@@ -66,7 +66,7 @@ export class GestionarDrpComponent implements OnInit {
     this.novedadId = this.route.snapshot.paramMap.get('novedadId');
 
     if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, this.esNovedad, this.novedadId)
+      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, this.esNovedad, this.novedadId, true)
         .subscribe(listas => {
 
         if (listas.length > 0) {
