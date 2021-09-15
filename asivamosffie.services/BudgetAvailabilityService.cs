@@ -651,6 +651,9 @@ namespace asivamosffie.services
                         };
                         ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalNovedadGrilla);
                     }
+                    else { 
+                    
+                    }
 
                    
 
