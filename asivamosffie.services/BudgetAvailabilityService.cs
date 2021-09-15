@@ -651,8 +651,70 @@ namespace asivamosffie.services
                         };
                         ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalNovedadGrilla);
                     }
-                    else { 
-                    
+                    else {
+                        DisponibilidadPresupuestal ddp = _context.DisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == RegistroPresupuestal.DisponibilidadPresupuestalId).FirstOrDefault();
+
+                        //obtener la disponibilidad desde la tabla porque no tiene el mismo estado ? 
+                        string strEstadoRegistro = string.Empty;
+                        string strTipoSolicitud = string.Empty;
+                        if (!string.IsNullOrEmpty(ddp.EstadoSolicitudCodigo))
+                        {
+                            strEstadoRegistro = ListEstados.Where(r => r.Codigo == ddp.EstadoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal).FirstOrDefault().Nombre;
+                        }
+
+                        if (!string.IsNullOrEmpty(ddp.TipoSolicitudCodigo))
+                        {
+                            strTipoSolicitud = ListEstados.Where(r => r.Codigo == ddp.TipoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal).FirstOrDefault().Nombre;
+                        }
+
+                        DateTime? fechaContrato = null;
+                        string numeroContrato = string.Empty;
+                        if (ddp.ContratacionId != null)
+                        {
+                            var contrato = ListContratos.Where(x => x.ContratacionId == ddp.ContratacionId).FirstOrDefault();
+                            fechaContrato = contrato?.FechaFirmaContrato;
+                            numeroContrato = ddp.NumeroContrato ?? (contrato != null ? contrato.NumeroContrato : string.Empty);
+                        }
+                        else
+                        {
+                            numeroContrato = ddp.NumeroContrato ?? string.Empty;
+                        }
+                        bool blnEstado = false;
+
+                        //si es administrativo, esta completo, si es tradicional, se verifica contra fuentes gestionadas
+                        if (ddp.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo)
+                        {
+                            blnEstado = true;
+                        }
+                        else if (ddp.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)
+                        {
+                            blnEstado = true;
+                        }
+                        else
+                        {
+                            List<int> ddpproyectosId = ddp.DisponibilidadPresupuestalProyecto.Select(x => x.DisponibilidadPresupuestalProyectoId).ToList();
+                            if (ListGestionFuenteFinanciacions.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId != null && ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId)).Count() > 0)
+                            {
+                                blnEstado = true;
+                            }
+                        }
+                        DisponibilidadPresupuestalGrilla disponibilidadPresupuestalNovedadGrilla = new DisponibilidadPresupuestalGrilla
+                        {
+                            FechaSolicitud = ddp.FechaSolicitud.ToString("yyyy/MM/dd"),
+                            EstadoRegistro = blnEstado,
+                            TipoSolicitud = strTipoSolicitud,
+                            TipoSolicitudEspecial = ConstanStringTipoSolicitudContratacion.novedadContractual,
+                            DisponibilidadPresupuestalId = ddp.DisponibilidadPresupuestalId,
+                            NumeroSolicitud = RegistroPresupuestal.NumeroSolicitud,
+                            FechaFirmaContrato = fechaContrato == null ? string.Empty : Convert.ToDateTime(fechaContrato).ToString("dd/MM/yyyy"),
+                            NumeroContrato = numeroContrato,
+                            Estado = ListEstados.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal &&
+                                 x.Codigo == RegistroPresupuestal.EstadoSolicitudCodigo).FirstOrDefault().Nombre,
+                            NovedadContractualRegistroPresupuestalId = RegistroPresupuestal.NovedadContractualRegistroPresupuestalId,
+                            EsNovedad = true,
+                            NumeroOtroSi = novedadContractual != null ? novedadContractual.NumeroOtroSi : string.Empty,
+                        };
+                        ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalNovedadGrilla);
                     }
 
                    
@@ -1488,8 +1550,8 @@ namespace asivamosffie.services
                     //el saldo actual de la fuente son todas las solicitudes a la fuentes
                     //var consignadoemnfuente = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorConsignacion);
                     //var fuente = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.Aportante.CofinanciacionAportanteId).FirstOrDefault();
-                    var consignadoemnfuente = _context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorFuente);
-                    var saldofuente = _context.GestionFuenteFinanciacion.Where(
+                    decimal consignadoemnfuente = _context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorFuente) ?? 0;
+                    decimal saldofuente = _context.GestionFuenteFinanciacion.Where(
                         x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId &&
                         x.DisponibilidadPresupuestalProyectoId != gestion.DisponibilidadPresupuestalProyectoId && x.Eliminado != true).Sum(x => x.ValorSolicitado);
                     string fuenteNombre = _context.Dominio.Where(x => x.Codigo == gestion.FuenteFinanciacion.FuenteRecursosCodigo
@@ -1498,23 +1560,23 @@ namespace asivamosffie.services
                     // Saldo_actual_de_la_fuente = (decimal)font.FuenteFinanciacion.ValorFuente - saldofuente
                     saldototal += (decimal)consignadoemnfuente - saldofuente;
                     string institucion = _context.InstitucionEducativaSede.Where(x => x.InstitucionEducativaSedeId == gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.PadreId).FirstOrDefault().Nombre;
-                    var tr = plantilla_proycto
+                    string tr = plantilla_proycto
                         .Replace("[DDP_LLAVE_MEN]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.LlaveMen)
                         .Replace("[DDP_INSTITUCION_EDUCATIVA]", institucion)
                         .Replace("[DDP_SEDE]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.Nombre)
                         .Replace("[DDP_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
                         .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x => x.ValorDocumento)).ToString())
                         .Replace("[DDP_FUENTE]", fuenteNombre)
-                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar || cumpleDdp ? gestion?.SaldoActualGenerado : gestion?.SaldoActual).ToString())
-                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar || cumpleDdp ? gestion.ValorSolicitadoGenerado : gestion.ValorSolicitado).ToString())
-                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar || cumpleDdp ? gestion?.NuevoSaldoGenerado : gestion?.NuevoSaldo).ToString());
+                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar || cumpleDdp ? (gestion.SaldoActualGenerado ?? 0) : gestion.SaldoActual).ToString())
+                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar || cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gestion.ValorSolicitado).ToString())
+                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar || cumpleDdp ? (gestion.NuevoSaldoGenerado ?? 0) : gestion.NuevoSaldo).ToString());
 
                     //.Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", saldototal).ToString())
                     //.Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
                     //.Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", (saldototal - gestion.ValorSolicitado)).ToString());
                     tablaproyecto += tr;
 
-                    decimal valorSolicitadoApo = !esValidar || cumpleDdp ? (decimal)gestion?.ValorSolicitadoGenerado : (decimal)gestion.ValorSolicitado;
+                    decimal valorSolicitadoApo = !esValidar || cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gestion.ValorSolicitado;
                     var tr2 = plantilla_fuentes
                         .Replace("[NOMBRE_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
                         .Replace("[FUENTE_APORTANTE]", fuenteNombre)
