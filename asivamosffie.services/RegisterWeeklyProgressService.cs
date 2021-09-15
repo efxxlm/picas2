@@ -457,7 +457,17 @@ namespace asivamosffie.services
             seguimientoSemanal.FlujoInversion = _context.FlujoInversion
                                 .Include(r => r.Programacion)
                                 .Where(r => r.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId)
+                                .Distinct()
                                 .ToList();
+
+
+            int CantidadDias = 0;
+
+            foreach (var item in seguimientoSemanal.FlujoInversion)
+            {
+                TimeSpan FechaDiferencia = (item.Programacion.FechaFin - item.Programacion.FechaInicio);
+                CantidadDias += FechaDiferencia.Days;
+            }
 
             List<int> ListSeguimientoSemanalId =
                 _context.SeguimientoSemanal

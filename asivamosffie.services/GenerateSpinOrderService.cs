@@ -207,7 +207,16 @@ namespace asivamosffie.services
                 foreach (var OrdenGiroDetalle in SolicitudPago.OrdenGiro.OrdenGiroDetalle)
                 {
                     if (OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Count > 0)
+                    {
                         OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica = OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r => r.Eliminado != true).ToList();
+
+
+                        foreach (var item in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
+                        {
+                            if (item.SolicitudPagoFaseFacturaDescuentoId != null)
+                                item.SolicitudPagoFaseFacturaDescuento = _context.SolicitudPagoFaseFacturaDescuento.Find(item.SolicitudPagoFaseFacturaDescuentoId);
+                        }
+                    }
 
                     foreach (var OrdenGiroDetalleDescuentoTecnica in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
                     {

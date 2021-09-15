@@ -14941,12 +14941,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.SaldoUso).HasColumnType("decimal(30, 0)");
 
                 entity.Property(e => e.TipoUsoCodigo)
-                    .HasMaxLength(100)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Uso)
-                    .IsRequired()
-                    .HasMaxLength(250);
+                entity.Property(e => e.Uso).HasMaxLength(250);
             });
 
             modelBuilder.Entity<VPagosSolicitudXodgXcontratacionXproyectoXuso>(entity =>
