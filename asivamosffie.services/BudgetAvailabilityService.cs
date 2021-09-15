@@ -2499,7 +2499,7 @@ namespace asivamosffie.services
                     var fuente = _context.FuenteFinanciacion.Find(pDisponibilidadPresObservacion.FuenteFinanciacionId);
                     VSaldosFuenteXaportanteIdValidar fuenteNew = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == pDisponibilidadPresObservacion.CofinanciacionAportanteId).FirstOrDefault();
 
-                    pDisponibilidadPresObservacion.SaldoActual = (fuenteNew != null ? fuenteNew.SaldoActual ?? 0 : (decimal)fuente.ValorFuente) + pDisponibilidadPresObservacion.ValorSolicitado;
+                    pDisponibilidadPresObservacion.SaldoActual = (fuenteNew != null ? fuenteNew.SaldoActual ?? 0 : (decimal)fuente.ValorFuente);
 
                     pDisponibilidadPresObservacion.NuevoSaldo = pDisponibilidadPresObservacion.SaldoActual - pDisponibilidadPresObservacion.ValorSolicitado;
                     int estado = (int)EnumeratorEstadoGestionFuenteFinanciacion.Solicitado;

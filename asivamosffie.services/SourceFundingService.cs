@@ -770,7 +770,13 @@ namespace asivamosffie.services
                     valorsolicitado = gestionFuenteFinanciacion
                                                     .Sum(x => x.ValorSolicitado);
                 }
-                valorDisponible = valorDisponible + valorsolicitado;//no debe tomar el valor aun
+                int gff = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId
+                    && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Select(x => x.GestionFuenteFinanciacionId).FirstOrDefault();
+
+                if (gff > 0)
+                {
+                    valorDisponible = valorDisponible + valorsolicitado;//no debe tomar el valor aun
+                }
 
                 ListaRetorno.Add(new GrillaFuentesFinanciacion
                 {
@@ -779,8 +785,7 @@ namespace asivamosffie.services
                     Nuevo_saldo_de_la_fuente = valorDisponible - valorsolicitado,
                     Saldo_actual_de_la_fuente = valorDisponible,
                     Valor_solicitado_de_la_fuente = valorsolicitado,
-                    GestionFuenteFinanciacionID = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId
-                     && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Select(x => x.GestionFuenteFinanciacionId).FirstOrDefault(),
+                    GestionFuenteFinanciacionID = gff,
                     Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldo : 0,
                     Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActual : 0,
 
@@ -936,8 +941,16 @@ namespace asivamosffie.services
                                                            x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
                                                            x.NovedadContractualRegistroPresupuestalId == NovedadContractualRegistroPresupuestalId)
                                                     .Sum(x => x.ValorSolicitado);
+                int gff = _context.GestionFuenteFinanciacion
+                                                                .Where(x => !(bool)x.Eliminado &&
+                                                                       x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
+                                                                       x.NovedadContractualRegistroPresupuestalId == NovedadContractualRegistroPresupuestalId)
+                                                                .Select(x => x.GestionFuenteFinanciacionId)
+                                                                .FirstOrDefault();
 
-                valorDisponible = valorDisponible + valorsolicitado; //no debe tomar la actual
+                if(gff > 0) {
+                    valorDisponible = valorDisponible + valorsolicitado; //no debe tomar la actual
+                }
 
                 ListaRetorno.Add(new GrillaFuentesFinanciacion
                 {
@@ -946,12 +959,7 @@ namespace asivamosffie.services
                     Nuevo_saldo_de_la_fuente = valorDisponible - valorsolicitado,
                     Saldo_actual_de_la_fuente = valorDisponible,
                     Valor_solicitado_de_la_fuente = valorsolicitado,
-                    GestionFuenteFinanciacionID = _context.GestionFuenteFinanciacion
-                                                                .Where(x => !(bool)x.Eliminado &&
-                                                                       x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
-                                                                       x.NovedadContractualRegistroPresupuestalId == NovedadContractualRegistroPresupuestalId)
-                                                                .Select(x => x.GestionFuenteFinanciacionId)
-                                                                .FirstOrDefault(),
+                    GestionFuenteFinanciacionID = gff,
                 });
             }
             return ListaRetorno;
