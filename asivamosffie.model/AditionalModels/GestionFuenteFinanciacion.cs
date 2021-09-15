@@ -22,6 +22,8 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public dynamic TipoAportante { get; set; }
 
+        [NotMapped]
+        public int CofinanciacionAportanteId { get; set; }
 
     }
 }

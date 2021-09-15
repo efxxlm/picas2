@@ -2478,13 +2478,18 @@ namespace asivamosffie.services
                     }
 
                     var fuente = _context.FuenteFinanciacion.Find(pDisponibilidadPresObservacion.FuenteFinanciacionId);
-                    pDisponibilidadPresObservacion.SaldoActual = (decimal)fuente.ValorFuente - valoresSolicitados;
+                    VSaldosFuenteXaportanteIdValidar  fuenteNew = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == pDisponibilidadPresObservacion.CofinanciacionAportanteId).FirstOrDefault();
+
+                    pDisponibilidadPresObservacion.SaldoActual = (fuenteNew != null ? fuenteNew.SaldoActual ?? 0 : (decimal)fuente.ValorFuente) + pDisponibilidadPresObservacion.ValorSolicitado;
                     pDisponibilidadPresObservacion.NuevoSaldo = pDisponibilidadPresObservacion.SaldoActual - pDisponibilidadPresObservacion.ValorSolicitado;
 
                     gsertion.FechaModificacion = DateTime.Now;
                     gsertion.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
                     gsertion.ValorSolicitado = pDisponibilidadPresObservacion.ValorSolicitado;
                     gsertion.FuenteFinanciacionId = pDisponibilidadPresObservacion.FuenteFinanciacionId;
+                    gsertion.SaldoActual = pDisponibilidadPresObservacion.SaldoActual;
+                    gsertion.NuevoSaldo = pDisponibilidadPresObservacion.NuevoSaldo;
+
                     _context.GestionFuenteFinanciacion.Update(gsertion);
                     _context.SaveChanges();
                 }
@@ -2492,7 +2497,10 @@ namespace asivamosffie.services
                 {
                     var valoresSolicitados = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == pDisponibilidadPresObservacion.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);
                     var fuente = _context.FuenteFinanciacion.Find(pDisponibilidadPresObservacion.FuenteFinanciacionId);
-                    pDisponibilidadPresObservacion.SaldoActual = (decimal)fuente.ValorFuente - valoresSolicitados;
+                    VSaldosFuenteXaportanteIdValidar fuenteNew = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == pDisponibilidadPresObservacion.CofinanciacionAportanteId).FirstOrDefault();
+
+                    pDisponibilidadPresObservacion.SaldoActual = (fuenteNew != null ? fuenteNew.SaldoActual ?? 0 : (decimal)fuente.ValorFuente) + pDisponibilidadPresObservacion.ValorSolicitado;
+
                     pDisponibilidadPresObservacion.NuevoSaldo = pDisponibilidadPresObservacion.SaldoActual - pDisponibilidadPresObservacion.ValorSolicitado;
                     int estado = (int)EnumeratorEstadoGestionFuenteFinanciacion.Solicitado;
                     pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;

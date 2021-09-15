@@ -41,6 +41,7 @@ export class FormGestionarFuentesComponent implements OnInit {
   estaEditando = false;
   esNovedad = false;
   novedadContractualRegistroPresupuestalId: number;
+  cofinanciacionAportanteId: any;
 
   constructor(
     private fb: FormBuilder, private fuenteFinanciacionService: FuenteFinanciacionService
@@ -65,6 +66,7 @@ export class FormGestionarFuentesComponent implements OnInit {
     this.valorGestionado = this.data.elemento.valorGestionado;
     this.esNovedad = this.data.elemento.esNovedad;
     this.novedadContractualRegistroPresupuestalId = this.data.elemento.novedadContractualRegistroPresupuestalId;
+    this.cofinanciacionAportanteId = this.data.elemento.id;
 
     if (this.esNovedad === true) {
       this.fuenteFinanciacionService.GetListFuentesFinanciacionByNovedadContractualRegistroPresupuestal(this.novedadContractualRegistroPresupuestalId, this.data.elemento.id)
@@ -267,8 +269,9 @@ export class FormGestionarFuentesComponent implements OnInit {
         DisponibilidadPresupuestalProyectoId: this.disponibilidadPresupuestalProyectoid,
         EsNovedad: this.esNovedad,
         NovedadContractualRegistroPresupuestalId: this.novedadContractualRegistroPresupuestalId,
-
+        CofinanciacionAportanteId: this.cofinanciacionAportanteId
       };
+
       this.disponibilidadPresupuestalService.CreateFinancialFundingGestion(CreateFinancialFundingGestion).subscribe(result => {
         console.log("Guardado");
         mensaje = result.message

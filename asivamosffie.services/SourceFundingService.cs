@@ -760,7 +760,7 @@ namespace asivamosffie.services
                 decimal valorDisponible = 0;
                 VSaldosFuenteXaportanteIdValidar saldo = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
                 
-                valorDisponible = saldo != null ? (decimal)saldo.SaldoActual : 0;
+                valorDisponible = saldo != null ? (decimal)saldo.SaldoActual : 0 ;
 
                 decimal valorsolicitado = 0;
 
@@ -770,6 +770,7 @@ namespace asivamosffie.services
                     valorsolicitado = gestionFuenteFinanciacion
                                                     .Sum(x => x.ValorSolicitado);
                 }
+                valorDisponible = valorDisponible + valorsolicitado;
 
                 ListaRetorno.Add(new GrillaFuentesFinanciacion
                 {
