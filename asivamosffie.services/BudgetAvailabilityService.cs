@@ -2365,7 +2365,7 @@ namespace asivamosffie.services
                 template = template.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroSolicitud).
                     Replace("_LinkF_", pDominioFront);
                 bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioTecnico.Usuario.Email, "SDP rechazado por validación presupuestal", template, pSentender, pPassword, pMailServer, pMailPort);
-                this.EliminarGestion(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId, false, 0);
+                this.EliminarGestion(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId, esNovedad, pDisponibilidadPresObservacion.NovedadContractualRegistroPresupuestalId ?? 0);
                 return
                 new Respuesta
                 {
