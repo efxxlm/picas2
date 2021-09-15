@@ -175,7 +175,7 @@
       Descargar DDP
     </button>
 
-    <button [disabled]="detailavailabilityBudget?.tieneNovedad == true && esNovedad == false" mat-raised-button color="accent" (click)="openDialogCancelarDDP()">Cancelar solicitud DDP</button>
+    <button [disabled]="(detailavailabilityBudget?.tieneNovedad == true && esNovedad == false) || (detailavailabilityBudget?.estadoStr == 'Con registro presupuestal')" mat-raised-button color="accent" (click)="openDialogCancelarDDP()">Cancelar solicitud DDP</button>
 
   </div>
 </section>
