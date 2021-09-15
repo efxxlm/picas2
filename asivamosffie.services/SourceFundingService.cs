@@ -770,7 +770,7 @@ namespace asivamosffie.services
                     valorsolicitado = gestionFuenteFinanciacion
                                                     .Sum(x => x.ValorSolicitado);
                 }
-                valorDisponible = valorDisponible + valorsolicitado;
+                valorDisponible = valorDisponible + valorsolicitado;//no debe tomar el valor aun
 
                 ListaRetorno.Add(new GrillaFuentesFinanciacion
                 {
@@ -931,11 +931,13 @@ namespace asivamosffie.services
                 VSaldosFuenteXaportanteIdValidar saldo = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
                 valorDisponible = saldo != null ? (decimal) saldo.SaldoActual : 0;
 
-                var valorsolicitado = _context.GestionFuenteFinanciacion
+                decimal valorsolicitado = _context.GestionFuenteFinanciacion
                                                     .Where(x => !(bool)x.Eliminado &&
                                                            x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId &&
                                                            x.NovedadContractualRegistroPresupuestalId == NovedadContractualRegistroPresupuestalId)
                                                     .Sum(x => x.ValorSolicitado);
+
+                valorDisponible = valorDisponible + valorsolicitado; //no debe tomar la actual
 
                 ListaRetorno.Add(new GrillaFuentesFinanciacion
                 {
