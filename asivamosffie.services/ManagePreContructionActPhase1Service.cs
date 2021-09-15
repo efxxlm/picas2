@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace asivamosffie.services
 {
     public class ManagePreContructionActPhase1Service : IManagePreContructionActPhase1Service
-    { 
+    {
         private readonly TextInfo ti = CultureInfo.CurrentCulture.TextInfo;
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
@@ -483,6 +483,8 @@ namespace asivamosffie.services
 
             Usuario Supervisor = contrato.Supervisor;
             Usuario Interventor = contrato.Interventor;
+            if (contrato.Interventor == null)
+                Interventor = contrato.Apoyo;
 
             //Registros Proyectos 
             string PlantillaRegistrosProyectos = _context.Plantilla
@@ -554,11 +556,11 @@ namespace asivamosffie.services
             plantilla.Contenido = plantilla.Contenido.Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", Interventor.GetNombreCompleto ?? string.Empty);
             plantilla.Contenido = plantilla.Contenido.Replace("[NIT_ENTIDAD_CONTRATISTA_OBRA]", " " + ti.ToTitleCase(contrato?.Contratacion?.Contratista?.RepresentanteLegal));
             plantilla.Contenido = plantilla.Contenido.Replace("[CEDULA_SUPERVISOR]", Supervisor?.NumeroIdentificacion);
-            plantilla.Contenido = plantilla.Contenido.Replace("[NIT_ENTIDAD_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion); 
+            plantilla.Contenido = plantilla.Contenido.Replace("[NIT_ENTIDAD_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion);
             plantilla.Contenido = plantilla.Contenido.Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", ti.ToTitleCase(contrato?.Contratacion?.Contratista?.Nombre));
             plantilla.Contenido = plantilla.Contenido.Replace("[NOMBRE_ENTIDAD_CONTRATISTA_OBRA]", ti.ToTitleCase(contrato?.Contratacion?.Contratista?.RepresentanteLegal));
             plantilla.Contenido = plantilla.Contenido.Replace("[NUMERO_DRP]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().NumeroDrp);
-            plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_GENERACION_DRP]", (bool)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaDrp.HasValue ? ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaDrp).ToString("dd-MM-yyyy") : " "); 
+            plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_GENERACION_DRP]", (bool)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaDrp.HasValue ? ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaDrp).ToString("dd-MM-yyyy") : " ");
             plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_APROBACION_POLIZAS]", (((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy")));
             plantilla.Contenido = plantilla.Contenido.Replace("[OBJETO]", Helpers.Helpers.HtmlConvertirTextoPlano(contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().Objeto));
             decimal ValorInicialContrato = !string.IsNullOrEmpty(contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString()) ? contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud) : 0;
