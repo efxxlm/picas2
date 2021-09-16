@@ -565,6 +565,7 @@ export interface Dominio{
   nombre?: string,
   activo?: boolean,
   codigo?: string,
+  disabled?: boolean,
 }
 
 export interface Localizacion{

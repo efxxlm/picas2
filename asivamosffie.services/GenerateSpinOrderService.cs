@@ -1453,6 +1453,52 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnicaByConcepto(int pOrdenGiroDetalleDescuentoTecnicaId, string pConceptoPagoCodigo, string pAuthor)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Aportante_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                await _context.Set<OrdenGiroDetalleDescuentoTecnicaAportante>()
+                          .Where(o => o.OrdenGiroDetalleDescuentoTecnicaId == pOrdenGiroDetalleDescuentoTecnicaId && o.ConceptoPagoCodigo == pConceptoPagoCodigo)
+                          .UpdateAsync(o => new OrdenGiroDetalleDescuentoTecnicaAportante
+                          {
+                              Eliminado = true,
+                              FechaModificacion = DateTime.Now,
+                              UsuarioModificacion = pAuthor
+                          });
+
+                return
+                 new Respuesta
+                 {
+                     IsSuccessful = true,
+                     IsException = false,
+                     IsValidation = false,
+                     Code = GeneralCodes.EliminacionExitosa,
+                     Message =
+                     await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                                                                                     (int)enumeratorMenu.Generar_Orden_de_giro,
+                                                                                     GeneralCodes.EliminacionExitosa,
+                                                                                     idAccion,
+                                                                                     pAuthor,
+                                                                                     ConstantCommonMessages.SpinOrder.ELIMINAR_APORTANTE_ORDENES_GIRO
+                                                                                 )
+                 };
+            }
+            catch (Exception ex)
+            {
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = false,
+                         IsException = true,
+                         IsValidation = false,
+                         Code = GeneralCodes.Error,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, "", ex.InnerException.ToString())
+                     };
+            }
+        }
+
         public async Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionAportante(int pOrdenGiroDetalleTerceroCausacionAportanteId, string pAuthor)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Orden_Giro, (int)EnumeratorTipoDominio.Acciones);

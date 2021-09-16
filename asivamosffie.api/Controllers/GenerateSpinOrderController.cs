@@ -68,6 +68,22 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+        [HttpPost]
+        [Route("DeleteOrdenGiroDetalleDescuentoTecnicaByConcepto")]
+        public async Task<IActionResult> DeleteOrdenGiroDetalleDescuentoTecnicaByConcepto([FromQuery] int pOrdenGiroDetalleDescuentoTecnicaId, [FromQuery] string pConceptoPagoCodigo)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _generateSpinOrderService.DeleteOrdenGiroDetalleDescuentoTecnicaByConcepto(pOrdenGiroDetalleDescuentoTecnicaId, pConceptoPagoCodigo, User.Identity.Name);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
 
         [Route("DeleteOrdenGiroDetalleTerceroCausacionAportante")]
         [HttpPost]

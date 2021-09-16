@@ -17,6 +17,8 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> DeleteOrdenGiroDetalleTerceroCausacionAportante(int pOrdenGiroDetalleTerceroCausacionAportanteId, string pAuthor);
 
+        Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnicaByConcepto(int pOrdenGiroDetalleDescuentoTecnicaId, string pConceptoPagoCodigo, string pAuthor);
+
         Task<Respuesta> DeleteOrdenGiroDetalleDescuentoTecnica(int pOrdenGiroDetalleDescuentoTecnicaId, string pAuthor);
 
         Task<Respuesta> DeleteOrdenGiro(int OrdenGiroId, string pAuthor);

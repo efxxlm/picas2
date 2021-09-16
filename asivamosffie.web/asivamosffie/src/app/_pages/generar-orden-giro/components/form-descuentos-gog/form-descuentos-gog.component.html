@@ -18,7 +18,7 @@
                 <p>  </p>
                 <section class="container text-center" [formGroup]="descuento">
                     <p>Nombre del descuento: <b> {{ getTipoDescuento( descuento.get( 'tipoDescuentoCodigo' ).value ) }} </b></p>
-                        
+
                         <section *ngIf="getCriterios( i ).length > 0">
                             <div formArrayName="criterios" *ngFor="let criterio of getCriterios( i ).controls; index as j">
                                 <mat-card class="shipping-card">
@@ -32,7 +32,7 @@
 
                                         <div class="d-flex">
                                             <b style="margin-right: .5em;">Conceptos de pago que aplican para el descuento: </b>
-                        
+
                                             <div class="d-flex" *ngFor="let value of criterio.get( 'concepto' ).value; index as indexConcepto">
                                                 {{ firstLetterUpperCase( getValueConcepto( value, criterio.get( 'conceptosDePago' ).value ) ) }} <span *ngIf="descuento.get( 'criterio' ).value.length - 1 !== indexConcepto">,</span> <span *ngIf="descuento.get( 'criterio' ).value.length - 1 === indexConcepto"></span>
                                             </div>
@@ -59,7 +59,7 @@
                             </div>
                         </section>
                 </section>
-            </mat-expansion-panel> 
+            </mat-expansion-panel>
         </mat-accordion>
     </form>
 </ng-container>
@@ -72,7 +72,7 @@
                         Descuento {{ i + 1 }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-        
+
                 <section class="container text-center" [formGroup]="descuento">
                     <p>Nombre del descuento: <b> {{ getTipoDescuento( descuento.get( 'tipoDescuentoCodigo' ).value ) }} </b></p>
                         <div class="row">
@@ -88,9 +88,14 @@
                                     <div class="col">
                                         <mat-form-field class="select-width">
                                             <mat-select formControlName="criterio" required multiple (selectionChange)="getListCriterios( $event.value, i )">
-                                                <mat-option *ngFor="let criterio of criteriosArray" [value]="criterio.codigo">
-                                                    {{ firstLetterUpperCase( criterio.nombre ) }}
+                                              <div *ngFor="let criterio of criteriosArray">
+                                                <mat-option *ngIf="criterio?.disabled == true"  [value]="criterio.codigo" disabled>
+                                                  {{ firstLetterUpperCase( criterio.nombre ) }}
                                                 </mat-option>
+                                                <mat-option *ngIf="criterio?.disabled != true" [value]="criterio.codigo">
+                                                  {{ firstLetterUpperCase( criterio.nombre ) }}
+                                                </mat-option>
+                                              </div>
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
@@ -106,7 +111,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <section *ngIf="getCriterios( i ).length > 0">
                             <div formArrayName="criterios" *ngFor="let criterio of getCriterios( i ).controls; index as j">
                                 <mat-card class="shipping-card">
@@ -129,9 +134,14 @@
                                                     <div class="col">
                                                         <mat-form-field class="select-width">
                                                             <mat-select formControlName="concepto" required multiple (selectionChange)="getListConceptos( $event.value, i, j )">
-                                                                <mat-option *ngFor="let concepto of criterio.get( 'conceptosDePago' ).value" [value]="concepto.codigo">
-                                                                    {{ firstLetterUpperCase( concepto.nombre ) }}
+                                                              <div *ngFor="let concepto of criterio.get( 'conceptosDePago' ).value">
+                                                                <mat-option *ngIf="concepto.disabled == true" [value]="concepto.codigo" disabled>
+                                                                  {{ firstLetterUpperCase( concepto.nombre ) }}
                                                                 </mat-option>
+                                                                <mat-option *ngIf="concepto.disabled != true" [value]="concepto.codigo">
+                                                                  {{ firstLetterUpperCase( concepto.nombre ) }}
+                                                                </mat-option>
+                                                              </div>
                                                             </mat-select>
                                                         </mat-form-field>
                                                     </div>
@@ -316,15 +326,6 @@
                                                             <button mat-button
                                                                     color="warn"
                                                                     type="button"
-                                                                    class="btn-eliminar"
-                                                                    *ngIf="getConceptos( i, j ).length > 1"
-                                                                    (click)="deleteConcepto( i, j, k )">
-                                                                    <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
-                                                                    Eliminar concepto para descuento
-                                                            </button>
-                                                            <button mat-button
-                                                                    color="warn"
-                                                                    type="button"
                                                                     class="btn-eliminar text-right"
                                                                     (click)="addAportante( i, j, k )"
                                                                     *ngIf="l === getAportantes( i, j, k ).length - 1">
@@ -334,6 +335,17 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-12 text-right">
+                                                  <button mat-button
+                                                          color="warn"
+                                                          type="button"
+                                                          class="btn-eliminar"
+                                                          *ngIf="getConceptos( i, j ).length > 1"
+                                                          (click)="deleteConcepto( i, j, k , criterio.get( 'ordenGiroDetalleDescuentoTecnicaId' ).value)">
+                                                          <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
+                                                          Eliminar concepto para descuento
+                                                  </button>
+                                              </div>
                                             </div>
                                         </div>
                                     </mat-card-content>
@@ -365,7 +377,7 @@
                                     <section [innerHTML]="descuento.get( 'obsVerificar' ).value.observacion" style="margin-left: 2em;" *ngIf="descuento.get( 'obsVerificar' ).value.tieneObservacion === true"></section>
                                 </mat-card-content>
                             </mat-card>
-                
+
                             <mat-card class="shipping-card border" align="left" *ngIf="descuento.get( 'obsAprobar' ).value !== null">
                                 <mat-card-header class="header-card">
                                     <mat-card-title class="header-card--text card-title-detalle">
@@ -379,7 +391,7 @@
                                     <section [innerHTML]="descuento.get( 'obsAprobar' ).value.observacion" style="margin-left: 2em;" *ngIf="descuento.get( 'obsAprobar' ).value.tieneObservacion === true"></section>
                                 </mat-card-content>
                             </mat-card>
-                
+
                             <mat-card class="shipping-card border" align="left" *ngIf="descuento.get( 'obsTramitar' ).value !== null">
                                 <mat-card-header class="header-card">
                                     <mat-card-title class="header-card--text card-title-detalle">
@@ -406,7 +418,7 @@
                             </button>
                         </div>
                 </section>
-            </mat-expansion-panel> 
+            </mat-expansion-panel>
         </mat-accordion>
     </form>
 </ng-template>
