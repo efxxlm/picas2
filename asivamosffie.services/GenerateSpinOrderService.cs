@@ -49,11 +49,10 @@ namespace asivamosffie.services
         public async Task<dynamic> GetValorConceptoByAportanteId(int pAportanteId, int pSolicitudPagoId, string pConceptoPago)
         {
             return _context.VValorUsoXcontratoAportante
-                           .Where(v => v.AportanteId == pAportanteId
-                               && v.ConceptoPagoCodigo == pConceptoPago
-                               && v.SolicitudPagoId == pSolicitudPagoId
-                                 )
-                           .Select(v => v.ValorUso);
+                                                   .Where(v => v.AportanteId == pAportanteId
+                                                       && v.ConceptoPagoCodigo == pConceptoPago
+                                                       && v.SolicitudPagoId == pSolicitudPagoId )
+                                                   .Select(v => v.ValorUso);
         }
 
         public async Task<dynamic> GetFuentesDeRecursosPorAportanteId(int pAportanteId)

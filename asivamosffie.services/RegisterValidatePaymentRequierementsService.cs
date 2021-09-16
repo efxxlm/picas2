@@ -1484,7 +1484,7 @@ namespace asivamosffie.services
                                                                                                      .Where(v => v.ContratoId == solicitudPago.ContratoId
                                                                                                                && v.ContratacionProyectoId == pContratacionProyectoId
                                                                                                                && v.EsPreconstruccion == EsPreConstruccion
-                                                                                                               && v.ConceptoCodigo == pConceptoCodigo
+                                                                                                            // && v.ConceptoCodigo == pConceptoCodigo
                                                                                                                && v.UsoCodigo == pUsoCodigo)
                                                                                                      .FirstOrDefault();
 
@@ -1500,7 +1500,9 @@ namespace asivamosffie.services
                                     && r.ProyectoId == contratacionProyecto.ProyectoId
                                     && r.EsPreConstruccion == EsPreConstruccion  
                                     && r.TipoUsoCodigo == pUsoCodigo
-                                    && r.ConceptoPagoCodigo == pConceptoCodigo)
+                                    && r.ConceptoPagoCodigo == pConceptoCodigo
+                                    
+                                    )
                            .Sum(v => v.ValorUso);
 
                     return new
@@ -1513,12 +1515,12 @@ namespace asivamosffie.services
 
                 VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal =
                                                                          VValorFacturadoContratoXproyectoXuso.ValorSolicitudDdp
-                                                                       - (decimal)_context.VValorFacturadoContratoXproyectoXuso
-                                                                                                                               .Where(v => v.ContratoId == solicitudPago.ContratoId
-                                                                                                                                   && v.ContratacionProyectoId == pContratacionProyectoId
-                                                                                                                                   && v.EsPreconstruccion == EsPreConstruccion
-                                                                                                                                   && v.Uso == VValorFacturadoContratoXproyectoXuso.Uso
-                                                                                                                                   )
+                                                                       - (decimal)_context.VValorFacturadoContratoXproyectoXuso.Where(
+                                                                                                                                         v => v.ContratoId == solicitudPago.ContratoId
+                                                                                                                                           && v.ContratacionProyectoId == pContratacionProyectoId
+                                                                                                                                           && v.EsPreconstruccion == EsPreConstruccion
+                                                                                                                                           && v.Uso == VValorFacturadoContratoXproyectoXuso.Uso 
+                                                                                                                                           )
                                                                                                                                .Sum(c => c.ValorFacturado);
 
                 decimal MontoMaximo = 0;
