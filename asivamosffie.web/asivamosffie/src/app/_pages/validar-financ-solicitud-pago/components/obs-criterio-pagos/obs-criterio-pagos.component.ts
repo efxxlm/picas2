@@ -955,4 +955,9 @@ export class ObsCriterioPagosComponent implements OnInit {
         */
     }
 
+    getUsosParaElConceoto(usoCodigo) {
+        const nombreUso = this.usosParaElConceoto.find( uso => uso.codigo === usoCodigo)
+        return nombreUso.nombre;
+    }
+
 }
