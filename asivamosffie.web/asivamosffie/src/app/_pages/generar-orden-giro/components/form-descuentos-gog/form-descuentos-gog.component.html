@@ -150,10 +150,6 @@
                                             <div formArrayName="conceptos" *ngFor="let concepto of getConceptos( i, j ).controls; index as k">
                                                 <h2 class="card-subTitle mt-1em"> {{ firstLetterUpperCase( concepto.get( 'nombre' ).value ) }} </h2>
 
-                                                <pre>
-                                                    {{ concepto.value | json }}
-                                                </pre>
-
                                                 <div [formGroup]="concepto" *ngIf="getAportantes( i, j, k ).length > 0">
                                                     <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j, k ).controls; index as l">
                                                         <mat-card-title class="header-card--text mt-1em"> Aportante {{ l + 1 }} </mat-card-title>
