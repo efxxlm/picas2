@@ -593,7 +593,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                 }
 
                 conceptosArray.forEach( async concepto => {
-                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e.codigo ).toPromise();
+                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e ).toPromise();
                   console.log(montoMaximoPendienteNew);
                   
                     this.getConceptos( index ).push(
@@ -633,7 +633,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                 }
 
                 conceptosArray.forEach( async concepto => {
-                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e.codigo ).toPromise();
+                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e ).toPromise();
                   console.log(montoMaximoPendienteNew);
                   
                     this.getConceptos( index ).push(
