@@ -247,8 +247,9 @@ export class ObsCriterioPagosComponent implements OnInit {
                                         if ( conceptoFind !== undefined ) {
                                           this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, FORMA_PAGO_CODIGO, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterio?.tipoCriterioCodigo, conceptoFind?.codigo )
                                             .subscribe(
-                                                response => {
+                                                async response => {
                                                   conceptosDePagoSeleccionados.push( conceptoFind );
+                                                  await this.getvaluesConceptoPagoCodigo(conceptosDePagoSeleccionados)
                                                   conceptoDePagoArray.push(
                                                       this.fb.group(
                                                           {

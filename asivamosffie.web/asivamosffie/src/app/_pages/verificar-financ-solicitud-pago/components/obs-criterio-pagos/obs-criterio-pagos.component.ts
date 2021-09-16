@@ -236,11 +236,12 @@ export class ObsCriterioPagosComponent implements OnInit {
                                 const conceptosDePagoSeleccionados = [];
                                 // Get conceptos de pago
                                 if ( criterio.solicitudPagoFaseCriterioConceptoPago.length > 0 ) {
-                                    criterio.solicitudPagoFaseCriterioConceptoPago.forEach( solicitudPagoFaseCriterioConceptoPago => {
+                                    criterio.solicitudPagoFaseCriterioConceptoPago.forEach( async solicitudPagoFaseCriterioConceptoPago => {
                                         const conceptoFind = conceptosDePago.find( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio );
 
                                         if ( conceptoFind !== undefined ) {
                                             conceptosDePagoSeleccionados.push( conceptoFind );
+                                            await this.getvaluesConceptoPagoCodigo(conceptosDePagoSeleccionados)
                                             conceptoDePagoArray.push(
                                                 this.fb.group(
                                                     {
