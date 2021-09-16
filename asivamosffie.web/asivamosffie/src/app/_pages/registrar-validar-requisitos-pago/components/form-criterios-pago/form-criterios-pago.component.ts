@@ -250,12 +250,14 @@ export class FormCriteriosPagoComponent implements OnInit {
                                         const conceptoFind = conceptosDePago.find( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio );
                                         console.log(conceptoFind);
 
-                                        const usoCodigo = '';
+                                        const usoCodigo =  solicitudPagoFaseCriterioConceptoPago.usoCodigo;
 
                                         if ( conceptoFind !== undefined ) {
+                                        console.log('usoCodigo: ', usoCodigo)
                                           this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, FORMA_PAGO_CODIGO, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterio?.tipoCriterioCodigo, conceptoFind?.codigo, usoCodigo )
                                             .subscribe(
                                                 async response => {
+                                                    console.log(response)
                                                   const conceptoDePagoArray = [];
                                                   conceptosDePagoSeleccionados.push( conceptoFind );
                                                   await this.getvaluesConceptoPagoCodigo(conceptosDePagoSeleccionados)
@@ -268,7 +270,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                                               usoCodigo: [ solicitudPagoFaseCriterioConceptoPago.usoCodigo ],
                                                               conceptoPagoCriterio: [ solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ],
                                                               valorFacturadoConcepto: [ solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto !== undefined ? solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto : null ],
-                                                              montoMaximo: response?.montoMaximo
+                                                              montoMaximo: response.montoMaximo
                                                           }
                                                       )
                                                   );
@@ -631,7 +633,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                 }
 
                 conceptosArray.forEach( async concepto => {
-                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e ).toPromise();
+                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e.codigo ).toPromise();
                   console.log(montoMaximoPendienteNew);
                   
                     this.getConceptos( index ).push(
