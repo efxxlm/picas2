@@ -47,6 +47,7 @@ export class ObsCriterioPagosComponent implements OnInit {
     criteriosArray: { codigo: string, nombre: string, porcentaje: number }[] = [];
     estaEditando = false;
     forma_pago_codigo: string;
+    usosParaElConceoto: any;
 
     get criterios() {
         return this.addressForm.get( 'criterios' ) as FormArray;
@@ -953,6 +954,13 @@ export class ObsCriterioPagosComponent implements OnInit {
                 );
         }
         */
+    }
+
+    getvaluesConceptoPagoCodigo(e) {
+        this.registrarPagosSvc.getUsoByConceptoPagoCodigo( e[0].codigo )
+        .subscribe(response => {
+            this.usosParaElConceoto = response;
+        })
     }
 
     getUsosParaElConceoto(usoCodigo) {

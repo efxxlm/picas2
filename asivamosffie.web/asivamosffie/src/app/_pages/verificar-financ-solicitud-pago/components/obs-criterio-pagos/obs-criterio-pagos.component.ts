@@ -46,6 +46,7 @@ export class ObsCriterioPagosComponent implements OnInit {
     });
     criteriosArray: { codigo: string, nombre: string, porcentaje: number }[] = [];
     estaEditando = false;
+    usosParaElConceoto: any;
 
     get criterios() {
         return this.addressForm.get( 'criterios' ) as FormArray;
@@ -351,6 +352,13 @@ export class ObsCriterioPagosComponent implements OnInit {
             )
     }
     */
+
+    getvaluesConceptoPagoCodigo(e) {
+        this.registrarPagosSvc.getUsoByConceptoPagoCodigo( e[0].codigo )
+        .subscribe(response => {
+            this.usosParaElConceoto = response;
+        })
+    }
 
     getUsosParaElConceoto(usoCodigo) {
         const nombreUso = this.usosParaElConceoto.find( uso => uso.codigo === usoCodigo)
