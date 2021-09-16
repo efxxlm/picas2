@@ -22,6 +22,7 @@
                     <p><strong>Tipo de pago:</strong> {{ criterio.get( 'tipoPago' ).value.nombre }} </p>
                     <div *ngFor="let concepto of getConceptos( j ).controls">
                         <p><b> {{ concepto.get( 'conceptoPagoCriterioNombre' ).value }} </b></p>
+                        <p><b>Uso para el concepto de pago: </b> {{ getUsosParaElConceoto(concepto.get( 'usoCodigo' ).value) }} </p>
                         <p><b>Monto pendiente por facturar: </b> {{ concepto.get( 'montoMaximo' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
                         <p><b>Valor facturado al concepto:</b> ${{ concepto.get( 'valorFacturadoConcepto' ).value | currency:' ':'symbol-narrow':'.0-0' }} </p>
                     </div>

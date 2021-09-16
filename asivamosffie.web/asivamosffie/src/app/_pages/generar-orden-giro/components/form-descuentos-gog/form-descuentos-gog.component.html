@@ -43,7 +43,7 @@
                                                 <h2 class="card-subTitle mt-1em"> {{ firstLetterUpperCase( concepto.get( 'nombre' ).value ) }} </h2>
                     
                                                 <pre>
-                                                    {{ conceptoconcepto.value | json }}
+                                                    {{ concepto.value | json }}
                                                 </pre>
 
                                                 <div [formGroup]="concepto" *ngIf="getAportantes( i, j, k ).length > 0">

@@ -49,7 +49,7 @@ export class FormCriteriosPagoComponent implements OnInit {
     criteriosArray: { codigo: string, nombre: string, porcentaje: number }[] = [];
     estaEditando = false;
     forma_pago_codigo: string;
-    usosParaElConceoto: []
+    usosParaElConceoto: any[]
 
     get criterios() {
         return this.addressForm.get( 'criterios' ) as FormArray;
@@ -245,7 +245,10 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 if ( criterio.solicitudPagoFaseCriterioConceptoPago.length > 0 ) {
                                     console.log(criterio.solicitudPagoFaseCriterioConceptoPago);
                                     criterio.solicitudPagoFaseCriterioConceptoPago.forEach( solicitudPagoFaseCriterioConceptoPago => {
+                                        console.log(solicitudPagoFaseCriterioConceptoPago);
+                                        
                                         const conceptoFind = conceptosDePago.find( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio );
+                                        console.log(conceptoFind);
 
                                         const usoCodigo = '';
 
@@ -262,6 +265,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                                               solicitudPagoFaseCriterioConceptoPagoId: [ solicitudPagoFaseCriterioConceptoPago.solicitudPagoFaseCriterioConceptoPagoId ],
                                                               solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
                                                               conceptoPagoCriterioNombre: [ conceptoFind.nombre ],
+                                                              usoCodigo: [ solicitudPagoFaseCriterioConceptoPago.usoCodigo ],
                                                               conceptoPagoCriterio: [ solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ],
                                                               valorFacturadoConcepto: [ solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto !== undefined ? solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto : null ],
                                                               montoMaximo: response?.montoMaximo
@@ -596,6 +600,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 solicitudPagoFaseCriterioConceptoPagoId: [ 0 ],
                                 solicitudPagoFaseCriterioId: [ this.criterios.controls[ index ].get( 'solicitudPagoFaseCriterioId' ).value ],
                                 conceptoPagoCriterioNombre: [ concepto.nombre ],
+                                usoCodigo: [ concepto.usoCodigo ],
                                 conceptoPagoCriterio: [ concepto.codigo ],
                                 valorFacturadoConcepto: [ null ],
                                 montoMaximo: montoMaximoPendienteNew?.montoMaximo
@@ -635,6 +640,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 solicitudPagoFaseCriterioConceptoPagoId: [ 0 ],
                                 solicitudPagoFaseCriterioId: [ this.criterios.controls[ index ].get( 'solicitudPagoFaseCriterioId' ).value ],
                                 conceptoPagoCriterioNombre: [ concepto.nombre ],
+                                usoCodigo: [ concepto.usoCodigo ],
                                 conceptoPagoCriterio: [ concepto.codigo ],
                                 valorFacturadoConcepto: [ null ],
                                 montoMaximo: montoMaximoPendienteNew?.montoMaximo
@@ -729,6 +735,13 @@ export class FormCriteriosPagoComponent implements OnInit {
             if ( criterioAnticipo !== undefined ) {
                 esAnticipio = true
             }
+
+            
+            criterio.conceptos.forEach(element => {
+                element.usoCodigo = criterio.usoCodigo
+            });
+            
+            console.log(criterio.conceptos);
 
             solicitudPagoFaseCriterio.push(
                 {
@@ -991,6 +1004,11 @@ export class FormCriteriosPagoComponent implements OnInit {
                 );
         }
         */
+    }
+
+    getUsosParaElConceoto(usoCodigo) {
+        const nombreUso = this.usosParaElConceoto.find( uso => uso.codigo === usoCodigo)
+        return nombreUso.nombre;
     }
 
 }
