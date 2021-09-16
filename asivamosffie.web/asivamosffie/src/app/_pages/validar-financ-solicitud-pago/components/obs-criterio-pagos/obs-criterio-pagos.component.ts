@@ -296,7 +296,7 @@ export class ObsCriterioPagosComponent implements OnInit {
                             if ( this.esVerDetalle === false ) {
                                 // Get observacion CU autorizar solicitud de pago 4.1.9
                                 this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                                    this.listaMenusId.autorizarSolicitudPagoId,
+                                    this.listaMenusId?.autorizarSolicitudPagoId,
                                     this.solicitudPago.solicitudPagoId,
                                     this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId,
                                     this.criteriosPagoFacturaCodigo )
@@ -317,7 +317,7 @@ export class ObsCriterioPagosComponent implements OnInit {
                                     );
                                 // Get observacion CU verificar solicitud de pago 4.1.8
                                 this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
-                                    this.listaMenusId.aprobarSolicitudPagoId,
+                                    this.listaMenusId?.aprobarSolicitudPagoId,
                                     this.solicitudPago.solicitudPagoId,
                                     this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId,
                                     this.criteriosPagoFacturaCodigo )
