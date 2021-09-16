@@ -703,6 +703,17 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
         return dialogRef.afterClosed();
     }
 
+    maximumDiscountValue( value: number, index: number, jIndex: number, kIndex: number, lIndex: number ) {
+        let valorMaximoDescuento = 0;        
+        this.solicitudPagoFaseCriterio.forEach(element => {
+            valorMaximoDescuento += element.valorFacturado
+        });    
+        if(value > valorMaximoDescuento) {
+            this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null );
+            this.openDialog( '', '<b>El valor del descuentos no puede ser mayor al valor facturado al concepto.</b>' )
+        }
+    }
+
     onSubmit( index: number ) {
         this.estaEditando = true;
         this.addressForm.markAllAsTouched();

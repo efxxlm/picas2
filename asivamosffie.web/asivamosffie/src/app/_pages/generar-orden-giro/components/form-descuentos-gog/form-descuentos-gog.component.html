@@ -41,11 +41,6 @@
                                         <div *ngIf="getConceptos( i, j ).length > 0">
                                             <div formArrayName="conceptos" *ngFor="let concepto of getConceptos( i, j ).controls; index as k">
                                                 <h2 class="card-subTitle mt-1em"> {{ firstLetterUpperCase( concepto.get( 'nombre' ).value ) }} </h2>
-                    
-                                                <pre>
-                                                    {{ concepto.value | json }}
-                                                </pre>
-
                                                 <div [formGroup]="concepto" *ngIf="getAportantes( i, j, k ).length > 0">
                                                     <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j, k ).controls; index as l">
                                                         <mat-card-title class="header-card--text mt-1em" *ngIf="aportante.get( 'tipoAportante' ).value !== null"> Aportante {{ l + 1 }} </mat-card-title>
@@ -286,7 +281,7 @@
                                                                                             currencyMask
                                                                                             [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                                                                                             formControlName="valorDescuento"
-                                                                                            (ngModelChange)="checkValueDescuento( $event, i, j, k, l ); checkTotalDiscountValues( i, j, k, l );"
+                                                                                            (ngModelChange)="checkValueDescuento( $event, i, j, k, l ); checkTotalDiscountValues( i, j, k, l ); maximumDiscountValue($event, i, j, k, l)"
                                                                                             onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''">
                                                                                 </mat-form-field>
                                                                                 <span   class="contador"

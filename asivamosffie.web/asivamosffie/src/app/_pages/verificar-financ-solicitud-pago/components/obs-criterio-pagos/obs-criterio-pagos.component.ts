@@ -246,6 +246,7 @@ export class ObsCriterioPagosComponent implements OnInit {
                                                         solicitudPagoFaseCriterioConceptoPagoId: [ solicitudPagoFaseCriterioConceptoPago.solicitudPagoFaseCriterioConceptoPagoId ],
                                                         solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
                                                         conceptoPagoCriterioNombre: [ conceptoFind.nombre ],
+                                                        usoCodigo: [ solicitudPagoFaseCriterioConceptoPago.usoCodigo ],
                                                         conceptoPagoCriterio: [ solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ],
                                                         valorFacturadoConcepto: [ solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto !== undefined ? solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto : null ]
                                                     }
