@@ -180,6 +180,7 @@ namespace asivamosffie.services
 
             if (SolicitudPago.ContratoId > 0)
             {
+                SolicitudPago.VConceptosUsosXsolicitudPagoId = _context.VConceptosUsosXsolicitudPagoId.Where(r => r.SolicitudPagoId == SolicitudPagoId).ToList();
                 SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, SolicitudPagoId);
                 SolicitudPago.ContratoSon.ListProyectos = await _registerValidatePayment.GetProyectosByIdContrato((int)SolicitudPago.ContratoId);
                 SolicitudPago.ValorXProyectoXFaseXAportanteXConcepto = GetInfoValorValorXProyectoXFaseXAportanteXConcepto(SolicitudPago.ContratoSon.ContratacionId);

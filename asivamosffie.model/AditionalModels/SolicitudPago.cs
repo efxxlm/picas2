@@ -13,6 +13,10 @@ namespace asivamosffie.model.Models
 {
     public partial class SolicitudPago
     {
+
+        [NotMapped]
+        public List<VConceptosUsosXsolicitudPagoId> VConceptosUsosXsolicitudPagoId { get; set; }
+
         [NotMapped]
         public dynamic TablaDrpUso { get; set; }
 
