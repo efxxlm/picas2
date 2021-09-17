@@ -1183,11 +1183,24 @@ export class TerceroCausacionGogComponent implements OnInit {
         const conceptoCodigo = this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.filter(
           conceptoCodigo => conceptoCodigo.conceptoCodigo === codigo
         );
-        const valorAportante = conceptoCodigo.find(
+        const valorAportante = conceptoCodigo.filter(
           conceptoCodigo => conceptoCodigo.aportanteId === aportanteId
         );
 
-        if (valorAportante) return valorAportante.saldo;
+        let valorConceptoAportante;
+
+        valorAportante.forEach(element1 => {
+            this.solicitudPago.vConceptosUsosXsolicitudPagoId.forEach(element2 => {
+                if (
+                  element1.conceptoCodigo == element2.conceptoCodigo &&
+                  element1.tipoUsoCodigo == element2.usoCodigo
+                  ) {
+                  valorConceptoAportante = element1.saldo;
+                }
+              });
+            });
+
+        if (valorAportante) return valorConceptoAportante;
       }
     }
 }
