@@ -229,10 +229,6 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                     }
                                 )
                             )
-                            if(this.criteriosArray.some( criterio => criterio.codigo === descuento.criterioCodigo )){
-                              const n = this.criteriosArray.findIndex( criterio => criterio.codigo === descuento.criterioCodigo );
-                              this.criteriosArray[n].disabled = true;
-                            }
                         }
 
                         let estadoSemaforo = 'sin-diligenciar';
@@ -835,6 +831,17 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
+    }
+
+    disableOptionCriterioXconcepto(criterios: any, codigo:any){
+      if(criterios != null){
+        if(criterios.value.length > 0){
+          if(criterios.value.some( criterio => criterio.criterioCodigo === codigo  && criterio.ordenGiroDetalleDescuentoTecnicaId > 0)){
+            return true;
+          }
+        }
+      }
+      return false;
     }
 
 }

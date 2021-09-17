@@ -89,10 +89,10 @@
                                         <mat-form-field class="select-width">
                                             <mat-select formControlName="criterio" required multiple (selectionChange)="getListCriterios( $event.value, i )">
                                               <div *ngFor="let criterio of criteriosArray">
-                                                <mat-option *ngIf="criterio?.disabled == true"  [value]="criterio.codigo" disabled>
+                                                <mat-option *ngIf="disableOptionCriterioXconcepto(descuento.get( 'criterios' ),criterio.codigo) == true"  [value]="criterio.codigo" disabled>
                                                   {{ firstLetterUpperCase( criterio.nombre ) }}
                                                 </mat-option>
-                                                <mat-option *ngIf="criterio?.disabled != true" [value]="criterio.codigo">
+                                                <mat-option *ngIf="disableOptionCriterioXconcepto(descuento.get( 'criterios' ),criterio.codigo) != true" [value]="criterio.codigo">
                                                   {{ firstLetterUpperCase( criterio.nombre ) }}
                                                 </mat-option>
                                               </div>
