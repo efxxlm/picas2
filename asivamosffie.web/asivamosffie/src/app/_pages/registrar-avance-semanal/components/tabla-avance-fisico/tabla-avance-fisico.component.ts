@@ -182,7 +182,7 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
                                 {
                                     programacionId: flujo.programacion.programacionId,
                                     capitulo: flujo.programacion.actividad,
-                                    programacionCapitulo: this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[i].programacionCapitulo,
+                                    programacionCapitulo: this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[i] ? this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[i].programacionCapitulo : null,
                                     avanceFisicoCapitulo: flujo.programacion.avanceFisicoCapitulo !== null ? String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) ) : null
                                 }
                             );
