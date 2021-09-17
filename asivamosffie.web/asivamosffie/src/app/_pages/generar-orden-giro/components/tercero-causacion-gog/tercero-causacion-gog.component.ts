@@ -716,10 +716,6 @@ export class TerceroCausacionGogComponent implements OnInit {
             totalDescuentoTecnica += aportante.valorDescuentoTecnica;
         }
 
-        console.log("valor del descuento a validar: ",value);
-        console.log("valor del descuento técnica: ",totalDescuentoTecnica);
-        console.log("valor del aportante x concepto: ",totalAportantePorConcepto);
-
         if ( value +totalDescuentoTecnica > totalAportantePorConcepto ) {
             this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null )
             this.openDialog( '', `<b>El valor del descuento del concepto de pago no puede ser mayor al valor total de los aportantes.</b>` );
