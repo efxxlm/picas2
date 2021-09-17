@@ -1206,4 +1206,15 @@ export class TerceroCausacionGogComponent implements OnInit {
         if (valorAportante) return valorConceptoAportante;
       }
     }
+
+    validateMaxAportante( value: number, index: number, jIndex: number, kIndex: number, lIndex: number, nombreAportante: any, getAportantes: any ) {
+      getAportantes.forEach(element => {
+        if (element.value.nombreAportante.nombreAportante === nombreAportante.nombreAportante)
+        
+        if ( value > element.value.valorDescuento ) {
+            this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null )
+            this.openDialog( '', `El <b>valor del descuento</b> no puede ser superior al <b>valor facturado por el concepto para el aportante</b>` );
+        }
+      });
+  }
 }
