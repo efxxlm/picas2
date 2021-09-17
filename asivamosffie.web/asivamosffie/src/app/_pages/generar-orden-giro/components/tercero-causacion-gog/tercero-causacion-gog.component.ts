@@ -313,7 +313,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                                         fuenteRecursos: [ null, Validators.required ],
                                         fuenteFinanciacionId: [ null ],
                                         valorDescuento: [ null, Validators.required ],
-                                        valorDescuentoTecnica: [ null ]
+                                        valorDescuentoTecnica: [ null ],
+                                        cuentaBancariaId: [ null ],
                                     }
                                 )
                               )
@@ -340,7 +341,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                 fuenteRecursos: [ fuente, Validators.required ],
                                                 fuenteFinanciacionId: [ fuente.fuenteFinanciacionId ],
                                                 valorDescuento: [ aportante.valorDescuento, Validators.required ],
-                                                valorDescuentoTecnica: [ null ]
+                                                valorDescuentoTecnica: [ null ],
+                                                cuentaBancariaId: [ aportante.cuentaBancariaId, Validators.required ],
                                             }
                                         )
                                     )
@@ -362,7 +364,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                                             fuenteRecursos: [ null, Validators.required ],
                                             fuenteFinanciacionId: [ null ],
                                             valorDescuento: [ null, Validators.required ],
-                                            valorDescuentoTecnica: [ null ]
+                                            valorDescuentoTecnica: [ null ],
+                                            cuentaBancariaId: [ null ]
                                         }
                                     )
                                   )
@@ -435,7 +438,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                 fuenteRecursos: [ null, Validators.required ],
                                                 fuenteFinanciacionId: [ null ],
                                                 valorDescuento: [ null, Validators.required ],
-                                                valorDescuentoTecnica: [ null ]
+                                                valorDescuentoTecnica: [ null ],
+                                                cuentaBancariaId: [ null ]
                                             }
                                         )
                                     ] )
@@ -862,7 +866,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                         fuenteRecursos: [ null, Validators.required ],
                         fuenteFinanciacionId: [ null ],
                         valorDescuento: [ null, Validators.required ],
-                        valorDescuentoTecnica: [ null ]
+                        valorDescuentoTecnica: [ null ],
+                        cuentaBancariaId: [ null ]
                     }
                 )
             )
@@ -1003,6 +1008,37 @@ export class TerceroCausacionGogComponent implements OnInit {
     }
 
     onSubmit( index: number ) {
+        let alert = true;
+        const conceptos = this.getConceptos( index )?.value;
+        if(conceptos != null){
+          if(conceptos.length > 0){
+            conceptos.forEach(concepto => {
+              if(concepto.aportantes != null){
+                if(concepto.aportantes.length > 0){
+                  concepto.aportantes.forEach(aportante => {
+                    if(aportante.valorDescuento == null || aportante.valorDescuento == undefined || aportante.valorDescuento <= 0 ){
+                      alert =  false;
+                    }
+                  });
+                }else{
+                  alert =  false;
+                }
+              }else{
+                alert =  false;
+              }
+            });
+          }else{
+            alert =  false;
+          }
+        }else{
+          alert =  false;
+        }
+
+        if(!alert){
+          this.openDialog( '', `<b>Debe ingresar todos los valores facturados por aportante</b>` );
+          return;
+        }
+
         this.estaEditando = true;
         this.addressForm.markAllAsTouched();
 
@@ -1094,6 +1130,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                   conceptoPagoCodigo: conceptoControl.get( 'conceptoPagoCriterio' ).value,
                                   valorDescuento: aportanteControl.get( 'valorDescuento' ).value,
                                   valorDescuentoTecnica: aportanteControl.get( 'valorDescuentoTecnica' ).value,
+                                  cuentaBancariaId: aportanteControl.get( 'cuentaBancariaId' ).value,
                                   //valorDescuento: aportanteControl.get( 'valorDescuento' ).value <= aportanteControl.get( 'valorDescuentoTecnica' ).value ? aportanteControl.get( 'valorDescuento' ).value : aportanteControl.get( 'valorDescuento' ).value - aportanteControl.get( 'valorDescuentoTecnica' ).value
                               }
                           )
@@ -1210,11 +1247,38 @@ export class TerceroCausacionGogComponent implements OnInit {
     validateMaxAportante( value: number, index: number, jIndex: number, kIndex: number, lIndex: number, nombreAportante: any, getAportantes: any ) {
       getAportantes.forEach(element => {
         if (element.value.nombreAportante.nombreAportante === nombreAportante.nombreAportante)
-        
+
         if ( value > element.value.valorDescuento ) {
             this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null )
             this.openDialog( '', `El <b>valor del descuento</b> no puede ser superior al <b>valor facturado por el concepto para el aportante</b>` );
         }
       });
+  }
+  disableSave(index: number){
+    const conceptos = this.getConceptos( index )?.value;
+    if(conceptos != null){
+      if(conceptos.length > 0){
+        conceptos.forEach(concepto => {
+          if(concepto.aportantes != null){
+            if(concepto.aportantes.length > 0){
+              concepto.aportantes.forEach(aportante => {
+                if(aportante.valorDescuento == null || aportante.valorDescuento == undefined || aportante.valorDescuento <= 0 ){
+                  return false;
+                }
+              });
+            }else{
+              return false;
+            }
+          }else{
+            return false;
+          }
+        });
+      }else{
+        return false;
+      }
+    }else{
+      return false;
+    }
+    return true;
   }
 }

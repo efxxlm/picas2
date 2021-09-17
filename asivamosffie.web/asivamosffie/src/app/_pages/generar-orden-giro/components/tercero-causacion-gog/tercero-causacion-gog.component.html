@@ -271,7 +271,7 @@
                                                                         required
                                                                         currencyMask
                                                                         [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
-                                                                        (ngModelChange)="validateDiscountAportanteValue( $event, i, j, k ); validateMaxSaldoActualAportante($event, i, j, k , aportante.get('nombreAportante').value)"
+                                                                        (ngModelChange)="validateDiscountAportanteValue( $event, i, j, k ); validateMaxSaldoActualAportante($event, i, j, k , aportante.get('nombreAportante').value);"
                                                                         formControlName="valorDescuento"
                                                                         onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''">
                                                             </mat-form-field>
@@ -589,7 +589,7 @@
                             <button mat-button
                                     color="warn"
                                     class="btn-guardar"
-                                    [disabled]="criterio.dirty === false"
+                                    [disabled]="criterio.dirty === false && !disableSave(i)"
                                     type="button"
                                     (click)="onSubmit( i )">
                                     <img src="assets/img/icon/guardar.svg" alt="Regresar">
