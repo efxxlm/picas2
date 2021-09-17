@@ -537,6 +537,7 @@ namespace asivamosffie.services
                         FechaSolicitud = ListDP.FechaSolicitud,
                         EstadoStr = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal
                                     && r.Codigo == ListDP.EstadoSolicitudCodigo).FirstOrDefault().Nombre,
+                        EstadoSolicitudCodigo = ListDP.EstadoSolicitudCodigo,
                         Plazo = contratacionDP != null ? plazoContratacion?.PlazoMeses.ToString() + " meses / " + plazoContratacion?.PlazoDias.ToString() + " dias" : "",
                         CuentaCarta = ListDP.CuentaCartaAutorizacion,
                         TipoSolicitudEspecial = ListDP.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ListDP.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
@@ -2358,24 +2359,24 @@ namespace asivamosffie.services
                                 uso.Add(usos.Count() > 0 ? usos.FirstOrDefault().Nombre : "");
                                 usovalor.Add(componenteUso.ValorUso);
                                 total += componenteUso.ValorUso;
-
-                                var dom = _context.Dominio.Where(x => x.Codigo == componente.TipoComponenteCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).ToList();
-                                grilla.Add(
-                                    new GrillaComponentes
-                                    {
-                                        ComponenteAportanteId = componente.ComponenteAportanteNovedadId,
-                                        Componente = dom.Count() > 0 ? dom.FirstOrDefault().Nombre : "",
-                                        ComponenteUsoCodigo = componente.TipoComponenteCodigo,
-                                        Fase = String.IsNullOrEmpty(componente.FaseCodigo) ? string.Empty : _context.Dominio.Where(r => r.Codigo == componente.FaseCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Fases).FirstOrDefault().Nombre,
-                                        Fuente = namefuente,
-                                        FuenteFinanciacionId = font.FuenteFinanciacionId,
-                                        Uso = uso,
-                                        ValorTotal = total,
-                                        ValorUso = usovalor,
-                                        cofinanciacionAportanteId = ppapor.CofinanciacionAportanteId.Value,
-                                        Aportante = getNombreAportante(ppapor.CofinanciacionAportante)
-                                    });
                             }
+
+                            var dom = _context.Dominio.Where(x => x.Codigo == componente.TipoComponenteCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).ToList();
+                            grilla.Add(
+                                new GrillaComponentes
+                                {
+                                    ComponenteAportanteId = componente.ComponenteAportanteNovedadId,
+                                    Componente = dom.Count() > 0 ? dom.FirstOrDefault().Nombre : "",
+                                    ComponenteUsoCodigo = componente.TipoComponenteCodigo,
+                                    Fase = String.IsNullOrEmpty(componente.FaseCodigo) ? string.Empty : _context.Dominio.Where(r => r.Codigo == componente.FaseCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Fases).FirstOrDefault().Nombre,
+                                    Fuente = namefuente,
+                                    FuenteFinanciacionId = font.FuenteFinanciacionId,
+                                    Uso = uso,
+                                    ValorTotal = total,
+                                    ValorUso = usovalor,
+                                    cofinanciacionAportanteId = ppapor.CofinanciacionAportanteId.Value,
+                                    Aportante = getNombreAportante(ppapor.CofinanciacionAportante)
+                                });
                         }
                     }
 
@@ -2578,6 +2579,7 @@ namespace asivamosffie.services
                     FechaSolicitud = detailDP.DisponibilidadPresupuestal.FechaSolicitud,
                     EstadoStr = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal
                                 && r.Codigo == detailDP.EstadoSolicitudCodigo).FirstOrDefault().Nombre,
+                    EstadoSolicitudCodigo = detailDP.EstadoSolicitudCodigo,
                     Plazo = detailDP.PlazoMeses.ToString() + " meses / " + detailDP.PlazoDias.ToString() + " dias",
                     CuentaCarta = detailDP.DisponibilidadPresupuestal.CuentaCartaAutorizacion,
                     TipoSolicitudEspecial = "Novedad Contractual",//detailDP.DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :

@@ -77,6 +77,8 @@ namespace asivamosffie.model.APIModels
         public List<SesionComiteSolicitud> SesionComiteSolicitud { get; set; }
         public decimal ValorTotalDisponibilidad { get; set; }
         public bool TieneNovedad { get; set; }
+        public string EstadoSolicitudCodigo { get; set; }
+
 
     }
 }
