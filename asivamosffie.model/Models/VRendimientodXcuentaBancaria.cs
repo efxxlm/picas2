@@ -7,5 +7,6 @@ namespace asivamosffie.model.Models
     {
         public string CuentaBancaria { get; set; }
         public decimal? TotalRendimientos { get; set; }
+        public decimal? RendimientoIncorporar { get; set; }
     }
 }

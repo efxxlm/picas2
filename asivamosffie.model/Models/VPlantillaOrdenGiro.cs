@@ -5,6 +5,7 @@ namespace asivamosffie.model.Models
 {
     public partial class VPlantillaOrdenGiro
     {
+        public int? ContratacionId { get; set; }
         public string NumeroDdp { get; set; }
         public string InstitucionEducativa { get; set; }
         public string LlaveMen { get; set; }

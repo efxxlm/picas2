@@ -1,4 +1,4 @@
-﻿using System;
+﻿ 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -343,8 +343,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -14435,11 +14433,13 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_EjecucionFinancieraXProyecto");
 
+                entity.Property(e => e.Descuento).HasColumnType("decimal(38, 0)");
+
                 entity.Property(e => e.Nombre)
                     .IsRequired()
                     .HasMaxLength(250);
 
-                entity.Property(e => e.OrdenadoGirarAntesImpuestos).HasColumnType("decimal(18, 0)");
+                entity.Property(e => e.OrdenadoGirarAntesImpuestos).HasColumnType("decimal(30, 0)");
 
                 entity.Property(e => e.PorcentajeEjecucionFinanciera).HasColumnType("numeric(38, 6)");
 
@@ -15811,6 +15811,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.RendimientoIncorporar).HasColumnType("numeric(18, 0)");
+
                 entity.Property(e => e.TotalRendimientos).HasColumnType("numeric(18, 0)");
             });
 
@@ -16237,7 +16239,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(25, 0)");
             });
 
             modelBuilder.Entity<VTablaOdgFacturado>(entity =>
@@ -16251,6 +16253,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ConceptoPagoCodigo)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Descuentos).HasColumnType("decimal(18, 0)");
 
                 entity.Property(e => e.TipoPago).HasMaxLength(250);
 

@@ -1500,8 +1500,21 @@ namespace asivamosffie.services
             return new List<dynamic>
             {
               await  _context.VEjecucionPresupuestalXproyecto.Where(r => r.ProyectoId == pProyectoId).ToListAsync(),
+              GetEjecucionFinanciera(pProyectoId),
               await  _context.VEjecucionFinancieraXproyecto.Where(r => r.ProyectoId == pProyectoId).ToListAsync()
             };
+        }
+
+        private List<VEjecucionFinancieraXproyecto> GetEjecucionFinanciera(int pProyectoId)
+        {
+            List<VEjecucionFinancieraXproyecto> list = _context.VEjecucionFinancieraXproyecto.Where(r => r.ProyectoId == pProyectoId).ToList();
+
+            foreach (var item in list)
+            {
+                item.Descuento = _context.VPlantillaOrdenGiro.Where(r => r.ContratacionId == item.ContratacionId).Sum(r => r.DescuentoAns + r.DescuentoOtros + r.DescuentoReteFuente);
+            }
+
+            return list;
         }
         #endregion
 
