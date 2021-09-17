@@ -51,7 +51,7 @@ en el cmd
     ipconfig
 
 con la ip local
-    npm run compilar --host="ip local" --disable-host-check
+    node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng serve --port 4200 --host="ip local" --disable-host-check
 
 ## Desplegar en [asivamos.ffie.com.co](https://asivamos.ffie.com.co)
 
