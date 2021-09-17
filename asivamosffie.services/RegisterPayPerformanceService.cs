@@ -1063,8 +1063,7 @@ namespace asivamosffie.services
                                                 ProvisionGravamenFinanciero = performance.ProvisionGravamenFinanciero,
                                                 TotalGastosBancarios = performance.TotalGastosBancarios,
                                                 TotalGravamenFinancieroDescontado = performance.TotalGravamenFinancieroDescontado,
-                                                Visitas = performance.Visitas,
-                                                RendimientoIncorporar = performance.RendimientoIncorporar
+                                                Visitas = performance.Visitas
                                             }).ToList();
 
             string directory = CheckFileDownloadDirectory();
