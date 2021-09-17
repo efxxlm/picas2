@@ -1159,6 +1159,8 @@ namespace asivamosffie.services
 
             List<VFuentesUsoXcontratoIdXproyecto> ListVFuentesUsoXcontratoId = new List<VFuentesUsoXcontratoIdXproyecto>();
 
+            Proyecto proyecto = _context.Proyecto.Find(pProyectoId);
+
             foreach (var item in ListaCompleta)
             {
                 if (!ListVFuentesUsoXcontratoId.Any(r => r.TipoUso == item.TipoUso && r.FuenteFinanciacion == item.FuenteFinanciacion))
@@ -1243,34 +1245,45 @@ namespace asivamosffie.services
                                                                             .Select(s => s.ValorUso)
                                                                             .FirstOrDefault() ?? 0;
 
-                                    decimal Descuento = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso
-                                                                                            .Where(v => v.AportanteId == Aportante.AportanteId
-                                                                                                     && v.UsoCodigo == usos.TipoUsoCodigo
-                                                                                                     && v.OrdenGiroId == solicitudPago.OrdenGiroId
-                                                                                                     && v.EsTerceroCausacion == 0
-                                                                                                     )
-                                                                                            .Sum(v => v.ValorDescuento);
 
-                                    decimal DescuentoTecnica = 0;
-                                    //_context.VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso
-                                    //                             .Where(r => r.OrdenGiroId == solicitudPago.OrdenGiroId
-                                    //                              && r.AportanteId == Aportante.AportanteId
-                                    //                              && r.UsoCodigo == usos.TipoUsoCodigo
-                                    //                             ).Sum(r => r.ValorDescuento) ?? 0;
+                                   List<VPlantillaOrdenGiroUsos> VPlantillaOrdenGiroUsos = _context.VPlantillaOrdenGiroUsos
+                                                                                            .Where(r => r.OrdenGiroId == solicitudPago.OrdenGiroId
+                                                                                                     && r.AportanteId == Aportante.AportanteId
+                                                                                                     && r.LlaveMen == proyecto.LlaveMen
+                                                                                                     && r.UsoCodigo == usos.TipoUsoCodigo
+                                                                                             ).ToList();
 
                                     Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
-
                                     if (Aportante.ValorUso == null)
                                         Aportante.ValorUso = new List<ValorUso>();
 
-                                    if (Descuento == 0)
-                                        Descuento = ValorUso;
-                                    Aportante.ValorUso.Add(new ValorUso
-                                    {
-                                        AportanteId = Aportante.AportanteId,
-                                        Valor = String.Format("{0:n0}", ValorUso),
-                                        ValorActual = String.Format("{0:n0}", (Descuento ))
-                                    });
+                                    if (VPlantillaOrdenGiroUsos != null)
+                                    { 
+                                        decimal Descuento = (VPlantillaOrdenGiroUsos.Sum(r=> r.DescuentoReteFuente + r.DescuentoOtros + r.DescuentoAns)) ?? 0;
+
+                                        decimal ValorConcepto = VPlantillaOrdenGiroUsos.Sum(r => r.ValorConcepto) ??0;
+                                        if (ValorConcepto == 0)
+                                            ValorConcepto = ValorUso;
+
+                                        Decimal Total = Math.Abs(ValorUso - (ValorConcepto - Descuento));
+
+                                        if (Total == 0)
+                                            Total = ValorUso;
+                                        Aportante.ValorUso.Add(new ValorUso
+                                        {
+                                            AportanteId = Aportante.AportanteId,
+                                            Valor = String.Format("{0:n0}", ValorUso),
+                                            ValorActual = String.Format("{0:n0}", Total)
+                                        });
+                                    }
+                                    else {
+                                        Aportante.ValorUso.Add(new ValorUso
+                                        {
+                                            AportanteId = Aportante.AportanteId,
+                                            Valor = String.Format("{0:n0}", ValorUso),
+                                            ValorActual = String.Format("{0:n0}", ValorUso)
+                                        });
+                                    }
                                 }
                             }
                         }
@@ -1425,9 +1438,8 @@ namespace asivamosffie.services
             foreach (var SolicitudPago in pListSolicitudPago)
             {
                 List<VDescuentosXordenGiro> descuentosXordenGiro = ListvDescuentosXordenGiro.Where(r => r.OrdenGiroId == SolicitudPago.OrdenGiroId).ToList();
-                VDescuentoTecnicaXordenGiro vDescuentosXordenGiro = ListVDescuentoTecnicaXordenGiro.Where(r => r.OrdenGiroId == SolicitudPago.OrdenGiroId).FirstOrDefault();
-
-
+                List<VDescuentoTecnicaXordenGiro> vDescuentosXordenGiro = ListVDescuentoTecnicaXordenGiro.Where(r => r.OrdenGiroId == SolicitudPago.OrdenGiroId).ToList();
+                 
                 string NombreContratista = _context.SolicitudPago
                      .Where(r => r.SolicitudPagoId == SolicitudPago.SolicitudPagoId)
                      .Include(r => r.Contrato)
@@ -1452,24 +1464,25 @@ namespace asivamosffie.services
                 decimal ValorDescuentosTecnica2 = 0;
                 if (vDescuentosXordenGiro != null)
                 {
-                    ValorDescuentosTecnica += (decimal)vDescuentosXordenGiro.ValorDescuento;
-                    ValorDescuentosTecnica2 = (decimal)vDescuentosXordenGiro.ValorDescuento;
+                    ValorDescuentosTecnica += (decimal)vDescuentosXordenGiro.Sum(r=> r.ValorDescuento);
+                    ValorDescuentosTecnica2 = (decimal)vDescuentosXordenGiro.Sum(r=> r.ValorDescuento);
                 }
 
 
-                decimal ValorFacturado = (SolicitudPago?.OrdenGiro?.ValorNetoGiro + ValorDescuentosTecnica2 + descuentosXordenGiro.Sum(r => r.ValorDescuento)) ?? 0;
+                //decimal ValorFacturado = (SolicitudPago?.OrdenGiro?.ValorNetoGiro + ValorDescuentosTecnica2 + descuentosXordenGiro.Sum(r => r.ValorDescuento)) ?? 0;
+                decimal ValorFacturado = (SolicitudPago?.OrdenGiro?.ValorNetoGiro - ValorDescuentosTecnica2 ) ?? 0;
 
-
+                List<VPlantillaOrdenGiro> vPlantillaOrdenGiros = _context.VPlantillaOrdenGiro.Where(r => r.OrdenGiroId == SolicitudPago.OrdenGiroId).ToList();
                 TablaOrdenesGiro.Add(
                     new
                     {
                         NumeroOrdenGiro = SolicitudPago.OrdenGiro.NumeroSolicitud,
                         Contratista = NombreContratista,
-                        Facturado = FormattedAmount(ValorFacturado),
-                        AnsAplicado = FormattedAmount(DescuentosANS),
-                        ReteGarantia = FormattedAmount(DescuentosReteGarantia),
-                        OtrosDescuentos = FormattedAmount(ValorDescuentosTecnica),
-                        ApagarAntesImpuestos = FormattedAmount(ValorFacturado - DescuentosANS - DescuentosReteGarantia - ValorDescuentosTecnica),
+                        Facturado = FormattedAmount(vPlantillaOrdenGiros.Sum(r=> r.ValorConcepto)),
+                        AnsAplicado = FormattedAmount(vPlantillaOrdenGiros.Sum(r=> r.DescuentoAns)),
+                        ReteGarantia = FormattedAmount(vPlantillaOrdenGiros.Sum(r => r.DescuentoReteFuente)),
+                        OtrosDescuentos = FormattedAmount(vPlantillaOrdenGiros.Sum(r => r.DescuentoOtros)),
+                        ApagarAntesImpuestos = FormattedAmount(vPlantillaOrdenGiros.Sum(r => r.ValorConcepto) - vPlantillaOrdenGiros.Sum(r => r.DescuentoAns) - vPlantillaOrdenGiros.Sum(r => r.DescuentoReteFuente) - vPlantillaOrdenGiros.Sum(r => r.DescuentoOtros)),
                         SolicitudId = SolicitudPago.SolicitudPagoId,
                         OrdenGiro = SolicitudPago.OrdenGiroId
                     });
