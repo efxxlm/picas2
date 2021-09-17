@@ -6,9 +6,9 @@
         </mat-card-content>
     </mat-card>
 
-    <div class="mt-1em text-center">
+    <!--<div class="mt-1em text-center">
         <p>Valor neto de giro: <b> {{ valorNetoGiroTercero | currency: '':'symbol-narrow':'.0-0' }} </b></p>
-    </div>
+    </div>-->
 
     <form [formGroup]="addressForm" (ngSubmit)="guardar()">
         <mat-accordion formArrayName="criterios" *ngFor="let criterio of criterios.controls; index as i">
