@@ -864,7 +864,7 @@ namespace asivamosffie.services
 
             decimal ValorDescuento = _context.SolicitudPagoFaseFacturaDescuento.Find(pOrdenGiroDetalleDescuentoTecnica.SolicitudPagoFaseFacturaDescuentoId).ValorDescuento ?? 0;
 
-            if (pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Where(r => r.Eliminado != true).Sum(r => r.ValorDescuento) != ValorDescuento)
+            if (pOrdenGiroDetalleDescuentoTecnica.OrdenGiroDetalleDescuentoTecnicaAportante.Where(r => r.Eliminado != true).Sum(r => r.ValorDescuento) > ValorDescuento)
                 return false;
 
             if (pOrdenGiroDetalleDescuentoTecnica?.OrdenGiroDetalleDescuentoTecnicaAportante?.Count() == 0)
@@ -980,6 +980,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
+
                     ValidateValorNeto(pOrdenGiro.OrdenGiroId);
 
                     _context.Set<OrdenGiro>()
@@ -1012,7 +1013,9 @@ namespace asivamosffie.services
                              ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO)
                      };
 
+                _context.SaveChanges();
                 await ValidarRegistroCompleto(pOrdenGiro.SolicitudPagoId, pOrdenGiro.UsuarioCreacion);
+
 
                 return respuesta;
             }
