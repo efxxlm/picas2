@@ -680,11 +680,11 @@ export class TerceroCausacionGogComponent implements OnInit {
     }
     validateMaxSaldoActualAportante( value: number, index: number, jIndex: number, kIndex: number, aportante: any ) {
         if ( value !== null ) {
-        // console.log(this.solicitudPago.tablaInformacionFuenteRecurso)
+        console.log(this.solicitudPago.tablaInformacionFuenteRecursos)
         // console.log(aportante.cofinanciacionAportanteId)
 
-        if (this.solicitudPago.tablaInformacionFuenteRecurso) {
-          const saldoAport = this.solicitudPago.tablaInformacionFuenteRecurso.find( obs => {
+        if (this.solicitudPago.tablaInformacionFuenteRecursos) {
+          const saldoAport = this.solicitudPago.tablaInformacionFuenteRecursos.find( obs => {
               if (obs.cofinanciacionAportanteId === aportante.cofinanciacionAportanteId) {
                   return obs.saldoActual
               }
