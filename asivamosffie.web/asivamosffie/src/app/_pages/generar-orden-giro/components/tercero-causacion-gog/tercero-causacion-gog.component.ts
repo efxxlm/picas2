@@ -176,7 +176,7 @@ export class TerceroCausacionGogComponent implements OnInit {
 
                     //const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
                     const dataAportantes = await this.ordenGiroSvc.getAportantesNew( this.solicitudPago );
-                    
+
                     for (let i = 0; i < dataAportantes.listaTipoAportante.length; i++) {
                         const element = dataAportantes.listaTipoAportante[i];
                         const element2 = this.solicitudPago.tablaInformacionFuenteRecursos[i];
@@ -700,6 +700,7 @@ export class TerceroCausacionGogComponent implements OnInit {
     // Check valor del descuento de los conceptos
     validateDiscountValue( value: number, index: number, jIndex: number, kIndex: number, lIndex: number ) {
         let totalAportantePorConcepto = 0;
+        let totalDescuentoTecnica = 0;
 
         if ( value !== null ) {
             if ( value < 0 ) {
@@ -710,9 +711,14 @@ export class TerceroCausacionGogComponent implements OnInit {
 
         for ( const aportante of this.getConceptos( index ).controls[ jIndex ].get( 'aportantes' ).value ) {
             totalAportantePorConcepto += aportante.valorDescuento;
+            totalDescuentoTecnica += aportante.valorDescuentoTecnica;
         }
 
-        if ( value > totalAportantePorConcepto ) {
+        console.log("valor del descuento a validar: ",value);
+        console.log("valor del descuento técnica: ",totalDescuentoTecnica);
+        console.log("valor del aportante x concepto: ",totalAportantePorConcepto);
+
+        if ( value +totalDescuentoTecnica > totalAportantePorConcepto ) {
             this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null )
             this.openDialog( '', `<b>El valor del descuento del concepto de pago no puede ser mayor al valor total de los aportantes.</b>` );
         }
