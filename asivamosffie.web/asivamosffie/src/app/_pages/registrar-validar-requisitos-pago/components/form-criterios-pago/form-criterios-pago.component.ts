@@ -379,8 +379,7 @@ export class FormCriteriosPagoComponent implements OnInit {
         }
 
         if (
-            valorConcepto > this.getConceptos( index ).controls[ jIndex ].get( 'montoMaximo' ).value ||
-            sumaValoresConcepto > this.getConceptos( index ).controls[ jIndex ].get( 'montoMaximo' ).value
+            valorConcepto > this.getConceptos( index ).controls[ jIndex ].get( 'montoMaximo' ).value 
         ) {
             this.openDialog( '', `El valor facturado al concepto no puede ser mayor al <b>Monto pendiente por facturar.</b>` );
             this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
