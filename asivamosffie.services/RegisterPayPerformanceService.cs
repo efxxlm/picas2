@@ -332,7 +332,7 @@ namespace asivamosffie.services
                     }
                     accounts.Add(cellValue);
 
-                    var activeAccount = bankAccounts.SingleOrDefault(account => account.NumeroCuentaBanco == cellValue);
+                    var activeAccount = bankAccounts.FirstOrDefault(account => account.NumeroCuentaBanco == cellValue);
                     var hasError = activeAccount == null;
                     if (activeAccount != null)
                     {
