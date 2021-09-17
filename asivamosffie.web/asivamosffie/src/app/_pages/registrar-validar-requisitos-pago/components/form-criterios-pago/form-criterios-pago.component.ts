@@ -567,9 +567,10 @@ export class FormCriteriosPagoComponent implements OnInit {
 
     getvaluesConcepto( conceptos: any[], index: number, criterioCodigo: any, e ) {
         
-        console.log(conceptos)
+        this.getConceptos( index ).clear();
+        this.criterios.controls[ index ].get( 'valorFacturado' ).setValue( null );
+
         const conceptosArray = [ ...conceptos ];
-        console.log(conceptosArray)
         if ( conceptosArray.length > 0 ) {
             if ( this.criterios.controls[ index ].get( 'conceptos' ).dirty === true ) {
 
