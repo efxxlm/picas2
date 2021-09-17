@@ -80,7 +80,6 @@ export class TerceroCausacionGogComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log(this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto);
         this.getTerceroCausacion();
     }
 
@@ -135,7 +134,6 @@ export class TerceroCausacionGogComponent implements OnInit {
             });
         } );
         console.log(this.solicitudPago.ordenGiro.ordenGiroDetalle);
-        console.log(this.valorNetoGiro);
         /*
             get listaCriterios para lista desplegable
             Se reutilizan los servicios del CU 4.1.7 "Solicitud de pago"
@@ -680,6 +678,25 @@ export class TerceroCausacionGogComponent implements OnInit {
             }
         }
     }
+    validateMaxSaldoActualAportante( value: number, index: number, jIndex: number, kIndex: number, aportante: any ) {
+        if ( value !== null ) {
+        console.log(this.solicitudPago.tablaInformacionFuenteRecurso)
+        console.log(aportante.cofinanciacionAportanteId)
+
+        const saldoAport = this.solicitudPago.tablaInformacionFuenteRecurso.find( obs => {
+            if (obs.cofinanciacionAportanteId === aportante.cofinanciacionAportanteId) {
+                return obs.saldoActual
+            }
+        })
+            if (
+                value > saldoAport
+            ) {
+                this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
+                this.openDialog( '', `<b>El valor facturado por el concepto para el aportante no puede ser mayor al saldo que tiene el aportante para el uso.</b>` )
+                return
+            }
+        }
+    }
     // Check valor del descuento de los conceptos
     validateDiscountValue( value: number, index: number, jIndex: number, kIndex: number, lIndex: number ) {
         let totalAportantePorConcepto = 0;
@@ -1160,7 +1177,6 @@ export class TerceroCausacionGogComponent implements OnInit {
         const conceptoCodigo = this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.filter(
           conceptoCodigo => conceptoCodigo.conceptoCodigo === codigo
         );
-
         const valorAportante = conceptoCodigo.find(
           conceptoCodigo => conceptoCodigo.aportanteId === aportanteId
         );

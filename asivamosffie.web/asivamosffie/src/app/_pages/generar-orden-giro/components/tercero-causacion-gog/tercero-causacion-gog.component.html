@@ -271,7 +271,7 @@
                                                                         required
                                                                         currencyMask
                                                                         [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
-                                                                        (ngModelChange)="validateDiscountAportanteValue( $event, i, j, k )"
+                                                                        (ngModelChange)="validateDiscountAportanteValue( $event, i, j, k ); validateMaxSaldoActualAportante($event, i, j, k , aportante.get('nombreAportante').value)"
                                                                         formControlName="valorDescuento"
                                                                         onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''">
                                                             </mat-form-field>
