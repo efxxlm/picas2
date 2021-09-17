@@ -1243,21 +1243,33 @@ namespace asivamosffie.services
                                                                             .Select(s => s.ValorUso)
                                                                             .FirstOrDefault() ?? 0;
 
-                                    decimal Descuento = _context.VOrdenGiroPagosXusoAportante
+                                    decimal Descuento = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso
                                                                                             .Where(v => v.AportanteId == Aportante.AportanteId
-                                                                                                     && v.TipoUsoCodigo == usos.TipoUsoCodigo)
-                                                                                            .Sum(v => v.ValorDescuento) ?? 0;
+                                                                                                     && v.UsoCodigo == usos.TipoUsoCodigo
+                                                                                                     && v.OrdenGiroId == solicitudPago.OrdenGiroId
+                                                                                                     && v.EsTerceroCausacion == 0
+                                                                                                     )
+                                                                                            .Sum(v => v.ValorDescuento);
+
+                                    decimal DescuentoTecnica = 0;
+                                    //_context.VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso
+                                    //                             .Where(r => r.OrdenGiroId == solicitudPago.OrdenGiroId
+                                    //                              && r.AportanteId == Aportante.AportanteId
+                                    //                              && r.UsoCodigo == usos.TipoUsoCodigo
+                                    //                             ).Sum(r => r.ValorDescuento) ?? 0;
 
                                     Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
 
                                     if (Aportante.ValorUso == null)
                                         Aportante.ValorUso = new List<ValorUso>();
 
+                                    if (Descuento == 0)
+                                        Descuento = ValorUso;
                                     Aportante.ValorUso.Add(new ValorUso
                                     {
                                         AportanteId = Aportante.AportanteId,
                                         Valor = String.Format("{0:n0}", ValorUso),
-                                        ValorActual = String.Format("{0:n0}", (ValorUso - Descuento))
+                                        ValorActual = String.Format("{0:n0}", (Descuento ))
                                     });
                                 }
                             }

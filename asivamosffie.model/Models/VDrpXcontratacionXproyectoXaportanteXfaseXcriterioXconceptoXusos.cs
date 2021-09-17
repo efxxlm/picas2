@@ -21,6 +21,6 @@ namespace asivamosffie.model.Models
         public int ComponenteUsoId { get; set; }
         public bool? EsPreConstruccion { get; set; }
         public decimal? Saldo { get; set; }
-        public int? A { get; set; }
+        public decimal? A { get; set; }
     }
 }

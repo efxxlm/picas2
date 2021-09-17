@@ -271,6 +271,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VEjecucionFinancieraXcontrato> VEjecucionFinancieraXcontrato { get; set; }
         public virtual DbSet<VEjecucionFinancieraXproyecto> VEjecucionFinancieraXproyecto { get; set; }
         public virtual DbSet<VEjecucionPresupuestalXproyecto> VEjecucionPresupuestalXproyecto { get; set; }
+        public virtual DbSet<VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportante> VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportante { get; set; }
+        public virtual DbSet<VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso> VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoId> VFuentesUsoXcontratoId { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoIdXproyecto> VFuentesUsoXcontratoIdXproyecto { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
@@ -14267,7 +14269,9 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_DrpXContratacionXProyectoXAportanteXFaseXCriterioXConceptoXUsos");
 
-                entity.Property(e => e.A).HasColumnName("a");
+                entity.Property(e => e.A)
+                    .HasColumnName("a")
+                    .HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.ConceptoCodigo)
                     .HasMaxLength(100)
@@ -14297,7 +14301,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Saldo).HasColumnType("numeric(19, 2)");
+                entity.Property(e => e.Saldo).HasColumnType("numeric(38, 0)");
 
                 entity.Property(e => e.TipoUsoCodigo)
                     .HasMaxLength(100)
@@ -14471,6 +14475,44 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.TotalComprometido).HasColumnType("decimal(18, 0)");
+            });
+
+            modelBuilder.Entity<VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportante>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FacturadoOdgXContratacionXProyectoXFaseXConceptoXAportante");
+
+                entity.Property(e => e.ConceptoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EsPreconstruccion).HasColumnName("esPreconstruccion");
+
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
+            });
+
+            modelBuilder.Entity<VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FacturadoXOdgXContratacionXProyectoXAportanteXFaseXConcepXUso");
+
+                entity.Property(e => e.ConceptoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EsPreconstruccion).HasColumnName("esPreconstruccion");
+
+                entity.Property(e => e.UsoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsoNombre)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<VFuentesUsoXcontratoId>(entity =>
