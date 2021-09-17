@@ -716,9 +716,14 @@ export class TerceroCausacionGogComponent implements OnInit {
             totalDescuentoTecnica += aportante?.valorDescuentoTecnica;
         }
 
-        if ( (value + totalDescuentoTecnica) > totalAportantePorConcepto ) {
+        if ( value !== null ) {
+          value = value + totalDescuentoTecnica;
+        }
+
+        if ( value > totalAportantePorConcepto ) {
             this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null )
             this.openDialog( '', `<b>El valor del descuento del concepto de pago no puede ser mayor al valor total de los aportantes.</b>` );
+            return;
         }
     }
 
