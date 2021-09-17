@@ -51,7 +51,7 @@ namespace asivamosffie.services
             return _context.VValorUsoXcontratoAportante
                                                    .Where(v => v.AportanteId == pAportanteId
                                                        && v.ConceptoPagoCodigo == pConceptoPago
-                                                       && v.SolicitudPagoId == pSolicitudPagoId )
+                                                       && v.SolicitudPagoId == pSolicitudPagoId)
                                                    .Select(v => v.ValorUso);
         }
 
@@ -255,6 +255,8 @@ namespace asivamosffie.services
             return _context.VDrpXcontratacionXproyectoXaportanteXfaseXcriterioXconceptoXusos.Where(r => r.ContratacionId == contratacionId)
                 .Select(r => new
                 {
+                    r.TipoUsoCodigo,
+                    UsoNombre = r.Nombre,
                     r.ProyectoId,
                     r.EsPreConstruccion,
                     r.AportanteId,
