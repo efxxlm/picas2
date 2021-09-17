@@ -680,21 +680,23 @@ export class TerceroCausacionGogComponent implements OnInit {
     }
     validateMaxSaldoActualAportante( value: number, index: number, jIndex: number, kIndex: number, aportante: any ) {
         if ( value !== null ) {
-        console.log(this.solicitudPago.tablaInformacionFuenteRecurso)
-        console.log(aportante.cofinanciacionAportanteId)
+        // console.log(this.solicitudPago.tablaInformacionFuenteRecurso)
+        // console.log(aportante.cofinanciacionAportanteId)
 
-        const saldoAport = this.solicitudPago.tablaInformacionFuenteRecurso.find( obs => {
-            if (obs.cofinanciacionAportanteId === aportante.cofinanciacionAportanteId) {
-                return obs.saldoActual
-            }
-        })
-            if (
-                value > saldoAport
-            ) {
-                this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
-                this.openDialog( '', `<b>El valor facturado por el concepto para el aportante no puede ser mayor al saldo que tiene el aportante para el uso.</b>` )
-                return
-            }
+        if (this.solicitudPago.tablaInformacionFuenteRecurso) {
+          const saldoAport = this.solicitudPago.tablaInformacionFuenteRecurso.find( obs => {
+              if (obs.cofinanciacionAportanteId === aportante.cofinanciacionAportanteId) {
+                  return obs.saldoActual
+              }
+          })
+              if (
+                  value > saldoAport
+              ) {
+                  this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
+                  this.openDialog( '', `<b>El valor facturado por el concepto para el aportante no puede ser mayor al saldo que tiene el aportante para el uso.</b>` )
+                  return
+              }
+          }
         }
     }
     // Check valor del descuento de los conceptos
