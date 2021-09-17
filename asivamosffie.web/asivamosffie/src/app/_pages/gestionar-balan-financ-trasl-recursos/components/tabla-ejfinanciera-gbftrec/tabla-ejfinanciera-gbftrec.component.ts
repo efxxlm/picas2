@@ -22,7 +22,7 @@ export class TablaEjfinancieraGbftrecComponent implements OnInit {
   dataTable: any[] = [];
   total: any;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
     this.loadTableData();
@@ -31,13 +31,53 @@ export class TablaEjfinancieraGbftrecComponent implements OnInit {
   loadTableData() {
     if (this.data.length > 0) {
       this.dataTable = this.data;
+
+      console.log(this.dataTable);
+
+      let tablaEjecucionFinanciera = [
+        {
+          nombre: "Obra",
+          ordenadoGirarAntesImpuestos: 0,
+          porcentajeEjecucionFinanciera: 0,
+          descuento: 0,
+          saldo: 0,
+          totalComprometido: 0
+        },
+        {
+          nombre: "Interventoria",
+          ordenadoGirarAntesImpuestos: 0,
+          porcentajeEjecucionFinanciera: 0,
+          descuento: 0,
+          saldo: 0,
+          totalComprometido: 0
+        }
+
+      ];
+      this.dataTable.forEach(element => {
+        if (element.nombre === "Obra") {
+          tablaEjecucionFinanciera[0].totalComprometido = element.totalComprometido
+          tablaEjecucionFinanciera[0].descuento = element.descuento
+          tablaEjecucionFinanciera[0].ordenadoGirarAntesImpuestos += element.ordenadoGirarAntesImpuestos
+        }
+        else if (element.nombre === "Interventoria") {
+          tablaEjecucionFinanciera[1].totalComprometido = element.totalComprometido
+          tablaEjecucionFinanciera[1].descuento = element.descuento
+          tablaEjecucionFinanciera[1].ordenadoGirarAntesImpuestos += element.ordenadoGirarAntesImpuestos
+        }
+      });
+      for (let i = 0; i <= 1; i++) {
+        tablaEjecucionFinanciera[i].ordenadoGirarAntesImpuestos -= tablaEjecucionFinanciera[i].descuento
+        tablaEjecucionFinanciera[i].saldo = tablaEjecucionFinanciera[i].totalComprometido - tablaEjecucionFinanciera[i].ordenadoGirarAntesImpuestos;
+        tablaEjecucionFinanciera[i].porcentajeEjecucionFinanciera = (tablaEjecucionFinanciera[i].ordenadoGirarAntesImpuestos * 100) / tablaEjecucionFinanciera[i].totalComprometido;
+      }
+
       this.total = {
         totalComprometido: 0,
         ordenadoGirarAntesImpuestos: 0,
         saldo: 0,
         porcentajeEjecucionFinanciera: 0
       };
-      this.dataTable.forEach(element => {
+      tablaEjecucionFinanciera.forEach(element => {
         this.total.totalComprometido += element.totalComprometido;
         this.total.ordenadoGirarAntesImpuestos =
           this.total.ordenadoGirarAntesImpuestos + element.ordenadoGirarAntesImpuestos;
@@ -47,12 +87,13 @@ export class TablaEjfinancieraGbftrecComponent implements OnInit {
       });
       if (this.total.porcentajeEjecucionFinanciera > 0)
         this.total.porcentajeEjecucionFinanciera = this.total.porcentajeEjecucionFinanciera / 2;
+      this.loadDataSource(tablaEjecucionFinanciera);
     }
-    this.loadDataSource();
   }
 
-  loadDataSource() {
-    this.dataSource = new MatTableDataSource(this.dataTable);
+  loadDataSource(tablaEjecucionFinanciera) {
+
+    this.dataSource = new MatTableDataSource(tablaEjecucionFinanciera);
     this.dataSource.sort = this.sort;
   }
 }
