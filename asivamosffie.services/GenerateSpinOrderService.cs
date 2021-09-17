@@ -263,6 +263,7 @@ namespace asivamosffie.services
                     r.AportanteId,
                     r.ConceptoCodigo,
                     r.ConceptoNombre,
+                    r.ValorUso,
                     r.Saldo
                 });
         }
