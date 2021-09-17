@@ -36,7 +36,7 @@
                                 <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j ).controls; index as k">
                                     <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ k + 1 }} </mat-card-title>
                                     <p>
-                                        <strong>Valor aportante para el concepto:</strong>
+                                        <strong>Saldo aportante para el concepto:</strong>
                                         {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('tipoAportante').value.aportanteId) | currency: '' :'symbol-narrow':'.0-0' }}
                                     </p>
                                     <p>
@@ -139,7 +139,7 @@
                                                 <div class="col-md-11">
                                                     <div class="row">
                                                         <p>
-                                                            <strong>Valor aportante para el concepto:</strong>
+                                                            <strong>Saldo aportante para el concepto:</strong>
                                                             {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('tipoAportante').value.aportanteId) | currency: '' :'symbol-narrow':'.0-0' }}
                                                         </p>
                                                     </div>
