@@ -41,11 +41,11 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
   }
 
   setDataSource(data: any[]){
-    data.forEach(element => {
-      element.fechaCargue = element.fechaCargue
-        ? element.fechaCargue.split('T')[0].split('-').reverse().join('/')
-        : '';
-    });
+    // data.forEach(element => {
+    //   element.fechaCargue = element.fechaCargue
+    //     ? element.fechaCargue.split('T')[0].split('-').reverse().join('/')
+    //     : '';
+    // });
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

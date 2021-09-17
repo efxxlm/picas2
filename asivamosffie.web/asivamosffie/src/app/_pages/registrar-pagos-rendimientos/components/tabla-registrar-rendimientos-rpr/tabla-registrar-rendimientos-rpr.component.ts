@@ -45,11 +45,11 @@ export class TablaRegistrarRendimientosRprComponent implements OnInit {
         if (a.fechaCargue < b.fechaCargue) return -1;
         return 0;
       });
-      response.forEach(element => {
-        element.fechaCargue = element.fechaCargue
-          ? element.fechaCargue.split('T')[0].split('-').reverse().join('/')
-          : '';
-      });
+      // response.forEach(element => {
+      //   element.fechaCargue = element.fechaCargue
+      //     ? element.fechaCargue.split('T')[0].split('-').reverse().join('/')
+      //     : '';
+      // });
       this.dataSource = new MatTableDataSource(response)
       this.dataSource.paginator = this.paginator
       this.dataSource.sort = this.sort
