@@ -5,7 +5,7 @@ namespace asivamosffie.model.Models
 {
     public partial class VEjecucionFinancieraXproyecto
     {
-        public decimal? Descuento { get; set; }
+        public int Descuento { get; set; }
         public int ContratoId { get; set; }
         public int ContratacionId { get; set; }
         public string TipoSolicitudCodigo { get; set; }
@@ -15,7 +15,7 @@ namespace asivamosffie.model.Models
         public decimal? OrdenadoGirarAntesImpuestos { get; set; }
         public decimal? Saldo { get; set; }
         public decimal? PorcentajeEjecucionFinanciera { get; set; }
-        public decimal ValorTraslado { get; set; }
-        public decimal ValorNetoOdg { get; set; }
+        public int ValorTraslado { get; set; }
+        public int ValorNetoOdg { get; set; }
     }
 }

@@ -15,12 +15,12 @@ namespace asivamosffie.model.Models
         public string Nombre { get; set; }
         public string ConceptoPagoCodigo { get; set; }
         public string TipoUsoCodigo { get; set; }
-        public decimal ValorUso { get; set; }
         public string ConceptoNombre { get; set; }
         public string ConceptoCodigo { get; set; }
         public int ComponenteUsoId { get; set; }
+        public decimal? ValorUso { get; set; }
         public bool? EsPreConstruccion { get; set; }
         public decimal? Saldo { get; set; }
-        public decimal? A { get; set; }
+        public decimal Facturado { get; set; }
     }
 }

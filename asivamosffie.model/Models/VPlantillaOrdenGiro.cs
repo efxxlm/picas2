@@ -5,9 +5,11 @@ namespace asivamosffie.model.Models
 {
     public partial class VPlantillaOrdenGiro
     {
+        public bool? EstaAprobada { get; set; }
         public int? ContratacionId { get; set; }
         public string NumeroDdp { get; set; }
         public string InstitucionEducativa { get; set; }
+        public int? ProyectoId { get; set; }
         public string LlaveMen { get; set; }
         public int? OrdenGiroId { get; set; }
         public string ConsecutivoFfie { get; set; }
