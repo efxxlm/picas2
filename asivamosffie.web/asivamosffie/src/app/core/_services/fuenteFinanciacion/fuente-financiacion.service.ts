@@ -130,6 +130,7 @@ export interface FuenteFinanciacion{
    cofinanciacionDocumentoId?:number,
    eliminado?: boolean,
    asociadoASolicitud?: boolean,
+   comprometidoEnDdp?:number,
    //DateTime FechaCreacion: Date
    //string UsuarioCreacion: string
 }

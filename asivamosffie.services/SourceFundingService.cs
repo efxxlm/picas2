@@ -49,7 +49,7 @@ namespace asivamosffie.services
                         .FirstOrDefaultAsync();
 
             int asociadoASolicitudes = 0;
-
+            VSaldosFuenteXaportanteId vSaldosFuenteXaportanteId = null;
             if (retorno != null)
             {
                 List<ControlRecurso> cr = _context.ControlRecurso.Where(r => r.Eliminado != true && r.FuenteFinanciacionId == retorno.FuenteFinanciacionId).ToList();
@@ -59,6 +59,7 @@ namespace asivamosffie.services
                 {
                     if (retorno.Aportante.CofinanciacionAportanteId > 0)
                     {
+                        vSaldosFuenteXaportanteId = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == retorno.Aportante.CofinanciacionAportanteId).FirstOrDefault();
                         asociadoASolicitudes += _context.ProyectoAportante.Where(r => r.Eliminado != true && r.AportanteId == retorno.Aportante.CofinanciacionAportanteId).Count();
                         asociadoASolicitudes += _context.ContratacionProyectoAportante.Where(r => r.Eliminado != true && r.CofinanciacionAportanteId == retorno.Aportante.CofinanciacionAportanteId).Count();
                         asociadoASolicitudes += _context.NovedadContractualAportante.Where(r => r.Eliminado != true && r.CofinanciacionAportanteId == retorno.Aportante.CofinanciacionAportanteId).Count();
@@ -94,7 +95,7 @@ namespace asivamosffie.services
             }
 
             retorno.AsociadoASolicitud = asociadoASolicitudes > 0 ? true : false;
-
+            retorno.ComprometidoEnDdp = vSaldosFuenteXaportanteId != null ? vSaldosFuenteXaportanteId.ComprometidoEnDdp : 0;
             return retorno;
         }
 
