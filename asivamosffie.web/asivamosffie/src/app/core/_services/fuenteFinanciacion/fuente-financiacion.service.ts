@@ -8,8 +8,8 @@ import { Respuesta } from '../common/common.service';
   providedIn: 'root'
 })
 export class FuenteFinanciacionService {
-  
-  
+
+
 
   constructor( private http:HttpClient
 
@@ -17,7 +17,7 @@ export class FuenteFinanciacionService {
 
   createEditFuentesFinanciacion(fuenteFinanciacion: FuenteFinanciacion){
     return this.http.post(`${environment.apiUrl}/SourceFunding/CreateEditFuentesFinanciacion/`, fuenteFinanciacion);
-  }  
+  }
 
   listaFuenteFinanciacion(){
     return this.http.get<FuenteFinanciacion[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacion`);
@@ -31,7 +31,7 @@ export class FuenteFinanciacionService {
     return this.http.get<FuenteFinanciacion[]>(`${environment.apiUrl}/SourceFunding/GetFuentesFinanciacionByAportanteId?AportanteId=${id}`);
   }
 
-  
+
   GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid( id: number, idaportante:number ){
     return this.http.get<any[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid?disponibilidadPresupuestalProyectoid=${id}&aportanteID=${idaportante}`);
   }
@@ -109,7 +109,7 @@ export class FuenteFinanciacionService {
   eliminarCuentaBancaria(cuentaBancariaId: any) {
     return this.http.delete(`${environment.apiUrl}/SourceFunding/EliminarCuentaBancaria?id=${cuentaBancariaId}`);
   }
-  
+
   getVSaldosFuenteXaportanteId( id: number ){
     return this.http.get<any>(`${environment.apiUrl}/SourceFunding/GetVSaldosFuenteXaportanteId?pAportanteId=${id}`);
   }
@@ -118,10 +118,10 @@ export class FuenteFinanciacionService {
 
 export interface FuenteFinanciacion{
    cofinanciacionDocumento?: any;
-   fuenteFinanciacionId?: number, 
+   fuenteFinanciacionId?: number,
    aportanteId: number,
    fuenteRecursosCodigo: string,
-   valorFuente: number, 
+   valorFuente: number,
    cantVigencias: number,
    aportante?: CofinanciacionAportante,
    cuentaBancaria?: CuentaBancaria[],
@@ -129,12 +129,13 @@ export interface FuenteFinanciacion{
    controlRecurso?: ControlRecurso[],
    cofinanciacionDocumentoId?:number,
    eliminado?: boolean,
-   //DateTime FechaCreacion: Date 
+   asociadoASolicitud?: boolean,
+   //DateTime FechaCreacion: Date
    //string UsuarioCreacion: string
 }
 
 export interface CuentaBancaria{
-  cuentaBancariaId: number, 
+  cuentaBancariaId: number,
   fuenteFinanciacionId: number,
   numeroCuentaBanco: string,
   nombreCuentaBanco: string,

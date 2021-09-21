@@ -47,10 +47,24 @@ namespace asivamosffie.services
                         .Include(r => r.Aportante)
                         .ThenInclude(apo => apo.CofinanciacionDocumento)
                         .FirstOrDefaultAsync();
+
+            int asociadoASolicitudes = 0;
+
             if (retorno != null)
             {
                 List<ControlRecurso> cr = _context.ControlRecurso.Where(r => r.Eliminado != true && r.FuenteFinanciacionId == retorno.FuenteFinanciacionId).ToList();
                 retorno.ControlRecurso = cr;
+
+                if (retorno.Aportante != null)
+                {
+                    if (retorno.Aportante.CofinanciacionAportanteId > 0)
+                    {
+                        asociadoASolicitudes += _context.ProyectoAportante.Where(r => r.Eliminado != true && r.AportanteId == retorno.Aportante.CofinanciacionAportanteId).Count();
+                        asociadoASolicitudes += _context.ContratacionProyectoAportante.Where(r => r.Eliminado != true && r.CofinanciacionAportanteId == retorno.Aportante.CofinanciacionAportanteId).Count();
+                        asociadoASolicitudes += _context.NovedadContractualAportante.Where(r => r.Eliminado != true && r.CofinanciacionAportanteId == retorno.Aportante.CofinanciacionAportanteId).Count();
+
+                    }
+                }
             }
 
             if (retorno.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
@@ -78,6 +92,8 @@ namespace asivamosffie.services
                     "Alcaldía " + _context.Localizacion.Find(retorno.Aportante.MunicipioId).Descripcion;
                 }
             }
+
+            retorno.AsociadoASolicitud = asociadoASolicitudes > 0 ? true : false;
 
             return retorno;
         }

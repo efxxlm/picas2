@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { TiposAportante, CommonService, Dominio, Localizacion } from 'src/app/core/_services/common/common.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { FuenteFinanciacion, FuenteFinanciacionService, CuentaBancaria, RegistroPresupuestal, ControlRecurso, VigenciaAporte } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 import { forkJoin } from 'rxjs';
 import { CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
@@ -39,7 +39,8 @@ export class ControlDeRecursosComponent implements OnInit {
   countResources: any = [];
   rpArray: RegistroPresupuestal[] = [];
   estaEditando = false;
-
+  esVerDetalle = false;
+  esVerDetalleRegistro = false;
   constructor(
               private fb: FormBuilder,
               private activatedRoute: ActivatedRoute,
@@ -48,7 +49,9 @@ export class ControlDeRecursosComponent implements OnInit {
               private dialog: MatDialog,
               private routes: Router,
              )
-  {}
+  {
+
+  }
 
   ngOnInit(): void {
     this.addressForm = this.fb.group({
@@ -74,7 +77,7 @@ export class ControlDeRecursosComponent implements OnInit {
     this.activatedRoute.params.subscribe( param => {
       this.idFuente = param['idFuente'];
       this.idControl = param['idControl'];
-      this.countResources = []
+      this.countResources = [];
       forkJoin([
         this.fuenteFinanciacionServices.getFuenteFinanciacion( this.idFuente ),
         this.commonService.listaNombreAportante(),
@@ -96,6 +99,11 @@ export class ControlDeRecursosComponent implements OnInit {
               this.calculateSumAccountByVigency(element);
             }
           });
+          if(this.fuente.asociadoASolicitud == true){
+            this.esVerDetalle = true;
+          }else{
+            this.esVerDetalle = false;
+          }
         }
         if(this.tipoAportante.ET.includes(this.tipoAportanteId.toString()))
         {
@@ -152,7 +160,13 @@ export class ControlDeRecursosComponent implements OnInit {
         }
 
       })
-    })
+    });
+    this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if ( urlSegment.path === 'verDetalleControlRecursos' ) {
+          this.esVerDetalleRegistro = true;
+          return;
+      }
+    });
 
   }
 
@@ -343,6 +357,10 @@ export class ControlDeRecursosComponent implements OnInit {
       this.openDialogError('', `El <b> valor de la consignación </b> no debe superar el <b> monto establecido en el RP ${numeroRp} </b>, verifique por favor.`);
       this.addressForm.get("valorConsignacion").setValue(editingResource?.valorConsignacion, {emitEvent:false});
     }
+  }
+
+  agregar() {
+    this.routes.navigate(['/gestionarFuentes/controlRecursos', this.idFuente, 0])
   }
 
 }
