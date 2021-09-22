@@ -253,19 +253,21 @@ namespace asivamosffie.services
 
         private dynamic GetInfoValorValorXProyectoXFaseXAportanteXConcepto(int contratacionId)
         {
-            return _context.VDrpXcontratacionXproyectoXaportanteXfaseXcriterioXconceptoXusos.Where(r => r.ContratacionId == contratacionId)
-                .Select(r => new
-                {
-                    r.TipoUsoCodigo,
-                    UsoNombre = r.Nombre,
-                    r.ProyectoId,
-                    r.EsPreConstruccion,
-                    r.AportanteId,
-                    r.ConceptoCodigo,
-                    r.ConceptoNombre,
-                    r.ValorUso,
-                    r.Saldo
-                });
+            return _context.VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso
+                                                                                        .Where(r => r.ContratacionId == contratacionId)
+                                                                                        .Select(r => new
+                                                                                        {
+                                                                                            TipoUsoCodigo = r.UsoCodigo,
+                                                                                            UsoNombre = r.UsoNombre,
+                                                                                            r.ProyectoId,
+                                                                                            EsPreConstruccion = r.EsPreconstruccion ,
+                                                                                            r.AportanteId,
+                                                                                            ConceptoCodigo = r.ConceptoCodigo , 
+                                                                                            ConceptoNombre = "",
+                                                                                            r.ValorUso,
+                                                                                            r.ValorDescuento,
+                                                                                            Saldo = r.SaldoUso
+                                                                                        });
         }
 
         private dynamic GetTablaInformacionFuenteRecursos(SolicitudPago solicitudPago)

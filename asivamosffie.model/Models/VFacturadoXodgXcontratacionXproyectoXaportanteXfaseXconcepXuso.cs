@@ -14,6 +14,8 @@ namespace asivamosffie.model.Models
         public string UsoNombre { get; set; }
         public string UsoCodigo { get; set; }
         public int? AportanteId { get; set; }
+        public decimal? ValorUso { get; set; }
         public decimal? ValorDescuento { get; set; }
+        public decimal? SaldoUso { get; set; }
     }
 }
