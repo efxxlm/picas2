@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { TipoDDP } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { FuenteFinanciacionService } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
@@ -14,11 +14,20 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class ConValidacionPresupuestalComponent implements OnInit {
 
+  esRechazada:boolean=false;
+  esNovedad: boolean = false;
   constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
     private router: Router,private sanitized: DomSanitizer,
     private fuenteFinanciacionService: FuenteFinanciacionService
-    ) { }
+    ) {
+      this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+        if ( urlSegment.path === 'rechazada' ) {
+            this.esRechazada = true;
+            return;
+        }
+    } );
+    }
     detailavailabilityBudget:any=null;
     esModificacion=false;
     pTipoDDP=TipoDDP;
@@ -26,6 +35,7 @@ export class ConValidacionPresupuestalComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     const esNovedad = this.route.snapshot.paramMap.get('esNovedad');
+    this.esNovedad = esNovedad == "true" ? true : false;
     const novedadId = this.route.snapshot.paramMap.get('novedadId');
     if (id) {
       this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, esNovedad, novedadId)

@@ -9,7 +9,8 @@ export class AccordionNovedadesComponent implements OnInit {
   @Input () tiposNovedadModificacionContractual;
   @Input () novedadeContractual: any;//NovedadContractual[];
   @Output() guardar = new EventEmitter();
-  
+  @Input() contrato: any;
+
   constructor() { }
 
   ngOnInit(): void {

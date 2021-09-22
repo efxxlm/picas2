@@ -637,7 +637,11 @@ namespace asivamosffie.services
                   {
                       cofinanciacionAportante.NombreAportanteString = _context.Dominio.Find(cpa.CofinanciacionAportante.NombreAportanteId).Nombre;
                   }
-                  listaAportantes.Add(cofinanciacionAportante);
+                  //validación multi
+                  if (!listaAportantes.Any(r => r.CofinanciacionAportanteId == cofinanciacionAportante?.CofinanciacionAportanteId))
+                  {
+                      listaAportantes.Add(cofinanciacionAportante);
+                  }
               });
            });
 
@@ -2817,7 +2821,6 @@ namespace asivamosffie.services
                     {
                         case ConstanTiposNovedades.Suspensión:
                         case ConstanTiposNovedades.Prórroga_a_las_Suspensión:
-                        case ConstanTiposNovedades.Reinicio:
                             if (
                                 descripcion.FechaInicioSuspension == null ||
                                 descripcion.FechaFinSuspension == null
@@ -2827,7 +2830,15 @@ namespace asivamosffie.services
                                 esCompleto = false;
                             }
                             break;
-
+                        case ConstanTiposNovedades.Reinicio:
+                            if (
+                                descripcion.FechaInicioSuspension == null
+                            )
+                            {
+                                descripcion.RegistroCompleto = false;
+                                esCompleto = false;
+                            }
+                            break;
                         case ConstanTiposNovedades.Adición:
                             if (
                                    descripcion.PresupuestoAdicionalSolicitado == null

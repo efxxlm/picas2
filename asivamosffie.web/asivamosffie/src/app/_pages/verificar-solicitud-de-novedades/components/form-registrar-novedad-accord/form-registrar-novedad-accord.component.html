@@ -136,7 +136,7 @@
         </div>
       </div>
 
-      <div class="row" *ngIf="novedadDescripcion.tipoNovedadCodigo == '1' || novedadDescripcion.tipoNovedadCodigo == '2' || novedadDescripcion.tipoNovedadCodigo === '6'">
+      <div class="row" *ngIf="novedadDescripcion.tipoNovedadCodigo == '1' || novedadDescripcion.tipoNovedadCodigo == '2'">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
@@ -149,7 +149,7 @@
             <div class="col d-flex">
               <mat-form-field class="example-full-width">
                 <input matInput [matDatepicker]="pickerPlazoInicio" formControlName="fechaInicio" readonly
-                  (click)="pickerPlazoInicio.open()" placeholder="DD/MM/AAAA" required>
+                  (click)="pickerPlazoInicio.open()" placeholder="DD/MM/AAAA" (dateChange)="updateFechaEstimada($event)" required>
                 <mat-datepicker #pickerPlazoInicio></mat-datepicker>
               </mat-form-field>
               <button mat-button color="primary" type="button" (click)="pickerPlazoInicio.open()"
@@ -174,7 +174,7 @@
           </div>
         </div>
       </div>
-      <div class="row" *ngIf="novedadDescripcion.tipoNovedadCodigo == '1' || novedadDescripcion.tipoNovedadCodigo == '2' || novedadDescripcion.tipoNovedadCodigo === '6'">
+      <div class="row" *ngIf="novedadDescripcion.tipoNovedadCodigo == '1' || novedadDescripcion.tipoNovedadCodigo == '2'">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
@@ -186,8 +186,8 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="example-full-width">
-                <input matInput [matDatepicker]="pickerPlazoFin" formControlName="fechaFinal" readonly
-                  (click)="pickerPlazoFin.open()" placeholder="DD/MM/AAAA" required>
+                <input matInput [min]="addressForm.get('fechaInicio').value" [matDatepicker]="pickerPlazoFin" formControlName="fechaFinal" readonly
+                  (click)="pickerPlazoFin.open()" placeholder="DD/MM/AAAA" (dateChange)="updateFechaEstimada()" required>
                 <mat-datepicker #pickerPlazoFin></mat-datepicker>
               </mat-form-field>
               <button mat-button color="primary" type="button" (click)="pickerPlazoFin.open()" class="btn-calendario">
@@ -211,11 +211,66 @@
           </div>
         </div>
       </div>
-
+      <div class="row"
+      *ngIf="
+        novedadDescripcion.tipoNovedadCodigo == '1' ||
+        novedadDescripcion.tipoNovedadCodigo == '2'
+      ">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="pr-1">
+            <label
+              class="label-left"
+            >
+              Fecha estimada de terminación del contrato:
+            </label>
+            <span> {{ fechaEstimadaFinalizacion  | date: 'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="novedadDescripcion.tipoNovedadCodigo == '6'">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="pr-1">
+            <label class="label-left" for="fechaInicio" [class.color-secondaryColor]="
+                addressForm.get('fechaInicio').invalid && addressForm.get('fechaInicio').touched ||
+                addressForm.get('fechaInicio').invalid && estaEditando">
+              Fecha de reinicio
+            </label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="example-full-width">
+              <input matInput [matDatepicker]="pickerPlazoInicio" formControlName="fechaInicio" readonly
+                (click)="pickerPlazoInicio.open()" placeholder="DD/MM/AAAA" required>
+              <mat-datepicker #pickerPlazoInicio></mat-datepicker>
+            </mat-form-field>
+            <button mat-button color="primary" type="button" (click)="pickerPlazoInicio.open()"
+              class="btn-calendario">
+              <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+            </button>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                *ngIf="
+                  (addressForm.get('fechaInicio').invalid && addressForm.get('fechaInicio').touched) ||
+                  (addressForm.get('fechaInicio').invalid && estaEditando)
+                "
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
       <mat-card-title class="header-card--text sub-text" *ngIf="novedadDescripcion.tipoNovedadCodigo == '4'">
         Plazo solicitado
       </mat-card-title>
-      
+
       <!-- <div class="row" *ngIf="novedadDescripcion.tipoNovedadCodigo == '4'">
         <div class="col-md-8">
           <div class="row">

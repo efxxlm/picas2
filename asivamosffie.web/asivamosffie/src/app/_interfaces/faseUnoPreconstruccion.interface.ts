@@ -36,7 +36,7 @@ export interface ContratoModificado {
 }
 
 export interface Contrato {
-  
+
   contratacionId: number;
   fechaTramite: string;
   tipoContratoCodigo: string;
@@ -70,6 +70,7 @@ export interface Contrato {
   contratoPoliza: ContratoPoliza[];
   fechaAprobacionRequisitosConstruccionInterventor?: string;
   modalidadCodigo?: string;
+  fechaTerminacionFase2?: Date;
 }
 
 interface ContratoPoliza {
@@ -150,7 +151,7 @@ interface Contratacion {
 }
 
 export interface ContratacionProyecto2 {
-  
+
   estadoSemaforo: string;
   estadoSemaforoContratacion: string;
   contratacionProyectoId: number;
@@ -168,7 +169,7 @@ export interface ContratacionProyecto2 {
 }
 
 interface Proyecto2 {
-  
+
   departamento: string;
   municipio: string;
   proyectoId: number;

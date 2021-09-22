@@ -28,6 +28,11 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
     { value: true, viewValue: 'Si' },
     { value: false, viewValue: 'No' }
   ]
+  requisitosNoSeRequire: any[] = [
+    { value: 2, viewValue: 'Si' },
+    { value: 1, viewValue: 'No' },
+    { value: 3, viewValue: 'No se requiere' }
+  ];
   require: any;
   booleanosObservacion: any[] = [
     { value: true, viewValue: 'Si' },
@@ -73,6 +78,16 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
   }
 
   ngOnInit(): void {
+    this.dataPlanesProgramas.forEach(element => {
+      if(element.id === 11 || element.id === 12 || element.id === 13){
+        element.nameRequisito = this.requisitosNoSeRequire.find(r => r.value == element.recibioRequisito).viewValue;
+      }
+      else if(!(element.id === 11 || element.id === 12 || element.id === 13)){
+        element.nameRequisito = this.booleanosRequisitos.find(r => r.value == element.recibioRequisito).viewValue;
+      }else{
+        element.nameRequisito = "No";
+      }
+    });
     this.dataSource = new MatTableDataSource(this.dataPlanesProgramas);
   }
 
@@ -286,7 +301,7 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
       ]
     }
 
-    console.log(); 
+    console.log();
 
     this.faseUnoConstruccionService.createEditObservacionPlanesProgramas(construccion)
       .subscribe(respuesta => {
@@ -296,5 +311,5 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
       })
   }
 
-  
+
 }

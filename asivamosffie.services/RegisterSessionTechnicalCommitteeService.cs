@@ -6949,7 +6949,7 @@ namespace asivamosffie.services
                         bool existeModificacion = false;
                         bool existeOtro = false;
 
-                        List<NovedadContractualDescripcion> novedadContractualDescripcion = _context.NovedadContractualDescripcion.Where(r => r.NovedadContractualId == novedad.NovedadContractualId).ToList();
+                        List<NovedadContractualDescripcion> novedadContractualDescripcion = _context.NovedadContractualDescripcion.Where(r => r.NovedadContractualId == novedad.NovedadContractualId).Include(r => r.NovedadContractualClausula).ToList();
                         foreach (var item in novedadContractualDescripcion)
                         {
                             if (item.Eliminado == null || novedad.Eliminado == false)
@@ -7033,6 +7033,13 @@ namespace asivamosffie.services
                                 {
                                     existeModificacion = true;
                                     enumClausula = 1;
+
+                                    if (item.NovedadContractualClausula.Count() <= 0)
+                                    {
+                                        NovedadesModificacion = NovedadesModificacion.Replace("[TP_NUM_CLAUSULA]", string.Empty);
+                                        NovedadesModificacion = NovedadesModificacion.Replace("[TP_CLAUSULA]", string.Empty);
+                                        NovedadesModificacion = NovedadesModificacion.Replace("[TP_AJUSTE_CLAUSULA]", string.Empty);
+                                    }
 
                                     foreach (var clausula in item.NovedadContractualClausula)
                                     {
@@ -7263,7 +7270,7 @@ namespace asivamosffie.services
                 bool existeOtroDetalle = false;
                 string tipoNovedadDetalle = string.Empty;
 
-                List<NovedadContractualDescripcion> novedadContractualDescripcionDetalle = _context.NovedadContractualDescripcion.Where(r => r.NovedadContractualId == novedadContractual.NovedadContractualId).ToList();
+                List<NovedadContractualDescripcion> novedadContractualDescripcionDetalle = _context.NovedadContractualDescripcion.Where(r => r.NovedadContractualId == novedadContractual.NovedadContractualId).Include(r => r.NovedadContractualClausula).ToList();
                 foreach (var item in novedadContractualDescripcionDetalle)
                 {
                     string motivoString = string.Empty;
@@ -7387,6 +7394,13 @@ namespace asivamosffie.services
                         {
                             existeModificacionDetalle = true;
                             enumClausula = 1;
+
+                            if (item.NovedadContractualClausula.Count() <= 0)
+                            {
+                                NovedadesModificacion = NovedadesModificacion.Replace("[TP_NUM_CLAUSULA]", string.Empty);
+                                NovedadesModificacion = NovedadesModificacion.Replace("[TP_CLAUSULA]", string.Empty);
+                                NovedadesModificacion = NovedadesModificacion.Replace("[TP_AJUSTE_CLAUSULA]",string.Empty);
+                            }
 
                             foreach (var clausula in item.NovedadContractualClausula)
                             {
@@ -7763,7 +7777,8 @@ namespace asivamosffie.services
                     if (sesionComiteSolicitud != null)
                     {
                         comiteTecnico = _context.ComiteTecnico.Find(sesionComiteSolicitud.ComiteTecnicoId);
-                        comiteFiduciario = _context.ComiteTecnico.Find(sesionComiteSolicitud.ComiteTecnicoFiduciarioId);
+                        if (sesionComiteSolicitud?.ComiteTecnicoFiduciarioId != null)
+                            comiteFiduciario = _context.ComiteTecnico.Find(sesionComiteSolicitud.ComiteTecnicoFiduciarioId);
                     }
 
                     //Se crear una nueva plantilla por cada vez que entra
@@ -7771,15 +7786,16 @@ namespace asivamosffie.services
                     NovedadesAdicion += NovedadAdicion;
                     NovedadesProrroga += NovedadProrroga;
                     NovedadesModificacion += NovedadModificacion;
-                    string numeroComiteTecnico = comiteTecnico != null ? comiteTecnico.NumeroComite : string.Empty;
-                    string numeroComiteFiduciario = comiteFiduciario != null ? comiteFiduciario.NumeroComite : string.Empty;
-                    string estado = sesionComiteSolicitud.EstadoCodigo != null ? ListaParametricas.Where(r => r.Codigo == sesionComiteSolicitud.EstadoCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Sesion_Comite_Solicitud).FirstOrDefault().Nombre : string.Empty;
+                    string numeroComiteTecnico = comiteTecnico != null ? comiteTecnico?.NumeroComite : string.Empty;
+                    string numeroComiteFiduciario = comiteFiduciario != null ? comiteFiduciario?.NumeroComite : string.Empty;
+                    var estadoTmp = sesionComiteSolicitud.EstadoCodigo != null ? ListaParametricas.Where(r => r.Codigo == sesionComiteSolicitud.EstadoCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Sesion_Comite_Solicitud).FirstOrDefault() : null;
+                    string estado = estadoTmp != null ? estadoTmp.Nombre : string.Empty;
                     bool existeAdicion = false;
                     bool existeProrroga = false;
                     bool existeModificacion = false;
                     bool existeOtro = false;
 
-                    List<NovedadContractualDescripcion> novedadContractualDescripcion = _context.NovedadContractualDescripcion.Where(r => r.NovedadContractualId == novedadContractual.NovedadContractualId).ToList();
+                    List<NovedadContractualDescripcion> novedadContractualDescripcion = _context.NovedadContractualDescripcion.Where(r => r.NovedadContractualId == novedadContractual.NovedadContractualId).Include(r => r.NovedadContractualClausula).ToList();
                     foreach (var item in novedadContractualDescripcion)
                     {
                         if (item.Eliminado == null || item.Eliminado == false)
@@ -7883,6 +7899,13 @@ namespace asivamosffie.services
                                 existeModificacion = true;
                                 enumClausula = 1;
 
+                                if (item.NovedadContractualClausula.Count() <= 0)
+                                {
+                                    NovedadesModificacion = NovedadesModificacion.Replace("[TP_NUM_CLAUSULA]", string.Empty);
+                                    NovedadesModificacion = NovedadesModificacion.Replace("[TP_CLAUSULA]", string.Empty);
+                                    NovedadesModificacion = NovedadesModificacion.Replace("[TP_AJUSTE_CLAUSULA]", string.Empty);
+                                }
+
                                 foreach (var clausula in item.NovedadContractualClausula)
                                 {
                                     if (clausula != null)
@@ -7895,7 +7918,9 @@ namespace asivamosffie.services
                             }
                         }
                     }
-
+                    Proyecto pry = _context.Proyecto.Find(novedadContractual.ProyectoId);
+                    Contrato ctr = _context.Contrato.Find(novedadContractual.ContratoId);
+                    Historiales = Historiales.Replace("[NOVEDAD_APLICA_A]", (novedadContractual.EsAplicadaAcontrato != true ? ("Proyecto " + (pry != null ? pry.LlaveMen : "")) : ("Contrato " + (ctr != null ? ctr.NumeroContrato : ""))) );
                     foreach (Dominio placeholderDominio in placeholders)
                     {
                         switch (placeholderDominio.Codigo)
