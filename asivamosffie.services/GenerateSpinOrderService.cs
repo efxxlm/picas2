@@ -559,14 +559,12 @@ namespace asivamosffie.services
                         decimal Saldo = ListPagos
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
-                                                          && r.Pagado == false
-                                                         )
+                                                         && r.Pagado == false)
                                                 .Sum(r => r.SaldoUso) ?? 0;
 
                         decimal Descuentos = DescuentosOrdenGiro
                                                             .Where(r => r.ProyectoId == ProyectoId.ProyectoId
-                                                             && r.UsoCodigo == TipoUso.TipoUsoCodigo
-                                                             )
+                                                             && r.UsoCodigo == TipoUso.TipoUsoCodigo)
                                                 .Sum(r => r.ValorDescuento);
 
                         decimal ValorUsoResta = ValorUso ?? 0 - Descuentos;
