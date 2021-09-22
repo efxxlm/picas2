@@ -5,7 +5,7 @@ import { RegistrarComponent } from './components/registrar/registrar.component';
 import { ControlDeRecursosComponent } from './components/control-de-recursos/control-de-recursos.component';
 import { SaldosYRendimientosComponent } from './components/saldos-y-rendimientos/saldos-y-rendimientos.component';
 import { CurrencyMaskInputMode, NgxCurrencyModule } from "ngx-currency";
- 
+
 export const customCurrencyMaskConfig = {
     align: "right",
     allowNegative: true,
@@ -31,6 +31,10 @@ const routes: Routes = [
   },
   {
     path: 'controlRecursos/:idFuente/:idControl',
+    component: ControlDeRecursosComponent
+  },
+  {
+    path: 'verDetalleControlRecursos/:idFuente/:idControl',
     component: ControlDeRecursosComponent
   },
   {

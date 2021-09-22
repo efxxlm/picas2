@@ -33,7 +33,7 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   //tieneDemanda:boolean;
   tieneDemanda: Subscription;
   numAcordTieneDemanda:any;
-  constructor(private fb: FormBuilder, public dialog: MatDialog, 
+  constructor(private fb: FormBuilder, public dialog: MatDialog,
     public commonServices: CommonService,
     public judicialServices:DefensaJudicialService,
     private activatedRoute: ActivatedRoute,) { }
@@ -41,14 +41,14 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
     async editMode(){
       this.estaEditando = true;
       this.addressForm.markAllAsTouched();
-      this.cargarRegistro().then(() => 
-      { 
-  
+      this.cargarRegistro().then(() =>
+      {
+
         this.addressForm.get("legitimacionActiva").setValue(this.defensaJudicial.esLegitimacionActiva);
         this.addressForm.get("tipoProceso").setValue(this.defensaJudicial.tipoProcesoCodigo);
-  
+
       });
-  
+
     }
 
   async cargarRegistro() {
@@ -57,9 +57,9 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
       forkJoin([
         this.judicialServices.GetDefensaJudicialById(this.controlJudicialId)
       ]).subscribe( proceso => {
-          this.defensaJudicial=proceso[0];    
+          this.defensaJudicial=proceso[0];
           this.textCabecera="Ver detalle/Editar proceso de defensa judicial "+this.defensaJudicial.numeroProceso;
-          console.log(this.defensaJudicial); 
+          console.log(this.defensaJudicial);
           this.contratos_class=this.estaIncompletocontratos(this.defensaJudicial);
           this.detalle_class=this.estaIncompletodetalle(this.defensaJudicial);
           this.convocados_class=this.estaIncompletoconvocados(this.defensaJudicial);
@@ -70,17 +70,24 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
           this.soporte_class=this.defensaJudicial.urlSoporteProceso==null || this.defensaJudicial.urlSoporteProceso== ""?0:2;
           this.ficha_class=this.estaIncompletoficha(this.defensaJudicial);
           setTimeout(() => { resolve(''); },1000)
-      });           
+      });
     });
 
-    
+
   }
   estaIncompletoficha(defensaJudicial: DefensaJudicial): number {
     //'en-alerta':ficha_class===3,'sin-diligenciar':ficha_class===0,'en-proceso':ficha_class===1,'completo':ficha_class===2
     let retorno:number=0;
     if(defensaJudicial.fichaEstudio.length>0){
       if(defensaJudicial.fichaEstudio[0].esCompleto == null){
-        retorno=3;
+        if(this.contratos_class === 2 && this.detalle_class === 2 && this.soporte_class=== 2
+          && ((this.convocados_class === 2 || this.demandantes_class===2))
+          && ((this.numAcordTieneDemanda > 0 ? (this.demandado_class_pasiva === 2 || this.convocado_class_pasiva===2) : (this.numAcordTieneDemanda == undefined || this.numAcordTieneDemanda == null || this.numAcordTieneDemanda == 0) ))
+        ){
+            retorno=0;
+        }else{
+          retorno=3;
+        }
       }else if(!defensaJudicial.fichaEstudio[0].esCompleto){
         if((defensaJudicial.fichaEstudio[0].antecedentes==null || defensaJudicial.fichaEstudio[0].antecedentes == '')
           && (defensaJudicial.fichaEstudio[0].hechosRelevantes==null || defensaJudicial.fichaEstudio[0].hechosRelevantes == '')
@@ -101,7 +108,14 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
         retorno = 2;
       }
     }else{
-      retorno = 3;
+      if(this.contratos_class === 2 && this.detalle_class === 2 && this.soporte_class=== 2
+        && ((this.convocados_class === 2 || this.demandantes_class===2))
+        && ((this.numAcordTieneDemanda > 0 ? (this.demandado_class_pasiva === 2 || this.convocado_class_pasiva===2) : (this.numAcordTieneDemanda == undefined || this.numAcordTieneDemanda == null || this.numAcordTieneDemanda == 0) ))
+      ){
+          retorno=0;
+      }else{
+        retorno=3;
+      }
     }
     return retorno;
   }
@@ -116,13 +130,13 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
       let num_completo = 0; //almacena los registros que estan completos
 
       defensaJudicial.demandadoConvocado.forEach(element => {
-          if( element.registroCompleto == null 
-            || (!element.registroCompleto 
+          if( element.registroCompleto == null
+            || (!element.registroCompleto
             && (element.nombre == null || element.nombre == '')
             && (element.tipoIdentificacionCodigo == null || element.tipoIdentificacionCodigo == '')
             && (element.numeroIdentificacion == null || element.numeroIdentificacion == '')
-            && (element.direccion == null || element.direccion == '') 
-            && (element.email == null || element.email == '') 
+            && (element.direccion == null || element.direccion == '')
+            && (element.email == null || element.email == '')
             )){
                 num_sindiligenciar = num_sindiligenciar+1;
             }else if(!element.registroCompleto){
@@ -156,13 +170,13 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
       let num_completo = 0; //almacena los registros que estan completos
 
       defensaJudicial.demandanteConvocante.forEach(element => {
-          if( element.registroCompleto == null 
-            || (!element.registroCompleto 
+          if( element.registroCompleto == null
+            || (!element.registroCompleto
             && (element.nombre == null || element.nombre == '')
             && (element.tipoIdentificacionCodigo == null || element.tipoIdentificacionCodigo == '')
             && (element.numeroIdentificacion == null || element.numeroIdentificacion == '')
-            && (element.direccion == null || element.direccion == '') 
-            && (element.email == null || element.email == '') 
+            && (element.direccion == null || element.direccion == '')
+            && (element.email == null || element.email == '')
             )){
                 num_sindiligenciar = num_sindiligenciar+1;
             }else if(!element.registroCompleto){
@@ -266,7 +280,7 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   }
   estaIncompletodetalle(defensaJudicial: DefensaJudicial): number {
     let retorno:number=0;
-    if(defensaJudicial.localizacionIdMunicipio!=null && 
+    if(defensaJudicial.localizacionIdMunicipio!=null &&
       defensaJudicial.tipoAccionCodigo!=null &&
       defensaJudicial.jurisdiccionCodigo!=null &&
       defensaJudicial.pretensiones!="" && defensaJudicial.pretensiones!=null
@@ -274,8 +288,8 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
       {
         retorno= 2;
       }
-      else{       
-        if(defensaJudicial.localizacionIdMunicipio==null && 
+      else{
+        if(defensaJudicial.localizacionIdMunicipio==null &&
           defensaJudicial.tipoAccionCodigo==null &&
           defensaJudicial.jurisdiccionCodigo==null &&
           (defensaJudicial.pretensiones=="" || defensaJudicial.pretensiones==null)
@@ -287,17 +301,17 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
           {
             retorno=1;
           }
-        
-      }    
+
+      }
     return retorno;
   }
 
-  estaIncompletocontratos(pProceso:DefensaJudicial):number{        
-    
+  estaIncompletocontratos(pProceso:DefensaJudicial):number{
+
     let retorno:number=0;
     let num_contratos: number = 0;
     let listaContratos:any[]= [];
-    
+
     if(pProceso != null){
 
       num_contratos = pProceso.cantContratos;// total de contratos
@@ -325,12 +339,12 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
     this.textCabecera="Registrar nuevo proceso de defensa judicial";
     this.activatedRoute.params.subscribe( param => {
       this.controlJudicialId = param['id'];
-      
+
       if(this.controlJudicialId)
       {
-        
+
         this.editMode();
-        
+
       }
     });
     this.commonServices.listaProcesosJudiciales().subscribe(

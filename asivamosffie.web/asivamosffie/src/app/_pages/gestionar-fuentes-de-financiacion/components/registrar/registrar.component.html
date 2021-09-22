@@ -102,7 +102,7 @@
                 <mat-form-field class="full-width">
                   <input matInput #numDocumento type="number" formControlName="numerodocumento" maxlength="10" readonly
                     required (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''">
                 </mat-form-field>
                 <span class="contador">{{10 - numDocumento.value.length}}</span>
               </div>
@@ -295,7 +295,7 @@
                   <input matInput #cuantosRP type="number" min="1" class="maincolor" max="99"
                     formControlName="cuantosRP" maxlength="20" (keyup)="CambioNumeroRP()" (change)="CambioNumeroRP()"
                     (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                     oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   />
                 </mat-form-field>
@@ -342,7 +342,7 @@
                       <mat-form-field class="full-width maincolor">
                         <input matInput #numeroRP type="text" formControlName="numeroRP" maxlength="50"
                           (keypress)="validateNumberKeypress($event)"
-                          onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                          onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                           oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                         <input type="hidden" formControlName="registroPresupuestalId" />
                       </mat-form-field>
@@ -380,7 +380,7 @@
                       <mat-form-field class="full-width maincolor">
                         <input matInput #valorRP formControlName="valorRP" maxlength="20"
                           (keypress)="validateNumberKeypress($event)" currencyMask
-                          onKeyPress="if(this.value.length>=this.maxLength) return false;" [options]="{
+                          onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''" [options]="{
                             prefix: '$ ',
                             thousands: '.',
                             precision: '0',
@@ -546,7 +546,7 @@
                       <mat-form-field class="full-width maincolor">
                         <input matInput #valorAporte currencyMask formControlName="valorFuenteRecursos" maxlength="20"
                           required (keypress)="validateNumberKeypress($event); validateonevige(j)"
-                          onKeyPress="if(this.value.length>=this.maxLength) return false;" [options]="{
+                          onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''" [options]="{
                             prefix: '$ ',
                             thousands: '.',
                             precision: '0',
@@ -589,7 +589,7 @@
                         <input matInput #cuantasVigencias type="number" class="maincolor" min="1" max="99" maxlength="2"
                           formControlName="cuantasVigencias" (keyup)="CambioNumerovigencia(j)" required
                           (keypress)="validateNumberKeypress($event)"
-                          onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                          onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                           oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                       </mat-form-field>
                       <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
@@ -692,7 +692,7 @@
                                 maxlength="20"
                                 required
                                 (keypress)="validateNumberKeypress($event)"
-                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                 
                                 [options]="{
                                   prefix: '$ ',

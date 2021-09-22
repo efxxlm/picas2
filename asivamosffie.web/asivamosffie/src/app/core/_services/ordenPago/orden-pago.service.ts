@@ -26,6 +26,10 @@ export class OrdenPagoService {
         return this.http.get( `${ this.urlApi }/GetSolicitudPagoBySolicitudPagoId?SolicitudPagoId=${ SolicitudPagoId }` );
     }
 
+    getInfoPlantilla( pOrdenGiroId: number ) {
+        return this.http.get( `${ this.urlApi }/GetInfoPlantilla?pOrdenGiroId=${ pOrdenGiroId }` );
+    }
+
     createEditOrdenGiro( pOrdenGiro: any ) {
         return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditOrdenGiro`, pOrdenGiro );
     }
@@ -59,6 +63,10 @@ export class OrdenPagoService {
 
     deleteOrdenGiroDetalleTerceroCausacionDescuento( pOrdenGiroDetalleTerceroCausacionDescuentoId: number[] ) {
         return this.http.post<Respuesta>( `${ this.urlApi }/DeleteOrdenGiroDetalleTerceroCausacionDescuento`, pOrdenGiroDetalleTerceroCausacionDescuentoId );
+    }
+
+    deleteOrdenGiroDetalleDescuentoTecnicaByConcepto( pOrdenGiroDetalleDescuentoTecnicaId: number, pConceptoPagoCodigo: string ) {
+      return this.http.post<Respuesta>( `${ this.urlApi }/DeleteOrdenGiroDetalleDescuentoTecnicaByConcepto?pOrdenGiroDetalleDescuentoTecnicaId=${ pOrdenGiroDetalleDescuentoTecnicaId }&pConceptoPagoCodigo=${ pConceptoPagoCodigo }`, '' );
     }
 
     async getAportantes( solicitudPago: any ) {
@@ -180,6 +188,32 @@ export class OrdenPagoService {
             return new Promise<{ listaTipoAportante, listaNombreAportante }>( resolve => resolve ( { listaTipoAportante, listaNombreAportante } ) );
         }
     }
+
+    async getAportantesNew( solicitudPago: any ) {
+      if ( solicitudPago !== undefined ) {
+          // constantes y variables
+          const tablaInformacionFuenteRecursos: any[] = solicitudPago.tablaInformacionFuenteRecursos;
+          const aportantes: any[] = [];
+          const listaNombreAportante: { tipoAportanteId: number, cofinanciacionAportanteId: number, nombreAportante: string }[] = [];
+          const listaTipoAportanteTmp = await this.commonSvc.listaTipoAportante().toPromise();
+          const listaTipoAportante = [];
+          // Get lista de aportantes
+          for ( const aportante of tablaInformacionFuenteRecursos ) {
+            aportantes.push( aportante );
+
+            listaNombreAportante.push(
+              {
+                  tipoAportanteId: aportante.tipoAportanteId,
+                  cofinanciacionAportanteId: aportante.cofinanciacionAportanteId,
+                  nombreAportante: aportante.nombreAportante
+              }
+            );
+            listaTipoAportante.push(listaTipoAportanteTmp.find(r => r.dominioId == aportante.tipoAportanteId));
+          }
+
+          return new Promise<{ listaTipoAportante, listaNombreAportante }>( resolve => resolve ( { listaTipoAportante, listaNombreAportante } ) );
+      }
+  }
 
     firstLetterUpperCase( texto:string ) {
         if ( texto !== undefined ) {

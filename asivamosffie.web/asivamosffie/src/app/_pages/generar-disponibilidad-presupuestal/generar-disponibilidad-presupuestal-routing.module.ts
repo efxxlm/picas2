@@ -21,6 +21,10 @@ const routes: Routes = [
     component: DetalleConValidacionPresupuestalComponent
   },
   {
+    path: 'detalleConDisponibilidadCancelada/:id/:esNovedad/:novedadId',
+    component: DetalleConValidacionPresupuestalComponent
+  },
+  {
     path: 'devueltaPorCoordinacionFinanciera/:id/:esNovedad/:novedadId',
     component: DevueltaPorCoordinacionFinancieraComponent
   },

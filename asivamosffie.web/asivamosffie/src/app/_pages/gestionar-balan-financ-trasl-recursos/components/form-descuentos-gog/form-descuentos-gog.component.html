@@ -1,0 +1,413 @@
+<ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+  <form [formGroup]="addressForm">
+      <mat-accordion *ngIf="descuentos.length > 0 && criteriosArray.length > 0">
+          <mat-expansion-panel class="expansion-style sub-expansion-black" formArrayName="descuentos" *ngFor="let descuento of descuentos.controls; index as i">
+              <mat-expansion-panel-header class="expansion-style--header">
+                  <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? descuento.get( 'estadoSemaforo' ).value : ''">
+                      Descuento {{ i + 1 }}
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <div class="d-flex justify-content-center">
+                  <b style="margin-right: .5em;">Criterios a los cuales aplica el descuento: </b>
+
+                  <div class="d-flex" *ngFor="let value of descuento.get( 'criterio' ).value; index as indexCriterio">
+                      {{ firstLetterUpperCase( getValueCriterio( value ) ) }} <span *ngIf="descuento.get( 'criterio' ).value.length - 1 !== indexCriterio" style="margin-right: .3em;">,</span> <span *ngIf="descuento.get( 'criterio' ).value.length - 1 === indexCriterio">.</span>
+                  </div>
+              </div>
+              <p>  </p>
+              <section class="container text-center" [formGroup]="descuento">
+                  <p>Nombre del descuento: <b> {{ getTipoDescuento( descuento.get( 'tipoDescuentoCodigo' ).value ) }} </b></p>
+                      
+                      <section *ngIf="getCriterios( i ).length > 0">
+                          <div formArrayName="criterios" *ngFor="let criterio of getCriterios( i ).controls; index as j">
+                              <mat-card class="shipping-card">
+                                  <mat-card-header class="header-card header-card--margin">
+                                      <mat-card-title class="header-card--text">
+                                          {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
+                                      </mat-card-title>
+                                  </mat-card-header>
+                                  <mat-card-content style="text-align: left;" [formGroup]="criterio">
+                                      <p><b>Tipo de pago: </b> <em> {{ firstLetterUpperCase( criterio.get( 'tipoPagoNombre' ).value ) }} </em></p>
+
+                                      <div class="d-flex">
+                                          <b style="margin-right: .5em;">Conceptos de pago que aplican para el descuento: </b>
+                      
+                                          <div class="d-flex" *ngFor="let value of criterio.get( 'concepto' ).value; index as indexConcepto">
+                                              {{ firstLetterUpperCase( getValueConcepto( value, criterio.get( 'conceptosDePago' ).value ) ) }} <span *ngIf="descuento.get( 'criterio' ).value.length - 1 !== indexConcepto">,</span> <span *ngIf="descuento.get( 'criterio' ).value.length - 1 === indexConcepto"></span>
+                                          </div>
+                                      </div>
+
+                                      <div *ngIf="getConceptos( i, j ).length > 0">
+                                          <div formArrayName="conceptos" *ngFor="let concepto of getConceptos( i, j ).controls; index as k">
+                                              <h2 class="card-subTitle mt-1em"> {{ firstLetterUpperCase( concepto.get( 'nombre' ).value ) }} </h2>
+                  
+                                              <div [formGroup]="concepto" *ngIf="getAportantes( i, j, k ).length > 0">
+                                                  <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j, k ).controls; index as l">
+                                                      <mat-card-title class="header-card--text mt-1em" *ngIf="aportante.get( 'tipoAportante' ).value !== null"> Aportante {{ l + 1 }} </mat-card-title>
+                                                      <div *ngIf="aportante.get( 'tipoAportante' ).value !== null" style="margin-left: .8em;">
+                                                          <p><b>Tipo de aportante: </b> {{ aportante.get( 'tipoAportante' ).value.nombre }} </p>
+                                                          <p><b>Nombre del aportante: </b> {{ aportante.get( 'nombreAportante' ).value.nombreAportante }} </p>
+                                                          <p><b>Fuente de los recursos: </b> {{ firstLetterUpperCase( getValueFuente( aportante.get('fuenteRecursos').value, aportante.get( 'fuenteDeRecursos' ).value ) ) }} </p>
+                                                          <p><b>Valor del descuento: </b> {{ aportante.get( 'valorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }} </p>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </mat-card-content>
+                              </mat-card>
+                          </div>
+                      </section>
+              </section>
+          </mat-expansion-panel> 
+      </mat-accordion>
+  </form>
+</ng-container>
+<ng-template #noEsVerDetalle>
+  <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+      <mat-accordion *ngIf="descuentos.length > 0 && criteriosArray.length > 0">
+          <mat-expansion-panel class="expansion-style sub-expansion-black" formArrayName="descuentos" *ngFor="let descuento of descuentos.controls; index as i">
+              <mat-expansion-panel-header class="expansion-style--header">
+                  <mat-panel-title class="expansion-style--title" [ngClass]="descuento.get( 'estadoSemaforo' ).value">
+                      Descuento {{ i + 1 }}
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+      
+              <section class="container text-center" [formGroup]="descuento">
+                  <p>Nombre del descuento: <b> {{ getTipoDescuento( descuento.get( 'tipoDescuentoCodigo' ).value ) }} </b></p>
+                      <div class="row">
+                          <div class="col-md-12" style="padding-left: 0;">
+                              <div class="row">
+                                  <div class="pr-1">
+                                      <label  class="label-left"
+                                              for="criterio"
+                                              [ngClass]="{ 'color-secondaryColor': (addressForm.get('criterio')?.invalid && addressForm.get('criterio').touched) || (addressForm.get('criterio')?.invalid && estaEditando) }">
+                                              Criterios a los cuales aplica el descuento
+                                      </label>
+                                  </div>
+                                  <div class="col">
+                                      <mat-form-field class="select-width">
+                                          <mat-select formControlName="criterio" required multiple (selectionChange)="getListCriterios( $event.value, i )">
+                                              <mat-option *ngFor="let criterio of criteriosArray" [value]="criterio.codigo">
+                                                  {{ firstLetterUpperCase( criterio.nombre ) }}
+                                              </mat-option>
+                                          </mat-select>
+                                      </mat-form-field>
+                                  </div>
+                                  <span class="icon-incompleto">
+                                      <img    class="icon-incompleto--img"
+                                              src="assets/img/icon/incompleto.svg"
+                                              alt="este campo es requerido"
+                                              [matTooltipPosition]="'above'"
+                                              matTooltip="Debe ingresar la información en el campo para continuar"
+                                              matTooltipClass="info-tooltip"
+                                              *ngIf="(addressForm.get('criterio')?.invalid && addressForm.get('criterio').touched) || (addressForm.get('criterio')?.invalid && estaEditando)">
+                                  </span>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <section *ngIf="getCriterios( i ).length > 0">
+                          <div formArrayName="criterios" *ngFor="let criterio of getCriterios( i ).controls; index as j">
+                              <mat-card class="shipping-card">
+                                  <mat-card-header class="header-card header-card--margin">
+                                      <mat-card-title class="header-card--text">
+                                          {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
+                                      </mat-card-title>
+                                  </mat-card-header>
+                                  <mat-card-content style="text-align: left;" [formGroup]="criterio">
+                                      <p><b>Tipo de pago: </b> <em> {{ firstLetterUpperCase( criterio.get( 'tipoPagoNombre' ).value ) }} </em></p>
+                                      <div class="row">
+                                          <div class="col-md-12" style="padding-left: 0;">
+                                              <div class="row">
+                                                  <div class="pr-1">
+                                                      <label  class="label-left"
+                                                              for="concepto" [ngClass]="{ 'color-secondaryColor': (criterio.get('concepto').invalid && criterio.get('concepto').touched) || (criterio.get('concepto').invalid && estaEditando) }">
+                                                              Conceptos de pago que aplican para el descuento:
+                                                      </label>
+                                                  </div>
+                                                  <div class="col">
+                                                      <mat-form-field class="select-width">
+                                                          <mat-select formControlName="concepto" required multiple (selectionChange)="getListConceptos( $event.value, i, j )">
+                                                              <mat-option *ngFor="let concepto of criterio.get( 'conceptosDePago' ).value" [value]="concepto.codigo">
+                                                                  {{ firstLetterUpperCase( concepto.nombre ) }}
+                                                              </mat-option>
+                                                          </mat-select>
+                                                      </mat-form-field>
+                                                  </div>
+                                                  <span class="icon-incompleto">
+                                                      <img    class="icon-incompleto--img"
+                                                              src="assets/img/icon/incompleto.svg"
+                                                              alt="este campo es requerido"
+                                                              [matTooltipPosition]="'above'"
+                                                              matTooltip="Debe ingresar la información en el campo para continuar"
+                                                              matTooltipClass="info-tooltip" *ngIf="(criterio.get('concepto').invalid && criterio.get('concepto').touched) || (criterio.get('concepto').invalid && estaEditando)">
+                                                  </span>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div *ngIf="getConceptos( i, j ).length > 0">
+                                          <div formArrayName="conceptos" *ngFor="let concepto of getConceptos( i, j ).controls; index as k">
+                                              <h2 class="card-subTitle mt-1em"> {{ firstLetterUpperCase( concepto.get( 'nombre' ).value ) }} </h2>
+                  
+                                              <div [formGroup]="concepto" *ngIf="getAportantes( i, j, k ).length > 0">
+                                                  <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j, k ).controls; index as l">
+                                                      <mat-card-title class="header-card--text mt-1em"> Aportante {{ l + 1 }} </mat-card-title>
+                                                      <div class="row">
+                                                          <div class="col-md-9" [formGroup]="aportante">
+                                                              <div class="row">
+                                                                  <div class="col-md-11">
+                                                                      <div class="row">
+                                                                          <div class="pr-1">
+                                                                              <label  class="label-left"
+                                                                                      for="tipoAportante"
+                                                                                      [ngClass]="{ 'color-secondaryColor': (aportante.get('tipoAportante').invalid && aportante.get('tipoAportante').touched) || (aportante.get('tipoAportante').invalid && estaEditando) }">
+                                                                                      Tipo de aportante:
+                                                                              </label>
+                                                                          </div>
+                                                                          <div class="col">
+                                                                              <mat-form-field class="select-width">
+                                                                                  <ng-container *ngIf=" aportante.get( 'tipoAportante' ).value !== null; else elseTemplate">
+                                                                                      <mat-select formControlName="tipoAportante" required>
+                                                                                          <mat-option [value]="aportante.get( 'tipoAportante' ).value">
+                                                                                              {{ aportante.get( 'tipoAportante' ).value.nombre }}
+                                                                                          </mat-option>
+                                                                                      </mat-select>
+                                                                                  </ng-container>
+                                                                                  <ng-template #elseTemplate>
+                                                                                      <mat-select formControlName="tipoAportante" required (ngModelChange)="valuePendingTipoAportante( $event, i, j, k, l )">
+                                                                                          <mat-option *ngFor="let aportante of concepto.get( 'tipoDeAportantes' ).value" [value]="aportante">
+                                                                                              {{ aportante.nombre }}
+                                                                                          </mat-option>
+                                                                                      </mat-select>
+                                                                                  </ng-template>
+                                                                              </mat-form-field>
+                                                                          </div>
+                                                                          <span class="icon-incompleto">
+                                                                              <img    class="icon-incompleto--img"
+                                                                                      src="assets/img/icon/incompleto.svg"
+                                                                                      alt="este campo es requerido"
+                                                                                      [matTooltipPosition]="'above'"
+                                                                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                                                                      matTooltipClass="info-tooltip"
+                                                                                      *ngIf="(aportante.get('tipoAportante').invalid && aportante.get('tipoAportante').touched) || (aportante.get('tipoAportante').invalid && estaEditando)">
+                                                                          </span>
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                              <div class="row">
+                                                                  <div class="col-md-11">
+                                                                      <div class="row">
+                                                                          <div class="pr-1">
+                                                                              <label  class="label-left"
+                                                                                      for="nombreAportante"
+                                                                                      [ngClass]="{ 'color-secondaryColor': (aportante.get('nombreAportante').invalid && aportante.get('nombreAportante').touched) || (aportante.get('nombreAportante').invalid && estaEditando) }">
+                                                                                      Nombre del aportante:
+                                                                              </label>
+                                                                          </div>
+                                                                          <div class="col">
+                                                                              <mat-form-field class="select-width">
+                                                                                  <mat-select formControlName="nombreAportante" required (ngModelChange)="getListaFuenteRecursos( $event, i, j, k, l )">
+                                                                                      <mat-option *ngFor="let aportante of aportante.get( 'listaNombreAportantes' ).value" [value]="aportante">
+                                                                                          {{ aportante.nombreAportante }}
+                                                                                      </mat-option>
+                                                                                  </mat-select>
+                                                                              </mat-form-field>
+                                                                          </div>
+                                                                          <span class="icon-incompleto">
+                                                                              <img    class="icon-incompleto--img"
+                                                                                      src="assets/img/icon/incompleto.svg"
+                                                                                      alt="este campo es requerido"
+                                                                                      [matTooltipPosition]="'above'"
+                                                                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                                                                      matTooltipClass="info-tooltip"
+                                                                                      *ngIf="(aportante.get('nombreAportante').invalid && aportante.get('nombreAportante').touched) || (aportante.get('nombreAportante').invalid && estaEditando)">
+                                                                          </span>
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                              <div class="row">
+                                                                  <div class="col-md-11">
+                                                                      <div class="row">
+                                                                          <div class="pr-1">
+                                                                              <label  class="label-left"
+                                                                                      for="fuenteRecursos"
+                                                                                      [ngClass]="{ 'color-secondaryColor': (aportante.get('fuenteRecursos').invalid && aportante.get('fuenteRecursos').touched) || (aportante.get('fuenteRecursos').invalid && estaEditando) }">
+                                                                                      Fuente de los recursos:
+                                                                              </label>
+                                                                          </div>
+                                                                          <div class="col">
+                                                                              <mat-form-field class="select-width">
+                                                                                  <mat-select formControlName="fuenteRecursos" required>
+                                                                                      <mat-option *ngFor="let fuente of aportante.get( 'fuenteDeRecursos' ).value" [value]="fuente.codigo">
+                                                                                          {{ fuente.nombre }}
+                                                                                      </mat-option>
+                                                                                  </mat-select>
+                                                                              </mat-form-field>
+                                                                          </div>
+                                                                          <span class="icon-incompleto">
+                                                                              <img    class="icon-incompleto--img"
+                                                                                      src="assets/img/icon/incompleto.svg"
+                                                                                      alt="este campo es requerido"
+                                                                                      [matTooltipPosition]="'above'"
+                                                                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                                                                      matTooltipClass="info-tooltip"
+                                                                                      *ngIf="(aportante.get('fuenteRecursos').invalid && aportante.get('fuenteRecursos').touched) || (aportante.get('fuenteRecursos').invalid && estaEditando)">
+                                                                          </span>
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                              <div class="row">
+                                                                  <div class="col-md-11">
+                                                                      <div class="row">
+                                                                          <div class="pr-1">
+                                                                              <label  class="label-left"
+                                                                                      for="valorDescuento"
+                                                                                      [ngClass]="{ 'color-secondaryColor': (aportante.get('valorDescuento').invalid && aportante.get('valorDescuento').touched) || (aportante.get('valorDescuento').invalid && estaEditando) }">
+                                                                                      Valor del descuento
+                                                                              </label>
+                                                                          </div>
+                                                                          <div class="col d-flex">
+                                                                              <mat-form-field class="full-width">
+                                                                                  <input  matInput
+                                                                                          #valorDescuento
+                                                                                          min="0"
+                                                                                          maxlength="20"
+                                                                                          required
+                                                                                          currencyMask
+                                                                                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                                                                                          formControlName="valorDescuento"
+                                                                                          (ngModelChange)="checkValueDescuento( $event, i, j, k, l ); checkTotalDiscountValues( i, j, k, l );"
+                                                                                          onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''">
+                                                                              </mat-form-field>
+                                                                              <span   class="contador"
+                                                                                      [matTooltipPosition]="'above'"
+                                                                                      matTooltip="Valor en ($) Pesos colombianos"
+                                                                                      matTooltipClass="info-tooltip">
+                                                                                      {{ 20 - valorDescuento.value.length }}
+                                                                              </span>
+                                                                          </div>
+                                                                          <span class="icon-incompleto">
+                                                                              <img    class="icon-incompleto--img"
+                                                                                      src="assets/img/icon/incompleto.svg"
+                                                                                      alt="este campo es requerido"
+                                                                                      [matTooltipPosition]="'above'"
+                                                                                      matTooltip="Debe ingresar la información en el campo para continuar"
+                                                                                      matTooltipClass="info-tooltip"
+                                                                                      *ngIf="(aportante.get('valorDescuento').invalid && aportante.get('valorDescuento').touched) || (aportante.get('valorDescuento').invalid && estaEditando)">
+                                                                          </span>
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+                                                          <div class="col-md-3 text-right" style="padding-top: 7em;">
+                                                              <button mat-button
+                                                                      color="warn"
+                                                                      type="button"
+                                                                      class="btn-eliminar"
+                                                                      (click)="deleteAportante( i, j, k, l )"
+                                                                      *ngIf="getAportantes( i, j, k ).length > 1">
+                                                                      <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
+                                                                      Eliminar aportante
+                                                              </button>
+                                                          </div>
+                                                      </div>
+                                                      <div class="col-md-12 text-right">
+                                                          <button mat-button
+                                                                  color="warn"
+                                                                  type="button"
+                                                                  class="btn-eliminar"
+                                                                  *ngIf="getConceptos( i, j ).length > 1"
+                                                                  (click)="deleteConcepto( i, j, k )">
+                                                                  <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
+                                                                  Eliminar concepto para descuento
+                                                          </button>
+                                                          <button mat-button
+                                                                  color="warn"
+                                                                  type="button"
+                                                                  class="btn-eliminar text-right"
+                                                                  (click)="addAportante( i, j, k )"
+                                                                  *ngIf="l === getAportantes( i, j, k ).length - 1">
+                                                                  <img src="assets/img/icon/mas.svg" alt="Eliminar radicado">
+                                                                  Agregar otro aportante
+                                                          </button>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </mat-card-content>
+                              </mat-card>
+                              <div class="col-md-12 text-right" *ngIf="getCriterios( i ).length > 1">
+                                  <button mat-button
+                                          color="warn"
+                                          type="button"
+                                          class="btn-eliminar"
+                                          (click)="deleteCriterio( i, j )">
+                                          <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
+                                          Eliminar criterio para descuento
+                                  </button>
+                              </div>
+                          </div>
+                      </section>
+
+                      <div *ngIf="descuento.get( 'obsVerificar' ).value !== null || descuento.get( 'obsAprobar' ).value !== null || descuento.get( 'obsTramitar' ).value !== null">
+                          <mat-card class="shipping-card border" align="left" *ngIf="descuento.get( 'obsVerificar' ).value !== null">
+                              <mat-card-header class="header-card">
+                                  <mat-card-title class="header-card--text card-title-detalle">
+                                      Verificación de la coordinación financiera
+                                  </mat-card-title>
+                              </mat-card-header>
+                              <mat-card-content>
+                                  <p style="margin-left: 2em;"><b> {{ descuento.get( 'obsVerificar' ).value.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                                  <p style="margin-left: 2em;" *ngIf="descuento.get( 'obsVerificar' ).value.tieneObservacion === true"><b>¿Desde la coordinación financiera tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
+                                  <p style="margin-left: 2em;" *ngIf="descuento.get( 'obsVerificar' ).value.tieneObservacion === false"><b>¿Desde la coordinación financiera tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
+                                  <section [innerHTML]="descuento.get( 'obsVerificar' ).value.observacion" style="margin-left: 2em;" *ngIf="descuento.get( 'obsVerificar' ).value.tieneObservacion === true"></section>
+                              </mat-card-content>
+                          </mat-card>
+              
+                          <mat-card class="shipping-card border" align="left" *ngIf="descuento.get( 'obsAprobar' ).value !== null">
+                              <mat-card-header class="header-card">
+                                  <mat-card-title class="header-card--text card-title-detalle">
+                                      Aprobación de la dirección financiera
+                                  </mat-card-title>
+                              </mat-card-header>
+                              <mat-card-content>
+                                  <p style="margin-left: 2em;"><b> {{ descuento.get( 'obsAprobar' ).value.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                                  <p style="margin-left: 2em;" *ngIf="descuento.get( 'obsAprobar' ).value.tieneObservacion === true"><b>¿Desde la dirección financiera tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
+                                  <p style="margin-left: 2em;" *ngIf="descuento.get( 'obsAprobar' ).value.tieneObservacion === false"><b>¿Desde la dirección financiera tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
+                                  <section [innerHTML]="descuento.get( 'obsAprobar' ).value.observacion" style="margin-left: 2em;" *ngIf="descuento.get( 'obsAprobar' ).value.tieneObservacion === true"></section>
+                              </mat-card-content>
+                          </mat-card>
+              
+                          <mat-card class="shipping-card border" align="left" *ngIf="descuento.get( 'obsTramitar' ).value !== null">
+                              <mat-card-header class="header-card">
+                                  <mat-card-title class="header-card--text card-title-detalle">
+                                      Observaciones de fiduciaria
+                                  </mat-card-title>
+                              </mat-card-header>
+                              <mat-card-content>
+                                  <p style="margin-left: 2em;"><b> {{ descuento.get( 'obsTramitar' ).value.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                                  <p style="margin-left: 2em;" *ngIf="descuento.get( 'obsTramitar' ).value.tieneObservacion === true"><b>¿Desde la fiduciaria tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
+                                  <p style="margin-left: 2em;" *ngIf="descuento.get( 'obsTramitar' ).value.tieneObservacion === false"><b>¿Desde la fiduciaria tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
+                                  <section [innerHTML]="descuento.get( 'obsTramitar' ).value.observacion" style="margin-left: 2em;" *ngIf="descuento.get( 'obsTramitar' ).value.tieneObservacion === true"></section>
+                              </mat-card-content>
+                          </mat-card>
+                      </div>
+
+                      <div class="text-center mb-2em">
+                          <button mat-button
+                                  color="warn"
+                                  class="btn-guardar"
+                                  type="button"
+                                  (click)="onSubmit( i )"
+                                  [disabled]="getCriterios( i ).dirty === false">
+                                  <img src="assets/img/icon/guardar.svg" alt="Guardar">
+                          </button>
+                      </div>
+              </section>
+          </mat-expansion-panel> 
+      </mat-accordion>
+  </form>
+</ng-template>

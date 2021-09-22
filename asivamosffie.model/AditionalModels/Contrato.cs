@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using asivamosffie.model.Models;
-using asivamosffie.model.APIModels;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
-using System.IO;
-using Microsoft.Extensions.Options;
+﻿using asivamosffie.model.APIModels;
 using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace asivamosffie.model.Models
 {
@@ -15,7 +10,7 @@ namespace asivamosffie.model.Models
     {
         [NotMapped]
         public IFormFile PFile { get; set; }
-         
+
         [NotMapped]
         public DateTime? FechaAprobacionComite { get; set; }
 
@@ -69,9 +64,9 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public dynamic VContratoPagosRealizados { get; set; }
-         
+
         [NotMapped]
-        public bool TieneSuspensionAprobada{ get; set; }
+        public bool TieneSuspensionAprobada { get; set; }
 
         [NotMapped]
         public int? SuspensionAprobadaId { get; set; }
@@ -93,7 +88,20 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public dynamic TablaDRP { get; set; }
+
+        [NotMapped]
+        public dynamic TablaDRPODG { get; set; }
+         
+        [NotMapped]
+        public DateTime? FechaEstimadaFinalizacion { get; set; }
+
+        [NotMapped]
+        public bool? EsMultiProyecto { get; set; }
+
+
+        [NotMapped]
+        public dynamic TablaRecursosComprometidos { get; set; }
     }
 
-    
+
 }

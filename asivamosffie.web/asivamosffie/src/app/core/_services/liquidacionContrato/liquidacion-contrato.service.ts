@@ -20,4 +20,8 @@ export class LiquidacionContratoService {
     return this.http.post<Respuesta>( `${ this.apiUrl }/CreateEditContractSettlement`, pContratacion )
   }
 
+  changeStateContractSettlement( pContratacionId: any ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/ChangeStateContractSettlement?pContratacionId=${ pContratacionId }`, null )
+  }
+
 }

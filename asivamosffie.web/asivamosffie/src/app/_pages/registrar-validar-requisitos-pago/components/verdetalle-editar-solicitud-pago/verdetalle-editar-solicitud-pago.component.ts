@@ -36,6 +36,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
     registroCompletoAcordeones: any = {
         registroCompletoFormaDePago: false,
         registroCompletoSolicitudPago: false,
+        registroCompletoDescripcionFactura: false,
         registroCompletoDetalleFactura: false,
         registroCompletoListaChequeo: false,
         registroCompletoOtrosCostos: false
@@ -110,7 +111,10 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                                     const solicitudPagoRegistrarSolicitudPago = this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[0];
 
                                     if ( solicitudPagoRegistrarSolicitudPago !== undefined && solicitudPagoRegistrarSolicitudPago.fechaSolicitud !== undefined && solicitudPagoRegistrarSolicitudPago.numeroRadicadoSac !== undefined ) {
-                                        this.semaforoDetalleFactura = 'sin-diligenciar'
+                                        const solicitudPagoFactura = this.contrato.solicitudPagoOnly.solicitudPagoFactura[ 0 ]
+                                        if ( this.contrato.solicitudPagoOnly.esFactura !== undefined && solicitudPagoFactura.numero !== undefined && solicitudPagoFactura.fecha !== undefined ) {
+                                            this.semaforoDetalleFactura = 'sin-diligenciar'
+                                        }
                                     }
                                     // Get observacion solicitud de pago
                                     this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
@@ -236,6 +240,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                 }
 
                 if ( this.contrato.solicitudPagoOnly.esFactura !== undefined && solicitudPagoFactura.numero !== undefined && solicitudPagoFactura.fecha !== undefined ) {
+                    this.registroCompletoAcordeones.registroCompletoDescripcionFactura = true
                     semaforoDescripcionFactura = 'completo'
                 }
             } else {

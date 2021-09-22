@@ -16,7 +16,7 @@
                     <div class="col">
                         <mat-radio-group class="radioInput" formControlName="nuevoAportante" required>
                             <mat-radio-button [value]="true">Sí</mat-radio-button>
-                            <mat-radio-button [value]="false" (change)="updateOldAportante()">No</mat-radio-button>
+                            <mat-radio-button [value]="false">No</mat-radio-button>
                         </mat-radio-group>
                         <span class="required-form-group" style="margin-left: 1px;">*</span>
                     </div>
@@ -285,7 +285,7 @@
                       (selectionChange)="changeAportante(j)"
                     >
                       <mat-option
-                        *ngFor="let aportante of listaAportantes"
+                        *ngFor="let aportante of filterAportante(listaAportantes,j)"
                         [value]="aportante.cofinanciacionAportanteId"
                       >
                         {{ aportante.nombreAportanteString }}
@@ -337,7 +337,7 @@
                       currencyMask
                       required
                       maxLength="20"
-                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                       oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                       formControlName="valorAportanteProyecto"
@@ -620,7 +620,7 @@
                                           currencyMask
                                           required
                                           maxLength="20"
-                                          onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                          onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                           oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                           [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
                                           formControlName="valorUso"

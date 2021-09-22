@@ -1650,7 +1650,7 @@ namespace asivamosffie.services
                     FechaActaInicioFase2DateTime = Convert.ToDateTime(contrato.FechaActaInicioFase2);
                     FechaPrevistaTerminacionDateTime = Convert.ToDateTime(contrato.FechaActaInicioFase2);
 
-                    if(contrato.FechaActaInicioFase2 != null && (contrato.PlazoFase2ConstruccionDias != null || contrato.PlazoFase2ConstruccionDias != null))
+                    if (contrato.FechaActaInicioFase2 != null && (contrato.PlazoFase2ConstruccionDias != null || contrato.PlazoFase2ConstruccionDias != null))
                     {
                         FechaPrevistaTerminacionDateTime = FechaPrevistaTerminacionDateTime.AddMonths((int)(contrato?.PlazoFase2ConstruccionMeses != null ? contrato?.PlazoFase2ConstruccionMeses : 0)).AddDays((int)(contrato?.PlazoFase2ConstruccionDias != null ? contrato?.PlazoFase2ConstruccionDias : 0));
                     }
@@ -1669,11 +1669,9 @@ namespace asivamosffie.services
                     contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
                     contrato.UsuarioInterventoria = _context.Usuario.Find(contrato.InterventorId);
                     //if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
-                        //contrato.UsuarioInterventoria = _context.Usuario.Find(contrato.SupervisorId);
-
+                    //contrato.UsuarioInterventoria = _context.Usuario.Find(contrato.SupervisorId);
                     Supervisor = _context.Usuario.Find(contrato.SupervisorId);
                     contrato.Supervisor = Supervisor;
-
                 }
                 string strTipoContratacion = ConstanMessages.SinDefinir;
                 Dominio TipoContratacionCodigo;
@@ -1705,6 +1703,7 @@ namespace asivamosffie.services
                     contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
 
                     contratista = _context.Contratista.Where(r => (bool)r.Activo && r.ContratistaId == contratacion.ContratistaId).FirstOrDefault();
+
 
                     if (contrato.Contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
                     {

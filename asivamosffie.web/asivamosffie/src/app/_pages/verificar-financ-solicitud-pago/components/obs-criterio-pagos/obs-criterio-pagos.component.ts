@@ -37,7 +37,7 @@ export class ObsCriterioPagosComponent implements OnInit {
     fasesContrato = TiposDeFase;
     solicitudPagoObservacionId = 0;
     btnBoolean = false;
-    montoMaximoPendiente = 0;
+    montoMaximoPendiente: any = undefined;
     esPreconstruccion = true;
     manejoAnticipoRequiere = false;
     addressForm = this.fb.group({
@@ -46,6 +46,8 @@ export class ObsCriterioPagosComponent implements OnInit {
     });
     criteriosArray: { codigo: string, nombre: string, porcentaje: number }[] = [];
     estaEditando = false;
+    forma_pago_codigo: string;
+    usosParaElConceoto: any;
 
     get criterios() {
         return this.addressForm.get( 'criterios' ) as FormArray;
@@ -74,17 +76,21 @@ export class ObsCriterioPagosComponent implements OnInit {
         }
         // Se obtiene la forma pago codigo dependiendo la fase seleccionada
         const FORMA_PAGO_CODIGO = this.esPreconstruccion === true ? this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo : this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo
+        this.forma_pago_codigo = FORMA_PAGO_CODIGO;
+
         let LISTA_CRITERIOS_FORMA_PAGO = await this.registrarPagosSvc.getCriterioByFormaPagoCodigo( FORMA_PAGO_CODIGO ).toPromise()
         let seDiligencioAnticipo: boolean;
         let listaSolicitudesPago = [];
-        let criterioAnticipo: Dominio = null;
-        const montoMaximoPendiente = await this.registrarPagosSvc.getMontoMaximo( this.solicitudPago.solicitudPagoId, this.esPreconstruccion === true ? 'True' : 'False' ).toPromise();
-        if ( this.contrato.contratoConstruccion.length > 0 ) this.manejoAnticipoRequiere = this.contrato.contratoConstruccion[0].manejoAnticipoRequiere;
-        this.montoMaximoPendiente = montoMaximoPendiente.valorPendientePorPagar;
+        let criterioAnticipo = null;
 
-        criterioAnticipo = LISTA_CRITERIOS_FORMA_PAGO.find( value => value.nombre === 'Anticipó' )
+        //const montoMaximoPendiente = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, FORMA_PAGO_CODIGO, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ).toPromise();
+        if ( this.contrato.contratoConstruccion.length > 0 ) this.manejoAnticipoRequiere = this.contrato.contratoConstruccion[0].manejoAnticipoRequiere;
+
+       // this.montoMaximoPendiente = montoMaximoPendiente
+
+        criterioAnticipo = LISTA_CRITERIOS_FORMA_PAGO //.find( value => value.nombre === 'Anticipo' )
         if ( this.manejoAnticipoRequiere === false || undefined ) {
-            LISTA_CRITERIOS_FORMA_PAGO = LISTA_CRITERIOS_FORMA_PAGO.filter( value => value.nombre !== 'Anticipó' )
+            LISTA_CRITERIOS_FORMA_PAGO = LISTA_CRITERIOS_FORMA_PAGO.filter( value => value.nombre !== 'Anticipo' )
         }
 
         if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago !== undefined && this.solicitudPago.solicitudPagoRegistrarSolicitudPago.length > 0 ) {
@@ -98,7 +104,7 @@ export class ObsCriterioPagosComponent implements OnInit {
                         if ( LISTA_CRITERIOS_FORMA_PAGO.length > 0 && this.esVerDetalle === false ) {
                             if ( fase.solicitudPagoFaseCriterio.length > 0 ) {
                                 // tipoCriterioCodigo
-                                if ( criterioAnticipo !== null ) {
+                                if ( criterioAnticipo ) {
                                     const anticipoFind = fase.solicitudPagoFaseCriterio.find( value => value.tipoCriterioCodigo === criterioAnticipo.codigo )
 
                                     if ( anticipoFind !== undefined ) {
@@ -157,20 +163,20 @@ export class ObsCriterioPagosComponent implements OnInit {
                                 const nombre = criterioValue.nombre.split( ' ' );
                                 const porcentaje = nombre[ nombre.length - 1 ].replace( '%', '' );
                                 const porcentajeCriterio = Number( porcentaje ) / 100;
-        
+
                                 criterioValue.porcentaje = porcentajeCriterio;
                                 criterioValue[ 'criterios' ] = [];
                             }
-        
+
                             const listSolicitudPago: any[] = this.contrato.solicitudPago;
-        
+
                             if ( listSolicitudPago.length > 1 ) {
                                 const solicitudPagoFaseCriterio = [];
                                 for ( const solicitud of listSolicitudPago ) {
                                     if ( solicitud.solicitudPagoId !== this.solicitudPago.solicitudPagoId ) {
                                         if ( solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ] !== undefined ) {
                                             const faseConstruccion = solicitud.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true );
-                                        
+
                                             if ( faseConstruccion !== undefined ) {
                                                 if ( faseConstruccion.solicitudPagoFaseCriterio.length > 0 ) {
                                                     faseConstruccion.solicitudPagoFaseCriterio.forEach( solicitudPagoFaseCriterioValue => {
@@ -181,16 +187,16 @@ export class ObsCriterioPagosComponent implements OnInit {
                                         }
                                     }
                                 }
-        
+
                                 if ( solicitudPagoFaseCriterio.length > 0 ) {
                                     solicitudPagoFaseCriterio.forEach( solicitudPagoFaseCriterio => {
                                         const criterioIndex = LISTA_CRITERIOS_FORMA_PAGO.findIndex( criterioValue => criterioValue.codigo === solicitudPagoFaseCriterio.tipoCriterioCodigo );
-        
+
                                         if ( criterioIndex !== -1 ) {
                                             LISTA_CRITERIOS_FORMA_PAGO[ criterioIndex ][ 'criterios' ].push( solicitudPagoFaseCriterio );
                                         }
                                     } )
-        
+
                                     LISTA_CRITERIOS_FORMA_PAGO.forEach( ( criterioValue, index ) => {
                                         let totalCriterio = 0;
                                         if ( criterioValue[ 'criterios' ].length > 0 ) {
@@ -198,10 +204,10 @@ export class ObsCriterioPagosComponent implements OnInit {
                                                 totalCriterio += criterio.valorFacturado;
                                             } )
                                         }
-        
+
                                         if ( totalCriterio > 0 ) {
                                             const restanteCriterio = ( ( this.montoMaximoPendiente * criterioValue.porcentaje ) - totalCriterio );
-        
+
                                             if ( totalCriterio === ( this.montoMaximoPendiente * criterioValue.porcentaje ) ) {
                                                 LISTA_CRITERIOS_FORMA_PAGO.splice( index, 1 );
                                             } else {
@@ -209,19 +215,19 @@ export class ObsCriterioPagosComponent implements OnInit {
                                             }
                                         }
                                     } )
-        
+
                                     LISTA_CRITERIOS_FORMA_PAGO.forEach( criterioValue => {
                                         delete criterioValue[ 'criterios' ];
                                     } )
                                 }
                             }
                         }
-        
+
                         if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
                             this.estaEditando = true;
                             this.addressForm.markAllAsTouched();
                             this.criterios.markAllAsTouched();
-        
+
                             for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
                                 // GET Criterio seleccionado
                                 const criterioSeleccionado = LISTA_CRITERIOS_FORMA_PAGO.filter( value => value.codigo === criterio.tipoCriterioCodigo );
@@ -231,52 +237,108 @@ export class ObsCriterioPagosComponent implements OnInit {
                                 const tipoDePago = tiposDePago.filter( value => value.codigo === criterio.tipoPagoCodigo );
                                 // GET conceptos de pago
                                 const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( criterio.tipoPagoCodigo );
-                                const conceptoDePagoArray = [];
+                                let conceptoDePagoArray = [];
                                 const conceptosDePagoSeleccionados = [];
                                 // Get conceptos de pago
                                 if ( criterio.solicitudPagoFaseCriterioConceptoPago.length > 0 ) {
                                     criterio.solicitudPagoFaseCriterioConceptoPago.forEach( solicitudPagoFaseCriterioConceptoPago => {
                                         const conceptoFind = conceptosDePago.find( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio );
-        
+
                                         if ( conceptoFind !== undefined ) {
-                                            conceptosDePagoSeleccionados.push( conceptoFind );
-                                            conceptoDePagoArray.push(
-                                                this.fb.group(
-                                                    {
-                                                        solicitudPagoFaseCriterioConceptoPagoId: [ solicitudPagoFaseCriterioConceptoPago.solicitudPagoFaseCriterioConceptoPagoId ],
-                                                        solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
-                                                        conceptoPagoCriterioNombre: [ conceptoFind.nombre ],
-                                                        conceptoPagoCriterio: [ solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ],
-                                                        valorFacturadoConcepto: [ solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto !== undefined ? solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto : null ]
-                                                    }
-                                                )
+                                          this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, FORMA_PAGO_CODIGO, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterio?.tipoCriterioCodigo, conceptoFind?.codigo )
+                                            .subscribe(
+                                                async response => {
+                                                  conceptosDePagoSeleccionados.push( conceptoFind );
+                                                  await this.getvaluesConceptoPagoCodigo(conceptosDePagoSeleccionados)
+                                                  conceptoDePagoArray.push(
+                                                      this.fb.group(
+                                                          {
+                                                              solicitudPagoFaseCriterioConceptoPagoId: [ solicitudPagoFaseCriterioConceptoPago.solicitudPagoFaseCriterioConceptoPagoId ],
+                                                              solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
+                                                              conceptoPagoCriterioNombre: [ conceptoFind.nombre ],
+                                                              usoCodigo: [ solicitudPagoFaseCriterioConceptoPago.usoCodigo ],
+                                                              conceptoPagoCriterio: [ solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio ],
+                                                              valorFacturadoConcepto: [ solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto !== undefined ? solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto : null ],
+                                                              montoMaximo: response?.montoMaximo
+                                                          }
+                                                      )
+                                                  );
+
+                                                  const montoMaximo = this.montoMaximoPendiente !== 0 ? ( this.montoMaximoPendiente * criterioSeleccionado[0].porcentaje ) : 0;
+
+                                                  this.criterios.push(
+                                                      this.fb.group(
+                                                          {
+                                                              solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
+                                                              solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
+                                                              montoMaximo: [ montoMaximo ],
+                                                              tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
+                                                              nombreCriterio: [ criterioSeleccionado[0].nombre ],
+                                                              tiposDePago: [ tiposDePago ],
+                                                              tipoPago: [ tipoDePago.length > 0 ? tipoDePago[0] : null ],
+                                                              conceptosDePago: [ conceptosDePago ],
+                                                              conceptoPago: [ conceptosDePagoSeleccionados, Validators.required ],
+                                                              conceptos: this.fb.array( conceptoDePagoArray ),
+                                                              valorFacturado: [ { value: criterio.valorFacturado !== undefined ? criterio.valorFacturado : null, disabled: true }, Validators.required ]
+                                                          }
+                                                      )
+                                                  );
+                                                  conceptoDePagoArray = []
+                                                }
                                             );
                                         }
                                     } );
                                 }
-        
-                                const montoMaximo = this.montoMaximoPendiente !== 0 ? ( this.montoMaximoPendiente * criterioSeleccionado[0].porcentaje ) : 0;
-        
-                                this.criterios.push(
-                                    this.fb.group(
-                                        {
-                                            solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
-                                            solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
-                                            montoMaximo: [ montoMaximo ],
-                                            tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
-                                            nombreCriterio: [ criterioSeleccionado[0].nombre ],
-                                            tiposDePago: [ tiposDePago ],
-                                            tipoPago: [ tipoDePago.length > 0 ? tipoDePago[0] : null ],
-                                            conceptosDePago: [ conceptosDePago ],
-                                            conceptoPago: [ conceptosDePagoSeleccionados, Validators.required ],
-                                            conceptos: this.fb.array( conceptoDePagoArray ),
-                                            valorFacturado: [ { value: criterio.valorFacturado !== undefined ? criterio.valorFacturado : null, disabled: true }, Validators.required ]
+
+
+                            }
+
+                            if ( this.esVerDetalle === false ) {
+                                // Get observacion CU autorizar solicitud de pago 4.1.9
+                                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                    this.listaMenusId?.autorizarSolicitudPagoId,
+                                    this.solicitudPago.solicitudPagoId,
+                                    this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId,
+                                    this.criteriosPagoFacturaCodigo )
+                                    .subscribe(
+                                        response => {
+                                            const observacion = response.find( obs => obs.archivada === false );
+
+                                            if ( observacion !== undefined ) {
+                                                this.esAutorizar = true;
+                                                this.observacion = observacion;
+                                                if ( this.observacion.tieneObservacion === true ) {
+                                                    this.semaforoObservacion.emit( true );
+                                                }
+
+                                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                            }
                                         }
-                                    )
-                                );
+                                    );
+                                // Get observacion CU verificar solicitud de pago 4.1.8
+                                this.obsMultipleSvc.getObservacionSolicitudPagoByMenuIdAndSolicitudPagoId(
+                                    this.listaMenusId?.aprobarSolicitudPagoId,
+                                    this.solicitudPago.solicitudPagoId,
+                                    this.solicitudPagoFase.solicitudPagoFaseCriterio[0].solicitudPagoFaseCriterioId,
+                                    this.criteriosPagoFacturaCodigo )
+                                    .subscribe(
+                                        response => {
+                                            const observacion = response.find( obs => obs.archivada === false );
+                                            if ( observacion !== undefined ) {
+                                                this.esAutorizar = false;
+                                                this.observacion = observacion;
+
+                                                if ( this.observacion.tieneObservacion === true ) {
+                                                    this.semaforoObservacion.emit( true );
+                                                }
+
+                                                this.solicitudPagoObservacionId = observacion.solicitudPagoObservacionId;
+                                            }
+                                        }
+                                    );
                             }
                         }
-        
+
                         this.addressForm.get( 'criterioPago' ).setValue( this.criteriosSeleccionadosArray.length > 0 ? this.criteriosSeleccionadosArray : null );
                     }
                 }
@@ -349,5 +411,99 @@ export class ObsCriterioPagosComponent implements OnInit {
             )
     }
     */
+
+    getvaluesConcepto( conceptos: any[], index: number, criterioCodigo: any ) {
+        const conceptosArray = [ ...conceptos ];
+        if ( conceptosArray.length > 0 ) {
+            if ( this.criterios.controls[ index ].get( 'conceptos' ).dirty === true ) {
+
+                if ( this.getConceptos( index ).controls.length > 0 ) {
+
+                    this.getConceptos( index ).controls.forEach( ( control, jIndex ) => {
+                        const conceptoIndex = conceptosArray.findIndex( concepto => concepto.codigo === control.get( 'conceptoPagoCriterio' ).value );
+                        const concepto = conceptosArray.find( concepto => concepto.codigo === control.get( 'conceptoPagoCriterio' ).value );
+
+                        if ( conceptoIndex !== -1 ) {
+                            conceptosArray.splice( conceptoIndex, 1 );
+                        }
+
+                        if ( concepto === undefined ) {
+                            this.getConceptos( index ).removeAt( jIndex );
+                        }
+                    } );
+
+
+                }
+
+                conceptosArray.forEach( async concepto => {
+                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo ).toPromise();
+                    this.getConceptos( index ).push(
+                        this.fb.group(
+                            {
+                                solicitudPagoFaseCriterioConceptoPagoId: [ 0 ],
+                                solicitudPagoFaseCriterioId: [ this.criterios.controls[ index ].get( 'solicitudPagoFaseCriterioId' ).value ],
+                                conceptoPagoCriterioNombre: [ concepto.nombre ],
+                                conceptoPagoCriterio: [ concepto.codigo ],
+                                valorFacturadoConcepto: [ null ],
+                                montoMaximo: montoMaximoPendienteNew?.montoMaximo
+                            }
+                        )
+                    );
+                } );
+            }
+
+            if ( this.criterios.controls[ index ].get( 'conceptos' ).dirty === false ) {
+
+                if ( this.getConceptos( index ).controls.length > 0 ) {
+
+                    this.getConceptos( index ).controls.forEach( ( control, jIndex ) => {
+                        const conceptoIndex = conceptosArray.findIndex( concepto => concepto.codigo === control.get( 'conceptoPagoCriterio' ).value );
+                        const concepto = conceptosArray.find( concepto => concepto.codigo === control.get( 'conceptoPagoCriterio' ).value );
+
+                        if ( conceptoIndex !== -1 ) {
+                            conceptosArray.splice( conceptoIndex, 1 );
+                        }
+
+                        if ( concepto === undefined ) {
+                            this.getConceptos( index ).removeAt( jIndex );
+                        }
+                    } );
+
+
+                }
+
+                conceptosArray.forEach( async concepto => {
+                  const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo ).toPromise();
+                    this.getConceptos( index ).push(
+                        this.fb.group(
+                            {
+                                solicitudPagoFaseCriterioConceptoPagoId: [ 0 ],
+                                solicitudPagoFaseCriterioId: [ this.criterios.controls[ index ].get( 'solicitudPagoFaseCriterioId' ).value ],
+                                conceptoPagoCriterioNombre: [ concepto.nombre ],
+                                conceptoPagoCriterio: [ concepto.codigo ],
+                                valorFacturadoConcepto: [ null ],
+                                montoMaximo: montoMaximoPendienteNew?.montoMaximo
+                            }
+                        )
+                    );
+                } );
+            }
+        } else {
+            this.getConceptos( index ).clear();
+            this.criterios.controls[ index ].get( 'valorFacturado' ).setValue( null );
+        }
+    }
+
+    getvaluesConceptoPagoCodigo(e) {
+        this.registrarPagosSvc.getUsoByConceptoPagoCodigo( e[0].codigo )
+        .subscribe(response => {
+            this.usosParaElConceoto = response;
+        })
+    }
+
+    getUsosParaElConceoto(usoCodigo) {
+        const nombreUso = this.usosParaElConceoto.find( uso => uso.codigo === usoCodigo)
+        return nombreUso.nombre;
+    }
 
 }

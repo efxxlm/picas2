@@ -1,0 +1,54 @@
+<section *ngIf="solicitudPago !== undefined">
+  <div *ngFor="let solicitudPagoFase of proyecto.fases; index as i">
+      <mat-accordion *ngIf="checkTieneDescuentos( solicitudPagoFase.esPreconstruccion )">
+          <mat-expansion-panel class="expansion-style sub-expansion">
+              <mat-expansion-panel-header class="expansion-style--header">
+                  <mat-panel-title class="expansion-style--title" >
+                      Descuentos Dirección Técnica - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <app-desc-dir-tecnica-gog   [solicitudPago]="solicitudPago"
+                                          [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
+                                          [solicitudPagoFase]="solicitudPagoFase"
+                                          [esVerDetalle]="true">
+              </app-desc-dir-tecnica-gog>
+          </mat-expansion-panel>
+      </mat-accordion>
+      <mat-accordion>
+          <mat-expansion-panel class="expansion-style sub-expansion">
+              <mat-expansion-panel-header class="expansion-style--header">
+                  <mat-panel-title class="expansion-style--title">
+                      Tercero de causación  - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <app-tercero-causacion-gog  [solicitudPago]="solicitudPago"
+                                          [esVerDetalle]="true"
+                                          [contratacionProyectoId]="contratacionProyectoId"
+                                          [solicitudPagoFase]="solicitudPagoFase"
+                                          [esPreconstruccion]="solicitudPagoFase.esPreconstruccion">
+              </app-tercero-causacion-gog>
+          </mat-expansion-panel>
+      </mat-accordion>
+  </div>
+  <mat-accordion>
+      <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title class="expansion-style--title">
+                  Origen
+              </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div align="center">
+              <b>Consecutivo: {{ solicitudPago.ordenGiro !== undefined ? solicitudPago.ordenGiro.consecutivoOrigen : '' }} </b>
+          </div>
+
+          <app-form-origen    [solicitudPago]="solicitudPago"
+                              [esVerDetalle]="true"
+                              (seDiligenciaFormulario)="checkSemaforoOrigen( $event )"
+                              (estadoSemaforo)="listaSemaforos.semaforoOrigen = $event">
+          </app-form-origen>
+      </mat-expansion-panel>
+  </mat-accordion>
+
+</section>

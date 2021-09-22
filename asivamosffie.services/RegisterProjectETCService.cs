@@ -30,24 +30,23 @@ namespace asivamosffie.services
             List<InformeFinal> list = await _context.InformeFinal
                             .Where(r => r.EstadoCumplimiento == ConstantCodigoEstadoCumplimientoInformeFinal.Con_Aprobacion_final)
                             .Include(r => r.Proyecto)
-                                .ThenInclude(r => r.ContratacionProyecto)
-                                    .ThenInclude(r => r.Contratacion)
-                                        .ThenInclude(r => r.Contrato)
-                            .Include(r => r.Proyecto)
                                 .ThenInclude(r => r.InstitucionEducativa)
                             .ToListAsync();
             List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
             List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
             foreach (var item in list)
             {
+                ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ProyectoId == item.ProyectoId && r.Eliminado != true).Include(r => r.Contratacion)
+                                        .ThenInclude(r => r.Contrato).FirstOrDefault();
+
                 bool cumpleCondicionesTai = false;
-                if (item.Proyecto.ContratacionProyecto.FirstOrDefault() != null)
+                if (contratacionProyecto != null)
                 {
-                    Contratacion contratacion = item.Proyecto.ContratacionProyecto.FirstOrDefault().Contratacion;
+                    Contratacion contratacion = contratacionProyecto.Contratacion;
                     if (contratacion != null)
                     {
                         if (contratacion.Contrato != null)
-                            cumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(contratacion.Contrato.FirstOrDefault().ContratoId);
+                            cumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(contratacion.Contrato.FirstOrDefault().ContratoId,false);
                     }
 
                 }
@@ -629,7 +628,7 @@ namespace asivamosffie.services
             informeFinal.Proyecto.Sede = Sede;
 
             ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
-                .Where(r => r.ProyectoId == informeFinal.ProyectoId)
+                .Where(r => r.ProyectoId == informeFinal.ProyectoId && r.Eliminado != true)
                 .Include(r => r.Contratacion)
                     .ThenInclude(r => r.Contrato)
                 .FirstOrDefault();

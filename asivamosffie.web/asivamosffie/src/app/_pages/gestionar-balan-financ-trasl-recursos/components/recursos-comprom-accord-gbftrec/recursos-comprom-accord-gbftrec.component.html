@@ -1,4 +1,4 @@
-<div class="table-responsive text-center">
+<!-- <div class="table-responsive text-center">
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
         <ng-container matColumnDef="aportante">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Aportante </th>
@@ -23,6 +23,36 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div> -->
+
+<div class="table-responsive text-center">
+  <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 table-gris">
+    <thead>
+      <tr class="mat-header-row cdk-header-row ng-star-inserted">
+        <th class="mat-header-cell cdk-header-cell ng-star-inserted">Aportante</th>
+        <th class="mat-header-cell cdk-header-cell ng-star-inserted">Valor aportante</th>
+        <th class="mat-header-cell cdk-header-cell ng-star-inserted">Valor total aportantes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let element of tablaRecursosComprometidos; let i = index">
+        <td class="mat-cell cdk-cell ng-star-inserted p-06em">{{ element.aportante }}</td>
+        <td class="mat-cell cdk-cell ng-star-inserted p-06em">
+          {{ element.valorAportante | currency: '':'symbol-narrow':'.0-0' }}
+        </td>
+        <td
+          class="mat-cell cdk-cell ng-star-inserted p-06em"
+          [attr.rowspan]="tablaRecursosComprometidos.length"
+          *ngIf="i === 0"
+        >
+          <strong>
+            {{ tablaRecursosComprometidos[0].valorTotalAportantes | currency: '':'symbol-narrow':'.0-0' }}
+          </strong>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-<app-fuentes-usos-gbftrec *ngIf="contratoId" [contratoId]="contratoId"></app-fuentes-usos-gbftrec>
+
+<app-fuentes-usos-gbftrec *ngIf="contratoId" [contratoId]="contratoId" [pProyectoId]="proyectoId"></app-fuentes-usos-gbftrec>

@@ -30,21 +30,21 @@
       <div *ngIf="this.valorProponente == '1'">
         <p>
           <strong>Número de identificación del representante legal del contratista de obra: </strong
-          > {{ this.numeroIdentificacionEntidadContratistaObra }}
+          >{{ this.numeroIdentificacionEntidadContratistaObra  }}
         </p>
         <p>
           <strong>Nombre del representante legal del contratista de obra: </strong
-          >{{ this.nombreRepresentanteLegalInterventoria }}
+          >{{ this.nombreRepresentanteLegalInterventoria  }}
         </p>
         <p><strong>Número de identificación de la entidad contratista de obra: </strong>{{ this.numeroIdentificacionRepresentanteContratistaInterventoria }}</p>
         <p><strong>Nombre entidad contratista de obra: </strong>{{ this.nombreEntidadContratistaObra }}</p>
         <p>
           <strong>Número de identificación del representante legal del contratista de interventoría: </strong
-          > {{ this.contrato?.interventor?.numeroIdentificacion }}
+            > {{ this.contrato?.interventor?.numeroIdentificacion }}
         </p>
         <p>
           <strong>Nombre del representante legal del contratista de interventoría: </strong
-          >{{ this.contrato?.interventor?.getNombreCompleto }}
+            >{{ this.contrato?.interventor?.getNombreCompleto }}
         </p>
         <p><strong>Número de identificación de la entidad contratista de interventoría: </strong>
           {{ this.contrato?.interventor?.nitOrganizacion }}</p>
@@ -54,7 +54,7 @@
       <div *ngIf="this.valorProponente == '2'">
         <p>
           <strong>Número de identificación del representante legal del contratista de interventoría: </strong
-          >{{ this.numeroIdentificacionEntidadContratistaObra }}
+            >{{ this.numeroIdentificacionEntidadContratistaObra }}
         </p>
         <p>
           <strong>Nombre del representante legal del contratista de interventoría: </strong

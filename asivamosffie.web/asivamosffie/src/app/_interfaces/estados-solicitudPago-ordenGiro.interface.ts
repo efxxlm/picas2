@@ -90,7 +90,7 @@ export interface ListaMenu {
 export enum ListaMenuId {
     generarOrdenGiro = 68,
     verificarOrdenGiro = 76,
-    aprobarOrdenGiro,
+    aprobarOrdenGiro = 77,
     tramitarOrdenGiro = 85
 }
 

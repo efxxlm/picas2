@@ -80,13 +80,13 @@ export class FormProyectoComponent implements OnInit {
                     if ( solicitudPagoFase.esPreconstruccion === true ) {
                         const fase = LISTA_FASES.find( fase => fase.codigo === this.fasesContrato.preConstruccion )
 
-                        if ( fase !== undefined ) {
+                        if ( fase !== undefined && fases[fases.length - 1] != fase ) {
                             fases.push( fase )
                         }
                     } else {
                         const fase = LISTA_FASES.find( fase => fase.codigo === this.fasesContrato.construccion )
 
-                        if ( fase !== undefined ) {
+                        if ( fase !== undefined && fases[fases.length - 1] != fase ) {
                             fases.push( fase )
                         }
                     }
@@ -274,7 +274,7 @@ export class FormProyectoComponent implements OnInit {
               }
             }
           
-            await this.registrarPagosSvc.createEditNewPayment( solicitudPago ).toPromise()
+            // await this.registrarPagosSvc.createEditNewPayment( solicitudPago ).toPromise()
         }
     }
 

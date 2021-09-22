@@ -74,7 +74,7 @@
                       (keyup)="CambioNumeroCotizantes(j)"
                       maxlength="2"
                       (keypress)="validateNumberKeypress($event)"
-                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                       oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                       required
                     />
@@ -386,7 +386,7 @@
                   formControlName="numeroIdentificacion"
                   required
                   (keypress)="validateNumberKeypress($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
@@ -497,7 +497,7 @@
                       formControlName="cedulaRepresentanteLegal"
                       required
                       (keypress)="validateNumberKeypress($event)"
-                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                       oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
                   </mat-form-field>
@@ -689,7 +689,7 @@
                       formControlName="telefonoProponente"
                       required
                       (keypress)="validateNumberKeypress($event)"
-                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                       oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
                   </mat-form-field>

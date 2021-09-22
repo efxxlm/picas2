@@ -62,22 +62,23 @@
             <button mat-raised-button
                     color="accent" 
                     class="btn-table"
+                    *ngIf="element.estadoSeguimientoSemanalCodigo === 1"
                     [routerLink]="[ 'verificarSeguimientoSemanal', element.seguimientoSemanalId ]">
                     {{ element.fechaModificacionVerificar === undefined ? 'Verificar avance' : 'Ver detalle/Editar' }}
-            </button>
+            </button> 
             <button mat-raised-button
                     color="accent" 
                     class="btn-table"
-                    *ngIf="element.numeroSemana !== primeraSemana"
-                    [routerLink]="[ 'consultarBitacora', element.contratacionProyectoId ]">
-                    Consultar bitácora
-            </button>
-            <button mat-raised-button
-                    color="accent" 
-                    class="btn-table"
-                    *ngIf="element.registroCompletoVerificar === true"
+                    *ngIf="element.registroCompletoVerificar === true && element.estadoSeguimientoSemanalCodigo === 1"
                     (click)="enviarVerificacion( element.seguimientoSemanalId )">
                     Enviar al supervisor
+            </button>
+            <button mat-raised-button
+                    color="accent" 
+                    class="btn-table"
+                    *ngIf="element.registroCompletoVerificar "
+                    [routerLink]="[ 'consultarBitacora', element.contratacionProyectoId ]">
+                    Consultar bitácora
             </button>
         </td>
     </ng-container>

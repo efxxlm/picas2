@@ -26,7 +26,7 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
-         
+
         #region Create
 
         public async Task<Respuesta> ChangeStatusContratoPolizaActualizacionSeguro(ContratoPolizaActualizacion pContratoPolizaActualizacion)
@@ -203,10 +203,12 @@ namespace asivamosffie.services
                     CreateEditContratoPolizaActualizacionListaChequeo(pContratoPolizaActualizacion.ContratoPolizaActualizacionListaChequeo, pContratoPolizaActualizacion.UsuarioCreacion);
 
                 _context.SaveChanges();
-                await ValidarRegistroCompletoContratoPolizaActualizacion((int)pContratoPolizaActualizacion.ContratoPolizaId);
+                await ValidarRegistroCompletoContratoPolizaActualizacion((int)pContratoPolizaActualizacion.ContratoPolizaActualizacionId);
 
                 return new Respuesta
                 {
+
+                    Data = pContratoPolizaActualizacion.ContratoPolizaActualizacionId,
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
@@ -346,15 +348,23 @@ namespace asivamosffie.services
         {
             try
             {
-                ContratoPoliza contratoPoliza = await this.GetContratoPoliza(GetContratoPoliza);
+                ContratoPoliza contratoPoliza = await this.GetContratoPoliza(GetContratoPoliza, false);
 
                 foreach (var item in contratoPoliza.ContratoPolizaActualizacion)
                 {
+
+                    bool EstaCompleto = ValidarRegistroCompletoContratoPolizaActualizacionList(contratoPoliza.ContratoPolizaActualizacion);
+                    string EstadoCodigo = item.EstadoActualizacion;
+
+                    if (EstaCompleto)
+                        EstadoCodigo = ConstanCodigoEstadoActualizacionPoliza.En_revision_de_actualizacion_de_poliza;
+
                     _context.Set<ContratoPolizaActualizacion>()
                             .Where(r => r.ContratoPolizaActualizacionId == item.ContratoPolizaActualizacionId)
                             .Update(r => new ContratoPolizaActualizacion
                             {
-                                RegistroCompleto = ValidarRegistroCompletoContratoPolizaActualizacionList(contratoPoliza.ContratoPolizaActualizacion)
+                                RegistroCompleto = EstaCompleto,
+                                EstadoActualizacion = EstadoCodigo
                             });
                 }
             }
@@ -378,11 +388,11 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoContratoPolizaActualizacionListaChequeo(ContratoPolizaActualizacionListaChequeo item)
         {
-            if ( 
+            if (
                    item.CumpleDatosAseguradoBeneficiario != true
-               ||  item.CumpleDatosTomadorAfianzado != true
-               ||  item.TieneReciboPagoDatosRequeridos != true
-               || !item.TieneCondicionesGeneralesPoliza.HasValue 
+               || item.CumpleDatosTomadorAfianzado != true
+               || item.TieneReciboPagoDatosRequeridos != true
+               || !item.TieneCondicionesGeneralesPoliza.HasValue
                || !item.CumpleDatosBeneficiarioGarantiaBancaria.HasValue
             ) return false;
 
@@ -397,8 +407,9 @@ namespace asivamosffie.services
                         .Where(c => c.ContratoPolizaActualizacionId == pItem.ContratoPolizaActualizacionId)
                         .Update(c => new ContratoPolizaActualizacion
                         {
-                            EstadoActualizacion = ConstanCodigoEstadoActualizacionPoliza.Con_poliza_observada_y_devuelta
-                        });
+                            EstadoActualizacion = ConstanCodigoEstadoActualizacionPoliza.Con_poliza_observada_y_devuelta,
+                            RegistroCompleto = false,
+                        }); ;
             }
 
 
@@ -480,7 +491,7 @@ namespace asivamosffie.services
                      || pContratoPolizaActualizacion.ContratoPolizaActualizacionListaChequeo.Count() == 0
                      || pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion.Count() == 0
                      || pContratoPolizaActualizacion.ContratoPolizaActualizacionRevisionAprobacionObservacion.Count(r => r.Archivada == false) == 0
-                     )
+                    )
                     return false;
 
                 foreach (var item in pContratoPolizaActualizacion.ContratoPolizaActualizacionSeguro)
@@ -514,10 +525,11 @@ namespace asivamosffie.services
             {
                 return await _context.Contrato
                                .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
-                               .Include(c => c.ContratoPoliza).ThenInclude(c => c.ContratoPolizaActualizacion)
+                               .Include(c => c.ContratoPoliza)
+                               //.ThenInclude(c => c.ContratoPolizaActualizacion)
                                .Where(c => c.NumeroContrato.ToLower().Trim().Contains(pNumeroContrato.ToLower().Trim())
                                    && c.ContratoPoliza.Count() > 0
-                                   && c.ContratoPoliza.All(r => r.ContratoPolizaActualizacion.Count() == 0)
+                                   //   && c.ContratoPoliza.All(r => r.ContratoPolizaActualizacion.Count() == 0)
                                    )
                                       .Select(r => new
                                       {
@@ -535,20 +547,46 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<ContratoPoliza> GetContratoPoliza(int pContratoPolizaId)
+        public async Task<ContratoPoliza> GetContratoPoliza(int pContratoPolizaId, bool? pEsNueva)
         {
-            ContratoPoliza contratoPoliza = await _context.ContratoPoliza
-                .Where(c => c.ContratoPolizaId == pContratoPolizaId)
-                .Include(c => c.PolizaGarantia)
-                .Include(c => c.PolizaGarantiaActualizacion)
-                .Include(c => c.PolizaListaChequeo)
-                .Include(c => c.PolizaObservacion)
-                .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contratista)
-                .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionSeguro)
-                .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionListaChequeo)
-                .Include(c => c.ContratoPolizaActualizacion).ThenInclude(c => c.ContratoPolizaActualizacionRevisionAprobacionObservacion)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
+
+            ContratoPoliza contratoPoliza = new ContratoPoliza();
+            List<ContratoPolizaActualizacion> contratoPolizaActualizacion = new List<ContratoPolizaActualizacion>();
+            if (pEsNueva != true)
+            {
+                contratoPolizaActualizacion = await _context.ContratoPolizaActualizacion
+                                                                              .Where(r => r.ContratoPolizaActualizacionId == pContratoPolizaId)
+                                                                              .Include(c => c.ContratoPolizaActualizacionSeguro)
+                                                                              .Include(c => c.ContratoPolizaActualizacionListaChequeo)
+                                                                              .Include(c => c.ContratoPolizaActualizacionRevisionAprobacionObservacion)
+                                                                              .AsNoTracking()
+                                                                              .ToListAsync();
+
+                contratoPoliza = await _context.ContratoPoliza
+                               .Where(c => c.ContratoPolizaId == contratoPolizaActualizacion.FirstOrDefault().ContratoPolizaId)
+                               .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contratista)
+                               .Include(c => c.PolizaGarantia)
+                               .Include(c => c.PolizaListaChequeo)
+                               .Include(c => c.PolizaObservacion)
+                               .AsNoTracking()
+                               .FirstOrDefaultAsync();
+
+            }
+            else
+            {
+                contratoPoliza = await _context.ContratoPoliza
+                    .Where(c => c.ContratoPolizaId == pContratoPolizaId)
+                    .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contratista)
+                    .Include(c => c.PolizaGarantia)
+                    .Include(c => c.PolizaListaChequeo)
+                    .Include(c => c.PolizaObservacion)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+
+            }
+
+            contratoPoliza.ContratoPolizaActualizacion = contratoPolizaActualizacion;
+
             GetRemoveDeleteItems(contratoPoliza);
 
             return contratoPoliza;

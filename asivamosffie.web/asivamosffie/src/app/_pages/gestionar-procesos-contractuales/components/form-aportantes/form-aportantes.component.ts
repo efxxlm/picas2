@@ -9,6 +9,9 @@ export class FormAportantesComponent implements OnInit {
 
   @Input() data: any[] = [];
   @Input() tipoSolicitud: string;
+  @Input() esNovedad: string;
+  @Input() disponibilidadPresupuestal: any;
+
   institucionesEducativa: any[] = []
   totalDdp: number = 0;
   tiposAportante = {

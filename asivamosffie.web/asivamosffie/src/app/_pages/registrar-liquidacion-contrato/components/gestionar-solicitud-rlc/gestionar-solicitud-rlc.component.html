@@ -64,9 +64,9 @@
             </mat-expansion-panel-header>
 
             <div class="container text-center" style="margin-top: 1em;">
-                <button mat-raised-button color="accent">
-                    Descargar acta
-                </button>
+                <a target="_blank" [href]="contrato.rutaDocumento" mat-raised-button color="accent">
+                    Visualizar
+                </a>
             </div>
         </mat-expansion-panel>
     </mat-accordion>
@@ -349,7 +349,7 @@
                         class="btn-guardar"
                         type="submit"
                         [disabled]="addressForm.dirty === false">
-                        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                        <img src="assets/img/icon/guardar.svg" alt="Guardar">
                 </button>
             </div>
         </form>

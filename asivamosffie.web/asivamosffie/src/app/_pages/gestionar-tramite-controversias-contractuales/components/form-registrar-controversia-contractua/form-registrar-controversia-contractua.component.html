@@ -11,7 +11,7 @@
         <div class="row">
           <div class="pr-1">
             <label class="label-left" for="numeroContrato"
-              [class.color-secondaryColor]="this.myFilter.invalid && this.myFilter.touched">
+              [class.color-secondaryColor]="myFilter.invalid && myFilter.touched">
               Número de contrato
             </label>
           </div>
@@ -22,7 +22,7 @@
               matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
               matTooltipClass="info-tooltip"
               >
-              <input matInput #nombre2 type="text" maxlength="10" [formControl]="myFilter" required
+              <input matInput #nombre2 type="text" maxlength="50" [formControl]="myFilter" required
                 [matAutocomplete]="auto2" />
               <mat-autocomplete #auto2="matAutocomplete">
                 <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredContrato | async"
@@ -38,7 +38,7 @@
           <span class="icon-incompleto">
             <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
               [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip" *ngIf="this.myFilter.invalid && this.myFilter.touched" />
+              matTooltipClass="info-tooltip" *ngIf="myFilter.invalid && myFilter.touched" />
           </span>
         </div>
       </div>

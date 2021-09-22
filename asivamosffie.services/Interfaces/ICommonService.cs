@@ -10,6 +10,10 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
     {
+        Task<Plantilla> GetPlantillaById(int pPlantillaId);
+
+        Task<byte[]> GetHtmlToPdf(Plantilla pPlantilla);
+
         string  EnumeradorTrasladoBalanceFinanciero();
          
         Task<string> EnumeradorActualizarPoliza();
@@ -109,6 +113,9 @@ namespace asivamosffie.services.Interfaces
 
         Task<InstitucionEducativaSede> GetInstitucionEducativaById(int InstitucionEducativaById);
         Task<List<Usuario>> GetUsuariosByPerfil(int pIdPerfil);
+        DateTime? GetFechaEstimadaFinalizacion(int pContratoId);
+
+        decimal GetValorTotalDisponibilidad(int pDisponibilidadPresupuestalId);
 
 
     }

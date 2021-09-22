@@ -9,6 +9,7 @@ import { FinancialBalanceService } from 'src/app/core/_services/financialBalance
 export class RecursosCompromPagadosGbftrecComponent implements OnInit {
 
   @Input() id: number;
+  @Input() tieneOrdenGiro: boolean;
   contratoObra: any;
   contratoInterventoria: any;
 

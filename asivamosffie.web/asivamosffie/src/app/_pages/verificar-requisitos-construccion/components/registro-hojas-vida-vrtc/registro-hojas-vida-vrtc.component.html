@@ -22,7 +22,7 @@
           max="999"
           required
           (keypress)="validateNumberKeypress($event)"
-          onKeyPress="if(this.value.length>=this.maxLength) return false;"
+          onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
           oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
         />
       </mat-form-field>
@@ -128,7 +128,7 @@
                       required
                       #cantidadHvRequeridas
                       (keypress)="validateNumberKeypress($event)"
-                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                       oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
                   </mat-form-field>
@@ -184,7 +184,7 @@
                       required
                       #cantidadHvRecibidas
                       (keypress)="validateNumberKeypress($event)"
-                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                       oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
                   </mat-form-field>
@@ -240,7 +240,7 @@
                       required
                       #cantidadHvAprobadas
                       (keypress)="validateNumberKeypress($event)"
-                      onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                       oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     />
                   </mat-form-field>

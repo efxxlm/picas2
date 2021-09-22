@@ -42,5 +42,19 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
+
+        [Route("ChangeStateContractSettlement")]
+        [HttpPost]
+        public async Task<IActionResult> ChangeStateContractSettlement([FromQuery] int pContratacionId)
+        {
+            try
+            {
+                return Ok(await _registerContractSettlementService.ChangeStateContractSettlement(pContratacionId, User.Identity.Name));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
     }
 }

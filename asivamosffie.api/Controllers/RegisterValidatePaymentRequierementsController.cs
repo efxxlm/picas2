@@ -21,6 +21,52 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+        #region Get Relaciones 
+        // # 0 
+        [HttpGet]
+        [Route("GetFormaPagoCodigoByFase")]
+        public async Task<IActionResult> GetFormaPagoCodigoByFase([FromQuery] bool pEsPreconstruccion, int pContratoId)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.GetFormaPagoCodigoByFase(pEsPreconstruccion, pContratoId));
+        }
+        // # 1
+        [HttpGet]
+        [Route("GetTipoPagoByCriterioCodigo")]
+        public async Task<IActionResult> GetTipoPagoByCriterioCodigo([FromQuery] string pCriterioCodigo)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.GetTipoPagoByCriterioCodigo(pCriterioCodigo));
+        }
+        // # 2
+        [HttpGet]
+        [Route("GetConceptoPagoCriterioCodigoByTipoPagoCodigo")]
+        public async Task<IActionResult> GetConceptoPagoCriterioCodigoByTipoPagoCodigo([FromQuery] string TipoPagoCodigo)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.GetConceptoPagoCriterioCodigoByTipoPagoCodigo(TipoPagoCodigo));
+        }
+        // # 3
+        [HttpGet]
+        [Route("GetUsoByConceptoPagoCriterioCodigo")]
+        public async Task<IActionResult> GetUsoByConceptoPagoCriterioCodigo([FromQuery] string pConceptoPagoCodigo, int pContratoId)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.GetUsoByConceptoPagoCriterioCodigo(pConceptoPagoCodigo, pContratoId));
+        }
+        // # 4
+        [HttpGet]
+        [Route("GetUsoByConceptoPagoCodigo")]
+        public async Task<IActionResult> GetUsoByConceptoPagoCodigo([FromQuery] string pConceptoPagoCodigo)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.GetUsoByConceptoPagoCodigo(pConceptoPagoCodigo));
+        }
+
+        //5# Traer Uso Por Concepto de pago 2 Orden Giro
+
+        [HttpGet]
+        [Route("GetCriterioByFormaPagoCodigo")]
+        public async Task<IActionResult> GetCriterioByFormaPagoCodigo([FromQuery] string pFormaPagoCodigo)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.GetCriterioByFormaPagoCodigo(pFormaPagoCodigo));
+        }
+        #endregion
         [HttpGet]
         [Route("GetSolicitudPago")]
         public async Task<IActionResult> GetSolicitudPago([FromQuery] int pSolicitudPagoId)
@@ -30,9 +76,25 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetMontoMaximoMontoPendiente")]
-        public async Task<IActionResult> GetMontoMaximoMontoPendiente([FromQuery] int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion)
+        public async Task<IActionResult> GetMontoMaximoMontoPendiente([FromQuery] 
+        int SolicitudPagoId, 
+            string strFormaPago, 
+            bool EsPreConstruccion, 
+            int pContratacionProyectoId, 
+            string pCriterioCodigo, 
+            string pConceptoCodigo,
+             string pUsoCodigo
+            )
         {
-            return Ok(await _registerValidatePaymentRequierementsService.GetMontoMaximoMontoPendiente(SolicitudPagoId, strFormaPago, EsPreConstruccion));
+            return Ok(await _registerValidatePaymentRequierementsService.GetMontoMaximoMontoPendiente(
+                SolicitudPagoId,
+                strFormaPago,
+                EsPreConstruccion,
+                pContratacionProyectoId,
+                pCriterioCodigo,
+                pConceptoCodigo,
+                pUsoCodigo
+                ));
         }
 
         [HttpGet]
@@ -99,6 +161,13 @@ namespace asivamosffie.api.Controllers
         {
             return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPagoFaseCriterio(pSolicitudPagoFaseCriterioId, HttpContext.User.FindFirst("User").Value));
         }
+         
+        [HttpPost]
+        [Route("DeleteSolicitudPagoFaseCriterioConceptoPago")]
+        public async Task<IActionResult> DeleteSolicitudPagoFaseCriterioConceptoPago([FromQuery] int pSolicitudPagoFaseCriterioConceptoId)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPagoFaseCriterioConceptoPago(pSolicitudPagoFaseCriterioConceptoId, HttpContext.User.FindFirst("User").Value));
+        }
 
         [HttpPost]
         [Route("DeleteSolicitudPagoFaseCriterioProyecto")]
@@ -137,48 +206,12 @@ namespace asivamosffie.api.Controllers
             pSolicitudPago.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
             return Ok(await _registerValidatePaymentRequierementsService.CreateEditNewPayment(pSolicitudPago));
         }
-
-        [HttpGet]
-        [Route("GetFormaPagoCodigoByFase")]
-        public async Task<IActionResult> GetFormaPagoCodigoByFase([FromQuery] bool pEsPreconstruccion)
-        {
-            return Ok(await _registerValidatePaymentRequierementsService.GetFormaPagoCodigoByFase(pEsPreconstruccion));
-        }
-
-
-        [HttpGet]
-        [Route("GetTipoPagoByCriterioCodigo")]
-        public async Task<IActionResult> GetTipoPagoByCriterioCodigo([FromQuery] string pCriterioCodigo)
-        {
-            return Ok(await _registerValidatePaymentRequierementsService.GetTipoPagoByCriterioCodigo(pCriterioCodigo));
-        }
-
-        [HttpGet]
-        [Route("GetConceptoPagoCriterioCodigoByTipoPagoCodigo")]
-        public async Task<IActionResult> GetConceptoPagoCriterioCodigoByTipoPagoCodigo([FromQuery] string TipoPagoCodigo)
-        {
-            return Ok(await _registerValidatePaymentRequierementsService.GetConceptoPagoCriterioCodigoByTipoPagoCodigo(TipoPagoCodigo));
-        }
-
-        [HttpGet]
-        [Route("GetUsoByConceptoPagoCriterioCodigo")]
-        public async Task<IActionResult> GetUsoByConceptoPagoCriterioCodigo([FromQuery] string pConceptoPagoCodigo, int pContratoId)
-        {
-            return Ok(await _registerValidatePaymentRequierementsService.GetUsoByConceptoPagoCriterioCodigo(pConceptoPagoCodigo, pContratoId));
-        }
-
+         
         [HttpGet]
         [Route("GetListSolicitudPago")]
         public async Task<IActionResult> GetListSolicitudPago()
         {
             return Ok(await _registerValidatePaymentRequierementsService.GetListSolicitudPago());
-        }
-
-        [HttpGet]
-        [Route("GetCriterioByFormaPagoCodigo")]
-        public async Task<IActionResult> GetCriterioByFormaPagoCodigo([FromQuery] string pFormaPagoCodigo)
-        {
-            return Ok(await _registerValidatePaymentRequierementsService.GetCriterioByFormaPagoCodigo(pFormaPagoCodigo));
         }
 
         [HttpGet]

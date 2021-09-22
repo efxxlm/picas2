@@ -125,9 +125,11 @@ namespace asivamosffie.services
 
         public async Task<InformeFinalInterventoria> GetInformeFinalAnexoByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId)
         {
-            InformeFinalInterventoria InformeFinalAnexo = await _context.InformeFinalInterventoria.Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId)
-                                                        .Include(r => r.InformeFinalAnexo).FirstOrDefaultAsync();
-            return InformeFinalAnexo;
+            return await _context.InformeFinalInterventoria
+                                                          .Where(r => r.InformeFinalInterventoriaId == pInformeFinalInterventoriaId)
+                                                          .Include(r => r.InformeFinalAnexo)
+                                                          .FirstOrDefaultAsync();
+
         }
 
         public async Task<InformeFinalInterventoria> GetObservacionesByInformeFinalInterventoriaId(int pInformeFinalInterventoriaId)
@@ -201,7 +203,7 @@ namespace asivamosffie.services
                         }
                         return false;
                     }
-                    else if ((bool)informeFinal.TieneObservacionesSupervisor && existe_no_cumple <= 0)
+                    else if (informeFinal.TieneObservacionesSupervisor == true && existe_no_cumple <= 0)
                     {
                         //Vuelve a empezar el flujo
                         informeFinal.EstadoInforme = ConstantCodigoEstadoInformeFinal.Modificado_interventor_completo;
@@ -366,7 +368,7 @@ namespace asivamosffie.services
                         EstadoInformeFinal = informeFinal.EstadoInforme,
                         posicion = item.InformeFinalListaChequeo.Orden,
                         estadoInforme = informeFinal.EstadoInforme,
-                        registroCompleto = (bool)informeFinal.RegistroCompleto,
+                        registroCompleto = (bool)informeFinal?.RegistroCompleto,
                         semaforo = semaforo,
                         aprobacionCodigo = item.AprobacionCodigo,
                         tieneModificacionInterventor = item.TieneModificacionInterventor,
@@ -825,7 +827,7 @@ namespace asivamosffie.services
             informeFinal.Proyecto.Sede = Sede;
 
             ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
-                .Where(r => r.ProyectoId == informeFinal.ProyectoId)
+                .Where(r => r.ProyectoId == informeFinal.ProyectoId && r.Eliminado != true)
                 .Include(r => r.Contratacion)
                     .ThenInclude(r => r.Contrato)
                 .FirstOrDefault();

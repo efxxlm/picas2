@@ -12,6 +12,7 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public decimal? ValorFacturadoConcepto { get; set; }
+        public string UsoCodigo { get; set; }
 
         public virtual SolicitudPagoFaseCriterio SolicitudPagoFaseCriterio { get; set; }
     }

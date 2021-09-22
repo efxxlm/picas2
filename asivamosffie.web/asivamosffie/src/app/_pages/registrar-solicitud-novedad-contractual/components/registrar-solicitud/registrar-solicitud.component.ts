@@ -20,7 +20,11 @@ export class RegistrarSolicitudComponent implements OnInit {
   options: any[] = [];
 
   novedadesArray = [
-    { name: 'Contrato', value: true },
+    /*{ name: 'Contrato', value: true },*/
+    { name: 'Proyecto', value: false }
+  ];
+
+  novedadesArrayProy = [
     { name: 'Proyecto', value: false }
   ];
   estaEditando = false;
@@ -102,7 +106,13 @@ export class RegistrarSolicitudComponent implements OnInit {
   }
 
   public seleccionAutocomplete(numeroContrato) {
-    console.log("entra: ", numeroContrato)
+    if(numeroContrato.esMultiProyecto == true){
+      this.novedadesArray = this.novedadesArray.filter(r => r.name == "Proyecto");
+    }else{
+      if(!this.novedadesArray.find(r =>r.name == "Contrato")){
+        this.novedadesArray.push({ name: 'Contrato', value: true });
+      }
+    }
     this.numeroContratoSeleccionado = numeroContrato;
     this.contrato = null;
     this.proyecto = null;

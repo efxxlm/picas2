@@ -25,5 +25,6 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public dynamic TablaOtroDescuento { get; set; }
 
+
     }
 }

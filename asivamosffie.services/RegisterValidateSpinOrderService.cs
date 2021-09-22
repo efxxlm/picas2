@@ -259,7 +259,7 @@ namespace asivamosffie.services
         {
             try
             {
-                int intCantidadDependenciasOrdenGiro = 2;
+                int intCantidadDependenciasOrdenGiro = 1;
 
                 //if ((int)enumeratorMenu.Tramitar_orden_de_giro == pOrdenGiroObservacion.MenuId)
                 //    intCantidadDependenciasOrdenGiro = 3;
@@ -273,19 +273,19 @@ namespace asivamosffie.services
                     .AsNoTracking()
                     .FirstOrDefault();
 
-                foreach (var OrdenGiroDetalle in ordenGiro.OrdenGiroDetalle)
-                {
-                    foreach (var item in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r => r.Eliminado != true).ToList())
-                    {
-                        intCantidadDependenciasOrdenGiro++;
-                    }
+                //foreach (var OrdenGiroDetalle in ordenGiro.OrdenGiroDetalle)
+                //{
+                //    foreach (var item in OrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.Where(r => r.Eliminado != true).ToList())
+                //    {
+                //        intCantidadDependenciasOrdenGiro++;
+                //    }
 
-                    foreach (var OrdenGiroDetalleTerceroCausacion in OrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
-                    {
-                        intCantidadDependenciasOrdenGiro++;
+                //    foreach (var OrdenGiroDetalleTerceroCausacion in OrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
+                //    {
+                //        intCantidadDependenciasOrdenGiro++;
 
-                    }
-                }
+                //    }
+                //}
 
 
                 int intCantidadObservaciones = _context.OrdenGiroObservacion.Where(r => r.OrdenGiroId == pOrdenGiroObservacion.OrdenGiroId
@@ -480,7 +480,7 @@ namespace asivamosffie.services
             Descuentos += ordenGiro.OrdenGiroDetalle?.Sum(r => r.OrdenGiroDetalleDescuentoTecnica?.Sum(r => r.OrdenGiroDetalleDescuentoTecnicaAportante?.Sum(r => r.ValorDescuento)));
 
 
-            UrlSoporte = "<a href=' target='_blank'" + UrlSoporte + "'>Link</a>";
+            UrlSoporte = "<a href='" + UrlSoporte + "' target='_blank'>Link</a>";
             try
             {
                 pContenido = pContenido
@@ -504,7 +504,7 @@ namespace asivamosffie.services
             return await _context.OrdenGiroObservacion
                                            .Where(s => s.MenuId == pMenuId
                                                && s.OrdenGiroId == pOrdenGiroId
-                                               && s.IdPadre == pPadreId
+                                             //  && s.IdPadre == pPadreId
                                                && s.TipoObservacionCodigo == pTipoObservacionCodigo)
                                             .Select(p => new
                                             {

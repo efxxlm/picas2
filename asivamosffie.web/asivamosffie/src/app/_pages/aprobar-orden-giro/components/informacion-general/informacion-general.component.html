@@ -27,10 +27,10 @@
 
         <div class="d-flex justify-content-center mt-1em">
             <p>Número de DDP: <b> {{ solicitudPago.contratoSon.contratacion.disponibilidadPresupuestal[ 0 ].numeroDdp }} </b></p>
-            <p style="margin-left: 2em;">Valor del DDP: <b> {{ solicitudPago.contratoSon.contratacion.disponibilidadPresupuestal[ 0 ].valorSolicitud | currency:'':'symbol-narrow':'.0-0' }} </b></p>
+            <p style="margin-left: 2em;">Valor del DDP: <b> {{ valorDelDDP | currency:'':'symbol-narrow':'.0-0' }} </b></p>
         </div>
 
-        <div class="d-flex justify-content-center table-responsive tabla-gris">
+        <!-- <div class="d-flex justify-content-center table-responsive tabla-gris">
             <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="width: 40%;">
                 <ng-container matColumnDef="drp">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> DRP </th>
@@ -51,9 +51,9 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
-        </div>
+        </div> -->
 
-        <app-tabla-aportantes *ngIf="solicitudPago.tablaUsoFuenteAportante !== undefined && solicitudPago.tablaUsoFuenteAportante.usos.length > 0" [tablaUsoFuenteAportante]="solicitudPago.tablaUsoFuenteAportante.usos"></app-tabla-aportantes>
+        <app-tabla-aportantes *ngIf="solicitudPago.tablaUsoFuenteAportante !== undefined && solicitudPago.tablaUsoFuenteAportante.usos.length > 0" [tablaUsoFuenteAportante]="solicitudPago.tablaUsoFuenteAportante.usos" [tablaDrpUso]="solicitudPago.tablaDrpUso"></app-tabla-aportantes>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -239,5 +239,24 @@
         </ng-template>
         -->
         
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                Porcentajes de participación
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        
+        <app-tabla-porcntj-partic-gog *ngIf="solicitudPago.tablaPorcentajeParticipacion !== undefined && solicitudPago.tablaPorcentajeParticipacion.length > 0" [tablaPorcentajeParticipacion]="solicitudPago.tablaPorcentajeParticipacion"></app-tabla-porcntj-partic-gog>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                Información fuente de recursos
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-tabla-info-fuenterec-gog *ngIf="solicitudPago.tablaInformacionFuenteRecursos !== undefined && solicitudPago.tablaInformacionFuenteRecursos.length > 0" [tablaInformacionFuenteRecursos]="solicitudPago.tablaInformacionFuenteRecursos"></app-tabla-info-fuenterec-gog>
     </mat-expansion-panel>
 </mat-accordion>

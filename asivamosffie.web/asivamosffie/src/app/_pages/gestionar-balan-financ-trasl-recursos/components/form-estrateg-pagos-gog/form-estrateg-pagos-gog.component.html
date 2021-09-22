@@ -1,0 +1,100 @@
+<ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+  <mat-card class="shipping-card">
+      <mat-card-content style="text-align: left;">
+          <p><b>Estrategia de pagos: </b> {{ getEstrategiaPago( addressForm.get( 'estrategiaPagoCodigo' ).value ) }} </p>
+      </mat-card-content>
+  </mat-card>
+</ng-container>
+<ng-template #noEsVerDetalle>
+  <form [formGroup]="addressForm" (ngSubmit)="onSubmit()" *ngIf="solicitudPago !== undefined">
+      <mat-card class="shipping-card">
+          <mat-card-content style="text-align: left;">
+              <div class="row">
+                  <div class="col-md-12">
+                      <div class="row">
+                          <div class="pr-1">
+                              <label class="label-left" for="estrategiaPago" [ngClass]="{
+                                  'color-secondaryColor':
+                                    (addressForm.get('estrategiaPagoCodigo').invalid && addressForm.get('estrategiaPagoCodigo').touched) ||
+                                    (addressForm.get('estrategiaPagoCodigo').invalid && estaEditando)
+                                }">Estrategia de pagos</label>
+                          </div>
+                          <div class="col">
+                              <mat-form-field class="select-width">
+                                  <mat-select formControlName="estrategiaPagoCodigo" required>
+                                      <mat-option *ngFor="let estrategia of estrategiaPagoArray" [value]="estrategia.codigo">
+                                          {{ estrategia.nombre }}
+                                      </mat-option>
+                                  </mat-select>
+                              </mat-form-field>
+                          </div>
+                          <span class="icon-incompleto">
+                              <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido" [matTooltipPosition]="'above'"
+                                  matTooltip="Debe ingresar la información en el campo para continuar"
+                                  matTooltipClass="info-tooltip" *ngIf="
+                                (addressForm.get('estrategiaPagoCodigo').invalid && addressForm.get('estrategiaPagoCodigo').touched) ||
+                                (addressForm.get('estrategiaPagoCodigo').invalid && estaEditando)
+                                " />
+                          </span>
+                      </div>
+                  </div>
+              </div>
+          </mat-card-content>
+      </mat-card>
+
+      <div class="mt-1em" *ngIf="obsVerificar !== undefined || obsAprobar !== undefined || obsTramitar !== undefined">
+          <mat-card class="shipping-card border" align="left" *ngIf="obsVerificar !== undefined">
+              <mat-card-header class="header-card">
+                  <mat-card-title class="header-card--text card-title-detalle">
+                      Verificación de la coordinación financiera
+                  </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                  <p style="margin-left: 2em;"><b> {{ obsVerificar.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                  <p style="margin-left: 2em;" *ngIf="obsVerificar.tieneObservacion === true"><b>¿Desde la coordinación financiera tiene observaciones a la Estrategia de pagos?</b>: Si</p>
+                  <p style="margin-left: 2em;" *ngIf="obsVerificar.tieneObservacion === false"><b>¿Desde la coordinación financiera tiene observaciones a la Estrategia de pagos?</b>: No</p>
+                  <section [innerHTML]="obsVerificar.observacion" style="margin-left: 2em;" *ngIf="obsVerificar.tieneObservacion === true"></section>
+              </mat-card-content>
+          </mat-card>
+
+          <mat-card class="shipping-card border" align="left" *ngIf="obsAprobar !== undefined">
+              <mat-card-header class="header-card">
+                  <mat-card-title class="header-card--text card-title-detalle">
+                      Aprobación de la dirección financiera
+                  </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                  <p style="margin-left: 2em;"><b> {{ obsAprobar.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                  <p style="margin-left: 2em;" *ngIf="obsAprobar.tieneObservacion === true"><b>¿Desde la dirección financiera tiene observaciones a la Estrategia de pagos?</b>: Si</p>
+                  <p style="margin-left: 2em;" *ngIf="obsAprobar.tieneObservacion === false"><b>¿Desde la dirección financiera tiene observaciones a la Estrategia de pagos?</b>: No</p>
+                  <section [innerHTML]="obsAprobar.observacion" style="margin-left: 2em;" *ngIf="obsAprobar.tieneObservacion === true"></section>
+              </mat-card-content>
+          </mat-card>
+
+          <mat-card class="shipping-card border" align="left" *ngIf="obsTramitar !== undefined">
+              <mat-card-header class="header-card">
+                  <mat-card-title class="header-card--text card-title-detalle">
+                      Observaciones de fiduciaria
+                  </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                  <p style="margin-left: 2em;"><b> {{ obsTramitar.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                  <p style="margin-left: 2em;" *ngIf="obsTramitar.tieneObservacion === true"><b>¿Desde la fiduciaria tiene observaciones a la Estrategia de pagos?</b>: Si</p>
+                  <p style="margin-left: 2em;" *ngIf="obsTramitar.tieneObservacion === false"><b>¿Desde la fiduciaria tiene observaciones a la Estrategia de pagos?</b>: No</p>
+                  <section [innerHTML]="obsTramitar.observacion" style="margin-left: 2em;" *ngIf="obsTramitar.tieneObservacion === true"></section>
+              </mat-card-content>
+          </mat-card>
+      </div>
+
+      <div class="text-center mb-2em">
+          <button mat-button
+                  color="warn"
+                  class="btn-guardar"
+                  type="submit"
+                  [disabled]="addressForm.dirty === false">
+              <img src="assets/img/icon/guardar.svg" alt="Guardar">
+          </button>
+      </div>
+  </form>
+</ng-template>

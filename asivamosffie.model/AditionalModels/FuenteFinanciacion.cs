@@ -15,6 +15,13 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string NombreFuente { get; set; }
+
+        [NotMapped]
+        public bool AsociadoASolicitud { get; set; }
+
+
+        [NotMapped]
+        public decimal ComprometidoEnDdp { get; set; }
     }
 
 }

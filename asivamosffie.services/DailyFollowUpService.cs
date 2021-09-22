@@ -60,7 +60,7 @@ namespace asivamosffie.services
                                                                 .OrderByDescending(r => r.FechaSeguimiento)
                                                                 .ToList();
                 //Nueva restricción control de cambios
-                p.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(p.ContratoId);
+                p.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(p.ContratoId,false);
 
                 if (listaSeguimientoDiario.Count() > 0)
                 {

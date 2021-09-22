@@ -6,6 +6,7 @@ import { TipoDDP } from 'src/app/core/_services/budgetAvailability/budget-availa
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { FuenteFinanciacionService } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { CancelarDdpComponent } from '../cancelar-ddp/cancelar-ddp.component';
 
 @Component({
   selector: 'app-con-validacion-presupuestal',
@@ -16,6 +17,10 @@ export class ConValidacionPresupuestalComponent implements OnInit {
 
   esRechazada:boolean=false;
   esNovedad: boolean = false;
+  esGenerar: boolean = false;
+  esCancelada: boolean = false;
+  novedadId;
+
   constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
     private router: Router,private sanitized: DomSanitizer,
@@ -25,6 +30,12 @@ export class ConValidacionPresupuestalComponent implements OnInit {
         if ( urlSegment.path === 'rechazada' ) {
             this.esRechazada = true;
             return;
+        }else if(urlSegment.path === 'conDisponibilidadPresupuestal'){
+            this.esGenerar = true;
+            return;
+        }else if(urlSegment.path === 'conDisponibilidadCancelada'){
+          this.esCancelada = true;
+          return;
         }
     } );
     }
@@ -35,10 +46,12 @@ export class ConValidacionPresupuestalComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     const esNovedad = this.route.snapshot.paramMap.get('esNovedad');
+    const esGenerar = this.esGenerar === true ? 'true':'false';
     this.esNovedad = esNovedad == "true" ? true : false;
     const novedadId = this.route.snapshot.paramMap.get('novedadId');
+    this.novedadId = this.route.snapshot.paramMap.get('novedadId');
     if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, esNovedad, novedadId)
+      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, esNovedad, novedadId,this.esGenerar)
         .subscribe(listas => {
           console.log(listas);
           this.detailavailabilityBudget=listas[0];
@@ -90,4 +103,19 @@ export class ConValidacionPresupuestalComponent implements OnInit {
     });
   }
 
+  openDialogCancelarDDP() {
+    let dialogRef = this.dialog.open(CancelarDdpComponent, {
+      width: '70em'
+    });
+    dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
+    dialogRef.componentInstance.tipo = this.detailavailabilityBudget.tipoSolicitudEspecial;
+    dialogRef.componentInstance.nSolicitud = this.detailavailabilityBudget.numeroSolicitud;
+    dialogRef.componentInstance.esNovedad = this.esNovedad;
+    dialogRef.componentInstance.registroPresupuestalId = this.novedadId;
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigate(["/generarDisponibilidadPresupuestal"], {});
+    });
+
+  }
 }

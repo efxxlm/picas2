@@ -13,12 +13,19 @@ namespace asivamosffie.model.Models
 {
     public partial class SolicitudPago
     {
+
+        [NotMapped]
+        public List<VConceptosUsosXsolicitudPagoId> VConceptosUsosXsolicitudPagoId { get; set; }
+
+        [NotMapped]
+        public dynamic TablaDrpUso { get; set; }
+
         [NotMapped]
         public Contrato ContratoSon { get; set; }
 
         [NotMapped]
         public decimal? SaldoPresupuestal { get; set; }
-         
+
         [NotMapped]
         public List<TablaDRP> TablaDRP { get; set; }
 
@@ -31,6 +38,17 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public dynamic TablaInformacionFuenteRecursos { get; set; }
 
+        [NotMapped]
+        public string MedioPagoCodigo { get; set; }
+
+        [NotMapped]
+        public OrdenGiroTerceroChequeGerencia PrimerOrdenGiroTerceroChequeGerencia { get; set; }
+
+        [NotMapped]
+        public OrdenGiroTerceroTransferenciaElectronica PrimerOrdenGiroTerceroTransferenciaElectronica { get; set; }
+         
+        [NotMapped]
+        public dynamic ValorXProyectoXFaseXAportanteXConcepto { get; set; }
     }
-    
+
 }

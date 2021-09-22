@@ -9,6 +9,10 @@ mat-card.mat-card:not([class*="mat-elevation-z"]) {
     @media only screen and (max-width: 48em) {
       padding: 1em 2em;
     }
+
+    @media only screen and (max-width: 40em) {
+      padding: 1em 4em;
+    }
 }
 
 .mat-card-header.header-card {

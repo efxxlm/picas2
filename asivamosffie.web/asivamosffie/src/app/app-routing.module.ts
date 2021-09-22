@@ -20,6 +20,7 @@ import { RegistrarAcuerdoComponent } from './_pages/gestionar-acuerdo-cofinancia
 import { RegistrarComponent } from './_pages/gestionar-fuentes-de-financiacion/components/registrar/registrar.component';
 import { CanDeactivateGuard } from './_guards/can-deactivate.guard';
 import { AuthenticateGuard } from './_guards/authenticate.guard';
+import { PlantillaComponent } from './_pages/generar-orden-giro/components/plantilla/plantilla.component';
 
 const routes: Routes = [
   {
@@ -175,7 +176,7 @@ const routes: Routes = [
 
       },
       {
- 
+
         path: 'procesosContractuales',
         canLoad: [ ActualUserGuard ],
         loadChildren: () => import( './_pages/gestionar-procesos-contractuales/gestionar-procesos-contractuales.module' )
@@ -259,7 +260,7 @@ const routes: Routes = [
         canLoad: [ ActualUserGuard ],
         loadChildren: () => import('./_pages/aprobar-seguimiento-diario/aprobar-seguimiento-diario.module')
         .then(m => m.AprobarSeguimientoDiarioModule),
-          
+
       },
       {
         path: 'gestionarTramiteControversiasContractuales',
@@ -298,7 +299,7 @@ const routes: Routes = [
         canLoad: [ ActualUserGuard ],
         loadChildren: () => import( './_pages/aprobar-requisitos-construccion/aprobar-requisitos-construccion.module' )
           .then( module => module.AprobarRequisitosConstruccionModule )
- 
+
       },
       {
         path: 'verificarRequisitosTecnicosConstruccion',
@@ -317,7 +318,7 @@ const routes: Routes = [
         canLoad: [ ActualUserGuard ],
         loadChildren: () => import( './_pages/requisitos-tecnicos-construccion/requisitos-tecnicos-construccion.module' )
           .then( module => module.RequisitosTecnicosConstruccionModule )
-      },      
+      },
       {
         path: 'validarAvanceSemanal',
         canLoad: [ ActualUserGuard ],
@@ -329,7 +330,7 @@ const routes: Routes = [
         canLoad: [ ActualUserGuard ],
         loadChildren: () => import( './_pages/requisitos-tecnicos-construccion/requisitos-tecnicos-construccion.module' )
           .then( module => module.RequisitosTecnicosConstruccionModule )
-      }, 
+      },
       {
         path: 'registrarInformeFinalProyecto',
         canLoad: [ ActualUserGuard ],
@@ -378,7 +379,7 @@ const routes: Routes = [
         loadChildren: () => import( './_pages/validar-cumplimiento-informe-final-proyecto/validar-cumplimiento-informe-final-proyecto.module' )
           .then( module => module.ValidarCumplimientoInformeFinalProyectoModule )
       },
-    { 
+    {
         path: 'verificarSolicitudDeNovedades',
         canLoad: [ ActualUserGuard ],
         loadChildren: () => import('./_pages/verificar-solicitud-de-novedades/verificar-solicitud-de-novedades.module')
@@ -413,8 +414,8 @@ const routes: Routes = [
         canLoad: [ ActualUserGuard ],
         loadChildren: () => import( './_pages/cargar-enlace-sistema-monitoreo-linea/cargar-enlace-sistema-monitoreo-linea.module' )
           .then( module => module.CargarEnlaceSistemaMonitoreoLineaModule )
-      },      
-      {    
+      },
+      {
         path: 'visualizarAvanceObraTiempoReal',
         canLoad: [ ActualUserGuard ],
         loadChildren: () => import( './_pages/visualizar-avance-obra-tiempo-real/visualizar-avance-obra-tiempo-real.module' )
@@ -462,7 +463,7 @@ const routes: Routes = [
         canLoad: [ ActualUserGuard ],
         loadChildren: () => import('./_pages/autorizar-solicitud-pago/autorizar-solicitud-pago.module')
         .then(m => m.AutorizarSolicitudPagoModule)
-      },      
+      },
       {
         path: 'verificarFinancieramenteSolicitudDePago',
         canLoad: [ ActualUserGuard ],
@@ -576,8 +577,17 @@ const routes: Routes = [
         canLoad: [ ActualUserGuard ],
         loadChildren: () => import('./_pages/menu/menu.module').then(m => m.MenuModule)
       },
+      /*{
+        path: 'informeSemanal',
+        canLoad: [ ActualUserGuard ],
+        loadChildren: () => import('./_pages/informe-semanal/informe-semanal.module').then(m => m.InformeSemanalModule)
+      },*/
     ]
-    
+
+  },
+  {
+    path: 'plantillaOrdenGiro/:id',
+    component: PlantillaComponent
   },
   {
     path: 'reportes',

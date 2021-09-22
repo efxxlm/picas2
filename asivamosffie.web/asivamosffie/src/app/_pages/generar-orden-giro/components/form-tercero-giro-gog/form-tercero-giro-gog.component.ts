@@ -18,6 +18,9 @@ export class FormTerceroGiroGogComponent implements OnInit {
     @Input() solicitudPago: any;
     @Input() esVerDetalle: boolean;
     @Output() tieneObservacion = new EventEmitter<boolean>();
+    @Output() observacionesVerificar = new EventEmitter<any>();
+    @Output() observacionesAprobar = new EventEmitter<any>();
+    @Output() observacionesTramitar = new EventEmitter<any>();
     obsVerificar: any;
     obsAprobar: any;
     obsTramitar: any;
@@ -50,6 +53,39 @@ export class FormTerceroGiroGogComponent implements OnInit {
                 this.commonSvc.listaBancos()
                     .subscribe( async listaBancos => {
                         this.bancosArray = listaBancos;
+
+                        // console.log(this.solicitudPago);
+                        if (this.solicitudPago.primerOrdenGiroTerceroTransferenciaElectronica) {
+                            const ordenGiroTerceroTransferenciaElectronica = this.solicitudPago.primerOrdenGiroTerceroTransferenciaElectronica;
+
+                            this.addressForm.get( 'transferenciaElectronica' ).setValue(
+                                {
+                                    ordenGiroTerceroId: 0,
+                                    ordenGiroTerceroTransferenciaElectronicaId: ordenGiroTerceroTransferenciaElectronica.ordenGiroTerceroTransferenciaElectronicaId,
+                                    titularCuenta: ordenGiroTerceroTransferenciaElectronica.titularCuenta !== undefined ? ordenGiroTerceroTransferenciaElectronica.titularCuenta : '',
+                                    titularNumeroIdentificacion: ordenGiroTerceroTransferenciaElectronica.titularNumeroIdentificacion !== undefined ? ordenGiroTerceroTransferenciaElectronica.titularNumeroIdentificacion : '',
+                                    numeroCuenta: ordenGiroTerceroTransferenciaElectronica.numeroCuenta !== undefined ? ordenGiroTerceroTransferenciaElectronica.numeroCuenta : '',
+                                    bancoCodigo: ordenGiroTerceroTransferenciaElectronica.bancoCodigo !== undefined ? ordenGiroTerceroTransferenciaElectronica.bancoCodigo : null,
+                                    esCuentaAhorros: ordenGiroTerceroTransferenciaElectronica.esCuentaAhorros !== undefined ? ordenGiroTerceroTransferenciaElectronica.esCuentaAhorros : null
+                                }
+                            )
+                        }
+                        if (this.solicitudPago.primerOrdenGiroTerceroChequeGerencia) {
+                            const ordenGiroTerceroChequeGerencia = this.solicitudPago.primerOrdenGiroTerceroChequeGerencia;
+                                
+                                this.addressForm.get( 'chequeGerencia' ).setValue(
+                                    {
+                                        ordenGiroTerceroId: 0,
+                                        ordenGiroTerceroChequeGerenciaId: ordenGiroTerceroChequeGerencia.ordenGiroTerceroChequeGerenciaId,
+                                        nombreBeneficiario: ordenGiroTerceroChequeGerencia.nombreBeneficiario !== undefined ? ordenGiroTerceroChequeGerencia.nombreBeneficiario : '',
+                                        numeroIdentificacionBeneficiario: ordenGiroTerceroChequeGerencia.numeroIdentificacionBeneficiario !== undefined ? ordenGiroTerceroChequeGerencia.numeroIdentificacionBeneficiario : ''
+                                    }
+                                    )
+                        }
+
+                        if (this.solicitudPago.medioPagoCodigo) {
+                            this.addressForm.get('medioPagoGiroContrato').setValue( this.solicitudPago.medioPagoCodigo );
+                        }
 
                         if ( this.solicitudPago.ordenGiro !== undefined ) {
                             this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
@@ -142,12 +178,15 @@ export class FormTerceroGiroGogComponent implements OnInit {
 
                                     if ( this.obsVerificar !== undefined ) {
                                         this.tieneObservacion.emit( true );
+                                        this.observacionesVerificar.emit(this.obsVerificar);
                                     }
                                     if ( this.obsAprobar !== undefined ) {
                                         this.tieneObservacion.emit( true );
+                                        this.observacionesAprobar.emit(this.obsAprobar);
                                     }
                                     if ( this.obsTramitar !== undefined ) {
                                         this.tieneObservacion.emit( true );
+                                        this.observacionesTramitar.emit(this.obsTramitar);
                                     }
                                 }
                             }

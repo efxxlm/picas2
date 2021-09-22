@@ -71,7 +71,6 @@
                                     <input  matInput
                                             formControlName="fechaExpedicion"
                                             [matDatepicker]="pickerFecha22"
-                                            [min]="minDate"
                                             readonly
                                             (click)="pickerFecha22.open()"
                                             required
@@ -184,7 +183,7 @@
                     class="btn-guardar"
                     [disabled]="addressForm.dirty === false"
                     type="submit">
-                    <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                    <img src="assets/img/icon/guardar.svg" alt="Guardar">
             </button>
         </div>
     </form>

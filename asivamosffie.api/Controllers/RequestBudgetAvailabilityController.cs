@@ -28,9 +28,9 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetDetailAvailabilityBudgetProyectNew")]
         [HttpGet]
-        public async Task<dynamic> GetDetailAvailabilityBudgetProyectNew([FromQuery] int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId)
+        public async Task<dynamic> GetDetailAvailabilityBudgetProyectNew([FromQuery] int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId, bool esGenerar)
         {
-            return await _managementCommitteeReportService.GetDetailAvailabilityBudgetProyectNew(disponibilidadPresupuestalId, esNovedad, RegistroNovedadId);
+            return await _managementCommitteeReportService.GetDetailAvailabilityBudgetProyectNew(disponibilidadPresupuestalId, esNovedad, RegistroNovedadId, esGenerar);
         }
 
         [Route("GetListAportanteByTipoAportanteByProyectoId")]

@@ -57,7 +57,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
         return this.getCriterios( index ).controls[ jIndex ].get( 'conceptos' ) as FormArray;
     }
 
-    getAportantes( index: number, jIndex: number, kIndex: number ) {
+    getAportantes( index: number, jIndex: number, kIndex: number) {
         return this.getConceptos( index, jIndex ).controls[ kIndex ].get( 'aportantes' ) as FormArray;
     }
 
@@ -117,6 +117,12 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                             const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( descuento.criterioCodigo );
                             const tipoPago = tiposDePago.find( tipoPago => tipoPago.codigo === descuento.tipoPagoCodigo );
                             const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPago.codigo );
+                            const conceptoP = [];
+                            if(conceptosDePago != null){
+                              conceptosDePago.forEach(element => {
+                                conceptoP.push(element)
+                              });
+                            }
                             // Get data del formulario de los conceptos seleccionados
                             const listaConceptos = [];
                             const formArrayConceptos = [];
@@ -130,7 +136,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                     const tieneConceptoCodigo = listaConceptos.includes( value.conceptoPagoCodigo );
 
                                     if ( tieneConceptoCodigo === false ) {
-                                        listaConceptos.push( value.conceptoPagoCodigo );    
+                                        listaConceptos.push( value.conceptoPagoCodigo );
                                     }
                                 } else {
                                     listaConceptos.push( value.conceptoPagoCodigo )
@@ -151,11 +157,10 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                             const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
                                             let tipoAportante: any;
                                             let listaFuenteRecursos: any[];
-
-                                            if ( nombreAportante !== undefined ) {
+                                            if(aportante.conceptoPagoCodigo == codigo){
+                                              if ( nombreAportante !== undefined ) {
                                                 tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
                                                 listaFuenteRecursos = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
-
                                                 formArrayAportantes.push(
                                                     this.fb.group(
                                                         {
@@ -184,6 +189,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                                     )
                                                 )
                                             }
+                                            }
                                         }
                                     }
 
@@ -196,10 +202,19 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                             aportantes: this.fb.array( formArrayAportantes.length > 0 ? formArrayAportantes : [] )
                                         }
                                     ) );
+
+                                    if (concepto) {
+                                        conceptoP.forEach(element => {
+                                            if (element.nombre === concepto.nombre) {
+                                                element.disabled = true;
+                                            }
+                                        });
+                                    }
                                 }
                             }
 
                             // Set formulario de los criterios
+
                             formArrayCriterios.push(
                                 this.fb.group(
                                     {
@@ -208,7 +223,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                         criterioCodigo: [ descuento.criterioCodigo !== undefined ? this.criteriosArray.find( criterio => criterio.codigo === descuento.criterioCodigo ).codigo : null ],
                                         tipoPagoNombre: [ tipoPago !== undefined ? tipoPago.nombre : null ],
                                         tipoPagoCodigo: [ tipoPago !== undefined ? tipoPago.codigo : null ],
-                                        conceptosDePago: [ conceptosDePago ],
+                                        conceptosDePago: [ conceptoP ],
                                         concepto: [ listaConceptos.length > 0 ? listaConceptos : null, Validators.required ],
                                         conceptos: this.fb.array( formArrayConceptos.length > 0 ? formArrayConceptos : [] )
                                     }
@@ -328,7 +343,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                             criterios: this.fb.array( [] )
                         }
                     ) );
-    
+
                 } );
             }
         } else {
@@ -373,7 +388,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
 
             return total;
         }
-        
+
         cb( totaldescuentos() );
     }
 
@@ -389,7 +404,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
         // const solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFacturaDescuento.find( solicitudPagoFaseFacturaDescuento => solicitudPagoFaseFacturaDescuento.solicitudPagoFaseFacturaDescuentoId === this.descuentos.controls[ index ].get( 'solicitudPagoFaseFacturaDescuentoId' ).value )
 
         let totalDescuentoCriterio = 0;
-            
+
         this.getCriterios( index ).controls.forEach( ( criterioControl, indexCriterio ) => {
             this.getConceptos( index, indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
                 this.getAportantes( index, indexCriterio, indexConcepto ).controls.forEach( aportanteControl => {
@@ -415,7 +430,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
     getTipoDescuento( tipoDescuentoCodigo: string ) {
         if (this.tiposDescuentoArray.length > 0) {
             const descuento = this.tiposDescuentoArray.find( descuento => descuento.codigo === tipoDescuentoCodigo );
-            
+
             if ( descuento !== undefined ) {
                 return descuento.nombre;
             }
@@ -524,7 +539,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                 }
             } );
         }
-        
+
         for ( const codigo of listaConceptos ) {
             const concepto = conceptosDePago.find( concepto => concepto.codigo === codigo );
 
@@ -606,18 +621,21 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
             )
     }
 
-    deleteConcepto( index: number, jIndex: number, kIndex: number ) {
+    deleteConcepto( index: number, jIndex: number, kIndex: number, ordenGiroDetalleDescuentoTecnicaId: number ) {
         this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
         .subscribe(
             value => {
                 if ( value === true ) {
+                    //ya existe en la tabla
                     const listConceptos: string[] = this.getCriterios( index ).controls[ jIndex ].get( 'concepto' ).value;
                     const indexConcepto = listConceptos.findIndex( codigo => codigo === this.getConceptos( index, jIndex ).controls[ kIndex ].get( 'conceptoCodigo' ).value );
-                    listConceptos.splice( indexConcepto, 1 );
 
-                    this.getCriterios( index ).controls[ jIndex ].get( 'concepto' ).setValue( listConceptos.length > 0 ? listConceptos : null );
-                    this.getConceptos( index, jIndex ).removeAt( kIndex );
-                    this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                    this.ordenGiroSvc.deleteOrdenGiroDetalleDescuentoTecnicaByConcepto(ordenGiroDetalleDescuentoTecnicaId,listConceptos[indexConcepto]).subscribe(r =>{
+                      listConceptos.splice( indexConcepto, 1 );
+                      this.getCriterios( index ).controls[ jIndex ].get( 'concepto' ).setValue( listConceptos.length > 0 ? listConceptos : null );
+                      this.getConceptos( index, jIndex ).removeAt( kIndex );
+                      this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                    });
                 }
             }
         )
@@ -694,6 +712,17 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
         return dialogRef.afterClosed();
     }
 
+    maximumDiscountValue( value: number, index: number, jIndex: number, kIndex: number, lIndex: number ) {
+        let valorMaximoDescuento = 0;
+        this.solicitudPagoFaseCriterio.forEach(element => {
+            valorMaximoDescuento += element.valorFacturado
+        });
+        if(value > valorMaximoDescuento) {
+            this.getAportantes( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null );
+            this.openDialog( '', '<b>El valor del descuentos no puede ser mayor al valor facturado al concepto.</b>' )
+        }
+    }
+
     onSubmit( index: number ) {
         this.estaEditando = true;
         this.addressForm.markAllAsTouched();
@@ -703,7 +732,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
 
             this.descuentos.controls.forEach( ( descuentoControl, indexDescuento ) => {
                 const ordenGiroDetalleDescuentoTecnica = [];
-    
+
                 this.getCriterios( indexDescuento ).controls.forEach( ( criterioControl, indexCriterio ) => {
                     const ordenGiroDetalleDescuento = {
                         contratacionProyectoId: this.solicitudPagoFase.contratacionProyectoId,
@@ -715,12 +744,12 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                         esPreconstruccion: this.esPreconstruccion,
                         ordenGiroDetalleDescuentoTecnicaAportante: []
                     }
-    
+
                     this.getConceptos( indexDescuento, indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
-    
+
                         this.getAportantes( indexDescuento, indexCriterio, indexConcepto ).controls.forEach( aportanteControl => {
                             let fuenteFinanciacionId = 0;
-                            
+
                             if ( aportanteControl.get( 'fuenteDeRecursos' ).value !== null && aportanteControl.get( 'fuenteRecursos' ).value !== null ) {
                                 const fuenteDeRecursos = aportanteControl.get( 'fuenteDeRecursos' ).value
                                 const fuente = fuenteDeRecursos.find( fuente => fuente.codigo === aportanteControl.get( 'fuenteRecursos' ).value )
@@ -742,7 +771,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                                     fuenteFinanciacionId: fuenteFinanciacionId
                                 }
                             )
-    
+
                         } );
                     } );
 
@@ -802,6 +831,17 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
+    }
+
+    disableOptionCriterioXconcepto(criterios: any, codigo:any){
+      if(criterios != null){
+        if(criterios.value.length > 0){
+          if(criterios.value.some( criterio => criterio.criterioCodigo === codigo  && criterio.ordenGiroDetalleDescuentoTecnicaId > 0)){
+            return true;
+          }
+        }
+      }
+      return false;
     }
 
 }

@@ -30,6 +30,8 @@ export class CancelarDdpComponent implements OnInit {
   id: any;
   tipo: any;
   nSolicitud: any;
+  esNovedad: any;
+  registroPresupuestalId: any;
 
   constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,private router: Router) {
     this.declararOnservaciones();
@@ -85,7 +87,11 @@ export class CancelarDdpComponent implements OnInit {
 
   devolverSolicitud() {
     console.log(this.observaciones.value);
-    let DisponibilidadPresupuestalObservacion={DisponibilidadPresupuestalId:this.id,Observacion:this.observaciones.value};
+    let DisponibilidadPresupuestalObservacion={
+      DisponibilidadPresupuestalId:this.id,Observacion:this.observaciones.value,
+      esNovedad: this.esNovedad,
+      novedadContractualRegistroPresupuestalId: this.registroPresupuestalId
+    };
     this.disponibilidadServices.SetCancelDDP(DisponibilidadPresupuestalObservacion).subscribe(listas => {
       console.log(listas);
       this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');

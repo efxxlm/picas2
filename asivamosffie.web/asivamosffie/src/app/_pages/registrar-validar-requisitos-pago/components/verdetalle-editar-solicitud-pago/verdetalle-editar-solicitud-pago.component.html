@@ -85,8 +85,8 @@
 
               <ng-container matColumnDef="ProyectoLLaveMen">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre proyecto</th>
-                <td mat-cell *matCellDef="let element">
-                  <div  class="sub-item-table justify-content-center align-items-center"
+                <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+                  <div  class="sub-item-table justify-content-center align-items-center text-center"
                         *ngFor="let el of element.listDyProyectos; let i = index"
                         [class.h-3]="el.listDyUsos.length === 1"
                         [class.h-6]="el.listDyUsos.length === 2"
@@ -123,7 +123,7 @@
               </ng-container>
 
               <ng-container matColumnDef="saldo">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Saldo</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Saldo presupuestal</th>
                 <td mat-cell *matCellDef="let element" style="padding: 0 !important">
                   <div class="sub-item-table justify-content-center align-items-center" *ngFor="let el of element.listDyProyectos; let i = index">
                     <div *ngFor="let el2 of el.listDyUsos; let j = index" class="borber-table">
@@ -209,7 +209,7 @@
                                                 [listaMenusId]="menusIdPath"
                                                 [registrarSolicitudPagoObs]="listaTipoObservacionSolicitudes.registrarSolicitudPago"
                                                 (estadoSemaforo)="semaforoDetalleFactura = $event; $event === 'completo' ? registroCompletoAcordeones.registroCompletoDetalleFactura = true : ''"
-                                                *ngIf="registroCompletoAcordeones.registroCompletoSolicitudPago === true">
+                                                *ngIf="registroCompletoAcordeones.registroCompletoDescripcionFactura === true && registroCompletoAcordeones.registroCompletoSolicitudPago === true">
             </app-form-detalle-factura-proyectos>
           </mat-expansion-panel>
         </mat-accordion>

@@ -72,7 +72,7 @@
                                                     <input matInput
                                                             formControlName="fechaSeguro"
                                                             [matDatepicker]="pickerFecha22"
-                                                            [min]="minDate"
+                                                            
                                                             readonly
                                                             (click)="pickerFecha22.open()"
                                                             required
@@ -117,7 +117,7 @@
                                                     <input  matInput
                                                             formControlName="fechaAmparo"
                                                             [matDatepicker]="pickerFecha221"
-                                                            [min]="minDate"
+                                                            
                                                             readonly
                                                             (click)="pickerFecha221.open()"
                                                             required
@@ -153,7 +153,7 @@
                                             <div class="pr-1">
                                                 <label  class="label-left"
                                                         for="valorAmparo"
-                                                        [ngClass]="{ 'color-secondaryColor': (seguro.get('fechaAmparo')?.invalid && seguro.get('fechaAmparo').touched) || (seguro.get('fechaAmparo')?.invalid && estaEditando) }">
+                                                        [ngClass]="{ 'color-secondaryColor': (seguro.get('valorAmparo')?.invalid && seguro.get('valorAmparo').touched) || (seguro.get('valorAmparo')?.invalid && estaEditando) }">
                                                         Valor actualizado del amparo
                                                 </label>
                                             </div>
@@ -162,7 +162,7 @@
                                                     <input matInput #valorAmparo currencyMask maxlength="20" required
                                                         formControlName="valorAmparo"
                                                         (keypress)="validateNumberKeypress($event)"
-                                                        onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                                        onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                                         [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" />
                                                 </mat-form-field>
                                                 <span class="contador" [matTooltipPosition]="'above'"
@@ -192,7 +192,7 @@
                                 type="submit"
                                 [disabled]="!seguro.dirty"
                             >
-                                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                                <img src="assets/img/icon/guardar.svg" alt="Guardar">
                         </button>
                     </div>
                 </mat-expansion-panel>

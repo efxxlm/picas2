@@ -147,7 +147,7 @@
                   max="99999999999999999999"
                   required
                   currencyMask
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                 />
               </mat-form-field>
@@ -352,6 +352,7 @@
                   (click)="pickerPlazoInicio.open()"
                   placeholder="DD/MM/AAAA"
                   required
+                  [max]="fechaFinSuspensionVal"
                 />
                 <mat-datepicker #pickerPlazoInicio></mat-datepicker>
               </mat-form-field>
@@ -414,7 +415,7 @@
                   max="99"
                   required
                   (keypress)="validateNumberKeypress($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
@@ -472,7 +473,7 @@
                   max="99"
                   required
                   (keypress)="validateNumberKeypress($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
@@ -529,7 +530,7 @@
                   max="99"
                   required
                   (keypress)="validateNumberKeypress($event)"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 />
               </mat-form-field>
@@ -573,7 +574,7 @@
                   required
                   (keypress)="validateNumberKeypress($event)"
                   onkeyup="if(this.value>29) this.value = 29;"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                   oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   [matTooltipPosition]="'above'"
                   matTooltip="Campo numérico igual o menor a 29 días"

@@ -93,7 +93,7 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
 
             if ( this.esRegistroNuevo === true && this.esVerDetalle === false ) {
                 this.dataSource = new MatTableDataSource( this.resultadoBusqueda.controls );
-                setTimeout(this.paginador, 200);
+                setTimeout(this.paginador, 400);
             }
         }
     }

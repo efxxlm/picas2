@@ -98,7 +98,7 @@ inválidos. Ajuste el archivo y cargue de nuevo</b>
               ` <br>Número de registros en el archivo: <b>${response.data.cantidadDeRegistros}</b><br>
         Número de registros válidos: <b>${response.data.cantidadDeRegistrosValidos}</b><br>
         Número de registros inválidos: <b>${response.data.cantidadDeRegistrosInvalidos}</b><br><br>
-        <b>¿Desea realizar el cargue de los reportes de pagos?</b>
+        <b>¿Desea realizar el cargue de los reportes de los rendimientos?</b>
         `
             )
           }

@@ -45,6 +45,14 @@ luego en el modulo de pone
 
     npm run compilar
 
+## Compilar un servidor local por wifi
+
+en el cmd
+    ipconfig
+
+con la ip local
+    node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng serve --port 4200 --host="ip local" --disable-host-check
+
 ## Desplegar en [asivamos.ffie.com.co](https://asivamos.ffie.com.co)
 
 cuenta cambiar en proxy.conf.json

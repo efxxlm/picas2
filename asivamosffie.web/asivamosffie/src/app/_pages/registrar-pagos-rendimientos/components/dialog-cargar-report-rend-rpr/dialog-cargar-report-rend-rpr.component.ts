@@ -104,7 +104,7 @@ export class DialogCargarReportRendRprComponent implements OnInit {
   private templateModal(data, valid: boolean):string{
     let userMessage = ""
     if(valid){
-      userMessage = "<b>¿Desea realizar el cargue de los reportes de pagos?</b>"
+      userMessage = "<b>¿Desea realizar el cargue de los reportes de los rendimientos?</b>"
     }else{
       userMessage = `<b>No se permite el cargue, ya que el archivo tiene registros
       inválidos. Ajuste el archivo y cargue de nuevo</b>`

@@ -122,7 +122,8 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
   @Input() proyecto: any;
   @Input() contrato: any;
   @Input() novedad: NovedadContractual;
-
+  novedadesOld : NovedadContractual[] = [];
+  fechaFinSuspensionVal: Date;
   @Output() guardar = new EventEmitter();
 
   constructor(
@@ -178,29 +179,35 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
 
       if((this.novedad.novedadContractualId == null || this.novedad.novedadContractualId.toString() == 'undefined') && this.contrato.novedadContractual.length > 0){
         esCreacion = true;
-        this.novedad = this.contrato.novedadContractual[0];
+        this.novedadesOld = this.contrato.novedadContractual;
+        //this.novedad = this.contrato.novedadContractual[0];
       }
-      if (
-        this.novedad.novedadContractualDescripcion !== undefined &&
-        this.novedad.novedadContractualDescripcion.length > 0
-      ) {
-        let existeSuspension = false;
-        this.novedad.novedadContractualDescripcion.forEach(n => {
-          if(n.tipoNovedadCodigo == this.tipoNovedadCodigo.suspension){
-            existeSuspension = true;
-          }
-          //let tipoNovedadseleccionada = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo === n.tipoNovedadCodigo).shift();
-          if(!esCreacion){
-            this.tipoNovedadArray = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo !== n.tipoNovedadCodigo)
-            this.tipoNovedadArray.push( n );
-            listaDescripcion.push( n );
+      let existeSuspension = false;
+      console.log(this.novedad, this.contrato,this.novedadesOld);
+      if(this.novedadesOld.length > 0){
+        this.novedadesOld.forEach(novedad =>{
+          if (
+            novedad.novedadContractualDescripcion !== undefined &&
+            novedad.novedadContractualDescripcion.length > 0
+          ){
+            novedad.novedadContractualDescripcion.forEach(n => {
+              if(n.tipoNovedadCodigo == this.tipoNovedadCodigo.suspension){
+                existeSuspension = true;
+                this.fechaFinSuspensionVal = n.fechaFinSuspension;
+              }
+              if(!esCreacion){
+                this.tipoNovedadArray = this.tipoNovedadArray.filter(r => r.tipoNovedadCodigo !== n.tipoNovedadCodigo)
+                this.tipoNovedadArray.push( n );
+                listaDescripcion.push( n );
+              }
+            });
           }
         });
-        if(existeSuspension){
-          this.tipoNovedadSuspension.forEach(element => {
-            this.tipoNovedadArray.push(element);
-          });
-        }
+      }
+      if(existeSuspension){
+        this.tipoNovedadSuspension.forEach(element => {
+          this.tipoNovedadArray.push(element);
+        });
       }
       this.addressForm.get('tipoNovedad').setValue(listaDescripcion);
       if (this.estaEditando) this.addressForm.markAllAsTouched();

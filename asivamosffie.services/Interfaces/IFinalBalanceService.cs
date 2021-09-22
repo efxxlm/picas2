@@ -13,6 +13,7 @@ namespace asivamosffie.services.Interfaces
         Task<OrdenGiro> SeeDetailOdg(int pOrdenGiroId);
         Task<dynamic> GetEjecucionFinancieraXProyectoId(int pProyectoId);
         Task<TablaUsoFuenteAportante> GetTablaUsoFuenteAportanteXContratoId(int pContratoId);
+        Task<TablaUsoFuenteAportante> GetTablaUsoFuenteAportanteXContratoId(int pContratoId , int pProyectoId);
         Task<Respuesta> ChangeStatudBalanceFinanciero(BalanceFinanciero pBalanceFinanciero);
         Task<Respuesta> ChangeStatudBalanceFinancieroTraslado(BalanceFinancieroTraslado pBalanceFinancieroTraslado);
         Task<Respuesta> ValidateCompleteBalanceFinanciero(int pBalanceFinancieroTrasladoId, bool pEstaCompleto);

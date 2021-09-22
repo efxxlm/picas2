@@ -31,6 +31,8 @@ export class FormVerificarSolicitudVfspComponent implements OnInit {
     displayedColumns: string[] = [
         'drp',
         'numDrp',
+        'ProyectoLLaveMen',
+        'NombreUso',
         'valor',
         'saldo'
     ];
@@ -108,7 +110,7 @@ export class FormVerificarSolicitudVfspComponent implements OnInit {
                                         this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
                                     }
 
-                                    this.dataSource = new MatTableDataSource( this.contrato.tablaDRP );
+                                    this.dataSource = new MatTableDataSource( this.contrato.tablaDRPODG );
                                     this.dataSource.paginator = this.paginator;
                                     this.dataSource.sort = this.sort;
                                 }

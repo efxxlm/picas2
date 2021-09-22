@@ -9,13 +9,17 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterValidatePaymentRequierementsService
     {
+        Task<Respuesta> DeleteSolicitudPagoFaseCriterioConceptoPago(int pSolicitudPagoFaseCriterioConceptoId, string pUsuarioModificacion);
+
+        Task<dynamic> GetUsoByConceptoPagoCodigo(string pConceptoPagoCodigo);
+
         Task<dynamic> GetMontoMaximo(int SolicitudPagoId, bool EsPreConstruccion);
 
-        Task<dynamic> GetFormaPagoCodigoByFase(bool pEsPreconstruccion);
+        Task<dynamic> GetFormaPagoCodigoByFase(bool pEsPreconstruccion ,int pContratoId);
 
         Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion);
 
-        Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion);
+        Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion , int pContratacionProyectoId, string pCriterioCodigo, string pConceptoCodigo, string pUsoCodigo);
 
         Task<Respuesta> ReturnSolicitudPago(SolicitudPago pSolicitudPago);
 

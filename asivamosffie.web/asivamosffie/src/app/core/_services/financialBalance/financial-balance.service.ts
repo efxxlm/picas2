@@ -60,6 +60,10 @@ export class FinancialBalanceService {
       return this.http.get<any>( `${ this.apiUrl }/GetTablaUsoFuenteAportanteXContratoId?pContratoId=${ contratoId }` );
     }
 
+    getTablaUsoFuenteAportanteXContratoIdXProyectoId(contratoId: any, pProyectoId: number) {
+      return this.http.get<any>( `${ this.apiUrl }/getTablaUsoFuenteAportanteXContratoIdXProyectoId?pContratoId=${ contratoId }&pProyectoId=${ pProyectoId }` );
+    }
+
     getEjecucionFinancieraXProyectoId(pProyectoId: any) {
       return this.http.get<any>( `${ this.apiUrl }/GetEjecucionFinancieraXProyectoId?pProyectoId=${ pProyectoId }` );
     }

@@ -25,8 +25,13 @@
                 {{detailavailabilityBudget?.rubroPorFinanciar}}
             </p>
             <p>
-                <strong>Valor de la solicitud:</strong>
-                {{detailavailabilityBudget?.valorSolicitud | currency:'':'symbol':'3.0'}}
+              <strong>Valor de la solicitud:</strong>
+              {{detailavailabilityBudget?.valorSolicitud | currency:'':'symbol':'3.0'}}
+            </p>
+            <p *ngIf="detailavailabilityBudget?.novedadContractual">
+              <strong>Valor después de la modificación:</strong>
+              <span *ngIf="!(detailavailabilityBudget?.estadoSolicitudCodigo == '5' || detailavailabilityBudget?.estadoSolicitudCodigo == '8')">{{detailavailabilityBudget?.valorTotalDisponibilidad + detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}</span>
+              <span *ngIf="(detailavailabilityBudget?.estadoSolicitudCodigo == '5' || detailavailabilityBudget?.estadoSolicitudCodigo == '8')">{{detailavailabilityBudget?.valorTotalDisponibilidad | currency:'':'symbol':'3.0'}}</span>
             </p>
             <p  *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
                 <strong>Plazo:</strong>
@@ -138,7 +143,9 @@
                         {{aportante.nombre}}
                     </p>
                     <p>
-                        <strong>Valor del aportante al proyecto:</strong>
+                        <strong *ngIf="this.esNovedad != true">Valor del aportante al proyecto:</strong>
+                        <strong *ngIf="this.esNovedad == true">Valor de adición del aportante al proyecto:</strong>
+
                          {{aportante.valorAportanteAlProyecto| currency:'':'symbol':'3.0'}}
                     </p>
                     <p *ngIf="detailavailabilityBudget?.urlConSoporte">
@@ -223,7 +230,7 @@
                             {{proyecto.municipio}}
                         </p>
                         <p>
-                            <strong>Valor total del proyecto para el componente de {{ detailavailabilityBudget?.tipoSolicitudContratacion === '1' ? 'Obra' : detailavailabilityBudget?.tipoSolicitudContratacion === '2' ? 'Interventoria' : '' }}:</strong>
+                            <strong>Valor total del proyecto:</strong>
                             {{ getTotalProyecto( proyecto.aportantes ) | currency:'':'symbol':'3.0' }}
                         </p>
 
@@ -371,8 +378,9 @@
         -->
     </mat-accordion>
 
-    <div class="botones">
+    <div class="botones" *ngIf="esCancelada != true">
         <button mat-raised-button color="accent" (click)="generarddp()">Descargar DDP</button>
+        <button mat-raised-button color="accent" [disabled]="(detailavailabilityBudget?.tieneNovedad == true && esNovedad == false) || (detailavailabilityBudget?.estadoStr == 'Con registro presupuestal')" (click)="openDialogCancelarDDP()">Cancelar solicitud DDP</button>
     </div>
 
 </section>

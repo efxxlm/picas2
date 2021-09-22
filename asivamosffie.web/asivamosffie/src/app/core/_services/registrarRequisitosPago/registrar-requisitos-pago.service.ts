@@ -33,16 +33,20 @@ export class RegistrarRequisitosPagoService {
     return this.http.get<any[]>( `${ this.apiUrl }/GetProyectosByIdContrato?pContratoId=${ pContratoId }` );
   }
 
-  getFormaPagoCodigoByFase( pEsPreconstruccion: string ) {
-    return this.http.get<Dominio[]>( `${ this.apiUrl }/GetFormaPagoCodigoByFase?pEsPreconstruccion=${ pEsPreconstruccion }` );
+  getFormaPagoCodigoByFase( pEsPreconstruccion: string, pContratoId: number) {
+    return this.http.get<Dominio[]>( `${ this.apiUrl }/GetFormaPagoCodigoByFase?pEsPreconstruccion=${ pEsPreconstruccion }&pContratoId=${ pContratoId }` );
   }
 
   getMontoMaximo( solicitudPagoId: number, esPreConstruccion: string ) {
     return this.http.get<any>( `${ this.apiUrl }/GetMontoMaximo?SolicitudPagoId=${ solicitudPagoId }&EsPreConstruccion=${ esPreConstruccion }` )
   }
 
-  getMontoMaximoMontoPendiente( SolicitudPagoId: number, strFormaPago: string, EsPreConstruccion: string ) {
-    return this.http.get<{ montoMaximo: number, valorPendientePorPagar: number }>( `${ this.apiUrl }/GetMontoMaximoMontoPendiente?SolicitudPagoId=${ SolicitudPagoId }&strFormaPago=${ strFormaPago }&EsPreConstruccion=${ EsPreConstruccion }` );
+  getMontoMaximoMontoPendiente( SolicitudPagoId: number, strFormaPago: string, EsPreConstruccion: string, contratacionProyectoId: number, pCriterioCodigo: string, pConceptoCodigo: string, pUsoCodigo: string = '' ) {
+    return this.http.get<{ montoMaximo: number, valorPendientePorPagar: number }>( `${ this.apiUrl }/GetMontoMaximoMontoPendiente?SolicitudPagoId=${ SolicitudPagoId }&strFormaPago=${ strFormaPago }&EsPreConstruccion=${ EsPreConstruccion }&pContratacionProyectoId=${ contratacionProyectoId }&pCriterioCodigo=${ pCriterioCodigo }&pConceptoCodigo=${ pConceptoCodigo }&pUsoCodigo=${pUsoCodigo}` );
+  }
+
+  getUsoByConceptoPagoCodigo(  pConceptoPagoCodigo: string ) {
+    return this.http.get<[]>( `${ this.apiUrl }/GetUsoByConceptoPagoCodigo?pConceptoPagoCodigo=${ pConceptoPagoCodigo }` );
   }
 
   getCriterioByFormaPagoCodigo( pFormaPagoCodigo: string ) {
@@ -103,6 +107,10 @@ export class RegistrarRequisitosPagoService {
   // Eliminar criterio del contrato
   deleteSolicitudPagoFaseCriterio( pSolicitudPagoFaseCriterioId: number ) {
     return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudPagoFaseCriterio?pSolicitudPagoFaseCriterioId=${ pSolicitudPagoFaseCriterioId }`, '' );
+  }
+  // Eliminar criterio del contrato
+  DeleteSolicitudPagoFaseCriterioConceptoPago( pSolicitudPagoFaseCriterioConceptoId: number ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudPagoFaseCriterioConceptoPago?pSolicitudPagoFaseCriterioConceptoId=${ pSolicitudPagoFaseCriterioConceptoId }`, '' );
   }
   // Eliminar criterio del proyecto
   deleteSolicitudPagoFaseCriterioProyecto( SolicitudPagoFaseCriterioProyectoId: number ) {

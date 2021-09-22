@@ -16,8 +16,8 @@ export class ActualizarPolizasService {
     return this.http.get<any[]>( `${ this.apiUrl }/GetContratoByNumeroContrato?pNumeroContrato=${ pNumeroContrato }` );
   }
 
-  getContratoPoliza( pContratoPolizaId: number ) {
-    return this.http.get<any>( `${ this.apiUrl }/GetContratoPoliza?pContratoPolizaId=${ pContratoPolizaId }` )
+  getContratoPoliza( pContratoPolizaId: number, pEsNueva: boolean ) {
+    return this.http.get<any>( `${ this.apiUrl }/GetContratoPoliza?pContratoPolizaId=${ pContratoPolizaId }&pEsNueva=${ pEsNueva }`)
   }
 
   getListVActualizacionPolizaYGarantias() {

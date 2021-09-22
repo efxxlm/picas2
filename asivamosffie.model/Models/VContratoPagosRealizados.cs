@@ -10,10 +10,10 @@ namespace asivamosffie.model.Models
         public bool? EsPreconstruccion { get; set; }
         public int ValorFacturado { get; set; }
         public decimal? PorcentajeFacturado { get; set; }
+        public decimal? PorcentajePorPagar { get; set; }
         public string FaseContrato { get; set; }
         public int? PagosRealizados { get; set; }
         public decimal? SaldoPorPagar { get; set; }
-        public decimal? PorcentajePorPagar { get; set; }
         public decimal? ValorSolicitud { get; set; }
     }
 }

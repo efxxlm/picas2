@@ -14,6 +14,7 @@ import { Respuesta } from 'src/app/core/_services/common/common.service';
 export class TrasladoRecursosGbftrecComponent implements OnInit {
   @Input() id: number;
   @Input() esVerDetalle: boolean;
+  @Input() tieneOrdenGiro: boolean;
   balanceFinanciero: any;
   balanceFinancieroId = 0;
   balanceFinancieroTraslado = [];
@@ -38,6 +39,8 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
     ]
   };
   estaEditando = false;
+  noPermitirGuardarOtraVez: boolean;
+  justificacionTrasladoAportanteFuenteEsTrue = true;
   constructor(private fb: FormBuilder, public dialog: MatDialog,private financialBalanceService: FinancialBalanceService,
     ) { }
   validateNumberKeypress(event: KeyboardEvent) {
@@ -67,7 +70,26 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+
+    this.textoJustificacion()
   }
+
+  textoJustificacion() {
+    this.addressForm.get('justificacionTrasladoAportanteFuente').valueChanges.subscribe(value => {
+      if (value == null) this.justificacionTrasladoAportanteFuenteEsTrue = true;
+      else this.justificacionTrasladoAportanteFuenteEsTrue = false
+    });
+  }
+  
+  formtieneOrdenGiro() {
+    if (!this.tieneOrdenGiro && this.addressForm.get( 'requiereTransladoRecursos' ).value === false) {
+      this.noPermitirGuardarOtraVez = true
+    }
+    if (!this.tieneOrdenGiro) {
+      this.addressForm.get( 'requiereTransladoRecursos' ).setValue(false);
+    }
+  }
+  
 
   buildForm() {
     this.financialBalanceService.getBalanceFinanciero(
@@ -92,6 +114,7 @@ export class TrasladoRecursosGbftrecComponent implements OnInit {
         this.balanceFinancieroId = response[ 'balanceFinancieroId' ]
         this.addressForm.patchValue(response);
       }
+      this.formtieneOrdenGiro();
     });
   }
 

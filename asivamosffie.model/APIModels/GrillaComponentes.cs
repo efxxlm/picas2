@@ -16,6 +16,8 @@ namespace asivamosffie.model.APIModels
         public int cofinanciacionAportanteId { get; set; }
         public int? FuenteFinanciacionId { get; set; }
         public string? Fase { get; set; }
+        public string? Fuente { get; set; }
+        public string? Aportante { get; set; }
 
     }
 }

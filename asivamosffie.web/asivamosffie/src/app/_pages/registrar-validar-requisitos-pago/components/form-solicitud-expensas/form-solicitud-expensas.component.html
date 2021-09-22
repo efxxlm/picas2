@@ -144,7 +144,7 @@
                                 <mat-form-field class="full-width">
                                     <input matInput #valorFacturado currencyMask maxlength="20" required
                                         formControlName="valorFacturado" (keypress)="validateNumberKeypress($event)"
-                                        onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                        onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                         (ngModelChange)="checkValorTotal( $event )"
                                         [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                                 </mat-form-field>
@@ -245,7 +245,7 @@
                                     <input matInput #valorFacturadoConcepto currencyMask maxlength="20" required
                                         formControlName="valorFacturadoConcepto"
                                         (keypress)="validateNumberKeypress($event)"
-                                        onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                        onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                                         [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                                 </mat-form-field>
                                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
@@ -267,7 +267,7 @@
         </mat-card>
         <div class="text-center mb-2em">
             <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.dirty === false">
-                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                <img src="assets/img/icon/guardar.svg" alt="Guardar">
             </button>
         </div>
     </form>

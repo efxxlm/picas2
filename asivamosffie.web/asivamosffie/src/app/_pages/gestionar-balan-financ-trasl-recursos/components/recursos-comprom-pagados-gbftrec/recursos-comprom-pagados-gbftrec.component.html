@@ -1,3 +1,7 @@
+<p *ngIf="!tieneOrdenGiro">
+    No tiene ordenes de giro tramitadas
+</p>
+  
 <mat-accordion>
     <mat-expansion-panel class="expansion-style" *ngIf="contratoObra !== undefined">
         <mat-expansion-panel-header class="expansion-style--header">
@@ -12,7 +16,7 @@
                         Recursos comprometidos
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-recursos-comprom-accord-gbftrec *ngIf="contratoObra" [contratacionProyecto]="contratoObra.contratacion.contratacionProyecto" [contratoId]="contratoObra.contratoId"></app-recursos-comprom-accord-gbftrec>
+                <app-recursos-comprom-accord-gbftrec *ngIf="contratoObra" [contratacionProyecto]="contratoObra.contratacion.contratacionProyecto" [contratoId]="contratoObra.contratoId" [tablaRecursosComprometidos]="contratoObra.tablaRecursosComprometidos" [proyectoId]="id"></app-recursos-comprom-accord-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>
@@ -49,7 +53,7 @@
                         Recursos comprometidos
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-recursos-comprom-accord-gbftrec *ngIf="contratoInterventoria" [contratacionProyecto]="contratoInterventoria.contratacion.contratacionProyecto" [contratoId]="contratoInterventoria.contratoId"></app-recursos-comprom-accord-gbftrec>
+                <app-recursos-comprom-accord-gbftrec *ngIf="contratoInterventoria" [contratacionProyecto]="contratoInterventoria.contratacion.contratacionProyecto" [contratoId]="contratoInterventoria.contratoId" [tablaRecursosComprometidos]="contratoInterventoria.tablaRecursosComprometidos" [proyectoId]="id"></app-recursos-comprom-accord-gbftrec>
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>

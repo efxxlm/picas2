@@ -35,7 +35,7 @@ export class TablaInformeFinalRlcComponent implements OnInit {
     async ngOnInit() {
 
         for( const contratacionProyecto of this.contrato.contratacion.contratacionProyecto ) {
-            const proyecto = await this.registerContractualLiquidationRequestService.gridInformeFinal( contratacionProyecto.contratacionProyectoId, this.listaMenu.registrarSolicitudLiquidacionContratacion ).toPromise();
+            const proyecto = await this.registerContractualLiquidationRequestService.gridInformeFinal( contratacionProyecto.contratacionId, this.listaMenu.registrarSolicitudLiquidacionContratacion ).toPromise();
 
             if ( proyecto !== null ) {
                 proyecto.forEach( registro => {
@@ -48,7 +48,7 @@ export class TablaInformeFinalRlcComponent implements OnInit {
                         sede: registro.sede,
                         estadoValidacion: registro.registroCompleto ? 'Con validación' : 'Sin validación',
                         registroCompleto: registro.registroCompleto ? 'Completo' : 'Incompleto',
-                        contratacionProyectoId: contratacionProyecto.contratacionProyectoId,
+                        contratacionId: contratacionProyecto.contratacionId,
                         proyectoId: registro.proyectoId
                     });
                 } )
@@ -58,4 +58,4 @@ export class TablaInformeFinalRlcComponent implements OnInit {
         this.dataSource = new MatTableDataSource( this.datosTabla );
     }
 
-} 
+}

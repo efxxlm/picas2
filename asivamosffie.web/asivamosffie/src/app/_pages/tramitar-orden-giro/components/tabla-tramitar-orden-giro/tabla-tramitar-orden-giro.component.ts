@@ -39,7 +39,7 @@ export class TablaTramitarOrdenGiroComponent implements OnInit {
         private ordenGiroSvc: OrdenPagoService,
         private obsOrdenGiro: ObservacionesOrdenGiroService )
     {
-        this.ordenGiroSvc.getListOrdenGiro( this.listaMenu.verificarOrdenGiro )
+        this.ordenGiroSvc.getListOrdenGiro( this.listaMenu.tramitarOrdenGiro )
             .subscribe(
                 response => {
                     console.log( response );

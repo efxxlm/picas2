@@ -57,7 +57,8 @@
       <p>
         <strong> Fecha de inicio de contrato: </strong>
         {{
-          (novedad.contrato?.fechaActaInicioFase2
+          (novedad?.contrato?.fechaEstimadaFinalizacion ? novedad?.contrato?.fechaEstimadaFinalizacion :
+            novedad.contrato?.fechaActaInicioFase2
             ? novedad.contrato?.fechaActaInicioFase2
             : novedad.contrato?.fechaActaInicioFase1
           ) | date: 'dd/MM/yyyy'
@@ -174,7 +175,7 @@
                 <strong *ngIf="descripcion.tipoNovedadCodigo == '2'">Fecha final de la prórroga a las suspensión: </strong>
                 {{ descripcion.fechaFinSuspension | date: 'dd/MM/yyyy' }}
               </p>
-              <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
+              <p *ngIf="((descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2') && !((novedad?.estadoCodigo == '26' && novedad?.vaComite) || (novedad?.estadoCodigo == '25' && !novedad?.vaComite)))">
                 <strong>
                   Fecha estimada de terminación del contrato:
                 </strong>

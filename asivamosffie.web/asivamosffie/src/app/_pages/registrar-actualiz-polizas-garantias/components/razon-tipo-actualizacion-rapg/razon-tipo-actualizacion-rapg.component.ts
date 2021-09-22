@@ -110,7 +110,7 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
             }
         }
     }
-  
+
     getvalues( codigoSeguro: string ) {
         const listaSeguros = [ ...codigoSeguro ];
 
@@ -280,7 +280,7 @@ export class RazonTipoActualizacionRapgComponent implements OnInit {
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [
-                                '/registrarActualizacionesPolizasYGarantias/verDetalleEditarPoliza', this.contratoPoliza.contratoPolizaId
+                                '/registrarActualizacionesPolizasYGarantias/verDetalleEditarPoliza', response.data
                             ]
                         )
                     );

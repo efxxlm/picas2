@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public int OrdenGiroId { get; set; }
         public int? AportanteId { get; set; }
         public decimal? ValorFacturado { get; set; }
+        public decimal? Descuentos { get; set; }
         public string ConceptoPagoCodigo { get; set; }
         public string ConceptoPago { get; set; }
         public string Uso { get; set; }

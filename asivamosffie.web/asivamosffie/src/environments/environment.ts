@@ -7,7 +7,9 @@ export const environment = {
   apiUrl: 'https://localhost:44372/api'
   //apiUrl: 'https://pruebasasivamosffiebackend.ivolucion.com/api',
   // apiUrl: 'https://asivamosffiepreproduccionbackend.ivolucion.com/api',
-  
+  //apiUrl: 'https://preasivamosback.ffie.com.co/api'
+  //apiUrl: 'https://proasivamosffieback.ivolucion.com/api'
+
 };
 
 /*

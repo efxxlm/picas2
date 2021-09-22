@@ -254,6 +254,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
         this.addressForm.markAllAsTouched();
 
         const pSolicitudPago = {
+            esFactura: this.contrato.solicitudPagoOnly && this.contrato.solicitudPagoOnly.esFactura ? this.contrato.solicitudPagoOnly.esFactura : null,
             solicitudPagoId: this.solicitudPagoId,
             contratoId: this.contrato.contratoId,
             solicitudPagoRegistrarSolicitudPago: [

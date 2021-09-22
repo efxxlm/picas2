@@ -26,6 +26,9 @@ export class TablaSolicitudesEnviadasComponent implements OnInit {
     enviadaFiduciariaNovedad: '24',
     firmadoNovedad: '25',
     enviadaFiduciariaLiquidacion: '6',
+    enviadaFiduciariaFirmas: '18',
+    enviadaFiduciariaEnProcesoFirmas: '19',
+
   }
 
   constructor ( private routes: Router ) {
@@ -36,7 +39,8 @@ export class TablaSolicitudesEnviadasComponent implements OnInit {
       let dataTable = [];
 
       response.forEach( lista => {
-        if ( lista.estadoCodigo === this.estadoCodigos.enviadaFiduciaria  || lista.estadoCodigo === this.estadoCodigos.enviadaFiduciariaNovedad || lista.estadoCodigo === this.estadoCodigos.firmadoNovedad || (lista.estadoCodigo === this.estadoCodigos.enviadaFiduciariaLiquidacion && lista.tipoSolicitud === "Liquidación Contractual")) {
+        if ( lista.estadoCodigo === this.estadoCodigos.enviadaFiduciaria  || lista.estadoCodigo === this.estadoCodigos.enviadaFiduciariaNovedad || lista.estadoCodigo === this.estadoCodigos.firmadoNovedad
+          || ((lista.estadoCodigo === this.estadoCodigos.enviadaFiduciariaLiquidacion || lista.estadoCodigo === this.estadoCodigos.enviadaFiduciariaFirmas || lista.estadoCodigo === this.estadoCodigos.enviadaFiduciariaEnProcesoFirmas) && lista.tipoSolicitud === "Liquidación Contractual")) {
           dataTable.push( lista );
         };
       } );

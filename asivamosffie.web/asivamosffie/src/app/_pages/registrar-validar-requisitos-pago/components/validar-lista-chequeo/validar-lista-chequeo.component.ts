@@ -212,8 +212,8 @@ export class ValidarListaChequeoComponent implements OnInit {
         dialogRef.afterClosed()
             .subscribe(
                 obs => {
-                    if ( this.esVerDetalle === false ) {
-                        this.solicitudPagoModificado.solicitudPagoListaChequeo[ index ].solicitudPagoListaChequeoRespuesta[ jIndex ].observacion = obs;
+                    if ( this.esVerDetalle === false && obs?.estaEditando === true) {
+                        this.solicitudPagoModificado.solicitudPagoListaChequeo[ index ].solicitudPagoListaChequeoRespuesta[ jIndex ].observacion = obs?.obs;
                     }
                 }
             );

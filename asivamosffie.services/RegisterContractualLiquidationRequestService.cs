@@ -122,7 +122,7 @@ namespace asivamosffie.services
             {
                 foreach (var novedadesxContrato in contratacion?.Contrato)
                 {
-                    List<NovedadContractual> novedadContractuals = _context.NovedadContractual.Where(r => r.ContratoId == novedadesxContrato.ContratoId).ToList();
+                    List<NovedadContractual> novedadContractuals = _context.NovedadContractual.Where(r => r.ContratoId == novedadesxContrato.ContratoId && r.EsAplicadaAcontrato == true).ToList();
 
                     novedadContractuals.ForEach(async p =>
                     {
@@ -133,10 +133,13 @@ namespace asivamosffie.services
                 }
                 foreach (var novedadesxProyectos in contratacion?.ContratacionProyecto)
                 {
-                    List<NovedadContractual> novedadContractuals = _context.NovedadContractual.Where(r => r.ProyectoId == novedadesxProyectos.ProyectoId).ToList();
+                    List<NovedadContractual> novedadContractuals = _context.NovedadContractual.Where(r => r.ProyectoId == novedadesxProyectos.ProyectoId && r.EsAplicadaAcontrato != true).ToList();
                     novedadContractuals.ForEach(async p =>
                     {
-                        novedades.Add(await _ContractualNoveltyService.GetNovedadContractualById(p.NovedadContractualId));
+                        if (!novedades.Any(r => r.NovedadContractualId == p.NovedadContractualId))
+                        {
+                            novedades.Add(await _ContractualNoveltyService.GetNovedadContractualById(p.NovedadContractualId));
+                        }
                     });
                 }
             }
@@ -178,27 +181,32 @@ namespace asivamosffie.services
                     proyecto.MunicipioObj = Municipio;
                     proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
                     proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+                    InformeFinal informeFinalProyecto = proyecto.InformeFinal.FirstOrDefault();
                     proyecto.Sede = Sede;
-                    LiquidacionContratacionObservacion liquidacionContratacionObservacion = _context.LiquidacionContratacionObservacion.Where(r => r.ContratacionId == pContratacionId
+                    if (informeFinalProyecto != null )
+                    {
+                        LiquidacionContratacionObservacion liquidacionContratacionObservacion = _context.LiquidacionContratacionObservacion.Where(r => r.ContratacionId == pContratacionId
                                                               && r.MenuId == pMenuId
-                                                              && r.IdPadre == proyecto.InformeFinal.FirstOrDefault().InformeFinalId
+                                                              && r.IdPadre == informeFinalProyecto.InformeFinalId
                                                               && r.Eliminado != true
                                                               && r.RegistroCompleto == true
                                                               && r.Archivado != true
                                                               && r.TipoObservacionCodigo == ConstantCodigoTipoObservacionLiquidacionContratacion.Informe_final).FirstOrDefault();
 
-                    ProyectoAjustado.Add(new
-                    {
-                        fechaEnvio = proyecto.InformeFinal.FirstOrDefault().FechaEnvioEtc,
-                        fechaAprobacion = proyecto.InformeFinal.FirstOrDefault().FechaAprobacionFinal,
-                        llaveMen = proyecto.LlaveMen,
-                        tipoIntervencion = proyecto.tipoIntervencionString,
-                        sede = proyecto.Sede.Nombre,
-                        registroCompleto = liquidacionContratacionObservacion != null ? liquidacionContratacionObservacion.RegistroCompleto : false,
-                        proyectoId = proyecto.ProyectoId,
-                        informeFinalId = proyecto.InformeFinal.FirstOrDefault().InformeFinalId,
-                        institucionEducativa = proyecto.InstitucionEducativa.Nombre
-                    });
+                        ProyectoAjustado.Add(new
+                        {
+                            fechaEnvio = informeFinalProyecto.FechaEnvioEtc,
+                            fechaAprobacion = informeFinalProyecto.FechaAprobacionFinal,
+                            llaveMen = proyecto.LlaveMen,
+                            tipoIntervencion = proyecto.tipoIntervencionString,
+                            sede = proyecto.Sede.Nombre,
+                            registroCompleto = liquidacionContratacionObservacion != null ? liquidacionContratacionObservacion.RegistroCompleto : false,
+                            proyectoId = proyecto.ProyectoId,
+                            informeFinalId = informeFinalProyecto.InformeFinalId,
+                            institucionEducativa = proyecto.InstitucionEducativa.Nombre
+                        });
+                    }
+                    
                 }
                 
             }
@@ -209,71 +217,74 @@ namespace asivamosffie.services
         public async Task<List<dynamic>> GetInformeFinalByProyectoId(int pProyectoId, int pContratacionId, int pMenuId)
         {
             String numeroContratoObra = string.Empty, nombreContratistaObra = string.Empty, numeroContratoInterventoria = string.Empty, nombreContratistaInterventoria = string.Empty;
-
+            InformeFinal informeFinal = _context.InformeFinal.Where(r => r.ProyectoId == pProyectoId).FirstOrDefault();
             List<dynamic> ProyectoAjustado = new List<dynamic>();
-            List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
-            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
-            List<Dominio> TipoObraIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).ToList();
-
-            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
-            Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == pProyectoId)
-                                                            .Include(r => r.InformeFinal)
-                                                            .Include(r => r.InstitucionEducativa)
-                                                            .FirstOrDefaultAsync();
-
-            InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == proyecto.SedeId).FirstOrDefault();
-            Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipio).FirstOrDefault();
-            proyecto.MunicipioObj = Municipio;
-            proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
-            proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
-            proyecto.Sede = Sede;
-            List<ContratacionProyecto> ListContratacion = await _context.ContratacionProyecto
-                                                        .Where(r => r.ProyectoId == pProyectoId)
-                                                        .Include(r => r.Contratacion)
-                                                         .ThenInclude(r => r.Contratista)
-                                                        .Include(r => r.Contratacion)
-                                                         .ThenInclude(r => r.Contrato)
-                                                        .ToListAsync();
-
-           ListContratacion.FirstOrDefault().Contratacion.TipoContratacionCodigo = TipoObraIntervencion.Where(r => r.Codigo == ListContratacion.FirstOrDefault().Contratacion.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
-
-            foreach (var item in ListContratacion)
+            if (informeFinal != null)
             {
-                Contrato contrato = await _context.Contrato.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefaultAsync();
-                Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefaultAsync();
-                if (contrato != null)
-                {
-                    if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
-                    {
+                List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
+                List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
+                List<Dominio> TipoObraIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).ToList();
 
-                        nombreContratistaObra = contratacion.Contratista != null ? contratacion.Contratista.Nombre : string.Empty;
-                        numeroContratoObra = contrato.NumeroContrato != null ? contrato.NumeroContrato : string.Empty;
-                    }
-                    else if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
+                List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
+                Proyecto proyecto = await _context.Proyecto.Where(r => r.ProyectoId == pProyectoId)
+                                                                .Include(r => r.InformeFinal)
+                                                                .Include(r => r.InstitucionEducativa)
+                                                                .FirstOrDefaultAsync();
+
+                InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == proyecto.SedeId).FirstOrDefault();
+                Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+                proyecto.MunicipioObj = Municipio;
+                proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
+                proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+                proyecto.Sede = Sede;
+                List<ContratacionProyecto> ListContratacion = await _context.ContratacionProyecto
+                                                            .Where(r => r.ProyectoId == pProyectoId)
+                                                            .Include(r => r.Contratacion)
+                                                             .ThenInclude(r => r.Contratista)
+                                                            .Include(r => r.Contratacion)
+                                                             .ThenInclude(r => r.Contrato)
+                                                            .ToListAsync();
+
+                ListContratacion.FirstOrDefault().Contratacion.TipoContratacionCodigo = TipoObraIntervencion.Where(r => r.Codigo == ListContratacion.FirstOrDefault().Contratacion.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
+
+                foreach (var item in ListContratacion)
+                {
+                    Contrato contrato = await _context.Contrato.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefaultAsync();
+                    Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefaultAsync();
+                    if (contrato != null)
                     {
-                        nombreContratistaInterventoria = contratacion.Contratista != null ? contratacion.Contratista.Nombre : string.Empty;
-                        numeroContratoInterventoria = contrato.NumeroContrato != null ? contrato.NumeroContrato : string.Empty;
+                        if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
+                        {
+
+                            nombreContratistaObra = contratacion.Contratista != null ? contratacion.Contratista.Nombre : string.Empty;
+                            numeroContratoObra = contrato.NumeroContrato != null ? contrato.NumeroContrato : string.Empty;
+                        }
+                        else if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
+                        {
+                            nombreContratistaInterventoria = contratacion.Contratista != null ? contratacion.Contratista.Nombre : string.Empty;
+                            numeroContratoInterventoria = contrato.NumeroContrato != null ? contrato.NumeroContrato : string.Empty;
+                        }
                     }
                 }
+                LiquidacionContratacionObservacion liquidacionContratacionObservacion = _context.LiquidacionContratacionObservacion.Where(r => r.ContratacionId == pContratacionId
+                                              && r.MenuId == pMenuId
+                                              && r.IdPadre == proyecto.InformeFinal.FirstOrDefault().InformeFinalId
+                                              && r.Eliminado != true
+                                              && r.RegistroCompleto == true
+                                              && r.Archivado != true
+                                              && r.TipoObservacionCodigo == ConstantCodigoTipoObservacionLiquidacionContratacion.Informe_final).FirstOrDefault();
+
+                ProyectoAjustado.Add(new
+                {
+                    registroCompleto = liquidacionContratacionObservacion != null ? liquidacionContratacionObservacion.RegistroCompleto : false,
+                    numeroContratoObra = numeroContratoObra,
+                    nombreContratistaObra = nombreContratistaObra,
+                    numeroContratoInterventoria = numeroContratoInterventoria,
+                    nombreContratistaInterventoria = nombreContratistaInterventoria,
+                    informeFinal = proyecto.InformeFinal.FirstOrDefault()
+                });
             }
-            LiquidacionContratacionObservacion liquidacionContratacionObservacion = _context.LiquidacionContratacionObservacion.Where(r => r.ContratacionId == pContratacionId
-                                          && r.MenuId == pMenuId
-                                          && r.IdPadre == proyecto.InformeFinal.FirstOrDefault().InformeFinalId
-                                          && r.Eliminado != true
-                                          && r.RegistroCompleto == true
-                                          && r.Archivado != true
-                                          && r.TipoObservacionCodigo == ConstantCodigoTipoObservacionLiquidacionContratacion.Informe_final).FirstOrDefault();
-
-            ProyectoAjustado.Add(new
-            {
-                registroCompleto = liquidacionContratacionObservacion != null ? liquidacionContratacionObservacion.RegistroCompleto : false,
-                numeroContratoObra = numeroContratoObra,
-                nombreContratistaObra = nombreContratistaObra,
-                numeroContratoInterventoria = numeroContratoInterventoria,
-                nombreContratistaInterventoria = nombreContratistaInterventoria,
-                informeFinal = proyecto.InformeFinal.FirstOrDefault()
-            });
-
+            
             return ProyectoAjustado;
         }
 

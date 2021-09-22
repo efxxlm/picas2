@@ -25,7 +25,7 @@
         <strong>Valor pagado: </strong
         ><em>
           {{
-            solicitudPago.ordenGiro.ordenGiroDetalle[0].ordenGiroDetalleTerceroCausacion[0].valorNetoGiro
+            valorTotalPagado
               | currency: '':'symbol-narrow':'.0-0'
           }}
         </em>
@@ -50,8 +50,7 @@
 
           <app-datos-solicitud-gbftrec [solicitudPago]="solicitudPago"></app-datos-solicitud-gbftrec>
         </mat-expansion-panel>
-      </mat-accordion>
-      <mat-accordion>
+
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title"> Datos DDP y DRP </mat-panel-title>
@@ -59,8 +58,6 @@
 
           <app-datos-ddp-drp-gbftrec [solicitudPago]="solicitudPago"></app-datos-ddp-drp-gbftrec>
         </mat-expansion-panel>
-      </mat-accordion>
-      <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title"> Soportes de factura </mat-panel-title>
@@ -74,8 +71,6 @@
             </mat-card-content>
           </mat-card>
         </mat-expansion-panel>
-      </mat-accordion>
-      <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title"> Tercero de giro </mat-panel-title>
@@ -147,16 +142,6 @@
             </mat-card-content>
           </mat-card>
         </mat-expansion-panel>
-      </mat-accordion>
-    </mat-expansion-panel>
-
-    <mat-expansion-panel class="expansion-style">
-      <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? semaforoDetalle : ''">
-          Detalle del giro
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title"> Porcentajes de participación </mat-panel-title>
@@ -169,8 +154,6 @@
             [tablaPorcentajeParticipacion]="solicitudPago.tablaPorcentajeParticipacion"
           ></app-tabla-porc-participacion-gbftrec>
         </mat-expansion-panel>
-      </mat-accordion>
-      <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title"> Información fuente de recursos </mat-panel-title>
@@ -184,12 +167,26 @@
           ></app-tabla-infofrecursos-gbftrec>
         </mat-expansion-panel>
       </mat-accordion>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title"> Estrategia de pagos </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <app-form-estrateg-pagos-gog [solicitudPago]="solicitudPago" [esVerDetalle]="true"></app-form-estrateg-pagos-gog>
+    </mat-expansion-panel>
+
+    <!-- ajuste -->
+    <!-- <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title"> Detalle del giro </mat-panel-title>
+      </mat-expansion-panel-header>
 
       <app-form-descuentos-direccion-tecnica
         [solicitudPago]="solicitudPago"
         [esVerDetalle]="esVerDetalle"
         [esRegistroNuevo]="esRegistroNuevo"
-        (estadoSemaforo)="semaforoDescuentos = $event; checkEstadoSemaforo()"
       >
       </app-form-descuentos-direccion-tecnica>
 
@@ -197,10 +194,42 @@
         [solicitudPago]="solicitudPago"
         [esVerDetalle]="esVerDetalle"
         [esRegistroNuevo]="esRegistroNuevo"
-        (trasladoId)="balanceFinancieroTrasladoId = $event"
-        (estadoSemaforo)="semaforoTerceroCausacion = $event; checkEstadoSemaforo()"
       >
       </app-form-tercero-causacion>
+    </mat-expansion-panel> -->
+
+    <!-- otro ajuste -->
+    <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of listaDetalleGiro">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title"> Detalle del giro - {{ proyecto.llaveMen }} </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <app-accordion-detalle-giro-gog
+        [solicitudPago]="solicitudPago"
+        [esVerDetalle]="true"
+        [proyecto]="proyecto"
+        [contratacionProyectoId]="proyecto.contratacionProyectoId"
+      >
+      </app-accordion-detalle-giro-gog>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title"> Observaciones </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <app-observaciones-orden-giro-gog
+        [solicitudPago]="solicitudPago"
+        [esVerDetalle]="true"
+      ></app-observaciones-orden-giro-gog>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title"> Soporte orden de giro </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <app-soporte-orden-giro-gog [solicitudPago]="solicitudPago" [esVerDetalle]="true"></app-soporte-orden-giro-gog>
     </mat-expansion-panel>
   </mat-accordion>
 </div>

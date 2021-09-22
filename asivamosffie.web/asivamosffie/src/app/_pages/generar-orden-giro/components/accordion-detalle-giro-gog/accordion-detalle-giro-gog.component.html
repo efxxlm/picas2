@@ -1,5 +1,5 @@
 <section *ngIf="solicitudPago !== undefined">
-    <mat-accordion>
+    <!-- <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title ">
@@ -9,8 +9,8 @@
 
             <app-tabla-porcntj-partic-gog *ngIf="solicitudPago.tablaPorcentajeParticipacion !== undefined && solicitudPago.tablaPorcentajeParticipacion.length > 0" [tablaPorcentajeParticipacion]="solicitudPago.tablaPorcentajeParticipacion"></app-tabla-porcntj-partic-gog>
         </mat-expansion-panel>
-    </mat-accordion>
-    <mat-accordion>
+    </mat-accordion> -->
+    <!-- <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title ">
@@ -20,7 +20,7 @@
 
             <app-tabla-info-fuenterec-gog *ngIf="solicitudPago.tablaInformacionFuenteRecursos !== undefined && solicitudPago.tablaInformacionFuenteRecursos.length > 0" [tablaInformacionFuenteRecursos]="solicitudPago.tablaInformacionFuenteRecursos"></app-tabla-info-fuenterec-gog>
         </mat-expansion-panel>
-    </mat-accordion>
+    </mat-accordion> -->
     <!--
         Se comenta el acordeon Estrategia de pagos por cambios de orden de giro a flujo multiproyecto 08/07/2021
         Los acordeones comentados suben al componente papa form-generar-orden-giro.component.html
@@ -37,7 +37,7 @@
             </mat-expansion-panel>
         </mat-accordion>
     -->
-    <!--    
+    <!--
         Para el flujo nuevo de detalles de giro se utiliza el objeto proyecto recibido de form-generar-orden-giro.component.html
         el cual se hace un recorrido de proyecto.fases para el coontinuar con el flujo de descuentos direccion tecnica y tercero de causacion por fases
     -->
@@ -49,7 +49,7 @@
                         Descuentos Dirección Técnica - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-    
+
                 <app-desc-dir-tecnica-gog   [solicitudPago]="solicitudPago"
                                             [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
                                             [solicitudPagoFase]="solicitudPagoFase"
@@ -65,9 +65,10 @@
                         Tercero de causación  - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-    
+
                 <app-tercero-causacion-gog  [solicitudPago]="solicitudPago"
                                             [esVerDetalle]="esVerDetalle"
+                                            [contratacionProyectoId]="contratacionProyectoId"
                                             [solicitudPagoFase]="solicitudPagoFase"
                                             [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
                                             (estadoSemaforo)="solicitudPagoFase.estadoSemaforoCausacion = $event; checkSemaforoProyecto()">
@@ -83,12 +84,11 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <div align="center">
-                <b>Consecutivo: {{ordenGiro !== undefined ? ordenGiro.consecutivoOrigen : '' }} </b>
+                <b>Consecutivo: {{ solicitudPago.ordenGiro !== undefined ? solicitudPago.ordenGiro.consecutivoOrigen : '' }} </b>
             </div>
 
             <app-form-origen    [solicitudPago]="solicitudPago"
                                 [esVerDetalle]="esVerDetalle"
-                                (seDiligenciaFormulario)="checkSemaforoOrigen( $event )"
                                 (estadoSemaforo)="listaSemaforos.semaforoOrigen = $event">
             </app-form-origen>
         </mat-expansion-panel>

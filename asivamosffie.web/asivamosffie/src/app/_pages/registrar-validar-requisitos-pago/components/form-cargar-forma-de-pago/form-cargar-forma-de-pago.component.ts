@@ -46,8 +46,8 @@ export class FormCargarFormaDePagoComponent implements OnInit {
     }
 
     async ngOnInit() {
-        this.formaPagoArrayPreconstruccion = await this.registrarPagosSvc.getFormaPagoCodigoByFase( 'True' ).toPromise();
-        this.formaPagoArrayConstruccion = await this.registrarPagosSvc.getFormaPagoCodigoByFase( 'False' ).toPromise();
+        this.formaPagoArrayPreconstruccion = await this.registrarPagosSvc.getFormaPagoCodigoByFase( 'True', this.contrato.contratoId ).toPromise();
+        this.formaPagoArrayConstruccion = await this.registrarPagosSvc.getFormaPagoCodigoByFase( 'False', this.contrato.contratoId ).toPromise();
         if (this.contrato.plazoFase1PreDias !== undefined) {
             this.tieneFase1 = true;
         }
@@ -115,6 +115,7 @@ export class FormCargarFormaDePagoComponent implements OnInit {
         this.estaEditando = true;
         this.addressForm.markAllAsTouched();
         const pSolicitudPago = {
+            esFactura: this.contrato.solicitudPagoOnly && this.contrato.solicitudPagoOnly.esFactura ? this.contrato.solicitudPagoOnly.esFactura : null,
             solicitudPagoId: this.solicitudPagoId,
             tipoSolicitudCodigo: this.tipoSolicitud,
             contratoId: this.contrato.contratoId,

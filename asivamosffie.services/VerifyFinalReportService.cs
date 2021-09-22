@@ -855,7 +855,7 @@ namespace asivamosffie.services
             informeFinal.Proyecto.Sede = Sede;
 
             ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
-                .Where(r => r.ProyectoId == informeFinal.ProyectoId)
+                .Where(r => r.ProyectoId == informeFinal.ProyectoId && r.Eliminado != true)
                 .Include(r => r.Contratacion)
                     .ThenInclude(r => r.Contrato)
                 .FirstOrDefault();

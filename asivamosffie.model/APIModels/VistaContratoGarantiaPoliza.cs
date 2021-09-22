@@ -40,5 +40,6 @@ namespace asivamosffie.model.APIModels
 
         public int? PlazoMeses { get; set; }
         public int? PlazoDias { get; set; }
+
     }
 }

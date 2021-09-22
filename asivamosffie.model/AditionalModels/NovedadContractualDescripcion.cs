@@ -27,6 +27,12 @@ namespace asivamosffie.model.Models
         //[NotMapped]
         //public bool? RegistroCompleto { get; set; }
 
+        [NotMapped]
+        public TimeSpan? GetDiasFechaSuspension
+        {
+            get => (FechaFinSuspension - FechaInicioSuspension);
+        }
+
     }
 
 }

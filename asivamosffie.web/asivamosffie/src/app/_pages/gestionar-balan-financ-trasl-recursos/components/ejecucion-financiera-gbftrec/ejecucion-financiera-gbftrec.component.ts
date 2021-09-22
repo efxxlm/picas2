@@ -40,6 +40,7 @@ export class EjecucionFinancieraGbftrecComponent implements OnInit {
           ordenadoGirarAntesImpuestos: element.ordenadoGirarAntesImpuestos,
           porcentajeEjecucionFinanciera: element.porcentajeEjecucionFinanciera,
           proyectoId: element.proyectoId,
+          descuento: element.descuento,
           saldo: element.saldo,
           totalComprometido: element.totalComprometido
         });

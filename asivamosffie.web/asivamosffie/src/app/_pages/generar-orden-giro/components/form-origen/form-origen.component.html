@@ -14,8 +14,8 @@
                                 <p><strong>Fuente: </strong> {{ aportante.get( 'fuente' ).value.nombre }} </p>
                             </div>
                             <ng-container *ngIf="aportante.get( 'listaCuentaBancaria' ).value.length > 1; else elseTemplate">
-                                <p><b>Nombre de la Cuenta: </b> {{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }} </p>
                                 <div class="animatedDown" *ngIf="aportante.get( 'cuentaBancariaId' ).value !== null" style="margin-left: .5em;">
+                                    <p><b>Nombre de la Cuenta: </b> <span *ngIf="aportante.get( 'cuentaBancariaId' ).value">{{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }}</span> </p>
                                     <p><strong>Número de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.numeroCuentaBanco }} </p>
                                     <p><strong>Banco: </strong> {{ firstLetterUpperCase( getBanco( aportante.get( 'cuentaBancariaId' ).value.bancoCodigo ) ) }} </p>
                                     <p><strong>Tipo de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.tipoCuentaCodigo }} </p>
@@ -23,8 +23,8 @@
                                 </div>
                             </ng-container>
                             <ng-template #elseTemplate>
-                                <p style="margin-left: .5em;"><strong>Nombre de la Cuenta: </strong> {{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }} </p>
                                 <div class="animatedDown" *ngIf="aportante.get( 'cuentaBancariaId' ).value !== null" style="margin-left: .5em;">
+                                    <p><strong>Nombre de la Cuenta: </strong> {{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }} </p>
                                     <p><strong>Número de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.numeroCuentaBanco }} </p>
                                     <p><strong>Banco: </strong> {{ firstLetterUpperCase( getBanco( aportante.get( 'cuentaBancariaId' ).value.bancoCodigo ) ) }} </p>
                                     <p><strong>Tipo de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.tipoCuentaCodigo }} </p>
@@ -51,7 +51,7 @@
                                 <p><strong>Nombre del aportante: </strong> {{ aportante.get( 'nombreAportante' ).value.nombreAportante }} </p>
                                 <p><strong>Fuente: </strong> {{ aportante.get( 'fuente' ).value.nombre }} </p>
                             </div>
-                            <ng-container *ngIf="aportante.get( 'listaCuentaBancaria' ).value.length > 1; else elseTemplate">
+                            <ng-container >
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="row">
@@ -91,30 +91,21 @@
                                     <p><strong>Código de negocio SIFI para radicación: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.codigoSifi }} </p>
                                 </div>
                             </ng-container>
-                            <ng-template #elseTemplate>
-                                <p style="margin-left: .5em;"><strong>Nombre de la Cuenta: </strong> {{ firstLetterUpperCase( aportante.get( 'cuentaBancariaId' ).value.nombreCuentaBanco ) }} </p>
-                                <div class="animatedDown" *ngIf="aportante.get( 'cuentaBancariaId' ).value !== null" style="margin-left: .5em;">
-                                    <p><strong>Número de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.numeroCuentaBanco }} </p>
-                                    <p><strong>Banco: </strong> {{ firstLetterUpperCase( getBanco( aportante.get( 'cuentaBancariaId' ).value.bancoCodigo ) ) }} </p>
-                                    <p><strong>Tipo de Cuenta: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.tipoCuentaCodigo }} </p>
-                                    <p><strong>Código de negocio SIFI para radicación: </strong> {{ aportante.get( 'cuentaBancariaId' ).value.codigoSifi }} </p>
-                                </div>
-                            </ng-template>
                         </div>
                     </div>
                 </mat-card-content>
             </mat-card>
 
-            <div class="text-center mb-2em" *ngIf="checkSaveBtn() === true">
+            <div class="text-center mb-2em">
                 <button mat-button
                         color="warn"
                         class="btn-guardar"
                         type="submit"
-                        [disabled]="aportantes.dirty === false">
-                        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                        >
+                        <img src="assets/img/icon/guardar.svg" alt="Guardar">
                 </button>
             </div>
         </form>
     </ng-template>
-    
+
 </section>

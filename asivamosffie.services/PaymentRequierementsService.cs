@@ -33,6 +33,7 @@ namespace asivamosffie.services
                                          .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
                                                                                                          .Update(r => new SolicitudPago()
                                                                                                          {
+                                                                                                             UrlSoporteFinanciera = pSolicitudPago.UrlSoporteFinanciera,
                                                                                                              FechaRadicacionSacFinanciera = pSolicitudPago.FechaRadicacionSacFinanciera,
                                                                                                              NumeroRadicacionSacFinanciera = pSolicitudPago.NumeroRadicacionSacFinanciera,
                                                                                                              FechaAsignacionSacFinanciera = DateTime.Now
@@ -576,8 +577,7 @@ namespace asivamosffie.services
         public void ArchivarSolicitudPagoObservacion(SolicitudPago pSolicitudPago)
         {
             _context.Set<SolicitudPagoObservacion>()
-                    .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId
-                              && s.TieneObservacion == false)
+                    .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
                     .Update(s => new SolicitudPagoObservacion()
                     {
                         Archivada = true,
@@ -638,7 +638,7 @@ namespace asivamosffie.services
                 ///4.1.8
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_apoyo_a_la_supervision)
                 {
-                    ArchivarSolicitudPagoObservacion(pSolicitudPago);
+                    //ArchivarSolicitudPagoObservacion(pSolicitudPago);
                     await SendEmailToDeclineVerify(pSolicitudPago.SolicitudPagoId);
                 }
 
@@ -653,7 +653,7 @@ namespace asivamosffie.services
                 ///4.1.9
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_coordinardor)
                 {
-                    ArchivarSolicitudPagoObservacion(pSolicitudPago);
+                   // ArchivarSolicitudPagoObservacion(pSolicitudPago);
                     await SendEmailToDeclineValidate(pSolicitudPago.SolicitudPagoId);
                 }
 

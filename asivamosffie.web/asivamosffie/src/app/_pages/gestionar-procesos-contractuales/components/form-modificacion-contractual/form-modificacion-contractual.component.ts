@@ -28,8 +28,9 @@ export class FormModificacionContractualComponent implements OnInit {
   tipoModificacion : string;
   valorTotalDdp: number = 0;
   contratacion: DataSolicitud;
-  tipoAportante = TiposAportante; 
+  tipoAportante = TiposAportante;
   tipoNovedad = TipoNovedadCodigo;
+  novedadContractualRegistroPresupuestalId: number = 0;
 
   listaTipoSolicitud = {
     obra: '1',
@@ -109,6 +110,7 @@ export class FormModificacionContractualComponent implements OnInit {
             this.contratacion = respuesta;
           });
         }
+        this.novedadContractualRegistroPresupuestalId = this.dataNovedad?.novedadContractualRegistroPresupuestal[0]?.novedadContractualRegistroPresupuestalId;
         this.estadoCodigo = this.dataNovedad.estadoCodigo;
       });
 
@@ -149,7 +151,7 @@ export class FormModificacionContractualComponent implements OnInit {
   };
 
   getDdp(disponibilidadPresupuestalId: number, numeroDdp: string ) {
-    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId, false, 0,false).subscribe((listas:any) => {
+    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId, true, this.novedadContractualRegistroPresupuestalId,false).subscribe((listas:any) => {
       console.log(listas);
       let documento = '';
         if ( numeroDdp !== undefined ) {

@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public int NumeroSemana { get; set; }
         public int ContratacionProyectoId { get; set; }
         public int SeguimientoSemanalId { get; set; }
+        public int? IntestadoSeguimientoSemanalCodigo { get; set; }
         public DateTime? FechaReporte { get; set; }
         public string LlaveMen { get; set; }
         public string NumeroContrato { get; set; }

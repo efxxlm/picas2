@@ -34,5 +34,8 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> EliminarCuentaBancaria(int id, string value);
         Task<Respuesta> EliminarFuentesFinanciacionCompleto(int id, string UsuarioModifico);
         Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByNovedadContractualRegistroPresupuestal(int NovedadContractualRegistroPresupuestalId, int aportanteID);
+        List<GrillaFuentesFinanciacion> GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(int disponibilidadPresupuestalProyectoid, int aportanteID, bool esNovedad, int novedadContractualRegistroPresupuestalId);
+        List<GrillaFuentesFinanciacion> GetListFuentesFinanciacionByDisponibilidadPresupuestald(int disponibilidadPresupuestaId, bool esNovedad, int novedadContractualRegistroPresupuestalId);
+
     }
 }

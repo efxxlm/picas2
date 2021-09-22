@@ -4,9 +4,18 @@
     margin-top: -.5em;
     color: #fff;
     text-align: center;
+
+    display: flex;
     
     .mat-button {
         color: #fff;
+
+        flex-grow: 1;
+        border-radius: 0;
+        &:not(:first-child) {
+            border-left: solid 1px #fff;
+        }
+
         &.active {
             color: #fdc101;
             color: var(--tertiaryColor);
@@ -27,6 +36,12 @@
             }
         }
 
+    }
+
+    &--icon {
+        height: 2em;
+        width: 1.5em;
+        margin-right: .8em;
     }
 }
 

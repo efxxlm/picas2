@@ -183,7 +183,7 @@ export class FormLiquidacionComponent implements OnInit {
     this.registerContractualLiquidationRequestSvc.getPolizaByContratacionId(contratacionId).subscribe(response => {
       if(response != null){
         this.data = response;
-        this.actualizarPolizaSvc.getContratoPoliza( this.data.contratoPolizaId )
+        this.actualizarPolizaSvc.getContratoPoliza( this.data.contratoPolizaId , false)
         .subscribe(
           response => {
             this.contratoPoliza = response;

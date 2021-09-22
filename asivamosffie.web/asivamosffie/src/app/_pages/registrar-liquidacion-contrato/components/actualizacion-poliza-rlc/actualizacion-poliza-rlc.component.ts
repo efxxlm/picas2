@@ -88,7 +88,7 @@ export class ActualizacionPolizaRlcComponent implements OnInit {
         this.razonActualizacionArray = await this.commonSvc.listaRazonActualizacion().toPromise();
         this.tipoActualizacionArray = await this.commonSvc.listaTipoActualizacion().toPromise();
 
-        this.actualizarPolizaSvc.getContratoPoliza( this.contrato.contratoPoliza[ 0 ].contratoPolizaId )
+        this.actualizarPolizaSvc.getContratoPoliza( this.contrato.contratoPoliza[ 0 ].contratoPolizaId , false)
             .subscribe(
                 response => {
                     this.contratoPoliza = response;
@@ -267,7 +267,7 @@ export class ActualizacionPolizaRlcComponent implements OnInit {
     getTipoSolicitudContrato( tipoSolicitudCodigo: string ) {
         if ( this.listaTipoSolicitudContrato.length > 0 ) {
             const solicitud = this.listaTipoSolicitudContrato.find( solicitud => solicitud.codigo === tipoSolicitudCodigo );
-            
+
             if ( solicitud !== undefined ) {
                 return solicitud.nombre;
             }

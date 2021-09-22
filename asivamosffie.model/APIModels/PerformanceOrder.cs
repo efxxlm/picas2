@@ -192,8 +192,8 @@ namespace asivamosffie.model.APIModels
         public decimal TotalGravamenFinancieroDescontado { get; set; }
         [JsonProperty(PropertyName = "Visitas")]
         public decimal Visitas { get; set; }
-        [JsonProperty(PropertyName = "Rendimiento a incorporar")]
-        public decimal RendimientoIncorporar { get; set; }
+       /* [JsonProperty(PropertyName = "Rendimiento a incorporar")]
+        public decimal RendimientoIncorporar { get; set; }*/
 
     }
 

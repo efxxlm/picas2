@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ɵConsole, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ɵConsole, AfterViewInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -14,6 +14,9 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./table-control-recursos.component.scss']
 })
 export class TableControlRecursosComponent implements OnInit, AfterViewInit {
+
+  @Input() esVerDetalle: boolean;
+  @Input() valorComprometidoDDP: number ;
 
   dataTable = [];
   displayedColumns: string[] = [
@@ -65,14 +68,27 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
             controlRecursoId: element.controlRecursoId
           })
         });
-        this.dataTable.forEach(element => {
+        let valorConsignacion = 0;
+        this.dataTable.forEach((element,index) => {
+          if(element.valorConsignacion > 0){
+            valorConsignacion += element.valorConsignacion;
+          }
           element.fechaCreacion = element.fechaCreacion
             ? element.fechaCreacion.split('T')[0].split('-').reverse().join('/')
             : '';
           element.fechaConsignacion = element.fechaConsignacion
             ? element.fechaConsignacion.split('T')[0].split('-').reverse().join('/')
             : '';
+            //asignarle al útimo
+            if (index === this.dataTable.length - 1){
+              if(this.valorComprometidoDDP < valorConsignacion){
+                element.lastOne = true;
+              }
+            }else{
+              element.lastOne = false;
+            }
         });
+        console.log(this.dataTable);
         this.dataSource = new MatTableDataSource(this.dataTable);
         this.ngAfterViewInit()
       })
@@ -136,6 +152,12 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
 
   editar(e: number) {
     this.router.navigate(['/gestionarFuentes/controlRecursos', this.idFuente, e])
+    // console.log(e);
+  }
+
+
+  verDetalle(e: number) {
+    this.router.navigate(['/gestionarFuentes/verDetalleControlRecursos', this.idFuente, e])
     // console.log(e);
   }
 

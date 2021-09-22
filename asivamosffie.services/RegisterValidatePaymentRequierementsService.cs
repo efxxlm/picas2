@@ -32,12 +32,17 @@ namespace asivamosffie.services
 
         #region Tablas Relacionadas Para Pagos
         //0# Traer Forma de Pago por Fase
-        public async Task<dynamic> GetFormaPagoCodigoByFase(bool pEsPreconstruccion)
+        public async Task<dynamic> GetFormaPagoCodigoByFase(bool pEsPreconstruccion, int pContratoId)
         {
-            List<dynamic> ListDynamics = new List<dynamic>();
-            List<string> strCriterios = _context.FormasPagoFase.Where(r => r.EsPreconstruccion == pEsPreconstruccion).Select(r => r.FormaPagoCodigo).ToList();
-            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Formas_Pago);
+            bool EsInterventoria = _context.Contrato.Include(r => r.Contratacion)
+                                                    .Count(r => r.ContratoId == pContratoId
+                                                        && r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria
+                                                          ) > 0;
 
+
+            List<dynamic> ListDynamics = new List<dynamic>();
+            List<string> strCriterios = _context.FormasPagoFase.Where(r => r.EsPreconstruccion == pEsPreconstruccion && r.EsInterventoria == EsInterventoria).Select(r => r.FormaPagoCodigo).ToList();
+            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Formas_Pago);
 
             foreach (var l in strCriterios)
             {
@@ -88,7 +93,11 @@ namespace asivamosffie.services
         public async Task<dynamic> GetConceptoPagoCriterioCodigoByTipoPagoCodigo(string TipoPagoCodigo)
         {
             List<dynamic> ListDynamics = new List<dynamic>();
-            List<string> strCriterios = _context.TipoPagoConceptoPagoCriterio.Where(r => r.TipoPagoCodigo == TipoPagoCodigo).Select(r => r.ConceptoPagoCriterioCodigo).ToList();
+            List<string> strCriterios = _context.TipoPagoConceptoPagoCriterio
+                                                                            .Where(r => r.TipoPagoCodigo == TipoPagoCodigo)
+                                                                            .Select(r => r.ConceptoPagoCriterioCodigo)
+                                                                            .ToList();
+
             List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Concepto_Pago_Criterio_Obra_Interventoria);
 
             strCriterios.ForEach(l =>
@@ -110,8 +119,9 @@ namespace asivamosffie.services
                 List<string> strCriterios = _context.ConceptoPagoUso.Where(r => r.ConceptoPagoCodigo == pConceptoPagoCodigo).Select(r => r.Uso).ToList();
                 List<Dominio> ListUsos = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Usos);
 
-                return _context.VValorUsoXcontratoId.Where(r => r.ContratoId == pContratoId && strCriterios.Contains(r.TipoUsoCodigo)).ToList();
+                List<VValorUsoXcontratoId> vValorUsoXcontratoId = _context.VValorUsoXcontratoId.Where(r => r.ContratoId == pContratoId && strCriterios.Contains(r.TipoUsoCodigo)).ToList();
 
+                return vValorUsoXcontratoId;
             }
             catch (Exception ex)
             {
@@ -119,6 +129,30 @@ namespace asivamosffie.services
             }
         }
         #endregion
+        //5# Traer Uso Por Concepto de pago 2 Orden Giro
+        public async Task<dynamic> GetUsoByConceptoPagoCodigo(string pConceptoPagoCodigo)
+        {
+            try
+            {
+                List<dynamic> ListDynamics = new List<dynamic>();
+                List<string> strCriterios = _context.ConceptoPagoUso.Where(r => r.ConceptoPagoCodigo == pConceptoPagoCodigo).Select(r => r.Uso).ToList();
+                List<Dominio> ListUsos = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Usos);
+
+                strCriterios.ForEach(l =>
+                {
+                    ListDynamics.Add(new
+                    {
+                        Codigo = l,
+                        Nombre = ListUsos.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
+                    });
+                });
+                return ListDynamics;
+            }
+            catch (Exception ex)
+            {
+                return new { };
+            }
+        }
 
         #region Create Edit Delete
         public async Task<dynamic> GetProyectosByIdContrato(int pContratoId)
@@ -364,6 +398,65 @@ namespace asivamosffie.services
         //    }
         //}
 
+
+        public async Task<Respuesta> DeleteSolicitudPagoFaseCriterioConceptoPago(int pSolicitudPagoFaseCriterioConceptoId, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Criterio_Pago, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                await _context.Set<SolicitudPagoFaseCriterioConceptoPago>()
+                                                                           .Where(r => r.SolicitudPagoFaseCriterioConceptoPagoId == pSolicitudPagoFaseCriterioConceptoId)
+                                                                                                           .UpdateAsync(r => new SolicitudPagoFaseCriterioConceptoPago
+                                                                                                           {
+                                                                                                               Eliminado = true,
+                                                                                                           });
+
+                SolicitudPagoFaseCriterioConceptoPago solicitudPagoFaseCriterioConceptoPagoOld =
+                                                                    _context.SolicitudPagoFaseCriterioConceptoPago.Where(r => r.SolicitudPagoFaseCriterioConceptoPagoId == pSolicitudPagoFaseCriterioConceptoId)
+                                                                                                                  .AsNoTracking()
+                                                                                                                  .FirstOrDefault();
+
+                SolicitudPagoFaseCriterio solicitudPagoFaseCriterioOld = _context.SolicitudPagoFaseCriterio.Where(r => r.SolicitudPagoFaseCriterioId == solicitudPagoFaseCriterioConceptoPagoOld.SolicitudPagoFaseCriterioId)
+                                                                                                           .AsNoTracking()
+                                                                                                           .FirstOrDefault();
+
+                solicitudPagoFaseCriterioOld.ValorFacturado -= solicitudPagoFaseCriterioConceptoPagoOld.ValorFacturadoConcepto;
+
+
+                await _context.Set<SolicitudPagoFaseCriterio>()
+                                                        .Where(r => r.SolicitudPagoFaseCriterioId == solicitudPagoFaseCriterioOld.SolicitudPagoFaseCriterioId)
+                                                                                                                                                    .UpdateAsync(r => new SolicitudPagoFaseCriterio
+                                                                                                                                                    {
+                                                                                                                                                        FechaModificacion = DateTime.Now,
+                                                                                                                                                        UsuarioModificacion = pUsuarioModificacion,
+                                                                                                                                                        ValorFacturado = solicitudPagoFaseCriterioOld.ValorFacturado
+                                                                                                                                                    });
+
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = true,
+                         IsException = false,
+                         IsValidation = false,
+                         Code = GeneralCodes.OperacionExitosa,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR SOLICITUD PAGO FASE CRITERIO CONCEPTO PAGO")
+                     };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
         public async Task<Respuesta> DeleteSolicitudPagoFaseCriterio(int pSolicitudPagoFaseCriterioId, string pUsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Criterio_Pago, (int)EnumeratorTipoDominio.Acciones);
@@ -481,8 +574,8 @@ namespace asivamosffie.services
             if (pSolicitudPago.SolicitudPagoId > 0)
             {
                 decimal? ValorFacturado =
-                    pSolicitudPago?.SolicitudPagoFactura?
-                    .Sum(r => r.ValorFacturado);
+                    pSolicitudPago?.SolicitudPagoRegistrarSolicitudPago?
+                    .Sum(r => r.SolicitudPagoFase.Sum(r => r.SolicitudPagoFaseCriterio.Where(r => r.Eliminado != true).Sum(r => r.ValorFacturado)));
 
                 _context.Set<SolicitudPago>()
                         .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
@@ -567,7 +660,9 @@ namespace asivamosffie.services
                 }
 
                 CreateEditListaChequeoRespuesta(pSolicitudPago.SolicitudPagoListaChequeo, pSolicitudPago.UsuarioCreacion);
-                _context.SaveChanges();
+
+                ArchivarObservaciones(pSolicitudPago.SolicitudPagoId, pSolicitudPago.UsuarioCreacion);
+
                 return
                      new Respuesta
                      {
@@ -591,6 +686,18 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPago.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
+        }
+
+        private void ArchivarObservaciones(int pSolicitudPagoId, string pAuthor)
+        {
+            _context.Set<SolicitudPagoObservacion>()
+                    .Where(r => r.SolicitudPagoId == pSolicitudPagoId)
+                    .Update(r => new SolicitudPagoObservacion
+                    {
+                        UsuarioModificacion = pAuthor,
+                        Archivada = true,
+                        FechaModificacion = DateTime.Now
+                    });
         }
 
         private void CreateEditNewPaymentWayToPay(ICollection<SolicitudPagoCargarFormaPago> pListSolicitudPagoCargarFormaPago, string usuarioCreacion)
@@ -730,39 +837,51 @@ namespace asivamosffie.services
         {
             foreach (var SolicitudPagoFase in solicitudPagoFaseList)
             {
-                if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
-                    CreateEditSolicitudPagoFaseCriterio(SolicitudPagoFase.SolicitudPagoFaseCriterio, SolicitudPagoFase.UsuarioCreacion);
-
-                if (!SolicitudPagoFase.EsPreconstruccion)
-                    if (SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() > 0)
-                        CreateEditSolicitudPagoSolicitudPagoAmortizacion(SolicitudPagoFase.SolicitudPagoFaseAmortizacion, pUsuarioCreacion);
-
-                if (SolicitudPagoFase.SolicitudPagoFaseId > 0)
-                {
-                    SolicitudPagoFase solicitudPagoFaseOld = _context.SolicitudPagoFase.Find(SolicitudPagoFase.SolicitudPagoFaseId);
-
-                    if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
-                        solicitudPagoFaseOld.RegistroCompletoCriterio = ValidateCompleteRecordSolicitudPagoFaseCriterio2(SolicitudPagoFase.SolicitudPagoFaseCriterio);
-
-                    solicitudPagoFaseOld.UsuarioModificacion = pUsuarioCreacion;
-                    solicitudPagoFaseOld.FechaModificacion = DateTime.Now;
-                    solicitudPagoFaseOld.TieneDescuento = SolicitudPagoFase.TieneDescuento;
-                    solicitudPagoFaseOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase);
-                }
-                else
+                try
                 {
                     if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
-                        SolicitudPagoFase.RegistroCompletoCriterio = ValidateCompleteRecordSolicitudPagoFaseCriterio2(SolicitudPagoFase.SolicitudPagoFaseCriterio);
+                        CreateEditSolicitudPagoFaseCriterio(SolicitudPagoFase.SolicitudPagoFaseCriterio, SolicitudPagoFase.UsuarioCreacion);
 
-                    SolicitudPagoFase.FechaCreacion = DateTime.Now;
-                    SolicitudPagoFase.Eliminado = false;
-                    SolicitudPagoFase.UsuarioCreacion = pUsuarioCreacion;
-                    SolicitudPagoFase.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase);
-                    _context.SolicitudPagoFase.Add(SolicitudPagoFase);
+                    if (!SolicitudPagoFase.EsPreconstruccion)
+                        if (SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() > 0)
+                            CreateEditSolicitudPagoSolicitudPagoAmortizacion(SolicitudPagoFase.SolicitudPagoFaseAmortizacion, pUsuarioCreacion);
+
+                    if (SolicitudPagoFase.SolicitudPagoFaseId > 0)
+                    {
+                        SolicitudPagoFase solicitudPagoFaseOld = _context.SolicitudPagoFase.Find(SolicitudPagoFase.SolicitudPagoFaseId);
+
+                        bool blRegistroCompleto = false;
+                        if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
+                            blRegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseCriterio2(SolicitudPagoFase.SolicitudPagoFaseCriterio);
+
+                        _context.Set<SolicitudPagoFase>()
+                                .Where(r => r.SolicitudPagoFaseId == SolicitudPagoFase.SolicitudPagoFaseId)
+                                .Update(r => new SolicitudPagoFase
+                                {
+                                    RegistroCompletoCriterio = blRegistroCompleto,
+                                    UsuarioModificacion = pUsuarioCreacion,
+                                    FechaModificacion = DateTime.Now,
+                                    TieneDescuento = SolicitudPagoFase.TieneDescuento,
+                                    RegistroCompleto = ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase)
+                                });
+                    }
+                    else
+                    {
+                        if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
+                            SolicitudPagoFase.RegistroCompletoCriterio = ValidateCompleteRecordSolicitudPagoFaseCriterio2(SolicitudPagoFase.SolicitudPagoFaseCriterio);
+
+                        SolicitudPagoFase.FechaCreacion = DateTime.Now;
+                        SolicitudPagoFase.Eliminado = false;
+                        SolicitudPagoFase.UsuarioCreacion = pUsuarioCreacion;
+                        SolicitudPagoFase.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase);
+                        _context.SolicitudPagoFase.Add(SolicitudPagoFase);
+                    }
+                    CreateEditSolicitudPagoFaseDescuento(SolicitudPagoFase.SolicitudPagoFaseFacturaDescuento, pUsuarioCreacion);
                 }
-
-                CreateEditSolicitudPagoFaseDescuento(SolicitudPagoFase.SolicitudPagoFaseFacturaDescuento, pUsuarioCreacion);
-
+                catch (Exception e)
+                {
+                    throw;
+                }
             }
         }
 
@@ -823,52 +942,62 @@ namespace asivamosffie.services
         {
             foreach (var SolicitudPagoFaseCriterio in ListSolicitudPagoFaseCriterio)
             {
-                //Crear Lista Chequeo Criterio Codigo
-                CreateEditListaChequeoByCriterio(SolicitudPagoFaseCriterio, strUsuarioCreacion);
-
-                foreach (var SolicitudPagoFaseCriterioConceptoPago in SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioConceptoPago)
+                try
                 {
-                    if (SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId > 0)
+                    CreateEditListaChequeoByCriterio(SolicitudPagoFaseCriterio, strUsuarioCreacion);
+
+                    foreach (var SolicitudPagoFaseCriterioConceptoPago in SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioConceptoPago)
                     {
-                        _context.Set<SolicitudPagoFaseCriterioConceptoPago>()
-                                .Where(s => s.SolicitudPagoFaseCriterioConceptoPagoId == SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId)
-                                .Update(s => new SolicitudPagoFaseCriterioConceptoPago
-                                {
-                                    ConceptoPagoCriterio = SolicitudPagoFaseCriterioConceptoPago.ConceptoPagoCriterio,
-                                    ValorFacturadoConcepto = SolicitudPagoFaseCriterioConceptoPago.ValorFacturadoConcepto
-                                });
+                        if (SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId > 0)
+                        {
+                            _context.Set<SolicitudPagoFaseCriterioConceptoPago>()
+                                    .Where(s => s.SolicitudPagoFaseCriterioConceptoPagoId == SolicitudPagoFaseCriterioConceptoPago.SolicitudPagoFaseCriterioConceptoPagoId)
+                                    .Update(s => new SolicitudPagoFaseCriterioConceptoPago
+                                    {
+                                        ConceptoPagoCriterio = SolicitudPagoFaseCriterioConceptoPago.ConceptoPagoCriterio,
+                                        UsoCodigo = SolicitudPagoFaseCriterioConceptoPago.UsoCodigo,
+                                        ValorFacturadoConcepto = SolicitudPagoFaseCriterioConceptoPago.ValorFacturadoConcepto
+                                    });
+                        }
+                        else
+                        {
+                            SolicitudPagoFaseCriterioConceptoPago.Eliminado = false;
+                            SolicitudPagoFaseCriterioConceptoPago.UsuarioCreacion = strUsuarioCreacion;
+                            SolicitudPagoFaseCriterioConceptoPago.FechaCreacion = DateTime.Now;
+                            SolicitudPagoFaseCriterioConceptoPago.ConceptoPagoCriterio = SolicitudPagoFaseCriterioConceptoPago.ConceptoPagoCriterio;
+                            SolicitudPagoFaseCriterioConceptoPago.UsoCodigo = SolicitudPagoFaseCriterioConceptoPago.UsoCodigo;
+                            _context.SolicitudPagoFaseCriterioConceptoPago.Add(SolicitudPagoFaseCriterioConceptoPago);
+                        }
+
+                        if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioId > 0)
+                        {
+                            _context.Set<SolicitudPagoFaseCriterio>()
+                                     .Where(s => s.SolicitudPagoFaseCriterioId == SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioId)
+                                     .Update(s => new SolicitudPagoFaseCriterio
+                                     {
+                                         FechaModificacion = DateTime.Now,
+                                         UsuarioModificacion = strUsuarioCreacion,
+                                         ValorFacturado = SolicitudPagoFaseCriterio.ValorFacturado,
+                                         SolicitudPagoFaseId = SolicitudPagoFaseCriterio.SolicitudPagoFaseId,
+                                         TipoCriterioCodigo = SolicitudPagoFaseCriterio.TipoCriterioCodigo,
+                                         RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio)
+                                     });
+                        }
+                        else
+                        {
+                            SolicitudPagoFaseCriterio.UsuarioCreacion = strUsuarioCreacion;
+                            SolicitudPagoFaseCriterio.FechaCreacion = DateTime.Now;
+                            SolicitudPagoFaseCriterio.Eliminado = false;
+                            SolicitudPagoFaseCriterio.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio);
+                            _context.SolicitudPagoFaseCriterio.Add(SolicitudPagoFaseCriterio);
+
+                        }
                     }
-                    else
-                    {
-                        SolicitudPagoFaseCriterioConceptoPago.Eliminado = false;
-                        SolicitudPagoFaseCriterioConceptoPago.UsuarioCreacion = strUsuarioCreacion;
-                        SolicitudPagoFaseCriterioConceptoPago.FechaCreacion = DateTime.Now;
-                        _context.SolicitudPagoFaseCriterioConceptoPago.Add(SolicitudPagoFaseCriterioConceptoPago);
-                    }
                 }
-
-                if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioId > 0)
+                catch (Exception e)
                 {
-                    SolicitudPagoFaseCriterio SolicitudPagoFaseCriterioOld = _context.SolicitudPagoFaseCriterio.Find(SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioId);
-
-                    SolicitudPagoFaseCriterioOld.FechaModificacion = DateTime.Now;
-                    SolicitudPagoFaseCriterioOld.UsuarioModificacion = strUsuarioCreacion;
-                    SolicitudPagoFaseCriterioOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio);
-                    SolicitudPagoFaseCriterioOld.ValorFacturado = SolicitudPagoFaseCriterio.ValorFacturado;
-                    SolicitudPagoFaseCriterioOld.SolicitudPagoFaseId = SolicitudPagoFaseCriterio.SolicitudPagoFaseId;
-                    SolicitudPagoFaseCriterioOld.TipoCriterioCodigo = SolicitudPagoFaseCriterio.TipoCriterioCodigo;
+                    throw;
                 }
-                else
-                {
-                    SolicitudPagoFaseCriterio.UsuarioCreacion = strUsuarioCreacion;
-                    SolicitudPagoFaseCriterio.FechaCreacion = DateTime.Now;
-                    SolicitudPagoFaseCriterio.Eliminado = false;
-                    SolicitudPagoFaseCriterio.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio);
-
-                    _context.SolicitudPagoFaseCriterio.Add(SolicitudPagoFaseCriterio);
-                }
-
-
             }
         }
 
@@ -970,7 +1099,6 @@ namespace asivamosffie.services
         //        }
         //    }
         //}
-
 
         #endregion
 
@@ -1194,6 +1322,7 @@ namespace asivamosffie.services
         #endregion 
 
         #region Tipo Otros Costos Servicios
+
         public async Task<Respuesta> CreateEditOtrosCostosServicios(SolicitudPago pSolicitudPago)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Solicitud_De_Pago, (int)EnumeratorTipoDominio.Acciones);
@@ -1335,48 +1464,73 @@ namespace asivamosffie.services
 
         #region Get
 
-        public async Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion)
+        public async Task<dynamic> GetMontoMaximoMontoPendiente(
+            int SolicitudPagoId,
+            string strFormaPago, 
+            bool EsPreConstruccion, 
+            int pContratacionProyectoId, 
+            string pCriterioCodigo, 
+            string pConceptoCodigo ,
+            string pUsoCodigo)
         {
-
             try
             {
-                SolicitudPago solicitudPago = await _context.SolicitudPago.FindAsync(SolicitudPagoId);
+                SolicitudPago solicitudPago = await _context.SolicitudPago
+                    .Where(r => r.SolicitudPagoId == SolicitudPagoId)
+                    .Include(r => r.Contrato)
+                    .FirstOrDefaultAsync();
 
-                decimal ValorTotalPorFase = (decimal)_context.VValorUsoXcontratoId.Where(r => r.ContratoId == solicitudPago.ContratoId && r.EsPreConstruccion == EsPreConstruccion).Sum(v => v.ValorUso);
+                VValorFacturadoContratoXproyectoXuso VValorFacturadoContratoXproyectoXuso = _context.VValorFacturadoContratoXproyectoXuso
+                                                                                                     .Where(v => v.ContratoId == solicitudPago.ContratoId
+                                                                                                               && v.ContratacionProyectoId == pContratacionProyectoId
+                                                                                                               && v.EsPreconstruccion == EsPreConstruccion
+                                                                                                            // && v.ConceptoCodigo == pConceptoCodigo
+                                                                                                               && v.UsoCodigo == pUsoCodigo)
+                                                                                                     .FirstOrDefault();
 
-                decimal ValorPendientePorPagar = (ValorTotalPorFase - (decimal)_context.VValorFacturadoContrato
-                    .Where(v => v.ContratoId == solicitudPago.ContratoId && v.EsPreconstruccion == EsPreConstruccion)
-                    .Sum(c => c.SaldoPresupuestal));
 
-                ValorPendientePorPagar = ValorTotalPorFase - ValorPendientePorPagar;
+                //  decimal Porcentaje = decimal.Parse(_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && r.Codigo == pCriterioCodigo).FirstOrDefault().Descripcion ?? "100");
+                decimal Porcentaje = 100;
 
-                string strNombreFormaPago = (_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Formas_Pago && r.Codigo == strFormaPago).FirstOrDefault().Nombre).Replace("%", ""); ;
-
-                List<string> FormasPago = strNombreFormaPago.Split("/").ToList();
-                decimal MontoMaximo = 0;
-                //TODO:VALIDAR 
-                foreach (var PorcentajePago in FormasPago)
+                if (VValorFacturadoContratoXproyectoXuso == null)
                 {
-                    if (Convert.ToUInt32(PorcentajePago) == 100)
-                        MontoMaximo = ValorPendientePorPagar;
-                    else
+                    ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Find(pContratacionProyectoId);
+                    decimal ValorTotalPorFase = (decimal)_context.VDrpXcontratacionXproyectoXfaseXconceptoXusos
+                           .Where(r => r.ContratacionId == solicitudPago.Contrato.ContratacionId
+                                    && r.ProyectoId == contratacionProyecto.ProyectoId
+                                    && r.EsPreConstruccion == EsPreConstruccion  
+                                    && r.TipoUsoCodigo == pUsoCodigo
+                                    && r.ConceptoPagoCodigo == pConceptoCodigo
+                                    
+                                    )
+                           .Sum(v => v.ValorUso);
+
+                    return new
                     {
-                        MontoMaximo = ValorTotalPorFase * Convert.ToUInt32(PorcentajePago);
-                        MontoMaximo /= 100;
-                        MontoMaximo = ValorPendientePorPagar - MontoMaximo;
-
-                        if (MontoMaximo < 0)
-                            MontoMaximo = ValorTotalPorFase;
-
-                        if (MontoMaximo < ValorPendientePorPagar)
-                            break;
-                    }
+                        MontoMaximo = (ValorTotalPorFase * Porcentaje) / 100,
+                        ValorPendientePorPagar = 0
+                    };
                 }
+
+
+                VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal =
+                                                                         VValorFacturadoContratoXproyectoXuso.ValorSolicitudDdp
+                                                                       - (decimal)_context.VValorFacturadoContratoXproyectoXuso.Where(
+                                                                                                                                         v => v.ContratoId == solicitudPago.ContratoId
+                                                                                                                                           && v.ContratacionProyectoId == pContratacionProyectoId
+                                                                                                                                           && v.EsPreconstruccion == EsPreConstruccion
+                                                                                                                                           && v.Uso == VValorFacturadoContratoXproyectoXuso.Uso 
+                                                                                                                                           )
+                                                                                                                               .Sum(c => c.ValorFacturado);
+
+                decimal MontoMaximo = 0;
+
+                MontoMaximo = ((decimal)VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal * Porcentaje) / 100;
 
                 return new
                 {
-                    MontoMaximo,
-                    ValorPendientePorPagar
+                    MontoMaximo = MontoMaximo < 0 ? VValorFacturadoContratoXproyectoXuso.ValorSolicitudDdp : MontoMaximo,
+                    VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal
                 };
             }
             catch (Exception e)
@@ -1550,6 +1704,8 @@ namespace asivamosffie.services
                     .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Municipio)
                     .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.CofinanciacionAportante).ThenInclude(t => t.Departamento)
                     .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.ContratacionProyectoAportante).ThenInclude(t => t.ComponenteAportante)
+                    .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(t => t.Proyecto)
+                    .Include(c => c.Contratacion).ThenInclude(c => c.DisponibilidadPresupuestal)
                     .AsNoTracking()
                     .FirstOrDefaultAsync();
 
@@ -1562,11 +1718,6 @@ namespace asivamosffie.services
                 SolicitudPago solicitudPago = _context.SolicitudPago.Find(pSolicitudPago);
                 contrato.SolicitudPagoOnly = GetSolicitudPagoComplete(solicitudPago);
             }
-            //contrato.ValorFacturadoContrato =
-            //    _context.VValorFacturadoContrato
-            //    .Where(v => v.ContratoId == pContratoId)
-            //    .ToList();
-
             List<VContratoPagosRealizados> vContratoPagosRealizados = new List<VContratoPagosRealizados>();
 
             try
@@ -1574,87 +1725,174 @@ namespace asivamosffie.services
                 if (_context.VContratoPagosRealizados
                   .Any(v => v.ContratoId == pContratoId && v.SolicitudPagoId == pSolicitudPago))
                 {
-                    vContratoPagosRealizados = _context.VContratoPagosRealizados
+
+                    vContratoPagosRealizados = GetValidarContratoPagosRealizados(pContratoId, pSolicitudPago);
+
+                    vContratoPagosRealizados = vContratoPagosRealizados
                       .Where(v => v.ContratoId == pContratoId && v.SolicitudPagoId == pSolicitudPago)
                       .ToList();
                 }
-
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
             }
-
-
             contrato.VContratoPagosRealizados = vContratoPagosRealizados;
-
-
-
             contrato.TablaDRP = GetDrpContrato(contrato.ContratacionId);
-
-
+            contrato.TablaDRPODG = GetDrpContratoODG(contrato.ContratacionId);
+            contrato.ListProyectos = GetListProyectos(contrato.ContratacionId);
             return contrato;
 
         }
 
+        public dynamic GetListProyectos(int pContratacionId)
+        {
+            return _context.ContratacionProyecto
+                                                .Where(cp => cp.ContratacionId == pContratacionId)
+                                                .Include(p => p.Proyecto).ThenInclude(i => i.InstitucionEducativa)
+                                                .Select(s => new
+                                                {
+                                                    s.Proyecto.InstitucionEducativa.Nombre,
+                                                    s.Proyecto.LlaveMen
+                                                }).ToList();
+        }
+
+        private List<VContratoPagosRealizados> GetValidarContratoPagosRealizados(int pContratoId, int pSolicitudPago)
+        {
+            List<VContratoPagosRealizados> vContratoPagosRealizados = _context.VContratoPagosRealizados
+                        .Where(v => v.ContratoId == pContratoId).ToList();
+
+
+            decimal ValorAnterior = 0;
+            decimal Drp = 0;
+            int Count = 1;
+            decimal dcDecimalValorFacturado = 0;
+            foreach (var item in vContratoPagosRealizados)
+            {
+                dcDecimalValorFacturado += item.ValorFacturado;
+                //item.SaldoPorPagar = item.ValorSolicitud - dcDecimalValorFacturado;
+                ValorAnterior = item.SaldoPorPagar ?? 0;
+                Drp = item.ValorSolicitud ?? 1;
+                //item.SaldoPorPagar = item.ValorSolicitud - dcDecimalValorFacturado;
+                item.PorcentajeFacturado = item.PorcentajeFacturado;
+                item.PorcentajePorPagar = item.PorcentajePorPagar;
+            }
+            Count++;
+
+            return vContratoPagosRealizados;
+        }
+
         public dynamic GetDrpContrato(int pContratacionId)
         {
-            List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).ToList();
+            bool OrdenGiroAprobada = _context.OrdenGiro.Where(r => r.SolicitudPago.FirstOrDefault().Contrato.ContratacionId == pContratacionId).FirstOrDefault()?.RegistroCompletoAprobar ?? false;
+
+            List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).OrderBy(r => r.FechaCreacion).ToList();
 
             var ListDrp = List.GroupBy(drp => drp.NumeroDrp)
-                                       .Select(d => d.OrderBy(p => p.NumeroDrp).FirstOrDefault())
-                                       .ToList();
+                              .Select(d =>
+                                          d.OrderBy(p => p.NumeroDrp)
+                                           .FirstOrDefault())
+                              .ToList();
 
             List<dynamic> ListTablaDrp = new List<dynamic>();
 
+            List<VPagosSolicitudXcontratacionXproyectoXuso> ListPagos =
+                    _context.VPagosSolicitudXcontratacionXproyectoXuso.Where(v => v.ContratacionId == pContratacionId)
+                                                                      .ToList();
+
+            //  List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
+
+            List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = new List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso>();
 
             foreach (var Drp in ListDrp)
             {
                 var ListProyectosId = List.Where(r => r.NumeroDrp == Drp.NumeroDrp)
-                                                .GroupBy(id => id.ProyectoId)
-                                                .Select(d => d.OrderBy(p => p.ProyectoId).FirstOrDefault())
-                                                .ToList();
+                                          .GroupBy(id => id.ProyectoId)
+                                          .Select(d =>
+                                                      d.OrderBy(p => p.ProyectoId)
+                                                       .FirstOrDefault())
+                                          .ToList();
 
                 List<dynamic> ListDyProyectos = new List<dynamic>();
                 foreach (var ProyectoId in ListProyectosId)
                 {
                     Proyecto proyecto = _context.Proyecto
-                                        .Where(r => r.ProyectoId == ProyectoId.ProyectoId)
-                                        .Include(ie => ie.InstitucionEducativa)
-                                        .FirstOrDefault();
+                                                        .Where(r => r.ProyectoId == ProyectoId.ProyectoId)
+                                                        .Include(ie => ie.InstitucionEducativa)
+                                                        .FirstOrDefault();
 
-                    var ListTipoUso = List.Where(r => r.NumeroDrp == Drp.NumeroDrp && r.ProyectoId == ProyectoId.ProyectoId)
-                                                  .GroupBy(id => id.TipoUsoCodigo)
-                                                  .Select(d => d.OrderBy(p => p.TipoUsoCodigo).FirstOrDefault())
-                                                  .ToList();
+                    var ListTipoUso = List.Where(r => r.NumeroDrp == Drp.NumeroDrp
+                                                   && r.ProyectoId == ProyectoId.ProyectoId)
+                                          .GroupBy(id => id.TipoUsoCodigo)
+                                          .Select(d => d.OrderBy(p => p.TipoUsoCodigo).FirstOrDefault())
+                                          .ToList();
 
                     List<dynamic> ListDyUsos = new List<dynamic>();
                     foreach (var TipoUso in ListTipoUso)
                     {
-                        VDrpXproyectoXusos Uso = List
-                                                    .Where(r => r.NumeroDrp == Drp.NumeroDrp
-                                                        && r.ProyectoId == ProyectoId.ProyectoId
-                                                        && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
-                                                    .FirstOrDefault();
-
-                        decimal ValorUso = List
+                        VDrpXproyectoXusos Uso =
+                                                List
                                                 .Where(r => r.NumeroDrp == Drp.NumeroDrp
-                                                    && r.ProyectoId == ProyectoId.ProyectoId
-                                                    && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
-                                                .Sum(v => v.ValorUso);
+                                                         && r.ProyectoId == ProyectoId.ProyectoId
+                                                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                                .FirstOrDefault();
 
-                        decimal Saldo = List
-                                            .Where(r => r.NumeroDrp == Drp.NumeroDrp
-                                                 && r.ProyectoId == ProyectoId.ProyectoId
-                                                 && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
-                                            .Sum(v => v.Saldo) ?? 0;
+                        decimal? ValorUso = List
+                                                .Where(r => r.NumeroDrp == Drp.NumeroDrp
+                                                         && r.ProyectoId == ProyectoId.ProyectoId
+                                                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                                .Sum(v => v.ValorUso) ?? 0;
 
-                        ListDyUsos.Add(new
+                        decimal? Saldo = ListPagos
+                                                .Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
+                                                          && r.Pagado == false
+                                                         )
+                                                .Sum(r => r.SaldoUso) ?? 0;
+
+
+                        decimal Descuentos = 0;
+
+                        decimal ValorUsoResta = ValorUso ?? 0 - Descuentos;
+
+                        if (true)
                         {
-                            Uso.Nombre,
-                            ValorUso = String.Format("{0:n0}", ValorUso),
-                            Saldo = String.Format("{0:n0}", Saldo)
-                        });
+                            foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                            && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
+                            {
+                                if (true)
+                                {
+                                    if (ValorUsoResta > item.SaldoUso)
+                                    {
+                                        ValorUsoResta -= (decimal)item.SaldoUso;
+                                        item.SaldoUso = ValorUsoResta;
+                                        item.Pagado = true;
+                                    }
+                                    else
+                                    {
+                                        item.SaldoUso -= ValorUsoResta;
+                                    }
+                                }
+                                else
+                                {
+                                    item.SaldoUso = Saldo;
+                                }
+                            }
+                            ListDyUsos.Add(new
+                            {
+                                Uso.Nombre,
+                                ValorUso = String.Format("{0:n0}", ValorUso),
+                                Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
+                            });
+                        }
+                        else
+                        {
+                            ListDyUsos.Add(new
+                            {
+                                Uso.Nombre,
+                                ValorUso = String.Format("{0:n0}", ValorUso),
+                                Saldo = String.Format("{0:n0}", ValorUso)
+                            });
+                        }
                     }
 
                     ListDyProyectos.Add(new
@@ -1674,6 +1912,140 @@ namespace asivamosffie.services
             }
             return ListTablaDrp;
         }
+
+        public dynamic GetDrpContratoODG(int pContratacionId)
+        {
+            bool OrdenGiroAprobada = _context.OrdenGiro.Where(r => r.SolicitudPago.FirstOrDefault().Contrato.ContratacionId == pContratacionId).FirstOrDefault()?.RegistroCompletoAprobar ?? false;
+
+            List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).OrderBy(r => r.FechaCreacion).ToList();
+
+            var ListDrp = List.GroupBy(drp => drp.NumeroDrp)
+                              .Select(d =>
+                                          d.OrderBy(p => p.NumeroDrp)
+                                           .FirstOrDefault())
+                              .ToList();
+
+            List<dynamic> ListTablaDrp = new List<dynamic>();
+
+            List<VPagosSolicitudXcontratacionXproyectoXuso> ListPagos =
+                    _context.VPagosSolicitudXcontratacionXproyectoXuso.Where(v => v.ContratacionId == pContratacionId)
+                                                                      .ToList();
+
+            List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
+
+            foreach (var Drp in ListDrp)
+            {
+                var ListProyectosId = List.Where(r => r.NumeroDrp == Drp.NumeroDrp)
+                                          .GroupBy(id => id.ProyectoId)
+                                          .Select(d =>
+                                                      d.OrderBy(p => p.ProyectoId)
+                                                       .FirstOrDefault())
+                                          .ToList();
+
+                List<dynamic> ListDyProyectos = new List<dynamic>();
+                foreach (var ProyectoId in ListProyectosId)
+                {
+                    Proyecto proyecto = _context.Proyecto
+                                                        .Where(r => r.ProyectoId == ProyectoId.ProyectoId)
+                                                        .Include(ie => ie.InstitucionEducativa)
+                                                        .FirstOrDefault();
+
+                    var ListTipoUso = List.Where(r => r.NumeroDrp == Drp.NumeroDrp
+                                                   && r.ProyectoId == ProyectoId.ProyectoId)
+                                          .GroupBy(id => id.TipoUsoCodigo)
+                                          .Select(d => d.OrderBy(p => p.TipoUsoCodigo).FirstOrDefault())
+                                          .ToList();
+
+                    List<dynamic> ListDyUsos = new List<dynamic>();
+                    foreach (var TipoUso in ListTipoUso)
+                    {
+                        VDrpXproyectoXusos Uso =
+                                                List
+                                                .Where(r => r.NumeroDrp == Drp.NumeroDrp
+                                                         && r.ProyectoId == ProyectoId.ProyectoId
+                                                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                                .FirstOrDefault();
+
+                        decimal? ValorUso = List
+                                                .Where(r => r.NumeroDrp == Drp.NumeroDrp
+                                                         && r.ProyectoId == ProyectoId.ProyectoId
+                                                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                                .Sum(v => v.ValorUso) ?? 0;
+
+                        decimal? Saldo = ListPagos
+                                                .Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
+                                                          && r.Pagado == false
+                                                         )
+                                                .Sum(r => r.SaldoUso) ?? 0;
+
+
+                        decimal? Descuentos = DescuentosOrdenGiro
+                                                            .Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                             && r.UsoCodigo == TipoUso.TipoUsoCodigo
+                                                             )
+                                                .Sum(r => r.ValorDescuento);
+
+                        decimal ValorUsoResta = (decimal)(ValorUso ?? 0 - Descuentos);
+                        foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                               && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
+                        {
+                            if (OrdenGiroAprobada)
+                            {
+                                if (ValorUsoResta > item.SaldoUso)
+                                {
+                                    ValorUsoResta -= (decimal)item.SaldoUso;
+                                    item.SaldoUso = ValorUsoResta;
+                                    item.Pagado = true;
+                                }
+                                else
+                                {
+                                    item.SaldoUso -= ValorUsoResta;
+                                }
+                            }
+                            else
+                            {
+                                item.SaldoUso = Saldo;
+                            }
+                        }
+
+                        if (OrdenGiroAprobada)
+                        {
+                            ListDyUsos.Add(new
+                            {
+                                Uso.Nombre,
+                                ValorUso = String.Format("{0:n0}", ValorUso),
+                                Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
+                            });
+                        }
+                        else
+                        {
+                            ListDyUsos.Add(new
+                            {
+                                Uso.Nombre,
+                                ValorUso = String.Format("{0:n0}", ValorUso),
+                                Saldo = String.Format("{0:n0}", ValorUso)
+                            });
+                        }
+                    }
+                    ListDyProyectos.Add(new
+                    {
+                        proyecto.InstitucionEducativa.Nombre,
+                        ListDyUsos
+                    });
+                }
+
+                ListTablaDrp.Add(new
+                {
+                    Enum,
+                    Drp.NumeroDrp,
+                    ListDyProyectos
+                });
+                Enum++;
+            }
+            return ListTablaDrp;
+        }
+
 
         public List<TablaDRP> GetDrpContrato(Contrato contrato)
         {
@@ -1808,8 +2180,16 @@ namespace asivamosffie.services
                 foreach (var SolicitudPagoFase in SolicitudPagoRegistrarSolicitudPago.SolicitudPagoFase)
                 {
                     if (SolicitudPagoFase.SolicitudPagoFaseCriterio.Count() > 0)
+                    {
                         SolicitudPagoFase.SolicitudPagoFaseCriterio = SolicitudPagoFase.SolicitudPagoFaseCriterio.Where(r => r.Eliminado != true).ToList();
 
+                        foreach (var SolicitudPagoFaseCriterio in SolicitudPagoFase.SolicitudPagoFaseCriterio)
+                        {
+                            if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioConceptoPago.Count() > 0)
+
+                                SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioConceptoPago = SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioConceptoPago.Where(r => r.Eliminado != true).ToList();
+                        }
+                    }
                     if (SolicitudPagoFase.SolicitudPagoFaseFacturaDescuento.Count() > 0)
                         SolicitudPagoFase.SolicitudPagoFaseFacturaDescuento = SolicitudPagoFase.SolicitudPagoFaseFacturaDescuento.Where(r => r.Eliminado != true).ToList();
 
@@ -2028,11 +2408,11 @@ namespace asivamosffie.services
 
         private bool ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio solicitudPagoFaseCriterio)
         {
-            return (string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
-                || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
-                );
-        }
+            if (string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
+                 || solicitudPagoFaseCriterio.ValorFacturado == 0) return false;
 
+            return true;
+        }
 
         private bool ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago pSolicitudPagoRegistrarSolicitudPago)
         {
@@ -2072,8 +2452,8 @@ namespace asivamosffie.services
 
                 if (TieneAmortizacion == true)
                 {
-                    if (pSolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() == 0)
-                        return false;
+                    //if (pSolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() == 0)
+                    //    return false;
 
                     foreach (var SolicitudPagoAmortizacion in pSolicitudPagoFase.SolicitudPagoFaseAmortizacion)
                     {
@@ -2082,6 +2462,22 @@ namespace asivamosffie.services
                     }
                 }
             }
+
+            if (!pSolicitudPagoFase.TieneDescuento.HasValue)
+                return false;
+
+            if ((bool)pSolicitudPagoFase.TieneDescuento)
+            {
+                foreach (var SolicitudPagoFaseFacturaDescuento in pSolicitudPagoFase.SolicitudPagoFaseFacturaDescuento)
+                {
+                    if (!ValidateCompleteRecordSolicitudPagoFaseFacturaDescuento(SolicitudPagoFaseFacturaDescuento))
+                        return false;
+                }
+            }
+
+            if (!ValidateCompleteRecordSolicitudPagoFaseCriterio2(pSolicitudPagoFase.SolicitudPagoFaseCriterio))
+                return false;
+
             return true;
         }
 
@@ -2113,7 +2509,8 @@ namespace asivamosffie.services
             {
                 if (
                        string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoCriterioCodigo)
-                    || string.IsNullOrEmpty(solicitudPagoFaseCriterio.ValorFacturado.ToString())
+                     || string.IsNullOrEmpty(solicitudPagoFaseCriterio.TipoPagoCodigo)
+                     || solicitudPagoFaseCriterio.ValorFacturado == 0
                       ) return false;
             }
             return true;

@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using asivamosffie.model.Models;
+﻿using asivamosffie.model.AditionalModels;
 using asivamosffie.model.APIModels;
+using asivamosffie.model.Models;
+using asivamosffie.services.Helpers;
+using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using asivamosffie.services.Helpers.Enumerator;
-using Z.EntityFramework.Plus;
-using System.Globalization;
-using asivamosffie.model.AditionalModels;
-using Microsoft.Extensions.Options;
-using System.Net.Mail;
-using System.Net;
-using Microsoft.Extensions.Options;
-using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using asivamosffie.services.Helpers.Constant;
+using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Threading.Tasks;
+using Z.EntityFramework.Plus;
 
 namespace asivamosffie.services
 {
@@ -35,6 +34,30 @@ namespace asivamosffie.services
             _mailSettings = mailSettings.Value;
             _context = context;
         }
+
+        public async Task<byte[]> GetHtmlToPdf(Plantilla pPlantilla)
+        {
+            Plantilla plantilla =
+                                  await _context.Plantilla
+                                                          .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Html_To_PDF).ToString())
+                                                          .Include(r => r.Encabezado).Include(r => r.PieDePagina)
+                                                          .FirstOrDefaultAsync();
+
+            plantilla.MargenAbajo = pPlantilla.MargenAbajo;
+            plantilla.MargenArriba = pPlantilla.MargenArriba;
+            plantilla.MargenDerecha = pPlantilla.MargenDerecha;
+            plantilla.MargenIzquierda = pPlantilla.MargenIzquierda;
+
+            plantilla.Contenido = plantilla.Contenido.Replace("[HTML]", pPlantilla.Contenido);
+            return PDF.Convertir(plantilla, pPlantilla.EsHorizontal);
+        }
+
+
+        public async Task<Plantilla> GetPlantillaById(int pPlantillaId)
+        {
+            return await _context.Plantilla.FindAsync(pPlantillaId);
+        }
+
         //Solicitudes de comite tecnico
         public async Task<dynamic> GetRequestSP(string pNameSP)
         {
@@ -224,7 +247,7 @@ namespace asivamosffie.services
             int cantidadDeResgistros = _context.OrdenGiro.Where(r => !string.IsNullOrEmpty(r.NumeroSolicitud)).Count();
             string Nomeclatura = "ODG_";
 
-            if (solicitudPago.Contrato.Contratacion.TipoContratacionCodigo == (ConstanCodigoTipoContratacion.Obra).ToString())
+            if (solicitudPago.Contrato.Contratacion.TipoSolicitudCodigo == (ConstanCodigoTipoContratacion.Obra).ToString())
                 Nomeclatura += "Obr";
             else
                 Nomeclatura += "Int";
@@ -831,6 +854,85 @@ namespace asivamosffie.services
                 }
             }
             return fechadiasHabiles;
+        }
+
+        public DateTime? GetFechaEstimadaFinalizacion(int pContratoId)
+        {
+            DateTime? fechaFinalizacion = null;
+
+            Contrato contrato = _context.Contrato.Find(pContratoId);
+            if (contrato != null)
+            {
+                fechaFinalizacion = contrato.FechaTerminacionFase2 != null ? contrato.FechaTerminacionFase2 : contrato.FechaTerminacion != null ? contrato.FechaTerminacion : null;
+                //obtener todas las novedades finalizadas las que no requieren comité, una vez tiene todas las firmas, las que requieren comité una vez se registra la modificación
+                if (fechaFinalizacion != null)
+                {
+                    List<NovedadContractual> novedadContractuals = _context.NovedadContractual.Where(r => r.Eliminado != true && r.ContratoId == pContratoId && (r.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Firmado || r.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado))
+                                                                                            .Include(r => r.NovedadContractualDescripcion)
+                                                                                            .ToList();
+                    DateTime? fechaReinicio = null;
+
+                    foreach (var novedad in novedadContractuals)
+                    {
+                        bool vaComite = false;
+
+                        foreach (var descripcion in novedad.NovedadContractualDescripcion)
+                        {
+                            if (descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Adición ||
+                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Modificación_de_Condiciones_Contractuales ||
+                                descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga)
+                            {
+                                vaComite = true;
+                            }
+                            else
+                            {
+                                vaComite = false;
+                            }
+
+                            if ((novedad.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Registrado && vaComite) || (novedad.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Firmado && !vaComite))
+                            {
+                                //
+                                if (descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio)
+                                {
+                                    fechaReinicio = descripcion.FechaInicioSuspension;
+                                }
+
+                                if (descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Suspensión || descripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga_a_las_Suspensión)
+                                {
+                                    if (descripcion.GetDiasFechaSuspension != null)
+                                    {
+                                        TimeSpan? diasTemp = descripcion.GetDiasFechaSuspension;
+                                        if (fechaReinicio != null)
+                                        {
+                                            if(fechaReinicio > descripcion.FechaInicioSuspension)
+                                                diasTemp = (fechaReinicio - descripcion.FechaInicioSuspension);
+                                        }
+                                        DateTime fechaFinalizacionTmp = (DateTime) fechaFinalizacion;
+                                        fechaFinalizacion = fechaFinalizacionTmp.AddDays((double)diasTemp.Value.TotalDays);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return fechaFinalizacion;
+        }
+
+        public decimal GetValorTotalDisponibilidad(int pDisponibilidadPresupuestalId)
+        {
+            decimal valorSolicitud = 0;
+            DisponibilidadPresupuestal disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Find(pDisponibilidadPresupuestalId);
+            //no encontré los helpers, sorry
+            if (disponibilidadPresupuestal != null)
+            {
+                valorSolicitud = disponibilidadPresupuestal.ValorSolicitud;
+                valorSolicitud += _context.NovedadContractualRegistroPresupuestal.Where(r => r.DisponibilidadPresupuestalId == disponibilidadPresupuestal.DisponibilidadPresupuestalId &&
+                    (r.EstadoSolicitudCodigo == "5" || r.EstadoSolicitudCodigo == "8")).Sum(r => r.ValorSolicitud);
+            }
+
+            return valorSolicitud;
         }
 
     }

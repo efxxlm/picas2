@@ -19,6 +19,7 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
   esNovedad;
   novedadId;
   esRechazadaFiduciaria = false;
+  esCancelada = false;
 
   constructor(public dialog: MatDialog, private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
@@ -27,6 +28,9 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
             if ( urlSegment.path === 'detalleRechazadaFiduciaria' ) {
                 this.esRechazadaFiduciaria = true;
                 return;
+            }else if ( urlSegment.path === 'detalleConDisponibilidadCancelada' ){
+              this.esCancelada = true;
+              return;
             }
         } );
     }
@@ -49,7 +53,7 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
     this.novedadId = this.route.snapshot.paramMap.get('novedadId');
 
     if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, this.esNovedad, this.novedadId)
+      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, this.esNovedad, this.novedadId, true)
         .subscribe(listas => {
           console.log(listas);
           if (listas.length > 0) {
@@ -97,6 +101,8 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
       width: '70em'
     });
     dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
+    dialogRef.componentInstance.tipo = this.detailavailabilityBudget.tipoSolicitudEspecial;
+    dialogRef.componentInstance.nSolicitud = this.detailavailabilityBudget.numeroSolicitud;
     dialogRef.afterClosed().subscribe(result => {
       this.router.navigate(["/generarDisponibilidadPresupuestal"], {});
     });

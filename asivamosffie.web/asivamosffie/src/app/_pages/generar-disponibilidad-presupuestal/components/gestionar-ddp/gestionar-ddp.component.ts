@@ -40,11 +40,12 @@ export class GestionarDdpComponent implements OnInit {
     this.esNovedad = this.route.snapshot.paramMap.get('esNovedad');
     this.novedadId = this.route.snapshot.paramMap.get('novedadId');
     if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, this.esNovedad, this.novedadId)
+      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, this.esNovedad, this.novedadId, true)
         .subscribe(listas => {
           console.log(listas);
           if (listas.length > 0) {
             this.detailavailabilityBudget = listas[0];
+            this.validarBotonGenerarDDp(this.detailavailabilityBudget?.proyectos);
           }
           else {
             this.openDialog('', 'Error al intentar recuperar los datos de la solicitud, por favor intenta nuevamente.');
@@ -53,7 +54,32 @@ export class GestionarDdpComponent implements OnInit {
         });
     }
   }
-  
+
+  validarBotonGenerarDDp(proyectos: any[]){
+    let cumpleCondiciones = true;
+    if(proyectos != null){
+      if(proyectos.length > 0){
+        proyectos.forEach(proyecto => {
+          proyecto.aportantes.forEach(apo => {
+            apo.fuentesFinanciacion.forEach(fuente => {
+              if(fuente.saldo_actual_de_la_fuente < fuente.valor_solicitado_de_la_fuente){
+                cumpleCondiciones = false;
+                return cumpleCondiciones;
+              }
+            });
+          });
+        });
+      }else{
+        cumpleCondiciones = false;
+        return cumpleCondiciones;
+      }
+    }else{
+      cumpleCondiciones = false;
+      return cumpleCondiciones;
+    }
+    return cumpleCondiciones;
+  }
+
   generarddp() {
     this.disponibilidadServices.CreateDDP(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId)
       .subscribe(listas => {
@@ -101,6 +127,9 @@ export class GestionarDdpComponent implements OnInit {
     dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
     dialogRef.componentInstance.tipo = this.detailavailabilityBudget.tipoSolicitudEspecial;
     dialogRef.componentInstance.nSolicitud = this.detailavailabilityBudget.numeroSolicitud;
+    dialogRef.componentInstance.esNovedad = this.esNovedad;
+    dialogRef.componentInstance.registroPresupuestalId = this.novedadId;
+
     dialogRef.afterClosed().subscribe(result => {
       this.router.navigate(["/generarDisponibilidadPresupuestal"], {});
     });

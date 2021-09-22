@@ -63,7 +63,8 @@
         </div>
         <div class="col-md-12">
           <p>
-            <strong>Valor total del proyecto:</strong>
+            <strong *ngIf="this.esNovedad != true">Valor total del proyecto:</strong>
+            <strong *ngIf="this.esNovedad == true">Valor de adición al proyecto:</strong>
             {{ valorAportante | currency: '':'symbol':'3.0' }}
           </p>
         </div>
@@ -169,10 +170,10 @@
                           (keyup)="reste(fuente)"
                           required
                           maxLength="20"
-                          onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                          onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                           oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                           [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left', allowNegative: false }"
-                          
+
                           formControlName="valorSolicitado"
                         />
                       </mat-form-field>

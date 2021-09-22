@@ -71,6 +71,7 @@ export interface Contrato {
   fechaAprobacionRequisitosConstruccionInterventor?: string;
   modalidadCodigo?: string;
   fechaTerminacionFase2?: Date;
+  fechaEstimadaFinalizacion?: Date;
 }
 
 interface ContratoPoliza {

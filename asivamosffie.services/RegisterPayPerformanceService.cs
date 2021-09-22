@@ -332,7 +332,7 @@ namespace asivamosffie.services
                     }
                     accounts.Add(cellValue);
 
-                    var activeAccount = bankAccounts.SingleOrDefault(account => account.NumeroCuentaBanco == cellValue);
+                    var activeAccount = bankAccounts.FirstOrDefault(account => account.NumeroCuentaBanco == cellValue);
                     var hasError = activeAccount == null;
                     if (activeAccount != null)
                     {
@@ -1063,8 +1063,7 @@ namespace asivamosffie.services
                                                 ProvisionGravamenFinanciero = performance.ProvisionGravamenFinanciero,
                                                 TotalGastosBancarios = performance.TotalGastosBancarios,
                                                 TotalGravamenFinancieroDescontado = performance.TotalGravamenFinancieroDescontado,
-                                                Visitas = performance.Visitas,
-                                                RendimientoIncorporar = performance.RendimientoIncorporar
+                                                Visitas = performance.Visitas
                                             }).ToList();
 
             string directory = CheckFileDownloadDirectory();

@@ -19,10 +19,12 @@ import { AprobarOrdenGiroComponent } from './components/aprobar-orden-giro/aprob
 import { TablaAprobarOrdenGiroComponent } from './components/tabla-aprobar-orden-giro/tabla-aprobar-orden-giro.component';
 import { FormAprobarOrdenGiroComponent } from './components/form-aprobar-orden-giro/form-aprobar-orden-giro.component';
 import { FormOrigenComponent } from './components/form-origen/form-origen.component';
+import { TablaPorcntjParticGogComponent } from './components/tabla-porcntj-partic-gog/tabla-porcntj-partic-gog.component';
+import { TablaInfoFuenterecGogComponent } from './components/tabla-info-fuenterec-gog/tabla-info-fuenterec-gog.component';
 
 
 @NgModule({
-  declarations: [ FormEstrategPagosGogComponent, TerceroCausacionComponent, TablaDatosSolicitudComponent, TablaAportantesComponent, SoporteOrdenGiroComponent, ObservacionesComponent, InformacionGeneralComponent, DialogEnviarAprobacionComponent, DetalleGiroComponent, DescuentosDireccionTecnicaComponent, AprobarOrdenGiroComponent, TablaAprobarOrdenGiroComponent, FormAprobarOrdenGiroComponent, FormOrigenComponent],
+  declarations: [ FormEstrategPagosGogComponent, TerceroCausacionComponent, TablaDatosSolicitudComponent, TablaAportantesComponent, SoporteOrdenGiroComponent, ObservacionesComponent, InformacionGeneralComponent, DialogEnviarAprobacionComponent, DetalleGiroComponent, DescuentosDireccionTecnicaComponent, AprobarOrdenGiroComponent, TablaAprobarOrdenGiroComponent, FormAprobarOrdenGiroComponent, FormOrigenComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent],
   imports: [
     CommonModule,
     FormsModule,

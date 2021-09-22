@@ -42,7 +42,7 @@ namespace asivamosffie.services
             List<VRegistrarPersonalObra> vRegistrarPersonalObra = await _context.VRegistrarPersonalObra.ToListAsync();
             vRegistrarPersonalObra.ForEach(r => {
                 //Nueva restricción control de cambios
-                r.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(r.ContratoId);
+                r.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(r.ContratoId,false);
             });
             return vRegistrarPersonalObra;
         }

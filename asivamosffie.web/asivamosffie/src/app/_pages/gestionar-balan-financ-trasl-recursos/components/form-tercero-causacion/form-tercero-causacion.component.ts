@@ -130,7 +130,8 @@ export class FormTerceroCausacionComponent implements OnInit {
       let valorNetoGiro = 0;
       let nuevoValorRegistrado = 0;
       const solicitudPagoFaseCriterio = solicitudPagoFase.solicitudPagoFaseCriterio;
-      const solicitudPagoFaseFactura = solicitudPagoFase.solicitudPagoFaseFactura[0];
+      const solicitudPagoFaseFactura = solicitudPagoFase.solicitudPagoFaseFactura ? solicitudPagoFase.solicitudPagoFaseFactura[0] : null;
+      console.log(this.ordenGiroDetalleDescuentoTecnica)
       const detalleDescuentoTecnica = this.ordenGiroDetalleDescuentoTecnica.filter(
         ordenGiroDetalleDescuentoTecnica =>
           ordenGiroDetalleDescuentoTecnica.esPreconstruccion === solicitudPagoFase.esPreconstruccion

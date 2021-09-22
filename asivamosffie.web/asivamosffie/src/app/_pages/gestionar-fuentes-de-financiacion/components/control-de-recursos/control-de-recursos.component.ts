@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { TiposAportante, CommonService, Dominio, Localizacion } from 'src/app/core/_services/common/common.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { FuenteFinanciacion, FuenteFinanciacionService, CuentaBancaria, RegistroPresupuestal, ControlRecurso, VigenciaAporte } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 import { forkJoin } from 'rxjs';
 import { CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
@@ -39,7 +39,8 @@ export class ControlDeRecursosComponent implements OnInit {
   countResources: any = [];
   rpArray: RegistroPresupuestal[] = [];
   estaEditando = false;
-  
+  esVerDetalle = false;
+  esVerDetalleRegistro = false;
   constructor(
               private fb: FormBuilder,
               private activatedRoute: ActivatedRoute,
@@ -48,7 +49,9 @@ export class ControlDeRecursosComponent implements OnInit {
               private dialog: MatDialog,
               private routes: Router,
              )
-  {}
+  {
+
+  }
 
   ngOnInit(): void {
     this.addressForm = this.fb.group({
@@ -56,7 +59,7 @@ export class ControlDeRecursosComponent implements OnInit {
       nombreCuenta: [null, Validators.required],
       numeroCuenta: [null, Validators.required],
       rp: [null],
-      valorRp: [null],      
+      valorRp: [null],
       vigencia: [null],
       vigenciaValor: [null],
       fechaConsignacion: [null, Validators.required],
@@ -74,7 +77,7 @@ export class ControlDeRecursosComponent implements OnInit {
     this.activatedRoute.params.subscribe( param => {
       this.idFuente = param['idFuente'];
       this.idControl = param['idControl'];
-      this.countResources = []
+      this.countResources = [];
       forkJoin([
         this.fuenteFinanciacionServices.getFuenteFinanciacion( this.idFuente ),
         this.commonService.listaNombreAportante(),
@@ -89,13 +92,18 @@ export class ControlDeRecursosComponent implements OnInit {
         this.listaDepartamentos = respuesta[3];
         this.tipoAportanteId = this.fuente.aportante.tipoAportanteId;
         if(this.fuente != null){
-          this.fuente.controlRecurso.forEach(element => {           
+          this.fuente.controlRecurso.forEach(element => {
             if(this.isETOrThirdParty()){
               this.calculateSumAccountByRp(element);
             }else{
               this.calculateSumAccountByVigency(element);
             }
           });
+          if(this.fuente.asociadoASolicitud == true){
+            this.esVerDetalle = true;
+          }else{
+            this.esVerDetalle = false;
+          }
         }
         if(this.tipoAportante.ET.includes(this.tipoAportanteId.toString()))
         {
@@ -132,10 +140,14 @@ export class ControlDeRecursosComponent implements OnInit {
 
         if(this.isETOrThirdParty()){
           this.fuente.aportante.cofinanciacionDocumento.forEach(element => {
-            this.listaVigencias.push({tipoVigenciaCodigo:element.vigenciaAporte.toString(),
-              fuenteFinanciacionId:null,
-              valorAporte: element.valorDocumento,
-              vigenciaAporteId:element.cofinanciacionDocumentoId});
+            if(element.vigenciaAporte != null && element.vigenciaAporte != undefined){
+              this.listaVigencias.push({
+                tipoVigenciaCodigo:element?.vigenciaAporte.toString(),
+                fuenteFinanciacionId:null,
+                valorAporte: element?.valorDocumento,
+                vigenciaAporteId:element?.cofinanciacionDocumentoId
+              });
+            }
           });
         }else{
           this.listaVigencias = this.fuente.vigenciaAporte;
@@ -148,7 +160,13 @@ export class ControlDeRecursosComponent implements OnInit {
         }
 
       })
-    })
+    });
+    this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if ( urlSegment.path === 'verDetalleControlRecursos' ) {
+          this.esVerDetalleRegistro = true;
+          return;
+      }
+    });
 
   }
 
@@ -158,7 +176,7 @@ export class ControlDeRecursosComponent implements OnInit {
       vigency = this.countResources.find(x => x.numeroRp === element.registroPresupuestal.numeroRp);
       if (vigency)
         vigency.value = (vigency? vigency.value: 0) + Number(element.valorConsignacion);
-    } 
+    }
     if(!vigency && element.registroPresupuestal){
       this.countResources.push({ value: element.valorConsignacion, numeroRp: element.registroPresupuestal.numeroRp, controlRecursoId: element.controlRecursoId });
     }
@@ -170,7 +188,7 @@ export class ControlDeRecursosComponent implements OnInit {
       vigency = this.countResources.find(x => x.vigenciaAporteId === element.vigenciaAporteId);
       if(vigency)
         vigency.value = (vigency? vigency.value : 0) + Number(element.valorConsignacion);
-    } 
+    }
     if(!vigency){
       this.countResources.push({ value: element.valorConsignacion, vigenciaAporteId: element.vigenciaAporteId, controlRecursoId: element.controlRecursoId });
     }
@@ -286,7 +304,7 @@ export class ControlDeRecursosComponent implements OnInit {
   validar(){
     let total = this.valorAporteEnCuenta + this.addressForm.get("valorConsignacion").value;
     let fuenteModificando : ControlRecurso;
-   
+
     if(!this.isETOrThirdParty()){
       this.validateVigency(fuenteModificando)
       return;
@@ -339,6 +357,10 @@ export class ControlDeRecursosComponent implements OnInit {
       this.openDialogError('', `El <b> valor de la consignación </b> no debe superar el <b> monto establecido en el RP ${numeroRp} </b>, verifique por favor.`);
       this.addressForm.get("valorConsignacion").setValue(editingResource?.valorConsignacion, {emitEvent:false});
     }
+  }
+
+  agregar() {
+    this.routes.navigate(['/gestionarFuentes/controlRecursos', this.idFuente, 0])
   }
 
 }

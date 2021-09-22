@@ -36,7 +36,7 @@ export class TablaAprobarOrdenGiroComponent implements OnInit {
         private dialog: MatDialog,
         private ordenGiroSvc: OrdenPagoService )
     {
-        this.ordenGiroSvc.getListOrdenGiro( this.listaMenu.verificarOrdenGiro )
+        this.ordenGiroSvc.getListOrdenGiro( this.listaMenu.aprobarOrdenGiro )
             .subscribe(
                 response => {
                     console.log( response );

@@ -22,6 +22,20 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+        [Route("GetInfoPlantilla")]
+        [HttpGet]
+        public async Task<List<VPlantillaOrdenGiro>> GetInfoPlantilla([FromQuery] int pOrdenGiroId)
+        {
+            try
+            {
+                return await _generateSpinOrderService.GetInfoPlantilla(pOrdenGiroId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpPost]
         [Route("DeleteOrdenGiroDetalleTerceroCausacionDescuento")]
         public async Task<IActionResult> DeleteOrdenGiroDetalleTerceroCausacionDescuento([FromBody] List<int> pOrdenGiroDetalleTerceroCausacionDescuentoId)
@@ -46,6 +60,22 @@ namespace asivamosffie.api.Controllers
             try
             {
                 respuesta = await _generateSpinOrderService.DeleteOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnicaAportanteId, User.Identity.Name);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+        [HttpPost]
+        [Route("DeleteOrdenGiroDetalleDescuentoTecnicaByConcepto")]
+        public async Task<IActionResult> DeleteOrdenGiroDetalleDescuentoTecnicaByConcepto([FromQuery] int pOrdenGiroDetalleDescuentoTecnicaId, [FromQuery] string pConceptoPagoCodigo)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _generateSpinOrderService.DeleteOrdenGiroDetalleDescuentoTecnicaByConcepto(pOrdenGiroDetalleDescuentoTecnicaId, pConceptoPagoCodigo, User.Identity.Name);
                 return Ok(respuesta);
             }
             catch (Exception ex)

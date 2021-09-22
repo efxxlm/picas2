@@ -29,5 +29,6 @@
   <app-detalle-recibo-satisfaccion *ngIf="report && mostrarDetalleRecibo" [report]="report"></app-detalle-recibo-satisfaccion>
   <app-tabla-informe-final-anexos *ngIf="mostrarInforme && report && !mostrarDetalleAnexos" [id]="id" [llaveMen]="report.proyecto.llaveMen" [report]="report"></app-tabla-informe-final-anexos>
   <app-tabla-detalle-informe-anexos *ngIf="mostrarInforme && report && mostrarDetalleAnexos" [id]="id"></app-tabla-detalle-informe-anexos>
+  <!-- bug 378 <app-tabla-historial-observaciones></app-tabla-historial-observaciones> -->
 
 </section>
