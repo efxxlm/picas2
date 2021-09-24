@@ -14998,6 +14998,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(2)
                     .IsUnicode(false);
 
+                entity.Property(e => e.EstaAprobadaOdg).HasColumnName("EstaAprobadaODG");
+
                 entity.Property(e => e.NumeroDrp)
                     .IsRequired()
                     .HasColumnName("NumeroDRP")

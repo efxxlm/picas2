@@ -558,51 +558,52 @@ namespace asivamosffie.services
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
                                                 .Sum(v => v.ValorUso) ?? 0;
 
-                        decimal Saldo = ListPagos
+                        decimal? Saldo = ListPagos
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
-                                                         && r.Pagado == false)
+                                                          && r.Pagado == false
+                                                         )
                                                 .Sum(r => r.SaldoUso) ?? 0;
 
-                        decimal Descuentos = DescuentosOrdenGiro
+
+                        decimal? Descuentos = DescuentosOrdenGiro
                                                             .Where(r => r.ProyectoId == ProyectoId.ProyectoId
-                                                             && r.UsoCodigo == TipoUso.TipoUsoCodigo)
+                                                             && r.UsoCodigo == TipoUso.TipoUsoCodigo
+                                                             )
                                                 .Sum(r => r.ValorDescuento);
 
-                        decimal ValorUsoResta = ValorUso ?? 0 - Descuentos;
-
-                        if (OrdenGiroAprobada)
+                        decimal ValorUsoResta = (decimal)(ValorUso ?? 0 - Descuentos);
+                        foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                               && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
                         {
-                            foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
-                                                            && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
+                            if (item.EstaAprobadaOdg)
                             {
-                                if (OrdenGiroAprobada)
+                                if (ValorUsoResta > item.SaldoUso)
                                 {
-                                    if (ValorUsoResta > item.SaldoUso)
-                                    {
-                                        ValorUsoResta -= (decimal)item.SaldoUso;
-                                        item.SaldoUso = ValorUsoResta;
-                                        item.Pagado = true;
-                                    }
-                                    else
-                                    {
-                                        item.SaldoUso -= ValorUsoResta;
-                                    }
+                                    ValorUsoResta -= (decimal)item.SaldoUso;
+                                    item.SaldoUso = ValorUsoResta;
+                                    item.Pagado = true;
                                 }
                                 else
                                 {
-                                    item.SaldoUso = Saldo;
+                                    item.SaldoUso -= ValorUsoResta;
                                 }
                             }
+                            else
+                            {
+                                item.SaldoUso = ValorUsoResta;
+                            }
+                        }
 
+                        if (true)
+                        {
                             ListDyUsos.Add(new
                             {
                                 Uso.Nombre,
                                 ValorUso = String.Format("{0:n0}", ValorUso),
-                                Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
+                                Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : ValorUso)
                             });
                         }
-
                         else
                         {
                             ListDyUsos.Add(new
@@ -613,7 +614,6 @@ namespace asivamosffie.services
                             });
                         }
                     }
-
                     ListDyProyectos.Add(new
                     {
                         proyecto.InstitucionEducativa.Nombre,

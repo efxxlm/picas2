@@ -5,6 +5,7 @@ namespace asivamosffie.model.Models
 {
     public partial class VPagosSolicitudXcontratacionXproyectoXuso
     {
+        public bool EstaAprobadaOdg { get; set; }
         public bool? Pagado { get; set; }
         public int ContratacionId { get; set; }
         public int? ContratacionProyectoId { get; set; }

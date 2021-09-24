@@ -1990,7 +1990,7 @@ namespace asivamosffie.services
                         foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                                && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
                         {
-                            if (OrdenGiroAprobada)
+                            if (item.EstaAprobadaOdg)
                             {
                                 if (ValorUsoResta > item.SaldoUso)
                                 {
@@ -2005,17 +2005,17 @@ namespace asivamosffie.services
                             }
                             else
                             {
-                                item.SaldoUso = Saldo;
+                                item.SaldoUso = ValorUsoResta;
                             }
                         }
 
-                        if (OrdenGiroAprobada)
+                        if (true)
                         {
                             ListDyUsos.Add(new
                             {
                                 Uso.Nombre,
                                 ValorUso = String.Format("{0:n0}", ValorUso),
-                                Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
+                                Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : ValorUso)
                             });
                         }
                         else
