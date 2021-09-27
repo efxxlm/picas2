@@ -28,6 +28,15 @@ namespace asivamosffie.api.Controllers
         }
 
 
+        [HttpGet]
+        [Route("GetVideos")]
+        public async Task<ActionResult<dynamic>> GetVideos()
+        {
+            var result = await common.GetVideos();
+            return result;
+        }
+
+
         [HttpPost]
         [Route("GetHtmlToPdf")]
         public async Task<FileResult> GetHtmlToPdf([FromBody] Plantilla pPlantilla)

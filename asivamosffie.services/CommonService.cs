@@ -34,6 +34,18 @@ namespace asivamosffie.services
             _mailSettings = mailSettings.Value;
             _context = context;
         }
+        public async Task<dynamic> GetVideos()
+        {
+            return await _context.Dominio
+                                       .Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Videos)
+                                       .Select(r => 
+                                                   new { 
+                                                       r.Nombre,
+                                                       r.Descripcion 
+                                                   }
+                                      ).ToListAsync(); 
+        }
+
 
         public async Task<byte[]> GetHtmlToPdf(Plantilla pPlantilla)
         {
@@ -904,10 +916,10 @@ namespace asivamosffie.services
                                         TimeSpan? diasTemp = descripcion.GetDiasFechaSuspension;
                                         if (fechaReinicio != null)
                                         {
-                                            if(fechaReinicio > descripcion.FechaInicioSuspension)
+                                            if (fechaReinicio > descripcion.FechaInicioSuspension)
                                                 diasTemp = (fechaReinicio - descripcion.FechaInicioSuspension);
                                         }
-                                        DateTime fechaFinalizacionTmp = (DateTime) fechaFinalizacion;
+                                        DateTime fechaFinalizacionTmp = (DateTime)fechaFinalizacion;
                                         fechaFinalizacion = fechaFinalizacionTmp.AddDays((double)diasTemp.Value.TotalDays);
                                     }
                                 }

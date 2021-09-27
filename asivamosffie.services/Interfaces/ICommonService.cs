@@ -9,20 +9,22 @@ using asivamosffie.services.Helpers.Enumerator;
 namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
-    {
+    { 
+        Task<dynamic> GetVideos();
+
         Task<Plantilla> GetPlantillaById(int pPlantillaId);
 
         Task<byte[]> GetHtmlToPdf(Plantilla pPlantilla);
 
-        string  EnumeradorTrasladoBalanceFinanciero();
-         
+        string EnumeradorTrasladoBalanceFinanciero();
+
         Task<string> EnumeradorActualizarPoliza();
 
         Task<string> EnumeradorOrigenOrdenGiro();
 
         Task<string> EnumeradorOrdenGiro(int ContratoId);
 
-        Task<VPermisosMenus> TienePermisos(int idPerfil, string pRuta); 
+        Task<VPermisosMenus> TienePermisos(int idPerfil, string pRuta);
 
         bool EnviarCorreo(List<string> pListCorreo, string pContenido, string pAsunto);
 
