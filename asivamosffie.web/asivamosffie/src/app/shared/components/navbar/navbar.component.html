@@ -1,22 +1,28 @@
-<nav class="navbar">
+<nav
+    class="navbar"
+    [class.navbar__close]="!responsiveOpen"
+>
     <!-- <a mat-button routerLink="/home" routerLinkActive="active"> -->
-    <a mat-button routerLink="/home">
+    <button mat-button class="navbar--icon-menu-responsive" (click)="responsiveOpen = !responsiveOpen">
+        <img class="navbar--icon" src="assets/img/icon/navbar/menu-responsive.svg" alt="Menú principal">
+    </button>
+    <a mat-button class="animatedDown" routerLink="/home">
         <img class="navbar--icon" src="assets/img/icon/navbar/menu.svg" alt="Menú principal">
         Menú principal
     </a>
-    <a mat-button routerLink="/home">
+    <a mat-button class="animatedDown" routerLink="/home">
         <img class="navbar--icon" src="assets/img/icon/navbar/manuales.svg" alt="Manuales instructivos">
         Manuales instructivos
     </a>
-    <a mat-button routerLink="/home">
+    <a mat-button class="animatedDown" routerLink="/home">
         <img class="navbar--icon" src="assets/img/icon/navbar/Video-tutorial.svg" alt="Video tutoriales">
         Video tutoriales
     </a>
-    <a mat-button routerLink="/cambiarContrasena">
+    <a mat-button class="animatedDown" routerLink="/cambiarContrasena">
         <img class="navbar--icon" src="assets/img/icon/navbar/cambiar-contrasenia.svg" alt="Cambiar contraseña">
         Cambiar contraseña
     </a>
-    <button mat-button (click)="logout()">
+    <button mat-button class="animatedDown" (click)="logout()">
         <img class="navbar--icon" src="assets/img/icon/navbar/cerrar-sesion.svg" alt="Cerrar sesión">
         Cerrar sesión
     </button>

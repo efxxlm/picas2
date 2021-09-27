@@ -6,14 +6,29 @@
     text-align: center;
 
     display: flex;
+
+    @media only screen and (max-width: 850px) {    
+        &__close:not(.navbar--icon-menu-responsive) {
+            .mat-button {
+                display: none;
+            }
+        }
+    }
     
     .mat-button {
         color: #fff;
 
         flex-grow: 1;
         border-radius: 0;
-        &:not(:first-child) {
-            border-left: solid 1px #fff;
+        @media only screen and (max-width: 850px) {
+            &:not(:first-child) {
+                border-top: solid 1px #fff;
+            }
+        }
+        @media only screen and (min-width: 851px) {
+            &:not(:last-child) {
+                border-right: solid 1px #fff;
+            }
         }
 
         &.active {
@@ -42,6 +57,20 @@
         height: 2em;
         width: 1.5em;
         margin-right: .8em;
+    }
+
+    &--icon-menu-responsive {
+        text-align: right;
+        @media only screen and (max-width: 850px) {
+            display: block !important;
+        }
+        @media only screen and (min-width: 851px) {
+            display: none;
+        }
+    }
+
+    @media only screen and (max-width: 850px) {
+        flex-direction: column;
     }
 }
 

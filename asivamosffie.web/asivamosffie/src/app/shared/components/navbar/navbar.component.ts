@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class NavbarComponent implements OnInit {
 
   showFiller = false;
+  responsiveOpen = false;
 
   constructor( private autenticacionService: AutenticacionService,
                private router: Router
