@@ -577,11 +577,13 @@ namespace asivamosffie.services
                     pSolicitudPago?.SolicitudPagoRegistrarSolicitudPago?
                     .Sum(r => r.SolicitudPagoFase.Sum(r => r.SolicitudPagoFaseCriterio.Where(r => r.Eliminado != true).Sum(r => r.ValorFacturado)));
 
+                bool? blEsAnticipo = pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Any(r => r.SolicitudPagoFase.Any(r => r.SolicitudPagoFaseCriterio.Any(r => r.TipoCriterioCodigo == ConstanCodigoSolicitudPagoCriterio.Anticipo)));
+
                 _context.Set<SolicitudPago>()
                         .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
                         .Update(s => new SolicitudPago
                         {
-                            EsAnticipio = pSolicitudPago.EsAnticipio,
+                            EsAnticipio = blEsAnticipo,
                             EsFactura = pSolicitudPago.EsFactura,
                             FechaModificacion = DateTime.Now,
                             TieneObservacion = false,
@@ -1466,72 +1468,116 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetMontoMaximoMontoPendiente(
             int SolicitudPagoId,
-            string strFormaPago, 
-            bool EsPreConstruccion, 
-            int pContratacionProyectoId, 
-            string pCriterioCodigo, 
-            string pConceptoCodigo ,
-            string pUsoCodigo)
+            string strFormaPago,
+            bool EsPreConstruccion,
+            int pContratacionProyectoId,
+            string pCriterioCodigo,
+            string pConceptoCodigo,
+            string pUsoCodigo,
+            string pTipoPago,
+            bool pConNovedad
+            )
         {
             try
             {
                 SolicitudPago solicitudPago = await _context.SolicitudPago
-                    .Where(r => r.SolicitudPagoId == SolicitudPagoId)
-                    .Include(r => r.Contrato)
-                    .FirstOrDefaultAsync();
-
-                VValorFacturadoContratoXproyectoXuso VValorFacturadoContratoXproyectoXuso = _context.VValorFacturadoContratoXproyectoXuso
-                                                                                                     .Where(v => v.ContratoId == solicitudPago.ContratoId
-                                                                                                               && v.ContratacionProyectoId == pContratacionProyectoId
-                                                                                                               && v.EsPreconstruccion == EsPreConstruccion
-                                                                                                            // && v.ConceptoCodigo == pConceptoCodigo
-                                                                                                               && v.UsoCodigo == pUsoCodigo)
-                                                                                                     .FirstOrDefault();
+                         .Where(r => r.SolicitudPagoId == SolicitudPagoId)
+                         .Include(r => r.Contrato)
+                         .FirstOrDefaultAsync();
 
 
-                //  decimal Porcentaje = decimal.Parse(_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && r.Codigo == pCriterioCodigo).FirstOrDefault().Descripcion ?? "100");
-                decimal Porcentaje = 100;
-
-                if (VValorFacturadoContratoXproyectoXuso == null)
+                if (pCriterioCodigo == ConstanCodigoCriterioPago.Anticipo)
                 {
+
                     ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Find(pContratacionProyectoId);
-                    decimal ValorTotalPorFase = (decimal)_context.VDrpXcontratacionXproyectoXfaseXconceptoXusos
-                           .Where(r => r.ContratacionId == solicitudPago.Contrato.ContratacionId
-                                    && r.ProyectoId == contratacionProyecto.ProyectoId
-                                    && r.EsPreConstruccion == EsPreConstruccion  
-                                    && r.TipoUsoCodigo == pUsoCodigo
-                                    && r.ConceptoPagoCodigo == pConceptoCodigo
-                                    
-                                    )
-                           .Sum(v => v.ValorUso);
+
+                    decimal ValorTotalPorFase = 0;
+                    if (pConNovedad)
+                    {
+                        ValorTotalPorFase = (decimal)_context.VDrpXcontratacionXproyectoXfaseXconceptoXusos
+                                                                                               .Where(r => r.ContratacionId == solicitudPago.Contrato.ContratacionId
+                                                                                                        && r.ProyectoId == contratacionProyecto.ProyectoId
+                                                                                                        && r.EsPreConstruccion == EsPreConstruccion
+                                                                                                        && r.TipoUsoCodigo == pUsoCodigo
+                                                                                                        && r.ConceptoPagoCodigo == pConceptoCodigo)
+                                                                                               .Sum(v => v.ValorUso);
+                    }
+                    else
+                    {
+                        ValorTotalPorFase = (decimal)_context.VDrpXcontratacionXproyectoXfaseXconceptoXusos
+                                                                                               .Where(r => r.ContratacionId == solicitudPago.Contrato.ContratacionId
+                                                                                                        && r.ProyectoId == contratacionProyecto.ProyectoId
+                                                                                                        && r.EsPreConstruccion == EsPreConstruccion
+                                                                                                        && r.TipoUsoCodigo == pUsoCodigo
+                                                                                                        && r.EsDrpOriginal == true
+                                                                                                        && r.ConceptoPagoCodigo == pConceptoCodigo)
+                                                                                               .Sum(v => v.ValorUso);
+                    }
+         
+                    int Porcentaje = Int32.Parse(_context.Dominio.Where(r => r.Codigo == pTipoPago && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Pago_Obra_Interventoria).Select(r => r.Descripcion).FirstOrDefault());
 
                     return new
                     {
-                        MontoMaximo = (ValorTotalPorFase * Porcentaje) / 100,
-                        ValorPendientePorPagar = 0
+                        MontoMaximo = (ValorTotalPorFase / 100) * Porcentaje,
+                        SaldoPresupuestal = 0
                     };
                 }
-
-
-                VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal =
-                                                                         VValorFacturadoContratoXproyectoXuso.ValorSolicitudDdp
-                                                                       - (decimal)_context.VValorFacturadoContratoXproyectoXuso.Where(
-                                                                                                                                         v => v.ContratoId == solicitudPago.ContratoId
-                                                                                                                                           && v.ContratacionProyectoId == pContratacionProyectoId
-                                                                                                                                           && v.EsPreconstruccion == EsPreConstruccion
-                                                                                                                                           && v.Uso == VValorFacturadoContratoXproyectoXuso.Uso 
-                                                                                                                                           )
-                                                                                                                               .Sum(c => c.ValorFacturado);
-
-                decimal MontoMaximo = 0;
-
-                MontoMaximo = ((decimal)VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal * Porcentaje) / 100;
-
-                return new
+                else
                 {
-                    MontoMaximo = MontoMaximo < 0 ? VValorFacturadoContratoXproyectoXuso.ValorSolicitudDdp : MontoMaximo,
-                    VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal
-                };
+
+
+                    VValorFacturadoContratoXproyectoXuso VValorFacturadoContratoXproyectoXuso = _context.VValorFacturadoContratoXproyectoXuso
+                                                                                                         .Where(v => v.ContratoId == solicitudPago.ContratoId
+                                                                                                                   && v.ContratacionProyectoId == pContratacionProyectoId
+                                                                                                                   && v.EsPreconstruccion == EsPreConstruccion
+                                                                                                                   // && v.ConceptoCodigo == pConceptoCodigo
+                                                                                                                   && v.UsoCodigo == pUsoCodigo)
+                                                                                                         .FirstOrDefault();
+
+
+                    //  decimal Porcentaje = decimal.Parse(_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && r.Codigo == pCriterioCodigo).FirstOrDefault().Descripcion ?? "100");
+                    decimal Porcentaje = 100;
+
+                    if (VValorFacturadoContratoXproyectoXuso == null)
+                    {
+                        ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Find(pContratacionProyectoId);
+                        decimal ValorTotalPorFase = (decimal)_context.VDrpXcontratacionXproyectoXfaseXconceptoXusos
+                               .Where(r => r.ContratacionId == solicitudPago.Contrato.ContratacionId
+                                        && r.ProyectoId == contratacionProyecto.ProyectoId
+                                        && r.EsPreConstruccion == EsPreConstruccion
+                                        && r.TipoUsoCodigo == pUsoCodigo
+                                        && r.ConceptoPagoCodigo == pConceptoCodigo
+                                        )
+                               .Sum(v => v.ValorUso);
+
+                        return new
+                        {
+                            MontoMaximo = (ValorTotalPorFase * Porcentaje) / 100,
+                            ValorPendientePorPagar = 0
+                        };
+                    }
+
+
+                    VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal =
+                                                                             VValorFacturadoContratoXproyectoXuso.ValorSolicitudDdp
+                                                                           - (decimal)_context.VValorFacturadoContratoXproyectoXuso.Where(
+                                                                                                                                             v => v.ContratoId == solicitudPago.ContratoId
+                                                                                                                                               && v.ContratacionProyectoId == pContratacionProyectoId
+                                                                                                                                               && v.EsPreconstruccion == EsPreConstruccion
+                                                                                                                                               && v.Uso == VValorFacturadoContratoXproyectoXuso.Uso
+                                                                                                                                               )
+                                                                                                                                   .Sum(c => c.ValorFacturado);
+
+                    decimal MontoMaximo = 0;
+
+                    MontoMaximo = ((decimal)VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal * Porcentaje) / 100;
+
+                    return new
+                    {
+                        MontoMaximo = MontoMaximo < 0 ? VValorFacturadoContratoXproyectoXuso.ValorSolicitudDdp : MontoMaximo,
+                        VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal
+                    };
+                }
             }
             catch (Exception e)
             {
