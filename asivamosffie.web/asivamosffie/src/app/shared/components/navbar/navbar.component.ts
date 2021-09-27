@@ -29,6 +29,10 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  verVideoTutorial(infoVideo) {
+    this.router.navigate( [ '/videoTutorial' ], { state: { infoVideo } } )
+  }
+
   logout() {
     this.autenticacionService.logout();
   }

@@ -23,9 +23,14 @@
     Video tutoriales
   </button>
   <mat-menu #menuVideoTutoriales="matMenu">
-    <a *ngFor="let videoTutorial of videoTutoriales" mat-menu-item [href]="videoTutorial.descripcion" target="_blank">
+    <!-- <a *ngFor="let videoTutorial of videoTutoriales" mat-menu-item (click)="verVideoTutorial(videoTutorial)">
       {{ videoTutorial.nombre }}
-    </a>
+    </a> -->
+
+    <a mat-menu-item routerLink="/videoTutorial/1">Dirección Tecnica</a>
+    <a mat-menu-item routerLink="/videoTutorial/2">Dirección Financiera</a>
+    <a mat-menu-item routerLink="/videoTutorial/3">Dirección Juridica</a>
+    <a mat-menu-item routerLink="/videoTutorial/4">Fiduciaria</a>
   </mat-menu>
   <a mat-button class="animatedDown" routerLink="/cambiarContrasena">
     <img class="navbar--icon" src="assets/img/icon/navbar/cambiar-contrasenia.svg" alt="Cambiar contraseña" />

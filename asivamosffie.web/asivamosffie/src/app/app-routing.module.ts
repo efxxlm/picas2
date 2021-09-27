@@ -21,6 +21,7 @@ import { RegistrarComponent } from './_pages/gestionar-fuentes-de-financiacion/c
 import { CanDeactivateGuard } from './_guards/can-deactivate.guard';
 import { AuthenticateGuard } from './_guards/authenticate.guard';
 import { PlantillaComponent } from './_pages/generar-orden-giro/components/plantilla/plantilla.component';
+import { VideoTutorialComponent } from './shared/components/video-tutorial/video-tutorial.component';
 
 const routes: Routes = [
   {
@@ -576,6 +577,11 @@ const routes: Routes = [
         path: 'menu',
         canLoad: [ ActualUserGuard ],
         loadChildren: () => import('./_pages/menu/menu.module').then(m => m.MenuModule)
+      },
+      {
+        path: 'videoTutorial/:id',
+        canLoad: [ ActualUserGuard ],
+        component: VideoTutorialComponent
       },
       /*{
         path: 'informeSemanal',
