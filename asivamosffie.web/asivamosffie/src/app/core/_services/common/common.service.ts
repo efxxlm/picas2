@@ -556,6 +556,10 @@ export class CommonService {
   GetHtmlToPdf(pdf: any){
     return this.http.post(`${environment.apiUrl}/common/GetHtmlToPdf`, pdf, { responseType: "blob" });
   }
+
+  getVideos() {
+    return this.http.get<any>(`${environment.apiUrl}/Common/GetVideos`);
+  }
 }
 
 export interface Dominio{
