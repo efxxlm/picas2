@@ -20,7 +20,32 @@
 
   <div class="video-16-9" *ngIf="videoTutorial">
     <iframe
-      [src]="videoTutorial.descripcion"
+      *ngIf="videoTutorial.descripcion === 'https://www.youtube-nocookie.com/embed/1_BZbIBUK_M'"
+      src="https://www.youtube-nocookie.com/embed/1_BZbIBUK_M"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+    <iframe
+      *ngIf="videoTutorial.descripcion === 'https://www.youtube-nocookie.com/embed/hLqeomVCgWg'"
+      src="https://www.youtube-nocookie.com/embed/hLqeomVCgWg"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+    <iframe
+      *ngIf="videoTutorial.descripcion === 'https://www.youtube-nocookie.com/embed/sprwbkwL0j4'"
+      src="https://www.youtube-nocookie.com/embed/sprwbkwL0j4"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+    <iframe
+      *ngIf="videoTutorial.descripcion === 'https://www.youtube-nocookie.com/embed/6z5q4f54dtc'"
+      src="https://www.youtube-nocookie.com/embed/6z5q4f54dtc"
       title="YouTube video player"
       frameborder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -33,3 +58,4 @@
     </video> -->
   </div>
 </section>
+
