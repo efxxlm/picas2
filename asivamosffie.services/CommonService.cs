@@ -141,7 +141,7 @@ namespace asivamosffie.services
                 mail.Body = pContenido;
                 SmtpServer.Port = _mailSettings.MailPort;
                 SmtpServer.Credentials = new NetworkCredential(_mailSettings.Sender, _mailSettings.Password);
-                SmtpServer.EnableSsl = false;
+                SmtpServer.EnableSsl = _mailSettings.EnableSSL;
                 SmtpServer.Send(mail);
 
             }
@@ -178,7 +178,7 @@ namespace asivamosffie.services
                 {
                     Port = _mailSettings.MailPort,
                     Credentials = new NetworkCredential(_mailSettings.Sender, _mailSettings.Password),
-                    EnableSsl = false
+                    EnableSsl = _mailSettings.EnableSSL
                 };
                 SmtpServer.Send(mail);
 
