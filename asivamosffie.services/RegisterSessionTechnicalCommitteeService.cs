@@ -1349,6 +1349,7 @@ namespace asivamosffie.services
 
                     pComiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria;
                     pComiteTecnico.NumeroComite = await _commonService.EnumeradorComiteTecnico();
+                    pComiteTecnico.TipoTemaFiduciarioCodigo = pComiteTecnico.TipoTemaFiduciarioCodigo;
 
 
                     foreach (var SesionComiteTema in pComiteTecnico.SesionComiteTema)
@@ -1396,6 +1397,7 @@ namespace asivamosffie.services
                     comiteTecnicoOld.FechaOrdenDia = comiteTecnicoOld.FechaOrdenDia;
                     comiteTecnicoOld.NumeroComite = comiteTecnicoOld.NumeroComite;
                     comiteTecnicoOld.EstadoComiteCodigo = comiteTecnicoOld.EstadoComiteCodigo;
+                    comiteTecnicoOld.TipoTemaFiduciarioCodigo = pComiteTecnico.TipoTemaFiduciarioCodigo;
 
                     foreach (var SesionComiteTema in pComiteTecnico.SesionComiteTema)
                     {
@@ -1431,6 +1433,12 @@ namespace asivamosffie.services
                         }
                     }
 
+                    //Elimino los anteriores 
+                    foreach (var SesionComiteSolicitud in comiteTecnicoOld.SesionComiteSolicitudComiteTecnico)
+                    {
+                        SesionComiteSolicitud.Eliminado = true;
+                    }
+
                     foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
                     {
                         if (SesionComiteSolicitud.SesionComiteSolicitudId == 0)
@@ -1450,6 +1458,7 @@ namespace asivamosffie.services
                             SesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
 
                             //Registros
+                            SesionComiteSolicitudOld.Eliminado = false;
                             SesionComiteSolicitudOld.TipoSolicitudCodigo = SesionComiteSolicitud.TipoSolicitudCodigo;
                             SesionComiteSolicitudOld.SolicitudId = SesionComiteSolicitud.SolicitudId;
                             SesionComiteSolicitudOld.EstadoCodigo = SesionComiteSolicitud.EstadoCodigo;
@@ -1691,6 +1700,8 @@ namespace asivamosffie.services
             comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => r.Eliminado != true).ToList();
 
             comiteTecnico.SesionInvitado = comiteTecnico.SesionInvitado.Where(r => r.Eliminado != true).ToList();
+
+            comiteTecnico.SesionComiteSolicitudComiteTecnico = comiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.Eliminado != true).ToList();
 
             #endregion query
 

@@ -15,7 +15,7 @@ const routes: Routes = [
     component: ComiteTecnicoComponent
   },
   {
-    path: 'crearOrdenDelDia/:id/:fecha',
+    path: 'crearOrdenDelDia/:id',
     component: CrearOrdenDelDiaComponent
   },
   {

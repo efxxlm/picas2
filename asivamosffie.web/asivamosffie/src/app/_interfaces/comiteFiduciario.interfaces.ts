@@ -2,6 +2,8 @@ export interface SolicitudContractual {
   nombreSesion: string;
   fecha: string;
   data: DataSesion[];
+  id?: number,
+  tipoSolicitudCodigo?: string
 };
 
 export interface DataSesion {
