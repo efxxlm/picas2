@@ -1485,47 +1485,6 @@ namespace asivamosffie.services
                          .Include(r => r.Contrato)
                          .FirstOrDefaultAsync();
 
-
-                if (pCriterioCodigo == ConstanCodigoCriterioPago.Anticipo)
-                {
-
-                    ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Find(pContratacionProyectoId);
-
-                    decimal ValorTotalPorFase = 0;
-                    if (pConNovedad)
-                    {
-                        ValorTotalPorFase = (decimal)_context.VDrpXcontratacionXproyectoXfaseXconceptoXusos
-                                                                                               .Where(r => r.ContratacionId == solicitudPago.Contrato.ContratacionId
-                                                                                                        && r.ProyectoId == contratacionProyecto.ProyectoId
-                                                                                                        && r.EsPreConstruccion == EsPreConstruccion
-                                                                                                        && r.TipoUsoCodigo == pUsoCodigo
-                                                                                                        && r.ConceptoPagoCodigo == pConceptoCodigo)
-                                                                                               .Sum(v => v.ValorUso);
-                    }
-                    else
-                    {
-                        ValorTotalPorFase = (decimal)_context.VDrpXcontratacionXproyectoXfaseXconceptoXusos
-                                                                                               .Where(r => r.ContratacionId == solicitudPago.Contrato.ContratacionId
-                                                                                                        && r.ProyectoId == contratacionProyecto.ProyectoId
-                                                                                                        && r.EsPreConstruccion == EsPreConstruccion
-                                                                                                        && r.TipoUsoCodigo == pUsoCodigo
-                                                                                                        && r.EsDrpOriginal == true
-                                                                                                        && r.ConceptoPagoCodigo == pConceptoCodigo)
-                                                                                               .Sum(v => v.ValorUso);
-                    }
-         
-                    int Porcentaje = Int32.Parse(_context.Dominio.Where(r => r.Codigo == pTipoPago && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Pago_Obra_Interventoria).Select(r => r.Descripcion).FirstOrDefault());
-
-                    return new
-                    {
-                        MontoMaximo = (ValorTotalPorFase / 100) * Porcentaje,
-                        SaldoPresupuestal = 0
-                    };
-                }
-                else
-                {
-
-
                     VValorFacturadoContratoXproyectoXuso VValorFacturadoContratoXproyectoXuso = _context.VValorFacturadoContratoXproyectoXuso
                                                                                                          .Where(v => v.ContratoId == solicitudPago.ContratoId
                                                                                                                    && v.ContratacionProyectoId == pContratacionProyectoId
@@ -1533,8 +1492,7 @@ namespace asivamosffie.services
                                                                                                                    // && v.ConceptoCodigo == pConceptoCodigo
                                                                                                                    && v.UsoCodigo == pUsoCodigo)
                                                                                                          .FirstOrDefault();
-
-
+                 
                     //  decimal Porcentaje = decimal.Parse(_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && r.Codigo == pCriterioCodigo).FirstOrDefault().Descripcion ?? "100");
                     decimal Porcentaje = 100;
 
@@ -1577,7 +1535,7 @@ namespace asivamosffie.services
                         MontoMaximo = MontoMaximo < 0 ? VValorFacturadoContratoXproyectoXuso.ValorSolicitudDdp : MontoMaximo,
                         VValorFacturadoContratoXproyectoXuso.SaldoPresupuestal
                     };
-                }
+                
             }
             catch (Exception e)
             {
@@ -1782,6 +1740,7 @@ namespace asivamosffie.services
             catch (Exception e)
             {
             }
+            contrato.VAmortizacionXproyecto = _context.VAmortizacionXproyecto.Where(v => v.ContratoId == pContratoId).ToList();
             contrato.VContratoPagosRealizados = vContratoPagosRealizados;
             contrato.TablaDRP = GetDrpContrato(contrato.ContratacionId);
             contrato.TablaDRPODG = GetDrpContratoODG(contrato.ContratacionId);
