@@ -16,7 +16,7 @@ export class TechnicalCommitteSessionService {
   constructor(
               private http: HttpClient,
 
-             ) 
+             )
   { }
 
   getListSolicitudesContractuales( fechaComite ){
@@ -87,6 +87,10 @@ export class TechnicalCommitteSessionService {
     return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/deleteSesionInvitado?pSesionInvitadoId=${ id }`);
    }
 
+   deleteSesionResponsable( id: number ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/deleteSesionResponsable?pSesionResponsableId=${ id }`);
+   }
+
    deleteComiteTecnicoByComiteTecnicoId( id: number ){
     return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/deleteComiteTecnicoByComiteTecnicoId?pComiteTecnicoId=${ id }`);
    }
@@ -100,7 +104,7 @@ export class TechnicalCommitteSessionService {
    }
 
    getCompromisosByComiteTecnicoId( id: number, esFiduciario: boolean){
-    return this.http.get<ComiteTecnico>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getCompromisosByComiteTecnicoId?ComiteTecnicoId=${ id }&pEsFiduciario=${ esFiduciario }`); 
+    return this.http.get<ComiteTecnico>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getCompromisosByComiteTecnicoId?ComiteTecnicoId=${ id }&pEsFiduciario=${ esFiduciario }`);
    }
 
    verificarTemasCompromisos( comite: ComiteTecnico ){
@@ -158,5 +162,5 @@ export class TechnicalCommitteSessionService {
    deleteTemaCompromiso( id ){
     return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/deleteTemaCompromiso?pTemaCompromisoId=${ id }`);
    }
-  
+
 }

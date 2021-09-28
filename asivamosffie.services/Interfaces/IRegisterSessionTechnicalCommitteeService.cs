@@ -43,6 +43,8 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> DeleteSesionInvitado(int pSesionInvitadoId, string pUsuarioModificacion);
 
+        Task<Respuesta> DeleteSesionResponsable(int pSesionResponsableId, string pUsuarioModificacion);
+
         Task<Respuesta> CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud(ComiteTecnico pComiteTecnico);
 
         Task<Respuesta> CambiarEstadoComiteTecnico(ComiteTecnico pComiteTecnico);

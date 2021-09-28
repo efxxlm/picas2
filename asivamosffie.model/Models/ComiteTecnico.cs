@@ -16,6 +16,7 @@ namespace asivamosffie.model.Models
             SesionInvitado = new HashSet<SesionInvitado>();
             SesionParticipante = new HashSet<SesionParticipante>();
             SesionParticipanteVoto = new HashSet<SesionParticipanteVoto>();
+            SesionResponsable = new HashSet<SesionResponsable>();
         }
 
         public int ComiteTecnicoId { get; set; }
@@ -50,5 +51,6 @@ namespace asivamosffie.model.Models
         public virtual ICollection<SesionInvitado> SesionInvitado { get; set; }
         public virtual ICollection<SesionParticipante> SesionParticipante { get; set; }
         public virtual ICollection<SesionParticipanteVoto> SesionParticipanteVoto { get; set; }
+        public virtual ICollection<SesionResponsable> SesionResponsable { get; set; }
     }
 }

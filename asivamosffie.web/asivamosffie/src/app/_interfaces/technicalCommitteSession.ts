@@ -53,6 +53,7 @@ export interface ComiteTecnico{
     sesionComiteSolicitudComiteTecnicoFiduciario?: SesionComiteSolicitud[],
     sesionParticipante?: SesionParticipante[],
     sesionInvitado?: SesionInvitado[],
+    sesionResponsable?: SesionResponsable[],
 
 }
 
@@ -211,6 +212,21 @@ export interface SesionInvitado{
     usuarioModificacion?: string,
     eliminado?: boolean,
     comiteTecnicoId?: number,
+
+}
+
+export interface SesionResponsable{
+  sesionResponsableId?: number,
+  nombre?: string,
+  cargo?: string,
+  entidad?: string,
+  fechaCreacion?: Date,
+  usuarioCreacion?: string,
+  fechaModificacion?: Date,
+  usuarioModificacion?: string,
+  eliminado?: boolean,
+  comiteTecnicoId?: number,
+  esDelegado?: boolean,
 
 }
 
