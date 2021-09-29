@@ -17,6 +17,7 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
 
   @Input() esVerDetalle: boolean;
   @Input() valorComprometidoDDP: number ;
+  @Input() saldoActual: number ;
 
   dataTable = [];
   displayedColumns: string[] = [
@@ -161,9 +162,14 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
     // console.log(e);
   }
 
-  eliminar(e: number) {
+  eliminar(e: any) {
+    console.log(this.valorComprometidoDDP);
     // console.log(e);
-    this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",e);
+    if(this.saldoActual < e.valorConsignacion){
+      this.openDialog('','<b>No se puede eliminar la consignación, supera el valor comprometido.</b>');
+      return;
+    }
+    this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",e.controlRecursoId);
   }
 
 }

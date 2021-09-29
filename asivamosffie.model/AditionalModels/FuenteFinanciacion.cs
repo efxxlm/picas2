@@ -22,6 +22,9 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public decimal ComprometidoEnDdp { get; set; }
+
+        [NotMapped]
+        public decimal SaldoActual { get; set; }
     }
 
 }

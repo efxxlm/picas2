@@ -131,6 +131,7 @@ export interface FuenteFinanciacion{
    eliminado?: boolean,
    asociadoASolicitud?: boolean,
    comprometidoEnDdp?:number,
+   saldoActual?:number
    //DateTime FechaCreacion: Date
    //string UsuarioCreacion: string
 }
