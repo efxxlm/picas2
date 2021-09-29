@@ -1071,9 +1071,30 @@ export class RegistrarComponent implements OnInit {
     this.valorRPTmp = 0;
     this.valorDocumentoTmp = 0;
 
+    let valorTotalRP = 0;
+
     let listaDocumentoSeleccionada = this.listaDocumentos.find(r => r.cofinanciacionAportanteId == event.value.cofinanciacionAportanteId && r.cofinanciacionDocumentoId == event.value.cofinanciacionDocumentoId);
     this.valorDocumentoTmp = listaDocumentoSeleccionada.valorDocumento;
     this.valorRPTmp = this.registrosPresupuestales.controls[i].get('valorRP').value;
+
+    this.registrosPresupuestales.controls.forEach(element => {
+      
+      if (element.value.numerodocumentoRP.numeroAcuerdo === event.value.numeroAcuerdo) {
+        valorTotalRP += element.value.valorRP;;
+
+        if (valorTotalRP > this.valorDocumentoTmp) {
+          this.registrosPresupuestales.controls[i].get('valorRP').setValue(null);
+          this.registrosPresupuestales.controls[i].get('numerodocumentoRP').setValue(null);
+          this.openDialog(
+            '',
+            '<b>Los valores RP son mayores que el valor del documento de apropiación</b>'
+          );
+          return;
+        }
+
+      }
+      
+    });
 
     if(this.valorRPTmp > this.valorDocumentoTmp){
       this.registrosPresupuestales.controls[i].get('valorRP').setValue(null);
