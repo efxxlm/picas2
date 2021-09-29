@@ -50,7 +50,8 @@ export class RegistrarComponent implements OnInit {
   listaFuentes: FuenteFinanciacion[] = [];
   listaDocumentos: CofinanciacionDocumento[] = [];
   valorTotal = 0;
-
+  valorRPTmp : number = 0;
+  valorDocumentoTmp: number = 0;
   data;
 
   mostrarNombreaportante: boolean;
@@ -1064,5 +1065,24 @@ export class RegistrarComponent implements OnInit {
   sinRPS() {
     this.registrosPresupuestales.clear();
     this.addressForm.get('cuantosRP').setValue(0);
+  }
+
+  validarValorRpXDocumentoApropiacion(event: any, i: number){
+    this.valorRPTmp = 0;
+    this.valorDocumentoTmp = 0;
+
+    let listaDocumentoSeleccionada = this.listaDocumentos.find(r => r.cofinanciacionAportanteId == event.value.cofinanciacionAportanteId && r.cofinanciacionDocumentoId == event.value.cofinanciacionDocumentoId);
+    this.valorDocumentoTmp = listaDocumentoSeleccionada.valorDocumento;
+    this.valorRPTmp = this.registrosPresupuestales.controls[i].get('valorRP').value;
+
+    if(this.valorRPTmp > this.valorDocumentoTmp){
+      this.registrosPresupuestales.controls[i].get('valorRP').setValue(null);
+      this.registrosPresupuestales.controls[i].get('numerodocumentoRP').setValue(null);
+      this.openDialog(
+        '',
+        '<b>Los valores RP son mayores que el valor del documento de apropiación</b>'
+      );
+      return;
+    }
   }
 }

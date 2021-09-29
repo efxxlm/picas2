@@ -312,7 +312,7 @@
                     " />
                 </span> -->
               </div>
-              <button mat-button color="warn" type="button" class="btn-eliminar" 
+              <button mat-button color="warn" type="button" class="btn-eliminar"
               *ngIf="idAportante !== '0'"
               (click)="onAddRP()">
                 <img src="assets/img/icon/mas.svg" alt="Agregar otro RP" />
@@ -375,7 +375,7 @@
                               }">
                         Valor RP
                       </label>
-                    </div>                  
+                    </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width maincolor">
                         <input matInput #valorRP formControlName="valorRP" maxlength="20"
@@ -388,7 +388,7 @@
                             allowNegative: false
                           }"
                           required
-                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />                    
+                          oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" />
                       </mat-form-field>
                       <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
                         matTooltipClass="info-tooltip">
@@ -456,7 +456,7 @@
                     </div>
                     <div class="col w-select-unico">
                       <mat-form-field class="full-width">
-                        <mat-select formControlName="numerodocumentoRP">
+                        <mat-select formControlName="numerodocumentoRP" (selectionChange)="validarValorRpXDocumentoApropiacion($event, i)">
                           <mat-option *ngFor="let nombreAportantes of listaDocumentos" [value]="nombreAportantes">
                             {{ nombreAportantes.numeroAcuerdo }} {{ nombreAportantes.numeroActa }}
                           </mat-option>
@@ -693,7 +693,7 @@
                                 required
                                 (keypress)="validateNumberKeypress($event)"
                                 onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
-                                
+
                                 [options]="{
                                   prefix: '$ ',
                                   thousands: '.',
