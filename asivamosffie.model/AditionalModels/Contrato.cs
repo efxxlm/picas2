@@ -101,6 +101,10 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public dynamic TablaRecursosComprometidos { get; set; }
+
+
+        [NotMapped]
+        public List<VAmortizacionXproyecto> VAmortizacionXproyecto{ get; set; }
     }
 
 

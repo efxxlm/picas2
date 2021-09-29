@@ -4,7 +4,7 @@ import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.serv
 import { forkJoin } from 'rxjs';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
-import { ComiteTecnico, SesionParticipante, SesionInvitado, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico, SesionParticipante, SesionInvitado, EstadosComite, SesionResponsable } from 'src/app/_interfaces/technicalCommitteSession';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -147,6 +147,24 @@ export class FormRegistrarParticipantesComponent implements OnInit {
             })
           }
 
+          if (this.objetoComiteTecnico.sesionResponsable.length > 0) {
+
+            this.responsables.clear();
+
+            this.objetoComiteTecnico.sesionResponsable.forEach(i => {
+              let grupoResponsable = this.crearResponsable();
+
+              grupoResponsable.get('nombre').setValue(i.nombre)
+              grupoResponsable.get('cargo').setValue(i.cargo)
+              grupoResponsable.get('entidad').setValue(i.entidad)
+              grupoResponsable.get('sesionResponsableId').setValue(i.sesionResponsableId)
+              grupoResponsable.get('esDelegado').setValue(i.esDelegado)
+
+              this.responsables.push(grupoResponsable);
+            })
+          }else{
+            this.agregaResponsable();
+          }
         })
 
       })
@@ -157,10 +175,15 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     return this.addressForm.get('invitados') as FormArray;
   }
 
+  get responsables() {
+    return this.addressForm.get('responsables') as FormArray;
+  }
+
   private buildForm() {
     this.addressForm = this.fb.group({
       miembrosParticipantes: [null, Validators.required],
-      invitados: this.fb.array([])
+      invitados: this.fb.array([]),
+      responsables: this.fb.array([])
     });
   }
 
@@ -170,6 +193,10 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
   agregaInvitado() {
     this.invitados.push(this.crearInvitado());
+  }
+
+  agregaResponsable() {
+    this.responsables.push(this.crearResponsable());
   }
 
   crearInvitado() {
@@ -184,6 +211,22 @@ export class FormRegistrarParticipantesComponent implements OnInit {
       entidad: [null, Validators.compose([
         Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ]
+    });
+  }
+
+  crearResponsable() {
+    return this.fb.group({
+      sesionResponsableId: [],
+      nombre: [null, Validators.compose([
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
+      ],
+      cargo: [null, Validators.compose([
+        Validators.required, Validators.minLength(1), Validators.maxLength(50)])
+      ],
+      entidad: [null, Validators.compose([
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
+      ],
+      esDelegado: [null, Validators.required],
     });
   }
 
@@ -358,14 +401,29 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
   }
 
-  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+  onDeleteResponsable(i: number) {
+    let grupo = this.responsables.controls[i] as FormGroup;
+    let idResponsable = grupo.get('sesionResponsableId').value ? grupo.get('sesionResponsableId').value : 0;
+    this.technicalCommitteSessionService.deleteSesionResponsable(idResponsable)
+      .subscribe(respuesta => {
+        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>')
+        this.borrarArray(this.responsables, i)
+      })
+
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e: number, esResponsable: boolean) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
-        this.onDelete(e)
+        if(esResponsable != true){
+          this.onDelete(e)
+        }else{
+          this.onDeleteResponsable(e)
+        }
       }
     });
   }
@@ -393,7 +451,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
         comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
         sesionParticipante: [],
         sesionInvitado: [],
-
+        sesionResponsable: [],
       }
 
       let miembros = this.addressForm.get('miembrosParticipantes').value;
@@ -424,7 +482,21 @@ export class FormRegistrarParticipantesComponent implements OnInit {
         comite.sesionInvitado.push(sesionInvitado);
       })
 
-      // console.log(comite)
+      //cc22 - responsables
+      this.responsables.controls.forEach(control => {
+        let sesionResponsable: SesionResponsable = {
+          comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
+          sesionResponsableId: control.get('sesionResponsableId').value,
+          nombre: control.get('nombre').value,
+          cargo: control.get('cargo').value,
+          entidad: control.get('entidad').value,
+          esDelegado: control.get('esDelegado').value,
+        }
+
+        comite.sesionResponsable.push(sesionResponsable);
+      })
+
+      console.log(comite)
 
       this.technicalCommitteSessionService.createEditSesionInvitadoAndParticipante(comite)
         .subscribe(respuesta => {
@@ -432,8 +504,6 @@ export class FormRegistrarParticipantesComponent implements OnInit {
           if (respuesta.code == "200")
             this.ngOnInit();
         })
-
-      // console.log(this.addressForm.get('miembrosParticipantes').value);
     }
   }
 }

@@ -76,14 +76,16 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetMontoMaximoMontoPendiente")]
-        public async Task<IActionResult> GetMontoMaximoMontoPendiente([FromQuery] 
-        int SolicitudPagoId, 
-            string strFormaPago, 
-            bool EsPreConstruccion, 
-            int pContratacionProyectoId, 
-            string pCriterioCodigo, 
+        public async Task<IActionResult> GetMontoMaximoMontoPendiente([FromQuery]
+        int SolicitudPagoId,
+            string strFormaPago,
+            bool EsPreConstruccion,
+            int pContratacionProyectoId,
+            string pCriterioCodigo,
             string pConceptoCodigo,
-             string pUsoCodigo
+            string pUsoCodigo,
+            string pTipoPago,
+            bool pConNovedad
             )
         {
             return Ok(await _registerValidatePaymentRequierementsService.GetMontoMaximoMontoPendiente(
@@ -93,7 +95,9 @@ namespace asivamosffie.api.Controllers
                 pContratacionProyectoId,
                 pCriterioCodigo,
                 pConceptoCodigo,
-                pUsoCodigo
+                pUsoCodigo,
+                pTipoPago,
+                pConNovedad
                 ));
         }
 
@@ -161,7 +165,7 @@ namespace asivamosffie.api.Controllers
         {
             return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPagoFaseCriterio(pSolicitudPagoFaseCriterioId, HttpContext.User.FindFirst("User").Value));
         }
-         
+
         [HttpPost]
         [Route("DeleteSolicitudPagoFaseCriterioConceptoPago")]
         public async Task<IActionResult> DeleteSolicitudPagoFaseCriterioConceptoPago([FromQuery] int pSolicitudPagoFaseCriterioConceptoId)
@@ -206,7 +210,7 @@ namespace asivamosffie.api.Controllers
             pSolicitudPago.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
             return Ok(await _registerValidatePaymentRequierementsService.CreateEditNewPayment(pSolicitudPago));
         }
-         
+
         [HttpGet]
         [Route("GetListSolicitudPago")]
         public async Task<IActionResult> GetListSolicitudPago()

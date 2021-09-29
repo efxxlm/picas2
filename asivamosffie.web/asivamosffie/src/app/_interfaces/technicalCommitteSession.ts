@@ -5,6 +5,7 @@ import { dashCaseToCamelCase } from '@angular/compiler/src/util';
 import { ProcesoSeleccion, ProcesoSeleccionCronograma } from '../core/_services/procesoSeleccion/proceso-seleccion.service';
 
 export interface SolicitudesContractuales{
+    fechaOrdenDia?: Date;
     id?: number,
     fechaSolicitud?: Date,
     tipoSolicitud?: string,
@@ -17,6 +18,8 @@ export interface SolicitudesContractuales{
     fecha?: Date,
     nombreSesion?: string,
     data?: any[],
+    numeroComite?: string,
+    seleccionado?: boolean
 
 }
 
@@ -50,6 +53,7 @@ export interface ComiteTecnico{
     sesionComiteSolicitudComiteTecnicoFiduciario?: SesionComiteSolicitud[],
     sesionParticipante?: SesionParticipante[],
     sesionInvitado?: SesionInvitado[],
+    sesionResponsable?: SesionResponsable[],
 
 }
 
@@ -211,6 +215,21 @@ export interface SesionInvitado{
 
 }
 
+export interface SesionResponsable{
+  sesionResponsableId?: number,
+  nombre?: string,
+  cargo?: string,
+  entidad?: string,
+  fechaCreacion?: Date,
+  usuarioCreacion?: string,
+  fechaModificacion?: Date,
+  usuarioModificacion?: string,
+  eliminado?: boolean,
+  comiteTecnicoId?: number,
+  esDelegado?: boolean,
+
+}
+
 export interface SesionSolicitudVoto{
     sesionSolicitudVotoId?: number,
     sesionComiteSolicitudId?: number,
@@ -261,6 +280,8 @@ export interface ComiteGrilla{
     numeroCompromisos?: number,
     numeroCompromisosCumplidos?: number,
     esComiteFiduciario?: boolean,
+    fechaComiteNoFormat?: Date;
+
 }
 
 export interface SesionSolicitudObservacionProyecto{

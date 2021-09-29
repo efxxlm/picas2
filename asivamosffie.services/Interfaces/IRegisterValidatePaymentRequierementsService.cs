@@ -15,15 +15,15 @@ namespace asivamosffie.services.Interfaces
 
         Task<dynamic> GetMontoMaximo(int SolicitudPagoId, bool EsPreConstruccion);
 
-        Task<dynamic> GetFormaPagoCodigoByFase(bool pEsPreconstruccion ,int pContratoId);
+        Task<dynamic> GetFormaPagoCodigoByFase(bool pEsPreconstruccion, int pContratoId);
 
         Task<dynamic> GetMontoMaximoProyecto(int pContrato, int pContratacionProyectoId, bool EsPreConstruccion);
 
-        Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion , int pContratacionProyectoId, string pCriterioCodigo, string pConceptoCodigo, string pUsoCodigo);
+        Task<dynamic> GetMontoMaximoMontoPendiente(int SolicitudPagoId, string strFormaPago, bool EsPreConstruccion, int pContratacionProyectoId, string pCriterioCodigo, string pConceptoCodigo, string pUsoCodigo, string pTipoPago, bool pConNovedad);
 
         Task<Respuesta> ReturnSolicitudPago(SolicitudPago pSolicitudPago);
 
-        Task  GetValidateSolicitudPagoId(int SolicitudPagoId);
+        Task GetValidateSolicitudPagoId(int SolicitudPagoId);
 
         Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago);
 
@@ -60,7 +60,7 @@ namespace asivamosffie.services.Interfaces
         Task<dynamic> GetUsoByConceptoPagoCriterioCodigo(string pConceptoPagoCodigo, int pContratoId);
 
         Task<dynamic> GetProyectosByIdContrato(int pContratoId);
-        
+
         SolicitudPago GetSolicitudPagoComplete(SolicitudPago solicitudPago);
 
         List<TablaDRP> GetDrpContrato(Contrato contrato);

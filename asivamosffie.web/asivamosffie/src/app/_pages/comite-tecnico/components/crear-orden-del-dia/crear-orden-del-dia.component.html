@@ -5,10 +5,54 @@
     </a>
   </div>
   <div class="text-center">
-    <h1 class="title-menu--h1">Crear orden del día de comité técnico</h1>
+    <h1 class="title-menu--h1">
+      <span *ngIf="!(idComite > 0)">Crear</span>
+      <span *ngIf="idComite > 0 && verDetalle != true">Ver detalle/Editar </span>
+      <span *ngIf="verDetalle == true">Ver detalle </span>
+      orden del día de comité técnico
+      <span>{{ numeroComite }}</span>
+    </h1>
   </div>
 
-  <mat-card class="shipping-card">
+  <!-- Seleccionar temas a tratar en el comite Fiduciario -->
+  <div class="flex w-tema" [style.pointer-events]="getStyle()" *ngIf="verDetalle != true">
+    <span class="mr-1em font-weight-bold">Tipo de tema</span>
+
+    <mat-form-field class="w-30">
+      <mat-select [formControl]="tipoDeTemas" multiple required (selectionChange)="getvalues($event.value)">
+        <mat-select-trigger>
+          <small>
+            {{ tipoDeTemas.value && tipoDeTemas.value[0] ? tipoDeTemas.value[0].nombre : '' }}
+            <span *ngIf="tipoDeTemas.value?.length > 1">
+              , {{ tipoDeTemas.value ? tipoDeTemas.value[1].nombre : '' }}
+            </span>
+          </small>
+        </mat-select-trigger>
+        <mat-option *ngFor="let tema of listaTipoTemas" [value]="tema">{{ tema.nombre }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <!-- Solicitudes contractuales -->
+  <div *ngIf="solicitudBoolean && verDetalle != true">
+    <div class="text-center mt-2em d-flex align-items-center">
+      <p class="mb-0 pr-1">
+        <img src="assets/img/icon/sim.svg" alt="información" class="icon" />
+        Seleccione los temas que desea incluir al comité técnico
+      </p>
+      <span class="seleccionados"> {{ totalSolicitudes() }} </span>
+    </div>
+    <div>
+      <app-tabla-solicitudes-contractuales
+      #tablaSolicitudes
+      [solicitudesContractuales]="dataSolicitudContractual"
+      [verDetalle]="false"
+      (sesionesSeleccionadas)="getSesionesSeleccionada($event)"
+      >
+      </app-tabla-solicitudes-contractuales>
+    </div>
+  </div>
+
+  <mat-card class="shipping-card" *ngIf="verDetalle == true">
     <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text"> Validación de solicitudes contractuales </mat-card-title>
     </mat-card-header>
@@ -19,11 +63,19 @@
         (click)="tablaSolicitudes.ngOnInit()"
         id="btnTablaSolicitudes"
       ></button>
-      <app-tabla-solicitudes-contractuales #tablaSolicitudes [solicitudesContractuales]="solicitudesContractuales">
+      <app-tabla-solicitudes-contractuales
+      #tablaSolicitudes
+      [solicitudesContractuales]="dataSolicitudContractual"
+      [verDetalle]="true"
+      >
       </app-tabla-solicitudes-contractuales>
     </mat-card-content>
   </mat-card>
-  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" [style.pointer-events]="getStyle()">
+  <form [formGroup]="addressForm"
+        novalidate
+        (ngSubmit)="onSubmit()"
+        *ngIf="temaNuevoBoolean && verDetalle != true"
+        [style.pointer-events]="getStyle()">
     <mat-card class="shipping-card">
       <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text"> Nuevo tema </mat-card-title>
@@ -241,16 +293,66 @@
         </p>
       </mat-card-content>
     </mat-card>
-    <div class="text-center">
-      <button
-        mat-button
-        color="warn"
-        class="btn-guardar"
-        *ngIf="estadosComite.sinConvocatoria == objetoComiteTecnico.estadoComiteCodigo"
-        type="submit"
-      >
-        <img src="assets/img/icon/guardar.svg" alt="Guardar" />
-      </button>
-    </div>
   </form>
+  <div *ngIf="verDetalle == true">
+    <mat-card class="shipping-card">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text"> Temas </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div>
+          <div *ngFor="let registroPresupuestal of tema.controls; let i = index">
+            <div>
+              <mat-card-title class="header-card--text pl-0"> Tema {{ i + 1 }} </mat-card-title>
+              <div class="row">
+                <div class="pr-1">
+                  <p><b>Tema: </b> {{ registroPresupuestal.get( 'tema' ).value }} </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="pr-1">
+                  <p><b>Responsable: </b> {{ registroPresupuestal.get( 'responsable' ).value?.nombre }} </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="pr-1">
+                  <p><b>Tiempo de intervención: </b> {{ registroPresupuestal.get( 'tiempoIntervencion' ).value }} Minutos</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="pr-1">
+                  <p><b> URL con soporte: </b> {{ registroPresupuestal.get( 'url' ).value }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="shipping-card">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text"> Proposiciones y varios </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          <img src="assets/img/icon/sim.svg" alt="información" class="icon" />
+          Tenga en cuenta que antes de registrar la sesión de comité técnico podrá diligenciar este campo
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="text-center">
+    <button
+      mat-button
+      color="warn"
+      class="btn-guardar"
+      *ngIf="(estadosComite.sinConvocatoria == objetoComiteTecnico.estadoComiteCodigo) && verDetalle != true"
+      type="submit"
+      (click)="onSubmit()"
+      [style.pointer-events]="getStyle()"
+      [disabled]="validateButton() || tipoDeTemas.invalid"
+    >
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+    </button>
+  </div>
 </div>

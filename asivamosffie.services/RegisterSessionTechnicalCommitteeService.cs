@@ -971,6 +971,68 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<Respuesta> DeleteSesionResponsable(int pSesionResponsableId, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Sesion_Invitado, (int)EnumeratorTipoDominio.Acciones);
+            try
+            {
+                if (pSesionResponsableId == 0)
+                {
+                    return
+                     new Respuesta
+                     {
+                         IsSuccessful = false,
+                         IsException = false,
+                         IsValidation = true,
+                         Code = ConstantSesionComiteTecnico.Error,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, "NO SE ENCONTRO SESION RESPONSABLE")
+                     };
+
+                }
+                SesionResponsable sesionResponsableOld = await _context.SesionResponsable.FindAsync(pSesionResponsableId);
+
+                if (sesionResponsableOld == null)
+                {
+                    return
+                     new Respuesta
+                     {
+                         IsSuccessful = false,
+                         IsException = false,
+                         IsValidation = true,
+                         Code = ConstantSesionComiteTecnico.Error,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, "NO SE ENCONTRO SESION RESPONSABLE")
+                     };
+                }
+                sesionResponsableOld.UsuarioModificacion = pUsuarioModificacion;
+                sesionResponsableOld.FechaModificacion = DateTime.Now;
+                sesionResponsableOld.Eliminado = true;
+                _context.SaveChanges();
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR SESIÓN RESPONSABLE")
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = ConstantSesionComiteTecnico.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
+                  };
+            }
+
+        }
+
         public async Task<ProcesoSeleccionMonitoreo> GetProcesoSeleccionMonitoreo(int pProcesoSeleccionMonitoreoId)
         {
             ProcesoSeleccionMonitoreo procesoSeleccionMonitoreo = await _context.ProcesoSeleccionMonitoreo
@@ -1349,6 +1411,7 @@ namespace asivamosffie.services
 
                     pComiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Sin_Convocatoria;
                     pComiteTecnico.NumeroComite = await _commonService.EnumeradorComiteTecnico();
+                    pComiteTecnico.TipoTemaFiduciarioCodigo = pComiteTecnico.TipoTemaFiduciarioCodigo;
 
 
                     foreach (var SesionComiteTema in pComiteTecnico.SesionComiteTema)
@@ -1396,6 +1459,7 @@ namespace asivamosffie.services
                     comiteTecnicoOld.FechaOrdenDia = comiteTecnicoOld.FechaOrdenDia;
                     comiteTecnicoOld.NumeroComite = comiteTecnicoOld.NumeroComite;
                     comiteTecnicoOld.EstadoComiteCodigo = comiteTecnicoOld.EstadoComiteCodigo;
+                    comiteTecnicoOld.TipoTemaFiduciarioCodigo = pComiteTecnico.TipoTemaFiduciarioCodigo;
 
                     foreach (var SesionComiteTema in pComiteTecnico.SesionComiteTema)
                     {
@@ -1431,6 +1495,12 @@ namespace asivamosffie.services
                         }
                     }
 
+                    //Elimino los anteriores 
+                    foreach (var SesionComiteSolicitud in comiteTecnicoOld.SesionComiteSolicitudComiteTecnico)
+                    {
+                        SesionComiteSolicitud.Eliminado = true;
+                    }
+
                     foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
                     {
                         if (SesionComiteSolicitud.SesionComiteSolicitudId == 0)
@@ -1450,6 +1520,7 @@ namespace asivamosffie.services
                             SesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
 
                             //Registros
+                            SesionComiteSolicitudOld.Eliminado = false;
                             SesionComiteSolicitudOld.TipoSolicitudCodigo = SesionComiteSolicitud.TipoSolicitudCodigo;
                             SesionComiteSolicitudOld.SolicitudId = SesionComiteSolicitud.SolicitudId;
                             SesionComiteSolicitudOld.EstadoCodigo = SesionComiteSolicitud.EstadoCodigo;
@@ -1676,6 +1747,7 @@ namespace asivamosffie.services
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico
                  .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
                     .Include(r => r.SesionInvitado)
+                    .Include(r => r.SesionResponsable)
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                         .ThenInclude(r => r.SesionSolicitudVoto)
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
@@ -1691,6 +1763,10 @@ namespace asivamosffie.services
             comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => r.Eliminado != true).ToList();
 
             comiteTecnico.SesionInvitado = comiteTecnico.SesionInvitado.Where(r => r.Eliminado != true).ToList();
+
+            comiteTecnico.SesionResponsable = comiteTecnico.SesionResponsable.Where(r => r.Eliminado != true).ToList();
+
+            comiteTecnico.SesionComiteSolicitudComiteTecnico = comiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.Eliminado != true).ToList();
 
             #endregion query
 
@@ -2003,6 +2079,37 @@ namespace asivamosffie.services
                         SesionInvitadoOld.Entidad = SesionInvitado.Entidad;
                     }
                 }
+                //cc22- responsable secretarìo
+
+                foreach (var SesionResponsable in pComiteTecnico.SesionResponsable)
+                {
+
+                    if (SesionResponsable.SesionResponsableId == 0)
+                    {
+                        _context.SesionResponsable.Add(new SesionResponsable
+                        {
+                            FechaCreacion = DateTime.Now,
+                            UsuarioCreacion = pComiteTecnico.UsuarioCreacion,
+                            Eliminado = false,
+                            Cargo = SesionResponsable.Cargo,
+                            ComiteTecnicoId = pComiteTecnico.ComiteTecnicoId,
+                            Entidad = SesionResponsable.Entidad,
+                            Nombre = SesionResponsable.Nombre,
+                            EsDelegado = SesionResponsable.EsDelegado
+                        });
+                    }
+                    else
+                    {
+                        SesionResponsable SesionInvitadoOld = _context.SesionResponsable.Find(SesionResponsable.SesionResponsableId);
+                        SesionInvitadoOld.FechaModificacion = DateTime.Now;
+                        SesionInvitadoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
+                        SesionInvitadoOld.Nombre = SesionResponsable.Nombre;
+                        SesionInvitadoOld.Cargo = SesionResponsable.Cargo;
+                        SesionInvitadoOld.Entidad = SesionResponsable.Entidad;
+                        SesionInvitadoOld.EsDelegado = SesionResponsable.EsDelegado;
+                    }
+                }
+
                 _context.SaveChanges();
                 return
                     new Respuesta

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormArray } from '@angular/forms';
+import { FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { TechnicalCommitteSessionService } from 'src/app/core/_services/technica
 import { SolicitudesContractuales, ComiteTecnico, SesionComiteTema, EstadosComite, SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { forkJoin } from 'rxjs';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { DataTable } from 'src/app/_interfaces/comiteFiduciario.interfaces';
 
 @Component({
   selector: 'app-crear-orden-del-dia',
@@ -18,6 +19,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
   listaMiembros: Dominio[] = [];
   solicitudesContractuales: SolicitudesContractuales[] = [];
+  dataSolicitudContractual: SolicitudesContractuales[] = [];
   fechaSesionString: string;
   fechaSesion: Date;
   idComite: number = 0;
@@ -25,12 +27,18 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   objetoComiteTecnico: ComiteTecnico = {
     estadoComiteCodigo: this.estadosComite.sinConvocatoria
   };
-
+  tipoDeTemas: FormControl = new FormControl();
+  listaTipoTemas: Dominio[] = [];
+  solicitudBoolean: boolean = false;
+  temaNuevoBoolean: boolean = false;
+  solicitudesSeleccionadas = [];
+  numeroComite = "";
   addressForm = this.fb.group({
     tema: this.fb.array([]),
   });
 
   estaEditando = false;
+  verDetalle = false;
 
   responsablesArray = [
     { name: 'reponsable 1', value: '1' },
@@ -47,49 +55,45 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     private commonService: CommonService,
 
   ) {
-
+    this.getFecha();
   }
 
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(a => {
-      let fecha = Date.parse(a.fecha);
-      this.fechaSesion = new Date(fecha);
-      this.fechaSesionString = `${this.fechaSesion.getFullYear()}/${this.fechaSesion.getMonth() + 1}/${this.fechaSesion.getDate()}`
 
-      this.idComite = a.id;
-
-      if (this.idComite > 0) {
-        this.editMode();
-      } else {
-
+    this.idComite = Number(this.activatedRoute.snapshot.params.id);
+      if(this.verDetalle != true){
         forkJoin([
           this.techicalCommitteeSessionService.getListSolicitudesContractuales(this.fechaSesionString),
           this.commonService.listaMiembrosComiteTecnico(),
+          this.commonService.listaTipoTema(),
 
         ]).subscribe(response => {
 
           this.solicitudesContractuales = response[0];
-
           this.solicitudesContractuales.forEach(sc => {
             sc.tipoSolicitudCodigo = sc.tipoSolicitudNumeroTabla
 
           })
-
+          this.dataSolicitudContractual = this.solicitudesContractuales;
 
           this.listaMiembros = response[1];
+          this.listaTipoTemas = response[2].filter(t => t.codigo != "3");
 
-          setTimeout(() => {
+         /*setTimeout(() => {
 
             let btnTablaSolicitudes = document.getElementById('btnTablaSolicitudes');
             btnTablaSolicitudes.click();
 
-          }, 1000);
+          }, 1000);*/
+          if (this.idComite > 0)
+            this.editMode();
 
         });
+      }else{
+        if (this.idComite > 0)
+          this.editMode();
       }
-
-    })
   }
 
   editMode() {
@@ -102,26 +106,27 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     ]).subscribe(response => {
 
       this.objetoComiteTecnico = response[0];
+      this.numeroComite = this.objetoComiteTecnico ?.numeroComite;
       this.listaMiembros = response[1];
-      // console.log(response[0])
-      this.solicitudesContractuales = response[0].sesionComiteSolicitudComiteTecnico;
 
-      if (this.solicitudesContractuales) {
-        this.solicitudesContractuales.forEach(sc => {
-          sc.id = sc.solicitudId;
-        })
+      if (this.objetoComiteTecnico?.tipoTemaFiduciarioCodigo == "3") {
+        this.tipoDeTemas.setValue(this.listaTipoTemas);
+      } else {
+        let tipoTemaSeleccionado = this.listaTipoTemas.filter(t => t.codigo == this.objetoComiteTecnico?.tipoTemaFiduciarioCodigo);
+        //if ( tipoTemaSeleccionado )
+        this.tipoDeTemas.setValue(tipoTemaSeleccionado);
       }
 
-      setTimeout(() => {
+      this.getvalues(this.tipoDeTemas.value);
 
-        let btnTablaSolicitudes = document.getElementById('btnTablaSolicitudes');
-        btnTablaSolicitudes.click();
-
-      }, 1000);
+      /**
+       * TEMAS
+       */
 
       let temas = this.addressForm.get('tema') as FormArray;
 
       temas.clear();
+      this.solicitudesSeleccionadas = [];
 
       response[0].sesionComiteTema = response[0].sesionComiteTema.filter(t => t.esProposicionesVarios != true)
 
@@ -138,9 +143,46 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
         temas.push(grupoTema);
 
-      })
+      });
 
-      // console.log(response);
+      this.solicitudesContractuales = response[0].sesionComiteSolicitudComiteTecnico.filter(r => r.eliminado != true);
+      if (this.solicitudesContractuales) {
+        this.solicitudesContractuales.forEach(sc => {
+          sc.id = sc.solicitudId;
+          sc.seleccionado = true;
+
+          if(this.dataSolicitudContractual.length > 0 ){
+            this.dataSolicitudContractual.forEach(ds => {
+              if(ds.id != sc.solicitudId){
+                this.dataSolicitudContractual.push(sc)
+              }
+            });
+          }else{
+            this.dataSolicitudContractual.push(sc)
+          }
+
+          this.solicitudesSeleccionadas.push({
+            nombreSesion: '',
+            fecha: '',
+            fechaSolicitud: sc.fechaSolicitud,
+            id: sc.id,
+            idSolicitud: sc.sesionComiteSolicitudId ?? 0,
+            numeroSolicitud: '',
+            tipoSolicitud: sc.tipoSolicitud,
+            tipoSolicitudCodigo: sc.tipoSolicitudCodigo,
+            seleccionado: sc.seleccionado
+          });
+
+        });
+      }
+
+      setTimeout(() => {
+
+        let btnTablaSolicitudes = document.getElementById('btnTablaSolicitudes');
+        btnTablaSolicitudes.click();
+
+      }, 1000);
+
     })
   }
 
@@ -153,8 +195,6 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   deleteTema(i) {
     let grupo = this.addressForm.get('tema') as FormArray;
     let tema = grupo.controls[i];
-
-    // console.log(tema)
 
     this.techicalCommitteeSessionService.deleteSesionComiteTema(tema.get('sesionTemaId').value)
       .subscribe(respuesta => {
@@ -171,7 +211,6 @@ export class CrearOrdenDelDiaComponent implements OnInit {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      // console.log(`Dialog result: ${result}`);
       if (result===true) {
         this.deleteTema(e)
       }
@@ -231,17 +270,27 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   onSubmit() {
     this.estaEditando=true;
     this.addressForm.markAllAsTouched();
+
     // console.log(this.addressForm);
-    if (this.addressForm.invalid) {
+    if (this.addressForm.invalid && this.temaNuevoBoolean) {
       this.openDialog('', '<b>Falta registrar información</b>');
 
     } else {
+      //deje el mismo campo de fiduciaria, de igual forma los distingue EsComiteFiduciario
+      let tipoTema: string = null;
+      if (this.tipoDeTemas.value) {
+        if (this.tipoDeTemas.value.length == 1)
+          tipoTema = this.tipoDeTemas.value[0].codigo;
+        else if (this.tipoDeTemas.value.length == 2)
+          tipoTema = "3";
+      }
+
       let comite: ComiteTecnico = {
         comiteTecnicoId: this.idComite,
         fechaOrdenDia: this.fechaSesion,
         sesionComiteTema: [],
         sesionComiteSolicitudComiteTecnico: [],
-
+        tipoTemaFiduciarioCodigo: tipoTema
       }
 
       this.tema.controls.forEach(control => {
@@ -258,8 +307,8 @@ export class CrearOrdenDelDiaComponent implements OnInit {
         comite.sesionComiteTema.push(sesionComiteTema);
       })
 
-      if (this.solicitudesContractuales) {
-        this.solicitudesContractuales.forEach(sol => {
+      if (this.solicitudesSeleccionadas.length > 0) {
+        this.solicitudesSeleccionadas.forEach(sol => {
           let sesionComiteSolicitud: SesionComiteSolicitud = {
             comiteTecnicoId: this.idComite,
             solicitudId: sol.id,
@@ -271,7 +320,6 @@ export class CrearOrdenDelDiaComponent implements OnInit {
         })
       }
 
-      // console.log(comite)
 
       this.techicalCommitteeSessionService.createEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud(comite).subscribe(respuesta => {
         this.openDialog('', `<b>${respuesta.message}</b>`)
@@ -280,4 +328,84 @@ export class CrearOrdenDelDiaComponent implements OnInit {
       });
     }
   }
+
+  //Obteniendo valores booleanos para habilitar/deshabilitar "Solicitudes contractuales/Temas nuevos"
+  getvalues(values: Dominio[]) {
+
+    const solicitud = values.find(value => value.codigo == "1");
+    const temaNuevo = values.find(value => value.codigo == "2");
+
+    if(solicitud){
+      this.solicitudBoolean = true;
+    }else{
+      this.solicitudBoolean = false;
+      this.solicitudesSeleccionadas = [];
+      if(this.dataSolicitudContractual.length > 0 ){
+        this.dataSolicitudContractual.forEach(ds => {
+          ds.seleccionado = false;
+        });
+      }
+    }
+
+    if (temaNuevo) {
+      this.temaNuevoBoolean = true;
+    } else {
+      this.temaNuevoBoolean = false
+    };
+
+    };
+
+  //Metodo para obtener la fecha recibida del componente ordenes del dia
+  getFecha() {
+
+    if (this.router.getCurrentNavigation().extras.replaceUrl) {
+      this.router.navigateByUrl('/comiteTecnico');
+      return;
+    };
+
+    if (this.router.getCurrentNavigation().extras.state)
+      this.fechaSesion = this.router.getCurrentNavigation().extras.state.fecha;
+      this.verDetalle = this.router.getCurrentNavigation().extras.state.verDetalle ?? false;
+      if(this.fechaSesion != null && this.fechaSesion != undefined && this.router.getCurrentNavigation().extras.state.fecha != ''){
+        try{
+          this.fechaSesionString = `${this.fechaSesion.getFullYear()}/${this.fechaSesion.getMonth() + 1}/${this.fechaSesion.getDate()}`
+        }
+        catch(e){
+          this.fechaSesionString = this.router.getCurrentNavigation().extras.state.fecha;
+        }
+      }
+
+  };
+
+  //Contador solicitudes seleccionadas
+  totalSolicitudes() {
+    let contador = this.solicitudesSeleccionadas.length;
+    return contador;
+  }
+
+  //Metodo para recibir las solicitudes contractuales
+  getSesionesSeleccionada(event: DataTable) {
+      const index = this.solicitudesSeleccionadas.findIndex(value => value.id === event.solicitud.id && value.tipoSolicitudCodigo === event.solicitud.tipoSolicitudCodigo);
+      if (index === -1) {
+        let solicitud = this.dataSolicitudContractual.find(value => value.id === event.solicitud.id && value.tipoSolicitudCodigo === event.solicitud.tipoSolicitudCodigo);
+        this.solicitudesSeleccionadas.push(solicitud ?? event.solicitud);
+      } else {
+        this.solicitudesSeleccionadas.splice(index, 1);
+      }
+  };
+
+  validateButton(){
+    //si seleccionaron temas, que exista al menos uno
+    if(this.temaNuevoBoolean && this.tema.controls.length <= 0){
+      return true;
+    }
+    //si seleccionaron solicitudes contractuales al menos una este seleccionada
+    if(this.solicitudBoolean && this.solicitudesSeleccionadas.length <= 0){
+      return true;
+    }
+
+    return false;
+  };
+
 }
+

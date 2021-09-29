@@ -382,6 +382,23 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpDelete]
+        [Route("DeleteSesionResponsable")]
+        public async Task<IActionResult> DeleteSesionResponsable([FromQuery] int pSesionResponsableId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _registerSessionTechnicalCommitteeService.DeleteSesionResponsable(pSesionResponsableId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         [HttpPost]
         [Route("CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud")]
         public async Task<IActionResult> CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud([FromBody] ComiteTecnico pComiteTecnico)

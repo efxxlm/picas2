@@ -44,6 +44,7 @@ export class TablaOrdenDelDiaComponent implements OnInit {
       // this.commonService.listaMiembrosComiteTecnico(),
     ]).subscribe(response => {
       response[0].forEach(element => {
+        element.fechaComiteNoFormat = new Date(element.fechaComite) ;
         element.fechaComite = element.fechaComite.split('T')[0].split('-').reverse().join('/');
       });
       this.dataSource = new MatTableDataSource(response[0]);
@@ -74,8 +75,8 @@ export class TablaOrdenDelDiaComponent implements OnInit {
     });
   }
 
-  onEdit(e: number) {
-    this.router.navigate(['/comiteTecnico/crearOrdenDelDia', e, '']);
+  onEdit(e: number, fecha: any, verDetalle: boolean) {
+    this.router.navigate( ['/comiteTecnico/crearOrdenDelDia', e ], { state: { fecha: fecha , verDetalle: verDetalle } } );
   }
 
   onConvocar(e: number) {

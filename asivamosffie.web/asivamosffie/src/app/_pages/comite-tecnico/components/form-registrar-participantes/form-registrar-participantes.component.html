@@ -194,7 +194,7 @@
                   color="warn"
                   type="button"
                   class="btn-eliminar"
-                  (click)="openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', i)"
+                  (click)="openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', i, false)"
                 >
                   <img src="assets/img/icon/menos.svg" alt="Eliminar invitado" />
                   Eliminar invitado
@@ -211,7 +211,190 @@
         Agregar invitado
       </button>
     </div>
-
+    <!--Control de cambios 22 / Responsable secretaría académica-->
+    <mat-card class="shipping-card">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text"> Responsable secretaría técnica </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div formGroupName="responsables">
+          <div *ngFor="let responsable of responsables.controls; let i = index">
+            <div [formGroupName]="i">
+              <mat-card-title class="header-card--text alineacion-titulos2 pl-0"> Responsable {{ i + 1 }} </mat-card-title>
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                    for="nombre"
+                    [class.color-secondaryColor]="
+                      (responsable.get('nombre').invalid && responsable.get('nombre').touched) ||
+                      (responsable.get('nombre').invalid && estaEditando)
+                    "
+                  >
+                    Nombre Secretario
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput #nombreResponsable type="text" formControlName="nombre" maxlength="100" required />
+                    <input type="hidden" formControlName="sesionResponsableId" />
+                  </mat-form-field>
+                  <span
+                    class="contador"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Campo alfanumérico"
+                    matTooltipClass="info-tooltip"
+                  >
+                    {{ 100 - nombreResponsable.value.length }}
+                  </span>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="
+                        (responsable.get('nombre').invalid && responsable.get('nombre').touched) ||
+                        (responsable.get('nombre').invalid && estaEditando)
+                      "
+                    />
+                  </span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                    for="cargo"
+                    [class.color-secondaryColor]="
+                      (responsable.get('cargo').invalid && responsable.get('cargo').touched) ||
+                      (responsable.get('cargo').invalid && estaEditando)
+                    "
+                  >
+                    Cargo
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput #cargo type="text" formControlName="cargo" maxlength="50" required />
+                  </mat-form-field>
+                  <span
+                    class="contador"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Campo alfanumérico"
+                    matTooltipClass="info-tooltip"
+                  >
+                    {{ 50 - cargo.value.length }}
+                  </span>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="
+                        (responsable.get('cargo').invalid && responsable.get('cargo').touched) ||
+                        (responsable.get('cargo').invalid && estaEditando)
+                      "
+                    />
+                  </span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                    for="entidad"
+                    [class.color-secondaryColor]="
+                      (responsable.get('entidad').invalid && responsable.get('entidad').touched) ||
+                      (responsable.get('entidad').invalid && estaEditando)
+                    "
+                  >
+                    Entidad
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput #entidad type="text" formControlName="entidad" maxlength="100" required />
+                  </mat-form-field>
+                  <span
+                    class="contador"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Campo alfanumérico"
+                    matTooltipClass="info-tooltip"
+                  >
+                    {{ 100 - entidad.value.length }}
+                  </span>
+                  <span class="icon-incompleto">
+                    <img
+                      class="icon-incompleto--img"
+                      src="assets/img/icon/incompleto.svg"
+                      alt="este campo es requerido"
+                      [matTooltipPosition]="'above'"
+                      matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip"
+                      *ngIf="
+                        (responsable.get('entidad').invalid && responsable.get('entidad').touched) ||
+                        (responsable.get('entidad').invalid && estaEditando)
+                      "
+                    />
+                  </span>
+                </div>
+              </div>
+              <!---->
+              <div class="row">
+                <div class="pr-1">
+                    <label class="label-left" for="esDelegado" [ngClass]="{
+                        'color-secondaryColor':
+                          (responsable.get('esDelegado').invalid && responsable.get('esDelegado').touched) ||
+                          (responsable.get('esDelegado').invalid && estaEditando)
+                      }">¿Es delegado?</label>
+                </div>
+                <div class="col d-flex">
+                  <mat-radio-group class="radioInput d-flex" formControlName="esDelegado" required>
+                    <mat-radio-button class="mr-1em" [value]="true">Sí</mat-radio-button>
+                    <mat-radio-button class="mr-1em" [value]="false">No</mat-radio-button>
+                  </mat-radio-group>
+                  <span class="required-form-group">*</span>
+                  <span class="icon-incompleto">
+                      <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
+                          alt="este campo es requerido" [matTooltipPosition]="'above'"
+                          matTooltip="Debe ingresar la información en el campo para continuar"
+                          matTooltipClass="info-tooltip" *ngIf="
+                          (responsable.get('esDelegado').invalid && responsable.get('esDelegado').touched) ||
+                          (responsable.get('esDelegado').invalid && estaEditando)
+                        " />
+                  </span>
+                </div>
+            </div>
+              <!---->
+              <div class="text-right" *ngIf="responsables.controls.length > 1">
+                <button
+                  mat-button
+                  color="warn"
+                  type="button"
+                  class="btn-eliminar"
+                  (click)="openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', i, true)"
+                >
+                  <img src="assets/img/icon/menos.svg" alt="Eliminar responsable" />
+                  Eliminar Responsable
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div class="text-right">
+      <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregaResponsable()">
+        <img src="assets/img/icon/mas.svg" alt="Agregar Responsable" />
+        Agregar Responsable
+      </button>
+    </div>
     <div class="text-center">
       <button mat-button color="warn" class="btn-guardar" type="submit">
         <img src="assets/img/icon/guardar.svg" alt="Guardar" />
@@ -247,6 +430,39 @@
             <div class="row">
               <div class="pr-1">
                 <p><strong>Entidad:</strong>{{ invitado.get('entidad').value }}</p>
+              </div>
+            </div>
+          </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="shipping-card var-main-gris" *ngIf="responsables.controls.length > 0">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text"> Responsables secretaría técnica </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+          <div *ngFor="let responsable of responsables.controls; let i = index">
+            <mat-card-title class="header-card--text alineacion-titulos2 pl-0"> Responsable {{ i + 1 }} </mat-card-title>
+            <div class="row">
+              <div class="pr-1">
+                <p><strong>Nombre Secretario:</strong>{{ responsable.get('nombre').value }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="pr-1">
+                <p><strong>Cargo:</strong>{{ responsable.get('cargo').value }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="pr-1">
+                <p><strong>Entidad:</strong>{{ responsable.get('entidad').value }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="pr-1">
+                <p><strong>Es delegado? :</strong>
+                  <span *ngIf="responsable.get('esDelegado').value != true">No</span>
+                  <span *ngIf="responsable.get('esDelegado').value == true">Sí</span>
+                </p>
               </div>
             </div>
           </div>

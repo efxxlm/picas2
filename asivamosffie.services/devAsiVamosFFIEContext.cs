@@ -14,7 +14,7 @@ namespace asivamosffie.model.Models
             : base(options)
         {
         }
-
+        public virtual DbSet<SesionResponsable> SesionResponsable { get; set; }
         public virtual DbSet<ActuacionSeguimiento> ActuacionSeguimiento { get; set; }
         public virtual DbSet<AjustePragramacionObservacion> AjustePragramacionObservacion { get; set; }
         public virtual DbSet<AjusteProgramacion> AjusteProgramacion { get; set; }
@@ -236,6 +236,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VActualizacionPolizaYgarantias> VActualizacionPolizaYgarantias { get; set; }
         public virtual DbSet<VAjusteProgramacion> VAjusteProgramacion { get; set; }
+        public virtual DbSet<VAmortizacionXproyecto> VAmortizacionXproyecto { get; set; }
         public virtual DbSet<VAportanteFuente> VAportanteFuente { get; set; }
         public virtual DbSet<VAportanteFuenteUso> VAportanteFuenteUso { get; set; }
         public virtual DbSet<VAportanteFuenteUsoProyecto> VAportanteFuenteUsoProyecto { get; set; }
@@ -344,7 +345,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -13510,9 +13510,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false)
                     .HasComment("Número que representa la entidad del sufijo después de la palabra número");
 
-                entity.Property(e => e.Observaciones)
-                    .HasMaxLength(1000)
-                    .HasComment("Observaciones de tabla en mención");
+                entity.Property(e => e.Observaciones).HasComment("Observaciones de tabla en mención");
 
                 entity.Property(e => e.PrimerApellido)
                     .HasMaxLength(300)
@@ -13563,9 +13561,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false)
                     .HasComment("Relación a la tabla dominio con la columna código");
 
-                entity.Property(e => e.UrlSoporteDocumentacion)
-                    .HasMaxLength(500)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.UrlSoporteDocumentacion).HasComment("URL donde se encuentra el campo en mención");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
@@ -13700,6 +13696,25 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VAmortizacionXproyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_AmortizacionXProyecto");
+
+                entity.Property(e => e.UsoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsoNombre).HasMaxLength(250);
+
+                entity.Property(e => e.ValorAnticipo).HasColumnType("decimal(30, 0)");
+
+                entity.Property(e => e.ValorAnticipoAmortizado).HasColumnType("decimal(38, 1)");
+
+                entity.Property(e => e.ValorPorAmortizar).HasColumnType("decimal(38, 1)");
             });
 
             modelBuilder.Entity<VAportanteFuente>(entity =>
