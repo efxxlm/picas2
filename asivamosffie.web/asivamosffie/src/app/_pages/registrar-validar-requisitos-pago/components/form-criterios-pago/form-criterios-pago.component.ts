@@ -29,6 +29,7 @@ export class FormCriteriosPagoComponent implements OnInit {
     @Input() faseCodigo: string;
     @Output() semaforoObservacion = new EventEmitter<boolean>();
     @Output() emitAnticipo = new EventEmitter<boolean>();
+    @Output() ocultarAmortizacionAnticipo = new EventEmitter<any>();
     criteriosSeleccionadosArray: Dominio[] = [];
     solicitudPagoRegistrarSolicitudPago: any;
     solicitudPagoRegistrarSolicitudPagoId = 0;
@@ -69,6 +70,7 @@ export class FormCriteriosPagoComponent implements OnInit {
 
     ngOnInit(): void {
         this.getCriterios();
+        this.criterioPago();
     }
 
     async getCriterios() {
@@ -355,6 +357,37 @@ export class FormCriteriosPagoComponent implements OnInit {
                 }
             }
         }
+
+        this.contrato.vAmortizacionXproyecto.forEach(element => {
+            if(element.tieneAnticipo === true) {
+                this.addressForm.get('criterioPago').setValue(null);
+                console.log(element.tieneAnticipo);
+                console.log(this.criteriosArray);
+                for (let i = 0; i < this.criteriosArray.length; i++) {
+                    const element = this.criteriosArray[i];
+                    if (element.codigo === '17') this.criteriosArray.splice(i, 1);
+                }
+            }
+        });
+
+        // this.addressForm.get('criterioPago').valueChanges.subscribe(value => {
+        //     console.log(value);
+        //     console.log(value.length > 0);
+        //     if (value.length > 0) {
+        //         value.forEach(element => {
+        //             if (element.codigo !== '17'){
+        //                 for (let i = 0; i < this.criteriosArray.length; i++) {
+        //                     const element = this.criteriosArray[i];
+        //                     if (element.codigo === '17') this.criteriosArray.splice(i, 1);
+        //                 }
+        //             }
+        //         });
+        //     } else {
+        //         this.criteriosArray = LISTA_CRITERIOS_FORMA_PAGO;
+        //         console.log(LISTA_CRITERIOS_FORMA_PAGO);
+        //         console.log(this.criteriosArray);
+        //     }
+        // })
     }
 
     validateNumberKeypress(event: KeyboardEvent) {
@@ -550,6 +583,7 @@ export class FormCriteriosPagoComponent implements OnInit {
             }
         } else {
             this.criterios.clear();
+            this.criteriosArray = LISTA_CRITERIOS_FORMA_PAGO;
         }
     }
 
@@ -1006,6 +1040,12 @@ export class FormCriteriosPagoComponent implements OnInit {
                 );
         }
         */
+    }
+
+    criterioPago() {
+        this.addressForm.get('criterioPago').valueChanges.subscribe(value => {
+            this.ocultarAmortizacionAnticipo.emit( value );
+        })
     }
 
     getUsosParaElConceoto(usoCodigo) {

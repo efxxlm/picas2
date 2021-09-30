@@ -57,11 +57,21 @@
                                                         [esVerDetalle]="esVerDetalle"
                                                         [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
                                                         [criteriosPagoFacturaCodigo]="registrarSolicitudPagoObs !== undefined ? registrarSolicitudPagoObs.criteriosPagoFacturaCodigo : ''"
-                                                        (emitAnticipo)="fase.get( 'tieneAnticipo' ).setValue( $event ); guardarDescuentoAnticipo( $event, fase )">
+                                                        (emitAnticipo)="fase.get( 'tieneAnticipo' ).setValue( $event ); guardarDescuentoAnticipo( $event, fase )"
+                                                        (ocultarAmortizacionAnticipo)="ocultarAmortizacionAnticipo($event)" >
                             </app-form-criterios-pago>
                         </mat-expansion-panel>
 
-                        <mat-expansion-panel class="expansion-style sub-expansion-black" *ngIf="fase.get( 'codigo' ).value === fasesContrato.construccion && manejoAnticipoRequiere === true && fase.get( 'tieneAnticipo' ).value === false && contrato.solicitudPago.length > 1">
+                        <mat-expansion-panel
+                            class="expansion-style sub-expansion-black"
+                            *ngIf="
+                                !ocultarAcordeonAmortizacionAnticipo &&
+                                fase.get('codigo').value === fasesContrato.construccion &&
+                                manejoAnticipoRequiere === true &&
+                                fase.get('tieneAnticipo').value === false &&
+                                contrato.solicitudPago.length > 1 
+                            "
+                        >
                             <mat-expansion-panel-header class="expansion-style--header">
                                 <mat-panel-title class="expansion-style--title font-size-09em">
                                     Amortización del anticipo - {{ fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? 'Fase 1' : 'Fase 2' }}
@@ -91,7 +101,8 @@
                                                                     [listaMenusId]="listaMenusId"
                                                                     [faseCodigo]="fase.get( 'codigo' ).value"
                                                                     [esVerDetalle]="esVerDetalle"
-                                                                    [contratacionProyectoId]="proyecto.get( 'contratacionProyectoId' ).value">
+                                                                    [contratacionProyectoId]="proyecto.get( 'contratacionProyectoId' ).value"
+                                                                    [boolAplicaDescuentos]="boolAplicaDescuentos">
                             </app-datos-factura-construccion-rvrp>
                         </mat-expansion-panel>
                     </mat-accordion>
