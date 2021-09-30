@@ -1,6 +1,6 @@
 import { RegistrarRequisitosPagoService } from './../../../../core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { Router } from '@angular/router';
-import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, EventEmitter, Output, SimpleChanges } from '@angular/core';
 import { Validators, FormBuilder, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
@@ -13,7 +13,7 @@ import { TiposDeFase } from 'src/app/_interfaces/solicitud-pago.interface';
   templateUrl: './datos-factura-construccion-rvrp.component.html',
   styleUrls: ['./datos-factura-construccion-rvrp.component.scss']
 })
-export class DatosFacturaConstruccionRvrpComponent implements OnInit {
+export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges {
   @Input() solicitudPago: any;
   @Input() esVerDetalle = false;
   @Input() tieneObservacion: boolean;
@@ -22,6 +22,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
   @Input() tieneObservacionOrdenGiro: boolean;
   @Input() faseCodigo: string;
   @Input() contratacionProyectoId: number;
+  @Input() boolAplicaDescuentos: boolean;
   @Output() semaforoObservacion = new EventEmitter<boolean>();
   esPreconstruccion = true;
   addressForm = this.fb.group({
@@ -65,6 +66,13 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDatosFactura();
+    
+  }
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.boolAplicaDescuentos)
+      if (this.boolAplicaDescuentos) this.addressForm.get('aplicaDescuento').setValue(false);
+      if (!this.boolAplicaDescuentos) this.addressForm.get('aplicaDescuento').setValue(null);
   }
 
   async getDatosFactura() {

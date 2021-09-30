@@ -322,6 +322,11 @@
         public const string SALDO_APORTANTE = "245";
         public const string PLAZO_DIAS = "247";
         public const string PLAZO_MESES = "246";
+        public const string RESPONSABLE_NOMBRE = "248";
+        public const string RESPONSABLE_CARGO = "249";
+        public const string RESPONSABLE_ENTIDAD = "250";
+        public const string RESPONSABLE_ES_DELEGADO = "251";
+        public const string REGISTROS_TABLA_RESPONSABLES = "252";
         #endregion
     }
 }

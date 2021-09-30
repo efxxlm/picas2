@@ -30,6 +30,8 @@ export class FormProyectoComponent implements OnInit {
             fases: this.fb.array( [] )
         }
     );
+    ocultarAcordeonAmortizacionAnticipo = false;
+    boolAplicaDescuentos = false;
 
     get fases() {
         return this.addressForm.get( 'fases' ) as FormArray
@@ -117,6 +119,12 @@ export class FormProyectoComponent implements OnInit {
                 this.estadoSemaforoProyecto.emit( false )
             }
         }
+
+        this.contrato.vAmortizacionXproyecto.forEach(element => {
+            if(element.tieneAnticipo === true) {
+                this.ocultarAcordeonAmortizacionAnticipo = true;
+            }
+        });
     }
 
     getValueFase( listFaseCodigo: Dominio[] ) {
@@ -276,6 +284,16 @@ export class FormProyectoComponent implements OnInit {
           
             // await this.registrarPagosSvc.createEditNewPayment( solicitudPago ).toPromise()
         }
+    }
+
+    ocultarAmortizacionAnticipo(event) {
+        // if (event.length === 1 && event[0].codigo === "17") this.ocultarAcordeonAmortizacionAnticipo = true;
+        // else this.ocultarAcordeonAmortizacionAnticipo = false;
+
+        // this.boolAplicaDescuentos = false;
+        // event.forEach(element => {
+        //     if (element.codigo === "17") this.boolAplicaDescuentos = true;
+        // });
     }
 
 }

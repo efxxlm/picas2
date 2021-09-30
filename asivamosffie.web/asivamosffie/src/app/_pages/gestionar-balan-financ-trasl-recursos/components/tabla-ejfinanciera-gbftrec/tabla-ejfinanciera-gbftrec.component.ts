@@ -56,14 +56,12 @@ export class TablaEjfinancieraGbftrecComponent implements OnInit {
       let concepto;
 
       this.dataTable.forEach(element => {
-        if (element.nombre === 'Obra') {
-          concepto = 0;
-        } else if (element.nombre === 'Interventoria') {
-          concepto = 1;
-        }
-          if (element.totalComprometido) tablaEjecucionFinanciera[concepto].totalComprometido = element.totalComprometido;
-          if (element.descuento) tablaEjecucionFinanciera[concepto].descuento = element.descuento;
-          tablaEjecucionFinanciera[concepto].ordenadoGirarAntesImpuestos += element.ordenadoGirarAntesImpuestos;
+        if (element.nombre === 'Obra') concepto = 0;
+        else if (element.nombre === 'Interventoria') concepto = 1;
+
+        if (element.totalComprometido) tablaEjecucionFinanciera[concepto].totalComprometido = element.totalComprometido;
+        if (element.descuento) tablaEjecucionFinanciera[concepto].descuento = element.descuento;
+        tablaEjecucionFinanciera[concepto].ordenadoGirarAntesImpuestos += element.ordenadoGirarAntesImpuestos;
       });
       for (let i = 0; i <= 1; i++) {
         tablaEjecucionFinanciera[i].ordenadoGirarAntesImpuestos -= tablaEjecucionFinanciera[i].descuento;
@@ -79,14 +77,13 @@ export class TablaEjfinancieraGbftrecComponent implements OnInit {
       };
       tablaEjecucionFinanciera.forEach(element => {
         this.total.totalComprometido += element.totalComprometido;
-        this.total.ordenadoGirarAntesImpuestos =
-          this.total.ordenadoGirarAntesImpuestos + element.ordenadoGirarAntesImpuestos;
+        this.total.ordenadoGirarAntesImpuestos = this.total.ordenadoGirarAntesImpuestos + element.ordenadoGirarAntesImpuestos;
         this.total.saldo = this.total.saldo + element.saldo;
-        this.total.porcentajeEjecucionFinanciera =
-          this.total.porcentajeEjecucionFinanciera + element.porcentajeEjecucionFinanciera;
+        this.total.porcentajeEjecucionFinanciera = this.total.porcentajeEjecucionFinanciera + element.porcentajeEjecucionFinanciera;
       });
-      if (this.total.porcentajeEjecucionFinanciera > 0)
+      if (this.total.porcentajeEjecucionFinanciera > 0) {
         this.total.porcentajeEjecucionFinanciera = this.total.porcentajeEjecucionFinanciera / 2;
+      }
       this.loadDataSource(tablaEjecucionFinanciera);
     }
   }
