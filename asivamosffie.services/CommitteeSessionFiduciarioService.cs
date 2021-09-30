@@ -3744,6 +3744,8 @@ namespace asivamosffie.services
                 List<SesionInvitado> ListInvitados = _context.SesionInvitado
                     .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).ToList();
 
+                List<SesionResponsable> ListResponsables = _context.SesionResponsable
+                    .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).ToList();
                 #endregion Listas
 
                 #region plantillas
@@ -3767,6 +3769,13 @@ namespace asivamosffie.services
                        .ToString()).FirstOrDefault()
                     .Contenido;
                 string RegistrosInvitados = string.Empty;
+
+                //Logica Invitados
+                string PlantillaResponsables = _context.Plantilla
+                    .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Registros_Tabla_Responsables)
+                       .ToString()).FirstOrDefault()
+                    .Contenido;
+                string RegistrosResponsables = string.Empty;
 
                 //Plantilla Contratacion
                 string PlantillaContratacion = _context.Plantilla
@@ -4088,7 +4097,41 @@ namespace asivamosffie.services
                     }
                 }
 
-                #endregion Tabla Invitados
+                #endregion Tabla Responsables
+
+                #region Tabla Responsables
+                //Tabla Invitados
+                foreach (var responsable in ListResponsables.Where(r => !(bool)r.Eliminado).ToList())
+                {
+                    RegistrosResponsables += PlantillaResponsables;
+                    foreach (Dominio placeholderDominio in placeholders)
+                    {
+                        switch (placeholderDominio.Codigo)
+                        {
+                            case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_NOMBRE:
+                                RegistrosResponsables = RegistrosResponsables
+                                    .Replace(placeholderDominio.Nombre, responsable.Nombre);
+                                break;
+
+                            case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_CARGO:
+                                RegistrosResponsables = RegistrosResponsables
+                                    .Replace(placeholderDominio.Nombre, responsable.Cargo);
+                                break;
+
+                            case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_ENTIDAD:
+                                RegistrosResponsables = RegistrosResponsables
+                                    .Replace(placeholderDominio.Nombre, responsable.Entidad);
+                                break;
+
+                            case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_ES_DELEGADO:
+                                RegistrosResponsables = RegistrosResponsables
+                                    .Replace(placeholderDominio.Nombre, responsable.EsDelegado != true ? "No" : "Sí" );
+                                break;
+                        }
+                    }
+                }
+
+                #endregion Tabla Responsables
 
                 #region Logica Orden Del Dia
 
@@ -5788,6 +5831,11 @@ namespace asivamosffie.services
                         case ConstanCodigoVariablesPlaceHolders.REGISTROS_TABLA_INVITADOS:
                             strContenido = strContenido
                                 .Replace(placeholderDominio.Nombre, RegistrosInvitados);
+                            break;
+
+                        case ConstanCodigoVariablesPlaceHolders.REGISTROS_TABLA_RESPONSABLES:
+                            strContenido = strContenido
+                                .Replace(placeholderDominio.Nombre, RegistrosResponsables);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.SOLICITUDES_CONTRATO:
