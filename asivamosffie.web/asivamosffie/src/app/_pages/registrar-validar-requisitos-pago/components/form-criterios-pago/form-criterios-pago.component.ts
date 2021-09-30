@@ -583,7 +583,6 @@ export class FormCriteriosPagoComponent implements OnInit {
             }
         } else {
             this.criterios.clear();
-            this.criteriosArray = LISTA_CRITERIOS_FORMA_PAGO;
         }
     }
 
