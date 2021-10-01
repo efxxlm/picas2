@@ -28,7 +28,12 @@
                             </div>
                             <div class="col d-flex" style="margin-right: 5.4em;">
                                 <mat-form-field class="full-width" >
-                                    <input matInput type="number" disabled>
+                                    <input
+                                        matInput
+                                        type="number"
+                                        [formControl]="valorPorAmortizar"
+                                        disabled
+                                    >
                                 </mat-form-field>
                             </div>
                         </div>
@@ -40,6 +45,7 @@
                             <div class="pr-1">
                                 <label  for="porcentajeAmortizacion"
                                         class="label-left"
+                                        max="100"
                                         [ngClass]="{ 'color-secondaryColor':(addressForm.get('porcentajeAmortizacion').invalid && addressForm.get('porcentajeAmortizacion').touched) || (addressForm.get('porcentajeAmortizacion').invalid && estaEditando) }">
                                         Porcentaje de amortización
                                 </label>

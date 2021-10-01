@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Validators, FormBuilder, FormControl } from '@angular/forms';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -41,6 +41,9 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
     fasesContrato = TiposDeFase;
     valorFacturado = 0;
 
+    valorPorAmortizar: FormControl;
+
+
     constructor(
         private fb: FormBuilder,
         private routes: Router,
@@ -54,18 +57,14 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
                     this.addressForm.get('valorAmortizacion').setValue( null );
                 }
 
-                /*
-                const exampleValue = this.valorTotalDelContrato * 0.2;
-                const porcentajeCalculo = value / 100;
-                const valorAmortizacion = exampleValue * porcentajeCalculo;
+                
+                const exampleValue =  value / 100;
+                const porcentajeCalculo = exampleValue * this.getProyectoId(this.contratacionProyectoId);
+                // const valorAmortizacion = exampleValue * porcentajeCalculo;
 
-                if (valorAmortizacion > this.contrato.vContratoPagosRealizados[0].valorFacturado) {
-                    this.openDialog('', `El valor de amortización no puede ser mayor al valor facturado`);
-                    this.addressForm.get('porcentajeAmortizacion').setValue('');
-                } else {
-                    this.addressForm.get('valorAmortizacion').setValue(valorAmortizacion);
-                }
-                */
+                console.log(porcentajeCalculo);
+                this.addressForm.get('valorAmortizacion').setValue(porcentajeCalculo);
+               
             } else {
                 this.addressForm.get('valorAmortizacion').setValue( 0 );
             }
@@ -73,7 +72,17 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.getDataAmortizacion()
+        this.getDataAmortizacion();
+        this.valorPorAmortizar = new FormControl({value: this.getProyectoId(this.contratacionProyectoId), disabled: true}, [Validators.required, Validators.max(100)]);
+    }
+
+    getProyectoId(codigo: any) {
+        if (this.contrato.vAmortizacionXproyecto.length > 0) {
+          const proyectoId = this.contrato.vAmortizacionXproyecto.find(proyectoId => proyectoId.contratacionProyectoId === codigo);
+          if (proyectoId !== undefined) {
+            return proyectoId.valorPorAmortizar;
+          }
+        }
     }
 
     async getDataAmortizacion() {

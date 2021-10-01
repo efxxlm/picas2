@@ -65,7 +65,7 @@
                         <mat-expansion-panel
                             class="expansion-style sub-expansion-black"
                             *ngIf="
-                                !ocultarAcordeonAmortizacionAnticipo &&
+                                ocultarAcordeonAmortizacionAnticipo ||
                                 fase.get('codigo').value === fasesContrato.construccion &&
                                 manejoAnticipoRequiere === true &&
                                 fase.get('tieneAnticipo').value === false &&
