@@ -846,7 +846,7 @@ namespace asivamosffie.services
 
                     if (!SolicitudPagoFase.EsPreconstruccion)
                         if (SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() > 0)
-                            CreateEditSolicitudPagoSolicitudPagoAmortizacion(SolicitudPagoFase.SolicitudPagoFaseAmortizacion, pUsuarioCreacion);
+                            CreateEditSolicitudPagoSolicitudPagoAmortizacion(SolicitudPagoFase.SolicitudPagoFaseAmortizacion , (int)SolicitudPagoFase.ContratacionProyectoId, pUsuarioCreacion);
 
                     if (SolicitudPagoFase.SolicitudPagoFaseId > 0)
                     {
@@ -887,8 +887,12 @@ namespace asivamosffie.services
             }
         }
 
-        private void CreateEditSolicitudPagoSolicitudPagoAmortizacion(ICollection<SolicitudPagoFaseAmortizacion> pSolicitudPagoAmortizacionList, string pUsuarioCreacion)
+        private void CreateEditSolicitudPagoSolicitudPagoAmortizacion(ICollection<SolicitudPagoFaseAmortizacion> pSolicitudPagoAmortizacionList, int ContratacionProyectoId, string pUsuarioCreacion)
         {
+
+            ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Find(ContratacionProyectoId);
+
+            int SolicitudPagoFaseCriterioConceptoPagoId = (int)_context.VAmortizacionXproyecto.Where(r => r.ContratacionProyectoId == ContratacionProyectoId).FirstOrDefault().SolicitudPagoFaseCriterioConceptoPagoId;
             foreach (var SolicitudPagoAmortizacion in pSolicitudPagoAmortizacionList)
             {
                 if (SolicitudPagoAmortizacion.SolicitudPagoFaseAmortizacionId > 0)
@@ -896,13 +900,14 @@ namespace asivamosffie.services
                     SolicitudPagoFaseAmortizacion solicitudPagoAmortizacionOld = _context.SolicitudPagoFaseAmortizacion.Find(SolicitudPagoAmortizacion.SolicitudPagoFaseAmortizacionId);
                     solicitudPagoAmortizacionOld.UsuarioModificacion = pUsuarioCreacion;
                     solicitudPagoAmortizacionOld.FechaModificacion = DateTime.Now;
-
+                    solicitudPagoAmortizacionOld.SolicitudPagoFaseCriterioConceptoPagoId = SolicitudPagoFaseCriterioConceptoPagoId;
                     solicitudPagoAmortizacionOld.PorcentajeAmortizacion = SolicitudPagoAmortizacion.PorcentajeAmortizacion;
                     solicitudPagoAmortizacionOld.ValorAmortizacion = SolicitudPagoAmortizacion.ValorAmortizacion;
                     solicitudPagoAmortizacionOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion);
                 }
                 else
                 {
+                    SolicitudPagoAmortizacion.SolicitudPagoFaseCriterioConceptoPagoId = SolicitudPagoFaseCriterioConceptoPagoId;
                     SolicitudPagoAmortizacion.Eliminado = false;
                     SolicitudPagoAmortizacion.UsuarioCreacion = pUsuarioCreacion;
                     SolicitudPagoAmortizacion.FechaCreacion = DateTime.Now;

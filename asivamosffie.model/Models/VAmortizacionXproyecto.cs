@@ -10,6 +10,7 @@ namespace asivamosffie.model.Models
         public int? ContratoId { get; set; }
         public int? ProyectoId { get; set; }
         public int? ContratacionProyectoId { get; set; }
+        public int? SolicitudPagoFaseCriterioConceptoPagoId { get; set; }
         public bool? TieneAnticipo { get; set; }
         public string UsoCodigo { get; set; }
         public string UsoNombre { get; set; }
