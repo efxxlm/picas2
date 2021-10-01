@@ -14,7 +14,7 @@ namespace asivamosffie.model.Models
             : base(options)
         {
         }
-        public virtual DbSet<SesionResponsable> SesionResponsable { get; set; }
+
         public virtual DbSet<ActuacionSeguimiento> ActuacionSeguimiento { get; set; }
         public virtual DbSet<AjustePragramacionObservacion> AjustePragramacionObservacion { get; set; }
         public virtual DbSet<AjusteProgramacion> AjusteProgramacion { get; set; }
@@ -199,6 +199,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<SesionInvitado> SesionInvitado { get; set; }
         public virtual DbSet<SesionParticipante> SesionParticipante { get; set; }
         public virtual DbSet<SesionParticipanteVoto> SesionParticipanteVoto { get; set; }
+        public virtual DbSet<SesionResponsable> SesionResponsable { get; set; }
         public virtual DbSet<SesionSolicitudCompromiso> SesionSolicitudCompromiso { get; set; }
         public virtual DbSet<SesionSolicitudObservacionActualizacionCronograma> SesionSolicitudObservacionActualizacionCronograma { get; set; }
         public virtual DbSet<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }
@@ -345,6 +346,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -7629,7 +7631,7 @@ namespace asivamosffie.model.Models
             modelBuilder.Entity<OrdenGiroDetalleObservacion>(entity =>
             {
                 entity.HasKey(e => e.OrdenGiroObservacionId)
-                    .HasName("PK__OrdenGir__C509FDB5161AAC15");
+                    .HasName("PK__OrdenGir__C509FDB5C73726D5");
 
                 entity.HasComment("Almacena las observaciones de una orden de giro");
 
@@ -9151,6 +9153,8 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProcesosContractualesObservacion>(entity =>
             {
+                entity.HasNoKey();
+
                 entity.Property(e => e.Archivado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.FechaCreacion)
@@ -9158,6 +9162,8 @@ namespace asivamosffie.model.Models
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.ProcesosContractualesObservacionId).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.TipoObservacionCodigo)
                     .HasMaxLength(2)
@@ -11344,7 +11350,7 @@ namespace asivamosffie.model.Models
             modelBuilder.Entity<SeguridadSaludCausaAccidente>(entity =>
             {
                 entity.HasKey(e => e.SeguridadSaludCausaAccidentesId)
-                    .HasName("PK__Segurida__60218A2A3128448E");
+                    .HasName("PK__Segurida__60218A2A40D29A19");
 
                 entity.HasComment("Almacena las causas del accidente relacionadas a una gestión de obra en un seguimiento semanal");
 
@@ -11821,6 +11827,39 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.SesionParticipanteId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SesionParticipanteVoto_SesionParticipante");
+            });
+
+            modelBuilder.Entity<SesionResponsable>(entity =>
+            {
+                entity.Property(e => e.Cargo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Entidad)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ComiteTecnico)
+                    .WithMany(p => p.SesionResponsable)
+                    .HasForeignKey(d => d.ComiteTecnicoId)
+                    .HasConstraintName("FK__SesionResponsable__ComiteTecnico");
             });
 
             modelBuilder.Entity<SesionSolicitudCompromiso>(entity =>
@@ -13398,7 +13437,7 @@ namespace asivamosffie.model.Models
             modelBuilder.Entity<TipoPagoConceptoPagoCriterio>(entity =>
             {
                 entity.HasKey(e => e.TipoPagoCodigoConceptoPagoCriterioCodigoId)
-                    .HasName("PK__TipoPago__3164A8D586395CE9");
+                    .HasName("PK__TipoPago__3164A8D56B764DD0");
 
                 entity.HasComment("Almacena la relación del tipo de pago con el concepto de pago criterio");
 

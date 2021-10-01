@@ -906,6 +906,7 @@ namespace asivamosffie.services
                     solicitudPagoAmortizacionOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion);
                 }
                 else
+
                 {
                     SolicitudPagoAmortizacion.SolicitudPagoFaseCriterioConceptoPagoId = SolicitudPagoFaseCriterioConceptoPagoId;
                     SolicitudPagoAmortizacion.Eliminado = false;
