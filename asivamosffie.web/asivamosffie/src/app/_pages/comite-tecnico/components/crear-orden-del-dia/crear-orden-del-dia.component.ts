@@ -168,13 +168,8 @@ export class CrearOrdenDelDiaComponent implements OnInit {
           sc.id = sc.solicitudId;
           sc.seleccionado = true;
 
-          if(this.dataSolicitudContractual.length > 0 ){
-            this.dataSolicitudContractual.forEach(ds => {
-              if(ds.id != sc.solicitudId){
-                this.dataSolicitudContractual.push(sc)
-              }
-            });
-          }else{
+          const index = this.dataSolicitudContractual.findIndex(value => value.id === sc.solicitudId && value.tipoSolicitudCodigo === sc.tipoSolicitudCodigo);
+          if(index === -1){
             this.dataSolicitudContractual.push(sc)
           }
 
@@ -192,6 +187,13 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
         });
       }
+
+      if(this.solicitudesSeleccionadas.length == this.dataSolicitudContractual.length && this.solicitudesSeleccionadas.length > 0){
+        this.seleccionarTodos = true;
+      }else{
+        this.seleccionarTodos = false;
+      }
+
       if(this.verDetalle == true){
         setTimeout(() => {
 
