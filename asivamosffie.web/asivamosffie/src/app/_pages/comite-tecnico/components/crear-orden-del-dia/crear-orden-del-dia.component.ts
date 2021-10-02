@@ -36,9 +36,11 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   addressForm = this.fb.group({
     tema: this.fb.array([]),
   });
+  temasString = "";
 
   estaEditando = false;
   verDetalle = false;
+  seleccionarTodos: boolean = false;
 
   responsablesArray = [
     { name: 'reponsable 1', value: '1' },
@@ -97,6 +99,13 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   }
 
   editMode() {
+    this.temasString = '';
+
+    if(this.verDetalle == true){
+      this.commonService.listaTipoTema().subscribe(response =>{
+        this.listaTipoTemas = response.filter(t => t.codigo != "3");
+      });
+    }
 
     forkJoin([
       //this.techicalCommitteeSessionService.getListSesionComiteTemaByIdSesion( this.idSesion ),
@@ -116,6 +125,14 @@ export class CrearOrdenDelDiaComponent implements OnInit {
         //if ( tipoTemaSeleccionado )
         this.tipoDeTemas.setValue(tipoTemaSeleccionado);
       }
+
+      this.tipoDeTemas.value.forEach(tema => {
+        if(this.temasString != ''){
+          this.temasString = this.temasString + ", " + tema.nombre;
+        }else{
+          this.temasString = tema.nombre;
+        }
+      });
 
       this.getvalues(this.tipoDeTemas.value);
 
@@ -175,13 +192,14 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
         });
       }
+      if(this.verDetalle == true){
+        setTimeout(() => {
 
-      setTimeout(() => {
+          let btnTablaSolicitudes = document.getElementById('btnTablaSolicitudes');
+          btnTablaSolicitudes.click();
 
-        let btnTablaSolicitudes = document.getElementById('btnTablaSolicitudes');
-        btnTablaSolicitudes.click();
-
-      }, 1000);
+        }, 1000);
+      }
 
     })
   }
@@ -385,13 +403,50 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
   //Metodo para recibir las solicitudes contractuales
   getSesionesSeleccionada(event: DataTable) {
-      const index = this.solicitudesSeleccionadas.findIndex(value => value.id === event.solicitud.id && value.tipoSolicitudCodigo === event.solicitud.tipoSolicitudCodigo);
-      if (index === -1) {
-        let solicitud = this.dataSolicitudContractual.find(value => value.id === event.solicitud.id && value.tipoSolicitudCodigo === event.solicitud.tipoSolicitudCodigo);
-        this.solicitudesSeleccionadas.push(solicitud ?? event.solicitud);
-      } else {
-        this.solicitudesSeleccionadas.splice(index, 1);
+    const index = this.solicitudesSeleccionadas.findIndex(value => value.id === event.solicitud.id && value.tipoSolicitudCodigo === event.solicitud.tipoSolicitudCodigo);
+    const data = this.dataSolicitudContractual.find(value => value.id === event.solicitud.id && value.tipoSolicitudCodigo === event.solicitud.tipoSolicitudCodigo);
+
+    if(data != null){
+      if(event.estado != true){
+        if (index !== -1) {
+          this.solicitudesSeleccionadas.splice(index, 1);
+          data.seleccionado = false;
+        }
+      }else{
+        if (index === -1) {
+          let solicitud = data;
+          data.seleccionado = true;
+          this.solicitudesSeleccionadas.push(solicitud ?? event.solicitud);
+        }
       }
+    }
+
+    if(this.solicitudesSeleccionadas.length == this.dataSolicitudContractual.length && this.solicitudesSeleccionadas.length > 0){
+      this.seleccionarTodos = true;
+    }else{
+      this.seleccionarTodos = false;
+    }
+  };
+
+  selectAll(event: boolean) {
+    if(event != true){
+      this.seleccionarTodos = false;
+      this.solicitudesSeleccionadas = [];
+      this.dataSolicitudContractual.forEach(solicitud => {
+        solicitud.seleccionado = false;
+      });
+    }
+    else{
+      this.seleccionarTodos = true;
+      this.dataSolicitudContractual.forEach(solicitud => {
+        solicitud.seleccionado = true;
+        //validar si existe
+        const index = this.solicitudesSeleccionadas.findIndex(value => value.id === solicitud.id && value.tipoSolicitudCodigo === solicitud.tipoSolicitudCodigo);
+        if (index === -1) {
+          this.solicitudesSeleccionadas.push(solicitud);
+        }
+      });
+    }
   };
 
   validateButton(){

@@ -32,7 +32,6 @@ export class TablaSolicitudesContractualesComponent implements OnInit {
         }else{
           this.displayedColumns = ['fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud'];
         }
-        console.log(this.solicitudesContractuales);
         this.dataSource = new MatTableDataSource( this.solicitudesContractuales );
 
         this.dataSource.sort = this.sort;

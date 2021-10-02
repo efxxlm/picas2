@@ -218,15 +218,15 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     return this.fb.group({
       sesionResponsableId: [],
       nombre: [null, Validators.compose([
-        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(300)])
       ],
       cargo: [null, Validators.compose([
-        Validators.required, Validators.minLength(1), Validators.maxLength(50)])
+        Validators.minLength(1), Validators.maxLength(50)])
       ],
       entidad: [null, Validators.compose([
-        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
+        Validators.minLength(1), Validators.maxLength(100)])
       ],
-      esDelegado: [null, Validators.required],
+      esDelegado: [null],
     });
   }
 

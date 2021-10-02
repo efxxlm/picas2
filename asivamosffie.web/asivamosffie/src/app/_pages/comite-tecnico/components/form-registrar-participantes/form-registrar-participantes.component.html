@@ -236,7 +236,7 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #nombreResponsable type="text" formControlName="nombre" maxlength="100" required />
+                    <input matInput #nombreResponsable type="text" formControlName="nombre" maxlength="300" required/>
                     <input type="hidden" formControlName="sesionResponsableId" />
                   </mat-form-field>
                   <span
@@ -245,7 +245,7 @@
                     matTooltip="Campo alfanumérico"
                     matTooltipClass="info-tooltip"
                   >
-                    {{ 100 - nombreResponsable.value.length }}
+                    {{ 300 - nombreResponsable.value.length }}
                   </span>
                   <span class="icon-incompleto">
                     <img
@@ -269,16 +269,16 @@
                     class="label-left"
                     for="cargo"
                     [class.color-secondaryColor]="
-                      (responsable.get('cargo').invalid && responsable.get('cargo').touched) ||
-                      (responsable.get('cargo').invalid && estaEditando)
-                    "
+                    (responsable.get('cargo').invalid && responsable.get('cargo').touched) ||
+                    (responsable.get('cargo').invalid && estaEditando)
+                  "
                   >
                     Cargo
                   </label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #cargo type="text" formControlName="cargo" maxlength="50" required />
+                    <input matInput #cargo type="text" formControlName="cargo" maxlength="50"  />
                   </mat-form-field>
                   <span
                     class="contador"
@@ -310,16 +310,16 @@
                     class="label-left"
                     for="entidad"
                     [class.color-secondaryColor]="
-                      (responsable.get('entidad').invalid && responsable.get('entidad').touched) ||
-                      (responsable.get('entidad').invalid && estaEditando)
-                    "
+                    (responsable.get('entidad').invalid && responsable.get('entidad').touched) ||
+                    (responsable.get('entidad').invalid && estaEditando)
+                  "
                   >
                     Entidad
                   </label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #entidad type="text" formControlName="entidad" maxlength="100" required />
+                    <input matInput #entidad type="text" formControlName="entidad" maxlength="100" />
                   </mat-form-field>
                   <span
                     class="contador"
@@ -349,17 +349,16 @@
               <div class="row">
                 <div class="pr-1">
                     <label class="label-left" for="esDelegado" [ngClass]="{
-                        'color-secondaryColor':
-                          (responsable.get('esDelegado').invalid && responsable.get('esDelegado').touched) ||
-                          (responsable.get('esDelegado').invalid && estaEditando)
-                      }">¿Es delegado?</label>
+                      'color-secondaryColor':
+                        (responsable.get('esDelegado').invalid && responsable.get('esDelegado').touched) ||
+                        (responsable.get('esDelegado').invalid && estaEditando)
+                    }">¿Es delegado?</label>
                 </div>
                 <div class="col d-flex">
-                  <mat-radio-group class="radioInput d-flex" formControlName="esDelegado" required>
+                  <mat-radio-group class="radioInput d-flex" formControlName="esDelegado">
                     <mat-radio-button class="mr-1em" [value]="true">Sí</mat-radio-button>
                     <mat-radio-button class="mr-1em" [value]="false">No</mat-radio-button>
                   </mat-radio-group>
-                  <span class="required-form-group">*</span>
                   <span class="icon-incompleto">
                       <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg"
                           alt="este campo es requerido" [matTooltipPosition]="'above'"
@@ -444,22 +443,22 @@
             <mat-card-title class="header-card--text alineacion-titulos2 pl-0"> Responsable {{ i + 1 }} </mat-card-title>
             <div class="row">
               <div class="pr-1">
-                <p><strong>Nombre Secretario:</strong>{{ responsable.get('nombre').value }}</p>
+                <p><strong>Nombre Secretario: </strong>{{ responsable.get('nombre').value }}</p>
               </div>
             </div>
             <div class="row">
               <div class="pr-1">
-                <p><strong>Cargo:</strong>{{ responsable.get('cargo').value }}</p>
+                <p><strong>Cargo: </strong>{{ responsable.get('cargo').value }}</p>
               </div>
             </div>
             <div class="row">
               <div class="pr-1">
-                <p><strong>Entidad:</strong>{{ responsable.get('entidad').value }}</p>
+                <p><strong>Entidad: </strong>{{ responsable.get('entidad').value }}</p>
               </div>
             </div>
             <div class="row">
               <div class="pr-1">
-                <p><strong>Es delegado? :</strong>
+                <p><strong>¿Es delegado? :</strong>
                   <span *ngIf="responsable.get('esDelegado').value != true">No</span>
                   <span *ngIf="responsable.get('esDelegado').value == true">Sí</span>
                 </p>

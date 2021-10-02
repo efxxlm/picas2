@@ -35,6 +35,8 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   };
   fechaComentario: Date = new Date();
   miembrosParticipantes: any[] = [];
+  responsables: any[] = [];
+
   temas: any[] = [];
   proposicionesVarios: any[] = [];
   seRealizoPeticion: boolean = false;
@@ -138,6 +140,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
         this.technicalCommitteeSessionSvc.getComiteTecnicoByComiteTecnicoId(this.activatedRoute.snapshot.params.id)
           .subscribe((response: any) => {
             this.acta.sesionComiteSolicitudComiteTecnico = response.sesionComiteSolicitudComiteTecnico;
+            this.responsables = response?.sesionResponsable;
           });
 
       });

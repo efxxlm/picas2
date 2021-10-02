@@ -33,28 +33,42 @@
     </mat-form-field>
   </div>
   <!-- Solicitudes contractuales -->
-  <div *ngIf="solicitudBoolean && verDetalle != true">
-    <div class="text-center mt-2em d-flex align-items-center">
-      <p class="mb-0 pr-1">
-        <img src="assets/img/icon/sim.svg" alt="información" class="icon" />
-        Seleccione los temas que desea incluir al comité técnico
-      </p>
-      <span class="seleccionados"> {{ totalSolicitudes() }} </span>
-    </div>
-    <div>
-      <app-tabla-solicitudes-contractuales
-      #tablaSolicitudes
-      [solicitudesContractuales]="dataSolicitudContractual"
-      [verDetalle]="false"
-      (sesionesSeleccionadas)="getSesionesSeleccionada($event)"
-      >
-      </app-tabla-solicitudes-contractuales>
-    </div>
-  </div>
-
-  <mat-card class="shipping-card" *ngIf="verDetalle == true">
+  <mat-card class="shipping-card" *ngIf="solicitudBoolean && verDetalle != true">
     <mat-card-header class="header-card header-card--margin">
-      <mat-card-title class="header-card--text"> Validación de solicitudes contractuales </mat-card-title>
+      <mat-card-title class="header-card--text"> Solicitudes contractuales </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="text-center">
+      <div >
+        <div class="text-center mt-2em d-flex align-items-center">
+          <section class="example-section">
+            <mat-checkbox [checked]="seleccionarTodos" (change)="selectAll($event.checked)"><span class="label-checkbox">Seleccionar todas las solicitudes constractuales</span></mat-checkbox>
+          </section>
+        </div>
+        <div class="text-center d-flex align-items-center">
+          <p class="mb-0 pr-1">
+            <img src="assets/img/icon/sim.svg" alt="información" class="icon" />
+            Seleccione los temas que desea incluir al comité técnico
+          </p>
+          <span class="seleccionados"> {{ totalSolicitudes() }} </span>
+        </div>
+        <div>
+          <app-tabla-solicitudes-contractuales
+          #tablaSolicitudes
+          [solicitudesContractuales]="dataSolicitudContractual"
+          [verDetalle]="false"
+          (sesionesSeleccionadas)="getSesionesSeleccionada($event)"
+          >
+          </app-tabla-solicitudes-contractuales>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <div *ngIf="verDetalle == true" class="text-center pt-1">
+    <p class="mr-1em"><b>Tipo de tema: </b><span>{{ temasString }}</span></p>
+  </div>
+  <mat-card class="shipping-card var-main-gris" *ngIf="verDetalle == true">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text"> Solicitudes contractuales </mat-card-title>
     </mat-card-header>
     <mat-card-content class="text-center">
       <button
@@ -281,21 +295,20 @@
         Agregar un nuevo tema
       </button>
     </div>
-
-    <mat-card class="shipping-card">
-      <mat-card-header class="header-card header-card--margin">
-        <mat-card-title class="header-card--text"> Proposiciones y varios </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <p>
-          <img src="assets/img/icon/sim.svg" alt="información" class="icon" />
-          Tenga en cuenta que antes de registrar la sesión de comité técnico podrá diligenciar este campo
-        </p>
-      </mat-card-content>
-    </mat-card>
   </form>
+  <mat-card class="shipping-card" *ngIf="(solicitudBoolean || temaNuevoBoolean) && verDetalle != true">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text"> Proposiciones y varios </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        <img src="assets/img/icon/sim.svg" alt="información" class="icon" />
+        Tenga en cuenta que antes de registrar la sesión de comité técnico podrá diligenciar este campo
+      </p>
+    </mat-card-content>
+  </mat-card>
   <div *ngIf="verDetalle == true">
-    <mat-card class="shipping-card">
+    <mat-card class="shipping-card var-main-gris">
       <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text"> Temas </mat-card-title>
       </mat-card-header>
@@ -329,7 +342,7 @@
         </div>
       </mat-card-content>
     </mat-card>
-    <mat-card class="shipping-card">
+    <mat-card class="shipping-card var-main-gris">
       <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text"> Proposiciones y varios </mat-card-title>
       </mat-card-header>

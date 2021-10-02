@@ -30,6 +30,40 @@
       </mat-card-content>
     </mat-card>
 
+    <mat-card class="shipping-card mt-2em" *ngIf="responsables.length > 0">
+      <mat-card-header class="header-card colorMainColor">
+        <mat-card-title class="header-card--text"> Responsables secretaría técnica </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+          <div *ngFor="let responsable of responsables; let i = index" style="margin-left: 1.5em">
+            <mat-card-title class="header-card--text alineacion-titulos2 pl-0"> Responsable {{ i + 1 }} </mat-card-title>
+            <div class="row">
+              <div class="pr-1">
+                <p><strong>Nombre Secretario: </strong>{{ responsable?.nombre }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="pr-1">
+                <p><strong>Cargo: </strong>{{ responsable?.cargo }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="pr-1">
+                <p><strong>Entidad: </strong>{{ responsable?.entidad }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="pr-1">
+                <p><strong>¿Es delegado?: </strong>
+                  <span *ngIf="responsable?.esDelegado != true" class="color-text">No</span>
+                  <span *ngIf="responsable?.esDelegado == true" class="color-text">Sí</span>
+                </p>
+              </div>
+            </div>
+          </div>
+      </mat-card-content>
+    </mat-card>
+
     <mat-accordion>
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header">
