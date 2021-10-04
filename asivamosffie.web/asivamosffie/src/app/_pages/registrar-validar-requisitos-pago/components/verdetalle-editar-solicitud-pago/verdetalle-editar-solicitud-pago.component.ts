@@ -149,6 +149,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
 
                                 // Get semaforo forma de pago y registro completo
                                 
+
                                 if ( this.contrato.solicitudPagoOnly ) {
                                     this.semaforoFormaDePago = 'completo';
                                     //Get registro completo
