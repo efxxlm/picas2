@@ -30,6 +30,7 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
         'numeroSolicitud',
         'modalidadContrato',
         'numeroContrato',
+        'tipoSolicitud',
         'estadoRegistroPago',
         'estadoRegistro',
         'gestion'
@@ -54,7 +55,7 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
                     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
                 }
             );
-    }
+    } 
 
     ngOnInit(): void {
     };

@@ -5,7 +5,7 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Registrar y validar requisitos de pago
+        Registrar y validar requisitos de pago  
     </h1>
     <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
 
@@ -48,6 +48,10 @@
             <ng-container matColumnDef="numeroContrato">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del contrato </th>
                 <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroContrato }} </td>
+            </ng-container>
+            <ng-container matColumnDef="tipoSolicitud">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>  Tipo solicitud</th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.esFactura?"Factura":"Cuenta de cobro" }} </td>
             </ng-container>
             <ng-container matColumnDef="estadoRegistroPago">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 15%;"> Estado de la solicitud de pago </th>
