@@ -112,7 +112,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
 
                                     if ( solicitudPagoRegistrarSolicitudPago !== undefined && solicitudPagoRegistrarSolicitudPago.fechaSolicitud !== undefined && solicitudPagoRegistrarSolicitudPago.numeroRadicadoSac !== undefined ) {
                                         const solicitudPagoFactura = this.contrato.solicitudPagoOnly.solicitudPagoFactura[ 0 ]
-                                        if ( this.contrato.solicitudPagoOnly.esFactura !== undefined && solicitudPagoFactura.numero !== undefined && solicitudPagoFactura.fecha !== undefined ) {
+                                        if ( this.contrato.solicitudPagoOnly.esFactura !== undefined && solicitudPagoFactura && solicitudPagoFactura.numero !== undefined && solicitudPagoFactura.fecha !== undefined ) {
                                             this.semaforoDetalleFactura = 'sin-diligenciar'
                                         }
                                     }
@@ -148,7 +148,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                                 }
 
                                 // Get semaforo forma de pago y registro completo
-                                if ( this.contrato.solicitudPago.length > 1 ) {
+                                if ( this.contrato.solicitudPagoOnly.length > 1 ) {
                                     this.semaforoFormaDePago = 'completo';
                                     //Get registro completo
                                     this.registroCompletoAcordeones.registroCompletoFormaDePago = true;
