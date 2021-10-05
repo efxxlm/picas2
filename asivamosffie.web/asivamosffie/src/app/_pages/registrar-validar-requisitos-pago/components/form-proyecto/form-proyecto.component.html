@@ -42,30 +42,9 @@
 
                 <div *ngIf="fases.length > 0" class="mt-3em">
                     <mat-accordion *ngFor="let fase of fases.controls; index as i">
-                        <mat-expansion-panel class="expansion-style sub-expansion-black">
-                            <mat-expansion-panel-header class="expansion-style--header">
-                              <mat-panel-title class="expansion-style--title font-size-09em" [ngClass]="esVerDetalle === true ? '' : fase.get( 'registroCompletoCriterio' ).value">
-                                Criterios de pago incluidos en el proyecto - {{ fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? 'Fase 1' : 'Fase 2' }}
-                              </mat-panel-title>
-                            </mat-expansion-panel-header>
-
-                            <app-form-criterios-pago    [solicitudPago]="contrato.solicitudPagoOnly"
-                                                        [contratacionProyectoId]="proyecto.get( 'contratacionProyectoId' ).value"
-                                                        [listaMenusId]="listaMenusId"
-                                                        [contrato]="contrato"
-                                                        [faseCodigo]="fase.get( 'codigo' ).value"
-                                                        [esVerDetalle]="esVerDetalle"
-                                                        [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
-                                                        [criteriosPagoFacturaCodigo]="registrarSolicitudPagoObs !== undefined ? registrarSolicitudPagoObs.criteriosPagoFacturaCodigo : ''"
-                                                        (emitAnticipo)="fase.get( 'tieneAnticipo' ).setValue( $event ); guardarDescuentoAnticipo( $event, fase )"
-                                                        (ocultarAmortizacionAnticipo)="ocultarAmortizacionAnticipo($event)" >
-                            </app-form-criterios-pago>
-                        </mat-expansion-panel>
-
                         <mat-expansion-panel
                             class="expansion-style sub-expansion-black"
                             *ngIf="
-                                ocultarAcordeonAmortizacionAnticipo ||
                                 fase.get('codigo').value === fasesContrato.construccion &&
                                 manejoAnticipoRequiere === true &&
                                 fase.get('tieneAnticipo').value === false &&
@@ -85,8 +64,29 @@
                                                             [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
                                                             [faseCodigo]="fase.get( 'codigo' ).value"
                                                             [amortizacionAnticipoCodigo]="registrarSolicitudPagoObs !== undefined ? registrarSolicitudPagoObs.amortizacionAnticipoCodigo : ''"
-                                                            [contratacionProyectoId]="proyecto.get( 'contratacionProyectoId' ).value">
+                                                            [contratacionProyectoId]="proyecto.get( 'contratacionProyectoId' ).value"
+                                                            [desabilitarAcordeonAmortizacionAnticipo]="desabilitarAcordeonAmortizacionAnticipo">
                             </app-form-amortizacion-anticipo>
+                        </mat-expansion-panel>
+
+                        <mat-expansion-panel class="expansion-style sub-expansion-black">
+                            <mat-expansion-panel-header class="expansion-style--header">
+                              <mat-panel-title class="expansion-style--title font-size-09em" [ngClass]="esVerDetalle === true ? '' : fase.get( 'registroCompletoCriterio' ).value">
+                                Criterios de pago incluidos en el proyecto - {{ fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? 'Fase 1' : 'Fase 2' }}
+                              </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <app-form-criterios-pago    [solicitudPago]="contrato.solicitudPagoOnly"
+                                                        [contratacionProyectoId]="proyecto.get( 'contratacionProyectoId' ).value"
+                                                        [listaMenusId]="listaMenusId"
+                                                        [contrato]="contrato"
+                                                        [faseCodigo]="fase.get( 'codigo' ).value"
+                                                        [esVerDetalle]="esVerDetalle"
+                                                        [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+                                                        [criteriosPagoFacturaCodigo]="registrarSolicitudPagoObs !== undefined ? registrarSolicitudPagoObs.criteriosPagoFacturaCodigo : ''"
+                                                        (emitAnticipo)="fase.get( 'tieneAnticipo' ).setValue( $event ); guardarDescuentoAnticipo( $event, fase )"
+                                                        (ocultarAmortizacionAnticipo)="ocultarAmortizacionAnticipo($event)" >
+                            </app-form-criterios-pago>
                         </mat-expansion-panel>
 
                         <mat-expansion-panel class="expansion-style sub-expansion-black">

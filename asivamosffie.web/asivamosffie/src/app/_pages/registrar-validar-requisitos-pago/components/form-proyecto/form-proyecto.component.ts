@@ -30,7 +30,7 @@ export class FormProyectoComponent implements OnInit {
             fases: this.fb.array( [] )
         }
     );
-    ocultarAcordeonAmortizacionAnticipo = false;
+    desabilitarAcordeonAmortizacionAnticipo = false;
     boolAplicaDescuentos = false;
 
     get fases() {
@@ -120,9 +120,10 @@ export class FormProyectoComponent implements OnInit {
             }
         }
 
+        // console.log('vAmortizacionXproyecto: ', this.contrato.vAmortizacionXproyecto);
         this.contrato.vAmortizacionXproyecto.forEach(element => {
             if(element.tieneAnticipo === true) {
-                this.ocultarAcordeonAmortizacionAnticipo = true;
+                this.desabilitarAcordeonAmortizacionAnticipo = true;
             }
         });
     }

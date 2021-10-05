@@ -52,7 +52,14 @@
                             </div>
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
-                                    <input matInput #porcentajeAmortizacion type="number" formControlName="porcentajeAmortizacion" (ngModelChange)="numberValidate( $event )" required>
+                                    <input
+                                    matInput
+                                    #porcentajeAmortizacion
+                                    type="number"
+                                    formControlName="porcentajeAmortizacion"
+                                    (ngModelChange)="numberValidate($event)"
+                                    required
+                                    >
                                 </mat-form-field>
                                 <span class="contador">%</span>
                             </div>

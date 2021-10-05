@@ -25,6 +25,7 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
     @Input() tieneObservacionOrdenGiro: boolean;
     @Input() contratacionProyectoId: number;
     @Input() solicitudPagoCargarFormaPago: any;
+    @Input() desabilitarAcordeonAmortizacionAnticipo: boolean;
     @Output() semaforoObservacion = new EventEmitter<boolean>();
     esPreconstruccion = true;
     solicitudPagoFase: any;
@@ -74,6 +75,10 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
     ngOnInit(): void {
         this.getDataAmortizacion();
         this.valorPorAmortizar = new FormControl({value: this.getProyectoId(this.contratacionProyectoId), disabled: true}, [Validators.required, Validators.max(100)]);
+
+        if(this.desabilitarAcordeonAmortizacionAnticipo) {
+            this.addressForm.get('porcentajeAmortizacion').disable()
+        }
     }
 
     getProyectoId(codigo: any) {
