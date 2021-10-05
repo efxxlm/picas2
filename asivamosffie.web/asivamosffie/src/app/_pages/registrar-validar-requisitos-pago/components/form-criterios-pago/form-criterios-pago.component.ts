@@ -353,6 +353,8 @@ export class FormCriteriosPagoComponent implements OnInit {
                         }
 
                         this.addressForm.get( 'criterioPago' ).setValue( this.criteriosSeleccionadosArray.length > 0 ? this.criteriosSeleccionadosArray : null );
+                        
+                        this.ocultarAmortizacionAnticipo.emit( this.addressForm.get('criterioPago').value );
                     }
                 }
             }
@@ -513,6 +515,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                     );
                 }
                 this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionados );
+                this.ocultarAmortizacionAnticipo.emit( this.addressForm.get('criterioPago').value );
             }
             if ( this.addressForm.get( 'criterios' ).dirty === false ) {
                 if ( this.solicitudPagoFase !== undefined && this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
@@ -723,6 +726,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 } );
                             }
                             this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionados );
+                            this.ocultarAmortizacionAnticipo.emit( this.addressForm.get('criterioPago').value );
                             this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
                         } else {
                             this.criterios.removeAt( index );
@@ -735,6 +739,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 } );
                             }
                             this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionados );
+                            this.ocultarAmortizacionAnticipo.emit( this.addressForm.get('criterioPago').value );
                             this.registrarPagosSvc.DeleteSolicitudPagoFaseCriterioConceptoPago( pSolicitudPagoFaseCriterioConceptoId )
                                 .subscribe(
                                     () => {

@@ -42,14 +42,14 @@
 
                 <div *ngIf="fases.length > 0" class="mt-3em">
                     <mat-accordion *ngFor="let fase of fases.controls; index as i">
+                        <!-- *ngIf="
+                            fase.get('codigo').value === fasesContrato.construccion &&
+                            manejoAnticipoRequiere === true &&
+                            fase.get('tieneAnticipo').value === false &&
+                            contrato.solicitudPago.length > 1 
+                        " -->
                         <mat-expansion-panel
                             class="expansion-style sub-expansion-black"
-                            *ngIf="
-                                fase.get('codigo').value === fasesContrato.construccion &&
-                                manejoAnticipoRequiere === true &&
-                                fase.get('tieneAnticipo').value === false &&
-                                contrato.solicitudPago.length > 1 
-                            "
                         >
                             <mat-expansion-panel-header class="expansion-style--header">
                                 <mat-panel-title class="expansion-style--title font-size-09em">

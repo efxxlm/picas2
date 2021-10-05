@@ -63,7 +63,7 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
                 const porcentajeCalculo = exampleValue * this.getProyectoId(this.contratacionProyectoId);
                 // const valorAmortizacion = exampleValue * porcentajeCalculo;
 
-                console.log(porcentajeCalculo);
+                // console.log(porcentajeCalculo);
                 this.addressForm.get('valorAmortizacion').setValue(porcentajeCalculo);
                
             } else {

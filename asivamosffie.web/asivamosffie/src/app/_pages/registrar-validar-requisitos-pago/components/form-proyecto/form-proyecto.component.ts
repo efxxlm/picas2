@@ -44,7 +44,7 @@ export class FormProyectoComponent implements OnInit {
     { }
 
     ngOnInit(): void {
-        console.log( this.proyecto )
+        console.log( 'proyecto: ', this.proyecto )
         this.getDataProyecto()
     }
 
@@ -120,7 +120,7 @@ export class FormProyectoComponent implements OnInit {
             }
         }
 
-        console.log('vAmortizacionXproyecto: ', this.contrato.vAmortizacionXproyecto);
+        console.log('contrato: ', this.contrato);
         this.contrato.vAmortizacionXproyecto.forEach(element => {
             if(element.tieneAnticipo === true) {
                 this.desabilitarAcordeonAmortizacionAnticipo = false;
@@ -291,10 +291,10 @@ export class FormProyectoComponent implements OnInit {
         // if (event.length === 1 && event[0].codigo === "17") this.ocultarAcordeonAmortizacionAnticipo = true;
         // else this.ocultarAcordeonAmortizacionAnticipo = false;
 
-        // this.boolAplicaDescuentos = false;
-        // event.forEach(element => {
-        //     if (element.codigo === "17") this.boolAplicaDescuentos = true;
-        // });
+        this.boolAplicaDescuentos = false;
+        event.forEach(element => {
+            if (element.codigo === "17") this.boolAplicaDescuentos = true;
+        });
     }
 
 }

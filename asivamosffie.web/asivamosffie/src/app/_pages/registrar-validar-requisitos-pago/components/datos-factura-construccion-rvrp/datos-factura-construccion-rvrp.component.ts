@@ -66,7 +66,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit, OnChanges 
 
   ngOnInit(): void {
     this.getDatosFactura();
-    
+    if (this.boolAplicaDescuentos) this.addressForm.get('aplicaDescuento').setValue(false);
   }
   
   ngOnChanges(changes: SimpleChanges): void {

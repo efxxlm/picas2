@@ -30,9 +30,10 @@
                                 <mat-form-field class="full-width" >
                                     <input
                                         matInput
-                                        type="number"
                                         [formControl]="valorPorAmortizar"
                                         disabled
+                                        currencyMask
+                                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                                     >
                                 </mat-form-field>
                             </div>
