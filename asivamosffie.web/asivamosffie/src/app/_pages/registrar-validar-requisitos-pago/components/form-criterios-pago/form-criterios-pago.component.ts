@@ -360,17 +360,18 @@ export class FormCriteriosPagoComponent implements OnInit {
             }
         }
 
-        this.contrato.vAmortizacionXproyecto.forEach(element => {
-            if(element.tieneAnticipo === true) {
-                // this.addressForm.get('criterioPago').setValue(null);
+        for (let i = 0; i < this.contrato.vAmortizacionXproyecto.length; i++) {
+            const element = this.contrato.vAmortizacionXproyecto[i];
+            if(i > 0 && element.tieneAnticipo === true) {
                 // console.log(element.tieneAnticipo);
                 // console.log(this.criteriosArray);
-                for (let i = 0; i < this.criteriosArray.length; i++) {
-                    const element = this.criteriosArray[i];
-                    if (element.codigo === '17') this.criteriosArray.splice(i, 1);
+                this.addressForm.get('criterioPago').setValue(null);
+                for (let j = 0; j < this.criteriosArray.length; j++) {
+                    const element = this.criteriosArray[j];
+                    if (element.codigo === '17') this.criteriosArray.splice(j, 1);
                 }
             }
-        });
+        };
 
         // this.addressForm.get('criterioPago').valueChanges.subscribe(value => {
         //     console.log(value);

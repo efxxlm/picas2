@@ -323,7 +323,7 @@
                     color="warn"
                     class="btn-guardar"
                     type="submit"
-                    [disabled]="addressForm.dirty === false">
+                    [disabled]="!addressForm.dirty && !addressForm.get('aplicaDescuento').value === false">
                     <img src="assets/img/icon/guardar.svg">
             </button>
         </div>
