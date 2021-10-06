@@ -43,6 +43,8 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
     valorFacturado = 0;
 
     valorPorAmortizar: FormControl;
+    solicitudPagoRegistrarSolicitudPago: any;
+    solicitudPagoRegistrarSolicitudPagoId: any;
 
 
     constructor(
@@ -236,20 +238,9 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
         this.estaEditando = true;
         this.addressForm.markAllAsTouched();
         const solicitudPagoFaseCriterio = [];
-        const solicitudPagoFaseAmortizacion = [
-            {
-                solicitudPagoFaseAmortizacionId: this.solicitudPagoFaseAmortizacionId,
-                solicitudPagoFaseId: this.solicitudPagoFase ? this.solicitudPagoFase.solicitudPagoFaseId : null,
-                porcentajeAmortizacion: this.addressForm.get('porcentajeAmortizacion').value,
-                valorAmortizacion: this.addressForm.get('valorAmortizacion').value
-            }
-        ];
-    
-        for (const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase) {
-            if (solicitudPagoFase.esPreconstruccion === false) {
-                solicitudPagoFase.solicitudPagoFaseAmortizacion = solicitudPagoFaseAmortizacion;
-            }
-        }
+
+        this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0]
+        this.solicitudPagoRegistrarSolicitudPagoId = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoRegistrarSolicitudPagoId
 
         if ( this.faseCodigo === this.fasesContrato.preConstruccion ) {
             if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
@@ -293,7 +284,8 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
                         {
                             solicitudPagoFaseId: 0,
                             esPreconstruccion: this.esPreconstruccion,
-                            contratacionProyectoId: this.contratacionProyectoId
+                            contratacionProyectoId: this.contratacionProyectoId,
+                            solicitudPagoRegistrarSolicitudPagoId: this.solicitudPagoRegistrarSolicitudPagoId
                         }
                     )
                 }
@@ -302,9 +294,24 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
                     {
                         solicitudPagoFaseId: 0,
                         esPreconstruccion: this.esPreconstruccion,
-                        contratacionProyectoId: this.contratacionProyectoId
+                        contratacionProyectoId: this.contratacionProyectoId,
+                        solicitudPagoRegistrarSolicitudPagoId: this.solicitudPagoRegistrarSolicitudPagoId
                     }
                 ]
+            }
+        }
+        const solicitudPagoFaseAmortizacion = [
+            {
+                solicitudPagoFaseAmortizacionId: this.solicitudPagoFaseAmortizacionId,
+                solicitudPagoFaseId: this.solicitudPagoFase ? this.solicitudPagoFase.solicitudPagoFaseId : null,
+                porcentajeAmortizacion: this.addressForm.get('porcentajeAmortizacion').value,
+                valorAmortizacion: this.addressForm.get('valorAmortizacion').value
+            }
+        ];
+    
+        for (const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase) {
+            if (solicitudPagoFase.esPreconstruccion === false) {
+                solicitudPagoFase.solicitudPagoFaseAmortizacion = solicitudPagoFaseAmortizacion;
             }
         }
     
