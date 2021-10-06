@@ -1,0 +1,126 @@
+<section>
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <ng-container matColumnDef="nombreUso">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Uso</th>
+      <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+        <div
+          class="sub-item-table justify-content-center align-items-center text-center"
+          [class.h-3]="element.data.length === 1"
+          [class.h-6]="element.data.length === 2"
+          [class.h-9]="element.data.length === 3"
+        >
+          {{ element.nombreUso }}
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="nombreAportante">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Aportante</th>
+      <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+        <div
+          class="sub-item-table justify-content-center align-items-center"
+        >
+          <div *ngFor="let el of element.data; let j = index" class="borber-table">
+            <div class="sub-item-table--element">
+              {{ el.nombreAportante }}
+            </div>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="nombreFuente">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fuente</th>
+      <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+        <div
+          class="sub-item-table justify-content-center align-items-center"
+        >
+          <div *ngFor="let el of element.data; let j = index" class="borber-table">
+            <div class="sub-item-table--element">
+              {{ el.nombreFuente }}
+            </div>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="valorUso">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor del uso</th>
+      <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+        <div
+          class="sub-item-table justify-content-center align-items-center"
+        >
+          <div *ngFor="let el of element.data; let j = index" class="borber-table">
+            <div class="sub-item-table--element">
+              {{ el.valorUso | currency: 'COP':'symbol-narrow':'.0-0' }}
+            </div>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="saldoDisponible">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Saldo Disponible</th>
+      <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+        <div
+          class="sub-item-table justify-content-center align-items-center"
+        >
+          <div *ngFor="let el of element.data; let j = index" class="borber-table">
+            <div class="sub-item-table--element">
+              {{ el.saldo  | currency: 'COP':'symbol-narrow':'.0-0'  }}
+            </div>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="valorLiberar">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor a liberar</th>
+      <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+        <div
+          class="sub-item-table justify-content-center align-items-center"
+        >
+          <div *ngFor="let el of element.data; let j = index" class="borber-table">
+            <div class="sub-item-table--element">
+              <div class="col d-flex input-saldo" *ngIf="el.saldo > 0">
+                <mat-form-field class="full-width">
+                  <input
+                    matInput
+                    #valorLiberar
+                    type="number"
+                    maxlength="20"
+                    required
+                    (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
+                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                  />
+                </mat-form-field>
+                <span
+                  class="contador"
+                  [matTooltipPosition]="'above'"
+                  matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip"
+                >
+                  {{ 20 - valorLiberar.value.length }}
+                </span>
+                <span class="icon-incompleto">
+                  <img
+                    class="icon-incompleto--img"
+                    src="assets/img/icon/incompleto.svg"
+                                  alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                    *ngIf="valorLiberar == null"
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" (click)="onSubmit(false)">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+    </button>
+  </div>
+</section>

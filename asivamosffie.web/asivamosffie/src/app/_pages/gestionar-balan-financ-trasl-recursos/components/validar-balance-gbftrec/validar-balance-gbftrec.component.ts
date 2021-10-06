@@ -14,6 +14,7 @@ export class ValidarBalanceGbftrecComponent implements OnInit {
     opcion1 = false;
     opcion2 = false;
     opcion3 = false;
+    opcion4 = false;
     data : any;
     esRegistroNuevo: boolean;
     esVerDetalle: boolean;

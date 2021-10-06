@@ -1,0 +1,17 @@
+<div class="text-center">
+  <p class="info-container">
+    <span class="info-text sin-diligenciar">Sin diligenciar</span>
+    <span class="info-text en-proceso">En proceso</span>
+    <span class="info-text completo">Completo</span>
+  </p>
+</div>
+<mat-accordion *ngFor="let drp of drps">
+    <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title {{estadoInforme == '0' || estadoInforme == null || semaforo? 'sin-diligenciar': estadoInforme == '1' || registroCompleto == false? 'en-proceso': 'completo'}}">
+                  {{ drp.numeroDrp }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-tabla-liberacion-saldo [tablaAportantes]="drp.aportantesGrid"></app-tabla-liberacion-saldo>
+    </mat-expansion-panel>
+</mat-accordion>

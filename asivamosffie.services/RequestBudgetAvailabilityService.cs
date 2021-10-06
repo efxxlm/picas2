@@ -3099,7 +3099,7 @@ namespace asivamosffie.services
             return ListDetailValidarDisponibilidadPresupuesal;
         }
 
-        private string getNombreAportante(CofinanciacionAportante confinanciacion)
+        public string getNombreAportante(CofinanciacionAportante confinanciacion)
         {
             string nombreAportante;
             if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))

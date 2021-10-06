@@ -49,9 +49,57 @@ import { DescDirTecnicaGogComponent } from './components/desc-dir-tecnica-gog/de
 import { TerceroCausacionGogComponent } from './components/tercero-causacion-gog/tercero-causacion-gog.component';
 import { FormOrigenComponent } from './components/form-origen/form-origen.component';
 import { FormDescuentosGogComponent } from './components/form-descuentos-gog/form-descuentos-gog.component';
+import { LiberacionSaldoComponent } from './components/liberacion-saldo/liberacion-saldo.component';
+import { TablaLiberacionSaldoComponent } from './components/tabla-liberacion-saldo/tabla-liberacion-saldo.component';
 
 @NgModule({
-  declarations: [GestionarBalanFinancTraslRecComponent, ValidarBalanceGbftrecComponent, RecursosCompromPagadosGbftrecComponent, EjecucionFinancieraGbftrecComponent, TrasladoRecursosGbftrecComponent, RecursosCompromAccordGbftrecComponent, FuentesUsosGbftrecComponent, ContratistasGbftrecComponent, TablaValorTotalOgGbftrecComponent, DetalleOgGbftrecComponent, TablaFacturadoOgGbftrecComponent, TablaDescuentosOgGbftrecComponent, TablaOtrosDescuentosOgGbftrecComponent, TablaEjpresupuestalGbftrecComponent, TablaEjfinancieraGbftrecComponent, VerdetalleeditarBalanceGbftrecComponent, DetalleBalanceGbftrecComponent, RegistrarTrasladoGbftrecComponent, ControlSolicitudesTrasladoGbftrecComponent, DatosSolicitudGbftrecComponent, DatosDdpDrpGbftrecComponent, TablaDrpGbftrecComponent, TablaPorcParticipacionGbftrecComponent, TablaInfofrecursosGbftrecComponent, FormCostoVariableGbftrecComponent, FormTipoPagoGbftrecComponent, VerdetalleeditarTrasladoGbftrecComponent, VerdetalleTrasladoGbftrecComponent, TablaTrasladosGbftrecComponent, TablaDetalleTrasladosGbftrecComponent, DetalleAccordTrasladosGbftrecComponent, FormOrdenGiroComponent, FormOrdenGiroSeleccionadaComponent, FormTerceroCausacionComponent, FormDescuentosDireccionTecnicaComponent, FormEstrategPagosGogComponent, AccordionDetalleGiroGogComponent, ObservacionesOrdenGiroGogComponent, SoporteOrdenGiroGogComponent, DescDirTecnicaGogComponent, TerceroCausacionGogComponent, FormOrigenComponent, FormDescuentosGogComponent],
+  declarations: [
+    GestionarBalanFinancTraslRecComponent,
+    ValidarBalanceGbftrecComponent,
+    RecursosCompromPagadosGbftrecComponent,
+    EjecucionFinancieraGbftrecComponent,
+    TrasladoRecursosGbftrecComponent,
+    RecursosCompromAccordGbftrecComponent,
+    FuentesUsosGbftrecComponent,
+    ContratistasGbftrecComponent,
+    TablaValorTotalOgGbftrecComponent,
+    DetalleOgGbftrecComponent,
+    TablaFacturadoOgGbftrecComponent,
+    TablaDescuentosOgGbftrecComponent,
+    TablaOtrosDescuentosOgGbftrecComponent,
+    TablaEjpresupuestalGbftrecComponent,
+    TablaEjfinancieraGbftrecComponent,
+    VerdetalleeditarBalanceGbftrecComponent,
+    DetalleBalanceGbftrecComponent,
+    RegistrarTrasladoGbftrecComponent,
+    ControlSolicitudesTrasladoGbftrecComponent,
+    DatosSolicitudGbftrecComponent,
+    DatosDdpDrpGbftrecComponent,
+    TablaDrpGbftrecComponent,
+    TablaPorcParticipacionGbftrecComponent,
+    TablaInfofrecursosGbftrecComponent,
+    FormCostoVariableGbftrecComponent,
+    FormTipoPagoGbftrecComponent,
+    VerdetalleeditarTrasladoGbftrecComponent,
+    VerdetalleTrasladoGbftrecComponent,
+    TablaTrasladosGbftrecComponent,
+    TablaDetalleTrasladosGbftrecComponent,
+    DetalleAccordTrasladosGbftrecComponent,
+    FormOrdenGiroComponent,
+    FormOrdenGiroSeleccionadaComponent,
+    FormTerceroCausacionComponent,
+    FormDescuentosDireccionTecnicaComponent,
+    FormEstrategPagosGogComponent,
+    AccordionDetalleGiroGogComponent,
+    ObservacionesOrdenGiroGogComponent,
+    SoporteOrdenGiroGogComponent,
+    DescDirTecnicaGogComponent,
+    TerceroCausacionGogComponent,
+    FormOrigenComponent,
+    FormDescuentosGogComponent,
+    LiberacionSaldoComponent,
+    TablaLiberacionSaldoComponent
+  ],
   imports: [
     CommonModule,
     MaterialModule,

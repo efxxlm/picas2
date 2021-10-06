@@ -39,6 +39,7 @@ namespace asivamosffie.services.Interfaces
         Task<dynamic> GetContratos();
         Task<dynamic> getNovedadContractualByContratacionId(int contratacionId);
         Task<Respuesta> CreateOrEditInfoAdditionalNoveltly(NovedadContractualRegistroPresupuestal pRegistro, int pContratacionId, string user);
+        string getNombreAportante(CofinanciacionAportante confinanciacion);
     }
     
 }

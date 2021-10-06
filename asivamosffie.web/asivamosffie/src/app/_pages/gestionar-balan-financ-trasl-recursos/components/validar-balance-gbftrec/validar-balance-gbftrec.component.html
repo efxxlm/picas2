@@ -10,7 +10,7 @@
         </ng-container>
         <ng-template #noEsVerDetalle>
             {{ esRegistroNuevo === true ? 'Validar' : 'Ver detalle/Editar' }} balance {{ data.llaveMen }}
-        </ng-template>  
+        </ng-template>
       </h1>
     <p class="info-sub-title">
         <span>Número de contrato de obra: <b>{{ data.numeroContratoObra }}</b></span>
@@ -27,19 +27,25 @@
     </mat-card>
     <div class="tabs--actions">
         <button mat-raised-button color="accent" class="tabs--btn2" [ngClass]="{'active': opcion1 === true}"
-            (click)="opcion1 = true; opcion2 = false; opcion3 = false;">
+            (click)="opcion1 = true; opcion2 = false; opcion3 = false; opcion4 = false;">
             Recursos comprometidos y pagados por contrato
         </button>
         <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion2 === true}"
-            (click)="opcion2 = true; opcion1 = false;  opcion3 = false;">
+            (click)="opcion2 = true; opcion1 = false;  opcion3 = false; opcion4 = false;">
             Ejecución financiera por componente
         </button>
         <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion3 === true}"
-            (click)="opcion3 = true; opcion1 = false;  opcion2 = false;">
+            (click)="opcion3 = true; opcion1 = false;  opcion2 = false; opcion4 = false;">
             Traslados de recursos
+        </button>
+        <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion4 === true}"
+          (click)="opcion4 = true; opcion1 = false;  opcion2 = false;  opcion3 = false;">
+          Liberación de saldo
         </button>
     </div>
     <app-recursos-comprom-pagados-gbftrec *ngIf="opcion1 && proyectoId" [id]="proyectoId" [tieneOrdenGiro]="this.data.tieneOrdenGiro"></app-recursos-comprom-pagados-gbftrec>
     <app-ejecucion-financiera-gbftrec *ngIf="opcion2 && proyectoId" [id]="proyectoId"></app-ejecucion-financiera-gbftrec>
     <app-traslado-recursos-gbftrec *ngIf="opcion3 && proyectoId" [id]="proyectoId" [tieneOrdenGiro]="this.data.tieneOrdenGiro" [esVerDetalle] = "esVerDetalle"></app-traslado-recursos-gbftrec>
-</section>
+    <app-liberacion-saldo *ngIf="opcion4 && proyectoId" [id]="proyectoId"  [esVerDetalle] = "esVerDetalle"></app-liberacion-saldo>
+
+  </section>
