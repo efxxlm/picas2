@@ -19,6 +19,7 @@ export class FormDetalleFacturaProyectosComponent implements OnInit {
     @Input() listaMenusId: any;
     @Input() registrarSolicitudPagoObs: any;
     @Input() esVerDetalle = false;
+    @Input() idSolicitud: any;
     @Output() estadoSemaforo = new EventEmitter<string>();
     solicitudPago: any;
     dataSource = new MatTableDataSource();

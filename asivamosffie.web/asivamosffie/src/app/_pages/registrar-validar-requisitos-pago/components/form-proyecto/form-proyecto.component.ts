@@ -16,6 +16,7 @@ export class FormProyectoComponent implements OnInit {
     @Input() listaMenusId: any;
     @Input() registrarSolicitudPagoObs: any;
     @Input() esVerDetalle = false;
+    @Input() idSolicitud: any;
     @Output() estadoSemaforoProyecto = new EventEmitter<boolean>();
     listaFases: Dominio[] = [];
     fasesContrato = TiposDeFase;
@@ -31,8 +32,9 @@ export class FormProyectoComponent implements OnInit {
         }
     );
     desabilitarAcordeonAmortizacionAnticipo = true;
+    ocultarAcordeonAmortizacionAnticipo = false;
     boolAplicaDescuentos = false;
-
+    mostrarAmortizacion = false;
     get fases() {
         return this.addressForm.get( 'fases' ) as FormArray
     };
@@ -45,7 +47,22 @@ export class FormProyectoComponent implements OnInit {
 
     ngOnInit(): void {
         console.log( 'proyecto: ', this.proyecto )
-        this.getDataProyecto()
+        this.getDataProyecto();
+
+        if(this.contrato.solicitudPago) {
+            if(this.contrato.solicitudPago.length > 1) {
+                let solicitudesId = this.contrato.solicitudPago.map(e => e.solicitudPagoId)
+                solicitudesId.forEach(element => {
+                    console.log(solicitudesId);
+                    console.log(this.idSolicitud > element);
+                    
+                    if (this.idSolicitud > element) {
+                        this.mostrarAmortizacion = true;
+                    }
+                });
+                
+            }
+        }
     }
 
     async getDataProyecto() {
@@ -124,6 +141,7 @@ export class FormProyectoComponent implements OnInit {
         this.contrato.vAmortizacionXproyecto.forEach(element => {
             if(element.tieneAnticipo === true) {
                 this.desabilitarAcordeonAmortizacionAnticipo = false;
+                this.ocultarAcordeonAmortizacionAnticipo = true;
             }
         });
     }
@@ -291,10 +309,12 @@ export class FormProyectoComponent implements OnInit {
         // if (event.length === 1 && event[0].codigo === "17") this.ocultarAcordeonAmortizacionAnticipo = true;
         // else this.ocultarAcordeonAmortizacionAnticipo = false;
 
-        this.boolAplicaDescuentos = false;
-        event.forEach(element => {
-            if (element.codigo === "17") this.boolAplicaDescuentos = true;
-        });
+        if(event) {
+            this.boolAplicaDescuentos = false;
+            event.forEach(element => {
+                if (element.codigo === "17") this.boolAplicaDescuentos = true;
+            });
+        }
     }
 
 }

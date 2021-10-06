@@ -53,6 +53,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
     observacion: any = undefined;
     esAutorizar = false;
     tipoObservacionCodigo = '2';
+    idSolicitud: any;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -71,6 +72,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.idSolicitud = this.activatedRoute.snapshot.params.idSolicitud
     }
 
     getContrato() {

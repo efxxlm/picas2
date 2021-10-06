@@ -208,6 +208,7 @@
             <app-form-detalle-factura-proyectos [contrato]="contrato"
                                                 [listaMenusId]="menusIdPath"
                                                 [registrarSolicitudPagoObs]="listaTipoObservacionSolicitudes.registrarSolicitudPago"
+                                                [idSolicitud]="idSolicitud"
                                                 (estadoSemaforo)="semaforoDetalleFactura = $event; $event === 'completo' ? registroCompletoAcordeones.registroCompletoDetalleFactura = true : ''"
                                                 *ngIf="registroCompletoAcordeones.registroCompletoDescripcionFactura === true && registroCompletoAcordeones.registroCompletoSolicitudPago === true">
             </app-form-detalle-factura-proyectos>

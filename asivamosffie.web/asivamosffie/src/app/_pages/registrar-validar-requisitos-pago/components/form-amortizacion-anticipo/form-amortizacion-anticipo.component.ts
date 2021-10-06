@@ -135,10 +135,14 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
             this.contrato.contratacion.disponibilidadPresupuestal.forEach( ddp => this.valorTotalDelContrato += ddp.valorSolicitud );
         }
       
+        console.log('solicitudPago: ', this.solicitudPago);
+        
         if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0] !== undefined ) {
             if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase !== undefined && this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[ 0 ] !== undefined ) {
                 if (this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0) {
                     for (const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase) {
+                        console.log('solicitudPagoFase: ', solicitudPagoFase);
+                        
                         if (solicitudPagoFase.esPreconstruccion === false && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId) {
                             this.solicitudPagoFase = solicitudPagoFase;
                         }
@@ -231,10 +235,11 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
     onSubmit() {
         this.estaEditando = true;
         this.addressForm.markAllAsTouched();
+        const solicitudPagoFaseCriterio = [];
         const solicitudPagoFaseAmortizacion = [
             {
                 solicitudPagoFaseAmortizacionId: this.solicitudPagoFaseAmortizacionId,
-                solicitudPagoFaseId: this.solicitudPagoFase.solicitudPagoFaseId,
+                solicitudPagoFaseId: this.solicitudPagoFase ? this.solicitudPagoFase.solicitudPagoFaseId : null,
                 porcentajeAmortizacion: this.addressForm.get('porcentajeAmortizacion').value,
                 valorAmortizacion: this.addressForm.get('valorAmortizacion').value
             }
@@ -245,7 +250,65 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
                 solicitudPagoFase.solicitudPagoFaseAmortizacion = solicitudPagoFaseAmortizacion;
             }
         }
+
+        if ( this.faseCodigo === this.fasesContrato.preConstruccion ) {
+            if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
+                const solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId )
+                const solicitudPagoFaseIndex = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.findIndex( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === true && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId )
+
+                if ( solicitudPagoFase !== undefined ) {
+                    this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[ solicitudPagoFaseIndex ].solicitudPagoFaseCriterio = solicitudPagoFaseCriterio
+                    // this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[ solicitudPagoFaseIndex ].esAnticipio = esAnticipio
+                } else {
+                    this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.push(
+                        {
+                            solicitudPagoFaseId: 0,
+                            esPreconstruccion: this.esPreconstruccion,
+                            contratacionProyectoId: this.contratacionProyectoId
+                        }
+                    )
+                }
+            } else {
+                this.solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase = [
+                    {
+                        solicitudPagoFaseId: 0,
+                        esPreconstruccion: this.esPreconstruccion,
+                        contratacionProyectoId: this.contratacionProyectoId
+                    }
+                ]
+            }
+        }
+
+        if ( this.faseCodigo === this.fasesContrato.construccion ) {
+            if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
+                const solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === false && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId )
+                const solicitudPagoFaseIndex = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.findIndex( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === false && solicitudPagoFase.contratacionProyectoId === this.contratacionProyectoId )
+
+                if ( solicitudPagoFase !== undefined ) {
+                    this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[ solicitudPagoFaseIndex ].solicitudPagoFaseCriterio = solicitudPagoFaseCriterio
+                    // this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[ solicitudPagoFaseIndex ].esAnticipio = esAnticipio
+                } else {
+                    // console.log( 'Test' )
+                    this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.push(
+                        {
+                            solicitudPagoFaseId: 0,
+                            esPreconstruccion: this.esPreconstruccion,
+                            contratacionProyectoId: this.contratacionProyectoId
+                        }
+                    )
+                }
+            } else {
+                this.solicitudPago.solicitudPagoRegistrarSolicitudPago[ 0 ].solicitudPagoFase = [
+                    {
+                        solicitudPagoFaseId: 0,
+                        esPreconstruccion: this.esPreconstruccion,
+                        contratacionProyectoId: this.contratacionProyectoId
+                    }
+                ]
+            }
+        }
     
+        console.log(this.solicitudPago)
         this.registrarPagosSvc.createEditNewPayment(this.solicitudPago)
             .subscribe(
                 response => {

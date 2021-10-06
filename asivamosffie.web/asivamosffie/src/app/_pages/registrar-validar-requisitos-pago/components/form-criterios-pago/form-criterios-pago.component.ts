@@ -865,6 +865,8 @@ export class FormCriteriosPagoComponent implements OnInit {
             }
         }
 
+        console.log(this.solicitudPago);
+        
         this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
             .subscribe(
                 response => {
