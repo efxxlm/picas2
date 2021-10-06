@@ -164,6 +164,9 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
                                 valorAmortizacion: solicitudPagoFaseAmortizacion.valorAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.valorAmortizacion : null
                             }
                         );
+                        if (this.addressForm.get('porcentajeAmortizacion').value) {
+                            this.addressForm.get('porcentajeAmortizacion').disable()
+                        }
               
                         if (this.esVerDetalle === false) {
                             // Get observacion CU autorizar solicitud de pago 4.1.9

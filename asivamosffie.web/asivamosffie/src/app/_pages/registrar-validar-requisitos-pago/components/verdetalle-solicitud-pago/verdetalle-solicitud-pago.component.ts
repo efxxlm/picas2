@@ -55,6 +55,7 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
     solicitudPagoRegistrarSolicitudPago: any;
     solicitudPagoFase: any;
     manejoAnticipoRequiere: boolean;
+    idSolicitud: any;
     
 
     get criterios() {
@@ -78,6 +79,7 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.idSolicitud = this.activatedRoute.snapshot.params.idSolicitud
     }
 
     applyFilter(event: Event) {
