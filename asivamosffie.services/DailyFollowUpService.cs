@@ -45,56 +45,65 @@ namespace asivamosffie.services
                                                                                 r.InterventorId == usuarioId
                                                                               )
                                                                         .ToListAsync();
-            foreach (var p in listaInfoProyectos)
+
+            try
             {
-                //no se muestran los que no tengan fase de construcción (requisitos)
-                int existe = _context.ContratoConstruccion.Where(r => r.ContratoId == p.ContratoId && r.ProyectoId == p.ProyectoId).Count();
-                if (existe <= 0)
-                {
-                    listaInfoProyectos.Remove(p);
-                    break;
-                }
-                List<SeguimientoDiario> listaSeguimientoDiario = _context.SeguimientoDiario
-                                                                .Where(s => s.ContratacionProyectoId == p.ContratacionProyectoId &&
-                                                                       s.Eliminado != true)
-                                                                .OrderByDescending(r => r.FechaSeguimiento)
-                                                                .ToList();
-                //Nueva restricción control de cambios
-                p.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(p.ContratoId,false);
 
-                if (listaSeguimientoDiario.Count() > 0)
-                {
-                    SeguimientoDiario seguimientoDiario = listaSeguimientoDiario.FirstOrDefault();
+                List<VProyectosXcontrato> ListvProyectosXcontratos = new List<VProyectosXcontrato>();
 
-                    p.FechaUltimoSeguimientoDiario = seguimientoDiario.FechaSeguimiento;
-                    p.SeguimientoDiarioId = seguimientoDiario.SeguimientoDiarioId;
-                    p.RegistroCompleto = seguimientoDiario.RegistroCompleto.HasValue ? seguimientoDiario.RegistroCompleto.Value : false;
-                    p.EstadoCodigo = seguimientoDiario.EstadoCodigo;
+                foreach (var p in listaInfoProyectos)
+                {  
+                    //no se muestran los que no tengan fase de construcción (requisitos)
+                    int existe = _context.ContratoConstruccion.Where(r => r.ContratoId == p.ContratoId && r.ProyectoId == p.ProyectoId).Count();
+                   
+                    List<SeguimientoDiario> listaSeguimientoDiario = _context.SeguimientoDiario
+                                                                    .Where(s => s.ContratacionProyectoId == p.ContratacionProyectoId &&
+                                                                           s.Eliminado != true)
+                                                                    .OrderByDescending(r => r.FechaSeguimiento)
+                                                                    .ToList();
+                    //Nueva restricción control de cambios
+                    p.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(p.ContratoId, false);
 
-                    if (listaSeguimientoDiario.Where(sd => sd.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.ConObservacionesEnviadas).Count() > 0)
+                    if (listaSeguimientoDiario.Count() > 0)
                     {
-                        SeguimientoDiario seguimientoTemp = listaSeguimientoDiario
-                                                                .Where(sd => sd.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.ConObservacionesEnviadas)
-                                                                .FirstOrDefault();
+                        SeguimientoDiario seguimientoDiario = listaSeguimientoDiario.FirstOrDefault();
 
-                        p.TieneObservaciones = true;
-                        p.RegistroCompletoTieneObservaciones = seguimientoTemp.RegistroCompleto;
+                        p.FechaUltimoSeguimientoDiario = seguimientoDiario.FechaSeguimiento;
+                        p.SeguimientoDiarioId = seguimientoDiario.SeguimientoDiarioId;
+                        p.RegistroCompleto = seguimientoDiario.RegistroCompleto.HasValue ? seguimientoDiario.RegistroCompleto.Value : false;
+                        p.EstadoCodigo = seguimientoDiario.EstadoCodigo;
+
+                        if (listaSeguimientoDiario.Where(sd => sd.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.ConObservacionesEnviadas).Count() > 0)
+                        {
+                            SeguimientoDiario seguimientoTemp = listaSeguimientoDiario
+                                                                    .Where(sd => sd.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.ConObservacionesEnviadas)
+                                                                    .FirstOrDefault();
+
+                            p.TieneObservaciones = true;
+                            p.RegistroCompletoTieneObservaciones = seguimientoTemp.RegistroCompleto;
 
 
+                        }
+
+                        if (listaSeguimientoDiario
+                                .Where(x => x.EstadoCodigo != null &&
+                                       x.EstadoCodigo != "0" &&
+                                       x.EstadoCodigo != ConstanCodigoEstadoSeguimientoDiario.EnProcesoDeRegistro)
+                                .Count() > 0)
+                        {
+                            p.MostrarBitacora = true;
+                        }
+                        if (existe > 0)
+                        {
+                            ListvProyectosXcontratos.Add(p);
+                        }  
                     }
-
-                    if (listaSeguimientoDiario
-                            .Where(x => x.EstadoCodigo != null &&
-                                   x.EstadoCodigo != "0" &&
-                                   x.EstadoCodigo != ConstanCodigoEstadoSeguimientoDiario.EnProcesoDeRegistro)
-                            .Count() > 0)
-                    {
-                        p.MostrarBitacora = true;
-                    }
-
                 }
             }
-
+            catch (Exception e)
+            { 
+                throw;
+            } 
             return listaInfoProyectos;
         }
 

@@ -24,6 +24,48 @@ namespace asivamosffie.services
 {
     public class RegisterWeeklyProgressService : IRegisterWeeklyProgressService
     {
+
+        #region Terminacion Anticipada
+
+
+        public Respuesta FinalizarSeguimientoSemanal(int pContratacionProyecto, string pAuthor)
+        {
+            Respuesta respuesta = new Respuesta();
+
+            try
+            {
+                _context.Set<SeguimientoSemanal>()
+                        .Where(r => r.ContratacionProyectoId == pContratacionProyecto)
+                        .Update(s => new SeguimientoSemanal
+                        {
+                            UsuarioModificacion = pAuthor,
+                            FechaModificacion = DateTime.Now,
+                            RegistroCompleto = true 
+                        });
+                  
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa
+                };
+            }
+            catch (Exception e)
+            {
+                return new Respuesta
+                {
+                    Data = e.InnerException,
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.Error
+                };
+            }
+        }
+
+        #endregion
+
         #region constructor
 
         private ICommonService _commonService;
