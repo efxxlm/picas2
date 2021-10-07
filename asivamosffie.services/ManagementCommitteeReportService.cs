@@ -1001,6 +1001,7 @@ namespace asivamosffie.services
                                 TemplateNotificacionCompromisos.Contenido
                                 .Replace("_LinkF_", pDominioFront)
                                 .Replace("[URL]", pDominioFront + "compromisosActasComite")
+                                .Replace("[TIPO_COMITE]", comiteTecnico.EsComiteFiduciario != true ? " Técnico" : " Fiduciario")
                                 .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
                                 .Replace("[COMPROMISO]", sesionSolicitudCompromiso.Tarea)
                                 .Replace("[FECHA_CUMPLIMIENTO]", sesionSolicitudCompromiso.FechaCumplimiento.HasValue ? sesionSolicitudCompromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
@@ -1022,6 +1023,7 @@ namespace asivamosffie.services
                                 TemplateNotificacionCompromisos.Contenido
                                 .Replace("_LinkF_", pDominioFront)
                                 .Replace("[URL]", pDominioFront + "compromisosActasComite")
+                                .Replace("[TIPO_COMITE]", comiteTecnico.EsComiteFiduciario != true ? " Técnico" : " Fiduciario")
                                 .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
                                 .Replace("[COMPROMISO]", sesionSolicitudCompromiso.Tarea)
                                 .Replace("[FECHA_CUMPLIMIENTO]", sesionSolicitudCompromiso.FechaCumplimiento.HasValue ? sesionSolicitudCompromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
@@ -1043,6 +1045,7 @@ namespace asivamosffie.services
                                 TemplateNotificacionCompromisos.Contenido
                                 .Replace("_LinkF_", pDominioFront)
                                 .Replace("[URL]", pDominioFront + "compromisosActasComite")
+                                .Replace("[TIPO_COMITE]", comiteTecnico.EsComiteFiduciario != true ? " Técnico" : " Fiduciario")
                                 .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
                                 .Replace("[COMPROMISO]", compromiso.Tarea)
                                 .Replace("[FECHA_CUMPLIMIENTO]", compromiso.FechaCumplimiento.HasValue ? compromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
