@@ -1068,7 +1068,6 @@ namespace asivamosffie.services
                     _context.ProcesoSeleccion
                     .Where(r => !(bool)r.Eliminado
                      && r.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite
-                     && r.FechaCreacion < pFechaOrdenDelDia
                      )
                     .OrderByDescending(r => r.ProcesoSeleccionId).ToList();
 
@@ -1076,21 +1075,18 @@ namespace asivamosffie.services
                     _context.ProcesoSeleccion
                     .Where(r => !(bool)r.Eliminado
                      && r.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobacionDeSeleccionEnTramite
-                     && r.FechaCreacion < pFechaOrdenDelDia
                      )
                     .OrderByDescending(r => r.ProcesoSeleccionId).ToList();
 
                 List<Contratacion> ListContratacion = _context.Contratacion
                     .Where(r => !(bool)r.Eliminado
                     && r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_tramite
-                    && r.FechaTramite < pFechaOrdenDelDia
                     )
                     .OrderByDescending(r => r.ContratacionId).ToList();
 
                 List<ProcesoSeleccionMonitoreo> ListActualizacionCronograma = _context.ProcesoSeleccionMonitoreo
                     .Where(r => !(bool)r.Eliminado
                     && r.EnviadoComiteTecnico == true
-                    && r.FechaCreacion < pFechaOrdenDelDia
                     )
                     .Include(r => r.ProcesoSeleccion)
                     .OrderByDescending(r => r.ProcesoSeleccionMonitoreoId).ToList();
@@ -1100,7 +1096,6 @@ namespace asivamosffie.services
                     && r.EsRequiereComite == true
                     && r.EstadoCodigo == ConstanCodigoEstadoControversiasContractuales.EnviadaComiteTecnico
                     && r.TipoControversiaCodigo == "1" // TAI
-                    && r.FechaSolicitud < pFechaOrdenDelDia
                     )
                     .OrderByDescending(r => r.ControversiaContractualId).ToList();
 
@@ -1108,7 +1103,6 @@ namespace asivamosffie.services
                     .Where(r => !(bool)r.Eliminado
                     && r.EsRequiereComite == true
                     && r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Enviado_a_comite_tecnico
-                    && r.FechaActuacion < pFechaOrdenDelDia
                     )
                     .Include(r => r.ControversiaContractual)
                     .OrderByDescending(r => r.ControversiaContractualId).ToList();
@@ -1118,7 +1112,6 @@ namespace asivamosffie.services
                     .Where(r => !(bool)r.Eliminado
                     && r.EsRequiereComiteReclamacion == true
                     && r.EstadoActuacionReclamacionCodigo == ConstanCodigoEstadosActuacionReclamacion.Enviado_a_comite_tecnico //enviado a comite
-                    && r.FechaActuacion < pFechaOrdenDelDia
                     )
                     .Include(r => r.ControversiaContractual)
                     .OrderByDescending(r => r.ControversiaContractualId).ToList();
@@ -1127,7 +1120,6 @@ namespace asivamosffie.services
                     .Where(r => !(bool)r.Eliminado
                     && r.FichaEstudio.FirstOrDefault().EsActuacionTramiteComite == true
                     && r.EstadoProcesoCodigo == ConstanCodigoEstadosDefensaJudicial.Enviado_a_comite_tecnico
-                    && r.FechaCreacion < pFechaOrdenDelDia // no estoy seguro de esto
                     )
                     .OrderByDescending(r => r.DefensaJudicialId).ToList();
 
@@ -1135,7 +1127,6 @@ namespace asivamosffie.services
                     .Where(r => !(bool)r.Eliminado
                     //&& r.FichaEstudio.FirstOrDefault().EsActuacionTramiteComite == true
                     && r.EstadoProcesoCodigo == ConstanCodigoEstadosDefensaJudicial.Enviado_a_comite_tecnico
-                    && r.FechaActuacion < pFechaOrdenDelDia // no estoy seguro de esto
                     )
                     .Include(r => r.DefensaJudicial)
                     .OrderByDescending(r => r.DefensaJudicialId).ToList();
@@ -1143,7 +1134,6 @@ namespace asivamosffie.services
                 List<NovedadContractual> ListNovedadContractual = _context.NovedadContractual
                     .Where(r => !(bool)r.Eliminado
                     && r.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Enviada_a_comite_tecnico
-                    && r.FechaSolictud < pFechaOrdenDelDia // no estoy seguro de esto
                     )
                     .OrderByDescending(r => r.FechaSolictud).ToList();
 
