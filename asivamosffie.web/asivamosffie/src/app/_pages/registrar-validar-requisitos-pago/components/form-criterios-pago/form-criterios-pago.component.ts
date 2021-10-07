@@ -361,7 +361,7 @@ export class FormCriteriosPagoComponent implements OnInit {
         } else {
             for (let i = 0; i < this.contrato.vAmortizacionXproyecto.length; i++) {
                 const element = this.contrato.vAmortizacionXproyecto[i];                
-                if(element.tieneAnticipo === true) {
+                if(element.tieneAnticipo === true && this.contrato.vAmortizacionXproyecto.length > 1) {
                     for (let j = 0; j < this.criteriosArray.length; j++) {
                         const element = this.criteriosArray[j];
                         if (element.codigo === '17') this.criteriosArray.splice(j, 1);
