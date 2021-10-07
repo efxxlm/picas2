@@ -74,6 +74,7 @@ export class FormAutorizarSolicitudComponent implements OnInit {
         'saldo'
     ];
     estaEditando = false;
+    idSolicitud: any;
     constructor(
         private activatedRoute: ActivatedRoute,
         private dialog: MatDialog,
@@ -98,6 +99,7 @@ export class FormAutorizarSolicitudComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.idSolicitud = this.activatedRoute.snapshot.params.idSolicitudPago
     }
 
     getContrato() {

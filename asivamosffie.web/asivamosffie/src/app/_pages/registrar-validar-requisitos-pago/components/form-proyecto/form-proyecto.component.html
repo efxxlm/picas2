@@ -44,6 +44,7 @@
                     <mat-accordion *ngFor="let fase of fases.controls; index as i">
                         <mat-expansion-panel
                         *ngIf="
+                            ocultarAcordeonAmortizacionAnticipo &&
                             mostrarAmortizacion &&
                             fase.get('codigo').value === fasesContrato.construccion &&
                             manejoAnticipoRequiere === true &&

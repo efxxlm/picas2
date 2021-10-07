@@ -149,5 +149,15 @@ export class FormDetalleFacturaProyectosComponent implements OnInit {
             }
         }
     }
+    
+    getAmortizacionXproyecto(id: string) {
+        if (this.contrato.vAmortizacionXproyecto.length > 0) {
+          const amortizacionProyecto = this.contrato.vAmortizacionXproyecto.find(e => e.contratacionProyectoId === id);
+          if( amortizacionProyecto === undefined) return false
+          else return true
+        } else {
+            return true;
+        }
+    }
 
 }

@@ -32,6 +32,7 @@ export class RegistrarSolicitudPagoComponent implements OnInit {
         'saldoPorPagar',
         'porcentajePorPagar'
     ];
+    idSolicitud: any;
 
     constructor( ){
     }

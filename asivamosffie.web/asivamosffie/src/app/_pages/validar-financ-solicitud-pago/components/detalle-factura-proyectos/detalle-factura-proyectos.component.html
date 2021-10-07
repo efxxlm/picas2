@@ -52,7 +52,10 @@
                 <app-form-proyecto  [proyecto]="proyecto"
                                     [contrato]="contrato"
                                     [listaMenusId]="listaMenusId"
-                                    [registrarSolicitudPagoObs]="registrarSolicitudPagoObs">
+                                    [registrarSolicitudPagoObs]="registrarSolicitudPagoObs"
+                                    [idSolicitud]="idSolicitud"
+                                    [ocultarAcordeonAmortizacionAnticipo]="getAmortizacionXproyecto(proyecto.value.contratacionProyectoId)"
+                                    >
                 </app-form-proyecto>
             </div>
         </div>

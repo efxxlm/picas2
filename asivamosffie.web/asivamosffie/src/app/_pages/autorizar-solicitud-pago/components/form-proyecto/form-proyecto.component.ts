@@ -16,6 +16,7 @@ export class FormProyectoComponent implements OnInit {
     @Input() registrarSolicitudPagoObs: any;
     @Input() idSolicitud: any;
     @Input() esVerDetalle = false;
+    @Input() ocultarAcordeonAmortizacionAnticipo: boolean = true;
     @Output() estadoSemaforoProyecto = new EventEmitter<boolean>();
     listaFases: Dominio[] = [];
     fasesContrato = TiposDeFase;
@@ -24,7 +25,6 @@ export class FormProyectoComponent implements OnInit {
     solicitudPagoFase = [];
     estadoSemaforoFase = 'sin-diligenciar'
     manejoAnticipoRequiere = false;
-    ocultarAcordeonAmortizacionAnticipo = false;
     mostrarAmortizacion = false;
     addressForm = this.fb.group(
         {
@@ -47,7 +47,7 @@ export class FormProyectoComponent implements OnInit {
         this.getDataProyecto()
 
         if(this.contrato.solicitudPago) {
-            if(this.contrato.solicitudPago.length > 1) {
+            if(this.contrato.solicitudPago.length > 1 && this.contrato.solicitudPagoOnly.esFactura) {
                 let solicitudesId = this.contrato.solicitudPago.map(e => e.solicitudPagoId)
                 solicitudesId.forEach(element => {                    
                     if (this.idSolicitud > element) {

@@ -5,6 +5,7 @@
         </mat-card-title>
     </mat-card-header>
     <mat-card-content style="text-align: left;">
+        <p><strong>Saldo a amortizar:</strong> {{ valorPorAmortizar.value | currency:'':'symbol-narrow':'.0-0' }} </p>
         <p><strong>Porcentaje de amortización:</strong> {{ addressForm.get( 'porcentajeAmortizacion' ).value }}% </p>
         <p><strong>Valor de amortización:</strong> {{ addressForm.get( 'valorAmortizacion' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
     </mat-card-content>

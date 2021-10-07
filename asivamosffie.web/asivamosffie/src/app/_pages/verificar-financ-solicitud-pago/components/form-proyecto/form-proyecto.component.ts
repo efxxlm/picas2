@@ -15,6 +15,8 @@ export class FormProyectoComponent implements OnInit {
     @Input() listaMenusId: any;
     @Input() registrarSolicitudPagoObs: any;
     @Input() esVerDetalle = false;
+    @Input() idSolicitud: any;
+    @Input() ocultarAcordeonAmortizacionAnticipo: boolean = true;
     @Output() estadoSemaforoProyecto = new EventEmitter<boolean>();
     listaFases: Dominio[] = [];
     fasesContrato = TiposDeFase;
@@ -23,6 +25,7 @@ export class FormProyectoComponent implements OnInit {
     solicitudPagoFase = [];
     estadoSemaforoFase = 'sin-diligenciar'
     manejoAnticipoRequiere = false;
+    mostrarAmortizacion = false;
     addressForm = this.fb.group(
         {
             fase: [ null, Validators.required ],
@@ -41,7 +44,19 @@ export class FormProyectoComponent implements OnInit {
 
     ngOnInit(): void {
         console.log( this.proyecto )
-        this.getDataProyecto()
+        this.getDataProyecto();
+
+        if(this.contrato.solicitudPago) {
+            if(this.contrato.solicitudPago.length > 1 && this.contrato.solicitudPagoOnly.esFactura) {
+                let solicitudesId = this.contrato.solicitudPago.map(e => e.solicitudPagoId)
+                solicitudesId.forEach(element => {
+                    if (this.idSolicitud > element) {
+                        this.mostrarAmortizacion = true;
+                    }
+                });
+                
+            }
+        }
     }
 
     async getDataProyecto() {

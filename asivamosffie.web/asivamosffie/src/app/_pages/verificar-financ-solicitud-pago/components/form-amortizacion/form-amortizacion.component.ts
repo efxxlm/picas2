@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ObservacionesMultiplesCuService } from 'src/app/core/_services/observacionesMultiplesCu/observaciones-multiples-cu.service';
@@ -33,13 +33,25 @@ export class FormAmortizacionComponent implements OnInit {
       valorAmortizacion: [{ value: null, disabled: true }, Validators.required]
     });
     estaEditando = false;
+    valorPorAmortizar: FormControl;
 
     constructor(
         private fb: FormBuilder )
     {}
 
     ngOnInit(): void {
-        this.getDataAmortizacion()
+        this.getDataAmortizacion();
+        this.valorPorAmortizar = new FormControl({value: this.getProyectoId(this.contratacionProyectoId), disabled: true}, [Validators.required, Validators.max(100)]);
+
+    }
+
+    getProyectoId(codigo: any) {
+        if (this.contrato.vAmortizacionXproyecto.length > 0) {
+          const proyectoId = this.contrato.vAmortizacionXproyecto.find(proyectoId => proyectoId.contratacionProyectoId === codigo);
+          if (proyectoId !== undefined) {
+            return proyectoId.valorPorAmortizar;
+          }
+        }
     }
 
     getDataAmortizacion() {

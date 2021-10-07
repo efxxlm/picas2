@@ -55,6 +55,7 @@
                                     [registrarSolicitudPagoObs]="registrarSolicitudPagoObs"
                                     [esVerDetalle]="esVerDetalle"
                                     [idSolicitud]="idSolicitud"
+                                    [ocultarAcordeonAmortizacionAnticipo]="getAmortizacionXproyecto(proyecto.value.contratacionProyectoId)"
                                     (estadoSemaforoProyecto)="proyecto.get( 'registroCompleto' ).setValue( $event );checkRegistroCompleto()">
                 </app-form-proyecto>
             </div>

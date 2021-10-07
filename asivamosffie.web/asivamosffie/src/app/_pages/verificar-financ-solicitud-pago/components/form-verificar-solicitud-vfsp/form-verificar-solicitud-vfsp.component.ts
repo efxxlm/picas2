@@ -43,6 +43,7 @@ export class FormVerificarSolicitudVfspComponent implements OnInit {
         valorFacturado: [null, Validators.required],
         tipoPago: [null, Validators.required]
     });
+    idSolicitud: any;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -57,6 +58,7 @@ export class FormVerificarSolicitudVfspComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.idSolicitud = this.activatedRoute.snapshot.params.idSolicitudPago
     }
 
     getContrato() {

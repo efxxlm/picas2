@@ -17,6 +17,8 @@ export class FormProyectoComponent implements OnInit {
     @Input() registrarSolicitudPagoObs: any;
     @Input() esVerDetalle = false;
     @Input() idSolicitud: any;
+    @Input() contratacionProyectoId: any;
+    @Input() ocultarAcordeonAmortizacionAnticipo: boolean = true;
     @Output() estadoSemaforoProyecto = new EventEmitter<boolean>();
     listaFases: Dominio[] = [];
     fasesContrato = TiposDeFase;
@@ -32,7 +34,6 @@ export class FormProyectoComponent implements OnInit {
         }
     );
     desabilitarAcordeonAmortizacionAnticipo = true;
-    ocultarAcordeonAmortizacionAnticipo = false;
     boolAplicaDescuentos = false;
     mostrarAmortizacion = false;
     get fases() {
@@ -50,7 +51,7 @@ export class FormProyectoComponent implements OnInit {
         this.getDataProyecto();
 
         if(this.contrato.solicitudPago) {
-            if(this.contrato.solicitudPago.length > 1) {
+            if(this.contrato.solicitudPago.length > 1 && this.contrato.solicitudPagoOnly.esFactura) {
                 let solicitudesId = this.contrato.solicitudPago.map(e => e.solicitudPagoId)
                 solicitudesId.forEach(element => {
                     if (this.idSolicitud > element) {
@@ -138,7 +139,7 @@ export class FormProyectoComponent implements OnInit {
         this.contrato.vAmortizacionXproyecto.forEach(element => {
             if(element.tieneAnticipo === true) {
                 this.desabilitarAcordeonAmortizacionAnticipo = false;
-                this.ocultarAcordeonAmortizacionAnticipo = true;
+                // this.ocultarAcordeonAmortizacionAnticipo = true;
             }
         });
     }
