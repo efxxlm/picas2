@@ -82,7 +82,7 @@
         </div>
         <div class="col color-blue" [innerHTML]="solicitudes.procesoSeleccion?.justificacion" style="text-align: justify;"></div>
       </div>
-      
+
       <div style="margin-top: .6em;">
         <div class="row" *ngIf="solicitudes.desarrolloSolicitud !== undefined && esComiteFiduciario === false">
           <div class="pr-1">
@@ -153,10 +153,10 @@
           </section>
         </div>
       </ng-template>
-      
+
       <div class="row" *ngIf="solicitudes.rutaSoporteVotacion && esComiteFiduciario === false" style="margin-top: .6em;">
         <div class="pr-1">
-          <label><b>URL con soporte de votación</b></label>
+          <label><b>URL con soportes</b></label>
         </div>
         <div class="col w-80">
           <span class="color-blue"> <b>{{ solicitudes.rutaSoporteVotacion }}</b> </span>
@@ -164,7 +164,7 @@
       </div>
       <div class="row" *ngIf="solicitudes.rutaSoporteVotacionFiduciario && esComiteFiduciario === true">
         <div class="pr-1">
-          <label><b>URL con soporte de votación</b></label>
+          <label><b>URL con soportes</b></label>
         </div>
         <div class="col w-80">
           <span class="color-blue"> <b>{{ solicitudes.rutaSoporteVotacionFiduciario }}</b> </span>
