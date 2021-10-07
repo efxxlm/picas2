@@ -154,7 +154,7 @@ export class FormCriteriosPagoComponent implements OnInit {
 
         for (let i = 0; i < this.contrato.vAmortizacionXproyecto.length; i++) {
             const element = this.contrato.vAmortizacionXproyecto[i];
-            // if(i > 0 && element.tieneAnticipo === true) {
+            if(i > 0 && element.tieneAnticipo === true) {
                 // console.log(element.tieneAnticipo);
                 // console.log(this.criteriosArray);
                 this.addressForm.get('criterioPago').setValue(null);
@@ -162,7 +162,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                     const element = this.criteriosArray[j];
                     if (element.codigo === '17') this.criteriosArray.splice(j, 1);
                 }
-            // }
+            }
         };
 
         if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago !== undefined && this.solicitudPago.solicitudPagoRegistrarSolicitudPago.length > 0 ) {
