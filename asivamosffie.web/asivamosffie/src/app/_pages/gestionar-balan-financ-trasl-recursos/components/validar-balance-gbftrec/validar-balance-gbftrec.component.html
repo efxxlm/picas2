@@ -38,14 +38,14 @@
             (click)="opcion3 = true; opcion1 = false;  opcion2 = false; opcion4 = false;">
             Traslados de recursos
         </button>
-        <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion4 === true}"
+        <!--<button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': opcion4 === true}"
           (click)="opcion4 = true; opcion1 = false;  opcion2 = false;  opcion3 = false;">
           Liberación de saldo
-        </button>
+        </button>-->
     </div>
     <app-recursos-comprom-pagados-gbftrec *ngIf="opcion1 && proyectoId" [id]="proyectoId" [tieneOrdenGiro]="this.data.tieneOrdenGiro"></app-recursos-comprom-pagados-gbftrec>
     <app-ejecucion-financiera-gbftrec *ngIf="opcion2 && proyectoId" [id]="proyectoId"></app-ejecucion-financiera-gbftrec>
     <app-traslado-recursos-gbftrec *ngIf="opcion3 && proyectoId" [id]="proyectoId" [tieneOrdenGiro]="this.data.tieneOrdenGiro" [esVerDetalle] = "esVerDetalle"></app-traslado-recursos-gbftrec>
-    <app-liberacion-saldo *ngIf="opcion4 && proyectoId" [id]="proyectoId"  [esVerDetalle] = "esVerDetalle"></app-liberacion-saldo>
+    <!--<app-liberacion-saldo *ngIf="opcion4 && proyectoId" [id]="proyectoId"  [esVerDetalle] = "esVerDetalle"></app-liberacion-saldo>-->
 
   </section>

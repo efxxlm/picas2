@@ -6,7 +6,7 @@
 
     &--btn {
         padding: .5em 2em;
-        width: 25%;
+        min-width: 25%;
         box-shadow: none;
         border: solid 1px #fff;
 
@@ -22,7 +22,7 @@
     }
     &--btn2 {
       padding: .5em 2em;
-      width: 25%;
+      min-width: 25%;
       box-shadow: none;
       border: solid 1px #fff;
 
