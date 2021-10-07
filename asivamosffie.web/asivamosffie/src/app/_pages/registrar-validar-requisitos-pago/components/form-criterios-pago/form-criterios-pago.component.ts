@@ -152,6 +152,16 @@ export class FormCriteriosPagoComponent implements OnInit {
 
         this.criteriosArray = LISTA_CRITERIOS_FORMA_PAGO;
 
+        for (let i = 0; i < this.contrato.vAmortizacionXproyecto.length; i++) {
+            const element = this.contrato.vAmortizacionXproyecto[i];
+            if(element.tieneAnticipo === true) {
+                // this.addressForm.get('criterioPago').setValue(null);
+                for (let j = 0; j < this.criteriosArray.length; j++) {
+                    const element = this.criteriosArray[j];
+                    if (element.codigo === '17') this.criteriosArray.splice(j, 1);
+                }
+            }
+        };
 
         if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago !== undefined && this.solicitudPago.solicitudPagoRegistrarSolicitudPago.length > 0 ) {
             this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0]
@@ -358,16 +368,6 @@ export class FormCriteriosPagoComponent implements OnInit {
                     }
                 }
             }
-        } else {
-            for (let i = 0; i < this.contrato.vAmortizacionXproyecto.length; i++) {
-                const element = this.contrato.vAmortizacionXproyecto[i];                
-                if(element.tieneAnticipo === true && this.contrato.vAmortizacionXproyecto.length > 1) {
-                    for (let j = 0; j < this.criteriosArray.length; j++) {
-                        const element = this.criteriosArray[j];
-                        if (element.codigo === '17') this.criteriosArray.splice(j, 1);
-                    }
-                }
-            };
         }
 
         // this.addressForm.get('criterioPago').valueChanges.subscribe(value => {
