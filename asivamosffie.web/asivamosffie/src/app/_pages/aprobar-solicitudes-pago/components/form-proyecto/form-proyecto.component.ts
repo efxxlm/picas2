@@ -15,6 +15,7 @@ export class FormProyectoComponent implements OnInit {
     @Input() listaMenusId: any;
     @Input() registrarSolicitudPagoObs: any;
     @Input() esVerDetalle = false;
+    @Input() idSolicitud: any;
     @Output() estadoSemaforoProyecto = new EventEmitter<boolean>();
     listaFases: Dominio[] = [];
     fasesContrato = TiposDeFase;
@@ -23,6 +24,9 @@ export class FormProyectoComponent implements OnInit {
     solicitudPagoFase = [];
     estadoSemaforoFase = 'sin-diligenciar'
     manejoAnticipoRequiere = false;
+    desabilitarAcordeonAmortizacionAnticipo = true;
+    ocultarAcordeonAmortizacionAnticipo = false;
+    mostrarAmortizacion = false;
     addressForm = this.fb.group(
         {
             fase: [ null, Validators.required ],
@@ -41,7 +45,19 @@ export class FormProyectoComponent implements OnInit {
 
     ngOnInit(): void {
         console.log( this.proyecto )
-        this.getDataProyecto()
+        this.getDataProyecto();
+
+        if(this.contrato.solicitudPago) {
+            if(this.contrato.solicitudPago.length > 1) {
+                let solicitudesId = this.contrato.solicitudPago.map(e => e.solicitudPagoId)
+                solicitudesId.forEach(element => {
+                    if (this.idSolicitud > element) {
+                        this.mostrarAmortizacion = true;
+                    }
+                });
+                
+            }
+        }
     }
 
     async getDataProyecto() {
@@ -115,6 +131,12 @@ export class FormProyectoComponent implements OnInit {
                 this.estadoSemaforoProyecto.emit( false )
             }
         }
+        this.contrato.vAmortizacionXproyecto.forEach(element => {
+            if(element.tieneAnticipo === true) {
+                this.desabilitarAcordeonAmortizacionAnticipo = false;
+                this.ocultarAcordeonAmortizacionAnticipo = true;
+            }
+        });
     }
 
     getValueFase( listFaseCodigo: Dominio[] ) {

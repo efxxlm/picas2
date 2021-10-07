@@ -53,9 +53,6 @@ export class FormProyectoComponent implements OnInit {
             if(this.contrato.solicitudPago.length > 1) {
                 let solicitudesId = this.contrato.solicitudPago.map(e => e.solicitudPagoId)
                 solicitudesId.forEach(element => {
-                    console.log(solicitudesId);
-                    console.log(this.idSolicitud > element);
-                    
                     if (this.idSolicitud > element) {
                         this.mostrarAmortizacion = true;
                     }
