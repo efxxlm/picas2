@@ -375,10 +375,10 @@ export class FormCriteriosPagoComponent implements OnInit {
                     console.log(element.tieneAnticipo);
                     
                     // this.addressForm.get('criterioPago').setValue(null);
-                    // for (let j = 0; j < this.criteriosArray.length; j++) {
-                    //     const element = this.criteriosArray[j];
-                    //     if (element.codigo === '17') this.criteriosArray.splice(j, 1);
-                    // }
+                    for (let j = 0; j < this.criteriosArray.length; j++) {
+                        const element = this.criteriosArray[j];
+                        if (element.codigo === '17') this.criteriosArray.splice(j, 1);
+                    }
                 }
             };
         }
