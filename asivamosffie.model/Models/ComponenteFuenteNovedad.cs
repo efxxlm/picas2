@@ -8,7 +8,6 @@ namespace asivamosffie.model.Models
         public ComponenteFuenteNovedad()
         {
             ComponenteUsoNovedad = new HashSet<ComponenteUsoNovedad>();
-            ComponenteUsoNovedadHistorico = new HashSet<ComponenteUsoNovedadHistorico>();
         }
 
         public int ComponenteFuenteNovedadId { get; set; }
@@ -23,6 +22,5 @@ namespace asivamosffie.model.Models
 
         public virtual ComponenteAportanteNovedad ComponenteAportanteNovedad { get; set; }
         public virtual ICollection<ComponenteUsoNovedad> ComponenteUsoNovedad { get; set; }
-        public virtual ICollection<ComponenteUsoNovedadHistorico> ComponenteUsoNovedadHistorico { get; set; }
     }
 }

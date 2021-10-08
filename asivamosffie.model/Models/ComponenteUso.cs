@@ -5,11 +5,6 @@ namespace asivamosffie.model.Models
 {
     public partial class ComponenteUso
     {
-        public ComponenteUso()
-        {
-            ComponenteUsoHistorico = new HashSet<ComponenteUsoHistorico>();
-        }
-
         public int ComponenteUsoId { get; set; }
         public int ComponenteAportanteId { get; set; }
         public string TipoUsoCodigo { get; set; }
@@ -25,6 +20,5 @@ namespace asivamosffie.model.Models
 
         public virtual ComponenteAportante ComponenteAportante { get; set; }
         public virtual FuenteFinanciacion FuenteFinanciacion { get; set; }
-        public virtual ICollection<ComponenteUsoHistorico> ComponenteUsoHistorico { get; set; }
     }
 }

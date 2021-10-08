@@ -13,9 +13,11 @@ namespace asivamosffie.model.Models
         public int? CofinanciacionAportanteId { get; set; }
         public int FuenteFinanciacionId { get; set; }
         public string FuenteRecursosCodigo { get; set; }
-        public decimal? Saldo { get; set; }
         public int ProyectoId { get; set; }
         public int ContratacionId { get; set; }
         public int DisponibilidadPresupuestalId { get; set; }
+        public int ContratoId { get; set; }
+        public string LlaveMen { get; set; }
+        public decimal ValorSolicitud { get; set; }
     }
 }
