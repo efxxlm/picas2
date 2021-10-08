@@ -231,10 +231,10 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
         }
 
         // Acordeon descripcion de la factura
-        if ( nombreAcordeon === 'descripcionFactura' && tieneRegistroAnterior === false ) {
+        if ( nombreAcordeon === 'descripcionFactura' && !this.registroCompletoAcordeones.registroCompletoSolicitudPago ) {
             return 'en-alerta';
         }
-        if ( nombreAcordeon === 'descripcionFactura' && tieneRegistroAnterior === true ) {
+        if ( nombreAcordeon === 'descripcionFactura' && this.registroCompletoAcordeones.registroCompletoSolicitudPago ) {
             let semaforoDescripcionFactura = 'sin-diligenciar'
             const solicitudPagoFactura = this.contrato.solicitudPagoOnly.solicitudPagoFactura[ 0 ]
 
