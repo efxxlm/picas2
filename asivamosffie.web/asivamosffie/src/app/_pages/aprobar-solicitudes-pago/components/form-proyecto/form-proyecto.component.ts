@@ -17,6 +17,7 @@ export class FormProyectoComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() idSolicitud: any;
     @Input() ocultarAcordeonAmortizacionAnticipo: boolean = true;
+    @Input() num: number;
     @Output() estadoSemaforoProyecto = new EventEmitter<boolean>();
     listaFases: Dominio[] = [];
     fasesContrato = TiposDeFase;
@@ -78,7 +79,8 @@ export class FormProyectoComponent implements OnInit {
         } );
 
         this.listaFases = LISTA_FASES
-        if ( this.contrato.contratoConstruccion.length > 0 ) this.manejoAnticipoRequiere = this.contrato.contratoConstruccion[0].manejoAnticipoRequiere;
+        if ( this.contrato.contratoConstruccion.length === 1 ) this.manejoAnticipoRequiere = this.contrato.contratoConstruccion[0].manejoAnticipoRequiere;
+        if ( this.contrato.contratoConstruccion.length > 1 ) this.manejoAnticipoRequiere = this.contrato.contratoConstruccion[this.num].manejoAnticipoRequiere;
 
 
         const solicitudPagoRegistrarSolicitudPago = this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[ 0 ]

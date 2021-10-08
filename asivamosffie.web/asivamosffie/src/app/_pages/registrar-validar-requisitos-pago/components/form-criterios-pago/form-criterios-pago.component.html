@@ -9,9 +9,7 @@
     <strong>Criterios de pago:</strong>
     <p *ngFor="let criterio of criteriosSeleccionadosArray; index as i" style="margin-left: .4em;">
       <span *ngIf="criterio">
-        {{ criterio.nombre }}
-        <span *ngIf="criteriosSeleccionadosArray.length - 1 !== i">,</span>
-        <span *ngIf="criteriosSeleccionadosArray.length - 1 === i">.</span>
+        {{ criterio.nombre }}<span *ngIf="criteriosSeleccionadosArray.length - 1 !== i">,</span><span *ngIf="criteriosSeleccionadosArray.length - 1 === i">.</span>
       </span>
     </p>
   </div>

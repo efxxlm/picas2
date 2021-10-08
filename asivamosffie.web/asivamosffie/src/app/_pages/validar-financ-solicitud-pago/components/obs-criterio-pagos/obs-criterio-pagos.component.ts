@@ -25,6 +25,7 @@ export class ObsCriterioPagosComponent implements OnInit {
     @Input() tieneObservacionOrdenGiro: boolean;
     @Input() esVerDetalle = false;
     @Input() faseCodigo: string;
+    @Input() num: number;
     @Output() semaforoObservacion = new EventEmitter<boolean>();
     @Output() emitAnticipo = new EventEmitter<boolean>();
     criteriosSeleccionadosArray: Dominio[] = [];
@@ -84,7 +85,8 @@ export class ObsCriterioPagosComponent implements OnInit {
         let criterioAnticipo = null;
 
         //const montoMaximoPendiente = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, FORMA_PAGO_CODIGO, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ).toPromise();
-        if ( this.contrato.contratoConstruccion.length > 0 ) this.manejoAnticipoRequiere = this.contrato.contratoConstruccion[0].manejoAnticipoRequiere;
+        if ( this.contrato.contratoConstruccion.length === 1 ) this.manejoAnticipoRequiere = this.contrato.contratoConstruccion[0].manejoAnticipoRequiere;
+        if ( this.contrato.contratoConstruccion.length > 1 ) this.manejoAnticipoRequiere = this.contrato.contratoConstruccion[this.num].manejoAnticipoRequiere;
 
        // this.montoMaximoPendiente = montoMaximoPendiente
 

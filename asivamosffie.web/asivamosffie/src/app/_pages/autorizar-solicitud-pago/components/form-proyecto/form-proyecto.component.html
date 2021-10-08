@@ -74,6 +74,7 @@
                                                     [faseCodigo]="fase.get( 'codigo' ).value"
                                                     [criteriosPagoFacturaCodigo]="registrarSolicitudPagoObs !== undefined ? registrarSolicitudPagoObs.criteriosPagoFacturaCodigo : ''"
                                                     [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
+                                                    [num]="num"
                                                     (emitAnticipo)="fase.get( 'tieneAnticipo' ).setValue( $event )">
                             </app-obs-criterio-pagos>
                         </mat-expansion-panel>

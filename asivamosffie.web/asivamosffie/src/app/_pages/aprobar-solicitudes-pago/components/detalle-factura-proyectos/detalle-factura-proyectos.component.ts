@@ -19,6 +19,7 @@ export class DetalleFacturaProyectosComponent implements OnInit {
     @Input() registrarSolicitudPagoObs: any;
     @Input() esVerDetalle = false;
     @Input() idSolicitud: any;
+    @Input() num: number;
     solicitudPago: any;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
