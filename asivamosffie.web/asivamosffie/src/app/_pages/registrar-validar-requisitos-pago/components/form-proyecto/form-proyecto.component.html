@@ -86,8 +86,10 @@
                                                         [esVerDetalle]="esVerDetalle"
                                                         [solicitudPagoCargarFormaPago]="solicitudPagoCargarFormaPago"
                                                         [criteriosPagoFacturaCodigo]="registrarSolicitudPagoObs !== undefined ? registrarSolicitudPagoObs.criteriosPagoFacturaCodigo : ''"
+                                                        [num]="num"
                                                         (emitAnticipo)="fase.get( 'tieneAnticipo' ).setValue( $event ); guardarDescuentoAnticipo( $event, fase )"
-                                                        (ocultarAmortizacionAnticipo)="ocultarAmortizacionAnticipo($event)" >
+                                                        (ocultarAmortizacionAnticipo)="ocultarAmortizacionAnticipo($event)"
+                                                        >
                             </app-form-criterios-pago>
                         </mat-expansion-panel>
 
