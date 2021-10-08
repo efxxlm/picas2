@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public NovedadContractualRegistroPresupuestal()
         {
             DisponibilidadPresupuestalObservacion = new HashSet<DisponibilidadPresupuestalObservacion>();
+            NovedadContractualRegistroPresupuestalHistorico = new HashSet<NovedadContractualRegistroPresupuestalHistorico>();
         }
 
         public int NovedadContractualRegistroPresupuestalId { get; set; }
@@ -32,5 +33,6 @@ namespace asivamosffie.model.Models
         public virtual DisponibilidadPresupuestal DisponibilidadPresupuestal { get; set; }
         public virtual NovedadContractual NovedadContractual { get; set; }
         public virtual ICollection<DisponibilidadPresupuestalObservacion> DisponibilidadPresupuestalObservacion { get; set; }
+        public virtual ICollection<NovedadContractualRegistroPresupuestalHistorico> NovedadContractualRegistroPresupuestalHistorico { get; set; }
     }
 }

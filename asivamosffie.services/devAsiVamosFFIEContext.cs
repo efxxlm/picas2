@@ -79,6 +79,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<DemandanteConvocante> DemandanteConvocante { get; set; }
         public virtual DbSet<DevMenu> DevMenu { get; set; }
         public virtual DbSet<DisponibilidadPresupuestal> DisponibilidadPresupuestal { get; set; }
+        public virtual DbSet<DisponibilidadPresupuestalHistorico> DisponibilidadPresupuestalHistorico { get; set; }
         public virtual DbSet<DisponibilidadPresupuestalObservacion> DisponibilidadPresupuestalObservacion { get; set; }
         public virtual DbSet<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto { get; set; }
         public virtual DbSet<DocumentoApropiacion> DocumentoApropiacion { get; set; }
@@ -125,6 +126,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<NovedadContractualDescripcionMotivo> NovedadContractualDescripcionMotivo { get; set; }
         public virtual DbSet<NovedadContractualObservaciones> NovedadContractualObservaciones { get; set; }
         public virtual DbSet<NovedadContractualRegistroPresupuestal> NovedadContractualRegistroPresupuestal { get; set; }
+        public virtual DbSet<NovedadContractualRegistroPresupuestalHistorico> NovedadContractualRegistroPresupuestalHistorico { get; set; }
         public virtual DbSet<OrdenGiro> OrdenGiro { get; set; }
         public virtual DbSet<OrdenGiroDetalle> OrdenGiroDetalle { get; set; }
         public virtual DbSet<OrdenGiroDetalleDescuentoTecnica> OrdenGiroDetalleDescuentoTecnica { get; set; }
@@ -1598,10 +1600,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ComponenteUsoHistorico>(entity =>
             {
-                entity.HasNoKey();
-
-                entity.Property(e => e.ComponenteUsoHistoricoId).ValueGeneratedOnAdd();
-
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -1618,7 +1616,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.ComponenteUso)
-                    .WithMany()
+                    .WithMany(p => p.ComponenteUsoHistorico)
                     .HasForeignKey(d => d.ComponenteUsoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Component__Compo__46335CF5");
@@ -1677,10 +1675,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ComponenteUsoNovedadHistorico>(entity =>
             {
-                entity.HasNoKey();
-
-                entity.Property(e => e.ComponenteUsoNovedadHistoricoId).ValueGeneratedOnAdd();
-
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -1697,7 +1691,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.ComponenteUsoNovedad)
-                    .WithMany()
+                    .WithMany(p => p.ComponenteUsoNovedadHistorico)
                     .HasForeignKey(d => d.ComponenteUsoNovedadId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Component__Compo__4AF81212");
@@ -4852,6 +4846,30 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_DisponibilidadPresupuestal_Contratacion");
             });
 
+            modelBuilder.Entity<DisponibilidadPresupuestalHistorico>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(18, 2)");
+
+                entity.HasOne(d => d.DisponibilidadPresupuestal)
+                    .WithMany(p => p.DisponibilidadPresupuestalHistorico)
+                    .HasForeignKey(d => d.DisponibilidadPresupuestalId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Disponibilidad__Historico__46335CF5");
+            });
+
             modelBuilder.Entity<DisponibilidadPresupuestalObservacion>(entity =>
             {
                 entity.HasComment("Almacena las observaciones de las solicitudes de disponibilidad presupuestal");
@@ -7397,6 +7415,30 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.NovedadContractualRegistroPresupuestal)
                     .HasForeignKey(d => d.NovedadContractualId)
                     .HasConstraintName("FK_NovedadContractualRegistroPresupuestal_NovedadContractual");
+            });
+
+            modelBuilder.Entity<NovedadContractualRegistroPresupuestalHistorico>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(18, 2)");
+
+                entity.HasOne(d => d.NovedadContractualRegistroPresupuestal)
+                    .WithMany(p => p.NovedadContractualRegistroPresupuestalHistorico)
+                    .HasForeignKey(d => d.NovedadContractualRegistroPresupuestalId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Novedad_Contractual_RP_historico");
             });
 
             modelBuilder.Entity<OrdenGiro>(entity =>
@@ -14630,9 +14672,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UsoNombre)
-                    .IsRequired()
-                    .HasMaxLength(250);
+                entity.Property(e => e.UsoNombre).HasMaxLength(250);
 
                 entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
 
