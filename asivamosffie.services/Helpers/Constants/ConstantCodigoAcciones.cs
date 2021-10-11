@@ -385,6 +385,9 @@
 
         public const string Cambiar_Estado_Balance_Financiero = "284";
         public const string CrearEditarProcesosContractualesObservacion = "285";
+        //Histórico saldos
+        public const string Crear_Editar_Componente_uso_Historico = "286";
+
 
     }
 }

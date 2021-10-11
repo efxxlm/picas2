@@ -3,8 +3,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
+import { FormBuilder} from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ReleaseBalanceService } from 'src/app/core/_services/releaseBalance/release-balance.service';
+import { Respuesta } from 'src/app/core/_services/common/common.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-tabla-liberacion-saldo',
@@ -13,12 +16,15 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class TablaLiberacionSaldoComponent implements OnInit {
   @Input() tablaAportantes: any[];
+
   estaEditando: boolean;
   estadoInforme = '0';
   registroCompleto = false;
   semaforo= false;
   noGuardado=false;
   soloMostrarObservacion=false;
+  ELEMENT_DATA: any[] = [];
+
   displayedColumns: string[] = [
     'nombreUso',
     'nombreAportante',
@@ -29,27 +35,33 @@ export class TablaLiberacionSaldoComponent implements OnInit {
   ];
   listAportantes : any[] = [];
   listaUsos : any[] = [];
-  //addressForm: FormGroup;
   addressForm = this.fb.group({});
-  dataSource = new MatTableDataSource;
+  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  proyectoId = 0;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private fb: FormBuilder,
-    public dialog: MatDialog) { }
-
-
+    public dialog: MatDialog,
+    private releaseBalanceService: ReleaseBalanceService,
+    private routes: Router,
+    private activatedRoute: ActivatedRoute
+    ) {
+      this.proyectoId = Number( this.activatedRoute.snapshot.params.id )
+    }
 
   ngOnInit(): void {
     this.listaUsos = [];
+    this.listAportantes = [];
     var result = this.groupListByUso(this.tablaAportantes,"codigoUso");
     this.tablaAportantes.forEach(r=>{
       if(!this.listaUsos.find(lu => lu.codigoUso == r.codigoUso)){
         this.listaUsos.push({
           codigoUso: r.codigoUso,
-          nombreUso: r.nombreUso
+          nombreUso: r.nombreUso,
+          valorSolicitud: r.valorSolicitud
         })
       }
     })
@@ -58,6 +70,8 @@ export class TablaLiberacionSaldoComponent implements OnInit {
         if(element !== null && element != undefined){
           let list = [];
           element.forEach(dataAportante => {
+            //this.estadoSemaforo.emit( 'en-proceso' );
+
               list.push({
                 nombreAportante: dataAportante.nombreAportante,
                 nombreFuente: dataAportante.nombreFuente,
@@ -65,14 +79,18 @@ export class TablaLiberacionSaldoComponent implements OnInit {
                 fuenteRecursosCodigo: dataAportante.fuenteRecursosCodigo,
                 cofinanciacionAportanteId: dataAportante.cofinanciacionAportanteId,
                 componenteUsoId: dataAportante.componenteUsoId,
+                componenteUsoHistoricoId: dataAportante.componenteUsoHistoricoId ?? 0,
                 valorUso: dataAportante.valorUso,
                 saldo: dataAportante.saldo ?? 0,
+                valorSolicitud: dataAportante.valorSolicitud ?? 0,
+                valorLiberar : dataAportante.valorLiberar ?? null
               });
           });
           this.listAportantes.push({
             codigoUso: r.codigoUso,
             nombreUso: r.nombreUso,
-            data: list
+            data: list,
+            valorSolicitud: r.valorSolicitud
           });
         }
     })
@@ -96,9 +114,52 @@ export class TablaLiberacionSaldoComponent implements OnInit {
     });
   }
 
-  onSubmit(test: boolean) {
+  onSubmit() {
     this.estaEditando = true;
     this.noGuardado=false;
+    const dataHistorico = [];
+    console.log(this.dataSource.data);
+    this.dataSource.data.forEach(r =>{
+      r.data.forEach(u => {
+          if(u.valorLiberar != null || u.componenteUsoHistoricoId > 0){
+            dataHistorico.push({
+              componenteUsoId: u.componenteUsoId,
+              valorLiberar: u.valorLiberar,
+              esNovedad: false,
+              componenteUsoNovedadId: 0,
+              componenteUsoHistoricoId: u.componenteUsoHistoricoId,
+              componenteUsoNovedadHistoricoId: 0
+            });
+          }
+      });
+    });
+    const VUsosHistorico ={
+      usosHistorico:dataHistorico
+    }
+    console.log(VUsosHistorico);
+
+    this.createEditHistoricalReleaseBalance(VUsosHistorico);
+  }
+
+  createEditHistoricalReleaseBalance(pUsosHistorico: any) {
+    this.releaseBalanceService.CreateEditHistoricalReleaseBalance(pUsosHistorico)
+      .subscribe(
+        (respuesta: Respuesta) => {
+          this.openDialog('', respuesta.message);
+          this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () => this.routes.navigate(
+                [
+                    '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarBalance', this.proyectoId
+                ]
+            )
+          );
+          return;
+        },
+        err => {
+          this.openDialog('', err.message);
+          return;
+        }
+      );
   }
 
 
@@ -121,5 +182,39 @@ export class TablaLiberacionSaldoComponent implements OnInit {
         return rv;
       }, {});
     };
+
+    validateSaldo(el: any, valorSolicitud: number,codigoUso: number){
+      this.dialog.closeAll();
+      let valorTotalLiberar = 0;
+      let index = this.dataSource.data.findIndex(d => d.codigoUso == codigoUso);
+      let positionDta = -1;
+      if(index != -1){
+        positionDta = this.dataSource.data[index].data.findIndex(d => d.componenteUsoId == el.componenteUsoId);
+      }
+      if(el.valorLiberar > el.saldo){
+        if(positionDta != -1)
+          this.dataSource.data[index].data[positionDta].valorLiberar = null;
+        this.openDialog(
+          '',
+          '<b>El valor a liberar no puede ser mayor al saldo disponible.</b>'
+        );
+        return false;
+      }
+      this.dataSource.data.forEach(r=>{
+        r.data.forEach(d => {
+          valorTotalLiberar += d.valorLiberar
+        });
+      });
+      if (valorTotalLiberar > valorSolicitud) {
+        if(positionDta != -1)
+          this.dataSource.data[index].data[positionDta].valorLiberar = null;
+        this.openDialog(
+          '',
+          '<b>Los valores registrados superan el valor total del RP;es necesario revisar y ajustar estos valores .</b>'
+        );
+        return false;
+      }
+
+    }
 
 }

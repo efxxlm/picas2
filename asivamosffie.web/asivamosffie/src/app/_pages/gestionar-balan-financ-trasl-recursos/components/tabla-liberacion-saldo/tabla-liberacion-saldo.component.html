@@ -82,10 +82,15 @@
                   <input
                     matInput
                     #valorLiberar
-                    type="number"
+                    min="0"
                     maxlength="20"
                     required
+                    currencyMask
+                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                    value="{{el.valorLiberar | currency: 'COP':'symbol-narrow':'.0-0' }}"
+                    [(ngModel)]="el.valorLiberar"
                     (keypress)="validateNumberKeypress($event)"
+                    (ngModelChange)="validateSaldo(el, element.valorSolicitud,element.codigoUso)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                     oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                   />
@@ -93,7 +98,7 @@
                 <span
                   class="contador"
                   [matTooltipPosition]="'above'"
-                  matTooltip="Campo numérico"
+                  matTooltip="Valor en ($) Pesos colombianos"
                   matTooltipClass="info-tooltip"
                 >
                   {{ 20 - valorLiberar.value.length }}
@@ -106,7 +111,7 @@
                 [matTooltipPosition]="'above'"
                 matTooltip="Debe ingresar la información en el campo para continuar"
                 matTooltipClass="info-tooltip"
-                    *ngIf="valorLiberar == null"
+                    *ngIf="el.valorLiberar == null"
                   />
                 </span>
               </div>
@@ -119,7 +124,7 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" (click)="onSubmit(false)">
+    <button mat-button color="warn" class="btn-guardar" (click)="onSubmit()">
       <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>

@@ -10,6 +10,7 @@ namespace asivamosffie.services.Interfaces
     public interface IReleaseBalanceService
     {
         Task<List<dynamic>> GetDrpByProyectoId(int pProyectoId);
+        Task<Respuesta> CreateEditHistoricalReleaseBalance(VUsosHistorico pUsosHistorico, string user);
 
     }
 }

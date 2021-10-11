@@ -14,7 +14,7 @@ namespace asivamosffie.api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ReleaseBalanceController : Controller
+    public class ReleaseBalanceController : ControllerBase
     {
 
         private readonly IReleaseBalanceService _releaseBalanceService;
@@ -31,6 +31,26 @@ namespace asivamosffie.api.Controllers
         public async Task<List<dynamic>> GetDrpByProyectoId([FromQuery] int pProyectoId)
         {
             return await _releaseBalanceService.GetDrpByProyectoId(pProyectoId);
+        }
+
+        //Creaciones y modificaciones
+
+        [HttpPost]
+        [Route("CreateEditHistoricalReleaseBalance")]
+        public async Task<IActionResult> CreateEditHistoricalReleaseBalance([FromBody] VUsosHistorico pUsosHistorico)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string user = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _releaseBalanceService.CreateEditHistoricalReleaseBalance(pUsosHistorico, user);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
         }
 
     }

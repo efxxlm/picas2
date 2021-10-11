@@ -355,81 +355,43 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
             {
-                entity.HasComment("Almacena el seguimiento de las actuaciones relacionadas a las controversias generadas en el sistema");
-
-                entity.Property(e => e.ActuacionSeguimientoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ActuacionAdelantada).HasComment("se debe registrar la actividad que el usuario considere debe realizarse.");
-
-                entity.Property(e => e.CantDiasVencimiento).HasComment("Días de vencimiento de términos para la próxima actuación requerida");
-
-                entity.Property(e => e.ControversiaActuacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsResultadoDefinitivo).HasComment("se debe indicar si el trámite ante la fiduciaria se debe dar por cerrado");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoDerivadaCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoReclamacionCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaActuacionAdelantada)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de actuación adelantada");
+                entity.Property(e => e.FechaActuacionAdelantada).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaVencimiento)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de vencimiento del registro");
+                entity.Property(e => e.FechaVencimiento).HasColumnType("datetime");
 
-                entity.Property(e => e.NumeroActuacionReclamacion)
-                    .HasMaxLength(100)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.Observaciones).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.ProximaActuacion).HasComment("registrar la actividad que considere debe realizarse");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.NumeroActuacionReclamacion).HasMaxLength(100);
 
                 entity.Property(e => e.RutaSoporte)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Ruta URL con soportes de la actuación");
-
-                entity.Property(e => e.SeguimientoCodigo).HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ControversiaActuacion)
                     .WithMany(p => p.ActuacionSeguimiento)
@@ -440,42 +402,22 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<AjustePragramacionObservacion>(entity =>
             {
-                entity.HasComment("Almacena las observaciones a los ajustes de la programación");
+                entity.Property(e => e.EsObra).HasColumnName("esObra");
 
-                entity.Property(e => e.AjustePragramacionObservacionId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.AjusteProgramacionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Archivada).HasComment("Indica si la observación esta archivada");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsObra)
-                    .HasColumnName("esObra")
-                    .HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observaciones)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de tabla en mención");
+                entity.Property(e => e.Observaciones).IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.AjusteProgramacion)
                     .WithMany(p => p.AjustePragramacionObservacion)
@@ -485,33 +427,7 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<AjusteProgramacion>(entity =>
             {
-                entity.HasComment("Almacena ajustes a los tipos de programación");
-
-                entity.Property(e => e.AjusteProgramacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ArchivoCargueIdFlujoInversion).HasComment("Identificador del archivo de cargue de flujo de inversión");
-
-                entity.Property(e => e.ArchivoCargueIdProgramacionObra).HasComment("Identificador del archivo de cargue de programación de obra");
-
-                entity.Property(e => e.ContratacionProyectoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.EstadoCodigo)
-                    .HasMaxLength(10)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.NovedadContractualId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ObservacionDevolucionFlujoInversion).HasComment("Identificador de la observación de la devolución del flujo de inversión");
-
-                entity.Property(e => e.ObservacionDevolucionIdProgramacionObra).HasComment("Identificador de la observación de la devolución de programación de obra");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoValidacion).HasComment("Indica que el registro queda completo de validación");
-
-                entity.Property(e => e.TieneObservacionesFlujoInversion).HasComment("Campo que indica que tiene observaciones de la tabla en mención");
-
-                entity.Property(e => e.TieneObservacionesProgramacionObra).HasComment("Campo que indica que tiene observaciones de la tabla en mención");
+                entity.Property(e => e.EstadoCodigo).HasMaxLength(10);
 
                 entity.HasOne(d => d.ContratacionProyecto)
                     .WithMany(p => p.AjusteProgramacion)
@@ -526,27 +442,12 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<AjusteProgramacionFlujo>(entity =>
             {
-                entity.HasComment("Almacena el flujo de los ajustes de programación");
-
-                entity.Property(e => e.AjusteProgramacionFlujoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.AjusteProgramacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.MesEjecucionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ProgramacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.SeguimientoSemanalId).HasComment("Llave foranea a la tabla en mención");
-
                 entity.Property(e => e.Semana)
                     .IsRequired()
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Número de la semana");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Valor)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.Valor).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.AjusteProgramacion)
                     .WithMany(p => p.AjusteProgramacionFlujo)
@@ -557,37 +458,19 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<AjusteProgramacionObra>(entity =>
             {
-                entity.HasComment("Almacena los ajustes de programación para los proyectos de tipo obra");
-
-                entity.Property(e => e.AjusteProgramacionObraId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.Actividad)
                     .IsRequired()
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Descripción de la actividad");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.AjusteProgramacionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaFin).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratoConstruccionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Duracion).HasComment("Cantidad de semanas que dura la programación");
-
-                entity.Property(e => e.EsRutaCritica).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaFin)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha fin de la actividad");
-
-                entity.Property(e => e.FechaInicio)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha inicio de la actividad");
+                entity.Property(e => e.FechaInicio).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoActividadCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.AjusteProgramacion)
                     .WithMany(p => p.AjusteProgramacionObra)
@@ -598,35 +481,17 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<AportanteFuenteFinanciacion>(entity =>
             {
-                entity.HasComment("Almacena los aportantes relacionados a las fuentes de financiación");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.AportanteFuenteFinanciacionId).HasComment("Descripción de la siguiente actividad por el área legal");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaEdicion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de edición");
-
-                entity.Property(e => e.FuenteFinanciacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ProyectoAdministrativoAportanteId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaEdicion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioEdicion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario que raliza la edición");
-
-                entity.Property(e => e.ValorFuente).HasComment("Representa la cantidad de dinero del campo correspondiente");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.FuenteFinanciacion)
                     .WithMany(p => p.AportanteFuenteFinanciacion)
@@ -642,82 +507,38 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ArchivoCargue>(entity =>
             {
-                entity.HasComment("Almacena las referencias de los archivos cargados en el sistema");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ArchivoCargueId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Activo).HasComment("Indica si el registro esta activo (0) Inactivo (1) Activo");
-
-                entity.Property(e => e.CantidadRegistros).HasComment("Cantidad de registros");
-
-                entity.Property(e => e.CantidadRegistrosInvalidos).HasComment("Cantidad de registros invalidos");
-
-                entity.Property(e => e.CantidadRegistrosValidos).HasComment("Cantidad de registros validos");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del archivo");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Observaciones)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de tabla en mención");
+                entity.Property(e => e.Observaciones).IsUnicode(false);
 
-                entity.Property(e => e.OrigenId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ReferenciaId)
-                    .HasColumnName("ReferenciaID")
-                    .HasComment("Referencia a la tabla dominio sobre la columna dominio ID");
+                entity.Property(e => e.ReferenciaId).HasColumnName("ReferenciaID");
 
                 entity.Property(e => e.Ruta)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Ruta del archivo de cargue");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Tamano)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Indica el tamaño del archivo de cargue");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(255)
-                    .HasComment("Usuario creación");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(255);
 
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(255)
-                    .HasComment("usuario que realiza modificación del registro");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(255);
             });
 
             modelBuilder.Entity<Auditoria>(entity =>
             {
-                entity.HasComment("Almacena las acciones que hace el usuario en el sistema");
-
-                entity.Property(e => e.AuditoriaId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.AccionId).HasComment("Referencia a la tabla dominio sobre la columna dominio ID");
-
-                entity.Property(e => e.Fecha)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se hace la acción");
-
-                entity.Property(e => e.MensajesValidacionesId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Observacion).HasComment("Complemento de la acción");
+                entity.Property(e => e.Fecha).HasColumnType("datetime");
 
                 entity.Property(e => e.Usuario)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario que hace la acción");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Accion)
                     .WithMany(p => p.Auditoria)
@@ -734,58 +555,29 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<BalanceFinanciero>(entity =>
             {
-                entity.HasComment("Almacena el balance financiero de los diferentes proyectos existentes en el sistema");
-
-                entity.Property(e => e.BalanceFinancieroId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.EstaAnulado).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
                 entity.Property(e => e.EstadoBalanceCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaAnulado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de anulación del BF");
+                entity.Property(e => e.FechaAnulado).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación");
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.JustificacionTrasladoAportanteFuente).HasComment("justificacion del traslado de la fuente de un aportante");
+                entity.Property(e => e.NumeroBalance).HasMaxLength(20);
 
-                entity.Property(e => e.NumeroBalance)
-                    .HasMaxLength(20)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.ProyectoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RequiereTransladoRecursos).HasComment("Indica si requiere traslado de recursos");
-
-                entity.Property(e => e.UrlSoporte)
-                    .HasMaxLength(1000)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.UrlSoporte).HasMaxLength(1000);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Proyecto)
                     .WithMany(p => p.BalanceFinanciero)
@@ -796,60 +588,34 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<BalanceFinancieroTraslado>(entity =>
             {
-                entity.HasComment("Almancena los traslados relacionados a cada uno de los balances financieros");
-
-                entity.Property(e => e.BalanceFinancieroTrasladoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.BalanceFinancieroId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaAnulacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de anulación del traslado del BF");
+                entity.Property(e => e.FechaAnulacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación");
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroTraslado)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.OrdenGiroId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorTraslado)
-                    .HasColumnType("numeric(38, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorTraslado).HasColumnType("numeric(38, 2)");
 
                 entity.HasOne(d => d.BalanceFinanciero)
                     .WithMany(p => p.BalanceFinancieroTraslado)
@@ -865,53 +631,24 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<BalanceFinancieroTrasladoValor>(entity =>
             {
-                entity.HasComment("Almacena el detalle de los traslados relacionados a cada uno de los balances financieros");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.BalanceFinancieroTrasladoValorId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.BalanceFinancieroTrasladoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsPreconstruccion).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.OrdenGiroDetalleDescuentoTecnicaAportanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.OrdenGiroDetalleDescuentoTecnicaId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.OrdenGiroDetalleTerceroCausacionAportanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.OrdenGiroDetalleTerceroCausacionDescuentoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoTrasladoCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorTraslado)
-                    .HasColumnType("numeric(38, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorTraslado).HasColumnType("numeric(38, 2)");
 
                 entity.HasOne(d => d.BalanceFinancieroTraslado)
                     .WithMany(p => p.BalanceFinancieroTrasladoValor)
@@ -941,42 +678,28 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<CargueObservacion>(entity =>
             {
-                entity.HasComment("Almacena los cargues realizados en el módulo de construcción");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.CargueObservacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ConstruccionCargueId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Observacion)
                     .IsRequired()
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Texto de la observación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoObservacionCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ConstruccionCargue)
                     .WithMany(p => p.CargueObservacion)
@@ -987,227 +710,113 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<CarguePago>(entity =>
             {
-                entity.HasComment("Almacena los archivos relacionados a los pagos");
+                entity.Property(e => e.Errores).IsUnicode(false);
 
-                entity.Property(e => e.CarguePagoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCargue).HasColumnType("datetime");
 
-                entity.Property(e => e.CargueValido).HasComment("Indica que el cargue es valido");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.Errores)
-                    .IsUnicode(false)
-                    .HasComment("Evidencia de error en el cargue");
-
-                entity.Property(e => e.FechaCargue)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en la que se hace el cargue del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.JsonContent)
                     .IsRequired()
-                    .IsUnicode(false)
-                    .HasComment("Contenido del archivo en formato json");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NombreArchivo)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del archivo de cargue");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Observaciones)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.RegistrosInvalidos).HasComment("Cantidad de registros invalidos");
-
-                entity.Property(e => e.RegistrosValidos).HasComment("Cantidad de registros validos");
-
-                entity.Property(e => e.TotalRegistros).HasComment("Cantidad de registros del archivo");
+                entity.Property(e => e.Observaciones).IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<CarguePagosRendimientos>(entity =>
             {
                 entity.HasKey(e => e.CargaPagosRendimientosId);
 
-                entity.HasComment("Almacena los archivos relacionados a los pagos de rendimientos");
-
-                entity.Property(e => e.CargaPagosRendimientosId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.CargueValido).HasComment("Indica que el cargue es valido");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.Errores)
-                    .IsUnicode(false)
-                    .HasComment("Evidencia de error en el cargue");
+                entity.Property(e => e.Errores).IsUnicode(false);
 
                 entity.Property(e => e.EstadoCargue)
                     .IsRequired()
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasComment("Indica el estado del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaActa)
-                    .HasColumnType("date")
-                    .HasComment("Fecha del acta");
+                entity.Property(e => e.FechaActa).HasColumnType("date");
 
-                entity.Property(e => e.FechaCargue)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en la que se hace el cargue del registro");
+                entity.Property(e => e.FechaCargue).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaTramite)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se realiza el trámite");
+                entity.Property(e => e.FechaTramite).HasColumnType("datetime");
 
                 entity.Property(e => e.Json)
                     .IsRequired()
-                    .IsUnicode(false)
-                    .HasComment("Contenido del archivo en formato json");
-
-                entity.Property(e => e.MostrarInconsistencias).HasComment("Indica si se deben mostrar las inconsistencias");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NombreArchivo)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del archivo de cargue");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.NumeroActa).HasComment("Númeo del acta");
+                entity.Property(e => e.Observaciones).IsUnicode(false);
 
-                entity.Property(e => e.Observaciones)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.PendienteAprobacion).HasComment("Indica si hay pendiente una aprobación");
-
-                entity.Property(e => e.RegistrosConsistentes).HasComment("Cantidad de registros consistentes");
-
-                entity.Property(e => e.RegistrosInconsistentes).HasComment("Cantidad de registros inconsistentes");
-
-                entity.Property(e => e.RegistrosInvalidos).HasComment("Cantidad de registros invalidos");
-
-                entity.Property(e => e.RegistrosValidos).HasComment("Cantidad de registros validos");
-
-                entity.Property(e => e.RutaActa)
-                    .IsUnicode(false)
-                    .HasComment("Ruta del acta");
+                entity.Property(e => e.RutaActa).IsUnicode(false);
 
                 entity.Property(e => e.TipoCargue)
                     .IsRequired()
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasComment("Tipo de cargue");
-
-                entity.Property(e => e.TotalRegistros).HasComment("Cantidad de registros del archivo");
-
-                entity.Property(e => e.TramiteJson).HasComment("Archivo en formato Json");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Cofinanciacion>(entity =>
             {
-                entity.HasComment("Almacena los acuerdos de cofinanciación");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.CofinanciacionId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(200)
-                    .HasComment("Usuario creación");
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .HasComment("usuario que realiza modificación del registro");
-
-                entity.Property(e => e.VigenciaCofinanciacionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
             });
 
             modelBuilder.Entity<CofinanciacionAportante>(entity =>
             {
-                entity.HasComment("Almacena la relación entre el aportante y el acuerdo de cofinanciación");
-
                 entity.HasIndex(e => new { e.CofinanciacionId, e.Eliminado })
                     .HasName("idxconfid_eliminado");
 
-                entity.Property(e => e.CofinanciacionAportanteId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.CofinanciacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.CuentaConRp)
-                    .HasColumnName("CuentaConRP")
-                    .HasComment("Indica si tiene registro presupuestal");
+                entity.Property(e => e.CuentaConRp).HasColumnName("CuentaConRP");
 
                 entity.Property(e => e.DepartamentoId)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Referencia a la tabla localización sobre la columna localización ID");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.MunicipioId)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Referencia a la tabla localización sobre la columna localización ID");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.NombreAportanteId).HasComment("Referencia a la tabla dominio sobre la columna dominio ID");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
-                entity.Property(e => e.TipoAportanteId).HasComment("Referencia a la tabla dominio sobre la columna dominio ID");
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(200)
-                    .HasComment("Usuario creación");
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .HasComment("usuario que realiza modificación del registro");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
 
                 entity.HasOne(d => d.Cofinanciacion)
                     .WithMany(p => p.CofinanciacionAportante)
@@ -1237,55 +846,23 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<CofinanciacionDocumento>(entity =>
             {
-                entity.HasComment("Almacena los documentos relacionados al aportante de un acuerdo de financiación");
+                entity.Property(e => e.FechaActa).HasColumnType("datetime");
 
-                entity.Property(e => e.CofinanciacionDocumentoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaAcuerdo).HasColumnType("datetime");
 
-                entity.Property(e => e.CofinanciacionAportanteId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaActa)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha del acta");
+                entity.Property(e => e.NumeroAcuerdo).HasColumnType("numeric(25, 0)");
 
-                entity.Property(e => e.FechaAcuerdo)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha del acuerdo de cofinanciación");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.ValorDocumento).HasColumnType("numeric(38, 2)");
 
-                entity.Property(e => e.NumeroActa).HasComment("numero de acta");
-
-                entity.Property(e => e.NumeroAcuerdo)
-                    .HasColumnType("numeric(25, 0)")
-                    .HasComment("Numero de acuerdo");
-
-                entity.Property(e => e.TipoDocumentoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(200)
-                    .HasComment("Usuario creación");
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .HasComment("usuario que realiza modificación del registro");
-
-                entity.Property(e => e.ValorDocumento)
-                    .HasColumnType("numeric(38, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
-
-                entity.Property(e => e.ValorTotalAportante)
-                    .HasColumnType("numeric(38, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
-
-                entity.Property(e => e.VigenciaAporte).HasComment("Vigencia del acuerdo de cofinanciación (Dominio)");
+                entity.Property(e => e.ValorTotalAportante).HasColumnType("numeric(38, 2)");
 
                 entity.HasOne(d => d.CofinanciacionAportante)
                     .WithMany(p => p.CofinanciacionDocumento)
@@ -1300,136 +877,80 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ComiteTecnico>(entity =>
             {
-                entity.HasComment("Almacena los datos generales de un comité técnico");
-
-                entity.Property(e => e.ComiteTecnicoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.CantCompromisos).HasComment("Cantidad de compromisos");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsAprobado).HasComment("Indica si la solicitud fue aprobado 1. Si, 2. No");
-
-                entity.Property(e => e.EsComiteFiduciario).HasComment("Indica si es un tipo de Comité Fiduciario 0. Comité técnico, 1. Comité Fiduciario  ");
-
-                entity.Property(e => e.EsCompleto).HasComment("Indica si la sesión se completo 1. Completo 0. Incompleto");
-
                 entity.Property(e => e.EstadoActaCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoComiteCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaAplazamiento)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aplazamiento del comité técnico");
+                entity.Property(e => e.FechaAplazamiento).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaOrdenDia)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de orden del día del comité técnico");
+                entity.Property(e => e.FechaOrdenDia).HasColumnType("datetime");
 
                 entity.Property(e => e.Justificacion)
                     .HasMaxLength(3000)
-                    .IsUnicode(false)
-                    .HasComment("Si el tema es otro diferente, se presentará un campo de texto abierto de 3,000 caracteres para  que el usuario explique el desarrollo del tema.");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroComite)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de comité");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Observaciones)
                     .HasMaxLength(3000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.RequiereVotacion).HasComment("Indica que el tema requiere votación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaActaSesion)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Ruta del acta");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaSoporteVotacion)
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Ruta de url de soporte de votación.");
-
-                entity.Property(e => e.TieneCompromisos).HasComment("Indica si la solicitud tiene compromisos 1. SI, 0. No");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoTemaFiduciarioCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<ComponenteAportante>(entity =>
             {
-                entity.HasComment("Almacena el dinero de cada aportante sobre cada fase");
-
-                entity.Property(e => e.ComponenteAportanteId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Activo).HasComment("Indica si el Componente esta activo dentro del proyecto (0.Inactivo 1. Activo)");
-
-                entity.Property(e => e.ContratacionProyectoAportanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.FaseCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro esta completo");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoComponenteCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ContratacionProyectoAportante)
                     .WithMany(p => p.ComponenteAportante)
@@ -1440,50 +961,28 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ComponenteAportanteNovedad>(entity =>
             {
-                entity.HasComment("Almacena las novedades sobre cada componente");
-
-                entity.Property(e => e.ComponenteAportanteNovedadId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Activo).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.CofinanciacionAportanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.FaseCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.NovedadContractualAportanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica si el Componente esta activo dentro del proyecto (0.Inactivo 1. Activo)");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoComponenteCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.CofinanciacionAportante)
                     .WithMany(p => p.ComponenteAportanteNovedad)
@@ -1498,41 +997,24 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ComponenteFuenteNovedad>(entity =>
             {
-                entity.HasComment("Almacena las fuentes de cada aportante para cada fase del proyecto");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.ComponenteFuenteNovedadId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ComponenteAportanteNovedadId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.FuenteFinanciacionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FuenteRecursosCodigo)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ComponenteAportanteNovedad)
                     .WithMany(p => p.ComponenteFuenteNovedad)
@@ -1543,49 +1025,26 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ComponenteUso>(entity =>
             {
-                entity.HasComment("Almacena los usos de cada fuente para cada fase del proyecto");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.ComponenteUsoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Activo).HasComment("Indica si el Componente esta activo dentro del proyecto (0.Inactivo 1. Activo)");
-
-                entity.Property(e => e.ComponenteAportanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.FuenteFinanciacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoUsoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorUso)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.ComponenteAportante)
                     .WithMany(p => p.ComponenteUso)
@@ -1625,47 +1084,26 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ComponenteUsoNovedad>(entity =>
             {
-                entity.HasComment("Almacena las novedades relacionadas a los usos para cada fase del proyecto");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.ComponenteUsoNovedadId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Activo).HasComment("Indica si el registro esta activo (0) Inactivo (1) Activo");
-
-                entity.Property(e => e.ComponenteFuenteNovedadId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoUsoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorUso)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.ComponenteFuenteNovedad)
                     .WithMany(p => p.ComponenteUsoNovedad)
@@ -1700,45 +1138,25 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<CompromisoSeguimiento>(entity =>
             {
-                entity.HasComment("Almacena los compromisos de una sesión de comité técnico");
-
-                entity.Property(e => e.CompromisoSeguimientoId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.DescripcionSeguimiento)
                     .IsRequired()
                     .HasMaxLength(3000)
-                    .IsUnicode(false)
-                    .HasComment("Descripción del seguimiento");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoCompromisoCodigo)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.SesionComiteTecnicoCompromisoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.SesionParticipanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.SesionSolicitudCompromisoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TemaCompromisoId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.SesionComiteTecnicoCompromiso)
                     .WithMany(p => p.CompromisoSeguimiento)
@@ -1763,60 +1181,35 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ConceptoPagoUso>(entity =>
             {
-                entity.HasComment("Almacena los códigos del concepto del pago");
-
-                entity.Property(e => e.ConceptoPagoUsoId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.ConceptoPagoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Uso)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Identificador del uso");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<ConstruccionCargue>(entity =>
             {
-                entity.HasComment("Almacena los registros de los cargues hechos en el módulo de construcción");
-
-                entity.Property(e => e.ConstruccionCargueId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.CantRegistrosInvalidos).HasComment("Cantidad de registros invalidos del programa");
-
-                entity.Property(e => e.CantRegistrosValidos).HasComment("Cantidad de registros validos del programa");
-
-                entity.Property(e => e.ContratoConstruccionId).HasComment("Llave foranea a la tabla en mención");
-
                 entity.Property(e => e.EstadoCargueCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCargue)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en la que se hace el cargue del registro");
+                entity.Property(e => e.FechaCargue).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoCargueCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.TotalRegistros).HasComment("Cantidad total de registros");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ContratoConstruccion)
                     .WithMany(p => p.ConstruccionCargue)
@@ -1827,48 +1220,25 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ConstruccionObservacion>(entity =>
             {
-                entity.HasComment("Almacena las observaciones del módulo de construcción");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ConstruccionObservacionId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Archivada).HasComment("Indica si la observación esta archivada");
-
-                entity.Property(e => e.ContratoConstruccionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsActa).HasComment("indica que la observación es del Acta.");
-
-                entity.Property(e => e.EsSupervision).HasComment("indica que la observación es de la Supervision");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observaciones)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de tabla en mención");
+                entity.Property(e => e.Observaciones).IsUnicode(false);
 
                 entity.Property(e => e.TipoObservacionConstruccion)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Dominio, Tipos de Observaciones realizadas en toda la fase de Construcción. (1.Diagnostico, 2. Planes y programas  3. Plan Licencia Vigente, 4. Plan Cambio Constructor, 5. Plan Acta Aceptación y Apropiación, 6. Plan de residuos de construcción y  demolición (RCD), etc)");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ContratoConstruccion)
                     .WithMany(p => p.ConstruccionObservacion)
@@ -1878,87 +1248,46 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ConstruccionPerfil>(entity =>
             {
-                entity.HasComment("Almacena los perfiles requeridos para un proyecto de la fase de construcción");
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ConstruccionPerfilId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.CantidadHvAprobadas).HasComment("Cantidad de hojas de vida aprobadas para cada perfil ");
-
-                entity.Property(e => e.CantidadHvRecibidas).HasComment("Cantidad de hojas de vida recibidas para cada perfil ");
-
-                entity.Property(e => e.CantidadHvRequeridas).HasComment("Cantidad de  hojas de vida  requeridas para  cada perfil");
-
-                entity.Property(e => e.ConObervacionesSupervision).HasComment("Indica que se tienen observaciones al perfil por parte del supervisor");
-
-                entity.Property(e => e.ContratoConstruccionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroRadicadoFfie)
                     .HasColumnName("NumeroRadicadoFFIE")
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de radicado en FFIE de aprobación de Hojas de vida");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroRadicadoFfie1)
                     .HasColumnName("NumeroRadicadoFFIE1")
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de radicado en FFIE de aprobación de Hojas de vida");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroRadicadoFfie2)
                     .HasColumnName("NumeroRadicadoFFIE2")
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de radicado en FFIE de aprobación de Hojas de vida");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroRadicadoFfie3)
                     .HasColumnName("NumeroRadicadoFFIE3")
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de radicado en FFIE de aprobación de Hojas de vida");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.Observaciones)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de tabla en mención");
+                entity.Property(e => e.Observaciones).IsUnicode(false);
 
                 entity.Property(e => e.PerfilCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RutaSoporte).HasComment("Ruta del perfil de construcción");
-
-                entity.Property(e => e.TieneObservacionesApoyo).HasComment("Campo que indica que tiene observaciones del apoyo a la supervisión");
-
-                entity.Property(e => e.TieneObservacionesSupervisor).HasComment("Campo que indica que tiene observaciones del supervisor");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ContratoConstruccion)
                     .WithMany(p => p.ConstruccionPerfil)
@@ -1969,35 +1298,19 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ConstruccionPerfilNumeroRadicado>(entity =>
             {
-                entity.HasComment("Almacena el número de radicado relacionado al perfil almacenado para un proyecto de la fase de construcción");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ConstruccionPerfilNumeroRadicadoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ConstruccionPerfilId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.NumeroRadicado)
-                    .HasMaxLength(50)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                entity.Property(e => e.NumeroRadicado).HasMaxLength(50);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ConstruccionPerfil)
                     .WithMany(p => p.ConstruccionPerfilNumeroRadicado)
@@ -2007,45 +1320,25 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ConstruccionPerfilObservacion>(entity =>
             {
-                entity.HasComment("Almacena las observaciones realcionadas al perfil de un proyecto en la fase de construcción");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ConstruccionPerfilObservacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Archivada).HasComment("Indica si la observación esta archivada");
-
-                entity.Property(e => e.ConstruccionPerfilId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsSupervision).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Observacion)
                     .HasMaxLength(3000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoObservacionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ConstruccionPerfil)
                     .WithMany(p => p.ConstruccionPerfilObservacion)
@@ -2056,164 +1349,83 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Contratacion>(entity =>
             {
-                entity.HasComment("Almacena las diferentes contrataciones de todos los contratistas");
-
-                entity.Property(e => e.ContratacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ConsideracionDescripcion).HasComment("Campo abierto para que el usuario describa la consideración especial");
-
-                entity.Property(e => e.ContratistaId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsMultiProyecto).HasComment("0. No, 1. Si");
-
-                entity.Property(e => e.EsObligacionEspecial).HasComment("¿Este contrato tendrá alguna obligación especial? 0.No 1. Si");
-
-                entity.Property(e => e.Estado).HasComment("Indica el estado del registro");
-
                 entity.Property(e => e.EstadoAprobacionLiquidacionCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoSolicitudCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoTramiteLiquidacion)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Indica el estado del tramite de liquidación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoValidacionLiquidacionCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación");
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaAprobacionLiquidacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de liquidación");
+                entity.Property(e => e.FechaAprobacionLiquidacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioDocumentacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de envio de la documentación de la contratación");
+                entity.Property(e => e.FechaEnvioDocumentacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaContratista)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de la firma del contratista en la contratación");
+                entity.Property(e => e.FechaFirmaContratista).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaEnvioContratista)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de la firma para envio a contratista");
+                entity.Property(e => e.FechaFirmaEnvioContratista).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaEnvioFiduciaria)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de la firma para envio a fiduciaria");
+                entity.Property(e => e.FechaFirmaEnvioFiduciaria).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaFiduciaria)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de la firma de la fiduciaria en la contratación");
+                entity.Property(e => e.FechaFirmaFiduciaria).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaTramite)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se realiza el trámite");
+                entity.Property(e => e.FechaTramite).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaTramiteGestionar)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se realiza el trámite");
+                entity.Property(e => e.FechaTramiteGestionar).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaTramiteLiquidacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se realiza el trámite");
+                entity.Property(e => e.FechaTramiteLiquidacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaTramiteLiquidacionControl)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se realiza el trámite");
+                entity.Property(e => e.FechaTramiteLiquidacionControl).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaValidacionLiquidacion)
-                    .HasColumnType("date")
-                    .HasComment("Fecha de valiación de la liquidación");
+                entity.Property(e => e.FechaValidacionLiquidacion).HasColumnType("date");
 
                 entity.Property(e => e.NumeroSolicitud)
                     .IsRequired()
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("número automático de solicitud a comité precedido de  las siglas PI, para los proyectos de infraestructura.");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroSolicitudLiquidacion)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ObservacionGestionar).HasComment("Observaciones al gestionar");
-
-                entity.Property(e => e.Observaciones).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.ObservacionesLiquidacion).HasComment("Observaciones de liquidación de contratación");
-
-                entity.Property(e => e.PlazoContratacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompleto1).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoAprobacionLiquidacion).HasComment("Indica que el registro queda completo aprobación de liquidación");
-
-                entity.Property(e => e.RegistroCompletoGestionar).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoLiquidacion)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro queda completo por verificaión de liquidación");
-
-                entity.Property(e => e.RegistroCompletoTramiteLiquidacion).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoVerificacionLiquidacion).HasComment("Indica que el registro queda completo por aprobación de liquidación");
+                entity.Property(e => e.RegistroCompletoLiquidacion).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.RutaMinuta)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("ruta de la minuta ");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoContratacionCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.UrlDocumentoLiquidacion)
-                    .HasMaxLength(500)
-                    .HasComment("URL donde se encuentra el campo en mención");
-
-                entity.Property(e => e.UrlSoporteGestionar).HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.UrlDocumentoLiquidacion).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Contratista)
                     .WithMany(p => p.Contratacion)
@@ -2228,26 +1440,11 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratacionObservacion>(entity =>
             {
-                entity.HasComment("Almacena las observaciones de la contratación");
-
-                entity.Property(e => e.ContratacionObservacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ComiteTecnicoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ContratacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ContratacionProyectoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.Observacion).HasComment("Observaciones de tabla en mención");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ComiteTecnico)
                     .WithMany(p => p.ContratacionObservacion)
@@ -2269,88 +1466,44 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratacionProyecto>(entity =>
             {
-                entity.HasComment("Almacena las contrataciones de los proyecto");
-
-                entity.Property(e => e.ContratacionProyectoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Activo).HasComment("Indica si el registro esta activo (0) Inactivo (1) Activo");
-
-                entity.Property(e => e.AvanceFisicoSemanal)
-                    .HasColumnType("decimal(18, 3)")
-                    .HasComment("Valorsegún unidad de medida");
-
-                entity.Property(e => e.ContratacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsAvanceobra).HasComment("¿El proyecto tiene avance de obra?  si/no.");
-
-                entity.Property(e => e.EsReasignacion).HasComment("¿El proyecto es una reasignación?,  opciones Si/No.");
+                entity.Property(e => e.AvanceFisicoSemanal).HasColumnType("decimal(18, 3)");
 
                 entity.Property(e => e.EstadoObraCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoRequisitosVerificacionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaAprobacionRequisitos)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de requisitos");
+                entity.Property(e => e.FechaAprobacionRequisitos).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaVigencia)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de vigencia");
-
-                entity.Property(e => e.LicenciaVigente).HasComment("¿El proyecto tiene licencia vigente? 0. No 1. Si");
+                entity.Property(e => e.FechaVigencia).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroLicencia)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de licencia");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.PorcentajeAvanceObra)
                     .HasMaxLength(500)
-                    .IsUnicode(false)
-                    .HasComment("¿Cuál es el porcentaje de avance de obra?");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ProgramacionSemanal)
-                    .HasColumnType("decimal(18, 3)")
-                    .HasComment("Cuantia de la programación semanal");
+                entity.Property(e => e.ProgramacionSemanal).HasColumnType("decimal(18, 3)");
 
-                entity.Property(e => e.ProyectoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RequiereLicencia).HasComment("¿El proyecto requiere licencias? 0 No 1 Si");
-
-                entity.Property(e => e.RutaCargaActaTerminacionContrato)
-                    .HasMaxLength(200)
-                    .HasComment("Ruta de la carga del acta");
-
-                entity.Property(e => e.TieneMonitoreoWeb).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.RutaCargaActaTerminacionContrato).HasMaxLength(200);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Contratacion)
                     .WithMany(p => p.ContratacionProyecto)
@@ -2367,40 +1520,22 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratacionProyectoAportante>(entity =>
             {
-                entity.HasComment("Almacena las relaciones de los aportantes con las contrataciones y proyectos");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.ContratacionProyectoAportanteId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.CofinanciacionAportanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ContratacionProyectoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorAporte)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorAporte).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.CofinanciacionAportante)
                     .WithMany(p => p.ContratacionProyectoAportante)
@@ -2416,76 +1551,56 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Contratista>(entity =>
             {
-                entity.HasComment("Almacena los contratistas");
-
-                entity.Property(e => e.ContratistaId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.Activo)
                     .IsRequired()
-                    .HasDefaultValueSql("((1))")
-                    .HasComment("Indica si el registro esta activo (0) Inactivo (1) Activo");
+                    .HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Nombre de la Entidad");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroIdentificacion)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de identificación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroInvitacion)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de la invitación");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ProcesoSeleccionProponenteId)
-                    .HasColumnName("ProcesoSeleccionProponenteID")
-                    .HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.ProcesoSeleccionProponenteId).HasColumnName("ProcesoSeleccionProponenteID");
 
                 entity.Property(e => e.RepresentanteLegal)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del Representante Legal");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RepresentanteLegalNumeroIdentificacion)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de identificación del representante legal del contratista de obra  ");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoIdentificacionCodigo)
                     .HasMaxLength(1)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoProponenteCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ProcesoSeleccionProponente)
                     .WithMany(p => p.Contratista)
@@ -2495,244 +1610,125 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Contrato>(entity =>
             {
-                entity.HasComment("Almacena los contratos");
-
-                entity.Property(e => e.ContratoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ApoyoId).HasComment("Llave foranea a la tabla usuario");
-
-                entity.Property(e => e.CantidadPerfiles).HasComment("Cantidad de perfiles del contrato");
-
-                entity.Property(e => e.ConObervacionesActa).HasComment("Acta con obseraciones");
-
-                entity.Property(e => e.ConObervacionesActaFase1).HasComment("Indica que tiene observaciones del acta fase 1");
-
-                entity.Property(e => e.ConObervacionesActaFase2).HasComment("Indica que tiene observaciones del acta fase 2");
-
-                entity.Property(e => e.ContratacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EstaDevuelto).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.Estado).HasComment("0. Incompleto, 1. Completo");
-
                 entity.Property(e => e.EstadoActa)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Estado del acta");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoActaFase2)
                     .HasMaxLength(10)
-                    .IsFixedLength()
-                    .HasComment("Estado del Acta Precontractual Dominio (1. Sin Acta generada, 2. “Con acta en proceso de firma”,3. “Con acta suscrita y cargada” )");
+                    .IsFixedLength();
 
                 entity.Property(e => e.EstadoDocumentoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.EstadoFase1Diagnostico).HasComment("Indica el estado del diagnostico de la fase 1");
-
-                entity.Property(e => e.EstadoFase1EyD).HasComment("Indica el estado de la fase 1");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoFase2)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Dominio Estado de Fase1 interventoria (1.Estudios y diseño, )");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoVerificacionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoVerificacionConstruccionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaActaInicioFase1)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha del acta de inicio fase 1");
+                entity.Property(e => e.FechaActaInicioFase1).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaActaInicioFase2)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha del acta de inicio fase 2");
+                entity.Property(e => e.FechaActaInicioFase2).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaAprobacionRequisitos)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de requisitos");
+                entity.Property(e => e.FechaAprobacionRequisitos).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaAprobacionRequisitosApoyo)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de apoyo de la supervisión para requisitos");
+                entity.Property(e => e.FechaAprobacionRequisitosApoyo).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaAprobacionRequisitosConstruccionApoyo)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de apoyo de la supervisión de la construcción para requisitos");
+                entity.Property(e => e.FechaAprobacionRequisitosConstruccionApoyo).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaAprobacionRequisitosConstruccionInterventor)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de interventor de la construcción para requisitos");
+                entity.Property(e => e.FechaAprobacionRequisitosConstruccionInterventor).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaAprobacionRequisitosConstruccionSupervisor)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de la supervisión de la consturcción para requisitos");
+                entity.Property(e => e.FechaAprobacionRequisitosConstruccionSupervisor).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaAprobacionRequisitosInterventor)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación del interventor para requisitos");
+                entity.Property(e => e.FechaAprobacionRequisitosInterventor).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaAprobacionRequisitosSupervisor)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de supervisor para requisitos");
+                entity.Property(e => e.FechaAprobacionRequisitosSupervisor).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCambioEstadoFase2)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha cambio estado fase 2 del contrato");
+                entity.Property(e => e.FechaCambioEstadoFase2).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioFirma)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de envio de firma del contrato");
+                entity.Property(e => e.FechaEnvioFirma).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaActaContratista)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma de l acta del contratista del contrato");
+                entity.Property(e => e.FechaFirmaActaContratista).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaActaContratistaFase1)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma del acta de fase 1");
+                entity.Property(e => e.FechaFirmaActaContratistaFase1).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaActaContratistaFase2)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma del acta de fase 2");
+                entity.Property(e => e.FechaFirmaActaContratistaFase2).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaActaContratistaInterventoria)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma del acta por el interventor");
+                entity.Property(e => e.FechaFirmaActaContratistaInterventoria).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaActaContratistaInterventoriaFase1)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma del acta de fase 1 por interventor");
+                entity.Property(e => e.FechaFirmaActaContratistaInterventoriaFase1).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaActaContratistaInterventoriaFase2)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma del acta de fase 2 por interventor");
+                entity.Property(e => e.FechaFirmaActaContratistaInterventoriaFase2).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaContratista)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de firma del contratista del contrato");
+                entity.Property(e => e.FechaFirmaContratista).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaContrato)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma del contrato");
+                entity.Property(e => e.FechaFirmaContrato).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaFiduciaria)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma de la fiduciaria del contrato");
+                entity.Property(e => e.FechaFirmaFiduciaria).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaTerminacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de terminación del contrato");
+                entity.Property(e => e.FechaTerminacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaTerminacionFase2)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha terminación de la fase 2 del contrato");
+                entity.Property(e => e.FechaTerminacionFase2).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaTramite)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se realiza el trámite");
-
-                entity.Property(e => e.InterventorId).HasComment("Llave foranea a la tabla usuario");
+                entity.Property(e => e.FechaTramite).HasColumnType("datetime");
 
                 entity.Property(e => e.ModalidadCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de solicitud");
-
-                entity.Property(e => e.ObservacionConsideracionesEspeciales).HasComment("Observaciones de las consideraciones especiales");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Observaciones)
                     .HasMaxLength(4000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.PlazoFase1PreDias).HasComment("Plazo de ejecución fase 1 – Preconstrucción: Días  ");
-
-                entity.Property(e => e.PlazoFase1PreMeses).HasComment("Plazo de ejecución fase 1 – Preconstrucción: Meses:");
-
-                entity.Property(e => e.PlazoFase2ConstruccionDias).HasComment("Plazo de ejecución fase Construcción: Días  ");
-
-                entity.Property(e => e.PlazoFase2ConstruccionMeses).HasComment("Plazo de ejecución fase 2 Construcción: Meses:");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompleto1).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoConstruccion).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaActa)
                     .HasMaxLength(500)
-                    .IsUnicode(false)
-                    .HasComment("Ruta del acta");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaActaFase1)
                     .HasMaxLength(500)
-                    .IsUnicode(false)
-                    .HasComment("Ruta del Acta Fase 1 PreConstrucción");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaActaFase2)
                     .HasMaxLength(500)
-                    .IsUnicode(false)
-                    .HasComment("Ruta del Acta Fase Construcción");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaActaSuscrita)
                     .HasMaxLength(500)
-                    .IsUnicode(false)
-                    .HasComment("Ruta del Acta suscrita Fase Construcción");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaDocumento)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Ruta del documento del contrato");
-
-                entity.Property(e => e.SupervisorId).HasComment("Llave foranea a la tabla usuario");
-
-                entity.Property(e => e.TieneDiagnosticoFase1).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneEstudiosDisenosFase1).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoContratoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Valor)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.Valor).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.Apoyo)
                     .WithMany(p => p.ContratoApoyo)
@@ -2758,346 +1754,148 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratoConstruccion>(entity =>
             {
-                entity.HasComment("Almacena los contratos relacionados a la fase de construcción");
+                entity.Property(e => e.ActaApropiacionFechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratoConstruccionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ActaApropiacionConObservaciones).HasComment("Indica que tiene Observaciones (1.Si, 0.No) Acta aceptación y apropiación diseños");
-
-                entity.Property(e => e.ActaApropiacionFechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de acta de apropiación");
-
-                entity.Property(e => e.ActaApropiacionFechaRadicado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de radicado del acta de apropiación");
+                entity.Property(e => e.ActaApropiacionFechaRadicado).HasColumnType("datetime");
 
                 entity.Property(e => e.ActaApropiacionObservaciones)
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones al acta de apropiación");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Administracion)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Valor de la cuota de administración");
+                entity.Property(e => e.Administracion).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.AprovechamientoForestalApropiacionFechaRadicado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de radicado de aprovechamiento forestal");
+                entity.Property(e => e.AprovechamientoForestalApropiacionFechaRadicado).HasColumnType("datetime");
 
-                entity.Property(e => e.AprovechamientoForestalConObservaciones).HasComment("Indica que tiene Observaciones (1.Si, 0.No) plan aprovechamiento forestal aprobado");
-
-                entity.Property(e => e.AprovechamientoForestalFechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación aprovechamiento forestal");
+                entity.Property(e => e.AprovechamientoForestalFechaAprobacion).HasColumnType("datetime");
 
                 entity.Property(e => e.AprovechamientoForestalObservaciones)
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones del aprovechamiento forestal");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ArchivoCargueIdFlujoInversion).HasComment("Identificador del archivo de cargue de flujo de inversión");
+                entity.Property(e => e.AseguramientoCalidadFechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ArchivoCargueIdProgramacionObra).HasComment("Identificador del archivo de cargue de programación de obra");
-
-                entity.Property(e => e.AseguramientoCalidadConObservaciones).HasComment("Indica que tiene Observaciones (1.Si, 0.No) plan de aseguramiento de la calidad de obra aprobado");
-
-                entity.Property(e => e.AseguramientoCalidadFechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de Aprobación deplan de aseguramiento de la calidad de  obra aprobado");
-
-                entity.Property(e => e.AseguramientoCalidadFechaRadicado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de radicado de aseguramiento de calidad");
+                entity.Property(e => e.AseguramientoCalidadFechaRadicado).HasColumnType("datetime");
 
                 entity.Property(e => e.AseguramientoCalidadObservaciones)
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones del aseguramiento de calidad");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.CambioConObservaciones).HasComment("Indica que tiene Observaciones (1.Si, 0.No) Cambio Constructor de la licencia");
+                entity.Property(e => e.CambioFechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.CambioFechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de cambio");
-
-                entity.Property(e => e.CambioFechaRadicado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha radicado del cambio");
+                entity.Property(e => e.CambioFechaRadicado).HasColumnType("datetime");
 
                 entity.Property(e => e.CambioObservaciones)
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones al haber un cambio");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.CantidadHojasVidaContratistaObra).HasComment("Cantidad de Hojas de Vida del contratista de Obra");
+                entity.Property(e => e.CostoDirecto).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.CantidadPerfilesInterventoria).HasComment("Cuántos perfiles diferentes se requieren del interventor para ejecutar el proyecto");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratoId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaInicioObra).HasColumnType("datetime");
 
-                entity.Property(e => e.CostoDirecto)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Costo directo");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.EsInformeDiagnostico).HasComment("¿Cuenta con informe de diagnóstico aprobado por la interventoría? (1.Si, 0. No)");
+                entity.Property(e => e.Imprevistos).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.InventarioArboreoFechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaInicioObra)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de inicio de obra");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Imprevistos)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("I (Imprevistos)");
-
-                entity.Property(e => e.InventarioArboreoConObservaciones).HasComment("Indica que tiene Observaciones (1.Si, 0.No) plan inventario arbóreo (talas) aprobado");
-
-                entity.Property(e => e.InventarioArboreoFechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de inventario arboreo");
-
-                entity.Property(e => e.InventarioArboreoFechaRadicado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de radicado  del inventario arboreo");
+                entity.Property(e => e.InventarioArboreoFechaRadicado).HasColumnType("datetime");
 
                 entity.Property(e => e.InventarioArboreoObservaciones)
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones del inventario arboreo");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.LicenciaConObservaciones).HasComment("Indica que tiene Observaciones (1.Si, 0.No)");
+                entity.Property(e => e.LicenciaFechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.LicenciaFechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de Aprobación de licencia vigente");
-
-                entity.Property(e => e.LicenciaFechaRadicado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de radicado Licencia Vigente");
+                entity.Property(e => e.LicenciaFechaRadicado).HasColumnType("datetime");
 
                 entity.Property(e => e.LicenciaObservaciones)
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de la licencia");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ManejoAguasLluviasConObservaciones).HasComment("Indica que tiene Observaciones (1.Si, 0.No) plan de manejo de aguas lluvias aprobado");
+                entity.Property(e => e.ManejoAguasLluviasFechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ManejoAguasLluviasFechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación manejo de aguas de lluvias");
-
-                entity.Property(e => e.ManejoAguasLluviasFechaRadicado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de radicado de manejo de aguas lluvias");
+                entity.Property(e => e.ManejoAguasLluviasFechaRadicado).HasColumnType("datetime");
 
                 entity.Property(e => e.ManejoAguasLluviasObservaciones)
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones del manejo de aguas lluvias");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ManejoAmbientalConObservaciones).HasComment("Indica que tiene Observaciones (1.Si, 0.No) plan de manejo ambiental aprobado");
+                entity.Property(e => e.ManejoAmbientalFechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ManejoAmbientalFechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de manejo ambiental");
-
-                entity.Property(e => e.ManejoAmbientalFechaRadicado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de radicado del manejo ambiental");
+                entity.Property(e => e.ManejoAmbientalFechaRadicado).HasColumnType("datetime");
 
                 entity.Property(e => e.ManejoAmbientalObservaciones)
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones del manejo ambiental");
-
-                entity.Property(e => e.ManejoAnticipoConObservaciones).HasComment("Indica que tiene Observaciones (1.Si, 0.No) Manejo del Anticipo");
-
-                entity.Property(e => e.ManejoAnticipoCronogramaAmortizacion).HasComment("¿Cuenta con cronograma de amortización aprobado? Sí No");
-
-                entity.Property(e => e.ManejoAnticipoPlanInversion).HasComment("¿Cuenta con plan de inversión aprobado para el anticipo? Sí No");
-
-                entity.Property(e => e.ManejoAnticipoRequiere).HasComment("¿El contrato requiere anticipo? 1.Si 0. No  ");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ManejoAnticipoRutaSoporte)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Ruta del soporte del Manejo de anticipo de la fase de construcción");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ManejoTransitoConObservaciones1).HasComment("Indica que tiene Observaciones (1.Si, 0.No) plan de manejo de tránsito (PMT) aprobado");
+                entity.Property(e => e.ManejoTransitoFechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ManejoTransitoFechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de manejo de transito");
-
-                entity.Property(e => e.ManejoTransitoFechaRadicado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de radicado  manejo de transito");
+                entity.Property(e => e.ManejoTransitoFechaRadicado).HasColumnType("datetime");
 
                 entity.Property(e => e.ManejoTransitoObservaciones)
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones del manejo de transito");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroSolicitudModificacion)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Numero de solicitud");
-
-                entity.Property(e => e.ObservacionDiagnosticoSupervisorId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ObservacionFlujoInversionSupervisorId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ObservacionManejoAnticipoSupervisorId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ObservacionPlanesProgramasSupervisorId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ObservacionProgramacionObraSupervisorId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.PlanActaApropiacion).HasComment("Indica que se recibio requisito Acta aceptación y apropiación diseños");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.PlanAprovechamientoForestal).HasComment("1=no,2=si,2=noSeRequiere");
 
-                entity.Property(e => e.PlanAseguramientoCalidad).HasComment("Indica que se recibio requisito plan de raseguramiento de la calidad de  obra aprobado");
-
-                entity.Property(e => e.PlanCambioConstructorLicencia).HasComment("Cambio constructor responsable de la licencia");
-
                 entity.Property(e => e.PlanInventarioArboreo).HasComment("1=no,2=si,2=noSeRequiere");
-
-                entity.Property(e => e.PlanLicenciaVigente).HasComment("Licencia vigente");
 
                 entity.Property(e => e.PlanManejoAguasLluvias).HasComment("1=no,2=si,2=noSeRequiere");
 
-                entity.Property(e => e.PlanManejoAmbiental).HasComment("Indica que se recibio requisito plan de manejo ambiental aprobado");
-
-                entity.Property(e => e.PlanManejoTransito).HasComment("Indica que se recibio requisito plan de manejo de tránsito (PMT)  aprobado");
-
-                entity.Property(e => e.PlanProgramaSalud).HasComment("Indica que se recibio requisito plan programa de Salud  aprobado");
-
-                entity.Property(e => e.PlanProgramaSeguridad).HasComment("Indica que se recibio requisito plan programa de Seguridad industrial  aprobado");
-
-                entity.Property(e => e.PlanResiduosDemolicion).HasComment("Indica que se recibio requisito plan de residuos de construcción y  demolición (RCD) aprobado");
-
                 entity.Property(e => e.PlanRutaSoporte)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Ruta del soporte del plan de la fase de construcción");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ProgramaSaludConObservaciones).HasComment("Indica que tiene Observaciones (1.Si, 0.No) planplan programa de Salud  aprobado");
+                entity.Property(e => e.ProgramaSaludFechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ProgramaSaludFechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de programa de salud");
-
-                entity.Property(e => e.ProgramaSaludFechaRadicado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de radicado del programa de salud");
+                entity.Property(e => e.ProgramaSaludFechaRadicado).HasColumnType("datetime");
 
                 entity.Property(e => e.ProgramaSaludObservaciones)
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones del programa de la salud");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ProgramaSeguridadConObservaciones).HasComment("Indica que tiene Observaciones (1.Si, 0.No) plan de programa de Seguridad industrial  aprobado");
+                entity.Property(e => e.ProgramaSeguridadFechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ProgramaSeguridadFechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de aseguramiento de calidad");
-
-                entity.Property(e => e.ProgramaSeguridadFechaRadicado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de radicado del programa de seguridad");
+                entity.Property(e => e.ProgramaSeguridadFechaRadicado).HasColumnType("datetime");
 
                 entity.Property(e => e.ProgramaSeguridadObservaciones)
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones del programa de seguridad");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ProyectoId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.ResiduosDemolicionFechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoDiagnostico).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoFlujoInversion).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoManejoAnticipo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoPlanesProgramas).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoProgramacionObra).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoValidacion).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoVerificacion).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RequiereModificacionContractual).HasComment("¿Se requirió modificación contractual?");
-
-                entity.Property(e => e.ResiduosDemolicionConObservaciones).HasComment("Indica que tiene Observaciones (1.Si, 0.No) plan de residuos de construcción y demolición (RCD) aprobado");
-
-                entity.Property(e => e.ResiduosDemolicionFechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación de residuos de demolición");
-
-                entity.Property(e => e.ResiduosDemolicionFechaRadicado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de radicado del manejo deresiduos de demolición");
+                entity.Property(e => e.ResiduosDemolicionFechaRadicado).HasColumnType("datetime");
 
                 entity.Property(e => e.ResiduosDemolicionObservaciones)
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de residuos de demoliciones");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaInforme)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Ruta del informe de diagnostico con soporte");
-
-                entity.Property(e => e.TieneObservacionesDiagnosticoApoyo).HasComment("Campo que indica que tiene observaciones del apoyo a la supervisión");
-
-                entity.Property(e => e.TieneObservacionesDiagnosticoSupervisor).HasComment("Campo que indica que tiene observaciones del supervisor");
-
-                entity.Property(e => e.TieneObservacionesFlujoInversionApoyo).HasComment("Campo que indica que tiene observaciones del apoyo a la supervisión");
-
-                entity.Property(e => e.TieneObservacionesFlujoInversionSupervisor).HasComment("Campo que indica que tiene observaciones del supervisor");
-
-                entity.Property(e => e.TieneObservacionesManejoAnticipoApoyo).HasComment("Campo que indica que tiene observaciones del apoyo a la supervisión");
-
-                entity.Property(e => e.TieneObservacionesManejoAnticipoSupervisor).HasComment("Campo que indica que tiene observaciones del supervisor");
-
-                entity.Property(e => e.TieneObservacionesPlanesProgramasApoyo).HasComment("Campo que indica que tiene observaciones del apoyo a la supervisión");
-
-                entity.Property(e => e.TieneObservacionesPlanesProgramasSupervisor).HasComment("Campo que indica que tiene observaciones del supervisor");
-
-                entity.Property(e => e.TieneObservacionesProgramacionObraApoyo).HasComment("Campo que indica que tiene observaciones del apoyo a la supervisión");
-
-                entity.Property(e => e.TieneObservacionesProgramacionObraSupervisor).HasComment("Campo que indica que tiene observaciones del supervisor");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Utilidad)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("U (Utilidad)");
+                entity.Property(e => e.Utilidad).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.ValorTotalFaseConstruccion)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorTotalFaseConstruccion).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.Contrato)
                     .WithMany(p => p.ContratoConstruccion)
@@ -3114,42 +1912,18 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratoObservacion>(entity =>
             {
-                entity.HasComment("Almacena las observaciones del contrato");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratoObservacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Archivado).HasComment("Indica si la observación esta archivada");
-
-                entity.Property(e => e.ContratoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.EsActa).HasComment("Indica si es acta");
-
-                entity.Property(e => e.EsActaFase1).HasComment("indica que la observación es del Acta para la fase 1 Preconstruccion.");
-
-                entity.Property(e => e.EsActaFase2).HasComment("indica que la observación es del Acta. de la fase 2");
-
-                entity.Property(e => e.EsSupervision).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observaciones).HasComment("Observaciones de tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Contrato)
                     .WithMany(p => p.ContratoObservacion)
@@ -3160,65 +1934,28 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratoPerfil>(entity =>
             {
-                entity.HasComment("Almacena la relación de los perfiles al contrato");
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratoPerfilId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.CantidadHvAprobadas).HasComment("Cantidad de hojas de vida aprobadas para cada perfil ");
-
-                entity.Property(e => e.CantidadHvRecibidas).HasComment("Cantidad de hojas de vida recibidas para cada perfil ");
-
-                entity.Property(e => e.CantidadHvRequeridas).HasComment("Cantidad de  hojas de vida  requeridas para  cada perfil");
-
-                entity.Property(e => e.ContratoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observacion).HasComment("Observaciones de tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.PerfilCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ProyectoId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.RegistroCompletoPerfilesProyecto).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoPerfilesProyecto)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RutaSoporte)
-                    .HasMaxLength(400)
-                    .HasComment("Ruta donde se encuentra ubicado");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.RutaSoporte).HasMaxLength(400);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Contrato)
                     .WithMany(p => p.ContratoPerfil)
@@ -3235,35 +1972,19 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratoPerfilNumeroRadicado>(entity =>
             {
-                entity.HasComment("Almacena el número de radicadode los perfiles relacionados a un contrato");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratoPerfilNumeroRadicadoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratoPerfilId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.NumeroRadicado)
-                    .HasMaxLength(50)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                entity.Property(e => e.NumeroRadicado).HasMaxLength(50);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ContratoPerfil)
                     .WithMany(p => p.ContratoPerfilNumeroRadicado)
@@ -3273,42 +1994,25 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratoPerfilObservacion>(entity =>
             {
-                entity.HasComment("Almacena las observaciones de los perfiles relacionados a los contratos");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratoPerfilObservacionId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratoPerfilId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observacion)
-                    .HasMaxLength(3250)
-                    .HasComment("Observaciones del contrato");
+                entity.Property(e => e.Observacion).HasMaxLength(3250);
 
                 entity.Property(e => e.TipoObservacionCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ContratoPerfil)
                     .WithMany(p => p.ContratoPerfilObservacion)
@@ -3319,66 +2023,37 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratoPoliza>(entity =>
             {
-                entity.HasComment("Almacena las pólizas relacionadas a los contratos");
-
-                entity.Property(e => e.ContratoPolizaId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ContratoId).HasComment("Llave foranea a la tabla en mención");
-
                 entity.Property(e => e.DescripcionModificacion)
                     .HasMaxLength(500)
-                    .IsUnicode(false)
-                    .HasComment("Descripción de la modificación");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoPolizaCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación");
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaExpedicion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de expedición de la póliza");
+                entity.Property(e => e.FechaExpedicion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.IncluyeCondicionesGenerales).HasComment("¿Se incluyen las  condiciones  generales de la  póliza/ o su  clausulado?");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NombreAseguradora)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Nombre de aseguradora");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroCertificado)
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasComment("Número de Certificado");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroPoliza)
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasComment("número de la póliza.");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(400);
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(400)
-                    .HasComment("Usuario creación");
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(400)
-                    .HasComment("usuario que realiza modificación del registro");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(400);
 
                 entity.HasOne(d => d.Contrato)
                     .WithMany(p => p.ContratoPoliza)
@@ -3389,63 +2064,33 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratoPolizaActualizacion>(entity =>
             {
-                entity.HasComment("Almacena la actualización de las pólizas relacionados a los contratos");
-
-                entity.Property(e => e.ContratoPolizaActualizacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ContratoPolizaId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
                 entity.Property(e => e.EstadoActualizacion)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Indica el estado del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaExpedicionActualizacionPoliza)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de expedición de la actualización poliza");
+                entity.Property(e => e.FechaExpedicionActualizacionPoliza).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroActualizacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ObservacionEspecifica)
-                    .HasMaxLength(2500)
-                    .HasComment("Obaservaciones especificas");
+                entity.Property(e => e.ObservacionEspecifica).HasMaxLength(2500);
 
                 entity.Property(e => e.RazonActualizacionCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionEspecifica).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.TieneObservacionEspecifica).HasComment("Campo que indica que tiene observaciones especificas");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoActualizacionCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(200)
-                    .HasComment("Usuario creación");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .HasComment("usuario que realiza modificación del registro");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
 
                 entity.HasOne(d => d.ContratoPoliza)
                     .WithMany(p => p.ContratoPolizaActualizacion)
@@ -3455,47 +2100,21 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratoPolizaActualizacionListaChequeo>(entity =>
             {
-                entity.HasComment("Almacena la lista de chequeo sobre la actualización de una póliza relacionada a un contrato");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.ContratoPolizaActualizacionListaChequeoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratoPolizaActualizacionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.CumpleDatosAseguradoBeneficiario).HasComment("Indica si cumple datos del beneficiario asegurado");
-
-                entity.Property(e => e.CumpleDatosBeneficiarioGarantiaBancaria).HasComment("Indica si cumple datos del beneficiario de garantia bancaria");
-
-                entity.Property(e => e.CumpleDatosTomadorAfianzado).HasComment("Indica si cumple datos del tomador afianzado");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.RegistroCompleto)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.TieneCondicionesGeneralesPoliza).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneReciboPagoDatosRequeridos).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.RegistroCompleto).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ContratoPolizaActualizacion)
                     .WithMany(p => p.ContratoPolizaActualizacionListaChequeo)
@@ -3506,58 +2125,31 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratoPolizaActualizacionRevisionAprobacionObservacion>(entity =>
             {
-                entity.HasComment("Almacena la revisión y aprobación con sus observaciones sobre la actualización de una póliza relacionada a un contrato");
-
-                entity.Property(e => e.ContratoPolizaActualizacionRevisionAprobacionObservacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Archivada).HasComment("Indica si la observación esta archivada");
-
-                entity.Property(e => e.ContratoPolizaActualizacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoSegundaRevision)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Indica el estado del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación");
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ObservacionGeneral)
-                    .HasMaxLength(4000)
-                    .HasComment("Observaciones generales");
+                entity.Property(e => e.ObservacionGeneral).HasMaxLength(4000);
 
-                entity.Property(e => e.RegistroCompleto)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.RegistroCompleto).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.ResponsableAprobacionId).HasComment("Llave foranea a la tabla usuario");
-
-                entity.Property(e => e.SegundaFechaRevision)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de segunda revisión");
+                entity.Property(e => e.SegundaFechaRevision).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ContratoPolizaActualizacion)
                     .WithMany(p => p.ContratoPolizaActualizacionRevisionAprobacionObservacion)
@@ -3572,64 +2164,33 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratoPolizaActualizacionSeguro>(entity =>
             {
-                entity.HasComment("Almacena el seguro relacionado a la actualización de una póliza");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.ContratoPolizaActualizacionSeguroId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratoPolizaActualizacionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.FechaSeguro).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaVigenciaAmparo).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.RegistroCompletoActualizacion).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.FechaSeguro)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de seguro");
-
-                entity.Property(e => e.FechaVigenciaAmparo)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de vigencia del amparo");
-
-                entity.Property(e => e.RegistroCompletoActualizacion)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoSeguro)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.TieneFechaSeguro).HasComment("Indica que tiene ficha de seguro");
-
-                entity.Property(e => e.TieneFechaVigenciaAmparo).HasComment("Indica que tiene fecha de vigencia amparo");
-
-                entity.Property(e => e.TieneValorAmparo).HasComment("Indica que la póliza tiene un valor de amparo");
+                entity.Property(e => e.RegistroCompletoSeguro).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.TipoSeguroCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorAmparo)
-                    .HasColumnType("numeric(38, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorAmparo).HasColumnType("numeric(38, 2)");
 
                 entity.HasOne(d => d.ContratoPolizaActualizacion)
                     .WithMany(p => p.ContratoPolizaActualizacionSeguro)
@@ -3640,45 +2201,21 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ControlRecurso>(entity =>
             {
-                entity.HasComment("Almacena la relación entre la fuente de financiación, las cuentas bancarias y el registro presupuestal");
+                entity.Property(e => e.FechaConsignacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ControlRecursoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.CuentaBancariaId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaConsignacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de consignación");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.FuenteFinanciacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroPresupuestalId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorConsignacion)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
-
-                entity.Property(e => e.VigenciaAporteId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.ValorConsignacion).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.CuentaBancaria)
                     .WithMany(p => p.ControlRecurso)
@@ -3700,120 +2237,54 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ControversiaActuacion>(entity =>
             {
-                entity.HasComment("Almacena la actuación de una controversia contractual");
-
-                entity.Property(e => e.ControversiaActuacionId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.ActuacionAdelantadaCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ActuacionAdelantadaOtro).HasComment("registrar la actividad que considere debe realizarse.");
-
-                entity.Property(e => e.CantDiasVencimiento).HasComment("registrar la actividad que considere debe realizarse");
-
-                entity.Property(e => e.ControversiaContractualId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsCompleto).HasComment("0. Incompleto, 1. Completo");
-
-                entity.Property(e => e.EsCompletoReclamacion).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.EsRequiereAseguradora).HasComment("¿El trámite requiere reclamación ante la aseguradora?");
-
-                entity.Property(e => e.EsRequiereComite).HasComment("¿Está actuación requiere comité técnico?");
-
-                entity.Property(e => e.EsRequiereComiteReclamacion).HasComment("¿Se requiere presentar la propuesta de reclamación a comité técnico?");
-
-                entity.Property(e => e.EsRequiereContratista).HasComment("¿Está actuación requiere la participación o insumo del contratista?");
-
-                entity.Property(e => e.EsRequiereFiduciaria).HasComment("¿Está actuación requiere la participación o insumo de la fiduciaria?");
-
-                entity.Property(e => e.EsRequiereInterventor).HasComment("¿Está actuación requiere la participación o insumo del interventor del contrato?");
-
-                entity.Property(e => e.EsRequiereJuridico).HasComment("¿Está actuación requiere la participación o insumo del equipo jurídico del FFIE?");
-
-                entity.Property(e => e.EsRequiereMesaTrabajo).HasComment("¿El proceso requiere mesas de trabajo?");
-
-                entity.Property(e => e.EsRequiereSupervisor).HasComment("¿Está actuación requiere la participación o insumo del supervisor del contrato?");
-
-                entity.Property(e => e.EsprocesoResultadoDefinitivo).HasComment("¿El proceso tiene resultado definitivo y se considera cerrado el proceso?");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoActuacionReclamacionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoAvanceTramiteCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.EstadoCodigo)
-                    .HasMaxLength(100)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                entity.Property(e => e.EstadoCodigo).HasMaxLength(100);
 
                 entity.Property(e => e.EstadoCodigoActuacionDerivada)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaActuacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de actuación de la controversia");
+                entity.Property(e => e.FechaActuacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaVencimiento)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de vencimiento del registro");
+                entity.Property(e => e.FechaVencimiento).HasColumnType("datetime");
 
-                entity.Property(e => e.NumeroActuacion)
-                    .HasMaxLength(100)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                entity.Property(e => e.NumeroActuacion).HasMaxLength(100);
 
-                entity.Property(e => e.NumeroActuacionReclamacion)
-                    .HasMaxLength(100)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.Observaciones).HasComment("Observaciones de tabla en mención");
+                entity.Property(e => e.NumeroActuacionReclamacion).HasMaxLength(100);
 
                 entity.Property(e => e.ProximaActuacionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.ProximaActuacionOtro).HasComment("“Actuaciones de controversias contractuales” se incluye el valor “otro”.");
-
-                entity.Property(e => e.RegistroCompletoActuacionDerivada).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.ResumenPropuestaFiduciaria).HasComment("Resumen");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaSoporte)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Ruta URL con soportes de la actuación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ControversiaContractual)
                     .WithMany(p => p.ControversiaActuacion)
@@ -3824,82 +2295,50 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ControversiaActuacionMesa>(entity =>
             {
-                entity.HasComment("Almacena la mesa de trabajo relacionada a la actuación de la controversia contractual");
-
-                entity.Property(e => e.ControversiaActuacionMesaId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.ActuacionAdelantada)
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Descripción de la actuación adelantada");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.CantDiasVencimiento).HasComment("Cantidad de días de vencimiento de la controversia de la actuación");
-
-                entity.Property(e => e.ControversiaActuacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsCompleto).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoAvanceMesaCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoRegistroCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaActuacionAdelantada)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de la actuación adelantada de la controversia");
+                entity.Property(e => e.FechaActuacionAdelantada).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaVencimiento)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de vencimiento del registro");
+                entity.Property(e => e.FechaVencimiento).HasColumnType("datetime");
 
-                entity.Property(e => e.NumeroMesaTrabajo)
-                    .HasMaxLength(100)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                entity.Property(e => e.NumeroMesaTrabajo).HasMaxLength(100);
 
                 entity.Property(e => e.Observaciones)
                     .HasMaxLength(3000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ProximaActuacionRequerida)
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Parrafo de la siguiente actuación requerida");
-
-                entity.Property(e => e.ResultadoDefinitivo).HasComment("Indica si es el resultado definitivo");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaSoporte)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Ruta del soporte");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ControversiaActuacion)
                     .WithMany(p => p.ControversiaActuacionMesa)
@@ -3910,83 +2349,52 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ControversiaActuacionMesaSeguimiento>(entity =>
             {
-                entity.HasComment("Almacena el seguimiento a la mesa de trabajo relacionada a la actuación de la controversia");
-
-                entity.Property(e => e.ControversiaActuacionMesaSeguimientoId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.ActuacionAdelantada)
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Descripción de la actuación adelantada");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.CantDiasVencimiento).HasComment("Cantidad de días de vencimiento de la controversia de la actuación en el seguimiento");
-
-                entity.Property(e => e.ControversiaActuacionMesaId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsCompleto).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoAvanceMesaCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoRegistroCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaActuacionAdelantada)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de la actuación adelantada de la controversia");
+                entity.Property(e => e.FechaActuacionAdelantada).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaVencimiento)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de vencimiento del registro");
+                entity.Property(e => e.FechaVencimiento).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroActuacionSeguimiento)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Observaciones)
                     .HasMaxLength(3000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ProximaActuacionRequerida)
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Parrafo de la siguiente actuación requerida");
-
-                entity.Property(e => e.ResultadoDefinitivo).HasComment("Indica si es el resultado definitivo");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaSoporte)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Ruta del soporte");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ControversiaActuacionMesa)
                     .WithMany(p => p.ControversiaActuacionMesaSeguimiento)
@@ -3997,90 +2405,55 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ControversiaContractual>(entity =>
             {
-                entity.HasComment("Almacena las controversias contractuales relacionadas a un contrato");
-
-                entity.Property(e => e.ControversiaContractualId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.ConclusionComitePreTecnico)
                     .HasMaxLength(3000)
-                    .IsUnicode(false)
-                    .HasComment("Conclusión del Comité pre-técnico de acuerdo con la solicitud");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ContratoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.CualOtroMotivo)
-                    .IsUnicode(false)
-                    .HasComment("Motivo adicional de la controversia contratual");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsCompleto).HasComment("0. Incompleto, 1. Completo");
-
-                entity.Property(e => e.EsProcede).HasComment("¿La solicitud procede?");
-
-                entity.Property(e => e.EsRequiereComite).HasComment("¿Requiere comité técnico?");
+                entity.Property(e => e.CualOtroMotivo).IsUnicode(false);
 
                 entity.Property(e => e.EstadoCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaComitePreTecnico)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de comité pretécnico");
+                entity.Property(e => e.FechaComitePreTecnico).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaSolicitud)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha solicitud");
+                entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
 
                 entity.Property(e => e.MotivoJustificacionRechazo)
                     .HasMaxLength(3000)
-                    .IsUnicode(false)
-                    .HasComment("Campo que sirve para todos los tipos de Controversia (Motivos de rechazo, Resumen de la justificación de la solicitud)");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroRadicadoSac)
                     .HasColumnName("NumeroRadicadoSAC")
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasComment("número de radicación de la solicitud.");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroSolicitud)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("código de consecutivo de controversia con las siguientes características: CO para contratos de obra o CI para contratos de interventoría, seguido del consecutivo de la controversia 001 a 00n seguido del número del contrato.");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaSoporte)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Ruta URL con soportes de la solicitud");
-
-                entity.Property(e => e.SolicitudId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoControversiaCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Contrato)
                     .WithMany(p => p.ControversiaContractual)
@@ -4091,37 +2464,22 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ControversiaMotivo>(entity =>
             {
-                entity.HasComment("Almacena los motivos de un controversia contractual");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ControversiaMotivoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ControversiaContractualId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.MotivoSolicitudCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ControversiaContractual)
                     .WithMany(p => p.ControversiaMotivo)
@@ -4132,65 +2490,41 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<CriterioCodigoTipoPagoCodigo>(entity =>
             {
-                entity.HasComment("Almacena los códigos de criterio del tipo de pago");
-
-                entity.Property(e => e.CriterioCodigoTipoPagoCodigoId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.CriterioCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoPagoCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<CronogramaSeguimiento>(entity =>
             {
-                entity.HasComment("Almacena los cronogramas un proceso de selección");
-
-                entity.Property(e => e.CronogramaSeguimientoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
                 entity.Property(e => e.EstadoActividadFinalCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoActividadInicialCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observacion).HasComment("Observaciones del cronograma");
-
-                entity.Property(e => e.ProcesoSeleccionCronogramaId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ProcesoSeleccionCronograma)
                     .WithMany(p => p.CronogramaSeguimiento)
@@ -4201,59 +2535,38 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<CuentaBancaria>(entity =>
             {
-                entity.HasComment("Almacena las cuentas bancarias relacionadasa una fuente de financiación");
-
-                entity.Property(e => e.CuentaBancariaId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.BancoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.CodigoSifi)
                     .HasColumnName("CodigoSIFI")
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Exenta).HasComment("Indica que la cuenta es Exenta del 4x1000");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.FuenteFinanciacionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NombreCuentaBanco)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Nombre de Cuenta");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroCuentaBanco)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de cuenta");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoCuentaCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.FuenteFinanciacion)
                     .WithMany(p => p.CuentaBancaria)
@@ -4263,153 +2576,87 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<DefensaJudicial>(entity =>
             {
-                entity.HasComment("Almacena los procesos de defensa judicial");
-
-                entity.Property(e => e.DefensaJudicialId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.CanalIngresoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.CantContratos).HasComment("Número de contratos vinculados al proceso");
+                entity.Property(e => e.CuantiaPerjuicios).HasColumnType("numeric(18, 0)");
 
-                entity.Property(e => e.CuantiaPerjuicios)
-                    .HasColumnType("numeric(18, 0)")
-                    .HasComment("Valor de los perjuicios");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsCompleto).HasComment("0. Incompleto, 1. Completo");
-
-                entity.Property(e => e.EsDemandaFfie)
-                    .HasColumnName("EsDemandaFFIE")
-                    .HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.EsLegitimacionActiva).HasComment("proceso se crea desde el FFIE como demandante (Activa) (1) o desde un tercero hacia el FFIE (Pasiva) (0)");
-
-                entity.Property(e => e.EsRequiereSupervisor).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
+                entity.Property(e => e.EsDemandaFfie).HasColumnName("EsDemandaFFIE");
 
                 entity.Property(e => e.EstadoProcesoCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ExisteConocimiento).HasComment("Existe conocimiento del proceso de defensa judicial");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaRadicadoFfie)
                     .HasColumnName("FechaRadicadoFFIE")
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de radicado del FFIE");
-
-                entity.Property(e => e.InstitucionEducativaSedeId).HasComment("Llave foranea a la tabla en mención");
+                    .HasColumnType("datetime");
 
                 entity.Property(e => e.JurisdiccionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.LegitimacionCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.LocalizacionIdMunicipio).HasComment("Llave foranea a la tabla localización");
-
-                entity.Property(e => e.NumeroDemandados).HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.NumeroDemandantes).HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroProceso)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("El número se creará de manera automática y estará compuesto por las siglas (DJ – consecutivo automático – el año de apertura del proceso)");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroRadicadoFfie)
                     .HasColumnName("NumeroRadicadoFFIE")
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.Pretensiones).HasComment("Descripción de las pretensiones");
-
-                entity.Property(e => e.SolicitudId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoAccionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoProcesoCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UrlSoporteProceso)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<DefensaJudicialContratacionProyecto>(entity =>
             {
-                entity.HasComment("Almacena los procesos de defensa judicial a una contratación de un proyecto");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.DefensaJudicialContratacionProyectoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratacionProyectoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.DefensaJudicialId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsCompleto).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ContratacionProyecto)
                     .WithMany(p => p.DefensaJudicialContratacionProyecto)
@@ -4425,70 +2672,37 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<DefensaJudicialSeguimiento>(entity =>
             {
-                entity.HasComment("Almacena el avance de los procesos de defensa judicial");
-
-                entity.Property(e => e.DefensaJudicialSeguimientoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ActuacionAdelantada).HasComment("registrar la actividad que considere debe realizarse.");
-
-                entity.Property(e => e.DefensaJudicialId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsCompleto).HasComment("0. Incompleto, 1. Completo");
-
-                entity.Property(e => e.EsRequiereSupervisor).HasComment("¿Está actuación requiere la participación o insumo del supervisor del contrato?");
-
-                entity.Property(e => e.EsprocesoResultadoDefinitivo).HasComment("¿El proceso tiene actuación definitiva (sentencia, o acto de autocomposición procesal -Transacción, Conciliación, Desistimiento o un convencimiento-), ¿y se considera cerrado el proceso?");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoProcesoCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaActuacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de actuación del seguimiento");
+                entity.Property(e => e.FechaActuacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaVencimiento)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de vencimiento del registro");
+                entity.Property(e => e.FechaVencimiento).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroActuacion)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.Observaciones).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.ProximaActuacion).HasComment("registrar la actividad que considere debe realizarse");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaSoporte)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Ruta URL con soportes de la actuación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.DefensaJudicial)
                     .WithMany(p => p.DefensaJudicialSeguimiento)
@@ -4499,98 +2713,61 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<DemandadoConvocado>(entity =>
             {
-                entity.HasComment("Almacena los datos del ente demandado");
-
-                entity.Property(e => e.DemandadoConvocadoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.CaducidadPrescripcion)
-                    .HasColumnType("date")
-                    .HasComment("Caducidad o Prescripción");
+                entity.Property(e => e.CaducidadPrescripcion).HasColumnType("date");
 
                 entity.Property(e => e.ConvocadoAutoridadDespacho)
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del convocado");
-
-                entity.Property(e => e.DefensaJudicialId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Direccion)
                     .HasMaxLength(150)
-                    .IsUnicode(false)
-                    .HasComment("Dirección física para envío de notificaciones");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Correo electrónico para envío de notificaciones");
-
-                entity.Property(e => e.EsConvocado).HasComment("Indica si el registro pertenece a un demandado o un convocado. (0. Demandante, 1. Convocante)");
-
-                entity.Property(e => e.EsDemandado).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EtapaProcesoFfiecodigo)
                     .HasColumnName("EtapaProcesoFFIECodigo")
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ExisteConocimiento).HasComment("Existe conocimiento por parte del demandado convocado");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.FechaRadicado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de radicadodel demandado convocado");
-
-                entity.Property(e => e.LocalizacionIdMunicipio).HasComment("identificador del Municipio de la Autoridad");
+                entity.Property(e => e.FechaRadicado).HasColumnType("datetime");
 
                 entity.Property(e => e.MedioControlAccion)
                     .HasMaxLength(3000)
-                    .IsUnicode(false)
-                    .HasComment("Medio de Control / Acción a evitar");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("nombre de la persona natural o jurídica del demandante.");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroIdentificacion)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("número de identificación..");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RadicadoDespacho)
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasComment("Radicado en despacho de conocimiento");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoIdentificacionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.DefensaJudicial)
                     .WithMany(p => p.DemandadoConvocado)
@@ -4602,65 +2779,40 @@ namespace asivamosffie.model.Models
             {
                 entity.HasKey(e => e.DemandanteConvocadoId);
 
-                entity.HasComment("Almacena los datos del ente demandante");
-
-                entity.Property(e => e.DemandanteConvocadoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.CantDemandados).HasComment("Número de demandados");
-
-                entity.Property(e => e.DefensaJucicialId).HasComment("Llave foranea a la tabla en mención");
-
                 entity.Property(e => e.Direccion)
                     .HasMaxLength(150)
-                    .IsUnicode(false)
-                    .HasComment("Dirección física para envío de notificaciones");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Correo electrónico para envío de notificaciones");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.EsConvocante).HasComment("Indica si el registro pertenece a un demandante o un convocante. (0. Demandante, 1. Convocante)  ");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("nombre de la persona natural o jurídica del demandante.");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroIdentificacion)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("número de identificación..");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoIdentificacionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.DefensaJucicial)
                     .WithMany(p => p.DemandanteConvocante)
@@ -4710,131 +2862,83 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<DisponibilidadPresupuestal>(entity =>
             {
-                entity.HasComment("Almacena las solicitudes de disponibilidad presupuestal");
-
-                entity.Property(e => e.DisponibilidadPresupuestalId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.AportanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ContratacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.CuentaCartaAutorizacion).HasComment("¿Cuenta con carta de autorización de la ET?");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsNovedadContractual).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
                 entity.Property(e => e.EstadoSolicitudCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaDdp)
                     .HasColumnName("FechaDDP")
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha del DDP");
+                    .HasColumnType("datetime");
 
                 entity.Property(e => e.FechaDrp)
                     .HasColumnName("FechaDRP")
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha del DRP");
+                    .HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaSolicitud)
-                    .HasColumnType("datetime")
-                    .HasComment("fecha de la solicitud");
+                entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
 
-                entity.Property(e => e.LimitacionEspecial)
-                    .HasMaxLength(4000)
-                    .HasComment("Limitación Especial");
-
-                entity.Property(e => e.NovedadContractualId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.LimitacionEspecial).HasMaxLength(4000);
 
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Numero asignado del contrato");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroDdp)
                     .HasColumnName("NumeroDDP")
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("si la solicitud es nueva asignará un Número DDP automático que  cumpla con con la siguiente estructura: DDP_PI_autoconsecutivo");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroDrp)
                     .HasColumnName("NumeroDRP")
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Número DRP");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroRadicadoSolicitud)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroSolicitud)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Númer de solicitud");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Objeto)
-                    .HasMaxLength(4000)
-                    .HasComment("Objeto");
+                entity.Property(e => e.Objeto).HasMaxLength(4000);
 
                 entity.Property(e => e.OpcionContratarCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaDdp)
                     .HasColumnName("RutaDDP")
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Ruta o url para descargar pdf");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoSolicitudEspecialCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.UrlSoporte)
-                    .HasMaxLength(3000)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.UrlSoporte).HasMaxLength(3000);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorAportante)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorAportante).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.ValorSolicitud)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.Aportante)
                     .WithMany(p => p.DisponibilidadPresupuestal)
@@ -4873,36 +2977,21 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<DisponibilidadPresupuestalObservacion>(entity =>
             {
-                entity.HasComment("Almacena las observaciones de las solicitudes de disponibilidad presupuestal");
-
-                entity.Property(e => e.DisponibilidadPresupuestalObservacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.DisponibilidadPresupuestalId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.EsNovedad).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
                 entity.Property(e => e.EstadoSolicitudCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.NovedadContractualRegistroPresupuestalId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Observacion)
                     .IsRequired()
                     .HasMaxLength(5000)
-                    .IsUnicode(false)
-                    .HasComment("Observación asociada a la disponibilidad Presupuestal");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.DisponibilidadPresupuestal)
                     .WithMany(p => p.DisponibilidadPresupuestalObservacion)
@@ -4918,35 +3007,17 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<DisponibilidadPresupuestalProyecto>(entity =>
             {
-                entity.HasComment("Almacena las relaciones de las solicitudes de disponibilidad presupuestal con los proyectos");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.DisponibilidadPresupuestalProyectoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.DisponibilidadPresupuestalId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.ProyectoAdministrativoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ProyectoId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.DisponibilidadPresupuestal)
                     .WithMany(p => p.DisponibilidadPresupuestalProyecto)
@@ -4967,47 +3038,31 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<DocumentoApropiacion>(entity =>
             {
-                entity.HasComment("Almacena los documento de apropiación relacionados al aportante");
+                entity.Property(e => e.Fecha).HasColumnType("datetime");
 
-                entity.Property(e => e.DocumentoApropiacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.AportanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Fecha)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se hace la acción");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroDocumento)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Número de documento");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoDocumentoCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Valor)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.Valor).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.VigenciaAporteCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Aportante)
                     .WithMany(p => p.DocumentoApropiacion)
@@ -5018,9 +3073,7 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Dominio>(entity =>
             {
-                entity.HasComment("Almacena los diferentes valores que pueden tomar las parametricas en el sistema");
-
-                entity.Property(e => e.DominioId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.DominioId).HasComment("Identificador de la tabla");
 
                 entity.Property(e => e.Activo)
                     .IsRequired()
@@ -5030,7 +3083,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Codigo)
                     .HasMaxLength(100)
                     .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .HasComment("Código de la parametrica en el sistema si lo tiene");
 
                 entity.Property(e => e.Descripcion)
                     .HasMaxLength(250)
@@ -5038,11 +3091,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaCreacion)
                     .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                    .HasComment("Fecha de creación de la parametrica");
 
                 entity.Property(e => e.FechaModificacion)
                     .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                    .HasComment("Si el registro se actualiza con respecto a los campos que no son de auditoria (TipoDominioId, Codigo, Nombre, Descripcion, Activo)");
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
@@ -5054,12 +3107,12 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
                     .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .HasComment("Email del Usuario que crea la nueva parametrica");
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .HasComment("Usuario que realizo la modificación de los datos no de auditoria");
 
                 entity.HasOne(d => d.TipoDominio)
                     .WithMany(p => p.Dominio)
@@ -5070,55 +3123,21 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<EnsayoLaboratorioMuestra>(entity =>
             {
-                entity.HasComment("Almacena los resultados de las muestras tomadas en las obras");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.EnsayoLaboratorioMuestraId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaEntregaResultado).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaEntregaResultado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de entrega de resultados");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.GestionObraCalidadEnsayoLaboratorioId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.NombreMuestra)
-                    .HasMaxLength(40)
-                    .HasComment("Nombre de la muestra");
-
-                entity.Property(e => e.Observacion).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisor).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.NombreMuestra).HasMaxLength(40);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.GestionObraCalidadEnsayoLaboratorio)
                     .WithMany(p => p.EnsayoLaboratorioMuestra)
@@ -5139,99 +3158,51 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<FaseComponenteUso>(entity =>
             {
-                entity.HasComment("Almacena la relación entre la fase el componente y el uso");
-
-                entity.Property(e => e.FaseComponenteUsoId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.ComponenteId)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.FaseId)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsoId)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<FichaEstudio>(entity =>
             {
-                entity.HasComment("Almacena la ficha de estudio a los procesos de defensa judicial");
-
-                entity.Property(e => e.FichaEstudioId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.Abogado)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Abogado que elabora el estudio");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.AnalisisJuridico).HasComment("registrar el análisis jurídico del proceso, basado en el material probatorio, antecedentes, los hechos relevantes, su conocimiento y experiencia");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.Antecedentes).HasComment("Antecedentes");
+                entity.Property(e => e.EsPresentadoAnteComiteFfie).HasColumnName("EsPresentadoAnteComiteFFIE");
 
-                entity.Property(e => e.DecisionComiteDirectrices).HasComment("registrar como referencia las decisiones y directrices que se tomaron en casos anteriores");
+                entity.Property(e => e.FechaComiteDefensa).HasColumnType("datetime");
 
-                entity.Property(e => e.DefensaJudicialId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsActuacionTramiteComite).HasComment("¿La actuación recomendada debe surtir trámite en comité técnico?");
-
-                entity.Property(e => e.EsAprobadoAperturaProceso).HasComment("Aplica para los casos, donde el proceso es de legitimación activa, donde el FFIE es el demandante,");
-
-                entity.Property(e => e.EsCompleto).HasComment("0. Incompleto, 1. Completo");
-
-                entity.Property(e => e.EsPresentadoAnteComiteFfie)
-                    .HasColumnName("EsPresentadoAnteComiteFFIE")
-                    .HasComment("¿Este proceso y su ficha se presentaron ante el Comité de Defensa del FFIE?");
-
-                entity.Property(e => e.FechaComiteDefensa)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de comité de defensa");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.HechosRelevantes).HasComment("registrar puntualmente los hechos relevantes del proceso.");
-
-                entity.Property(e => e.JurisprudenciaDoctrina).HasComment("registrar los conceptos");
-
-                entity.Property(e => e.RecomendacionFinalComite).HasComment("Recomendaciones finales del comité");
-
-                entity.Property(e => e.Recomendaciones).HasComment("registrar sus recomendaciones para el proceso, basado en el análisis jurídico.");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.RutaSoporte)
                     .HasMaxLength(400)
-                    .IsUnicode(false)
-                    .HasComment("URL Soporte del material probatorio, en el cual el usuario podrá diligenciar la ubicación de los documentos que sustentan la ficha de análisis jurídico y recomendaciones frente al proceso.");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoActuacionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.DefensaJudicial)
                     .WithMany(p => p.FichaEstudio)
@@ -5242,27 +3213,12 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<FlujoInversion>(entity =>
             {
-                entity.HasComment("Almacena el flujo de inversión de un contrato de inversión dependienco de la programación de la ejecución");
-
-                entity.Property(e => e.FlujoInversionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ContratoConstruccionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.MesEjecucionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ProgramacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.SeguimientoSemanalId).HasComment("Llave foranea a la tabla en mención");
-
                 entity.Property(e => e.Semana)
                     .IsRequired()
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Número de la semana");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Valor)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.Valor).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.ContratoConstruccion)
                     .WithMany(p => p.FlujoInversion)
@@ -5291,86 +3247,48 @@ namespace asivamosffie.model.Models
                 entity.HasKey(e => e.FormaPagoCodigoCriterioPagoCodigoId)
                     .HasName("PK__FormaPag__DFCDB1CEC4ACB432");
 
-                entity.HasComment("Almacena la relación de la forma de pago con el criterio de pago");
-
-                entity.Property(e => e.FormaPagoCodigoCriterioPagoCodigoId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.CriterioPagoCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.FormaPagoCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<FormasPagoFase>(entity =>
             {
-                entity.HasComment("Almacena el código de la forma de pago en relación a la fase del proyecto");
-
-                entity.Property(e => e.FormasPagoFaseId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.EsPreconstruccion).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
                 entity.Property(e => e.FormaPagoCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<FuenteFinanciacion>(entity =>
             {
-                entity.HasComment("Almacena las fuestes de financiación relacionadas al aportante");
-
                 entity.HasIndex(e => new { e.AportanteId, e.Eliminado })
                     .HasName("indexaportante");
 
-                entity.Property(e => e.FuenteFinanciacionId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.AportanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.CantVigencias).HasComment("¿De cuántas vigencias se realizará el aporte?");
-
-                entity.Property(e => e.CofinanciacionDocumentoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FuenteRecursosCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorFuente)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorFuente).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.Aportante)
                     .WithMany(p => p.FuenteFinanciacion)
@@ -5386,77 +3304,38 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<GestionFuenteFinanciacion>(entity =>
             {
-                entity.HasComment("Almacena la gestión a la fuente de financiación");
+                entity.Property(e => e.DisponibilidadPresupuestalId).HasColumnName("DisponibilidadPresupuestalID");
 
-                entity.Property(e => e.GestionFuenteFinanciacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.BalanceFinancieroTrasladoValorId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.DisponibilidadPresupuestalId)
-                    .HasColumnName("DisponibilidadPresupuestalID")
-                    .HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.DisponibilidadPresupuestalProyectoId)
-                    .HasColumnName("DisponibilidadPresupuestalProyectoID")
-                    .HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsNovedad).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
+                entity.Property(e => e.DisponibilidadPresupuestalProyectoId).HasColumnName("DisponibilidadPresupuestalProyectoID");
 
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(1)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FuenteFinanciacionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.NuevoSaldo).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.NovedadContractualRegistroPresupuestalId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.NuevoSaldoGenerado).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.NuevoSaldo)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("se calculará  automáticamente  y debe mostrar    FORMATO CASO DE USO    07/01/2020  Versión 1 Página 4 de 6    Cualquier copia impresa de este documento se considera como COPIA NO CONTROLADA.    la información  asociada al saldo  actual de la  fuente(s) menos  el valor solicitado  de la fuente(s).  ");
+                entity.Property(e => e.SaldoActual).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.NuevoSaldoGenerado)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Nuevo saldo generado");
-
-                entity.Property(e => e.RendimientosIncorporadosId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.SaldoActual)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Saldo actual de la  fuente");
-
-                entity.Property(e => e.SaldoActualGenerado)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Valor del saldo actual generado");
+                entity.Property(e => e.SaldoActualGenerado).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorSolicitado)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorSolicitado).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.ValorSolicitadoGenerado)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorSolicitadoGenerado).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.BalanceFinancieroTrasladoValor)
                     .WithMany(p => p.GestionFuenteFinanciacion)
@@ -5487,68 +3366,25 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<GestionObraCalidadEnsayoLaboratorio>(entity =>
             {
-                entity.HasComment("Almacena el tipo de ensayo y/o muestra al seguimiento semanal de la gestión de la obra");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.GestionObraCalidadEnsayoLaboratorioId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaEntregaResultados).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaEntregaResultados)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de entrega de resultados");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.FechaTomaMuestras)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de toma de muestras");
-
-                entity.Property(e => e.NumeroMuestras).HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.Observacion).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.RealizoControlMedicion).HasComment("Índica si realizo el control de medición");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoMuestras).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisor).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.SeguimientoSemanalGestionObraCalidadId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.FechaTomaMuestras).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoEnsayoCodigo)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.UrlSoporteGestion).HasComment("URL donde se encuentra el campo en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ObservacionApoyo)
                     .WithMany(p => p.GestionObraCalidadEnsayoLaboratorioObservacionApoyo)
@@ -5569,38 +3405,22 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<GrupoMunicipios>(entity =>
             {
-                entity.HasComment("Almacena los municipios agregados a un proceso de selección");
+                entity.Property(e => e.GrupoMunicipiosId).ValueGeneratedNever();
 
-                entity.Property(e => e.GrupoMunicipiosId)
-                    .HasComment("Llave foranea a la tabla en mención")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.LocalizacionIdMunicipio).HasComment("Llave foranea a la tabla localización");
-
-                entity.Property(e => e.ProcesoSeleccionGrupoId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ProcesoSeleccionGrupo)
                     .WithMany(p => p.GrupoMunicipios)
@@ -5613,149 +3433,87 @@ namespace asivamosffie.model.Models
             {
                 entity.HasNoKey();
 
-                entity.HasComment("Almacena los reportes e indicadores de PowerBI");
-
-                entity.Property(e => e.Activo).HasComment("Indica si el registro esta activo (0) Inactivo (1) Activo");
-
                 entity.Property(e => e.Etapa)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Indica el número de la tapa");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.GroupId)
                     .IsRequired()
-                    .HasMaxLength(100)
-                    .HasComment("Llave del grupo en PowerBI");
+                    .HasMaxLength(100);
 
-                entity.Property(e => e.Indicador).HasComment("indica si es un indicador o un reporte");
-
-                entity.Property(e => e.IndicadorReporteId)
-                    .HasComment("Llave primaria de la tabla")
-                    .ValueGeneratedOnAdd();
+                entity.Property(e => e.IndicadorReporteId).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
-                    .HasMaxLength(100)
-                    .HasComment("Nombre del reporte indicador");
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Proceso)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Proceso al que pertenece el indicador de reportes");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ReportId)
                     .IsRequired()
-                    .HasMaxLength(100)
-                    .HasComment("Llave de reporte en PowerBI");
+                    .HasMaxLength(100);
             });
 
             modelBuilder.Entity<InformeFinal>(entity =>
             {
-                entity.HasComment("Almacena los informes finales relacionados a un proyecto");
-
-                entity.Property(e => e.InformeFinalId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
                 entity.Property(e => e.EstadoAprobacion)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Indica el estado de la aprobación del informe final");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoCumplimiento)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Indica el estado del cumplimiento del informe final");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoEntregaEtc)
                     .HasColumnName("EstadoEntregaETC")
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Indica el estado de la entrega a la ETC");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoInforme)
                     .HasMaxLength(2)
                     .IsUnicode(false)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica el estado del informe");
+                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoValidacion)
                     .HasMaxLength(2)
                     .IsUnicode(false)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica el estado de la validación del informe final");
+                    .HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.FechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación");
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaAprobacionFinal)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación final");
+                entity.Property(e => e.FechaAprobacionFinal).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioApoyoSupervisor)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de envio del informe final a apoyo a la supervisión");
+                entity.Property(e => e.FechaEnvioApoyoSupervisor).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaEnvioEtc)
                     .HasColumnName("FechaEnvioETC")
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de envio del informe final a la ETC");
+                    .HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioGrupoNovedades)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de envio del informe final al grupo de novedades");
+                entity.Property(e => e.FechaEnvioGrupoNovedades).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioSupervisor)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de envio del informe final al supervisor");
+                entity.Property(e => e.FechaEnvioSupervisor).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaSuscripcion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de suscripción del inform final");
+                entity.Property(e => e.FechaSuscripcion).HasColumnType("datetime");
 
-                entity.Property(e => e.ProyectoId).HasComment("Llave foranea a la tabla localización");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoCumplimiento).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoEntregaEtc)
-                    .HasColumnName("RegistroCompletoEntregaETC")
-                    .HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoValidacion).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.TieneObservacionesCumplimiento).HasComment("Campo que indica que tiene observaciones de cumplimiento");
-
-                entity.Property(e => e.TieneObservacionesInterventoria).HasComment("Campo que indica que tiene observaciones de interventoria");
-
-                entity.Property(e => e.TieneObservacionesSupervisor).HasComment("Campo que indica que tiene observaciones del supervisor");
-
-                entity.Property(e => e.TieneObservacionesValidacion).HasComment("Campo que indica que tiene observaciones de validación");
+                entity.Property(e => e.RegistroCompletoEntregaEtc).HasColumnName("RegistroCompletoEntregaETC");
 
                 entity.Property(e => e.UrlActa)
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Proyecto)
                     .WithMany(p => p.InformeFinal)
@@ -5766,100 +3524,60 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<InformeFinalAnexo>(entity =>
             {
-                entity.HasComment("Almacena los anexos de los informes finales relacionados a un proyecto");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.InformeFinalAnexoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.FechaRadicado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de radicado del anexo del informe final");
+                entity.Property(e => e.FechaRadicado).HasColumnType("datetime");
 
                 entity.Property(e => e.NumRadicadoSac)
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasComment("Número de radicado SAC");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoAnexo)
                     .HasMaxLength(2)
                     .IsUnicode(false)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Tipo del anexo");
+                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.UrlSoporte)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<InformeFinalInterventoria>(entity =>
             {
-                entity.HasComment("Almacena la gestión de la interventoria frente al informe final");
-
-                entity.Property(e => e.InformeFinalInterventoriaId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.AprobacionCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.CalificacionCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.InformeFinalAnexoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.InformeFinalId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.InformeFinalListaChequeoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TieneModificacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneModificacionInterventor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ValidacionCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.InformeFinalAnexo)
                     .WithMany(p => p.InformeFinalInterventoria)
@@ -5881,41 +3599,17 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<InformeFinalInterventoriaObservaciones>(entity =>
             {
-                entity.HasComment("Almacena las observaciones de la interventoria en un informe final");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.InformeFinalInterventoriaObservacionesId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Archivado).HasComment("Indica si la observación esta archivada");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsApoyo).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.EsCalificacion).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.EsSupervision).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.InformeFinalInterventoriaId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Observaciones).HasComment("Observaciones de tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.InformeFinalInterventoria)
                     .WithMany(p => p.InformeFinalInterventoriaObservaciones)
@@ -5925,81 +3619,41 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<InformeFinalListaChequeo>(entity =>
             {
-                entity.HasComment("Almacena la lista de chequeo relacionada a un informe final");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.InformeFinalListaChequeoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.MensajeAyuda)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Mensaje ayuda");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Nombre de la lista de chequeo del informe final");
-
-                entity.Property(e => e.Posicion).HasComment("Posición en la lista de chequeo");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<InformeFinalObservaciones>(entity =>
             {
-                entity.HasComment("Almacena las observaciones de un informa final");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.InformeFinalObservacionesId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Archivado).HasComment("Indica si la observación esta archivada");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsApoyo).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.EsGrupoNovedades).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.EsGrupoNovedadesInterventoria).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.EsSupervision).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.InformeFinalId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Observaciones).HasComment("Observaciones de tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.InformeFinal)
                     .WithMany(p => p.InformeFinalObservaciones)
@@ -6012,40 +3666,23 @@ namespace asivamosffie.model.Models
             {
                 entity.HasKey(e => e.InfraestrucutraIntervenirProyectoId);
 
-                entity.HasComment("Almacena la infraestructura a intervenir en relación a un proyecto");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.InfraestrucutraIntervenirProyectoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Cantidad).HasComment("Cantidad de unidades");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaEliminacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de eliminación");
+                entity.Property(e => e.FechaEliminacion).HasColumnType("datetime");
 
                 entity.Property(e => e.InfraestructuraCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.ProyectoId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioEliminacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario que elimino el registro del proyecto");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Proyecto)
                     .WithMany(p => p.InfraestructuraIntervenirProyecto)
@@ -6056,87 +3693,47 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<InstitucionEducativaSede>(entity =>
             {
-                entity.HasComment("Almacena todas las instituciones educativas");
-
-                entity.Property(e => e.InstitucionEducativaSedeId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Activo).HasComment("Indica si el registro esta activo (0) Inactivo (1) Activo");
-
                 entity.Property(e => e.CodigoDane)
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.LocalizacionIdMunicipio)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Llave foranea a la tabla localización");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Nombre de la Institución Educativa");
-
-                entity.Property(e => e.PadreId).HasComment("Llave foranea a la misma tabla");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<LiquidacionContratacionObservacion>(entity =>
             {
-                entity.HasComment("Almacena las observaciones sobre una liquidación contratación");
-
-                entity.Property(e => e.LiquidacionContratacionObservacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Archivado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica si la observación esta archivada");
-
-                entity.Property(e => e.ContratacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.Archivado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.FechaCreacion)
                     .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())")
-                    .HasComment("Fecha de creación del registro");
+                    .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.IdPadre).HasComment("Llave foranea a la misma tabla");
-
-                entity.Property(e => e.MenuId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Observacion).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.TieneObservacion).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoObservacionCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Contratacion)
                     .WithMany(p => p.LiquidacionContratacionObservacion)
@@ -6152,134 +3749,81 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ListaChequeo>(entity =>
             {
-                entity.HasComment("Almacena las listas de chequeo del sistema");
-
-                entity.Property(e => e.ListaChequeoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Activo).HasComment("Indica si el registro esta activo (0) Inactivo (1) Activo");
-
                 entity.Property(e => e.CriterioPagoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsObra).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoMenuCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
-                    .HasMaxLength(500)
-                    .HasComment("Nombre de la lista de chequeo");
+                    .HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(250)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(250)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<ListaChequeoItem>(entity =>
             {
-                entity.HasComment("Almacena los items que conforman la lista de chequeo");
+                entity.Property(e => e.Activo).HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.ListaChequeoItemId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Activo)
-                    .HasDefaultValueSql("((1))")
-                    .HasComment("Indica si el registro esta activo (0) Inactivo (1) Activo");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.FechaCreacion)
                     .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())")
-                    .HasComment("Fecha de creación del registro");
+                    .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
-                    .HasMaxLength(1500)
-                    .HasComment("Nombre del item de la lista de chequeo");
+                    .HasMaxLength(1500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(250)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(250)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<ListaChequeoListaChequeoItem>(entity =>
             {
-                entity.HasComment("Almacena la lista de chequeo con el item");
-
                 entity.HasIndex(e => new { e.ListaChequeoId, e.ListaChequeoItemId })
                     .HasName("Index_ListaChequeo_ListaChequeoItem")
                     .IsUnique();
 
-                entity.Property(e => e.ListaChequeoListaChequeoItemId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.ListaChequeoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ListaChequeoItemId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Mensaje)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Mensaje");
-
-                entity.Property(e => e.Orden).HasComment("Orden de visualización");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ListaChequeo)
                     .WithMany(p => p.ListaChequeoListaChequeoItem)
@@ -6296,8 +3840,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Localizacion>(entity =>
             {
-                entity.HasComment("Almacena los departamentos y municipios");
-
                 entity.Property(e => e.LocalizacionId)
                     .HasMaxLength(10)
                     .IsUnicode(false)
@@ -6311,7 +3853,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.IdPadre)
                     .HasMaxLength(10)
                     .IsUnicode(false)
-                    .HasComment("Llave foranea a la misma tabla");
+                    .HasComment("Identificador LocalizacionId Padre al que pertenece");
 
                 entity.Property(e => e.Nivel)
                     .HasColumnType("numeric(2, 0)")
@@ -6325,52 +3867,18 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ManejoMaterialesInsumos>(entity =>
             {
-                entity.HasComment("Almacena el manejo de los materiales");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ManejoMaterialesInsumosId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EstanProtegidosDemarcadosMateriales).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observacion).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisor).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RequiereObservacion).HasComment("Indica si requiere observación");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.Url).HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ObservacionApoyo)
                     .WithMany(p => p.ManejoMaterialesInsumosObservacionApoyo)
@@ -6385,45 +3893,24 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ManejoMaterialesInsumosProveedor>(entity =>
             {
-                entity.HasComment("Almacena la tendencia del manejo de los materiales con el proveedor");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ManejoMaterialesInsumosProveedorId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.ManejoMaterialesInsumosId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Proveedor)
-                    .HasMaxLength(100)
-                    .HasComment("Nombre del proveedor");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RequierePermisosAmbientalesMineros).HasComment("Indica si requiere permisos ambientales mineros");
+                entity.Property(e => e.Proveedor).HasMaxLength(100);
 
                 entity.Property(e => e.UrlRegistroFotografico)
                     .HasMaxLength(500)
-                    .IsFixedLength()
-                    .HasComment("URL donde se encuentra el campo en mención");
+                    .IsFixedLength();
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ManejoMaterialesInsumos)
                     .WithMany(p => p.ManejoMaterialesInsumosProveedor)
@@ -6433,52 +3920,20 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ManejoOtro>(entity =>
             {
-                entity.HasComment("Almacena el manejo de otros materiales");
+                entity.Property(e => e.FechaActividad).HasColumnType("datetime");
 
-                entity.Property(e => e.ManejoOtroId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Actividad).HasComment("Descripción de la actividad");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaActividad)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de la actividad");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisor).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.UrlSoporteGestion).HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ObservacionApoyo)
                     .WithMany(p => p.ManejoOtroObservacionApoyo)
@@ -6493,55 +3948,19 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ManejoResiduosConstruccionDemolicion>(entity =>
             {
-                entity.HasComment("Almacena el manejo de los residuos de demolición de construcción");
+                entity.Property(e => e.EstaCuantificadoRcd).HasColumnName("EstaCuantificadoRCD");
 
-                entity.Property(e => e.ManejoResiduosConstruccionDemolicionId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.CantidadToneladas).HasComment("Cantidad de toneladas");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EstaCuantificadoRcd)
-                    .HasColumnName("EstaCuantificadoRCD")
-                    .HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observacion).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisor).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RequiereObservacion).HasComment("Indica si requiere observación");
-
-                entity.Property(e => e.SeReutilizadorResiduos).HasComment("Indica si se reutilizaron residuos");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ObservacionApoyo)
                     .WithMany(p => p.ManejoResiduosConstruccionDemolicionObservacionApoyo)
@@ -6556,41 +3975,19 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ManejoResiduosConstruccionDemolicionGestor>(entity =>
             {
-                entity.HasComment("Almacena los gestores del manejo de residuos");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ManejoResiduosConstruccionDemolicionGestorId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.ManejoResiduosConstruccionDemolicionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.NombreGestorResiduos)
-                    .HasMaxLength(255)
-                    .HasComment("Nombre el gestor de residuos");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.TienePermisoAmbiental).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.Url).HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.NombreGestorResiduos).HasMaxLength(255);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ManejoResiduosConstruccionDemolicion)
                     .WithMany(p => p.ManejoResiduosConstruccionDemolicionGestor)
@@ -6600,54 +3997,20 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ManejoResiduosPeligrososEspeciales>(entity =>
             {
-                entity.HasComment("Almacena el manejo de los residuos peligrosos especiales");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ManejoResiduosPeligrososEspecialesId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EstanClasificados).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observacion).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisor).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RequiereObservacion).HasComment("Indica si requiere observación");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.UrlRegistroFotografico)
-                    .HasMaxLength(500)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.UrlRegistroFotografico).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ObservacionApoyo)
                     .WithMany(p => p.ManejoResiduosPeligrososEspecialesObservacionApoyo)
@@ -6662,9 +4025,7 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<MensajesValidaciones>(entity =>
             {
-                entity.HasComment("Almacena los mensajes del sistema según el menú");
-
-                entity.Property(e => e.MensajesValidacionesId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.MensajesValidacionesId).HasComment("Identificador de la tabla");
 
                 entity.Property(e => e.Activo)
                     .IsRequired()
@@ -6675,15 +4036,15 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .HasComment("Código del mensaje");
 
                 entity.Property(e => e.FechaCreacion)
                     .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                    .HasComment("Fecha de creación de la parametrica");
 
                 entity.Property(e => e.FechaModificacion)
                     .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                    .HasComment("Si el registro se actualiza con respecto a los campos que no son de auditoria (MensajesValidacionesId, Codigo, Mensaje, Modulo, Activo)");
 
                 entity.Property(e => e.Mensaje)
                     .IsRequired()
@@ -6696,12 +4057,12 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
                     .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .HasComment("Email del Usuario que crea la nueva parametrica");
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .HasComment("Usuario que realizo la modificación de los datos no de auditoria");
 
                 entity.HasOne(d => d.Menu)
                     .WithMany(p => p.MensajesValidaciones)
@@ -6711,9 +4072,7 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Menu>(entity =>
             {
-                entity.HasComment("Almacena los menús que conforman el sistema");
-
-                entity.Property(e => e.MenuId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.MenuId).HasComment("Identificador de la tabla");
 
                 entity.Property(e => e.Descripcion)
                     .HasMaxLength(400)
@@ -6722,28 +4081,27 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Eliminado)
                     .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                    .HasComment("Indica que el menú fue eliminado (0)Menú vigente (1)MNenú Eliminado");
 
                 entity.Property(e => e.FaseCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.FechaCreacion)
                     .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                    .HasComment("Fecha de creación del Menú");
 
                 entity.Property(e => e.FechaModificacion)
                     .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                    .HasComment("Si el registro se actualiza con respecto a los campos que no son de auditoria ( Nombre,Descripción,Posición,Icono,RutaFormulario)");
 
                 entity.Property(e => e.Icono)
                     .HasMaxLength(400)
                     .IsUnicode(false)
                     .HasComment("Icono");
 
-                entity.Property(e => e.MenuPadreId).HasComment("Llave foranea a la misma tabla");
+                entity.Property(e => e.MenuPadreId).HasComment("Identificador del Menu Padre");
 
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(200)
@@ -6760,19 +4118,17 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
                     .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .HasComment("Email del Usuario que crea al nuevo menú");
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .HasComment("Usuario que realizo la modificación de los datos no de auditoria");
             });
 
             modelBuilder.Entity<MenuPerfil>(entity =>
             {
-                entity.HasComment("Almacena la relación de los perfiles  con el menú");
-
-                entity.Property(e => e.MenuPerfilId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.MenuPerfilId).HasComment("Identificador de la tabla");
 
                 entity.Property(e => e.Activo)
                     .IsRequired()
@@ -6782,7 +4138,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())")
-                    .HasComment("Fecha de creación del registro");
+                    .HasComment("Fecha de Creación del registro");
 
                 entity.Property(e => e.MenuId).HasComment("Identificador del Menú");
 
@@ -6792,17 +4148,11 @@ namespace asivamosffie.model.Models
                     .HasDefaultValueSql("((1))")
                     .HasComment("Indica si el perfil tiene permisos de CRUD en la funcionalidad");
 
-                entity.Property(e => e.TienePermisoEditar).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TienePermisoEliminar).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TienePermisoLeer).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .HasComment("Nombre de usuario que creo el registro");
 
                 entity.HasOne(d => d.Menu)
                     .WithMany(p => p.MenuPerfil)
@@ -6819,21 +4169,9 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<MesEjecucion>(entity =>
             {
-                entity.HasComment("Almacena los meses de ejecución relacionado al contrato construcción");
+                entity.Property(e => e.FechaFin).HasColumnType("datetime");
 
-                entity.Property(e => e.MesEjecucionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ContratoConstruccionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.FechaFin)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha fin de la actividad");
-
-                entity.Property(e => e.FechaInicio)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha inicio de la actividad");
-
-                entity.Property(e => e.Numero).HasComment("Número del mes de ejecución");
+                entity.Property(e => e.FechaInicio).HasColumnType("datetime");
 
                 entity.HasOne(d => d.ContratoConstruccion)
                     .WithMany(p => p.MesEjecucion)
@@ -6846,25 +4184,11 @@ namespace asivamosffie.model.Models
             {
                 entity.HasNoKey();
 
-                entity.HasComment("Almacena las modificaciones contractuales");
+                entity.Property(e => e.FechaEnvioTramite).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioTramite)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de envio del trámite");
+                entity.Property(e => e.FechaTramite).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaTramite)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se realiza el trámite");
-
-                entity.Property(e => e.ModificacionContractualId)
-                    .HasComment("Llave primaria de la tabla")
-                    .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.NovedadContractualId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Observaciones).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.UrlMinuta).HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.ModificacionContractualId).ValueGeneratedOnAdd();
 
                 entity.HasOne(d => d.ModificacionContractualNavigation)
                     .WithMany()
@@ -6875,187 +4199,85 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<NovedadContractual>(entity =>
             {
-                entity.HasComment("Almacena las novedades contractuales");
+                entity.Property(e => e.CausaRechazo).IsUnicode(false);
 
-                entity.Property(e => e.NovedadContractualId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.AbogadoRevisionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.CausaRechazo)
-                    .IsUnicode(false)
-                    .HasComment("Causa del rechazo");
-
-                entity.Property(e => e.ContratoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.DeseaContinuar).HasComment("Campo utilizado para marcar si desea continuar");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsAplicadaAcontrato)
-                    .HasColumnName("EsAplicadaAContrato")
-                    .HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
+                entity.Property(e => e.EsAplicadaAcontrato).HasColumnName("EsAplicadaAContrato");
 
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoProcesoCodigo)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaAprobacionGestionContractual)
-                    .HasColumnType("date")
-                    .HasComment("Fecha de aprobación de la gestión contractual");
+                entity.Property(e => e.FechaAprobacionGestionContractual).HasColumnType("date");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioActaApoyo)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de envio del acta al apoyo de la supervisión");
+                entity.Property(e => e.FechaEnvioActaApoyo).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioActaContratistaInterventoria)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de envio del acta a contratista de interventoria");
+                entity.Property(e => e.FechaEnvioActaContratistaInterventoria).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioActaContratistaObra)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de envio del acta a contratista de obra");
+                entity.Property(e => e.FechaEnvioActaContratistaObra).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioActaSupervisor)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de envio  del acta al supervisor");
+                entity.Property(e => e.FechaEnvioActaSupervisor).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioFirmaContratista)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de envio para firma de contratista");
+                entity.Property(e => e.FechaEnvioFirmaContratista).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioFirmaFiduciaria)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de envio  para firma de fiduciaria");
+                entity.Property(e => e.FechaEnvioFirmaFiduciaria).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioGestionContractual)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de envio para gestión contractual");
+                entity.Property(e => e.FechaEnvioGestionContractual).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaActaContratistaObra)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma de acta del contratista de obra");
+                entity.Property(e => e.FechaFirmaActaContratistaObra).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaApoyo)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma de apoyo a supervisión");
+                entity.Property(e => e.FechaFirmaApoyo).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaContratista)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma del contratista");
+                entity.Property(e => e.FechaFirmaContratista).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaContratistaInterventoria)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma de acta del contratista de interventoria");
+                entity.Property(e => e.FechaFirmaContratistaInterventoria).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaFiduciaria)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma de la fiduciaria del contrato");
+                entity.Property(e => e.FechaFirmaFiduciaria).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaSupervisor)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma de la supervisión");
+                entity.Property(e => e.FechaFirmaSupervisor).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaSesionInstancia)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de la instancia de la sesión");
+                entity.Property(e => e.FechaSesionInstancia).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaSolictud)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de solicitud");
+                entity.Property(e => e.FechaSolictud).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaTramiteGestionar)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se realiza el trámite");
+                entity.Property(e => e.FechaTramiteGestionar).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaValidacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de validación");
+                entity.Property(e => e.FechaValidacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaVerificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de verificación");
+                entity.Property(e => e.FechaVerificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.InstanciaCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroOtroSi)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroSolicitud)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de radicado en FFIE de solicitud.");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ObervacionSupervisorId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.RazonesNoContinuaProceso).IsUnicode(false);
 
-                entity.Property(e => e.ObservacionGestionar).HasComment("Observaciones al gestionar");
-
-                entity.Property(e => e.ObservacionesDevolucionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ObservacionesTramite).HasComment("Observaciones de trámite de la novedad contractual");
-
-                entity.Property(e => e.ProyectoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RazonesNoContinuaProceso)
-                    .IsUnicode(false)
-                    .HasComment("Razones por las cuales no continua el proceso");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoGestionar).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoTramite).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoTramiteNovedades).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoValidacion).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoVerificacion).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.TieneObservacionesApoyo).HasComment("Campo que indica que tiene observaciones del apoyo a la supervisión");
-
-                entity.Property(e => e.TieneObservacionesSupervisor).HasComment("Campo que indica que tiene observaciones del supervisor");
-
-                entity.Property(e => e.UrlDocumentoSuscrita)
-                    .IsUnicode(false)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.UrlDocumentoSuscrita).IsUnicode(false);
 
                 entity.Property(e => e.UrlSoporte)
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.UrlSoporteFirmas)
-                    .IsUnicode(false)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.UrlSoporteFirmas).IsUnicode(false);
 
-                entity.Property(e => e.UrlSoporteGestionar).HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(400);
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(400)
-                    .HasComment("Usuario creación");
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(400)
-                    .HasComment("usuario que realiza modificación del registro");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(400);
 
                 entity.HasOne(d => d.Contrato)
                     .WithMany(p => p.NovedadContractual)
@@ -7070,42 +4292,22 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<NovedadContractualAportante>(entity =>
             {
-                entity.HasComment("Almacena la relación novedad contractrual con el aportante del acuerdo de cofinanciación");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.NovedadContractualAportanteId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.CofinanciacionAportanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.NovedadContractualId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorAporte)
-                    .HasColumnType("numeric(18, 9)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorAporte).HasColumnType("numeric(18, 9)");
 
                 entity.HasOne(d => d.CofinanciacionAportante)
                     .WithMany(p => p.NovedadContractualAportante)
@@ -7120,40 +4322,22 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<NovedadContractualClausula>(entity =>
             {
-                entity.HasComment("Almacena las clausulas sobre la novedad contractual");
+                entity.Property(e => e.AjusteSolicitadoAclausula).HasColumnName("AjusteSolicitadoAClausula");
 
-                entity.Property(e => e.NovedadContractualClausulaId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.ClausulaAmodificar).HasColumnName("ClausulaAModificar");
 
-                entity.Property(e => e.AjusteSolicitadoAclausula)
-                    .HasColumnName("AjusteSolicitadoAClausula")
-                    .HasComment("Ajuste solicitado a la clausula de la novedad contractual");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ClausulaAmodificar)
-                    .HasColumnName("ClausulaAModificar")
-                    .HasComment("Parrafo a modificar de la clausula");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.NovedadContractualDescripcionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.NovedadContractualDescripcion)
                     .WithMany(p => p.NovedadContractualClausula)
@@ -7163,87 +4347,47 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<NovedadContractualDescripcion>(entity =>
             {
-                entity.HasComment("Almacena la descripción de la novedad contractual");
-
-                entity.Property(e => e.NovedadContractualDescripcionId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.AjusteClausula)
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Ajuste a la clausula de la novedad contractual");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ClausulaModificar)
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Parrafo a modificar de la clausula");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ConceptoTecnico).HasComment("Concepto de comité técnico");
+                entity.Property(e => e.FechaConcepto).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.EsDocumentacionSoporte).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
+                entity.Property(e => e.FechaFinSuspension).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaConcepto)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en la que se emite el concepto");
+                entity.Property(e => e.FechaInicioSuspension).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaFinSuspension)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha fin de suspensión");
-
-                entity.Property(e => e.FechaInicioSuspension)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de inicio de suspensión");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.MotivoNovedadCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.NovedadContractualId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroRadicado)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.PlazoAdicionalDias)
-                    .HasColumnType("numeric(22, 2)")
-                    .HasComment("Plazo de días adicionales");
+                entity.Property(e => e.PlazoAdicionalDias).HasColumnType("numeric(22, 2)");
 
-                entity.Property(e => e.PlazoAdicionalMeses)
-                    .HasColumnType("numeric(22, 2)")
-                    .HasComment("Plazo de meses adicionales");
+                entity.Property(e => e.PlazoAdicionalMeses).HasColumnType("numeric(22, 2)");
 
-                entity.Property(e => e.PresupuestoAdicionalSolicitado)
-                    .HasColumnType("numeric(22, 2)")
-                    .HasComment("Valor del presupuesto adicional");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.ResumenJustificacion).HasComment("Resumen de la justificación");
+                entity.Property(e => e.PresupuestoAdicionalSolicitado).HasColumnType("numeric(22, 2)");
 
                 entity.Property(e => e.TipoNovedadCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(400)
-                    .HasComment("Usuario creación");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(400);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(400)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.NovedadContractual)
                     .WithMany(p => p.NovedadContractualDescripcion)
@@ -7254,37 +4398,19 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<NovedadContractualDescripcionMotivo>(entity =>
             {
-                entity.HasComment("Almacena el motivo de la descripción de la novedad contractual");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.NovedadContractualDescripcionMotivoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.MotivoNovedadCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.NovedadContractualDescripcionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(400)
-                    .HasComment("Usuario creación");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(400);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(400)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.NovedadContractualDescripcion)
                     .WithMany(p => p.NovedadContractualDescripcionMotivo)
@@ -7294,40 +4420,18 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<NovedadContractualObservaciones>(entity =>
             {
-                entity.HasComment("Almacena las observaciones de la novedad contractual");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.NovedadContractualObservacionesId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Archivado).HasComment("Indica si la observación esta archivada");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsSupervision).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.EsTramiteNovedades).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.NovedadContractualId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Observaciones).HasComment("Observaciones de tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.NovedadContractual)
                     .WithMany(p => p.NovedadContractualObservaciones)
@@ -7337,75 +4441,44 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<NovedadContractualRegistroPresupuestal>(entity =>
             {
-                entity.HasComment("Almacena la relación de la novedad contractual con el registro presupuestal");
-
-                entity.Property(e => e.NovedadContractualRegistroPresupuestalId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.DisponibilidadPresupuestalId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
                 entity.Property(e => e.EstadoSolicitudCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaDdp)
                     .HasColumnName("FechaDDP")
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha del DDP");
+                    .HasColumnType("datetime");
 
                 entity.Property(e => e.FechaDrp)
                     .HasColumnName("FechaDRP")
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha del DRP");
+                    .HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.NovedadContractualId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroDrp)
                     .HasColumnName("NumeroDRP")
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroSolicitud)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Objeto)
-                    .HasMaxLength(4000)
-                    .HasComment("Objeto de la novedad contractual");
-
-                entity.Property(e => e.PlazoDias).HasComment("Plazo en días");
-
-                entity.Property(e => e.PlazoMeses).HasComment("Plazo en meses");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.Objeto).HasMaxLength(4000);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorSolicitud)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.DisponibilidadPresupuestal)
                     .WithMany(p => p.NovedadContractualRegistroPresupuestal)
@@ -7444,132 +4517,72 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiro>(entity =>
             {
-                entity.HasComment("Almacena las ordenes de giro");
+                entity.Property(e => e.ConsecutivoOrigen).HasMaxLength(50);
 
-                entity.Property(e => e.OrdenGiroId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ConsecutivoOrigen)
-                    .HasMaxLength(50)
-                    .HasComment("Identificador del origen");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaRegistroCompleto)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha cuando el registro quedo completo");
+                entity.Property(e => e.FechaRegistroCompleto).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaRegistroCompletoAprobar)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha cuando el registro quedo completo al aprobar");
+                entity.Property(e => e.FechaRegistroCompletoAprobar).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaRegistroCompletoTramitar)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha cuando el registro quedo completo al tramitar");
+                entity.Property(e => e.FechaRegistroCompletoTramitar).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaRegistroCompletoVerificar)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha cuando el registro quedo completo al verificar");
+                entity.Property(e => e.FechaRegistroCompletoVerificar).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroSolicitud)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.RegistroCompleto)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.RegistroCompleto).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.RegistroCompletoAprobar)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
+                entity.Property(e => e.RegistroCompletoAprobar).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.RegistroCompletoTramitar)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
+                entity.Property(e => e.RegistroCompletoTramitar).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.RegistroCompletoVerificar)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
+                entity.Property(e => e.RegistroCompletoVerificar).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.TieneObservacion)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.TieneObservacion).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.TieneTraslado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.TieneTraslado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.UrlSoporteFirmadoAprobar)
-                    .HasMaxLength(500)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.UrlSoporteFirmadoAprobar).HasMaxLength(500);
 
-                entity.Property(e => e.UrlSoporteFirmadoVerificar)
-                    .HasMaxLength(500)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.UrlSoporteFirmadoVerificar).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorNetoGiro)
-                    .HasColumnType("numeric(38, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorNetoGiro).HasColumnType("numeric(38, 2)");
 
-                entity.Property(e => e.ValorNetoGiroTraslado)
-                    .HasColumnType("numeric(38, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorNetoGiroTraslado).HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<OrdenGiroDetalle>(entity =>
             {
-                entity.HasComment("Almacena el detalle de las ordenes de giro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.OrdenGiroDetalleId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.OrdenGiroId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.OrdenGiro)
                     .WithMany(p => p.OrdenGiroDetalle)
@@ -7579,49 +4592,27 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiroDetalleDescuentoTecnica>(entity =>
             {
-                entity.HasComment("Almacena el descuento técnico de las ordenes de giro");
-
-                entity.Property(e => e.OrdenGiroDetalleDescuentoTecnicaId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.CriterioCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.EsPreconstruccion).HasColumnName("esPreconstruccion");
 
-                entity.Property(e => e.EsPreconstruccion)
-                    .HasColumnName("esPreconstruccion")
-                    .HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.OrdenGiroDetalleId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.SolicitudPagoFaseFacturaDescuentoId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoPagoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.OrdenGiroDetalle)
                     .WithMany(p => p.OrdenGiroDetalleDescuentoTecnica)
@@ -7631,53 +4622,25 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiroDetalleDescuentoTecnicaAportante>(entity =>
             {
-                entity.HasComment("Almacena la relación entre el aportante y el descuento técnico de la ordend e giro");
-
-                entity.Property(e => e.OrdenGiroDetalleDescuentoTecnicaAportanteId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.AportanteId).HasComment("Llave foranea a la tabla en mención");
-
                 entity.Property(e => e.ConceptoPagoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.FuenteFinanciacionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FuenteRecursosCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.OrdenGiroDetalleDescuentoTecnicaId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RequiereDescuento).HasComment("Indica si requiere descuento");
-
-                entity.Property(e => e.SolicitudPagoFaseFacturaDescuentoId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
-
-                entity.Property(e => e.ValorDescuento).HasComment("Representa la cantidad de dinero del campo correspondiente");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.FuenteFinanciacion)
                     .WithMany(p => p.OrdenGiroDetalleDescuentoTecnicaAportante)
@@ -7692,38 +4655,21 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiroDetalleEstrategiaPago>(entity =>
             {
-                entity.HasComment("Almacena la estrategia de pago de una orden giro");
-
-                entity.Property(e => e.OrdenGiroDetalleEstrategiaPagoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
                 entity.Property(e => e.EstrategiaPagoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.OrdenGiroDetalleId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.OrdenGiroDetalle)
                     .WithMany(p => p.OrdenGiroDetalleEstrategiaPago)
@@ -7736,41 +4682,21 @@ namespace asivamosffie.model.Models
                 entity.HasKey(e => e.OrdenGiroObservacionId)
                     .HasName("PK__OrdenGir__C509FDB5C73726D5");
 
-                entity.HasComment("Almacena las observaciones de una orden de giro");
-
-                entity.Property(e => e.OrdenGiroObservacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.FechaCreacion)
                     .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())")
-                    .HasComment("Fecha de creación del registro");
+                    .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observacion).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.OrdenGiroDetalleId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoObservacionCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(200)
-                    .HasComment("Usuario creación");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .HasComment("usuario que realiza modificación del registro");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
 
                 entity.HasOne(d => d.OrdenGiroDetalle)
                     .WithMany(p => p.OrdenGiroDetalleObservacion)
@@ -7781,61 +4707,35 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiroDetalleTerceroCausacion>(entity =>
             {
-                entity.HasComment("Almacena la causación de una orden de giro");
-
-                entity.Property(e => e.OrdenGiroDetalleTerceroCausacionId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.ConceptoCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ConceptoPagoCriterio)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Criterio del concepto de pago");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.EsPreconstruccion).HasColumnName("esPreconstruccion");
 
-                entity.Property(e => e.EsPreconstruccion)
-                    .HasColumnName("esPreconstruccion")
-                    .HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.OrdenGiroDetalleId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoOrigen).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.TieneDescuento).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoPagoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ValorFacturadoConcepto).HasColumnType("decimal(25, 3)");
 
-                entity.Property(e => e.ValorNetoGiro)
-                    .HasColumnType("decimal(25, 3)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorNetoGiro).HasColumnType("decimal(25, 3)");
 
                 entity.HasOne(d => d.OrdenGiroDetalle)
                     .WithMany(p => p.OrdenGiroDetalleTerceroCausacion)
@@ -7845,55 +4745,27 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiroDetalleTerceroCausacionAportante>(entity =>
             {
-                entity.HasComment("Almacena la relación de los aportantes frente a la causación de una orden de giro");
-
-                entity.Property(e => e.OrdenGiroDetalleTerceroCausacionAportanteId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.AportanteId).HasComment("Llave foranea a la tabla en mención");
-
                 entity.Property(e => e.ConceptoPagoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.CuentaBancariaId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.FuenteFinanciacionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FuenteRecursoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.OrdenGiroDetalleTerceroCausacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoOrigen).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorDescuento)
-                    .HasColumnType("decimal(38, 0)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
 
                 entity.HasOne(d => d.Aportante)
                     .WithMany(p => p.OrdenGiroDetalleTerceroCausacionAportante)
@@ -7918,51 +4790,27 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiroDetalleTerceroCausacionDescuento>(entity =>
             {
-                entity.HasComment("Almacena los descuentosde un aportante frente a una causación de una orden de giro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.OrdenGiroDetalleTerceroCausacionDescuentoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.AportanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.FuenteFinanciacionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FuenteRecursosCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.OrdenGiroDetalleTerceroCausacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoDescuentoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorDescuento)
-                    .HasColumnType("decimal(25, 0)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(25, 0)");
 
                 entity.HasOne(d => d.Aportante)
                     .WithMany(p => p.OrdenGiroDetalleTerceroCausacionDescuento)
@@ -7982,49 +4830,21 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiroObservacion>(entity =>
             {
-                entity.HasComment("Almacena las observaciones de la orden de giro");
-
-                entity.Property(e => e.OrdenGiroObservacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Archivada).HasComment("Indica si la observación esta archivada");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.FechaCreacion)
                     .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())")
-                    .HasComment("Fecha de creación del registro");
+                    .HasDefaultValueSql("(getdate())");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.IdPadre).HasComment("Llave foranea a la misma tabla");
-
-                entity.Property(e => e.MenuId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Observacion).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.OrdenGiroId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.TieneObservacion).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoObservacionCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(200)
-                    .HasComment("Usuario creación");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .HasComment("usuario que realiza modificación del registro");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
 
                 entity.HasOne(d => d.Menu)
                     .WithMany(p => p.OrdenGiroObservacion)
@@ -8040,14 +4860,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiroPago>(entity =>
             {
-                entity.HasComment("Almacena la relación de la orden del giro con el pago");
-
-                entity.Property(e => e.OrdenGiroPagoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.OrdenGiroId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroPagoId).HasComment("Llave foranea a la tabla en mención");
-
                 entity.HasOne(d => d.OrdenGiro)
                     .WithMany(p => p.OrdenGiroPago)
                     .HasForeignKey(d => d.OrdenGiroId)
@@ -8063,37 +4875,19 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiroSoporte>(entity =>
             {
-                entity.HasComment("Almacena los soportes de una orden de giro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.OrdenGiroSoporteId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.OrdenGiroDetalleId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.UrlSoporte)
-                    .HasMaxLength(1000)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.UrlSoporte).HasMaxLength(1000);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.OrdenGiroDetalle)
                     .WithMany(p => p.OrdenGiroSoporte)
@@ -8103,38 +4897,21 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiroTercero>(entity =>
             {
-                entity.HasComment("Almacena los pagos a terceros de una orden de giro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.OrdenGiroTerceroId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.MedioPagoGiroCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.OrdenGiroId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.OrdenGiro)
                     .WithMany(p => p.OrdenGiroTercero)
@@ -8144,41 +4921,21 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiroTerceroChequeGerencia>(entity =>
             {
-                entity.HasComment("Almacena los cheques gerencia de un tercero para una orden de giro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.OrdenGiroTerceroChequeGerenciaId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.NombreBeneficiario).HasMaxLength(100);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.NombreBeneficiario)
-                    .HasMaxLength(100)
-                    .HasComment("Nombre de la persona beneficiaria del cheque");
-
-                entity.Property(e => e.NumeroIdentificacionBeneficiario)
-                    .HasMaxLength(50)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.OrdenGiroTerceroId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.NumeroIdentificacionBeneficiario).HasMaxLength(50);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.OrdenGiroTercero)
                     .WithMany(p => p.OrdenGiroTerceroChequeGerencia)
@@ -8188,55 +4945,33 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<OrdenGiroTerceroTransferenciaElectronica>(entity =>
             {
-                entity.HasComment("Almacena las transferencias electronicas de un tercero para una orden de giro");
-
-                entity.Property(e => e.OrdenGiroTerceroTransferenciaElectronicaId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.BancoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.EsCuentaAhorros).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroCuenta)
                     .HasMaxLength(70)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.OrdenGiroTerceroId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TitularCuenta)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Titular de la cuenta del tercero para transferencia electronica");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TitularNumeroIdentificacion)
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasComment("Número de identificación del titular");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.OrdenGiroTercero)
                     .WithMany(p => p.OrdenGiroTerceroTransferenciaElectronica)
@@ -8246,21 +4981,19 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Perfil>(entity =>
             {
-                entity.HasComment("Almacena los perfiles");
-
-                entity.Property(e => e.PerfilId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.PerfilId).HasComment("Identificador de la tabla");
 
                 entity.Property(e => e.Eliminado)
                     .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                    .HasComment("Indica que el usuario fue eliminado (0)Usuario vigente (1)Usuario Eliminado");
 
                 entity.Property(e => e.FechaCreacion)
                     .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                    .HasComment("Fecha de creación del Usuario");
 
                 entity.Property(e => e.FechaModificacion)
                     .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                    .HasComment("Si el registro se actualiza con respecto a los campos que no son de auditoria ( Email, contraseña, IsActivo,Observaciones)");
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
@@ -8271,62 +5004,37 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
                     .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .HasComment("Email del Usuario que crea al nuevo usuario");
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .HasComment("Usuario que realizo la modificación de los datos no de auditoria");
             });
 
             modelBuilder.Entity<PlanesProgramasListaChequeoRespuesta>(entity =>
             {
-                entity.HasComment("Almacena las respuestas a los items de la lista de chequeo");
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.PlanesProgramasListaChequeoRespuestaId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación");
+                entity.Property(e => e.FechaRadicado).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.FechaRadicado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de radicado");
-
-                entity.Property(e => e.ListaChequeoItemId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Observacion)
-                    .HasMaxLength(2000)
-                    .HasComment("Observaciones de tabla en mención");
+                entity.Property(e => e.Observacion).HasMaxLength(2000);
 
                 entity.Property(e => e.RecibioRequisitoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.TieneObservaciones).HasComment("Campo que indica que tiene observaciones de la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ListaChequeoItem)
                     .WithMany(p => p.PlanesProgramasListaChequeoRespuesta)
@@ -8337,35 +5045,13 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Plantilla>(entity =>
             {
-                entity.HasComment("Almacena las plantillas para formar los diferentes pdf en el sistema");
-
-                entity.Property(e => e.PlantillaId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.Codigo)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.Contenido).HasComment("Cuerpo de la plantilla");
-
-                entity.Property(e => e.EncabezadoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.MargenAbajo).HasComment("Cantidad de pixeles de la margen de abajo");
-
-                entity.Property(e => e.MargenArriba).HasComment("Cantidad de pixeles de la margen de arriba");
-
-                entity.Property(e => e.MargenDerecha).HasComment("Cantidad de pixeles de la margen derecha");
-
-                entity.Property(e => e.MargenIzquierda).HasComment("Cantidad de pixeles de la margen izquierda");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Nombre de la plantilla");
-
-                entity.Property(e => e.PieDePaginaId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TipoPlantillaId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Encabezado)
                     .WithMany(p => p.InverseEncabezado)
@@ -8380,83 +5066,42 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<PlazoContratacion>(entity =>
             {
-                entity.HasComment("Almacena los plazos de contratación");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.PlazoContratacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.PlazoDias).HasComment("Plazo en días");
-
-                entity.Property(e => e.PlazoMeses).HasComment("Plazo en meses");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<PolizaGarantia>(entity =>
             {
-                entity.HasComment("Almacena las garantias de la póliza");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.PolizaGarantiaId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratoPolizaId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsIncluidaPoliza).HasComment("¿Está incluida en la póliza presentada?  0. No 1. Si");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoGarantiaCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(400)
-                    .HasComment("Usuario creación");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(400);
 
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(400)
-                    .HasComment("usuario que realiza modificación del registro");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(400);
 
-                entity.Property(e => e.ValorAmparo)
-                    .HasColumnType("numeric(18, 0)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorAmparo).HasColumnType("numeric(18, 0)");
 
-                entity.Property(e => e.Vigencia)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de la vigencia de la póliza");
+                entity.Property(e => e.Vigencia).HasColumnType("datetime");
 
-                entity.Property(e => e.VigenciaAmparo)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de la vigencia de amparo");
+                entity.Property(e => e.VigenciaAmparo).HasColumnType("datetime");
 
                 entity.HasOne(d => d.ContratoPoliza)
                     .WithMany(p => p.PolizaGarantia)
@@ -8467,41 +5112,20 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<PolizaGarantiaActualizacion>(entity =>
             {
-                entity.HasComment("Almacena la actualización de las garantias de una póliza");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.PolizaGarantiaActualizacionId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratoPolizaId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsIncluidaPoliza).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoGarantiaCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(400)
-                    .HasComment("Usuario creación");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(400);
 
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(400)
-                    .HasComment("usuario que realiza modificación del registro");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(400);
 
                 entity.HasOne(d => d.ContratoPoliza)
                     .WithMany(p => p.PolizaGarantiaActualizacion)
@@ -8512,45 +5136,19 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<PolizaListaChequeo>(entity =>
             {
-                entity.HasComment("Almacena las listas de chequeo de una póliza");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.PolizaListaChequeoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratoPolizaId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.CumpleDatosAseguradoBeneficiario).HasComment("Indica si cumple datos del beneficiario asegurado");
-
-                entity.Property(e => e.CumpleDatosBeneficiarioGarantiaBancaria).HasComment("Indica si cumple datos del beneficiario de garantia bancaria");
-
-                entity.Property(e => e.CumpleDatosTomadorAfianzado).HasComment("Indica si cumple datos del tomador afianzado");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.TieneCondicionesGeneralesPoliza).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneReciboPagoDatosRequeridos).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ContratoPoliza)
                     .WithMany(p => p.PolizaListaChequeo)
@@ -8561,50 +5159,23 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<PolizaObservacion>(entity =>
             {
-                entity.HasComment("Almacena las observaciones de una póliza");
-
-                entity.Property(e => e.PolizaObservacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ContratoPolizaId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoRevisionCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación");
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaRevision)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de revisión");
+                entity.Property(e => e.FechaRevision).HasColumnType("datetime");
 
-                entity.Property(e => e.Observacion).HasComment("Observación de la poliza");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(400);
 
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.ResponsableAprobacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(400)
-                    .HasComment("Usuario creación");
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(400)
-                    .HasComment("usuario que realiza modificación del registro");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(400);
 
                 entity.HasOne(d => d.ContratoPoliza)
                     .WithMany(p => p.PolizaObservacion)
@@ -8620,66 +5191,45 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Predio>(entity =>
             {
-                entity.HasComment("Almacena los predios");
-
-                entity.Property(e => e.PredioId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Activo).HasComment("Indica si el registro esta activo (0) Inactivo (1) Activo");
-
                 entity.Property(e => e.CedulaCatastral)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Cédula Catastral del predio");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Direccion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Dirección del predio");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.DocumentoAcreditacionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.InstitucionEducativaSedeId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroDocumento)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número del documento de acreditación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoPredioCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UbicacionLatitud)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Ubicación del predio coordenada Latitud");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UbicacionLongitud)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Ubicación del predio coordenada Longitud");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.InstitucionEducativaSede)
                     .WithMany(p => p.Predio)
@@ -8689,172 +5239,98 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProcesoSeleccion>(entity =>
             {
-                entity.HasComment("Almacena los procesos de selección");
-
-                entity.Property(e => e.ProcesoSeleccionId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.AlcanceParticular)
                     .HasMaxLength(5000)
-                    .IsUnicode(false)
-                    .HasComment("Descripción del Alcance");
-
-                entity.Property(e => e.CantGrupos).HasComment("Cantidad de grupos");
-
-                entity.Property(e => e.CantidadCotizaciones).HasComment("Cantidad de cotizaciones recibidas");
-
-                entity.Property(e => e.CantidadProponentes).HasComment("Indica la cantidad de proponentes según el tipo de proceso de selección . Para el caso de selección privada es solo 1.  ");
-
-                entity.Property(e => e.CantidadProponentesInvitados).HasComment("Cantidad de proponentes invitados");
-
-                entity.Property(e => e.CondicionesAsignacionPuntaje).HasComment("Condiciones de asignación de puntaje");
-
-                entity.Property(e => e.CondicionesFinancierasHabilitantes).HasComment("Condiciones financieras habilitantes");
-
-                entity.Property(e => e.CondicionesJuridicasHabilitantes).HasComment("Condiciones jurídicas habilitantes");
-
-                entity.Property(e => e.CondicionesTecnicasHabilitantes).HasComment("Condiciones técnicas habilitantes");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.CriteriosSeleccion)
                     .HasMaxLength(5000)
-                    .IsUnicode(false)
-                    .HasComment("Criterio de Selección");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsCompleto).HasComment("Indica si el proceso de selección esta Completo. 0. Incompleto, 1. Completo");
-
-                entity.Property(e => e.EsDistribucionGrupos).HasComment("¿Este proceso de selección se realiza distribución del territorio en grupos? 0. No  1. Si");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoProcesoSeleccionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EtapaProcesoSeleccionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.EvaluacionDescripcion).HasComment("Descripción de la Evaluación en Procesos de seleccion de tipo Invitaciones Cerradas y Abiertas.  ");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Justificacion)
                     .HasMaxLength(5000)
-                    .IsUnicode(false)
-                    .HasComment("Descripción de la Justificación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroProceso)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de proceso. El número se creará de manera automática y estará compuesto por las siglas (SP, SC y SA – un consecutivo automático – el año de apertura del proceso)");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Objeto)
                     .HasMaxLength(5000)
-                    .IsUnicode(false)
-                    .HasComment("Descripción del Objeto");
-
-                entity.Property(e => e.ResponsableEstructuradorUsuarioid).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ResponsableTecnicoUsuarioId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.SolicitudId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoAlcanceCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoIntervencionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoOrdenEligibilidadCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoProcesoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UrlSoporteEvaluacion)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("dirección web");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UrlSoporteProponentesSeleccionados)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<ProcesoSeleccionCotizacion>(entity =>
             {
-                entity.HasComment("Almacena las cotizaciones de los procesos de selección");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.ProcesoSeleccionCotizacionId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Descripcion).HasComment("Descripción de la cotización");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.NombreOrganizacion)
-                    .HasMaxLength(1500)
-                    .HasComment("Nombre de la organización");
-
-                entity.Property(e => e.ProcesoSeleccionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.NombreOrganizacion).HasMaxLength(1500);
 
                 entity.Property(e => e.UrlSoporte)
                     .HasMaxLength(500)
-                    .IsUnicode(false)
-                    .HasComment("Dirección web");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorCotizacion)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorCotizacion).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.ProcesoSeleccion)
                     .WithMany(p => p.ProcesoSeleccionCotizacion)
@@ -8865,55 +5341,34 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProcesoSeleccionCronograma>(entity =>
             {
-                entity.HasComment("Almacena los cronogramas de los procesos de selección");
-
-                entity.Property(e => e.ProcesoSeleccionCronogramaId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.Descripcion)
                     .HasMaxLength(5000)
-                    .IsUnicode(false)
-                    .HasComment("descripción de la Actividad");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoActividadCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EtapaActualProcesoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaMaxima)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha máxima de cronograma");
+                entity.Property(e => e.FechaMaxima).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.NumeroActividad).HasComment("Numero de la actividad en el cronograma");
-
-                entity.Property(e => e.ProcesoSeleccionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ProcesoSeleccion)
                     .WithMany(p => p.ProcesoSeleccionCronograma)
@@ -8924,57 +5379,34 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProcesoSeleccionCronogramaMonitoreo>(entity =>
             {
-                entity.HasComment("Almacena el monitoreo sobre el cronograma de los procesos de selección");
-
-                entity.Property(e => e.ProcesoSeleccionCronogramaMonitoreoId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.Descripcion)
                     .HasMaxLength(5000)
-                    .IsUnicode(false)
-                    .HasComment("Descripción del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoActividadCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EtapaActualProcesoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaMaxima)
-                    .HasColumnType("datetime")
-                    .HasComment("fecha máxima de monitoreo de cronograma");
+                entity.Property(e => e.FechaMaxima).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.NumeroActividad).HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.ProcesoSeleccionCronogramaId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ProcesoSeleccionMonitoreoId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ProcesoSeleccionMonitoreo)
                     .WithMany(p => p.ProcesoSeleccionCronogramaMonitoreo)
@@ -8984,58 +5416,34 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProcesoSeleccionGrupo>(entity =>
             {
-                entity.HasComment("Almacena los grupos del proceso de selección");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.ProcesoSeleccionGrupoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NombreGrupo)
                     .HasMaxLength(600)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del grupo");
-
-                entity.Property(e => e.PlazoMeses).HasComment("plazo en meses");
-
-                entity.Property(e => e.ProcesoSeleccionId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoPresupuestoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Valor)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.Valor).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.ValorMaximoCategoria)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Valor maximo de categoría de ejecución");
+                entity.Property(e => e.ValorMaximoCategoria).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.ValorMinimoCategoria)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Valor minimo de categoría de ejecución  ");
+                entity.Property(e => e.ValorMinimoCategoria).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.ProcesoSeleccion)
                     .WithMany(p => p.ProcesoSeleccionGrupo)
@@ -9046,39 +5454,24 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProcesoSeleccionIntegrante>(entity =>
             {
-                entity.HasComment("Almacena los integrantes del proceso de selección");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.ProcesoSeleccionIntegranteId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NombreIntegrante)
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del integrante");
-
-                entity.Property(e => e.PorcentajeParticipacion).HasComment("% de Participación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ProcesoSeleccion)
                     .WithMany(p => p.ProcesoSeleccionIntegrante)
@@ -9095,46 +5488,28 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProcesoSeleccionMonitoreo>(entity =>
             {
-                entity.HasComment("Almacena el proceso de monitoreo de los procesos de selección");
-
-                entity.Property(e => e.ProcesoSeleccionMonitoreoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EnviadoComiteTecnico).HasComment("Indica que fue enviado al comité técnico");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoActividadCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroProceso)
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.ProcesoSeleccionId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ProcesoSeleccion)
                     .WithMany(p => p.ProcesoSeleccionMonitoreo)
@@ -9145,27 +5520,17 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProcesoSeleccionObservacion>(entity =>
             {
-                entity.HasComment("Almacena las observaciones del proceso de selección");
-
-                entity.Property(e => e.ProcesoSeleccionObservacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Observacion)
                     .IsRequired()
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Observación asociada al Proceso");
-
-                entity.Property(e => e.ProcesoSeleccionId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ProcesoSeleccion)
                     .WithMany(p => p.ProcesoSeleccionObservacion)
@@ -9176,76 +5541,49 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProcesoSeleccionProponente>(entity =>
             {
-                entity.HasComment("Almacena los proponente de un proceso de selección");
-
-                entity.Property(e => e.ProcesoSeleccionProponenteId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.CedulaRepresentanteLegal)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Cédula del representante legal");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.DireccionProponente)
                     .HasMaxLength(500)
-                    .IsUnicode(false)
-                    .HasComment("Dirección del proponente");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.EmailProponente).HasComment("dirección de correo electronico del proponente");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.LocalizacionIdMunicipio)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Identificador del municipio ");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NombreProponente)
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del proponente como Natural, juridico o Unión Temporal o Consorcio");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NombreRepresentanteLegal)
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del representante legal");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroIdentificacion)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de identificación del proponente");
-
-                entity.Property(e => e.ProcesoSeleccionId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TelefonoProponente)
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasComment("Teléfono del proponente");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoIdentificacionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoProponenteCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(200)
-                    .HasComment("Usuario creación");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .HasComment("usuario que realiza modificación del registro");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
 
                 entity.HasOne(d => d.ProcesoSeleccion)
                     .WithMany(p => p.ProcesoSeleccionProponente)
@@ -9287,35 +5625,19 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Programacion>(entity =>
             {
-                entity.HasComment("Almacena la programación de un contrato de construcción");
-
-                entity.Property(e => e.ProgramacionId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.Actividad)
                     .IsRequired()
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Descripción de actividad");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ContratoConstruccionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaFin).HasColumnType("datetime");
 
-                entity.Property(e => e.Duracion).HasComment("Fecha Fin de la actividad");
-
-                entity.Property(e => e.EsRutaCritica).HasComment("Identifica si la actividad es ruta critica: El usuario deberá indicar con un número “1” si la actividad, marcada con tipo “I”, pertenece a la ruta crítica del proceso, validando que no se ubique el número uno en un tipo de actividad C o SC.");
-
-                entity.Property(e => e.FechaFin)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha fin de la actividad");
-
-                entity.Property(e => e.FechaInicio)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha inicio de la actividad");
+                entity.Property(e => e.FechaInicio).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoActividadCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ContratoConstruccion)
                     .WithMany(p => p.Programacion)
@@ -9326,38 +5648,18 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProgramacionPersonalContrato>(entity =>
             {
-                entity.HasComment("Almacena la cantidad de personas programadas para un número N de semanas");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ProgramacionPersonalContratoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.CantidadPersonal).HasComment("Cantidad de personal");
-
-                entity.Property(e => e.ContratoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.NumeroSemana).HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.ProyectoId).HasComment("Identificador del proyecto");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Contrato)
                     .WithMany(p => p.ProgramacionPersonalContrato)
@@ -9374,133 +5676,72 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Proyecto>(entity =>
             {
-                entity.HasComment("Almacena los proyectos");
-
                 entity.HasIndex(e => e.LlaveMen)
                     .HasName("uk_llavemen")
                     .IsUnique();
 
-                entity.Property(e => e.ProyectoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.CantPrediosPostulados).HasComment("Número de predios postulados");
-
-                entity.Property(e => e.ConvocatoriaId).HasComment("Llave foranea a la tabla en mención");
-
                 entity.Property(e => e.CoordinacionResponsableCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EnConvocatoria).HasComment("Indica que el proyecto hace parte de una convocatoria (1. Si, 0. No)");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoJuridicoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoProgramacionCodigo)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoProyectoCodigoOld)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.EstadoProyectoInterventoriaCodigo)
-                    .HasMaxLength(100)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                entity.Property(e => e.EstadoProyectoInterventoriaCodigo).HasMaxLength(100);
 
-                entity.Property(e => e.EstadoProyectoObraCodigo)
-                    .HasMaxLength(100)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                entity.Property(e => e.EstadoProyectoObraCodigo).HasMaxLength(100);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaSesionJunta)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de la sesión de junta");
-
-                entity.Property(e => e.InstitucionEducativaId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaSesionJunta).HasColumnType("datetime");
 
                 entity.Property(e => e.LlaveMen)
                     .HasColumnName("LlaveMEN")
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Llave Men");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.LocalizacionIdMunicipio)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Municipio donde se ejecutara el proyecto");
-
-                entity.Property(e => e.NumeroActaJunta).HasComment("Número del acta en el que se aprueba la incorporación del proyecto.");
-
-                entity.Property(e => e.PlazoDiasInterventoria).HasComment("Plazo en dias de la interventoria");
-
-                entity.Property(e => e.PlazoDiasObra).HasComment("Plazo en días de la obra");
-
-                entity.Property(e => e.PlazoMesesInterventoria).HasComment("Plazo en meses de la interventoria");
-
-                entity.Property(e => e.PlazoMesesObra).HasComment("Plazo en meses de la obra");
-
-                entity.Property(e => e.PredioPrincipalId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.SedeId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TieneEstadoFase1Diagnostico).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneEstadoFase1EyD).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoIntervencionCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoPredioCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UrlMonitoreo)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("URL para monitoreo en línea");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorInterventoria)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorInterventoria).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.ValorObra)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorObra).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.ValorTotal)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorTotal).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.InstitucionEducativa)
                     .WithMany(p => p.ProyectoInstitucionEducativa)
@@ -9525,64 +5766,32 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProyectoAdministrativo>(entity =>
             {
-                entity.HasComment("Almacena los proyectos administrativos");
+                entity.Property(e => e.FechaCreado).HasColumnType("datetime");
 
-                entity.Property(e => e.ProyectoAdministrativoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.Enviado).HasComment("Indica que fue enviado el proyecto administrativo");
-
-                entity.Property(e => e.FechaCreado)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del proyecto administrativo");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<ProyectoAdministrativoAportante>(entity =>
             {
-                entity.HasComment("Almacena la relación del aportante de proyectos administrativos");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ProyectoAdministrativoAportanteId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.AportanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaEdicion)
-                    .HasColumnType("datetime")
-                    .HasComment("fecha en que se hace la edición");
-
-                entity.Property(e => e.ProyectoAdminstrativoId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaEdicion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioEdicion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario que raliza la edición");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ProyectoAdminstrativo)
                     .WithMany(p => p.ProyectoAdministrativoAportante)
@@ -9593,49 +5802,25 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProyectoAportante>(entity =>
             {
-                entity.HasComment("Almacena la relación del aportante con el proyecto");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.ProyectoAportanteId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.AportanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.CofinanciacionDocumentoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.ProyectoId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorInterventoria)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorInterventoria).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.ValorObra)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorObra).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.ValorTotalAportante)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorTotalAportante).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.Aportante)
                     .WithMany(p => p.ProyectoAportante)
@@ -9659,70 +5844,38 @@ namespace asivamosffie.model.Models
             {
                 entity.ToTable("ProyectoEntregaETC");
 
-                entity.HasComment("Almacena la entrega de los proyectos a ETC");
-
                 entity.HasIndex(e => e.InformeFinalId)
                     .HasName("UK_informe_final_proyecto_etc")
                     .IsUnique();
 
-                entity.Property(e => e.ProyectoEntregaEtcid)
-                    .HasColumnName("ProyectoEntregaETCId")
-                    .HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.ProyectoEntregaEtcid).HasColumnName("ProyectoEntregaETCId");
 
-                entity.Property(e => e.ActaBienesServicios).HasComment("Acta de bienes y servicios");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaEntregaDocumentosEtc)
                     .HasColumnName("FechaEntregaDocumentosETC")
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de entrega de documentación a la ETC");
+                    .HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaActaBienesServicios)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma del acta de bienes y servicios de la ETC");
+                entity.Property(e => e.FechaFirmaActaBienesServicios).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFirmaActaEngregaFisica)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha firma del acta de la entrega fisica de la ETC");
+                entity.Property(e => e.FechaFirmaActaEngregaFisica).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaRecorridoObra)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de recorrido de obra a la entrega de ETC");
-
-                entity.Property(e => e.InformeFinalId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaRecorridoObra).HasColumnType("datetime");
 
                 entity.Property(e => e.NumRadicadoDocumentosEntregaEtc)
                     .HasColumnName("NumRadicadoDocumentosEntregaETC")
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasComment("Número de radicado de entrega de documentos a la ETC");
-
-                entity.Property(e => e.NumRepresentantesRecorrido).HasComment("Número de representantes que realizarán recorrido");
-
-                entity.Property(e => e.RegistroCompletoActaBienesServicios).HasComment("Registro completo del acta de bienes y servicios");
-
-                entity.Property(e => e.RegistroCompletoRecorridoObra).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoRemision).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.UrlActaEntregaFisica).HasComment("URL donde se encuentra el campo en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.InformeFinal)
                     .WithOne(p => p.ProyectoEntregaEtc)
@@ -9736,35 +5889,19 @@ namespace asivamosffie.model.Models
                 entity.HasKey(e => e.ProyectoFuenteId)
                     .HasName("PK_ProyectoAportante_copy1");
 
-                entity.HasComment("Almacena la relación entre una fuente y un proyecto");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.ProyectoFuenteId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.FuenteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ProyectoId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Fuente)
                     .WithMany(p => p.ProyectoFuentes)
@@ -9797,29 +5934,15 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProyectoPredio>(entity =>
             {
-                entity.HasComment("Almacena los predios relacionados al proyecto");
-
-                entity.Property(e => e.ProyectoPredioId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Activo).HasComment("Indica si el registro esta activo (0) Inactivo (1) Activo");
-
                 entity.Property(e => e.EstadoJuridicoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.PredioId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ProyectoId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Predio)
                     .WithMany(p => p.ProyectoPredio)
@@ -9834,64 +5957,38 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProyectoRequisitoTecnico>(entity =>
             {
-                entity.HasComment("Almacena los requisitos técnicos de un proyectos");
-
-                entity.Property(e => e.ProyectoRequisitoTecnicoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.CantidadAprobadas).HasComment("Cantidad de  hojas de vida  aprobadas para  cada perfil");
-
-                entity.Property(e => e.CantidadHojasDeVida).HasComment("Cantidad de  hojas de vida  requeridas para  cada perfil");
-
-                entity.Property(e => e.CantidadRecibidas).HasComment("Cantidad de  hojas de vida  recibidas para  cada perfil");
-
                 entity.Property(e => e.DireccionUrl)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("ubicación de las hojas de vida entregadas por el constructor y el Acta de aprobación de personal.");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.Estado).HasComment("Completo, cuando el usuario ha registrado todos los  perfiles requeridos, según lo indicado en la pregunta  ¿Cuántos perfiles diferentes se requieren en el proyecto? o  Incompleto, cuando falta información por registrar.");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoHojasDeVidaCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoRequisitoCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaAprobacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de aprobación");
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Observacion)
                     .IsRequired()
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Observación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.PerfilCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.ProyectoId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Proyecto)
                     .WithMany(p => p.ProyectoRequisitoTecnico)
@@ -9902,53 +5999,34 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<RegistroPresupuestal>(entity =>
             {
-                entity.HasComment("Almacena los registros presupuestales relacionados a un aportante");
-
                 entity.HasIndex(e => new { e.AportanteId, e.NumeroRp, e.FechaRp, e.CofinanciacionDocumentoId })
                     .HasName("UK_RP")
                     .IsUnique();
 
-                entity.Property(e => e.RegistroPresupuestalId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.AportanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.CofinanciacionDocumentoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaRp)
                     .HasColumnName("FechaRP")
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de registro presupuestal");
+                    .HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroRp)
                     .HasColumnName("NumeroRP")
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de RP");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ValorRp)
                     .HasColumnType("numeric(18, 2)")
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                    .HasDefaultValueSql("((0))");
 
                 entity.HasOne(d => d.Aportante)
                     .WithMany(p => p.RegistroPresupuestal)
@@ -9963,57 +6041,28 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<RendimientosIncorporados>(entity =>
             {
-                entity.HasComment("Almacena los rendimientos asociados a un cargue de pagos de rendimientos");
-
-                entity.Property(e => e.RendimientosIncorporadosId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Aprobado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que esta aprobado si tiene valor = 1");
-
-                entity.Property(e => e.CarguePagosRendimientosId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Consistente).HasComment("Indica si es consistente");
+                entity.Property(e => e.Aprobado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.CuentaBancaria)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de la cuenta bancaria");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaRendimientos)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de los rendimientos incorporados");
+                entity.Property(e => e.FechaRendimientos).HasColumnType("datetime");
 
-                entity.Property(e => e.Incorporados)
-                    .HasColumnType("decimal(25, 3)")
-                    .HasComment("Valor del rendimiento incorporado");
+                entity.Property(e => e.Incorporados).HasColumnType("decimal(25, 3)");
 
-                entity.Property(e => e.ProvisionGravamenFinanciero)
-                    .HasColumnType("decimal(25, 3)")
-                    .HasComment("Valor de la provisión del gravamen financiero");
+                entity.Property(e => e.ProvisionGravamenFinanciero).HasColumnType("decimal(25, 3)");
 
-                entity.Property(e => e.RendimientoIncorporar)
-                    .HasColumnType("decimal(25, 3)")
-                    .HasComment("Valor del rendimiento a incorporar");
+                entity.Property(e => e.RendimientoIncorporar).HasColumnType("decimal(25, 3)");
 
-                entity.Property(e => e.Row).HasComment("Identificador de la fila");
+                entity.Property(e => e.TotalGastosBancarios).HasColumnType("decimal(25, 3)");
 
-                entity.Property(e => e.TotalGastosBancarios)
-                    .HasColumnType("decimal(25, 3)")
-                    .HasComment("Valor del total de gastos bancarios");
+                entity.Property(e => e.TotalGravamenFinancieroDescontado).HasColumnType("decimal(25, 3)");
 
-                entity.Property(e => e.TotalGravamenFinancieroDescontado)
-                    .HasColumnType("decimal(25, 3)")
-                    .HasComment("Valor del total del gravamen financiero descontado");
+                entity.Property(e => e.TotalRendimientosGenerados).HasColumnType("decimal(25, 3)");
 
-                entity.Property(e => e.TotalRendimientosGenerados)
-                    .HasColumnType("decimal(25, 3)")
-                    .HasComment("Valor del total de rendimiento generados");
-
-                entity.Property(e => e.Visitas)
-                    .HasColumnType("decimal(25, 3)")
-                    .HasComment("Cantidad de visitas");
+                entity.Property(e => e.Visitas).HasColumnType("decimal(25, 3)");
 
                 entity.HasOne(d => d.CarguePagosRendimientos)
                     .WithMany(p => p.RendimientosIncorporados)
@@ -10029,52 +6078,33 @@ namespace asivamosffie.model.Models
 
                 entity.ToTable("RepresentanteETCRecorrido");
 
-                entity.HasComment("Almacena las personas representantes de una ETC");
-
-                entity.Property(e => e.RepresentanteEtcid)
-                    .HasColumnName("RepresentanteETCId")
-                    .HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.RepresentanteEtcid).HasColumnName("RepresentanteETCId");
 
                 entity.Property(e => e.Cargo)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Cargo en la entidad territorial");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Dependencia)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Nombre de la dependencia del representante de la ETC");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del representante que hae el recorrido de la ETC");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ProyectoEntregaEtcid)
-                    .HasColumnName("ProyectoEntregaETCId")
-                    .HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
+                entity.Property(e => e.ProyectoEntregaEtcid).HasColumnName("ProyectoEntregaETCId");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ProyectoEntregaEtc)
                     .WithMany(p => p.RepresentanteEtcrecorrido)
@@ -10087,30 +6117,20 @@ namespace asivamosffie.model.Models
             {
                 entity.HasKey(e => e.RequisitoTecnicoRadicado1);
 
-                entity.HasComment("Almacena los radicados de los requisitos técnicos");
+                entity.Property(e => e.RequisitoTecnicoRadicado1).HasColumnName("RequisitoTecnicoRadicado");
 
-                entity.Property(e => e.RequisitoTecnicoRadicado1)
-                    .HasColumnName("RequisitoTecnicoRadicado")
-                    .HasComment("Identificador del Radicado FFIE en en requisito tpecnico");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroRadicadoFfie)
                     .IsRequired()
                     .HasColumnName("NumeroRadicadoFFIE")
                     .HasMaxLength(20)
-                    .IsUnicode(false)
-                    .HasComment("Número de radicado en FFIE de aprobación de Hojas de vida");
-
-                entity.Property(e => e.ProyectoRequisitoTecnicoId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ProyectoRequisitoTecnico)
                     .WithMany(p => p.RequisitoTecnicoRadicado)
@@ -10121,63 +6141,36 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoActuacionDerivada>(entity =>
             {
-                entity.HasComment("Almacena el seguimiento de las controversias de actuación");
-
-                entity.Property(e => e.SeguimientoActuacionDerivadaId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ControversiaActuacionId).HasComment("Llave foranea a la tabla en mención");
-
                 entity.Property(e => e.DescripciondeActuacionAdelantada)
                     .HasMaxLength(1500)
-                    .IsUnicode(false)
-                    .HasComment("Descripción de la actuación adelantada");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsCompleto).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.EsRequiereFiduciaria).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoActuacionDerivadaCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaActuacionDerivada)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de la actuación derivada");
+                entity.Property(e => e.FechaActuacionDerivada).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.NumeroActuacionDerivada)
-                    .HasMaxLength(100)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.Observaciones).HasComment("Observaciones de tabla en mención");
+                entity.Property(e => e.NumeroActuacionDerivada).HasMaxLength(100);
 
                 entity.Property(e => e.RutaSoporte)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Ruta del soporte");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ControversiaActuacion)
                     .WithMany(p => p.SeguimientoActuacionDerivada)
@@ -10188,116 +6181,38 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoDiario>(entity =>
             {
-                entity.HasComment("Almacena los seguimientos diarios de una contratación de un proyecto");
+                entity.Property(e => e.CausaIndisponibilidadEquipoCodigo).HasMaxLength(2);
 
-                entity.Property(e => e.SeguimientoDiarioId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.CausaIndisponibilidadMaterialCodigo).HasMaxLength(2);
 
-                entity.Property(e => e.CantidadPersonalProgramado).HasComment("Cantidad de personal programado");
+                entity.Property(e => e.CausaIndisponibilidadProductividadCodigo).HasMaxLength(2);
 
-                entity.Property(e => e.CantidadPersonalTrabajando).HasComment("Cantidad de personal trabajando");
+                entity.Property(e => e.DisponibilidadEquipoCodigo).HasMaxLength(2);
 
-                entity.Property(e => e.CausaIndisponibilidadEquipoCodigo)
-                    .HasMaxLength(2)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                entity.Property(e => e.DisponibilidadMaterialCodigo).HasMaxLength(2);
 
-                entity.Property(e => e.CausaIndisponibilidadMaterialCodigo)
-                    .HasMaxLength(2)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                entity.Property(e => e.EstadoCodigo).HasMaxLength(2);
 
-                entity.Property(e => e.CausaIndisponibilidadProductividadCodigo)
-                    .HasMaxLength(2)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratacionProyectoId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.DisponibilidadEquipoCodigo)
-                    .HasMaxLength(2)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                entity.Property(e => e.FechaSeguimiento).HasColumnType("date");
 
-                entity.Property(e => e.DisponibilidadEquipoObservaciones).HasComment("Observaciones de la disponibilidad del equipo");
+                entity.Property(e => e.FechaValidacion).HasColumnType("datetime");
 
-                entity.Property(e => e.DisponibilidadMaterialCodigo)
-                    .HasMaxLength(2)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                entity.Property(e => e.FechaVerificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.DisponibilidadMaterialObservaciones).HasComment("Observaciones de la disponibilidad del material");
-
-                entity.Property(e => e.DisponibilidadPersonal).HasComment("Indica si hay disponibilidad de personal");
-
-                entity.Property(e => e.DisponibilidadPersonalObservaciones).HasComment("Observaciones de la disponibilidad de personal");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EstadoCodigo)
-                    .HasMaxLength(2)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.FechaSeguimiento)
-                    .HasColumnType("date")
-                    .HasComment("Fecha de sguimiento ");
-
-                entity.Property(e => e.FechaValidacion)
-                    .HasColumnType("datetime")
-                    .HasComment("fecha de validación");
-
-                entity.Property(e => e.FechaVerificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de verificación");
-
-                entity.Property(e => e.NumeroHorasRetrasoEquipo).HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.NumeroHorasRetrasoMaterial).HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.NumeroHorasRetrasoPersonal).HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.NumeroHorasRetrasoProductividad).HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ProductividadCodigo)
-                    .HasMaxLength(2)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.ProductividadObservaciones).HasComment("Observaciones de productividad");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoValidacion).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoVerificacion).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.SeGeneroRetrasoEquipo).HasComment("Indica si se genero retrazo del equipo");
-
-                entity.Property(e => e.SeGeneroRetrasoMaterial).HasComment("Indica si se genero retrazo del material");
-
-                entity.Property(e => e.SeGeneroRetrasoPersonal).HasComment("Indica si se genero retrazo del personal");
-
-                entity.Property(e => e.SeGeneroRetrasoProductividad).HasComment("Indica si se genero retrazo de la productividad");
-
-                entity.Property(e => e.SeguimientoSemanalId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.ProductividadCodigo).HasMaxLength(2);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ContratacionProyecto)
                     .WithMany(p => p.SeguimientoDiario)
@@ -10314,38 +6229,18 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoDiarioObservaciones>(entity =>
             {
-                entity.HasComment("Almacena las observaciones de un seguimiento diario");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SeguimientoDiarioObservacionesId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Archivado).HasComment("Indica si la observación esta archivada");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsSupervision).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observaciones).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.SeguimientoDiarioId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.SeguimientoDiario)
                     .WithMany(p => p.SeguimientoDiarioObservaciones)
@@ -10355,83 +6250,39 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanal>(entity =>
             {
-                entity.HasComment("Almacena los seguimientos semanales de una contratación de un proyecto");
-
-                entity.Property(e => e.SeguimientoSemanalId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ContratacionProyectoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
                 entity.Property(e => e.EstadoMuestrasCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoSeguimientoSemanalCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaFin)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha fin de la actividad");
+                entity.Property(e => e.FechaFin).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaInicio)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha inicio de la actividad");
+                entity.Property(e => e.FechaInicio).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacionAvalar)
-                    .HasColumnType("datetime")
-                    .HasComment("fecha de modificación para avalar");
+                entity.Property(e => e.FechaModificacionAvalar).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacionVerificar)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de modificación para verificar");
+                entity.Property(e => e.FechaModificacionVerificar).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaRegistroCompletoApoyo)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha del registro completo por parte del apoyo a la supervisión");
+                entity.Property(e => e.FechaRegistroCompletoApoyo).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaRegistroCompletoInterventor)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de registro completo del interventor");
+                entity.Property(e => e.FechaRegistroCompletoInterventor).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaRegistroCompletoSupervisor)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha del registro completo por parte del supervisor");
-
-                entity.Property(e => e.NumeroSemana).HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoAvalar).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoMuestras).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoVerificar).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.FechaRegistroCompletoSupervisor).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ContratacionProyecto)
                     .WithMany(p => p.SeguimientoSemanal)
@@ -10442,51 +6293,17 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalAvanceFinanciero>(entity =>
             {
-                entity.HasComment("Almacena el avance financieron del seguimiento semanal");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SeguimientoSemanalAvanceFinancieroId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.GenerarAlerta).HasComment("Indica que se genera alerta por incumplimiento del avance financiero");
-
-                entity.Property(e => e.Observacion).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisor).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RequiereObservacion).HasComment("Indica si requiere observación");
-
-                entity.Property(e => e.SeguimientoSemanalId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ObservacionApoyo)
                     .WithMany(p => p.SeguimientoSemanalAvanceFinancieroObservacionApoyo)
@@ -10507,59 +6324,26 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalAvanceFisico>(entity =>
             {
-                entity.HasComment("Almacena el avance físico del seguimiento semanal");
-
-                entity.Property(e => e.SeguimientoSemanalAvanceFisicoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.AvanceFisicoSemanal)
-                    .HasColumnType("decimal(18, 3)")
-                    .HasComment("Valorsegún unidad de medida");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.AvanceFisicoSemanal).HasColumnType("decimal(18, 3)");
 
                 entity.Property(e => e.EstadoObraCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ProgramacionSemanal)
-                    .HasColumnType("decimal(18, 3)")
-                    .HasComment("Cuantia de la programación semanal");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisor).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.SeguimientoSemanalId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.ProgramacionSemanal).HasColumnType("decimal(18, 3)");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ObservacionApoyo)
                     .WithMany(p => p.SeguimientoSemanalAvanceFisicoObservacionApoyo)
@@ -10580,39 +6364,21 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalAvanceFisicoProgramacion>(entity =>
             {
-                entity.HasComment("Almacena la relación de la programación respecto al avance físico del seguimiento semanal");
+                entity.Property(e => e.AvanceFisicoCapitulo).HasColumnType("decimal(38, 3)");
 
-                entity.Property(e => e.SeguimientoSemanalAvanceFisicoProgramacionId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.AvanceFisicoCapitulo)
-                    .HasColumnType("decimal(38, 3)")
-                    .HasComment("División jerarquica del avance físico");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.ProgramacionCapitulo).HasColumnType("decimal(3, 0)");
 
-                entity.Property(e => e.ProgramacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.SeguimientoSemanalAvanceFisicoId).HasComment("Llave foranea a la tabla en mención");
-
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Programacion)
                     .WithMany(p => p.SeguimientoSemanalAvanceFisicoProgramacion)
@@ -10629,38 +6395,18 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalGestionObra>(entity =>
             {
-                entity.HasComment("Almacena la gestión de obra del seguimiento semanal");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SeguimientoSemanalGestionObraId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.SeguimientoSemanalId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.SeguimientoSemanal)
                     .WithMany(p => p.SeguimientoSemanalGestionObra)
@@ -10671,49 +6417,17 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalGestionObraAlerta>(entity =>
             {
-                entity.HasComment("Almacena las alertas relacionadas con la gestión de obra del seguimiento semanal");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SeguimientoSemanalGestionObraAlertaId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Alerta).HasComment("Descripción de la alerta");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisor).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.SeIdentificaronAlertas).HasComment("Indica si se identificaron alertas");
-
-                entity.Property(e => e.SeguimientoSemanalGestionObraId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ObservacionApoyo)
                     .WithMany(p => p.SeguimientoSemanalGestionObraAlertaObservacionApoyo)
@@ -10734,64 +6448,18 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalGestionObraAmbiental>(entity =>
             {
-                entity.HasComment("Almacena la gestión de obra ambiental del seguimiento semanal");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SeguimientoSemanalGestionObraAmbientalId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.ManejoMaterialesInsumoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ManejoOtroId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ManejoResiduosConstruccionDemolicionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ManejoResiduosPeligrososEspecialesId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisor).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.SeEjecutoGestionAmbiental).HasComment("Indica si se ejecuto la gestión ambiental");
-
-                entity.Property(e => e.SeguimientoSemanalGestionObraId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TieneManejoMaterialesInsumo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneManejoOtro).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneManejoResiduosConstruccionDemolicion).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneManejoResiduosPeligrososEspeciales).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ManejoMaterialesInsumo)
                     .WithMany(p => p.SeguimientoSemanalGestionObraAmbiental)
@@ -10832,47 +6500,17 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalGestionObraCalidad>(entity =>
             {
-                entity.HasComment("Almacena la gestión de obra calidad del seguimiento semanal");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SeguimientoSemanalGestionObraCalidadId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisor).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.SeRealizaronEnsayosLaboratorio).HasComment("Indica si se realizaron ensayos de laboratorio");
-
-                entity.Property(e => e.SeguimientoSemanalGestionObraId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ObservacionApoyo)
                     .WithMany(p => p.SeguimientoSemanalGestionObraCalidadObservacionApoyo)
@@ -10893,71 +6531,21 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalGestionObraSeguridadSalud>(entity =>
             {
-                entity.HasComment("Almacena la gestión de obrade seguridad y salud del seguimiento semanal");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SeguimientoSemanalGestionObraSeguridadSaludId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.CantidadAccidentes).HasComment("Cantidad de accidentes");
+                entity.Property(e => e.TemaCapacitacion).HasMaxLength(300);
 
-                entity.Property(e => e.CumpleRevisionElementosProyeccion).HasComment("Indica si cumple revisión de elementos de protección");
-
-                entity.Property(e => e.CumpleRevisionSenalizacion).HasComment("Indica si cumple revisión de señalización");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionCapacitacion).HasComment("Observaciones de la capacitación");
-
-                entity.Property(e => e.ObservacionRevisionElementosProteccion).HasComment("Observaciones en la revisión de elementos de protección");
-
-                entity.Property(e => e.ObservacionRevisionSenalizacion).HasComment("Observaciones en la revisión de la señalización");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisor).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.SeRealizoCapacitacion).HasComment("Indica si se realizo capacitación");
-
-                entity.Property(e => e.SeRealizoRevisionElementosProteccion).HasComment("Indica si se realizo revisión de elementos de protección");
-
-                entity.Property(e => e.SeRealizoRevisionSenalizacion).HasComment("Indica si se realizo revisión de señalización");
-
-                entity.Property(e => e.SeguimientoSemanalGestionObraId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TemaCapacitacion)
-                    .HasMaxLength(300)
-                    .HasComment("Descripción del tema de capacitación");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.UrlSoporteGestion)
-                    .HasMaxLength(255)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.UrlSoporteGestion).HasMaxLength(255);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ObservacionApoyo)
                     .WithMany(p => p.SeguimientoSemanalGestionObraSeguridadSaludObservacionApoyo)
@@ -10978,61 +6566,15 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalGestionObraSocial>(entity =>
             {
-                entity.HasComment("Almacena la gestión de obra social del seguimiento semanal");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SeguimientoSemanalGestionObraSocialId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.CantidadEmpleosDirectos).HasComment("Cantidad de empleos directos");
+                entity.Property(e => e.UrlSoporteGestion).HasMaxLength(500);
 
-                entity.Property(e => e.CantidadEmpleosIndirectos).HasComment("Cantidad de empleos indirectos");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(50);
 
-                entity.Property(e => e.CantidadTotalEmpleos).HasComment("Cantidad de total de empleos");
-
-                entity.Property(e => e.Conclusion).HasComment("Conclusión del tema de la comunidad");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionRealizaronReuniones).HasComment("Observaciones si realizaron reuniones");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisor).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.SeRealizaronReuniones).HasComment("Indica si se realizaron reuniones");
-
-                entity.Property(e => e.SeguimientoSemanalGestionObraId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TemaComunidad).HasComment("Descripción del tema de comunidad");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.UrlSoporteGestion)
-                    .HasMaxLength(500)
-                    .HasComment("URL donde se encuentra el campo en mención");
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(50)
-                    .HasComment("Usuario creación");
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(50)
-                    .HasComment("usuario que realiza modificación del registro");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(50);
 
                 entity.HasOne(d => d.ObservacionApoyo)
                     .WithMany(p => p.SeguimientoSemanalGestionObraSocialObservacionApoyo)
@@ -11053,48 +6595,23 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalObservacion>(entity =>
             {
-                entity.HasComment("Almacena las observaciones sdel seguimiento semanal de obra");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SeguimientoSemanalObservacionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Archivada).HasComment("Indica si la observación esta archivada");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsSupervisor).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observacion).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.ObservacionPadreId).HasComment("Llave foranea a la misma tabla");
-
-                entity.Property(e => e.SeguimientoSemanalId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TieneObservacion).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoObservacionCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.SeguimientoSemanal)
                     .WithMany(p => p.SeguimientoSemanalObservacion)
@@ -11105,36 +6622,18 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalPersonalObra>(entity =>
             {
-                entity.HasComment("Almacena el personal de obra de seguimiento semanal");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SeguimientoSemanalPersonalObraId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.CantidadPersonal).HasComment("Cantidad de personal");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.SeguimientoSemanalId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.SeguimientoSemanal)
                     .WithMany(p => p.SeguimientoSemanalPersonalObra)
@@ -11145,57 +6644,23 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalRegistrarComiteObra>(entity =>
             {
-                entity.HasComment("Almacena los comités de obra del seguimiento semanal");
+                entity.Property(e => e.FechaComite).HasColumnType("datetime");
 
-                entity.Property(e => e.SeguimientoSemanalRegistrarComiteObraId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaComite)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha del comité de obra");
+                entity.Property(e => e.NumeroComite).HasMaxLength(255);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.NumeroComite)
-                    .HasMaxLength(255)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisor).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.SeguimientoSemanalId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.UrlSoporteComite)
-                    .HasMaxLength(500)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.UrlSoporteComite).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ObservacionApoyo)
                     .WithMany(p => p.SeguimientoSemanalRegistrarComiteObraObservacionApoyo)
@@ -11216,51 +6681,19 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalRegistroFotografico>(entity =>
             {
-                entity.HasComment("Almacena el registro fotografico del seguimiento semanal");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SeguimientoSemanalRegistroFotograficoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Descripcion).HasComment("Descripción del registro");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.ObservacionApoyoId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorId).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyo).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisor).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.SeguimientoSemanalId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TieneObservacionApoyo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisor).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.UrlSoporteFotografico)
-                    .HasMaxLength(500)
-                    .HasComment("URL donde se encuentra el campo en mención");
+                entity.Property(e => e.UrlSoporteFotografico).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ObservacionApoyo)
                     .WithMany(p => p.SeguimientoSemanalRegistroFotograficoObservacionApoyo)
@@ -11281,89 +6714,17 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalReporteActividad>(entity =>
             {
-                entity.HasComment("Almacena el reporte de actividades del seguimiento semanal");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SeguimientoSemanalReporteActividadId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ActividadAdministrativaFinanciera).HasComment("Descripción de la actividad por financiera");
-
-                entity.Property(e => e.ActividadAdministrativaFinancieraSiguiente).HasComment("Descripción de la siguiente actividad por financiera");
-
-                entity.Property(e => e.ActividadLegal).HasComment("Descripción de la actividad por el área legal");
-
-                entity.Property(e => e.ActividadLegalSiguiente).HasComment("Descripción de la siguiente actividad por el área legal");
-
-                entity.Property(e => e.ActividadTecnica).HasComment("Descripción de la actividad por el área técnica");
-
-                entity.Property(e => e.ActividadTecnicaSiguiente).HasComment("Descripción de la siguiente actividad por el área técnica");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.ObservacionApoyoIdActividad).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionApoyoIdActividadSiguiente).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionApoyoIdEstadoContrato).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorIdActividad).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorIdActividadSiguiente).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.ObservacionSupervisorIdEstadoContrato).HasComment("Llave foranea a la tabla en usuario");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoActividad).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoActividadSiguiente).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoEstadoContrato).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyoActividad).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyoActividadSiguiente).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionApoyoEstadoContrato).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisorActividad).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisorActividadSiguiente).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RegistroCompletoObservacionSupervisorEstadoContrato).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.ResumenEstadoContrato).HasComment("Resumen del estado del contrato");
-
-                entity.Property(e => e.SeguimientoSemanalId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TieneObservacionApoyoActividad).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionApoyoActividadSiguiente).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionApoyoEstadoContrato).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisorActividad).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisorActividadSiguiente).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneObservacionSupervisorEstadoContrato).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ObservacionApoyoIdActividadNavigation)
                     .WithMany(p => p.SeguimientoSemanalReporteActividadObservacionApoyoIdActividadNavigation)
@@ -11455,28 +6816,16 @@ namespace asivamosffie.model.Models
                 entity.HasKey(e => e.SeguridadSaludCausaAccidentesId)
                     .HasName("PK__Segurida__60218A2A40D29A19");
 
-                entity.HasComment("Almacena las causas del accidente relacionadas a una gestión de obra en un seguimiento semanal");
-
-                entity.Property(e => e.SeguridadSaludCausaAccidentesId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.CausaAccidenteCodigo)
                     .IsRequired()
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.SeguimientoSemanalGestionObraSeguridadSaludId).HasComment("Llave foranea a la tabla SeguimientoSemanalGestionObraSeguridadSalud");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.SeguimientoSemanalGestionObraSeguridadSalud)
                     .WithMany(p => p.SeguridadSaludCausaAccidente)
@@ -11487,51 +6836,29 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionComentario>(entity =>
             {
-                entity.HasComment("Almacena los comentarios de una sesión de comité");
-
-                entity.Property(e => e.SesionComentarioId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ComiteTecnicoId).HasComment("identificador del registro de sesión de comité");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
                 entity.Property(e => e.EstadoActaVoto)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Estado del voto del acta en sesión de comité");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Fecha)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se hace la acción");
+                entity.Property(e => e.Fecha).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.MiembroSesionParticipanteId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Observacion)
                     .IsRequired()
                     .HasMaxLength(3000)
-                    .IsUnicode(false)
-                    .HasComment("Descripción de la observación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
-
-                entity.Property(e => e.ValidacionVoto).HasComment("Indica si se valido el voto");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ComiteTecnico)
                     .WithMany(p => p.SesionComentario)
@@ -11548,97 +6875,45 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionComiteSolicitud>(entity =>
             {
-                entity.HasComment("Almacena la relación de las solicitudes con las sesiones de comité");
-
-                entity.Property(e => e.SesionComiteSolicitudId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.CantCompromisos).HasComment("Cantidad de Compromisos que genera");
-
-                entity.Property(e => e.CantCompromisosFiduciario).HasComment("Cantidad de compromisos de la sesión de comité fiduciario");
-
-                entity.Property(e => e.ComiteTecnicoFiduciarioId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ComiteTecnicoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.DesarrolloSolicitud).HasComment("Observación del desarrollo de la solicitud del comité técnico");
-
-                entity.Property(e => e.DesarrolloSolicitudFiduciario).HasComment("Observación del desarrollo de la solicitud del comité fiduciario");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
                 entity.Property(e => e.EstadoActaCodigo)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoActaCodigoFiduciario)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaComiteFiduciario)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de comité fiduciario");
+                entity.Property(e => e.FechaComiteFiduciario).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.GeneraCompromiso).HasComment("Indica que genera compromiso");
-
-                entity.Property(e => e.GeneraCompromisoFiduciario).HasComment("Indica que se genera un compromiso en comité fiduciario");
-
-                entity.Property(e => e.Observaciones).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.ObservacionesFiduciario).HasComment("Observaciones del comité fiduciario");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RegistroCompletoFiduciaria).HasComment("Indica que el registro esta completo para el sufijo seguido de las palabras registro completo");
-
-                entity.Property(e => e.RequiereVotacion).HasComment("Indica si requiere votación");
-
-                entity.Property(e => e.RequiereVotacionFiduciario).HasComment("Indica si requiere votación en comité fiduciario");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.RutaSoporteVotacion)
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Ruta de url de soporte de votación.");
-
-                entity.Property(e => e.RutaSoporteVotacionFiduciario).HasComment("Ruta del soporte de votación del comité fiduciario");
-
-                entity.Property(e => e.SolicitudId).HasComment("Identificador de la Solicitud depenciendo del Tipo de Solicitud. DefensaJudicialId, ControversiaContractualId, NovedadContractualId, ContratacionId,ProcesoSeleccionId");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioComiteFiduciario)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario del sistema que realiza la inclusión de la solicitud en un comité fiduciario");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ComiteTecnicoFiduciario)
                     .WithMany(p => p.SesionComiteSolicitudComiteTecnicoFiduciario)
@@ -11654,53 +6929,34 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionComiteTecnicoCompromiso>(entity =>
             {
-                entity.HasComment("Almacena los compromisos de una sesión de comité técnico");
-
-                entity.Property(e => e.SesionComiteTecnicoCompromisoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ComiteTecnicoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCumplimiento)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de cumplimiento");
+                entity.Property(e => e.FechaCumplimiento).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Responsable)
                     .IsRequired()
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del responsable");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Tarea)
                     .IsRequired()
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Descripción de la tarea");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ComiteTecnico)
                     .WithMany(p => p.SesionComiteTecnicoCompromiso)
@@ -11713,70 +6969,33 @@ namespace asivamosffie.model.Models
             {
                 entity.HasKey(e => e.SesionTemaId);
 
-                entity.HasComment("Almacena los temas de una sesión de comité");
+                entity.Property(e => e.EstadoTemaCodigo).HasMaxLength(255);
 
-                entity.Property(e => e.SesionTemaId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.CantCompromisos).HasComment("Cantidad de compromisos de la sesión de comité técnico");
-
-                entity.Property(e => e.ComiteTecnicoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsAprobado).HasComment("Indica que el tema fue aprobado. 1. Si, 2. No");
-
-                entity.Property(e => e.EsProposicionesVarios).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.EstadoTemaCodigo)
-                    .HasMaxLength(255)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.GeneraCompromiso).HasComment("Indica que se genera un compromiso en comité técnico");
-
-                entity.Property(e => e.Observaciones).HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.ObservacionesDecision).HasComment("Observaciones de la decisión");
-
-                entity.Property(e => e.RegistroCompleto).HasComment("Indica que el registro queda completo");
-
-                entity.Property(e => e.RequiereVotacion).HasComment("Indica si requiere votación");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.ResponsableCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaSoporte)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Ruta del archivo adjunto");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Tema)
                     .IsRequired()
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Descripción del tema");
-
-                entity.Property(e => e.TiempoIntervencion).HasComment("tiempo de intervención dado en minutos");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ComiteTecnico)
                     .WithMany(p => p.SesionComiteTema)
@@ -11786,47 +7005,30 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionInvitado>(entity =>
             {
-                entity.HasComment("Almacena los invitados a una sesión de comité");
-
-                entity.Property(e => e.SesionInvitadoId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.Cargo)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Cargo del Invitado");
-
-                entity.Property(e => e.ComiteTecnicoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Entidad)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Nombre de la Entidad");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Nombre Invitado");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ComiteTecnico)
                     .WithMany(p => p.SesionInvitado)
@@ -11836,34 +7038,18 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionParticipante>(entity =>
             {
-                entity.HasComment("Almacena los participantes a una sesión de comité");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SesionParticipanteId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ComiteTecnicoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("date")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("date");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
-
-                entity.Property(e => e.UsuarioId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ComiteTecnico)
                     .WithMany(p => p.SesionParticipante)
@@ -11880,44 +7066,26 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionParticipanteVoto>(entity =>
             {
-                entity.HasComment("Almacena el voto de los participantes a una sesión de comité");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SesionParticipanteVotoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ComiteTecnicoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.EsAprobado).HasComment("Identifica si es aprobado el tema por el invitado 0. No, 1. Si");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Observaciones)
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ObservacionesDevolucion)
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones cuando se quiere devolver la solicitud");
-
-                entity.Property(e => e.SesionParticipanteId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ComiteTecnico)
                     .WithMany(p => p.SesionParticipanteVoto)
@@ -11967,54 +7135,30 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionSolicitudCompromiso>(entity =>
             {
-                entity.HasComment("Almacena los compromisos de las solicitudes de un comité");
-
-                entity.Property(e => e.SesionSolicitudCompromisoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsCumplido).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.EsFiduciario)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
+                entity.Property(e => e.EsFiduciario).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCumplimiento)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de cumplimiento");
+                entity.Property(e => e.FechaCumplimiento).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.ResponsableSesionParticipanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.SesionComiteSolicitudId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Tarea)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Descripción de la tarea");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ResponsableSesionParticipante)
                     .WithMany(p => p.SesionSolicitudCompromiso)
@@ -12030,40 +7174,20 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionSolicitudObservacionActualizacionCronograma>(entity =>
             {
-                entity.HasComment("Almacena las relaciones de los participantes del cronograma del proceso de selección");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SesionSolicitudObservacionActualizacionCronogramaId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observacion)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de tabla en mención");
-
-                entity.Property(e => e.ProcesoSeleccionCronogramaMonitoreoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.SesionComiteSolicitudId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.SesionParticipanteId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.Observacion).IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ProcesoSeleccionCronogramaMonitoreo)
                     .WithMany(p => p.SesionSolicitudObservacionActualizacionCronograma)
@@ -12085,40 +7209,20 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionSolicitudObservacionProyecto>(entity =>
             {
-                entity.HasComment("Almacena las observaciones de una sesión de comité respecto a la contratación del proyecto");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SesionSolicitudObservacionProyectoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratacionProyectoId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observacion)
-                    .IsUnicode(false)
-                    .HasComment("Observación del proyecto según el participante");
-
-                entity.Property(e => e.SesionComiteSolicitudId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.SesionParticipanteId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.Observacion).IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ContratacionProyecto)
                     .WithMany(p => p.SesionSolicitudObservacionProyecto)
@@ -12140,42 +7244,20 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionSolicitudVoto>(entity =>
             {
-                entity.HasComment("Almacena los votos de una solicitud de un comité");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SesionSolicitudVotoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ComiteTecnicoFiduciarioId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsAprobado).HasComment("Indica si la solicitud ha sido aprobada por el participante de la sesión 0. No aprobado, 1. Aprobado  ");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observacion)
-                    .IsUnicode(false)
-                    .HasComment("Observación del proyecto según el participante");
-
-                entity.Property(e => e.SesionComiteSolicitudId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.SesionParticipanteId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.Observacion).IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.SesionComiteSolicitud)
                     .WithMany(p => p.SesionSolicitudVoto)
@@ -12191,40 +7273,20 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SesionTemaVoto>(entity =>
             {
-                entity.HasComment("Almacena los votos de los participantes sobre un tema de una sesión");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.SesionTemaVotoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsAprobado).HasComment("Indica si la solicitud ha sido aprobada por el participante de la sesión 0. No aprobado, 1. Aprobado  ");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Observacion)
-                    .IsUnicode(false)
-                    .HasComment("Observación del proyecto según el participante");
-
-                entity.Property(e => e.SesionParticipanteId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.SesionTemaId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.Observacion).IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.SesionParticipante)
                     .WithMany(p => p.SesionTemaVoto)
@@ -12241,66 +7303,45 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Solicitud>(entity =>
             {
-                entity.HasComment("Almacena las solicitudes");
-
-                entity.Property(e => e.SolicitudId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.EsCompleto).HasComment("0. Incompleto, 1. Completo");
-
                 entity.Property(e => e.EstadoCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaEnvioDocumentacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de envio  de la documentación");
+                entity.Property(e => e.FechaEnvioDocumentacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaTramite)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se realiza el trámite");
+                entity.Property(e => e.FechaTramite).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroSolicitud)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Número de radicado en FFIE de solicitud.");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Observaciones)
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Observaciones de tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RutaMinuta)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("ruta de la minuta ");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<SolicitudPago>(entity =>
@@ -12839,50 +7880,28 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<TemaCompromiso>(entity =>
             {
-                entity.HasComment("Almacena los compromisos de un tema");
-
-                entity.Property(e => e.TemaCompromisoId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Eliminado).HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.EsCumplido).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaCumplimiento)
-                    .HasColumnType("datetime")
-                    .HasComment("fecha de cumplimiento");
+                entity.Property(e => e.FechaCumplimiento).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.Responsable).HasComment("Nombre del responsable");
-
-                entity.Property(e => e.SesionTemaId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Tarea)
                     .HasMaxLength(500)
-                    .IsUnicode(false)
-                    .HasComment("Descripción de la tarea");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ResponsableNavigation)
                     .WithMany(p => p.TemaCompromiso)
@@ -12898,29 +7917,17 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<TemaCompromisoSeguimiento>(entity =>
             {
-                entity.HasComment("Almacena el seguimiento de los compromisos de un tema");
-
-                entity.Property(e => e.TemaCompromisoSeguimientoId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Tarea)
-                    .HasMaxLength(500)
-                    .HasComment("Descripción de la tarea");
-
-                entity.Property(e => e.TemaCompromisoId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.Tarea).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.TemaCompromiso)
                     .WithMany(p => p.TemaCompromisoSeguimiento)
@@ -12969,57 +7976,24 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<TempFlujoInversion>(entity =>
             {
-                entity.HasComment("Tabla utilizada para el cargue de proyectos masivos");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.TempFlujoInversionId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.AjusteProgramacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.AjusteProgramacionObraId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ArchivoCargueId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.ContratoConstruccionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.EstaValidado).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.MesEjecucionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Posicion).HasComment("Posición en la visualización");
-
-                entity.Property(e => e.PosicionCapitulo).HasComment("Posición en la visualización");
-
-                entity.Property(e => e.ProgramacionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.SeguimientoSemanalId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Semana)
                     .IsRequired()
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Número de la semana");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Valor)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.Valor).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.ArchivoCargue)
                     .WithMany(p => p.TempFlujoInversion)
@@ -13035,188 +8009,125 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<TempOrdenLegibilidad>(entity =>
             {
-                entity.HasComment("Tabla utilizada para el cargue de proyectos masivos");
-
-                entity.Property(e => e.TempOrdenLegibilidadId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.ArchivoCargueId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.CcrlutoConsorcio)
-                    .HasColumnName("CCRLUToConsorcio")
-                    .HasComment("Cédula de ciudadania del representante legal, unión temporal o consorcio");
-
-                entity.Property(e => e.CedulaRepresentanteLegal).HasComment("Cédula del representante legal");
+                entity.Property(e => e.CcrlutoConsorcio).HasColumnName("CCRLUToConsorcio");
 
                 entity.Property(e => e.Correo)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Correo electrónico");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.CorreoRl)
                     .IsRequired()
                     .HasColumnName("CorreoRL")
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Correo electrónico del representante legal");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.CorreoRlutoConsorcio)
                     .IsRequired()
                     .HasColumnName("CorreoRLUToConsorcio")
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Correo electrónico del representante legal, unión temporal o consorcio");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Departamento).HasComment("Llave foranea a la tabla localización");
+                entity.Property(e => e.DepartamentoRl).HasColumnName("DepartamentoRL");
 
-                entity.Property(e => e.DepartamentoRl)
-                    .HasColumnName("DepartamentoRL")
-                    .HasComment("Llave foranea a la tabla localización");
-
-                entity.Property(e => e.DepartamentoRlutoConsorcio)
-                    .HasColumnName("DepartamentoRLUToConsorcio")
-                    .HasComment("Llave foranea a la tabla localización");
+                entity.Property(e => e.DepartamentoRlutoConsorcio).HasColumnName("DepartamentoRLUToConsorcio");
 
                 entity.Property(e => e.Direccion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Dirección física");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.DireccionRl)
                     .IsRequired()
                     .HasColumnName("DireccionRL")
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Dirección física ");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.DireccionRlutoConsorcio)
                     .IsRequired()
                     .HasColumnName("DireccionRLUToConsorcio")
                     .HasMaxLength(500)
-                    .IsUnicode(false)
-                    .HasComment("Dirección física ");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.EntiddaesQueIntegranLaUnionTemporal).HasComment("Cantidad de entidades que integran la unión temporal");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.EstaValidado).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.IdentificacionTributaria).HasComment("Identificaión tributaria");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Legal)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Observación del área legal");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Minicipio).HasComment("Identificador de municipio referente a la tabla localización");
+                entity.Property(e => e.MinicipioRlutoConsorcio).HasColumnName("MinicipioRLUToConsorcio");
 
-                entity.Property(e => e.MinicipioRlutoConsorcio)
-                    .HasColumnName("MinicipioRLUToConsorcio")
-                    .HasComment("Identificador de municipio referente a la tabla localización");
-
-                entity.Property(e => e.MunucipioRl)
-                    .HasColumnName("MunucipioRL")
-                    .HasComment("Identificador de municipio referente a la tabla localización");
+                entity.Property(e => e.MunucipioRl).HasColumnName("MunucipioRL");
 
                 entity.Property(e => e.NombreEntidad)
                     .HasMaxLength(500)
-                    .IsUnicode(false)
-                    .HasComment("Nombre de la entidad");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NombreIntegrante)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del integrante");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.NombreIntegrante2)
-                    .HasMaxLength(200)
-                    .HasComment("Nombre del integrante 2");
+                entity.Property(e => e.NombreIntegrante2).HasMaxLength(200);
 
-                entity.Property(e => e.NombreIntegrante3)
-                    .HasMaxLength(200)
-                    .HasComment("Nombre del integrante 3");
+                entity.Property(e => e.NombreIntegrante3).HasMaxLength(200);
 
                 entity.Property(e => e.NombreOtoConsorcio)
                     .IsRequired()
                     .HasColumnName("NombreOToConsorcio")
                     .HasMaxLength(500)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del consorcio");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NombreProponente)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del proponente");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NombreRlutoConsorcio)
                     .IsRequired()
                     .HasColumnName("NombreRLUToConsorcio")
                     .HasMaxLength(1000)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del consorcio RLUT");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroIddentificacionProponente)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.PorcentajeParticipacion)
-                    .HasColumnType("decimal(18, 0)")
-                    .HasComment("Porcentaje participación");
+                entity.Property(e => e.PorcentajeParticipacion).HasColumnType("decimal(18, 0)");
 
-                entity.Property(e => e.PorcentajeParticipacion2)
-                    .HasColumnType("decimal(18, 0)")
-                    .HasComment("Porcentaje participación 2");
+                entity.Property(e => e.PorcentajeParticipacion2).HasColumnType("decimal(18, 0)");
 
-                entity.Property(e => e.PorcentajeParticipacion3)
-                    .HasColumnType("decimal(18, 0)")
-                    .HasComment("Porcentaje participación 3");
+                entity.Property(e => e.PorcentajeParticipacion3).HasColumnType("decimal(18, 0)");
 
                 entity.Property(e => e.RepresentanteLegal)
                     .IsRequired()
                     .HasMaxLength(500)
-                    .IsUnicode(false)
-                    .HasComment("Nombre del representante legal");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Telefono)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Número de telefono");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TelefonoRl)
                     .IsRequired()
                     .HasColumnName("TelefonoRL")
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Número de telefono del representante legal");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TelefonoRlutoConsorcio)
                     .HasColumnName("TelefonoRLUToConsorcio")
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Número de telefono del representante legal, unión temporal o consorcio");
-
-                entity.Property(e => e.TipoProponenteId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ArchivoCargue)
                     .WithMany(p => p.TempOrdenLegibilidad)
@@ -13227,59 +8138,31 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<TempProgramacion>(entity =>
             {
-                entity.HasComment("Tabla utilizada para el cargue de proyectos masivos");
-
-                entity.Property(e => e.TempProgramacionId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.Actividad)
                     .IsRequired()
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("Descripción de la actividad");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.AjusteProgramacionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.ArchivoCargueId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaFin).HasColumnType("datetime");
 
-                entity.Property(e => e.ContratoConstruccionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaInicio).HasColumnType("datetime");
 
-                entity.Property(e => e.Duracion).HasComment("Cantidad de semanas que dura la programación");
-
-                entity.Property(e => e.EsRutaCritica).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.EstaValidado).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaFin)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha fin de la actividad");
-
-                entity.Property(e => e.FechaInicio)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha inicio de la actividad");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoActividadCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(2000)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.ArchivoCargue)
                     .WithMany(p => p.TempProgramacion)
@@ -13295,181 +8178,75 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<Template>(entity =>
             {
-                entity.HasComment("Tabla utilizada para el cargue de proyectos masivos");
+                entity.Property(e => e.Asunto).HasMaxLength(255);
 
-                entity.Property(e => e.TemplateId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.Contenido).IsRequired();
 
-                entity.Property(e => e.Activo).HasComment("Indica si el registro esta activo (0) Inactivo (1) Activo");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Asunto)
-                    .HasMaxLength(255)
-                    .HasComment("Asunto de la notificación");
-
-                entity.Property(e => e.Contenido)
-                    .IsRequired()
-                    .HasComment("Cuerpo del template");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Tipo)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .HasComment("Tipo de template");
+                    .HasMaxLength(255);
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(200)
-                    .HasComment("Usuario creación");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .HasComment("usuario que realiza modificación del registro");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
             });
 
             modelBuilder.Entity<TemporalProyecto>(entity =>
             {
-                entity.HasComment("Tabla utilizada para el cargue de proyectos masivos");
+                entity.Property(e => e.Aportante1).HasColumnName("Aportante_1");
 
-                entity.Property(e => e.TemporalProyectoId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.Aportante2).HasColumnName("Aportante_2");
 
-                entity.Property(e => e.Aportante1)
-                    .HasColumnName("Aportante_1")
-                    .HasComment("Identificador del aportante");
+                entity.Property(e => e.Aportante3).HasColumnName("Aportante_3");
 
-                entity.Property(e => e.Aportante2)
-                    .HasColumnName("Aportante_2")
-                    .HasComment("Identificador del aportante");
+                entity.Property(e => e.CedulaCatastralPredio).HasMaxLength(20);
 
-                entity.Property(e => e.Aportante3)
-                    .HasColumnName("Aportante_3")
-                    .HasComment("Identificador del aportante");
+                entity.Property(e => e.CodigoDaneIe).HasColumnName("CodigoDaneIE");
 
-                entity.Property(e => e.ArchivoCargueId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.DireccionPredioPrincipal).HasMaxLength(20);
 
-                entity.Property(e => e.CantPrediosPostulados).HasComment("Cantidad predios postulados");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Cantidad).HasComment("Cantidad de proyectos");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.CedulaCatastralPredio)
-                    .HasMaxLength(20)
-                    .HasComment("Cédula catastral del predio");
-
-                entity.Property(e => e.CodigoDaneIe)
-                    .HasColumnName("CodigoDaneIE")
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.CodigoDaneSede).HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.ConvocatoriaId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.CoordinacionResponsableId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.Departamento).HasComment("Llave foranea a la tabla localización");
-
-                entity.Property(e => e.DireccionPredioPrincipal)
-                    .HasMaxLength(20)
-                    .HasComment("Dirección física ");
-
-                entity.Property(e => e.DocumentoAcreditacionPredioId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.EnConvotatoria).HasComment("Indica si es una convocatoria");
-
-                entity.Property(e => e.EspacioIntervenirId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.EstaValidado).HasComment("Define si cumple la caracteristica representada por el sufijo despues de la palabra es");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.FechaSesionJunta)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de sesión de la junta");
-
-                entity.Property(e => e.InstitucionEducativaId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaSesionJunta).HasColumnType("datetime");
 
                 entity.Property(e => e.LlaveMen)
                     .IsRequired()
                     .HasColumnName("LlaveMEN")
-                    .HasMaxLength(8)
-                    .HasComment("Llave del MEN");
+                    .HasMaxLength(8);
 
-                entity.Property(e => e.Municipio).HasComment("Llave foranea a la tabla localización");
+                entity.Property(e => e.NumeroDocumentoAcreditacion).HasMaxLength(20);
 
-                entity.Property(e => e.NumeroActaJunta).HasComment("Número de acta de la junta");
+                entity.Property(e => e.TipoAportanteId1).HasColumnName("TipoAportanteId_1");
 
-                entity.Property(e => e.NumeroDocumentoAcreditacion)
-                    .HasMaxLength(20)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
+                entity.Property(e => e.TipoAportanteId2).HasColumnName("TipoAportanteId_2");
 
-                entity.Property(e => e.PlazoDiasInterventoria).HasComment("Plazo en dias de la interventoria");
-
-                entity.Property(e => e.PlazoDiasObra).HasComment("Plazo en días de la obra");
-
-                entity.Property(e => e.PlazoMesesInterventoria).HasComment("Plazo en meses de la interventoria");
-
-                entity.Property(e => e.PlazoMesesObra).HasComment("Plazo en meses de la obra");
-
-                entity.Property(e => e.SedeId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TipoAportanteId1)
-                    .HasColumnName("TipoAportanteId_1")
-                    .HasComment("Tipo de aportante del aportante número 1");
-
-                entity.Property(e => e.TipoAportanteId2)
-                    .HasColumnName("TipoAportanteId_2")
-                    .HasComment("Tipo de aportante del aportante número 2");
-
-                entity.Property(e => e.TipoAportanteId3)
-                    .HasColumnName("TipoAportanteId_3")
-                    .HasComment("Tipo de aportante del aportante número 3");
-
-                entity.Property(e => e.TipoIntervencionId).HasComment("Llave foranea a la tabla en mención");
-
-                entity.Property(e => e.TipoPredioId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.TipoAportanteId3).HasColumnName("TipoAportanteId_3");
 
                 entity.Property(e => e.UbicacionPredioPrincipalLatitud)
                     .IsRequired()
                     .HasColumnName("UbicacionPredioPrincipal_Latitud")
-                    .HasMaxLength(10)
-                    .HasComment("Latitud de la ubicación del predio principal");
+                    .HasMaxLength(10);
 
                 entity.Property(e => e.UbicacionPredioPrincipalLontitud)
                     .IsRequired()
                     .HasColumnName("UbicacionPredioPrincipal_Lontitud")
-                    .HasMaxLength(10)
-                    .HasComment("Longitud de la ubicación del predio principal");
+                    .HasMaxLength(10);
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(200)
-                    .HasComment("Usuario creación");
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(200);
 
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .HasComment("usuario que realiza modificación del registro");
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(200);
 
-                entity.Property(e => e.ValorInterventoria)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorInterventoria).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.ValorObra)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorObra).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.ValorTotal)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
-
-                entity.Property(e => e.VigenciaAcuerdoCofinanciacion).HasComment("Identificador de la vigencia del acuerdo de cofinanciación");
+                entity.Property(e => e.ValorTotal).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.ArchivoCargue)
                     .WithMany(p => p.TemporalProyecto)
@@ -13480,17 +8257,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<TipoActividadGestionObra>(entity =>
             {
-                entity.HasComment("Almacena el tipo de actividad de una gestión de obra de los seguimientos semanales");
-
-                entity.Property(e => e.TipoActividadGestionObraId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.SeguimientoSemanalGestionObraId).HasComment("Llave foranea a la tabla en mención");
-
                 entity.Property(e => e.TipoActividadCodigo)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.SeguimientoSemanalGestionObra)
                     .WithMany(p => p.TipoActividadGestionObra)
@@ -13501,9 +8271,7 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<TipoDominio>(entity =>
             {
-                entity.HasComment("Nombre de los grupos de las parámetricas");
-
-                entity.Property(e => e.TipoDominioId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.TipoDominioId).HasComment("Identificador de la tabla");
 
                 entity.Property(e => e.Activo).HasComment("Indica que el tipo de parametrica esta activo en el sistema (0)Desactivado (1)Vigente");
 
@@ -13514,11 +8282,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaCreacion)
                     .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                    .HasComment("Fecha de creación del tipo de parametrica");
 
                 entity.Property(e => e.FechaModificacion)
                     .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                    .HasComment("Si el registro se actualiza con respecto a los campos que no son de auditoria ( Nombre, Descripcion, Activo)");
 
                 entity.Property(e => e.Nombre)
                     .IsRequired()
@@ -13529,12 +8297,12 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
                     .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .HasComment("Email del Usuario que crea al nuevo tipo de parametrica");
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .HasComment("Usuario que realizo la modificación de los datos no de auditoria");
             });
 
             modelBuilder.Entity<TipoPagoConceptoPagoCriterio>(entity =>
@@ -13542,32 +8310,24 @@ namespace asivamosffie.model.Models
                 entity.HasKey(e => e.TipoPagoCodigoConceptoPagoCriterioCodigoId)
                     .HasName("PK__TipoPago__3164A8D56B764DD0");
 
-                entity.HasComment("Almacena la relación del tipo de pago con el concepto de pago criterio");
-
-                entity.Property(e => e.TipoPagoCodigoConceptoPagoCriterioCodigoId).HasComment("Llave primaria de la tabla");
-
                 entity.Property(e => e.ConceptoPagoCriterioCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoPagoCodigo)
                     .IsRequired()
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Usuario>(entity =>
             {
-                entity.HasComment("Almacena los usuarios");
-
                 entity.HasIndex(e => e.Email)
                     .HasName("Uniques_Email")
                     .IsUnique();
 
-                entity.Property(e => e.UsuarioId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.UsuarioId).HasComment("Identificador de la tabla");
 
                 entity.Property(e => e.Activo)
                     .HasDefaultValueSql("((1))")
@@ -13575,9 +8335,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Bloqueado).HasComment("Indica si el usuario se encuentra bloqueado por seguridad y numero de intentos fallidos en el sistema");
 
-                entity.Property(e => e.CambiarContrasena)
-                    .HasDefaultValueSql("('0')")
-                    .HasComment("indica si el usuario debe cambiar la contraseña");
+                entity.Property(e => e.CambiarContrasena).HasDefaultValueSql("('0')");
 
                 entity.Property(e => e.Contrasena)
                     .IsRequired()
@@ -13585,12 +8343,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.DependenciaCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Eliminado)
                     .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
+                    .HasComment("Indica que el usuario fue eliminado (0)Usuario vigente (1)Usuario Eliminado");
 
                 entity.Property(e => e.Email)
                     .IsRequired()
@@ -13598,21 +8355,17 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false)
                     .HasComment("Identificación de usuario definido por correo electrónico");
 
-                entity.Property(e => e.FechaCambioPassword)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de cambio de contraseña");
+                entity.Property(e => e.FechaCambioPassword).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCreacion)
                     .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
+                    .HasComment("Fecha de creación del Usuario");
 
-                entity.Property(e => e.FechaExpiracion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de expiración del usuario");
+                entity.Property(e => e.FechaExpiracion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion)
                     .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
+                    .HasComment("Si el registro se actualiza con respecto a los campos que no son de auditoria ( Email, contraseña, IsActivo,Observaciones)");
 
                 entity.Property(e => e.FechaUltimoIngreso)
                     .HasColumnType("datetime")
@@ -13620,8 +8373,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.GrupoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.IntentosFallidos).HasComment("Cantidad de intentos de ingreso fallidos por contraseña.");
 
@@ -13637,8 +8389,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.MunicipioId)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NitOrganizacion).HasMaxLength(255);
 
@@ -13649,71 +8400,53 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.NumeroIdentificacion)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Número que representa la entidad del sufijo después de la palabra número");
-
-                entity.Property(e => e.Observaciones).HasComment("Observaciones de tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.PrimerApellido)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Primer apellido usuario");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.PrimerNombre)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("Primer nombre usuario");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ProcedenciaCodigo)
                     .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.SegundoApellido)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("segundo apellido usuario");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.SegundoNombre)
                     .HasMaxLength(300)
-                    .IsUnicode(false)
-                    .HasComment("segundo nombre usuario");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TelefonoCelular)
                     .HasMaxLength(15)
-                    .IsUnicode(false)
-                    .HasComment("Telefono celular usuario");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TelefonoFijo)
                     .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasComment("Telefono fijo usuario");
-
-                entity.Property(e => e.TieneContratoAsignado).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
-
-                entity.Property(e => e.TieneGrupo).HasComment("Indica que contiene el elemento de acuerdo al sufijo despues de la palabra tiene");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoAsignacionCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TipoDocumentoCodigo)
                     .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
-
-                entity.Property(e => e.UrlSoporteDocumentacion).HasComment("URL donde se encuentra el campo en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
                     .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .HasComment("Email del Usuario que crea al nuevo usuario");
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .HasComment("Usuario que realizo la modificación de los datos no de auditoria");
 
                 entity.HasOne(d => d.Municipio)
                     .WithMany(p => p.Usuario)
@@ -13723,34 +8456,18 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<UsuarioPerfil>(entity =>
             {
-                entity.HasComment("Almacena la relación del perfil con usuario");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.UsuarioPerfilId).HasComment("Llave primaria de la tabla");
-
-                entity.Property(e => e.Activo).HasComment("Indica si el registro esta activo (0) Inactivo (1) Activo");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.PerfilId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
-
-                entity.Property(e => e.UsuarioId).HasComment("Llave foranea a la tabla en mención");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Perfil)
                     .WithMany(p => p.UsuarioPerfil)
@@ -16937,42 +11654,25 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<VigenciaAporte>(entity =>
             {
-                entity.HasComment("Almacena las vigencias del aporte relacionados a la fuente de financiación");
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.VigenciaAporteId).HasComment("Llave primaria de la tabla");
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Eliminado)
-                    .HasDefaultValueSql("((0))")
-                    .HasComment("Indica que el registro ha sido eliminado si tiene valor 1");
-
-                entity.Property(e => e.FechaCreacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha de creación del registro");
-
-                entity.Property(e => e.FechaModificacion)
-                    .HasColumnType("datetime")
-                    .HasComment("Fecha en que se modifica registro");
-
-                entity.Property(e => e.FuenteFinanciacionId).HasComment("Llave foranea a la tabla en mención");
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.TipoVigenciaCodigo)
                     .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("Relación a la tabla dominio con la columna código");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("Usuario creación");
+                    .IsUnicode(false);
 
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
-                    .IsUnicode(false)
-                    .HasComment("usuario que realiza modificación del registro");
+                    .IsUnicode(false);
 
-                entity.Property(e => e.ValorAporte)
-                    .HasColumnType("numeric(18, 2)")
-                    .HasComment("Representa la cantidad de dinero del campo correspondiente");
+                entity.Property(e => e.ValorAporte).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.FuenteFinanciacion)
                     .WithMany(p => p.VigenciaAporte)

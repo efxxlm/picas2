@@ -22,17 +22,21 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly IRegisterValidatePaymentRequierementsService _registerValidatePaymentRequierementsService;
         private readonly IBudgetAvailabilityService _budgetAvailabilityService;
+        private readonly IContractualControversy _contractualControversy;
 
         public FinancialBalanceService(devAsiVamosFFIEContext context,
                                        ICommonService commonService,
                                        IBudgetAvailabilityService budgetAvailabilityService,
-                                       IRegisterValidatePaymentRequierementsService registerValidatePaymentRequierementsService
+                                       IRegisterValidatePaymentRequierementsService registerValidatePaymentRequierementsService,
+                                       IContractualControversy contractualControversy
             )
         {
             _budgetAvailabilityService = budgetAvailabilityService;
             _context = context;
             _commonService = commonService;
             _registerValidatePaymentRequierementsService = registerValidatePaymentRequierementsService;
+            _contractualControversy = contractualControversy;
+
         }
         #endregion
 
@@ -854,6 +858,7 @@ namespace asivamosffie.services
                                                         .ToListAsync();
 
             ListContratacion.FirstOrDefault().Contratacion.TipoContratacionCodigo = TipoObraIntervencion.Where(r => r.Codigo == ListContratacion.FirstOrDefault().Contratacion.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
+            bool cumpleCondicionesTai = false;
 
             foreach (var item in ListContratacion)
             {
@@ -862,6 +867,8 @@ namespace asivamosffie.services
 
                 if (contrato != null)
                 {
+                    cumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(contrato.ContratoId, false);
+
                     if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
                         numeroContratoObra = contrato.NumeroContrato ?? string.Empty;
 
@@ -883,7 +890,8 @@ namespace asivamosffie.services
                 municipio = proyecto.MunicipioObj.Descripcion,
                 numeroContratoObra = numeroContratoObra,
                 numeroContratoInterventoria = numeroContratoInterventoria,
-                proyecto.BalanceFinanciero
+                proyecto.BalanceFinanciero,
+                CumpleCondicionesTai = cumpleCondicionesTai
             });
 
             return ProyectoAjustado;

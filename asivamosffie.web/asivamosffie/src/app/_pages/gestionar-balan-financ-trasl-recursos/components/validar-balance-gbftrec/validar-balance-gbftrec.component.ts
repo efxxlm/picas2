@@ -18,6 +18,7 @@ export class ValidarBalanceGbftrecComponent implements OnInit {
     data : any;
     esRegistroNuevo: boolean;
     esVerDetalle: boolean;
+    cumpleCondicionesTai: boolean = false;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -49,6 +50,7 @@ export class ValidarBalanceGbftrecComponent implements OnInit {
                 .subscribe( getDataByProyectoId => {
                     if( getDataByProyectoId.length > 0 ){
                         this.data = getDataByProyectoId[0];
+                        this.cumpleCondicionesTai = this.data?.cumpleCondicionesTai;
                     }
                 } );
         }

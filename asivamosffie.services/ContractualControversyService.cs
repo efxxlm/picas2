@@ -4998,7 +4998,7 @@ namespace asivamosffie.services
             if (cumpleCondicionesTai && esNovedad)
             {
                 List<NovedadContractual> listaNovedades = _context.NovedadContractual
-                                                            .Where(x => x.Eliminado != true)
+                                                            .Where(x => x.Eliminado != true && x.ContratoId == pContratoId)
                                                             .Include(x => x.NovedadContractualDescripcion)
                                                             .ToList();
                 foreach (var r in listaNovedades)

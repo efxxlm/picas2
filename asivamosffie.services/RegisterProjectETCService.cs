@@ -34,6 +34,8 @@ namespace asivamosffie.services
                             .ToListAsync();
             List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
             List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
+            List<InformeFinal> listReturn = new List<InformeFinal>();
+            
             foreach (var item in list)
             {
                 ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ProyectoId == item.ProyectoId && r.Eliminado != true).Include(r => r.Contratacion)
@@ -50,11 +52,7 @@ namespace asivamosffie.services
                     }
 
                 }
-                if (cumpleCondicionesTai)
-                {
-                    list.Remove(item);
-                    break;
-                }
+
                 InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == item.Proyecto.SedeId).FirstOrDefault();
                 item.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == item.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
                 item.Proyecto.Sede = Sede;
@@ -66,8 +64,12 @@ namespace asivamosffie.services
                 {
                     item.EstadoEntregaETCString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoEntregaEtc, (int)EnumeratorTipoDominio.Estado_Entrega_ETC_proyecto);
                 }
+                if (!cumpleCondicionesTai)
+                {
+                    listReturn.Add(item);
+                }
             }
-            return list;
+            return listReturn;
         }
 
         public async Task<ProyectoEntregaEtc> GetProyectoEntregaEtc(int informeFinalId)
