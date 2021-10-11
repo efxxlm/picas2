@@ -19,5 +19,8 @@ namespace asivamosffie.model.Models
         public int ContratoId { get; set; }
         public string LlaveMen { get; set; }
         public decimal ValorSolicitud { get; set; }
+        public int? ComponenteUsoHistoricoId { get; set; }
+        public decimal? ValorLiberar { get; set; }
+        public int RegistroCompleto { get; set; }
     }
 }

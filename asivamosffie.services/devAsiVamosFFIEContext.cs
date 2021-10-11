@@ -241,6 +241,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VActualizacionPolizaYgarantias> VActualizacionPolizaYgarantias { get; set; }
         public virtual DbSet<VAjusteProgramacion> VAjusteProgramacion { get; set; }
+        public virtual DbSet<VAmortizacionTotalXproyecto> VAmortizacionTotalXproyecto { get; set; }
         public virtual DbSet<VAmortizacionXproyecto> VAmortizacionXproyecto { get; set; }
         public virtual DbSet<VAmortizadoXsolicitudPagoFaseCriterioConceptoUso> VAmortizadoXsolicitudPagoFaseCriterioConceptoUso { get; set; }
         public virtual DbSet<VAportanteFuente> VAportanteFuente { get; set; }
@@ -13839,6 +13840,15 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<VAmortizacionTotalXproyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_AmortizacionTotalXProyecto");
+
+                entity.Property(e => e.ValorAmortizacion).HasColumnType("decimal(30, 0)");
+            });
+
             modelBuilder.Entity<VAmortizacionXproyecto>(entity =>
             {
                 entity.HasNoKey();
@@ -13851,11 +13861,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.UsoNombre).HasMaxLength(250);
 
-                entity.Property(e => e.ValorAnticipo).HasColumnType("decimal(30, 0)");
+                entity.Property(e => e.ValorAnticipo).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.ValorAnticipoAmortizado).HasColumnType("decimal(38, 1)");
 
-                entity.Property(e => e.ValorPorAmortizar).HasColumnType("decimal(38, 1)");
+                entity.Property(e => e.ValorPorAmortizar).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<VAmortizadoXsolicitudPagoFaseCriterioConceptoUso>(entity =>
@@ -14672,7 +14682,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UsoNombre).HasMaxLength(250);
+                entity.Property(e => e.UsoNombre)
+                    .IsRequired()
+                    .HasMaxLength(250);
 
                 entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
 
@@ -16179,6 +16191,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.NumeroDrp)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.Property(e => e.ValorLiberar)
+                    .HasColumnName("valorLiberar")
+                    .HasColumnType("numeric(19, 2)");
 
                 entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(18, 2)");
 
