@@ -8,7 +8,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
-
+ 
 @Component({
   selector: 'app-tabla-registro-seguimiento-diario',
   templateUrl: './tabla-registro-seguimiento-diario.component.html',

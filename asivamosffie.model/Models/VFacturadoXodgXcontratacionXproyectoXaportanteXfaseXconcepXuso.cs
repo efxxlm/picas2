@@ -5,13 +5,13 @@ namespace asivamosffie.model.Models
 {
     public partial class VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso
     {
-        public int? OrdenGiroDetalleTerceroCausacionDescuentoId { get; set; }
-        public int? OrdenGiroDetalleTerceroCausacionAportanteId { get; set; }
+        public int OrdenGiroDetalleTerceroCausacionDescuentoId { get; set; }
+        public int OrdenGiroDetalleTerceroCausacionAportanteId { get; set; }
         public int? OrdenGiroId { get; set; }
         public int ContratoId { get; set; }
         public int ContratacionId { get; set; }
         public int? ProyectoId { get; set; }
-        public bool? EsPreconstruccion { get; set; }
+        public bool? EsPreConstruccion { get; set; }
         public string ConceptoCodigo { get; set; }
         public string UsoNombre { get; set; }
         public string UsoCodigo { get; set; }

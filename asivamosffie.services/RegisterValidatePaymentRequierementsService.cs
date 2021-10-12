@@ -397,7 +397,7 @@ namespace asivamosffie.services
         //            };
         //    }
         //}
-         
+
         public async Task<Respuesta> DeleteSolicitudPagoFaseCriterioConceptoPago(int pSolicitudPagoFaseCriterioConceptoId, string pUsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Criterio_Pago, (int)EnumeratorTipoDominio.Acciones);
@@ -892,17 +892,18 @@ namespace asivamosffie.services
             ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Find(ContratacionProyectoId);
 
             int SolicitudPagoFaseCriterioConceptoPagoId = (int)_context.VAmortizacionXproyecto.Where(r => r.ContratacionProyectoId == ContratacionProyectoId).FirstOrDefault().SolicitudPagoFaseCriterioConceptoPagoId;
-            
+
             foreach (var SolicitudPagoAmortizacion in pSolicitudPagoAmortizacionList)
             {
                 if (SolicitudPagoAmortizacion.SolicitudPagoFaseAmortizacionId > 0)
                 {
                     SolicitudPagoFaseAmortizacion solicitudPagoAmortizacionOld = _context.SolicitudPagoFaseAmortizacion.Find(SolicitudPagoAmortizacion.SolicitudPagoFaseAmortizacionId);
                     solicitudPagoAmortizacionOld.UsuarioModificacion = pUsuarioCreacion;
-                    solicitudPagoAmortizacionOld.FechaModificacion = DateTime.Now;
+                    solicitudPagoAmortizacionOld.FechaModificacion = DateTime.Now; 
                     solicitudPagoAmortizacionOld.SolicitudPagoFaseCriterioConceptoPagoId = SolicitudPagoFaseCriterioConceptoPagoId;
                     solicitudPagoAmortizacionOld.PorcentajeAmortizacion = SolicitudPagoAmortizacion.PorcentajeAmortizacion;
                     solicitudPagoAmortizacionOld.ValorAmortizacion = SolicitudPagoAmortizacion.ValorAmortizacion;
+                    solicitudPagoAmortizacionOld.ConceptoCodigo = SolicitudPagoAmortizacion.ConceptoCodigo;
                     solicitudPagoAmortizacionOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion);
                 }
                 else
@@ -1753,6 +1754,7 @@ namespace asivamosffie.services
             contrato.TablaDRP = GetDrpContrato(contrato.ContratacionId);
             contrato.TablaDRPODG = GetDrpContratoODG(contrato.ContratacionId);
             contrato.ListProyectos = GetListProyectos(contrato.ContratacionId);
+            contrato.VConceptosXcontratoXfaseXproyecto = _context.VConceptosXcontratoXfaseXproyecto.Where(r => r.ContratoId == contrato.ContratoId).ToList();
             return contrato;
 
         }
@@ -2022,7 +2024,7 @@ namespace asivamosffie.services
                             }
                         }
 
-                        if (true)
+                        if (OrdenGiroAprobada)
                         {
                             ListDyUsos.Add(new
                             {
@@ -2499,6 +2501,7 @@ namespace asivamosffie.services
             if (
                      string.IsNullOrEmpty(solicitudPagoAmortizacion.PorcentajeAmortizacion.ToString())
                   || string.IsNullOrEmpty(solicitudPagoAmortizacion.ValorAmortizacion.ToString())
+                  || string.IsNullOrEmpty(solicitudPagoAmortizacion.ConceptoCodigo.ToString())
                 )
                 return false;
             return true;

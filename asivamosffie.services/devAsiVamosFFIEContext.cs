@@ -251,6 +251,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VComponenteUsoNovedad> VComponenteUsoNovedad { get; set; }
         public virtual DbSet<VCompromisoSeguimiento> VCompromisoSeguimiento { get; set; }
         public virtual DbSet<VConceptosUsosXsolicitudPagoId> VConceptosUsosXsolicitudPagoId { get; set; }
+        public virtual DbSet<VConceptosXcontratoXfaseXproyecto> VConceptosXcontratoXfaseXproyecto { get; set; }
         public virtual DbSet<VConfinanciacionReporte> VConfinanciacionReporte { get; set; }
         public virtual DbSet<VContratacionProyectoSolicitudLiquidacion> VContratacionProyectoSolicitudLiquidacion { get; set; }
         public virtual DbSet<VContratistaReporteHist> VContratistaReporteHist { get; set; }
@@ -298,6 +299,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VPagosSolicitudXcontratacionXproyectoXuso> VPagosSolicitudXcontratacionXproyectoXuso { get; set; }
         public virtual DbSet<VPagosSolicitudXcontratacionXproyectoXusoXamortizacion> VPagosSolicitudXcontratacionXproyectoXusoXamortizacion { get; set; }
         public virtual DbSet<VPagosSolicitudXodgXcontratacionXproyectoXuso> VPagosSolicitudXodgXcontratacionXproyectoXuso { get; set; }
+        public virtual DbSet<VPagosSolicitudXsinAmortizacion> VPagosSolicitudXsinAmortizacion { get; set; }
         public virtual DbSet<VParametricas> VParametricas { get; set; }
         public virtual DbSet<VPermisosMenus> VPermisosMenus { get; set; }
         public virtual DbSet<VPlantillaOrdenGiro> VPlantillaOrdenGiro { get; set; }
@@ -354,6 +356,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -7556,6 +7560,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SolicitudPagoFaseAmortizacion>(entity =>
             {
+                entity.Property(e => e.ConceptoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -8716,6 +8724,21 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(250);
             });
 
+            modelBuilder.Entity<VConceptosXcontratoXfaseXproyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ConceptosXContratoXFaseXProyecto");
+
+                entity.Property(e => e.ConceptoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ConceptoNombre)
+                    .IsRequired()
+                    .HasMaxLength(250);
+            });
+
             modelBuilder.Entity<VConfinanciacionReporte>(entity =>
             {
                 entity.HasNoKey();
@@ -9388,10 +9411,8 @@ namespace asivamosffie.model.Models
                 entity.ToView("V_FacturadoXOdgXContratacionXProyectoXAportanteXFaseXConcepXUso");
 
                 entity.Property(e => e.ConceptoCodigo)
-                    .HasMaxLength(2)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
-
-                entity.Property(e => e.EsPreconstruccion).HasColumnName("esPreconstruccion");
 
                 entity.Property(e => e.SaldoUso).HasColumnType("numeric(38, 0)");
 
@@ -9883,11 +9904,6 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_PagosSolicitudXContratacionXProyectoXUso");
 
-                entity.Property(e => e.ConceptoPagoCriterio)
-                    .IsRequired()
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.EstaAprobadaOdg).HasColumnName("EstaAprobadaODG");
 
                 entity.Property(e => e.NumeroDrp)
@@ -9896,7 +9912,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(1)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SaldoUso).HasColumnType("decimal(38, 1)");
+                entity.Property(e => e.SaldoUso).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.TipoUsoCodigo)
                     .HasMaxLength(2)
@@ -9953,6 +9969,34 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Uso)
                     .IsRequired()
                     .HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<VPagosSolicitudXsinAmortizacion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_PagosSolicitudXSinAmortizacion");
+
+                entity.Property(e => e.ConceptoPagoCriterio)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstaAprobadaOdg).HasColumnName("EstaAprobadaODG");
+
+                entity.Property(e => e.NumeroDrp)
+                    .IsRequired()
+                    .HasColumnName("NumeroDRP")
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SaldoUso).HasColumnType("decimal(30, 0)");
+
+                entity.Property(e => e.TipoUsoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Uso).HasMaxLength(250);
             });
 
             modelBuilder.Entity<VParametricas>(entity =>

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class VPagosSolicitudXcontratacionXproyectoXuso
+    public partial class VPagosSolicitudXsinAmortizacion
     {
+        public bool EsFactura { get; set; }
         public bool EstaAprobadaOdg { get; set; }
         public bool? Pagado { get; set; }
         public int ContratacionId { get; set; }
@@ -15,7 +16,7 @@ namespace asivamosffie.model.Models
         public string Uso { get; set; }
         public bool EsPreconstruccion { get; set; }
         public decimal? SaldoUso { get; set; }
-        public int ConceptoPagoCriterio { get; set; }
         public int SolicitudPagoFaseCriterioConceptoPagoId { get; set; }
+        public string ConceptoPagoCriterio { get; set; }
     }
 }

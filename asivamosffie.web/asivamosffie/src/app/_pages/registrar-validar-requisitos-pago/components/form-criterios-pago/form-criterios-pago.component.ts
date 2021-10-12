@@ -234,6 +234,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                             this.addressForm.markAllAsTouched();
                             this.criterios.markAllAsTouched();
 
+                            
                             for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
                                 // GET Criterio seleccionado
                                 const criterioSeleccionado = LISTA_CRITERIOS_FORMA_PAGO.filter( value => value.codigo === criterio.tipoCriterioCodigo );
@@ -248,6 +249,8 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 // Get conceptos de pago
                                 if ( criterio.solicitudPagoFaseCriterioConceptoPago.length > 0 ) {
                                     // console.log(criterio.solicitudPagoFaseCriterioConceptoPago);
+                                    
+                                    console.log('solicitudPagoFaseCriterioConceptoPago', criterio.solicitudPagoFaseCriterioConceptoPago);
                                     criterio.solicitudPagoFaseCriterioConceptoPago.forEach( solicitudPagoFaseCriterioConceptoPago => {
                                         // console.log(solicitudPagoFaseCriterioConceptoPago);
                                         

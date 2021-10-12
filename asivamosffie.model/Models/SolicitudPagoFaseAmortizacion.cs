@@ -16,6 +16,7 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
         public int? SolicitudPagoFaseCriterioConceptoPagoId { get; set; }
+        public string ConceptoCodigo { get; set; }
 
         public virtual SolicitudPagoFase SolicitudPagoFase { get; set; }
     }

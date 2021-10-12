@@ -105,6 +105,9 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public List<VAmortizacionXproyecto> VAmortizacionXproyecto{ get; set; }
+
+        [NotMapped]
+        public List<VConceptosXcontratoXfaseXproyecto> VConceptosXcontratoXfaseXproyecto { get; set; }
     }
 
 

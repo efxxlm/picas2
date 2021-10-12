@@ -260,7 +260,7 @@ namespace asivamosffie.services
                                                                                             TipoUsoCodigo = r.UsoCodigo,
                                                                                             UsoNombre = r.UsoNombre,
                                                                                             r.ProyectoId,
-                                                                                            EsPreConstruccion = r.EsPreconstruccion ,
+                                                                                            EsPreConstruccion = r.EsPreConstruccion ,
                                                                                             r.AportanteId,
                                                                                             ConceptoCodigo = r.ConceptoCodigo , 
                                                                                             ConceptoNombre = "",
@@ -513,8 +513,8 @@ namespace asivamosffie.services
 
             List<dynamic> ListTablaDrp = new List<dynamic>();
 
-            List<VPagosSolicitudXcontratacionXproyectoXuso> ListPagos =
-                    _context.VPagosSolicitudXcontratacionXproyectoXuso.Where(v => v.ContratacionId == pContratacionId)
+            List<VPagosSolicitudXsinAmortizacion> ListPagos =
+                    _context.VPagosSolicitudXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId)
                                                                       .ToList();
 
             List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
