@@ -1218,13 +1218,15 @@ export class TerceroCausacionGogComponent implements OnInit {
       }
     }
 
+
+    // TODO: filtrar por proyecto y fase
     getValorAportante(codigo: string, aportanteId: any) {
       if (this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.length > 0) {
         const conceptoCodigo = this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.filter(
-          conceptoCodigo => conceptoCodigo.conceptoCodigo === codigo
+          conceptoCodigo => conceptoCodigo.conceptoCodigo == codigo
         );
         const valorAportante = conceptoCodigo.filter(
-          conceptoCodigo => conceptoCodigo.aportanteId === aportanteId
+          conceptoCodigo => conceptoCodigo.aportanteId == aportanteId
         );
 
         let valorConceptoAportante;
@@ -1232,8 +1234,8 @@ export class TerceroCausacionGogComponent implements OnInit {
         valorAportante.forEach(element1 => {
             this.solicitudPago.vConceptosUsosXsolicitudPagoId.forEach(element2 => {
                 if (
-                  element1.conceptoCodigo == element2.conceptoCodigo &&
-                  element1.tipoUsoCodigo == element2.usoCodigo
+                  element1.conceptoCodigo == element2.conceptoCodigo 
+                  // && element1.tipoUsoCodigo == element2.usoCodigo
                   ) {
                   valorConceptoAportante = element1.saldo;
                 }
