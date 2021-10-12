@@ -195,7 +195,7 @@ namespace asivamosffie.services
 
                         ProyectoAjustado.Add(new
                         {
-                            fechaEnvio = informeFinalProyecto.FechaEnvioEtc,
+                            fechaEnvio = informeFinalProyecto.FechaEnvioEtc != null ? informeFinalProyecto.FechaEnvioEtc : informeFinalProyecto.FechaAprobacionFinal,
                             fechaAprobacion = informeFinalProyecto.FechaAprobacionFinal,
                             llaveMen = proyecto.LlaveMen,
                             tipoIntervencion = proyecto.tipoIntervencionString,

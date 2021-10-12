@@ -36,7 +36,7 @@ export class TablaInformeFinalComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   constructor(
     private registerContractualLiquidationRequestService: RegisterContractualLiquidationRequestService
-  ) { 
+  ) {
   }
 
   ngOnInit(): void {
@@ -62,6 +62,7 @@ export class TablaInformeFinalComponent implements OnInit {
         })
       }
       this.dataSource.data = this.datosTabla;
+      console.log(this.dataSource.data);
       this.total = this.datosTabla.length;
       this.datosTabla.forEach(element => {
         if(element.registroCompleto === 'Completo')

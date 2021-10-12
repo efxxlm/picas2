@@ -89,8 +89,16 @@ namespace asivamosffie.services
             {
                 if (pBalanceFinanciero.RequiereTransladoRecursos == false)
                 {
-                    pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado;
-                    pBalanceFinanciero.RegistroCompleto = true;
+                    if (pBalanceFinanciero.CumpleCondicionesTai != true)
+                    {
+                        pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado;
+                        pBalanceFinanciero.RegistroCompleto = true;
+                    }
+                    else
+                    {
+                        pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.En_proceso_de_validacion;
+                    }
+
                 }
                 else
                     pBalanceFinanciero.EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_necesidad_de_traslado;
@@ -114,8 +122,10 @@ namespace asivamosffie.services
                                                                        RegistroCompleto = pBalanceFinanciero.RegistroCompleto,
                                                                        EstadoBalanceCodigo = pBalanceFinanciero.EstadoBalanceCodigo
                                                                    });
-
-                    CreateEditBalanceFinancieroTraslado(pBalanceFinanciero.BalanceFinancieroTraslado, pBalanceFinanciero.UsuarioCreacion);
+                    if (pBalanceFinanciero.CumpleCondicionesTai != true)
+                    {
+                        CreateEditBalanceFinancieroTraslado(pBalanceFinanciero.BalanceFinancieroTraslado, pBalanceFinanciero.UsuarioCreacion);
+                    }
                 }
                 return
                 new Respuesta

@@ -24,5 +24,6 @@ namespace asivamosffie.model.Models
         public int? ContratoId { get; set; }
         public int? ContratoPolizaId { get; set; }
         public int? ContratoPolizaActualizacionId { get; set; }
+        public bool? CumpleCondicionesTai { get; set; }
     }
 }

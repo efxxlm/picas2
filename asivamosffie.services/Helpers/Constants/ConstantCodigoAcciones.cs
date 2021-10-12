@@ -388,6 +388,8 @@
         //Histórico saldos
         public const string Crear_Editar_Componente_uso_Historico = "286";
 
+        public const string Liberar_saldo = "287";
+
 
     }
 }

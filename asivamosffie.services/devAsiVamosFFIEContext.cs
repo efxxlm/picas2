@@ -8578,11 +8578,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.UsoNombre).HasMaxLength(250);
 
-                entity.Property(e => e.ValorAnticipo).HasColumnType("decimal(38, 0)");
+                entity.Property(e => e.ValorAnticipo).HasColumnType("decimal(30, 0)");
 
                 entity.Property(e => e.ValorAnticipoAmortizado).HasColumnType("decimal(38, 1)");
 
-                entity.Property(e => e.ValorPorAmortizar).HasColumnType("decimal(38, 0)");
+                entity.Property(e => e.ValorPorAmortizar).HasColumnType("decimal(38, 1)");
             });
 
             modelBuilder.Entity<VAmortizadoXsolicitudPagoFaseCriterioConceptoUso>(entity =>
@@ -9399,9 +9399,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UsoNombre)
-                    .IsRequired()
-                    .HasMaxLength(250);
+                entity.Property(e => e.UsoNombre).HasMaxLength(250);
 
                 entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
 
@@ -10089,6 +10087,10 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Concepto).HasMaxLength(250);
+
+                entity.Property(e => e.ConceptoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ConsecutivoFfie)
                     .IsRequired()

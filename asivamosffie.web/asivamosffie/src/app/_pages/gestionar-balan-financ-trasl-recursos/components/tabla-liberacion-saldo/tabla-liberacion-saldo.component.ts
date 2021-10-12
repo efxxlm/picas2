@@ -16,6 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class TablaLiberacionSaldoComponent implements OnInit {
   @Input() tablaAportantes: any[];
+  @Input() balanceFinanciero: any;
 
   estaEditando: boolean;
   estadoInforme = '0';
@@ -83,7 +84,7 @@ export class TablaLiberacionSaldoComponent implements OnInit {
                 valorUso: dataAportante.valorUso,
                 saldo: dataAportante.saldo ?? 0,
                 valorSolicitud: dataAportante.valorSolicitud ?? 0,
-                valorLiberar : dataAportante.valorLiberar ?? null
+                valorLiberar : dataAportante.valorLiberar ?? null,
               });
           });
           this.listAportantes.push({
@@ -118,7 +119,6 @@ export class TablaLiberacionSaldoComponent implements OnInit {
     this.estaEditando = true;
     this.noGuardado=false;
     const dataHistorico = [];
-    console.log(this.dataSource.data);
     this.dataSource.data.forEach(r =>{
       r.data.forEach(u => {
           if(u.valorLiberar != null || u.componenteUsoHistoricoId > 0){
@@ -134,15 +134,16 @@ export class TablaLiberacionSaldoComponent implements OnInit {
       });
     });
     const VUsosHistorico ={
-      usosHistorico:dataHistorico
+      usosHistorico:dataHistorico,
+      balanceFinancieroId: this.balanceFinanciero?.balanceFinancieroId ?? 0,
+      proyectoId: this.proyectoId
     }
-    console.log(VUsosHistorico);
 
     this.createEditHistoricalReleaseBalance(VUsosHistorico);
   }
 
   createEditHistoricalReleaseBalance(pUsosHistorico: any) {
-    this.releaseBalanceService.CreateEditHistoricalReleaseBalance(pUsosHistorico)
+    this.releaseBalanceService.createEditHistoricalReleaseBalance(pUsosHistorico)
       .subscribe(
         (respuesta: Respuesta) => {
           this.openDialog('', respuesta.message);

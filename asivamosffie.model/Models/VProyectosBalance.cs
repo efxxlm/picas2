@@ -16,5 +16,6 @@ namespace asivamosffie.model.Models
         public string EstadoBalanceCodigo { get; set; }
         public int? NumeroTraslado { get; set; }
         public int? BalanceFinancieroId { get; set; }
+        public bool? CumpleCondicionesTai { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace asivamosffie.model.Models
         public string UsoCodigo { get; set; }
         public string UsoNombre { get; set; }
         public decimal? ValorAnticipo { get; set; }
-        public decimal ValorAnticipoAmortizado { get; set; }
+        public decimal? ValorAnticipoAmortizado { get; set; }
         public decimal? ValorPorAmortizar { get; set; }
     }
 }

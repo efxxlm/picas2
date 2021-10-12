@@ -71,8 +71,10 @@
                         [routerLink]="['validarBalance', element.proyectoId]"
                     >
                         Validar balance
-                    </a> 
-                    <a *ngIf="element.estadoBalanceCodigo !== '0' && element.estadoBalanceCodigo !== estadoBalance.balanceAprobado"
+                    </a>
+                    <a *ngIf="(element.estadoBalanceCodigo !== '0' && element.estadoBalanceCodigo !== estadoBalance.balanceAprobado && element.cumpleCondicionesTai !== true)
+                              || (element.cumpleCondicionesTai === true && element.estadoBalanceCodigo === estadoBalance.enProcesoValidacion)
+                              "
                         mat-button
                         mat-raised-button
                         color="accent"
@@ -80,7 +82,7 @@
                         [routerLink]="['verDetalleEditarBalance', element.proyectoId]"
                     >
                         Ver detalle/Editar
-                    </a> 
+                    </a>
                     <a *ngIf="element.estadoBalanceCodigo === estadoBalance.balanceAprobado"
                         mat-button
                         mat-raised-button
@@ -101,6 +103,18 @@
                     >
                         Aprobar Balance
                     </button>
+                    <!--Liberar saldo (cc24)-->
+                    <button
+                      *ngIf="element.registroCompleto === true && element.cumpleCondicionesTai === true && element.estadoBalanceCodigo === estadoBalance.enProcesoValidacion"
+                      mat-button
+                      mat-raised-button
+                      color="accent"
+                      class="btn-table"
+                      type="button"
+                      (click)="liberarSaldo(element)"
+                  >
+                      Liberar Saldo
+                </button>
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

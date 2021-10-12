@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { EstadoBalance } from 'src/app/_interfaces/balance-financiero.interface';
+import { ReleaseBalanceService } from 'src/app/core/_services/releaseBalance/release-balance.service';
+import { Respuesta } from 'src/app/core/_services/common/common.service';
 
 export interface RegistrarInterface {
   fechaTerminacionProyecto: Date;
@@ -41,7 +43,7 @@ export class GestionarBalanFinancTraslRecComponent implements OnInit {
     'llaveMEN',
     'tipoIntervencion',
     'institucionEducativa',
-    'sede',    
+    'sede',
     'numeroTraslados',
     'estadoBalance',
     'gestion'
@@ -52,7 +54,9 @@ export class GestionarBalanFinancTraslRecComponent implements OnInit {
     private routes: Router,
     private commonSvc: CommonService,
     private balanceSvc: FinancialBalanceService,
-    public dialog: MatDialog )
+    public dialog: MatDialog,
+    private releaseBalanceService: ReleaseBalanceService,
+    )
   {
     this.commonSvc.listaEstadoBalance()
       .subscribe( listaEstadoBalance => this.listaEstadoBalance = listaEstadoBalance )
@@ -129,6 +133,22 @@ export class GestionarBalanFinancTraslRecComponent implements OnInit {
         .subscribe(
           response => {
             this.openDialog('', `${ response.message }`);
+
+            this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+              .then( () => this.routes.navigate( ['/gestionarBalanceFinancieroTrasladoRecursos'] ) );
+          },
+          err => this.openDialog( '', `${ err.message }` )
+        )
+    }
+  }
+
+  liberarSaldo( registro: any ) {
+    if ( registro.balanceFinancieroId !== undefined ) {
+
+      this.releaseBalanceService.releaseBalance( registro.balanceFinancieroId )
+      .subscribe(
+        (respuesta: Respuesta) => {
+            this.openDialog('', `${ respuesta.message }`);
 
             this.routes.navigateByUrl( '/', {skipLocationChange: true} )
               .then( () => this.routes.navigate( ['/gestionarBalanceFinancieroTrasladoRecursos'] ) );

@@ -7,6 +7,7 @@ namespace asivamosffie.model.Models
     {
         public bool? EstaAprobada { get; set; }
         public int? ContratacionId { get; set; }
+        public int? ContratoId { get; set; }
         public string NumeroDdp { get; set; }
         public string InstitucionEducativa { get; set; }
         public int? ProyectoId { get; set; }

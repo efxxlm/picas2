@@ -13,6 +13,7 @@ namespace asivamosffie.model.Models
         public string NumeroDdp { get; set; }
         public string InstitucionEducativa { get; set; }
         public string LlaveMen { get; set; }
+        public int? ProyectoId { get; set; }
         public int? OrdenGiroId { get; set; }
         public string ConsecutivoFfie { get; set; }
         public string NombreCuenta { get; set; }
@@ -24,6 +25,7 @@ namespace asivamosffie.model.Models
         public string TerceroCausasionNombre { get; set; }
         public string Numerofactura { get; set; }
         public string Concepto { get; set; }
+        public string ConceptoCodigo { get; set; }
         public int? AportanteId { get; set; }
         public string FormaPago { get; set; }
         public decimal? ValorConcepto { get; set; }

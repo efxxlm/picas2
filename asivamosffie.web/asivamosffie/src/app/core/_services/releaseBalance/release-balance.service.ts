@@ -16,7 +16,12 @@ export class ReleaseBalanceService {
       return this.http.get<any[]>( `${ this.apiUrl }/GetDrpByProyectoId?pProyectoId=${ pProyectoId }` );
     }
 
-    CreateEditHistoricalReleaseBalance( pUsosHistorico: any ){
+    createEditHistoricalReleaseBalance( pUsosHistorico: any ){
       return this.http.post(`${ this.apiUrl }/CreateEditHistoricalReleaseBalance`, pUsosHistorico );
     }
+
+    releaseBalance( pBalanceFinancieroId: any ){
+      return this.http.post(`${this.apiUrl}/ReleaseBalance?pBalanceFinancieroId=${ pBalanceFinancieroId }`, null);
+    }
+
 }

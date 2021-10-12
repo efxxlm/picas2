@@ -9,5 +9,11 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public List<VUsoHistorico> UsosHistorico { get; set; }
 
+        [NotMapped]
+        public int BalanceFinancieroId { get; set; }
+
+        [NotMapped]
+        public int ProyectoId { get; set; }
+
     }
 }

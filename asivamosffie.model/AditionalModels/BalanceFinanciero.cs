@@ -8,5 +8,8 @@ namespace asivamosffie.model.Models
     {
         [NotMapped]
         public decimal? ValorNetoGiroBalance { get; set; }
+
+        [NotMapped]
+        public bool? CumpleCondicionesTai { get; set; }
     }
 }
