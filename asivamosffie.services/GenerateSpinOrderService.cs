@@ -260,9 +260,9 @@ namespace asivamosffie.services
                                                                                             TipoUsoCodigo = r.UsoCodigo,
                                                                                             UsoNombre = r.UsoNombre,
                                                                                             r.ProyectoId,
-                                                                                            EsPreConstruccion = r.EsPreConstruccion ,
+                                                                                            EsPreConstruccion = r.EsPreConstruccion,
                                                                                             r.AportanteId,
-                                                                                            ConceptoCodigo = r.ConceptoCodigo , 
+                                                                                            ConceptoCodigo = r.ConceptoCodigo,
                                                                                             ConceptoNombre = "",
                                                                                             r.ValorUso,
                                                                                             r.ValorDescuento,
@@ -514,8 +514,9 @@ namespace asivamosffie.services
             List<dynamic> ListTablaDrp = new List<dynamic>();
 
             List<VPagosSolicitudXsinAmortizacion> ListPagos =
-                    _context.VPagosSolicitudXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId)
-                                                                      .ToList();
+                    _context.VPagosSolicitudXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId
+                                                                     && v.EstaAprobadaOdg)
+                                                            .ToList();
 
             List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
 

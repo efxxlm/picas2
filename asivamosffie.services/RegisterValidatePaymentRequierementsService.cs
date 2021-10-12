@@ -1942,8 +1942,9 @@ namespace asivamosffie.services
 
             List<dynamic> ListTablaDrp = new List<dynamic>();
 
-            List<VPagosSolicitudXcontratacionXproyectoXuso> ListPagos =
-                    _context.VPagosSolicitudXcontratacionXproyectoXuso.Where(v => v.ContratacionId == pContratacionId)
+            List<VPagosSolicitudXsinAmortizacion> ListPagos =
+                    _context.VPagosSolicitudXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId
+                                                                     && v.EstaAprobadaOdg)
                                                                       .ToList();
 
             List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
@@ -2024,7 +2025,7 @@ namespace asivamosffie.services
                             }
                         }
 
-                        if (OrdenGiroAprobada)
+                        if (true)
                         {
                             ListDyUsos.Add(new
                             {
@@ -2500,8 +2501,8 @@ namespace asivamosffie.services
         {
             if (
                      string.IsNullOrEmpty(solicitudPagoAmortizacion.PorcentajeAmortizacion.ToString())
-                  || string.IsNullOrEmpty(solicitudPagoAmortizacion.ValorAmortizacion.ToString())
-                  || string.IsNullOrEmpty(solicitudPagoAmortizacion.ConceptoCodigo.ToString())
+                  || string.IsNullOrEmpty(solicitudPagoAmortizacion.ValorAmortizacion.ToString()
+                    )
                 )
                 return false;
             return true;

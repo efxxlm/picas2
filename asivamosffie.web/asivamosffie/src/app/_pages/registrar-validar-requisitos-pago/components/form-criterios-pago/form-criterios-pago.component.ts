@@ -249,8 +249,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 // Get conceptos de pago
                                 if ( criterio.solicitudPagoFaseCriterioConceptoPago.length > 0 ) {
                                     // console.log(criterio.solicitudPagoFaseCriterioConceptoPago);
-                                    
-                                    console.log('solicitudPagoFaseCriterioConceptoPago', criterio.solicitudPagoFaseCriterioConceptoPago);
+
                                     criterio.solicitudPagoFaseCriterioConceptoPago.forEach( solicitudPagoFaseCriterioConceptoPago => {
                                         // console.log(solicitudPagoFaseCriterioConceptoPago);
                                         
