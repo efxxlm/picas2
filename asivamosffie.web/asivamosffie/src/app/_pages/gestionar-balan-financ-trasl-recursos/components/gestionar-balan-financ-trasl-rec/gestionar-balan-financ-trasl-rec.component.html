@@ -93,7 +93,7 @@
                         Ver detalle
                     </a>
                     <button
-                        *ngIf="element.registroCompleto === true && element.estadoBalanceCodigo === estadoBalance.balanceValidado"
+                        *ngIf="element.registroCompleto === true && element.estadoBalanceCodigo === estadoBalance.balanceValidado && element.cumpleCondicionesTai !== true"
                         mat-button
                         mat-raised-button
                         color="accent"
@@ -113,7 +113,7 @@
                       type="button"
                       (click)="liberarSaldo(element)"
                   >
-                      Liberar Saldo
+                      Aprobar Balance
                 </button>
                 </td>
             </ng-container>

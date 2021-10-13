@@ -13,6 +13,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public bool? Liberado { get; set; }
+        public decimal? Saldo { get; set; }
 
         public virtual ComponenteFuenteNovedad ComponenteUsoNovedad { get; set; }
     }

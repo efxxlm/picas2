@@ -192,7 +192,7 @@ namespace asivamosffie.services
                                     string fuenteNombre = _context.Dominio.Where(x => x.Codigo == ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteRecursosCodigo
                                                     && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
 
-                                    if (!esGenerar)
+                                    if (!esGenerar || ListDP.EstadoSolicitudCodigo == "5" || ListDP.EstadoSolicitudCodigo == "8")
                                     {
                                         fuentes.Add(new GrillaFuentesFinanciacion
                                         {

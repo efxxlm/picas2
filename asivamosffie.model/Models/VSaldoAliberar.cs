@@ -8,7 +8,7 @@ namespace asivamosffie.model.Models
         public string NumeroDrp { get; set; }
         public int ComponenteUsoId { get; set; }
         public string CodigoUso { get; set; }
-        public decimal ValorUso { get; set; }
+        public decimal? ValorUso { get; set; }
         public string NombreUso { get; set; }
         public int? CofinanciacionAportanteId { get; set; }
         public int FuenteFinanciacionId { get; set; }

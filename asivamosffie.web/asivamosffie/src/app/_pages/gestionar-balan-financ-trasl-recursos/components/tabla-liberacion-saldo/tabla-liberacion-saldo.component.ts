@@ -17,6 +17,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class TablaLiberacionSaldoComponent implements OnInit {
   @Input() tablaAportantes: any[];
   @Input() balanceFinanciero: any;
+  @Input() esVerDetalle: boolean;
 
   estaEditando: boolean;
   estadoInforme = '0';
@@ -128,7 +129,8 @@ export class TablaLiberacionSaldoComponent implements OnInit {
               esNovedad: false,
               componenteUsoNovedadId: 0,
               componenteUsoHistoricoId: u.componenteUsoHistoricoId,
-              componenteUsoNovedadHistoricoId: 0
+              componenteUsoNovedadHistoricoId: 0,
+              saldo: u.saldo
             });
           }
       });
@@ -203,9 +205,10 @@ export class TablaLiberacionSaldoComponent implements OnInit {
       }
       this.dataSource.data.forEach(r=>{
         r.data.forEach(d => {
-          valorTotalLiberar += d.valorLiberar
+          valorTotalLiberar += (d.valorUso - d.valorLiberar)
         });
       });
+
       if (valorTotalLiberar > valorSolicitud) {
         if(positionDta != -1)
           this.dataSource.data[index].data[positionDta].valorLiberar = null;

@@ -1567,16 +1567,16 @@ namespace asivamosffie.services
                         .Replace("[DDP_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
                         .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x => x.ValorDocumento)).ToString())
                         .Replace("[DDP_FUENTE]", fuenteNombre)
-                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar || cumpleDdp ? (gestion.SaldoActualGenerado ?? 0) : gestion.SaldoActual).ToString())
-                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar || cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gestion.ValorSolicitado).ToString())
-                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar || cumpleDdp ? (gestion.NuevoSaldoGenerado ?? 0) : gestion.NuevoSaldo).ToString());
+                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar && !cumpleDdp ? (gestion.SaldoActualGenerado ?? 0) : gestion.SaldoActual).ToString())
+                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar && !cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gestion.ValorSolicitado).ToString())
+                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar && !cumpleDdp ? (gestion.NuevoSaldoGenerado ?? 0) : gestion.NuevoSaldo).ToString());
 
                     //.Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", saldototal).ToString())
                     //.Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
                     //.Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", (saldototal - gestion.ValorSolicitado)).ToString());
                     tablaproyecto += tr;
 
-                    decimal valorSolicitadoApo = !esValidar || cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gestion.ValorSolicitado;
+                    decimal valorSolicitadoApo = !esValidar && !cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gestion.ValorSolicitado;
                     var tr2 = plantilla_fuentes
                         .Replace("[NOMBRE_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
                         .Replace("[FUENTE_APORTANTE]", fuenteNombre)
