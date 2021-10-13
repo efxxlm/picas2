@@ -4975,19 +4975,12 @@ namespace asivamosffie.services
                                     r => r.ControversiaContractualId == controversiaContractual.ControversiaContractualId
                                     && r.Eliminado != true
                                     && r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada
-                                    && r.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.Comunicacion_decision_TAI_al_contratista).FirstOrDefault();
+                                    && r.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.Comunicacion_decision_TAI_al_contratista
+                                    && r.FechaActuacion < DateTime.Now).FirstOrDefault();
 
                                 if (controversiaActuacion != null)
                                 {
-                                    if (DateTime.Now > controversiaActuacion.FechaActuacion)
-                                    {
-                                        cumpleCondicionesTai = true;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        cumpleCondicionesTai = false;
-                                    }
+                                    cumpleCondicionesTai = true;
                                 }
                             }
                         }
