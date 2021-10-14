@@ -85,10 +85,34 @@ namespace asivamosffie.services
         {
             try
             {
-                List<SeguimientoSemanal> List = await _context.SeguimientoSemanal
+                List<SeguimientoSemanal> List = new List<SeguimientoSemanal>();
+                DateTime? fechaActuacionTai = null;
+
+                ContratacionProyecto cp = _context.ContratacionProyecto.Find(pContratacionProyectoId);
+                if (cp != null)
+                {
+                    Contrato contrato = _context.Contrato.Where(r => r.ContratacionId == cp.ContratacionId).FirstOrDefault();
+                    if (_contractualControversy.ValidarCumpleTaiContratista(contrato.ContratoId,false,false,0))
+                    {
+                        fechaActuacionTai = _contractualControversy.FechaActuacionTaiContratista(contrato.ContratoId);
+                    }
+                }
+
+                if (fechaActuacionTai != null)
+                {
+                    DateTime fechaActuacionTaiTmp = (DateTime)fechaActuacionTai;
+                    List = await _context.SeguimientoSemanal
+                            .Where(r => r.ContratacionProyectoId == pContratacionProyectoId && r.FechaInicio != null && r.FechaFin != null && (fechaActuacionTaiTmp.Date >= ((DateTime)r.FechaInicio).Date))
+                            .Include(r => r.SeguimientoSemanalPersonalObra)
+                            .ToListAsync();
+                }
+                else
+                {
+                    List = await _context.SeguimientoSemanal
                     .Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
                     .Include(r => r.SeguimientoSemanalPersonalObra)
                     .ToListAsync();
+                }
 
                 if (List.Count() == 0)
                 {
