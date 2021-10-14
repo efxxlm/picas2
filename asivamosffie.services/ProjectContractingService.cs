@@ -589,6 +589,7 @@ namespace asivamosffie.services
             foreach (var proyecto in ListProyectos)
             {
                 bool cumpleCondicionTai = false;
+
                 if (!string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo))
                 {
                     Localizacion departamento = ListDepartamentos.Find(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipioNavigation.IdPadre);
@@ -609,12 +610,22 @@ namespace asivamosffie.services
 
                     cumpleCondicionTai = ValidarCumpleTaiContratistaxProyectoId(proyecto.ProyectoId);
 
-                    if (proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.Disponible && !cumpleCondicionTai)
+
+                    if (proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.Disponible)
                         proyectoGrilla.TieneObra = true;
 
-                    if (proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.Disponible && !cumpleCondicionTai)
+                    if (proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.Disponible)
                         proyectoGrilla.TieneInterventoria = true;
 
+                    if (cumpleCondicionTai)
+                    {
+                        if (proyecto?.ContratacionProyecto?.FirstOrDefault()?.Contratacion?.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria) {
+                            proyectoGrilla.TieneInterventoria = false;
+                        }
+                        else {
+                            proyectoGrilla.TieneObra = false;
+                        }
+                    }
 
                     if (proyecto.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.Disponible ||
                         proyecto.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico ||
