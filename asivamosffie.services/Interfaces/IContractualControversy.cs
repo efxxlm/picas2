@@ -80,5 +80,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> ChangeStateActuacion(int pControversiaActuacionId, string value);
         Task VencimientoTerminosContrato();
         bool ValidarCumpleTaiContratista(int pContratoId, bool esNovedad, bool esSeguimiento, int pProyectoId);
+        DateTime? FechaActuacionTaiContratista(int pContratoId);
+
     }
 }

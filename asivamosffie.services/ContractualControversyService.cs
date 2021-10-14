@@ -1113,8 +1113,8 @@ namespace asivamosffie.services
                 actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
                 actuacionSeguimientoOld.EstadoCodigo = pEstadoReclamacionCodigo;
 
-                ControversiaContractual controversiaContractual = _context.ControversiaContractual.Find(actuacionSeguimientoOld.ControversiaContractualId);         
-                
+                ControversiaContractual controversiaContractual = _context.ControversiaContractual.Find(actuacionSeguimientoOld.ControversiaContractualId);
+
                 //liberar proyectos asociaciados al contrato - c24
                 if (controversiaContractual != null)
                 {
@@ -1138,7 +1138,7 @@ namespace asivamosffie.services
                         }
                     }
                 }
-                
+
                 if (string.IsNullOrEmpty(actuacionSeguimientoOld.NumeroActuacionReclamacion) && actuacionSeguimientoOld.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.RemisiondeComunicaciondedecisiondeTAIporAlianzaFiduciariaalaAseguradora && (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada))
                 {
                     int consecutivo = _context.ControversiaActuacion
@@ -1842,7 +1842,7 @@ namespace asivamosffie.services
 
                         FechaFinContratoTmp = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacion != null ? Convert.ToDateTime(contrato.FechaTerminacion).ToString("dd/MM/yyyy") : null;
                         FechaInicioContratoTmp = contrato.FechaActaInicioFase2 != null ? Convert.ToDateTime(contrato.FechaActaInicioFase2).ToString("dd/MM/yyyy") : contrato.FechaActaInicioFase1 != null ? Convert.ToDateTime(contrato.FechaActaInicioFase1).ToString("dd/MM/yyyy") : null;
-                        
+
                         NumeroContratoTmp = contrato.NumeroContrato;
                         //PlazoFormatTmp = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses).ToString("00") + " meses / " + Convert.ToInt32(contrato.PlazoFase2ConstruccionDias).ToString("00") + " dias ";
                         if (contratacion != null)
@@ -2814,21 +2814,21 @@ namespace asivamosffie.services
                     if (EstadoActuacionReclamacion != null)
                     {
                         EstadoActuacionReclamacionTmp = EstadoActuacionReclamacion.Nombre;
-                        EstadoActuacionReclamacionCodigoTmp = EstadoActuacionReclamacion.Codigo; 
+                        EstadoActuacionReclamacionCodigoTmp = EstadoActuacionReclamacion.Codigo;
                     }
 
                     int ActuacionSeguimientoIdTmp = 0;
 
                     if (lstActuacionSeguimientoId.Count() > 0)
                         ActuacionSeguimientoIdTmp = lstActuacionSeguimientoId[0];
-                     
+
                     List<Dominio> listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Actuacion_No_TAI).ToList();
 
                     if (controversiaContractual.TipoControversiaCodigo == ConstanCodigoTipoControversia.Terminacion_anticipada_por_incumplimiento_TAI)
                         listaDominioActuacionActualizada = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_controversia_contractual_TAI).ToList();
-                
+
                     List<Dominio> listaDominioAvanceTramiteActuacion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Avance_Tramite).ToList();
-                     
+
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
                     {
                         ControversiaContractualId = controversia.ControversiaContractualId,
@@ -2837,7 +2837,7 @@ namespace asivamosffie.services
                         ActuacionId = controversia.ControversiaActuacionId,
                         EstadoActuacion = strEstadoActuacion,
                         EstadoActuacionCodigo = strEstadoActuacionCodigo,
-                        NumeroActuacion = controversia.NumeroActuacion, 
+                        NumeroActuacion = controversia.NumeroActuacion,
                         NumeroActuacionReclamacion = "ACT_REC " + controversia.ControversiaActuacionId.ToString("0000"),
                         RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
                         ProximaActuacionCodigo = strProximaActuacionCodigo,
@@ -4953,7 +4953,7 @@ namespace asivamosffie.services
 
             List<ControversiaContractual> controversiaContractualList = _context.ControversiaContractual.Where(r => r.ContratoId == pContratoId && r.Eliminado != true).ToList();
 
-            foreach(var controversiaContractual in controversiaContractualList)
+            foreach (var controversiaContractual in controversiaContractualList)
             {
                 SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
                             .Where(r => r.SolicitudId == controversiaContractual.ControversiaContractualId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales && (r.Eliminado == false || r.Eliminado == null))
@@ -5018,6 +5018,47 @@ namespace asivamosffie.services
                 }
             }
             return cumpleCondicionesTai;
+        }
+
+        public DateTime? FechaActuacionTaiContratista(int pContratoId)
+        {
+            List<ControversiaContractual> controversiaContractualList = _context.ControversiaContractual.Where(r => r.ContratoId == pContratoId && r.Eliminado != true).ToList();
+
+            foreach (var controversiaContractual in controversiaContractualList)
+            {
+                SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
+                            .Where(r => r.SolicitudId == controversiaContractual.ControversiaContractualId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales && (r.Eliminado == false || r.Eliminado == null))
+                            .FirstOrDefault();
+
+                if (sesionComiteSolicitud != null)
+                {
+                    if (sesionComiteSolicitud.ComiteTecnicoFiduciarioId != null)
+                    {
+                        ComiteTecnico comiteFiduciario = _context.ComiteTecnico.Find(sesionComiteSolicitud.ComiteTecnicoFiduciarioId);
+
+                        if (comiteFiduciario != null)
+                        {
+                            //cumple la primera condición de ser aprobada por el comite fiduciario
+                            if (comiteFiduciario.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada)
+                            {
+                                //validar que esa controversia tenga actuaciones finalizadas y con actuación "Comunicacion_decision_TAI_al_contratista"
+                                ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion.Where(
+                                    r => r.ControversiaContractualId == controversiaContractual.ControversiaContractualId
+                                    && r.Eliminado != true
+                                    && r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada
+                                    && r.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.Comunicacion_decision_TAI_al_contratista
+                                    && r.FechaActuacion < DateTime.Now).FirstOrDefault();
+
+                                if (controversiaActuacion != null)
+                                {
+                                    return controversiaActuacion.FechaActuacion;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
     }

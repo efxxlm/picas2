@@ -321,6 +321,29 @@ namespace asivamosffie.services
 
                 GetInformacionGeneral(seguimientoSemanal);
                 GetAvanceFisico(seguimientoSemanal);
+                //si es tai -> cambiar fecha fin 
+                ContratacionProyecto cp = _context.ContratacionProyecto.Find(pContratacionProyectoId);
+                if (cp != null)
+                {
+                    Contrato c = _context.Contrato.Where(r => r.ContratacionId == cp.ContratacionId && r.Eliminado != true).FirstOrDefault();
+                    if (c != null)
+                    {
+                        if (_contractualControversy.ValidarCumpleTaiContratista(c.ContratoId,false,false,0))
+                        {
+                            DateTime? fechaActuacion = _contractualControversy.FechaActuacionTaiContratista(c.ContratoId);
+                            if (fechaActuacion != null)
+                            {
+                                if (((DateTime)fechaActuacion).Date >= ((DateTime)seguimientoSemanal.FechaInicio).Date && ((DateTime)fechaActuacion).Date <= ((DateTime)seguimientoSemanal.FechaFin).Date)
+                                {
+                                    if (((DateTime)fechaActuacion).Date < ((DateTime)seguimientoSemanal.FechaFin).Date)
+                                    {
+                                        seguimientoSemanal.FechaFin = fechaActuacion;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 return seguimientoSemanal;
             }
             catch (Exception ex)
