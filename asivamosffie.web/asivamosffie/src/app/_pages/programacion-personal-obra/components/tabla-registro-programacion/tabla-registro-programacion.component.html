@@ -54,7 +54,7 @@
                 color="accent"
                 class="btn-table"
                 (click)="openRegistroProgramacion( element, false )"
-                *ngIf="element.estadoProgramacionInicialCodigo === estadosProgramacion.sinProgramacionPersonal && element?.cumpleCondicionesTai === false">
+                *ngIf="element.estadoProgramacionInicialCodigo === estadosProgramacion.sinProgramacionPersonal">
                 Registrar programación de personal
         </button>
 
@@ -62,7 +62,7 @@
                 color="accent"
                 class="btn-table"
                 (click)="aprobarProgramacion( element.contratacionProyectoId )"
-                *ngIf="element.estadoProgramacionInicialCodigo === estadosProgramacion.sinAprobacionProgramacionPersonal && element?.cumpleCondicionesTai === false">
+                *ngIf="element.estadoProgramacionInicialCodigo === estadosProgramacion.sinAprobacionProgramacionPersonal">
                 Aprobar programación
         </button>
 
@@ -71,8 +71,7 @@
                 class="btn-table"
                 (click)="openRegistroProgramacion( element , false)"
                 *ngIf=" (element.estadoProgramacionInicialCodigo === estadosProgramacion.enRegistroProgramacion
-                        || element.estadoProgramacionInicialCodigo === estadosProgramacion.conAprobacionProgramacionPersonal
-                        || element.estadoProgramacionInicialCodigo === estadosProgramacion.sinAprobacionProgramacionPersonal) && element?.cumpleCondicionesTai === false">
+                        || element.estadoProgramacionInicialCodigo === estadosProgramacion.sinAprobacionProgramacionPersonal)">
                 Ver detalle/Editar
         </button>
 
@@ -81,7 +80,7 @@
                 color="accent"
                 class="btn-table"
                 (click)="openRegistroProgramacion( element , true )"
-                *ngIf="element?.cumpleCondicionesTai === true">
+                *ngIf="element.estadoProgramacionInicialCodigo === estadosProgramacion.conAprobacionProgramacionPersonal">
                 Ver historial
         </button>
 
