@@ -20,6 +20,7 @@ namespace asivamosffie.model.Models
         public bool? VerEditarBitacora { get; set; }
         public int? CantidadSemanas { get; set; }
         public int? NumeroSemana { get; set; }
+        public bool? CumpleCondicionesTai { get; set; }
         public bool? VerReportarSeguimientoSemanal { get; set; }
         public bool? VerCargarActa { get; set; }
         public bool? EnviarVerificacion { get; set; }
