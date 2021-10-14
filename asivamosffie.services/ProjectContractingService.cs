@@ -588,6 +588,7 @@ namespace asivamosffie.services
 
             foreach (var proyecto in ListProyectos)
             {
+                bool cumpleCondicionTai = false;
                 if (!string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo))
                 {
                     Localizacion departamento = ListDepartamentos.Find(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipioNavigation.IdPadre);
@@ -606,11 +607,14 @@ namespace asivamosffie.services
                         NumeroSolicitud = proyecto?.ContratacionProyecto?.FirstOrDefault()?.Contratacion?.NumeroSolicitud ?? "No asignado"
                     };
 
-                    if (proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.Disponible)
+                    cumpleCondicionTai = ValidarCumpleTaiContratistaxProyectoId(proyecto.ProyectoId);
+
+                    if (proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.Disponible && !cumpleCondicionTai)
                         proyectoGrilla.TieneObra = true;
 
-                    if (proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.Disponible)
+                    if (proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.Disponible && !cumpleCondicionTai)
                         proyectoGrilla.TieneInterventoria = true;
+
 
                     if (proyecto.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.Disponible ||
                         proyecto.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico ||
@@ -620,7 +624,7 @@ namespace asivamosffie.services
                         proyecto.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico ||
                         proyecto.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario ||
                         proyecto.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.Liberado_por_comunicacion_decision_TAI_al_contratista ||
-                        ValidarCumpleTaiContratistaxProyectoId(proyecto.ProyectoId)
+                        cumpleCondicionTai
                         )
                     {
                         ListProyectoGrilla.Add(proyectoGrilla);
