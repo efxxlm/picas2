@@ -9,7 +9,7 @@ using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
 using Z.EntityFramework.Plus;
-using Microsoft.AspNetCore.StaticFiles;
+using asivamosffie.services.Helpers.Constants;
 
 namespace asivamosffie.services
 {
@@ -550,18 +550,6 @@ namespace asivamosffie.services
                                                     r => !(bool)r.Eliminado
                                                  && r.EstadoJuridicoCodigo == ConstantCodigoEstadoJuridico.Aprobado
                                                  && (bool)r.RegistroCompleto
-                                                 && (
-                                                     r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.Disponible ||
-                                                     r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico ||
-                                                     r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario ||
-                                                     r.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.Liberado_por_comunicacion_decision_TAI_al_contratista ||
-
-                                                     r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.Disponible ||
-                                                     r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico ||
-                                                     r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario ||
-                                                     r.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.Liberado_por_comunicacion_decision_TAI_al_contratista 
-
-                                                     )
                                                 && r.TipoIntervencionCodigo == (string.IsNullOrEmpty(pTipoIntervencion) ? r.TipoIntervencionCodigo : pTipoIntervencion)
                                                 && r.LlaveMen.Contains((string.IsNullOrEmpty(pLlaveMen) ? r.LlaveMen : pLlaveMen))
                                                 && r.LocalizacionIdMunicipio == (string.IsNullOrEmpty(pMunicipio) ? r.LocalizacionIdMunicipio : pMunicipio)
@@ -624,7 +612,19 @@ namespace asivamosffie.services
                     if (proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.Disponible)
                         proyectoGrilla.TieneInterventoria = true;
 
-                    ListProyectoGrilla.Add(proyectoGrilla);
+                    if (proyecto.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.Disponible ||
+                        proyecto.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico ||
+                        proyecto.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario ||
+                        proyecto.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.Liberado_por_comunicacion_decision_TAI_al_contratista ||
+                        proyecto.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.Disponible ||
+                        proyecto.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteTecnico ||
+                        proyecto.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario ||
+                        proyecto.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.Liberado_por_comunicacion_decision_TAI_al_contratista ||
+                        ValidarCumpleTaiContratistaxProyectoId(proyecto.ProyectoId)
+                        )
+                    {
+                        ListProyectoGrilla.Add(proyectoGrilla);
+                    }
 
                 }
             }
@@ -1354,6 +1354,58 @@ namespace asivamosffie.services
         public async Task<List<FaseComponenteUso>> GetListFaseComponenteUso()
         {
             return _context.FaseComponenteUso.ToList();
+        }
+
+        private bool ValidarCumpleTaiContratistaxProyectoId(int pProyectoId)
+        {
+            //Nueva restricción control de cambios
+            bool cumpleCondicionesTai = false;
+            ContratacionProyecto cp = _context.ContratacionProyecto.Where(r => r.ProyectoId == pProyectoId && r.Eliminado != true).FirstOrDefault();
+            if (cp != null)
+            {
+                Contrato contrato = _context.Contrato.Where(r => r.ContratacionId == cp.ContratacionId).FirstOrDefault();
+                if (contrato != null)
+                {
+                    List<ControversiaContractual> controversiaContractualList = _context.ControversiaContractual.Where(r => r.ContratoId == contrato.ContratoId && r.Eliminado != true).ToList();
+                    foreach (var controversiaContractual in controversiaContractualList)
+                    {
+                        SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud
+                                    .Where(r => r.SolicitudId == controversiaContractual.ControversiaContractualId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales && (r.Eliminado == false || r.Eliminado == null))
+                                    .FirstOrDefault();
+
+                        if (sesionComiteSolicitud != null)
+                        {
+                            if (sesionComiteSolicitud.ComiteTecnicoFiduciarioId != null)
+                            {
+                                ComiteTecnico comiteFiduciario = _context.ComiteTecnico.Find(sesionComiteSolicitud.ComiteTecnicoFiduciarioId);
+
+                                if (comiteFiduciario != null)
+                                {
+                                    //cumple la primera condición de ser aprobada por el comite fiduciario
+                                    if (comiteFiduciario.EstadoComiteCodigo == ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada)
+                                    {
+                                        //validar que esa controversia tenga actuaciones finalizadas y con actuación "Comunicacion_decision_TAI_al_contratista"
+                                        ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion.Where(
+                                            r => r.ControversiaContractualId == controversiaContractual.ControversiaContractualId
+                                            && r.Eliminado != true
+                                            && r.EstadoCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada
+                                            && r.ActuacionAdelantadaCodigo == ConstanCodigoActuacionAdelantada.Comunicacion_decision_TAI_al_contratista
+                                            && r.FechaActuacion < DateTime.Now).FirstOrDefault();
+
+                                        if (controversiaActuacion != null)
+                                        {
+                                            cumpleCondicionesTai = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            
+            return cumpleCondicionesTai;
         }
 
     }
