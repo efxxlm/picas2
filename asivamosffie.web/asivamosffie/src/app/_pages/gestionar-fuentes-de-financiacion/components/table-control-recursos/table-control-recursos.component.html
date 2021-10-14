@@ -51,7 +51,7 @@
           <button *ngIf="!esVerDetalle" mat-raised-button color="accent" class="btn-table" (click)="editar(element.controlRecursoId)">
             Ver detalle/<br />Editar
           </button>
-          <button *ngIf="!esVerDetalle || (element.lastOne == true && esVerDetalle)" mat-raised-button color="accent" class="btn-table" (click)="eliminar(element.controlRecursoId)">
+          <button *ngIf="!esVerDetalle || (element.lastOne == true && esVerDetalle)" mat-raised-button color="accent" class="btn-table" (click)="eliminar(element)">
             Eliminar
           </button>
           <button *ngIf="esVerDetalle" mat-raised-button color="accent" class="btn-table" (click)="verDetalle(element.controlRecursoId)">

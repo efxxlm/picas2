@@ -20,6 +20,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [],
@@ -44,7 +45,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatCheckboxModule,
     MatTooltipModule,
     MatAutocompleteModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatMenuModule
   ],
   exports: [
     MatButtonModule,
@@ -66,7 +68,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatCheckboxModule,
     MatTooltipModule,
     MatAutocompleteModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatMenuModule
   ]
 })
 export class MaterialModule {}

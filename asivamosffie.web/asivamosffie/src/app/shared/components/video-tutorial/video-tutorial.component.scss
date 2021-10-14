@@ -1,0 +1,14 @@
+.video-16-9 {
+  padding-bottom: 56.25%;
+  position: relative;
+  margin: 2em 0;
+
+  video,
+  iframe {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}

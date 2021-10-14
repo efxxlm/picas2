@@ -223,7 +223,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field>
-                  <input matInput type="text" maxlength="20" #segundoNombre formControlName="segundoNombre" required />
+                  <input matInput type="text" maxlength="20" #segundoNombre formControlName="segundoNombre" />
                 </mat-form-field>
                 <span
                   class="contador"
@@ -328,7 +328,6 @@
                     maxlength="20"
                     #segundoApellido
                     formControlName="segundoApellido"
-                    required
                   />
                 </mat-form-field>
                 <span
@@ -517,7 +516,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field>
-                  <input matInput type="text" maxlength="7" #telefonoFijo formControlName="telefonoFijo" required />
+                  <input matInput type="text" maxlength="7" #telefonoFijo formControlName="telefonoFijo" />
                 </mat-form-field>
                 <span
                   class="contador"
@@ -864,7 +863,6 @@
                   (onContentChanged)="maxLength($event, 500)"
                   formControlName="observaciones"
                   #observaciones
-                  required
                 >
                 </quill-editor>
                 <span

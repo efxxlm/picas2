@@ -11,6 +11,7 @@ import { ModalDialogComponent } from './components/modal-dialog/modal-dialog.com
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { SpinnerLoadingComponent } from './components/spinner-loading/spinner-loading.component';
 import { SubMenuComponent } from './components/sub-menu/sub-menu.component';
+import { VideoTutorialComponent } from './components/video-tutorial/video-tutorial.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { SubMenuComponent } from './components/sub-menu/sub-menu.component';
     ModalDialogComponent,
     NavbarComponent,
     SpinnerLoadingComponent,
-    SubMenuComponent
+    SubMenuComponent,
+    VideoTutorialComponent
   ],
   exports: [
     HeaderComponent,

@@ -49,7 +49,7 @@ namespace asivamosffie.services
                     //.Include(RC => RC.VigenciaAporte)                   
                     .ToListAsync();
 
-                return ControlGrid.OrderBy(r => r.RegistroPresupuestal?.NumeroRp).ThenByDescending(r => r.FechaCreacion).ToList();
+                return ControlGrid.OrderBy(r => r.RegistroPresupuestal?.NumeroRp).ThenByDescending(r => r.RegistroPresupuestalId).ToList();
 
             }
             catch (Exception )
