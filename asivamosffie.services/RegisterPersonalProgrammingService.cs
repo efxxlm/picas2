@@ -40,10 +40,10 @@ namespace asivamosffie.services
         public async Task<List<VRegistrarPersonalObra>> GetListProyectos()
         {
             List<VRegistrarPersonalObra> vRegistrarPersonalObra = await _context.VRegistrarPersonalObra.ToListAsync();
-            vRegistrarPersonalObra.ForEach(r => {
+            /*vRegistrarPersonalObra.ForEach(r => {
                 //Nueva restricción control de cambios
-                r.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(r.ContratoId,false);
-            });
+                r.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(r.ContratoId,false,false,0);
+            });*/
             return vRegistrarPersonalObra;
         }
 

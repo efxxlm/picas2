@@ -233,8 +233,7 @@ namespace asivamosffie.services
                         contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp != null &&
                         contrato.ContratoPoliza?.OrderByDescending(r => r.FechaAprobacion)?.FirstOrDefault()?.FechaAprobacion != null &&
                         (existeNovedad > 0 ? listaNovedadesActivas.Where(x => x.ContratoId == contrato.ContratoId).Count() > 0 :
-                        listaNovedadesActivas.Where(x => x.ContratoId == contrato.ContratoId).Count() == 0) &&
-                        !(_contractualControversy.ValidarCumpleTaiContratista(contrato.ContratoId,true))
+                        listaNovedadesActivas.Where(x => x.ContratoId == contrato.ContratoId).Count() == 0)
                     )
                 {
                     if(contrato?.Contratacion?.Contratista != null)
@@ -279,6 +278,7 @@ namespace asivamosffie.services
                     }
 
                     contrato.TieneActa = tieneActa;
+                    contrato.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(contrato.ContratoId, true, false, 0);
 
                     //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?
                     listaContratos.Add(contrato);
@@ -395,7 +395,10 @@ namespace asivamosffie.services
             if (novedadContractual != null)
             {
                 if(novedadContractual.Contrato != null)
+                {
                     novedadContractual.Contrato.FechaEstimadaFinalizacion = _commonService.GetFechaEstimadaFinalizacion((int)novedadContractual.ContratoId);
+                    novedadContractual.Contrato.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(novedadContractual.Contrato.ContratoId, true, false, 0);
+                }
             }
 
             List<NovedadContractualAportante> novedadContractualAportantes = _context.NovedadContractualAportante

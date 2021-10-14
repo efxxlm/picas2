@@ -22,6 +22,13 @@ import { NovedadContractual, NovedadContractualDescripcion } from 'src/app/_inte
 })
 export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
   @Input() estaEditando: boolean;
+  @Input() proyecto: any;
+  @Input() contrato: any;
+  @Input() novedad: NovedadContractual;
+  novedadesOld : NovedadContractual[] = [];
+  fechaFinSuspensionVal: Date;
+  @Output() guardar = new EventEmitter();
+
   tipoNovedadCodigo = TipoNovedadCodigo;
   addressForm = this.fb.group({
     novedadContractualId: [],
@@ -119,12 +126,6 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
     return alphanumeric.test(inputChar) ? true : false;
   }
 
-  @Input() proyecto: any;
-  @Input() contrato: any;
-  @Input() novedad: NovedadContractual;
-  novedadesOld : NovedadContractual[] = [];
-  fechaFinSuspensionVal: Date;
-  @Output() guardar = new EventEmitter();
 
   constructor(
     private fb: FormBuilder,
@@ -139,35 +140,46 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
     this.tipoNovedadArray = [];
     this.tipoNovedadSuspension = [];
     const tieneActa = this.contrato != null ? this.contrato?.tieneActa : false;
+    const cumpleCondicionesTai = this.contrato != null ? this.contrato?.cumpleCondicionesTai : false;
     this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response => {
       response.forEach(n => {
-        if(tieneActa === true){
-          if(n.codigo !== this.tipoNovedadCodigo.reinicio && n.codigo !== this.tipoNovedadCodigo.prorroga_a_las_Suspension){
-            let novedadContractualDescripcion: NovedadContractualDescripcion = {
-              tipoNovedadCodigo: n.codigo,
-              nombreTipoNovedad: n.nombre
-            };
-            this.tipoNovedadArray.push(novedadContractualDescripcion);
-          }else{
-            let novedadContractualDescripcion: NovedadContractualDescripcion = {
-              tipoNovedadCodigo: n.codigo,
-              nombreTipoNovedad: n.nombre
-            };
-            this.tipoNovedadSuspension.push(novedadContractualDescripcion);
-          }
+        if(cumpleCondicionesTai){
+          if(n.codigo === this.tipoNovedadCodigo.modificacion_de_Condiciones_Contractuales){
+             let novedadContractualDescripcion: NovedadContractualDescripcion = {
+               tipoNovedadCodigo: n.codigo,
+               nombreTipoNovedad: n.nombre
+             };
+             this.tipoNovedadArray.push(novedadContractualDescripcion);
+         }
         }else{
-          if(n.codigo !== this.tipoNovedadCodigo.reinicio &&
-             n.codigo !== this.tipoNovedadCodigo.prorroga_a_las_Suspension &&
-             n.codigo !== this.tipoNovedadCodigo.suspension){
+          if(tieneActa === true){
+            if(n.codigo !== this.tipoNovedadCodigo.reinicio && n.codigo !== this.tipoNovedadCodigo.prorroga_a_las_Suspension){
               let novedadContractualDescripcion: NovedadContractualDescripcion = {
                 tipoNovedadCodigo: n.codigo,
                 nombreTipoNovedad: n.nombre
               };
               this.tipoNovedadArray.push(novedadContractualDescripcion);
+            }else{
+              let novedadContractualDescripcion: NovedadContractualDescripcion = {
+                tipoNovedadCodigo: n.codigo,
+                nombreTipoNovedad: n.nombre
+              };
+              this.tipoNovedadSuspension.push(novedadContractualDescripcion);
+            }
+          }else{
+            if(n.codigo !== this.tipoNovedadCodigo.reinicio &&
+               n.codigo !== this.tipoNovedadCodigo.prorroga_a_las_Suspension &&
+               n.codigo !== this.tipoNovedadCodigo.suspension){
+                let novedadContractualDescripcion: NovedadContractualDescripcion = {
+                  tipoNovedadCodigo: n.codigo,
+                  nombreTipoNovedad: n.nombre
+                };
+                this.tipoNovedadArray.push(novedadContractualDescripcion);
+            }
           }
         }
-      });
 
+      });
       this.addressForm.get('novedadContractualId').setValue(this.novedad.novedadContractualId);
       this.addressForm.get('fechaSolicitudNovedad').setValue(this.novedad.fechaSolictud);
       this.addressForm.get('instanciaPresentoSolicitud').setValue(this.novedad.instanciaCodigo);
@@ -180,10 +192,12 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
       if((this.novedad.novedadContractualId == null || this.novedad.novedadContractualId.toString() == 'undefined') && this.contrato.novedadContractual.length > 0){
         esCreacion = true;
         this.novedadesOld = this.contrato.novedadContractual;
-        //this.novedad = this.contrato.novedadContractual[0];
+      }else{
+        esCreacion = false;
+        this.novedadesOld.push(this.novedad);
       }
       let existeSuspension = false;
-      console.log(this.novedad, this.contrato,this.novedadesOld);
+
       if(this.novedadesOld.length > 0){
         this.novedadesOld.forEach(novedad =>{
           if (
@@ -204,7 +218,8 @@ export class FormRegistrarNovedadComponent implements OnInit, OnChanges {
           }
         });
       }
-      if(existeSuspension){
+
+      if(existeSuspension && !cumpleCondicionesTai){
         this.tipoNovedadSuspension.forEach(element => {
           this.tipoNovedadArray.push(element);
         });

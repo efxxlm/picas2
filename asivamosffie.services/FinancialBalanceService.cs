@@ -878,7 +878,7 @@ namespace asivamosffie.services
                 if (contrato != null)
                 {
                     if(!cumpleCondicionesTai)
-                        cumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(contrato.ContratoId, false);
+                        cumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(contrato.ContratoId, false, false, 0);
 
                     if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
                         numeroContratoObra = contrato.NumeroContrato ?? string.Empty;

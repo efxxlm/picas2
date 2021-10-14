@@ -108,6 +108,9 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public List<VConceptosXcontratoXfaseXproyecto> VConceptosXcontratoXfaseXproyecto { get; set; }
+
+        [NotMapped]
+        public bool CumpleCondicionesTai { get; set; }
     }
 
 

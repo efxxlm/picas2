@@ -79,6 +79,6 @@ namespace asivamosffie.services.Interfaces
         Task<SeguimientoActuacionDerivada> GetSeguimientoActuacionDerivadabyId(int pSeguimientoActuacionDerivadaId);
         Task<Respuesta> ChangeStateActuacion(int pControversiaActuacionId, string value);
         Task VencimientoTerminosContrato();
-        bool ValidarCumpleTaiContratista(int pContratoId, bool esNovedad);
+        bool ValidarCumpleTaiContratista(int pContratoId, bool esNovedad, bool esSeguimiento, int pProyectoId);
     }
 }

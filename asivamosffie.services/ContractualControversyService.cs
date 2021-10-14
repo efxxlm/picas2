@@ -1122,7 +1122,7 @@ namespace asivamosffie.services
 
                     if (contrato != null)
                     {
-                        if (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada && this.ValidarCumpleTaiContratista(contrato.ContratoId, false))
+                        if (pEstadoReclamacionCodigo == ConstantCodigoEstadoControversiaActuacion.Finalizada && this.ValidarCumpleTaiContratista(contrato.ContratoId, false, false, 0))
                         {
                             if (actuacionSeguimientoOld?.ControversiaContractualId > 0)
                             {
@@ -4946,7 +4946,7 @@ namespace asivamosffie.services
             }
         }
 
-        public bool ValidarCumpleTaiContratista(int pContratoId, bool esNovedad)
+        public bool ValidarCumpleTaiContratista(int pContratoId, bool esNovedad, bool esSeguimiento, int pProyectoId)
         {
             //Nueva restricción control de cambios
             bool cumpleCondicionesTai = false;
@@ -4980,37 +4980,40 @@ namespace asivamosffie.services
 
                                 if (controversiaActuacion != null)
                                 {
-                                    cumpleCondicionesTai = true;
+                                    if (esSeguimiento)
+                                    {
+                                        Contrato contrato = _context.Contrato.Find(pContratoId);
+                                        if (contrato != null)
+                                        {
+                                            ContratacionProyecto cp = _context.ContratacionProyecto.Where(r => r.ProyectoId == pProyectoId && r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+                                            if (cp != null)
+                                            {
+                                                List<SeguimientoDiario> listaSeguimientoDiario = _context.SeguimientoDiario
+                                                                                                .Where(s => s.ContratacionProyectoId == cp.ContratacionProyectoId &&
+                                                                                                       s.Eliminado != true)
+                                                                                                .OrderByDescending(r => r.FechaSeguimiento)
+                                                                                                .ToList();
+                                                if (listaSeguimientoDiario.Count() > 0)
+                                                {
+                                                    SeguimientoDiario sd = listaSeguimientoDiario.FirstOrDefault();
+                                                    if (sd != null)
+                                                    {
+                                                        if (sd.FechaSeguimiento.Date >= ((DateTime)controversiaActuacion.FechaActuacion).Date && sd.EstadoCodigo != "1")
+                                                        {
+                                                            cumpleCondicionesTai = true;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        cumpleCondicionesTai = true;
+                                    }
                                 }
                             }
                         }
-                    }
-                }
-            }
-            //
-            if (cumpleCondicionesTai && esNovedad)
-            {
-                List<NovedadContractual> listaNovedades = _context.NovedadContractual
-                                                            .Where(x => x.Eliminado != true && x.ContratoId == pContratoId)
-                                                            .Include(x => x.NovedadContractualDescripcion)
-                                                            .ToList();
-                foreach (var r in listaNovedades)
-                {
-                    int totalDescripcion = _context.NovedadContractualDescripcion
-                        .Where(r => r.NovedadContractualId == r.NovedadContractualId
-                                    && (r.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga
-                                    || r.TipoNovedadCodigo == ConstanTiposNovedades.Adición
-                                    || r.TipoNovedadCodigo == ConstanTiposNovedades.Suspensión
-                                    || r.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga_a_las_Suspensión)).Count();
-
-                    if (totalDescripcion > 0)
-                    {
-                        cumpleCondicionesTai = true;
-                        break;
-                    }
-                    else
-                    {
-                        cumpleCondicionesTai = false;
                     }
                 }
             }
