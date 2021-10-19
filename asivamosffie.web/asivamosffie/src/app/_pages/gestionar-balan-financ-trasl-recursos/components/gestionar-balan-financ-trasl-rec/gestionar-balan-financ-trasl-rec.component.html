@@ -63,15 +63,15 @@
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
                 <td mat-cell *matCellDef="let element" align="center">
-                    <a *ngIf="element.estadoBalanceCodigo === null || element.estadoBalanceCodigo === '0'"
+                    <button *ngIf="element.estadoBalanceCodigo === null || element.estadoBalanceCodigo === '0'"
                         mat-button
                         mat-raised-button
                         color="accent"
                         class="btn-table"
-                        [routerLink]="['validarBalance', element.proyectoId]"
+                        (click)="validarBalance(element)"
                     >
                         Validar balance
-                    </a>
+                    </button>
                     <a *ngIf="(element.estadoBalanceCodigo !== '0' && element.estadoBalanceCodigo !== estadoBalance.balanceAprobado && element.cumpleCondicionesTai !== true)
                               || (element.cumpleCondicionesTai === true && element.estadoBalanceCodigo === estadoBalance.enProcesoValidacion)
                               "
@@ -83,7 +83,7 @@
                     >
                         Ver detalle/Editar
                     </a>
-                    <a *ngIf="element.estadoBalanceCodigo === estadoBalance.balanceAprobado"
+                    <a *ngIf="element.estadoBalanceCodigo === estadoBalance.balanceAprobado || (element.cumpleCondicionesTai === true && element.estadoBalanceCodigo === estadoBalance.balanceValidado)"
                         mat-button
                         mat-raised-button
                         color="accent"
@@ -93,7 +93,7 @@
                         Ver detalle
                     </a>
                     <button
-                        *ngIf="element.registroCompleto === true && element.estadoBalanceCodigo === estadoBalance.balanceValidado && element.cumpleCondicionesTai !== true"
+                        *ngIf="element.registroCompleto === true && element.estadoBalanceCodigo === estadoBalance.balanceValidado"
                         mat-button
                         mat-raised-button
                         color="accent"
@@ -113,8 +113,18 @@
                       type="button"
                       (click)="liberarSaldo(element)"
                   >
-                      Aprobar Balance
+                      Liberar saldo
                 </button>
+                <!--<button
+                      mat-button
+                      mat-raised-button
+                      color="accent"
+                      class="btn-table"
+                      type="button"
+                      (click)="liberarSaldoDelete(element)"
+                  >
+                      Liberar saldo - Rollback
+                </button>-->
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

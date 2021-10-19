@@ -13,7 +13,7 @@ export class ValidarComponent implements OnInit {
   listaDisponibilidades: any;
   listaestado=['En validación presupuestal','Devuelta por coordinación financiera',
     'Devuelta por validación presupuestal','Con validación presupuestal',
-    'Con disponibilidad presupuestal','Rechazada por validación presupuestal','Con disponibilidad cancelada']
+    'Con disponibilidad presupuestal','Rechazada por validación presupuestal','Con disponibilidad cancelada','Liberación de saldo']
 
   devueltaPresupuestal_class:string;
 
@@ -62,6 +62,10 @@ export class ValidarComponent implements OnInit {
         break;
 
         case 'Con disponibilidad cancelada':
+          this.validarCompletos( disponibilidad );
+        break;
+
+        case 'Liberación de saldo':
           this.validarCompletos( disponibilidad );
         break;
       }

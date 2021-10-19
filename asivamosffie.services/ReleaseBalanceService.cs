@@ -9,7 +9,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Z.EntityFramework.Plus;
 
-
 namespace asivamosffie.services
 {
     public class ReleaseBalanceService : IReleaseBalanceService
@@ -41,6 +40,8 @@ namespace asivamosffie.services
                         .Where(r => r.Eliminado != true && r.ContratacionId == cp.ContratacionId && r.NumeroDrp != null && (r.EstadoSolicitudCodigo == "5" || r.EstadoSolicitudCodigo == "8")).FirstOrDefault();
                     if (drp != null)
                     {
+                        DisponibilidadPresupuestalHistorico dpph = _context.DisponibilidadPresupuestalHistorico.Where(r => r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId).FirstOrDefault();
+                            
                         List<VSaldoAliberar> datosAportante = _context.VSaldoAliberar.Where(r => r.ProyectoId == pProyectoId && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId).ToList();
                         BalanceFinanciero balanceFinanciero = _context.BalanceFinanciero.Where(r => r.ProyectoId == pProyectoId).FirstOrDefault();
                         bool liberado = false;
@@ -81,22 +82,24 @@ namespace asivamosffie.services
                             }
                             if (!liberado)
                             {
-                                da.Saldo = valorActual;
+                                da.SaldoPresupuestal = valorActual;
                             }
                             else
                             {
                                 ComponenteUsoHistorico cuh = _context.ComponenteUsoHistorico.Find(da.ComponenteUsoHistoricoId);
-                                da.Saldo = cuh.Saldo;
+                                if (cuh != null)
+                                    da.SaldoPresupuestal = cuh.Saldo;
                             }
                         });
                         drps.Add(new
                         {
-                            NumeroDrp = drp.NumeroDrp,
-                            DisponibilidadPresupuestalId = drp.DisponibilidadPresupuestalId,
-                            ProyectoId = cp.ProyectoId,
-                            ContratacionId = cp.ContratacionId,
+                            DisponibilidadPresupuestalHistoricoId = dpph != null ? dpph.DisponibilidadPresupuestalHistoricoId : 0,
+                            drp.NumeroDrp,
+                            drp.DisponibilidadPresupuestalId,
+                            cp.ProyectoId,
+                            cp.ContratacionId,
                             AportantesGrid = datosAportante,
-                            ValorSolicitud = drp.ValorSolicitud,
+                            drp.ValorSolicitud,
                             BalanceFinanciero = balanceFinanciero
                         });
                     }
@@ -232,7 +235,6 @@ namespace asivamosffie.services
         public async Task<Respuesta> ReleaseBalance(int pBalanceFinancieroId, string user)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Liberar_saldo, (int)EnumeratorTipoDominio.Acciones);
-
             Respuesta respuesta = new Respuesta();
             try
             {
@@ -471,7 +473,7 @@ namespace asivamosffie.services
                                 .Where(b => b.BalanceFinancieroId == pBalanceFinancieroId)
                                 .Update(b => new BalanceFinanciero
                                 {
-                                    EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_aprobado,
+                                    EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado,
                                     UsuarioModificacion = user,
                                     FechaModificacion = DateTime.Now
                                 });
@@ -502,5 +504,201 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> DeleteReleaseBalance(int pBalanceFinancieroId, string user)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Liberar_saldo, (int)EnumeratorTipoDominio.Acciones);
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string strCrearEditar = "LIBERAR SALDO - BORRAR";
+                if (pBalanceFinancieroId != 0)
+                {
+                    BalanceFinanciero balanceFinanciero = _context.BalanceFinanciero.Find(pBalanceFinancieroId);
+                    if (balanceFinanciero != null)
+                    {
+                        DisponibilidadPresupuestal drp = null;
+                        DisponibilidadPresupuestalProyecto dpp = null;
+                        List<ContratacionProyecto> contratacionProyectos = _context.ContratacionProyecto.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.Eliminado != true).ToList();
+                        List<ProyectoAportante> proyectoAportantesData = new List<ProyectoAportante>();
+
+                        foreach (var cp in contratacionProyectos)
+                        {
+                            List<VSaldoAliberar> usos = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId).ToList();
+                            if (usos.FirstOrDefault()?.DisponibilidadPresupuestalId != 0)
+                            {
+                                drp = _context.DisponibilidadPresupuestal.Find(usos.FirstOrDefault().DisponibilidadPresupuestalId);
+                                dpp = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == usos.FirstOrDefault().DisponibilidadPresupuestalId && r.ProyectoId == balanceFinanciero.ProyectoId).FirstOrDefault();
+                            }
+
+                            if (drp != null)
+                            {
+                                decimal valorDrpActual = drp.ValorSolicitud;
+
+                                foreach (var uso in usos)
+                                {
+                                    //Acá se hace el cambio, los valores que estban en el histórico pasan a la tabla principal y en el histórico queda el 
+                                    //valor del uso original
+
+                                    ComponenteUso componenteUso = _context.ComponenteUso.Find(uso.ComponenteUsoId);
+                                    ComponenteUsoHistorico componenteUsoHistorico = _context.ComponenteUsoHistorico.Find(uso.ComponenteUsoHistoricoId);
+                                    decimal valorUsoSinLiberar = componenteUso.ValorUso;
+                                    decimal valorUsoAntiguo = componenteUsoHistorico.ValorUso;
+
+                                    GestionFuenteFinanciacion gff = null;
+                                    if (dpp != null)
+                                        gff = _context.GestionFuenteFinanciacion.Where(r => r.DisponibilidadPresupuestalProyectoId == dpp.DisponibilidadPresupuestalProyectoId && r.FuenteFinanciacionId == componenteUso.FuenteFinanciacionId).FirstOrDefault();
+
+                                    await _context.Set<ComponenteUsoHistorico>()
+                                                        .Where(r => r.ComponenteUsoHistoricoId == uso.ComponenteUsoHistoricoId)
+                                                        .UpdateAsync(r => new ComponenteUsoHistorico()
+                                                        {
+                                                            FechaModificacion = DateTime.Now,
+                                                            UsuarioModificacion = user,
+                                                            Liberado = false,
+                                                            ValorUso = valorUsoSinLiberar
+                                                        });
+
+
+                                    await _context.Set<ComponenteUso>()
+                                                        .Where(r => r.ComponenteUsoId == uso.ComponenteUsoId)
+                                                        .UpdateAsync(r => new ComponenteUso()
+                                                        {
+                                                            FechaModificacion = DateTime.Now,
+                                                            UsuarioModificacion = user,
+                                                            ValorUso = valorUsoAntiguo
+                                                        });
+
+                                    //Actualizar gestiones fuentes de financiación con los valores del histórico fuente del componente Uso
+                                    //Eliminar las de historico
+                                    if (gff != null)
+                                    {
+                                        GestionFuenteFinanciacionHistorico gffh = _context.GestionFuenteFinanciacionHistorico.Where(r => r.GestionFuenteFinanciacionId == gff.GestionFuenteFinanciacionId).FirstOrDefault();
+                                        if (gffh != null)
+                                        {
+                                            //valores antiguos gff
+
+                                            decimal A_SaldoActual = gffh.SaldoActual;
+                                            decimal A_ValorSolicitado = gffh.ValorSolicitado;
+                                            decimal A_NuevoSaldo = gffh.NuevoSaldo;
+
+                                            await _context.Set<GestionFuenteFinanciacion>()
+                                                        .Where(r => r.GestionFuenteFinanciacionId == gff.GestionFuenteFinanciacionId)
+                                                        .UpdateAsync(r => new GestionFuenteFinanciacion()
+                                                        {
+                                                            FechaModificacion = DateTime.Now,
+                                                            UsuarioModificacion = user,
+                                                            SaldoActual = A_SaldoActual,
+                                                            ValorSolicitado = A_ValorSolicitado,
+                                                            NuevoSaldo = A_NuevoSaldo
+                                                        });
+                                            _context.GestionFuenteFinanciacionHistorico.Remove(gffh);
+
+                                        }
+
+                                    }
+                                    //obtengo componente Aportante
+                                    ComponenteAportante componenteAportante = _context.ComponenteAportante.Find(componenteUso.ComponenteAportanteId);
+                                    if (componenteAportante != null)
+                                    {
+                                        ContratacionProyectoAportante cpa = _context.ContratacionProyectoAportante.Find(componenteAportante.ContratacionProyectoAportanteId);
+                                        if (cpa != null)
+                                        {
+                                            Contratacion contratacionDP = _context.Contratacion.Where(r => r.ContratacionId == cp.ContratacionId).FirstOrDefault();
+
+                                            //proyectoAportante
+                                            //actualizo el drp con el nuevo valor de los usos
+                                            ProyectoAportante pa = _context.ProyectoAportante.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.AportanteId == cpa.CofinanciacionAportanteId).FirstOrDefault();
+                                            if (pa != null)
+                                            {
+                                                ProyectoAportanteHistorico pah = _context.ProyectoAportanteHistorico.Where(r => r.ProyectoAportanteId == pa.ProyectoAportanteId).FirstOrDefault();
+                                                if (pah != null)
+                                                {
+                                                    //actualizo el regitro con los valores nuevos
+                                                    await _context.Set<ProyectoAportante>()
+                                                        .Where(r => r.ProyectoId == pa.ProyectoId && r.AportanteId == pa.AportanteId)
+                                                        .UpdateAsync(r => new ProyectoAportante()
+                                                        {
+                                                            FechaModificacion = DateTime.Now,
+                                                            UsuarioModificacion = user,
+                                                            ValorObra = pah.ValorObra,
+                                                            ValorInterventoria = pah.ValorInterventoria,
+                                                            ValorTotalAportante = pah.ValorTotalAportante
+                                                        });
+
+                                                    _context.ProyectoAportanteHistorico.Remove(pah);
+                                                }
+                                            }
+
+                                            ContratacionProyectoAportanteHistorico cpah = _context.ContratacionProyectoAportanteHistorico.Where(r => r.ContratacionProyectoAportanteId == cpa.ContratacionProyectoAportanteId).FirstOrDefault();
+                                            if (cpah != null)
+                                            {
+                                                await _context.Set<ContratacionProyectoAportante>()
+                                                                .Where(r => r.ContratacionProyectoAportanteId == cpa.ContratacionProyectoAportanteId)
+                                                                .UpdateAsync(r => new ContratacionProyectoAportante()
+                                                                {
+                                                                    FechaModificacion = DateTime.Now,
+                                                                    UsuarioModificacion = user,
+                                                                    ValorAporte = cpah.ValorAporte
+                                                                });
+                                                _context.ContratacionProyectoAportanteHistorico.Remove(cpah);
+                                            }
+                                        }
+                                    }
+                                }
+                                //crear el registro histórico del ddp, con el valor actual del drp
+                                DisponibilidadPresupuestalHistorico dph = _context.DisponibilidadPresupuestalHistorico.Where(r => r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId).FirstOrDefault();
+                                if (dph != null)
+                                {
+
+                                    //actualizo el drp con el nuevo valor de los usos
+                                    await _context.Set<DisponibilidadPresupuestal>()
+                                                    .Where(r => r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId)
+                                                    .UpdateAsync(r => new DisponibilidadPresupuestal()
+                                                    {
+                                                        FechaModificacion = DateTime.Now,
+                                                        UsuarioModificacion = user,
+                                                        ValorSolicitud = dph.ValorSolicitud
+                                                    });
+                                    _context.DisponibilidadPresupuestalHistorico.Remove(dph);
+                                }
+                            }
+                        }
+                        
+                    }
+                    //cambio el estado del balance
+                    _context.Set<BalanceFinanciero>()
+                                .Where(b => b.BalanceFinancieroId == pBalanceFinancieroId)
+                                .Update(b => new BalanceFinanciero
+                                {
+                                    EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.En_proceso_de_validacion,
+                                    UsuarioModificacion = user,
+                                    FechaModificacion = DateTime.Now
+                                });
+                }
+                _context.SaveChanges();
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_balance_financiero_traslados_de_recursos, GeneralCodes.OperacionExitosa, idAccion, user, strCrearEditar)
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_balance_financiero_traslados_de_recursos, GeneralCodes.Error, idAccion, user, ex.InnerException.ToString())
+                    };
+            }
+        }
     }
 }

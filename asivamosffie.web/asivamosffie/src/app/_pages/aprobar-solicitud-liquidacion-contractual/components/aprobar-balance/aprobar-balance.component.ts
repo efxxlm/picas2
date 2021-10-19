@@ -18,6 +18,7 @@ export class AprobarBalanceComponent implements OnInit {
   esVerDetalle: boolean;
   proyectoId: number;
   data : any;
+  cumpleCondicionesTai: boolean = false;
 
   constructor(
     private routes: Router,
@@ -49,7 +50,7 @@ export class AprobarBalanceComponent implements OnInit {
 
   ngOnInit(): void {
     this.getBalanceByProyectoId(this.proyectoId);
-  }  
+  }
 
   redirectToParent(): void{
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
@@ -66,6 +67,7 @@ export class AprobarBalanceComponent implements OnInit {
         if( getDataByProyectoId.length > 0 ){
             this.data = getDataByProyectoId[0];
             if(this.data != null){
+              this.cumpleCondicionesTai = this.data.cumpleCondicionesTai;
               if(this.data.balanceFinanciero.length > 0)
                 this.balanceFinancieroId = this.data.balanceFinanciero[0].balanceFinancieroId;
             }

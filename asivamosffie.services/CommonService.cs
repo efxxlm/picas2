@@ -932,18 +932,41 @@ namespace asivamosffie.services
             return fechaFinalizacion;
         }
 
-        public decimal GetValorTotalDisponibilidad(int pDisponibilidadPresupuestalId)
+        public decimal GetValorTotalDisponibilidad(int pDisponibilidadPresupuestalId, bool esLiberacion)
         {
             decimal valorSolicitud = 0;
             DisponibilidadPresupuestal disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Find(pDisponibilidadPresupuestalId);
-            //no encontré los helpers, sorry
-            if (disponibilidadPresupuestal != null)
-            {
-                valorSolicitud = disponibilidadPresupuestal.ValorSolicitud;
-                valorSolicitud += _context.NovedadContractualRegistroPresupuestal.Where(r => r.DisponibilidadPresupuestalId == disponibilidadPresupuestal.DisponibilidadPresupuestalId &&
-                    (r.EstadoSolicitudCodigo == "5" || r.EstadoSolicitudCodigo == "8")).Sum(r => r.ValorSolicitud);
-            }
 
+            if (!esLiberacion)
+            {
+                //no encontré los helpers, sorry
+                if (disponibilidadPresupuestal != null)
+                {
+                    valorSolicitud = disponibilidadPresupuestal.ValorSolicitud;
+                    valorSolicitud += _context.NovedadContractualRegistroPresupuestal.Where(r => r.DisponibilidadPresupuestalId == disponibilidadPresupuestal.DisponibilidadPresupuestalId &&
+                        (r.EstadoSolicitudCodigo == "5" || r.EstadoSolicitudCodigo == "8")).Sum(r => r.ValorSolicitud);
+                }
+            }
+            else
+            {
+                DisponibilidadPresupuestalHistorico disponibilidadPresupuestalh = _context.DisponibilidadPresupuestalHistorico.Where(r => r.DisponibilidadPresupuestalId == pDisponibilidadPresupuestalId).FirstOrDefault();
+                //no encontré los helpers, sorry
+                if (disponibilidadPresupuestalh != null)
+                {
+                    valorSolicitud = disponibilidadPresupuestalh.ValorSolicitud;
+                    // valorSolicitud += _context.NovedadContractualRegistroPresupuestal.Where(r => r.DisponibilidadPresupuestalId == disponibilidadPresupuestal.DisponibilidadPresupuestalId &&
+                    //     (r.EstadoSolicitudCodigo == "5" || r.EstadoSolicitudCodigo == "8")).Sum(r => r.ValorSolicitud);
+                }
+                else
+                {
+                    if (disponibilidadPresupuestal != null)
+                    {
+                        valorSolicitud = disponibilidadPresupuestal.ValorSolicitud;
+                        valorSolicitud += _context.NovedadContractualRegistroPresupuestal.Where(r => r.DisponibilidadPresupuestalId == disponibilidadPresupuestal.DisponibilidadPresupuestalId &&
+                            (r.EstadoSolicitudCodigo == "5" || r.EstadoSolicitudCodigo == "8")).Sum(r => r.ValorSolicitud);
+                    }
+                }
+            }
             return valorSolicitud;
         }
 

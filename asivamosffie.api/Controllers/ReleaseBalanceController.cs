@@ -71,5 +71,23 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("DeleteReleaseBalance")]
+        public async Task<IActionResult> DeleteReleaseBalance([FromQuery] int pBalanceFinancieroId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string user = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _releaseBalanceService.DeleteReleaseBalance(pBalanceFinancieroId, user);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
     }
 }

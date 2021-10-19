@@ -42,14 +42,14 @@ export class TablaRegistroPresupuestalComponent implements OnInit {
   ngOnInit(): void {
     let elementos:Contrato[]=[];
     this.disponibilidadServices.GetListGenerarRegistroPresupuestal().subscribe(listas => {
-      
+
       listas.disponibilidadPresupuestal.forEach(element => {
         elementos.push({
           id:element.disponibilidadPresupuestalId,
           estado:element.estado,
           fechaFirma:element.fechaFirmaContrato,
           numeroContrato:element.numeroContrato,
-          tipoSolicitud:element.tipoSolicitudEspecial, 
+          tipoSolicitud:element.tipoSolicitudEspecial,
           esNovedad: element.esNovedad,
           novedadId: element.novedadContractualRegistroPresupuestalId,
           numeroOtroSi: element.numeroOtroSi != null ? element.numeroOtroSi : "" });
@@ -61,8 +61,8 @@ export class TablaRegistroPresupuestalComponent implements OnInit {
       this.paginator._intl.nextPageLabel = 'Siguiente';
       this.paginator._intl.previousPageLabel = 'Anterior';
     });
-    
-    
+
+
   }
   /*
   jflorez, lo cambio por router link
@@ -72,4 +72,13 @@ export class TablaRegistroPresupuestalComponent implements OnInit {
   verDetalle(){
     this.router.navigate(['/generarRegistroPresupuestal/verDetalle', element.id]);
   }*/
+
+  verDetalle(id: number, esNovedad, novedadId, estado: string) {
+    if(estado == "Liberación de saldo"){
+      this.router.navigate(['generarRegistroPresupuestal/conLiberacionSaldo', id, esNovedad, novedadId ? novedadId : 0]);
+    }
+    else{
+      this.router.navigate(['generarRegistroPresupuestal/gestionarDrp', id, esNovedad, novedadId ? novedadId : 0]);
+    }
+  }
 }

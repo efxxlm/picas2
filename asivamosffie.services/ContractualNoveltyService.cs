@@ -533,7 +533,7 @@ namespace asivamosffie.services
                 {
                     decimal valorSolicitud = 0;
                     DisponibilidadPresupuestal ddp = novedadContractual.Contrato?.Contratacion?.DisponibilidadPresupuestal.FirstOrDefault();
-                    valorSolicitud = _commonService.GetValorTotalDisponibilidad(ddp.DisponibilidadPresupuestalId);
+                    valorSolicitud = _commonService.GetValorTotalDisponibilidad(ddp.DisponibilidadPresupuestalId,false);
                     foreach (var disponibilidad in novedadContractual.Contrato?.Contratacion?.DisponibilidadPresupuestal)
                     {
                         disponibilidad.ValorTotalDisponibilidad = valorSolicitud;

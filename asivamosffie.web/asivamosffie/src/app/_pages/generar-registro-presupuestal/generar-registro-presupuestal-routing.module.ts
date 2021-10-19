@@ -18,6 +18,10 @@ const routes: Routes = [
     path: 'gestionarDrp/:id/:esNovedad/:novedadId',
     component: GestionarDrpComponent
   },
+  {
+    path: 'conLiberacionSaldo/:id/:esNovedad/:novedadId',
+    component: GestionarDrpComponent
+  },
 ];
 
 @NgModule({

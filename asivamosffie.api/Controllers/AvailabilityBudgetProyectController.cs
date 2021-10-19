@@ -121,5 +121,21 @@ namespace asivamosffie.api.Controllers
 
 
         }
+
+        [HttpGet]
+        [Route("GetDetailAvailabilityBudgetProyectHistorical")]
+        public async Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyectHistorical([FromQuery] int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId, bool esGenerar)
+        {
+            try
+            {
+                return await _availabilityBudgetProyectService.GetDetailAvailabilityBudgetProyectHistorical(disponibilidadPresupuestalId, esNovedad, RegistroNovedadId, esGenerar);
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

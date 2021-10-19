@@ -363,19 +363,21 @@ namespace asivamosffie.services
                 foreach (var contratacionProyecto in contratacion.ContratacionProyecto)
                 {
                     VProyectosBalance vProyectosBalance = await _context.VProyectosBalance.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).FirstOrDefaultAsync();
-                    LiquidacionContratacionObservacion liquidacionContratacionObservacion = _context.LiquidacionContratacionObservacion.Where(r => r.ContratacionId == pContratatacionId
-                                                              && r.MenuId == pMenuId
-                                                              && r.IdPadre == vProyectosBalance.BalanceFinancieroId
-                                                              && r.Eliminado != true
-                                                              && r.RegistroCompleto == true
-                                                              && r.Archivado != true
-                                                              && r.TipoObservacionCodigo == ConstantCodigoTipoObservacionLiquidacionContratacion.Balance_financiero).FirstOrDefault();
-                    Balance.Add(new
+                    if (vProyectosBalance != null)
                     {
-                        balance = vProyectosBalance,
-                        registroCompleto = liquidacionContratacionObservacion != null ? liquidacionContratacionObservacion.RegistroCompleto : false,
-                    });
-
+                        LiquidacionContratacionObservacion liquidacionContratacionObservacion = _context.LiquidacionContratacionObservacion.Where(r => r.ContratacionId == pContratatacionId
+                                          && r.MenuId == pMenuId
+                                          && r.IdPadre == vProyectosBalance.BalanceFinancieroId
+                                          && r.Eliminado != true
+                                          && r.RegistroCompleto == true
+                                          && r.Archivado != true
+                                          && r.TipoObservacionCodigo == ConstantCodigoTipoObservacionLiquidacionContratacion.Balance_financiero).FirstOrDefault();
+                        Balance.Add(new
+                        {
+                            balance = vProyectosBalance,
+                            registroCompleto = liquidacionContratacionObservacion != null ? liquidacionContratacionObservacion.RegistroCompleto : false,
+                        });
+                    }
                 }
 
             }

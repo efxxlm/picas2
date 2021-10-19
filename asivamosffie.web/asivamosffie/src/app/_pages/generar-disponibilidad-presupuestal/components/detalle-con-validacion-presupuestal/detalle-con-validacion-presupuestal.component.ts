@@ -20,6 +20,7 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
   novedadId;
   esRechazadaFiduciaria = false;
   esCancelada = false;
+  esLiberacion = false;
 
   constructor(public dialog: MatDialog, private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
@@ -30,6 +31,9 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
                 return;
             }else if ( urlSegment.path === 'detalleConDisponibilidadCancelada' ){
               this.esCancelada = true;
+              return;
+            }else if ( urlSegment.path === 'conLiberacionSaldo' ){
+              this.esLiberacion = true;
               return;
             }
         } );
@@ -53,7 +57,19 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
     this.novedadId = this.route.snapshot.paramMap.get('novedadId');
 
     if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, this.esNovedad, this.novedadId, true)
+      if(this.esLiberacion != true){
+        this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, this.esNovedad, this.novedadId, true)
+        .subscribe(listas => {
+          console.log(listas);
+          if (listas.length > 0) {
+            this.detailavailabilityBudget = listas[0];
+          }
+          else {
+            this.openDialog('', 'Error al intentar recuperar los datos de la solicitud, por favor intenta nuevamente.');
+          }
+        });
+      }else{
+        this.disponibilidadServices.GetDetailAvailabilityBudgetProyectHistorical(id, this.esNovedad, this.novedadId, true)
         .subscribe(listas => {
           console.log(listas);
           if (listas.length > 0) {
@@ -64,6 +80,7 @@ export class DetalleConValidacionPresupuestalComponent implements OnInit {
           }
 
         });
+      }
     }
   }
   generarddp() {

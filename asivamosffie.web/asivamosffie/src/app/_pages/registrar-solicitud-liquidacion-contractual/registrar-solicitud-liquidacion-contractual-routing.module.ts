@@ -9,7 +9,7 @@ import { RecursosComprometidosPagadosComponent } from './components/recursos-com
 import { ValidarInformeFinalComponent } from './components/validar-informe-final/validar-informe-final.component';
 import { VerEjecucionFinancieraComponent } from './components/ver-ejecucion-financiera/ver-ejecucion-financiera.component';
 import { VerTrasladosRecursosComponent } from './components/ver-traslados-recursos/ver-traslados-recursos.component';
-import { DetalleTrasladosComponent } from './components/detalle-traslados/detalle-traslados.component';
+import { VerLiberacionSaldosComponent } from './components/ver-liberacion-saldos/ver-liberacion-saldos.component';
 
 const routes: Routes = [
   {
@@ -31,7 +31,7 @@ const routes: Routes = [
   {
     path: 'validarRequisitos/:id/validarBalance/:proyectoId',
     component: ValidarBalanceComponent
-  },  
+  },
   {
     path: 'validarRequisitos/:id/verDetalleEditarBalance/:proyectoId',
     component: ValidarBalanceComponent
@@ -103,7 +103,7 @@ const routes: Routes = [
   {
     path: 'validarRequisitos/:id/validarBalance/:proyectoId/ejecucionFinanciera',
     component: VerEjecucionFinancieraComponent
-  },  
+  },
   {
     path: 'validarRequisitos/:id/verDetalleEditarBalance/:proyectoId/ejecucionFinanciera',
     component: VerEjecucionFinancieraComponent
@@ -111,7 +111,7 @@ const routes: Routes = [
   {
     path: 'verDetalleEditarRequisitos/:id/validarBalance/:proyectoId/ejecucionFinanciera',
     component: VerEjecucionFinancieraComponent
-  },  
+  },
   {
     path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/ejecucionFinanciera',
     component: VerEjecucionFinancieraComponent
@@ -127,15 +127,15 @@ const routes: Routes = [
   {
     path: 'verDetalleEditarRequisitos/:id/validarBalance/:proyectoId/traslados',
     component: VerTrasladosRecursosComponent
-  },   
+  },
   {
     path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/traslados',
     component: VerTrasladosRecursosComponent
-  },   
+  },
   {
     path: 'validarRequisitos/:id/validarBalance/:proyectoId/traslados',
     component: VerTrasladosRecursosComponent
-  },  
+  },
   {
     path: 'validarRequisitos/:id/verDetalleEditarBalance/:proyectoId/traslados',
     component: VerTrasladosRecursosComponent
@@ -159,7 +159,28 @@ const routes: Routes = [
   {
     path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/traslados/verDetalle/:numeroOrdenGiro',
     component: RegistrarTrasladoGbftrecComponent
-  }
+  },
+  /**Liberación */
+  {
+    path: 'verDetalleEditarRequisitos/:id/validarBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'validarRequisitos/:id/validarBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'validarRequisitos/:id/verDetalleEditarBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
 ];
 
 @NgModule({

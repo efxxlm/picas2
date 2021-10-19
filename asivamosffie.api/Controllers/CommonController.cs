@@ -259,7 +259,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return common.GetValorTotalDisponibilidad(pDisponibilidadPresupuestalId);
+                return common.GetValorTotalDisponibilidad(pDisponibilidadPresupuestalId,false);
             }
             catch (Exception ex)
             {

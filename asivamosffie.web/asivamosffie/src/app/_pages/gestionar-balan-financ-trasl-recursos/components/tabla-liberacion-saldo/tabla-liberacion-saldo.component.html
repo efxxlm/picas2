@@ -78,7 +78,7 @@
           <div *ngFor="let el of element.data; let j = index" class="borber-table">
             <div class="sub-item-table--element">
               <div *ngIf="esVerDetalle === true">
-                {{ el.saldo  | currency: 'COP':'symbol-narrow':'.0-0'  }}
+                {{ el.valorLiberar  | currency: 'COP':'symbol-narrow':'.0-0'  }}
               </div>
               <div class="col d-flex input-saldo" *ngIf="el.saldo > 0 && !esVerDetalle">
                 <mat-form-field class="full-width">

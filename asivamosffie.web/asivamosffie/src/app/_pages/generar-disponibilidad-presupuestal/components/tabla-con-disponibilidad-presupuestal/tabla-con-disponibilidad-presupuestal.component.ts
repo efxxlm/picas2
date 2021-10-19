@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 export interface OrdenDelDia {
   id: number;
@@ -22,6 +23,8 @@ export class TablaConDisponibilidadPresupuestalComponent implements OnInit {
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'id'];
   dataSource = new MatTableDataSource();
   @Input()disponibilidadPresupuestal: any;
+  @Input()esLiberacion: boolean;
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -30,7 +33,7 @@ export class TablaConDisponibilidadPresupuestalComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     let elements:OrdenDelDia[]=[];
@@ -59,5 +62,15 @@ export class TablaConDisponibilidadPresupuestalComponent implements OnInit {
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
   }
+
+  verDetalle(id: number, esNovedad, novedadId) {
+    if(this.esLiberacion == true){
+      this.router.navigate(['generarDisponibilidadPresupuestal/conLiberacionSaldo', id, esNovedad, novedadId ? novedadId : 0]);
+    }
+    else{
+      this.router.navigate(['generarDisponibilidadPresupuestal/detalleConDisponibilidadPresupuestal', id, esNovedad, novedadId ? novedadId : 0]);
+    }
+  }
+
 
 }

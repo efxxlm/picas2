@@ -22,5 +22,6 @@ namespace asivamosffie.model.Models
         public int? ComponenteUsoHistoricoId { get; set; }
         public decimal? ValorLiberar { get; set; }
         public int RegistroCompleto { get; set; }
+        public decimal? SaldoTesoral { get; set; }
     }
 }

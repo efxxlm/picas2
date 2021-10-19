@@ -18,6 +18,7 @@ export class ValidarBalanceComponent implements OnInit {
   listaTipoObservacionLiquidacionContratacion: TipoObservacionLiquidacionContrato = TipoObservacionLiquidacionContratoCodigo;
   esRegistroNuevo: boolean;
   esVerDetalle: boolean;
+  cumpleCondicionesTai: boolean = false;
 
   constructor(
     private routes: Router,
@@ -47,9 +48,8 @@ export class ValidarBalanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.proyectoId);
     this.getBalanceByProyectoId(this.proyectoId);
-  }  
+  }
 
   redirectToParent(): void{
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
@@ -59,13 +59,14 @@ export class ValidarBalanceComponent implements OnInit {
       }
     });
   }
-  
+
   getBalanceByProyectoId(proyectoId: number) {
     this.financialBalanceService.getDataByProyectoId(proyectoId)
     .subscribe( getDataByProyectoId => {
         if( getDataByProyectoId.length > 0 ){
             this.data = getDataByProyectoId[0];
             if(this.data != null){
+              this.cumpleCondicionesTai = this.data.cumpleCondicionesTai;
               if(this.data.balanceFinanciero.length > 0)
                 this.balanceFinancieroId = this.data.balanceFinanciero[0].balanceFinancieroId;
             }

@@ -35,6 +35,10 @@ export class DisponibilidadPresupuestalService {
     return this.http.get<any[]>(`${environment.apiUrl}/AvailabilityBudgetProyect/GetDetailAvailabilityBudgetProyectNew?disponibilidadPresupuestalId=${id}&esNovedad=${esNovedad}&RegistroNovedadId=${RegistroNovedadId}&esGenerar=${esGenerar}`);
   }
 
+  GetDetailAvailabilityBudgetProyectHistorical(id, esNovedad='false', RegistroNovedadId='0',  esGenerar=false)
+  {
+    return this.http.get<any[]>(`${environment.apiUrl}/AvailabilityBudgetProyect/GetDetailAvailabilityBudgetProyectHistorical?disponibilidadPresupuestalId=${id}&esNovedad=${esNovedad}&RegistroNovedadId=${RegistroNovedadId}&esGenerar=${esGenerar}`);
+  }
 
   StartDownloadPDF(pdf)
   {

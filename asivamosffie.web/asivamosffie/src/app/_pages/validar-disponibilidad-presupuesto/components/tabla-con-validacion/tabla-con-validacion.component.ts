@@ -24,6 +24,7 @@ export class TablaConValidacionComponent implements OnInit {
 
   @Input()disponibilidadPresupuestal: any;
   @Input()esGenerar: boolean;
+  @Input()esLiberacion: boolean;
 
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'estadoRegistro', 'id'];
   dataSource = new MatTableDataSource();
@@ -73,7 +74,11 @@ export class TablaConValidacionComponent implements OnInit {
     console.log(id, esNovedad, novedadId);
     if(this.esGenerar == true){
       this.router.navigate(['validarDisponibilidadPresupuesto/conDisponibilidadPresupuestal', id, esNovedad, novedadId ? novedadId : 0]);
-    }else{
+    }
+    else if(this.esLiberacion == true){
+      this.router.navigate(['validarDisponibilidadPresupuesto/conLiberacionSaldo', id, esNovedad, novedadId ? novedadId : 0]);
+    }
+    else{
       this.router.navigate(['validarDisponibilidadPresupuesto/conValidacionPresupuestal', id, esNovedad, novedadId ? novedadId : 0]);
     }
   }

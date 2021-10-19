@@ -12,6 +12,7 @@ import { RegistrarTrasladoGbftrecComponent } from "./components/registrar-trasla
 import { TrasladoRecursosGtlcComponent } from "./components/traslado-recursos-gtlc/traslado-recursos-gtlc.component";
 import { VerDetalleEditarVerificacionComponent } from "./components/ver-detalle-editar-verificacion/ver-detalle-editar-verificacion.component";
 import { VerDetalleVerificacionGtlcComponent } from "./components/ver-detalle-verificacion-gtlc/ver-detalle-verificacion-gtlc.component";
+import { VerLiberacionSaldosComponent } from "./components/ver-liberacion-saldos/ver-liberacion-saldos.component";
 import { VerificarBalanceGtlcComponent } from "./components/verificar-balance-gtlc/verificar-balance-gtlc.component";
 import { VerificarInformeGtlcComponent } from "./components/verificar-informe-gtlc/verificar-informe-gtlc.component";
 import { VerificarRequisitosGtlcComponent } from "./components/verificar-requisitos-gtlc/verificar-requisitos-gtlc.component";
@@ -214,8 +215,37 @@ const routes: Routes = [
   {
     path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/trasladoRecursos/verDetalle/:numeroOrdenGiro',
     component: RegistrarTrasladoGbftrecComponent
-  }
-]; 
+  },
+  /**Liberación */
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verificarBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verDetalleEditarBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verDetalleBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/verDetalleBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'verificarRequisitos/:id/verificarBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+];
 @NgModule({
   imports: [RouterModule.forChild(routes),NgxCurrencyModule.forRoot(customCurrencyMaskConfig)],
   exports: [RouterModule]

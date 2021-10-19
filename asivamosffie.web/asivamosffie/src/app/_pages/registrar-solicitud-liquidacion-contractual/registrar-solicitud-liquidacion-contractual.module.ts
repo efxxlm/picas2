@@ -48,6 +48,8 @@ import { TablaPorcntjParticGogComponent } from './components/tabla-porcntj-parti
 import { TablaInfoFuenterecGogComponent } from './components/tabla-info-fuenterec-gog/tabla-info-fuenterec-gog.component';
 import { TablaEjfinancieraGbftrecComponent } from './components/tabla-ejfinanciera-gbftrec/tabla-ejfinanciera-gbftrec.component';
 import { TablaEjpresupuestalGbftrecComponent } from './components/tabla-ejpresupuestal-gbftrec/tabla-ejpresupuestal-gbftrec.component';
+import { VerLiberacionSaldosComponent } from './components/ver-liberacion-saldos/ver-liberacion-saldos.component';
+import { TablaLiberacionSaldoComponent } from './components/tabla-liberacion-saldo/tabla-liberacion-saldo.component';
 
 @NgModule({
   declarations: [
@@ -92,7 +94,9 @@ import { TablaEjpresupuestalGbftrecComponent } from './components/tabla-ejpresup
     TablaPorcntjParticGogComponent,
     TablaInfoFuenterecGogComponent,
     TablaEjfinancieraGbftrecComponent,
-    TablaEjpresupuestalGbftrecComponent
+    TablaEjpresupuestalGbftrecComponent,
+    VerLiberacionSaldosComponent,
+    TablaLiberacionSaldoComponent
 
   ],
   imports: [

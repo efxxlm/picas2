@@ -11,7 +11,7 @@
       </ng-container>
       <ng-template #noEsVerDetalle>
           {{ esRegistroNuevo === true ? 'Validar' : 'Ver detalle/Editar' }} balance {{ data.llaveMen }}
-      </ng-template>  
+      </ng-template>
     </h1>
     <p class="colorMainColor mt-05em">
       <span class="mx-1em">
@@ -73,8 +73,11 @@
     <a [routerLink]="['verEjecucionFinanciera']" mat-raised-button color="accent" class="tabs--btn">
         Ver ejecución financiera por componente
     </a>
-    <a *ngIf="esVerDetalle !== true" [routerLink]="['verTrasladosRecursos']" mat-raised-button color="accent" class="tabs--btn">
+    <a *ngIf="esVerDetalle !== true && cumpleCondicionesTai !== true" [routerLink]="['verTrasladosRecursos']" mat-raised-button color="accent" class="tabs--btn">
         Ver traslados de recursos
+    </a>
+    <a *ngIf="cumpleCondicionesTai === true" [routerLink]="['liberacionSaldo']" mat-raised-button color="accent" class="tabs--btn">
+      Ver liberación de saldos
     </a>
   </div>
 

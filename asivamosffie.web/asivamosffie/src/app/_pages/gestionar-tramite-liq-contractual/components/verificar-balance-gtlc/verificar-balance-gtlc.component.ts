@@ -20,6 +20,7 @@ export class VerificarBalanceGtlcComponent implements OnInit {
   esVerDetalle: boolean;
   data : any;
   proyectoId: number;
+  cumpleCondicionesTai: boolean = false;
 
   constructor(
     private router: Router,
@@ -49,7 +50,7 @@ export class VerificarBalanceGtlcComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getBalanceByProyectoId(this.proyectoId);
-  }  
+  }
 
   redirectToParent(): void{
     this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
@@ -66,6 +67,7 @@ export class VerificarBalanceGtlcComponent implements OnInit {
         if( getDataByProyectoId.length > 0 ){
             this.data = getDataByProyectoId[0];
             if(this.data != null){
+              this.cumpleCondicionesTai = this.data.cumpleCondicionesTai;
               if(this.data.balanceFinanciero.length > 0)
                 this.balanceFinancieroId = this.data.balanceFinanciero[0].balanceFinancieroId;
             }
@@ -82,4 +84,8 @@ export class VerificarBalanceGtlcComponent implements OnInit {
   verTrasladoRecursos(){
     this.router.navigate([`${ this.router.url }/trasladoRecursos`]);
   }
+  verLiberacionSaldo(){
+    this.router.navigate([`${ this.router.url }/liberacionSaldo`]);
+  }
+
 }

@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog, MatDialogRef, MatDialogConfig, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CancelarDrpComponent } from '../cancelar-drp/cancelar-drp.component';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CurrencyPipe } from '@angular/common';
@@ -42,10 +42,18 @@ export class GestionarDrpComponent implements OnInit {
   listaComponentesUsoAportante:any[] = [];
   esNovedad;
   novedadId;
+  esLiberacion: boolean = false;
 
   constructor(public dialog: MatDialog, private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute, private currencyPipe: CurrencyPipe,
-    private router: Router, private sanitized: DomSanitizer,) { }
+    private router: Router, private sanitized: DomSanitizer,) {
+      this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+        if ( urlSegment.path === 'conLiberacionSaldo' ){
+          this.esLiberacion = true;
+          return;
+        }
+    } );
+     }
 
   openDialog(modalTitle: string, modalText: string, relocate = false) {
     let dialogref = this.dialog.open(ModalDialogComponent, {
@@ -66,7 +74,8 @@ export class GestionarDrpComponent implements OnInit {
     this.novedadId = this.route.snapshot.paramMap.get('novedadId');
 
     if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, this.esNovedad, this.novedadId, true)
+      if(this.esLiberacion != true){
+        this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, this.esNovedad, this.novedadId, true)
         .subscribe(listas => {
 
         if (listas.length > 0) {
@@ -97,7 +106,39 @@ export class GestionarDrpComponent implements OnInit {
         else {
           this.openDialog('', 'Error al intentar recuperar los datos de la solicitud, por favor intenta nuevamente.');
         }
+        });
+      }else{
+        this.disponibilidadServices.GetDetailAvailabilityBudgetProyectHistorical(id, this.esNovedad, this.novedadId, true)
+        .subscribe(listas => {
+        if (listas.length > 0) {
+          this.detailavailabilityBudget = listas[0];
+          this.detailavailabilityBudget.proyectos.forEach(element => {
+            listaComponentesUsoAportante = [];
+            element.aportantes.forEach(aportante => {
+              this.listacomponentes = [];
+              // filtro por aportante
+              element.componenteGrilla.filter( r => r.cofinanciacionAportanteId == aportante.cofinanciacionAportanteId).forEach(element2 => {
+                this.listacomponentes.push({
+                  componente: element2.componente,
+                  fase: element2?.fase,
+                  uso: [{ nombre: element2.uso }],
+                  valorUso: [{ valor: element2.valorUso.map(y => { let convert = y.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"); return "$" + convert; }) }],
+                  valorTotal: element2.valorTotal,
+                  fuenteFinanciacion: aportante.fuentesFinanciacion[0].fuente
+                });
+              });
+              //dataSource.push(new MatTableDataSource(this.listacomponentes));
+              listaComponentesUsoAportante.push( new MatTableDataSource(this.listacomponentes) )
+            });
+            element['listaComponentesUsoAportante'] = listaComponentesUsoAportante;
+          });
+
+        }
+        else {
+          this.openDialog('', 'Error al intentar recuperar los datos de la solicitud, por favor intenta nuevamente.');
+        }
       });
+      }
     }
     //this.dataSource = new MatTableDataSource(ELEMENT_DATA);
   }

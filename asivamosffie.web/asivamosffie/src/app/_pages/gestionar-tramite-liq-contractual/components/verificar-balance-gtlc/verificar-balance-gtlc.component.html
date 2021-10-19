@@ -11,7 +11,7 @@
         </ng-container>
         <ng-template #noEsVerDetalle>
             {{ esRegistroNuevo === true ? 'Verificar' : 'Ver detalle/Editar' }} balance {{ data.llaveMen }}
-        </ng-template>  
+        </ng-template>
       </h1>
       <p class="colorMainColor mt-05em">
         <span class="mx-1em">
@@ -24,7 +24,7 @@
         </span>
       </p>
     </div>
-  
+
     <mat-card class="shipping-card var-main-gris">
       <mat-card-content>
         <p>
@@ -65,7 +65,7 @@
         </p>
       </mat-card-content>
     </mat-card>
-  
+
     <div class="tabs--actions">
         <button mat-raised-button color="accent" class="tabs--btn"
             (click)="this.irRecursosComprometidos()">
@@ -75,11 +75,14 @@
             (click)="this.verEjecucionFinanciera()">
             Ejecución financiera por componente
         </button>
-        <button *ngIf="esVerDetalle !== true" mat-raised-button color="accent" class="tabs--btn" (click)="this.verTrasladoRecursos()">
+        <button *ngIf="esVerDetalle !== true  && cumpleCondicionesTai !== true" mat-raised-button color="accent" class="tabs--btn" (click)="this.verTrasladoRecursos()">
             Traslados de recursos
         </button>
+        <button *ngIf="cumpleCondicionesTai === true" mat-raised-button color="accent" class="tabs--btn" (click)="this.verLiberacionSaldo()">
+          Ver liberación de saldos
+        </button>
     </div>
-    
+
     <app-observaciones-supervisor *ngIf="listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionId" [contratacionId] = "contratacionId" [padreId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.aprobarSolicitudLiquidacionContratacion" [esVerDetalle] = "esVerDetalle"></app-observaciones-supervisor>
     <app-form-observacion-balance *ngIf="!esVerDetalle && listaTipoObservacionLiquidacionContratacion && listaMenu && contratacionId" [contratacionId] = "contratacionId" [balanceFinancieroId] = "balanceFinancieroId" [tipoObservacionCodigo]="listaTipoObservacionLiquidacionContratacion.balanceFinanciero" [menuId]="listaMenu.gestionarSolicitudLiquidacionContratacion" (callOnInitParent)="redirectToParent()"></app-form-observacion-balance>
 </section>

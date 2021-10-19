@@ -24,4 +24,8 @@ export class ReleaseBalanceService {
       return this.http.post(`${this.apiUrl}/ReleaseBalance?pBalanceFinancieroId=${ pBalanceFinancieroId }`, null);
     }
 
+    deleteReleaseBalance( pBalanceFinancieroId: any ){
+      return this.http.post(`${this.apiUrl}/DeleteReleaseBalance?pBalanceFinancieroId=${ pBalanceFinancieroId }`, null);
+    }
+
 }

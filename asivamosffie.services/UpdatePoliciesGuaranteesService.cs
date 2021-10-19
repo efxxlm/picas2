@@ -555,7 +555,7 @@ namespace asivamosffie.services
             if (pEsNueva != true)
             {
                 contratoPolizaActualizacion = await _context.ContratoPolizaActualizacion
-                                                                              .Where(r => r.ContratoPolizaActualizacionId == pContratoPolizaId)
+                                                                              .Where(r => r.ContratoPolizaId == pContratoPolizaId)
                                                                               .Include(c => c.ContratoPolizaActualizacionSeguro)
                                                                               .Include(c => c.ContratoPolizaActualizacionListaChequeo)
                                                                               .Include(c => c.ContratoPolizaActualizacionRevisionAprobacionObservacion)
@@ -563,7 +563,7 @@ namespace asivamosffie.services
                                                                               .ToListAsync();
 
                 contratoPoliza = await _context.ContratoPoliza
-                               .Where(c => c.ContratoPolizaId == contratoPolizaActualizacion.FirstOrDefault().ContratoPolizaId)
+                               .Where(c => c.ContratoPolizaId == pContratoPolizaId)
                                .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contratista)
                                .Include(c => c.PolizaGarantia)
                                .Include(c => c.PolizaListaChequeo)

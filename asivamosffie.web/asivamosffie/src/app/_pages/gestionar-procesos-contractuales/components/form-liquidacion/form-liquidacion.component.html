@@ -363,10 +363,10 @@
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
-              <p><b>Nombre de la aseguradora</b>: {{ contratoPoliza.nombreAseguradora }} </p>
-              <p><b>Número de la póliza</b>: {{ contratoPoliza.numeroPoliza }}</p>
-              <p><b>Número de certificado</b>: {{ contratoPoliza.numeroCertificado }}</p>
-              <p><b>Fecha de expedición de la póliza</b>:{{ contratoPoliza.fechaExpedicion | date: 'dd/MM/yyyy' }}              </p>
+              <p><b>Nombre de la aseguradora</b>: {{ contratoPoliza?.nombreAseguradora }} </p>
+              <p><b>Número de la póliza</b>: {{ contratoPoliza?.numeroPoliza }}</p>
+              <p><b>Número de certificado</b>: {{ contratoPoliza?.numeroCertificado }}</p>
+              <p><b>Fecha de expedición de la póliza</b>:{{ contratoPoliza?.fechaExpedicion | date: 'dd/MM/yyyy' }}              </p>
               <div *ngFor="let seguro of seguros">
                 <p><b>Seguro {{ seguro?.nombre }}</b></p>
                 <p><b>Vigencia de la póliza</b>: {{ seguro?.seguroPoliza?.vigencia | date: 'dd/MM/yyyy' }}</p>

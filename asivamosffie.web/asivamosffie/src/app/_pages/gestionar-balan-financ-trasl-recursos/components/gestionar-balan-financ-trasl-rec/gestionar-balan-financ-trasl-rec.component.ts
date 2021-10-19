@@ -97,9 +97,7 @@ export class GestionarBalanFinancTraslRecComponent implements OnInit {
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
   }
-  validarBalance(id){
-    this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/validarBalance', id]);
-  }
+
   verDetalleEditarBalance(id){
     this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarBalance', id]);
   }
@@ -156,6 +154,52 @@ export class GestionarBalanFinancTraslRecComponent implements OnInit {
           err => this.openDialog( '', `${ err.message }` )
         )
     }
+  }
+
+  liberarSaldoDelete( registro: any ) {
+    if ( registro.balanceFinancieroId !== undefined ) {
+
+      this.releaseBalanceService.deleteReleaseBalance( registro.balanceFinancieroId )
+      .subscribe(
+        (respuesta: Respuesta) => {
+            this.openDialog('', `${ respuesta.message }`);
+
+            this.routes.navigateByUrl( '/', {skipLocationChange: true} )
+              .then( () => this.routes.navigate( ['/gestionarBalanceFinancieroTrasladoRecursos'] ) );
+          },
+          err => this.openDialog( '', `${ err.message }` )
+        )
+    }
+  }
+
+  validarBalance( registro: any ) {
+    let cumpleValidar = false;
+    if ( registro.balanceFinancieroId === undefined ) {
+      if(registro.validarSinLiberacion === true && registro.estadoBalanceCodigo == "0"){
+        cumpleValidar = true;
+      }
+    }
+    if(!cumpleValidar){
+      this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/validarBalance', registro.proyectoId]);
+    }else{
+        const pBalanceFinanciero = {
+            balanceFinancieroId: 0,
+            proyectoId: registro.proyectoId,
+            requiereTransladoRecursos: false,
+            cumpleCondicionesTai: false
+        };
+        this.balanceSvc.createEditBalanceFinanciero(pBalanceFinanciero)
+        .subscribe((respuesta: Respuesta) => {
+            this.openDialog('', respuesta.message);
+            this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/verDetalleBalance', registro.proyectoId]);
+            return;
+          },
+          err => {
+            this.openDialog('', err.message);
+            this.ngOnInit();
+            return;
+          });
+        }
   }
 
 }

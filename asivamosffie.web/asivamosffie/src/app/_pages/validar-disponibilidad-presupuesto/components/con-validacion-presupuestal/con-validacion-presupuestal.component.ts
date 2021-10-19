@@ -19,6 +19,8 @@ export class ConValidacionPresupuestalComponent implements OnInit {
   esNovedad: boolean = false;
   esGenerar: boolean = false;
   esCancelada: boolean = false;
+  esLiberacion: boolean = false;
+
   novedadId;
 
   constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,
@@ -36,6 +38,9 @@ export class ConValidacionPresupuestalComponent implements OnInit {
         }else if(urlSegment.path === 'conDisponibilidadCancelada'){
           this.esCancelada = true;
           return;
+        }else if(urlSegment.path === 'conLiberacionSaldo'){
+          this.esLiberacion = true;
+          return;
         }
     } );
     }
@@ -51,7 +56,8 @@ export class ConValidacionPresupuestalComponent implements OnInit {
     const novedadId = this.route.snapshot.paramMap.get('novedadId');
     this.novedadId = this.route.snapshot.paramMap.get('novedadId');
     if (id) {
-      this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, esNovedad, novedadId,this.esGenerar)
+      if(this.esLiberacion != true){
+        this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(id, esNovedad, novedadId,this.esGenerar)
         .subscribe(listas => {
           console.log(listas);
           this.detailavailabilityBudget=listas[0];
@@ -67,7 +73,25 @@ export class ConValidacionPresupuestalComponent implements OnInit {
               });
             }
           }
+        });
+      }else{
+        this.disponibilidadServices.GetDetailAvailabilityBudgetProyectHistorical(id, esNovedad, novedadId,this.esGenerar)
+        .subscribe(listas => {
+          console.log(listas);
+          this.detailavailabilityBudget=listas[0];
+          if(this.detailavailabilityBudget != null){
+            if(this.detailavailabilityBudget?.tipoSolicitudCodigo === this.pTipoDDP.DDP_especial){
+              this.detailavailabilityBudget?.aportantes.forEach(element => {
+                this.fuenteFinanciacionService.GetListFuentesFinanciacionByDisponibilidadPresupuestalid(this.detailavailabilityBudget?.id).subscribe(lista => {
+                  if(lista.length > 0){
+                    element.fuentesFinanciacion = lista;
+                  }
+              });
+              });
+            }
+          }
       });
+      }
     }
   }
 

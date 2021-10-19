@@ -13,7 +13,7 @@ namespace asivamosffie.model.Models
         public string? NombreFuente { get; set; }
 
         [NotMapped]
-        public decimal? Saldo { get; set; }
+        public decimal? SaldoPresupuestal { get; set; }
 
     }
 }

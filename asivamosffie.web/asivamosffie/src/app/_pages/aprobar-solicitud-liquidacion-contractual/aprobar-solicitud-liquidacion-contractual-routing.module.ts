@@ -11,6 +11,7 @@ import { VerTrasladosRecursosComponent } from './components/ver-traslados-recurs
 import { DetalleTrasladosComponent } from './components/detalle-traslados/detalle-traslados.component';
 import { AprobarInformeFinalComponent } from './components/aprobar-informe-final/aprobar-informe-final.component';
 import { RegistrarTrasladoGbftrecComponent } from './components/registrar-traslado-gbftrec/registrar-traslado-gbftrec.component';
+import { VerLiberacionSaldosComponent } from './components/ver-liberacion-saldos/ver-liberacion-saldos.component';
 
 const routes: Routes = [
   {
@@ -156,6 +157,23 @@ const routes: Routes = [
   {
     path: 'verDetalleEditarRequisitos/:id/verDetalleEditarBalance/:proyectoId/verTrasladosRecursos/verDetalle/:numeroOrdenGiro',
     component: RegistrarTrasladoGbftrecComponent
+  },
+  /**Liberación */
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/aprobarBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'verDetalleEditarRequisitos/:id/aprobarBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'aprobarRequisitosParaLiquidacion/:id/verDetalleEditarBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'verDetalleRequisitos/:id/verDetalleBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
   },
 ];
 

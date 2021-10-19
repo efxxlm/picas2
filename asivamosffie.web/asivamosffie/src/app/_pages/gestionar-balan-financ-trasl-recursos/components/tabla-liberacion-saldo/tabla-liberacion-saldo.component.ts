@@ -83,7 +83,7 @@ export class TablaLiberacionSaldoComponent implements OnInit {
                 componenteUsoId: dataAportante.componenteUsoId,
                 componenteUsoHistoricoId: dataAportante.componenteUsoHistoricoId ?? 0,
                 valorUso: dataAportante.valorUso,
-                saldo: dataAportante.saldo ?? 0,
+                saldo: dataAportante.saldoTesoral ?? 0,
                 valorSolicitud: dataAportante.valorSolicitud ?? 0,
                 valorLiberar : dataAportante.valorLiberar ?? null,
               });

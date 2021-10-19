@@ -1,0 +1,38 @@
+<section class="container">
+  <div class="text-center">
+    <div class="text-right">
+      <a routerLink="./.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Liberación de saldos {{ proyecto?.llaveMen }}
+    </h1>
+    <p class="colorMainColor mt-1em">
+      <span class="mx-1em"> Número de contrato de obra: <b> {{ proyecto?.numeroContratoObra }} </b> </span>
+      <span class="mx-1em"> Número de contrato de interventoría: <b> {{ proyecto?.numeroContratoInterventoria }} </b> </span>
+    </p>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content align="left">
+        <p><strong>Tipo de intervención: </strong><em>{{ proyecto?.tipoIntervencion }}</em></p>
+        <p><strong>Institución Educativa: </strong><em>{{ proyecto?.institucionEducativa }}</em></p>
+        <p><strong>Sede educativa: </strong><em>{{ proyecto?.sedeEducativa }}</em></p>
+        <p><strong>Departamento: </strong><em>{{ proyecto?.departamento }}</em></p>
+        <p><strong>Municipio: </strong><em>{{ proyecto?.municipio }}</em></p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-accordion *ngFor="let drp of drps">
+    <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                  {{ drp.numeroDrp }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-tabla-liberacion-saldo [tablaAportantes]="drp.aportantesGrid" [balanceFinanciero]="drp.balanceFinanciero"></app-tabla-liberacion-saldo>
+    </mat-expansion-panel>
+</mat-accordion>
+
+</section>

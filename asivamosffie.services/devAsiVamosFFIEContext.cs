@@ -284,6 +284,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VEjecucionFinancieraXproyecto> VEjecucionFinancieraXproyecto { get; set; }
         public virtual DbSet<VEjecucionPresupuestalXproyecto> VEjecucionPresupuestalXproyecto { get; set; }
         public virtual DbSet<VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportante> VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportante { get; set; }
+        public virtual DbSet<VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportanteXuso> VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportanteXuso { get; set; }
         public virtual DbSet<VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso> VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoId> VFuentesUsoXcontratoId { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoIdXproyecto> VFuentesUsoXcontratoIdXproyecto { get; set; }
@@ -9494,6 +9495,25 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
             });
 
+            modelBuilder.Entity<VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportanteXuso>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FacturadoOdgXContratacionXProyectoXFaseXConceptoXAportanteXUso");
+
+                entity.Property(e => e.ConceptoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EsPreconstruccion).HasColumnName("esPreconstruccion");
+
+                entity.Property(e => e.TipoUsoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
+            });
+
             modelBuilder.Entity<VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso>(entity =>
             {
                 entity.HasNoKey();
@@ -10535,6 +10555,8 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasColumnName("tipoIntervencion")
                     .HasMaxLength(250);
+
+                entity.Property(e => e.ValidarSinLiberacion).HasColumnName("validarSinLiberacion");
             });
 
             modelBuilder.Entity<VProyectosCierre>(entity =>
@@ -11044,6 +11066,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.NumeroDrp)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.Property(e => e.SaldoTesoral)
+                    .HasColumnName("saldoTesoral")
+                    .HasColumnType("numeric(38, 0)");
 
                 entity.Property(e => e.ValorLiberar)
                     .HasColumnName("valorLiberar")
