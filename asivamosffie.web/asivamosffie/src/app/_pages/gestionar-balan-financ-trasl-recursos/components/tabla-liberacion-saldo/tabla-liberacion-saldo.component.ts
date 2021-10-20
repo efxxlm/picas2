@@ -86,6 +86,10 @@ export class TablaLiberacionSaldoComponent implements OnInit {
                 saldo: dataAportante.saldoTesoral ?? 0,
                 valorSolicitud: dataAportante.valorSolicitud ?? 0,
                 valorLiberar : dataAportante.valorLiberar ?? null,
+                esNovedad : dataAportante.esNovedad ?? false,
+                novedadContractualRegistroPresupuestalId: dataAportante.novedadContractualRegistroPresupuestalId ?? false,
+                componenteUsoNovedadId: dataAportante.componenteUsoNovedadId,
+                componenteUsoNovedadHistoricoId: dataAportante.componenteUsoNovedadHistoricoId ?? 0,
               });
           });
           this.listAportantes.push({
@@ -122,14 +126,14 @@ export class TablaLiberacionSaldoComponent implements OnInit {
     const dataHistorico = [];
     this.dataSource.data.forEach(r =>{
       r.data.forEach(u => {
-          if(u.valorLiberar != null || u.componenteUsoHistoricoId > 0){
+          if(u.valorLiberar != null || u.componenteUsoHistoricoId > 0 || u.componenteUsoNovedadHistoricoId > 0 ){
             dataHistorico.push({
               componenteUsoId: u.componenteUsoId,
               valorLiberar: u.valorLiberar,
-              esNovedad: false,
-              componenteUsoNovedadId: 0,
+              esNovedad: u.esNovedad,
+              componenteUsoNovedadId: u.componenteUsoNovedadId,
               componenteUsoHistoricoId: u.componenteUsoHistoricoId,
-              componenteUsoNovedadHistoricoId: 0,
+              componenteUsoNovedadHistoricoId:  u.componenteUsoNovedadHistoricoId,
               saldo: u.saldo
             });
           }

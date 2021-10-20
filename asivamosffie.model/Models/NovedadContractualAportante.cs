@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public NovedadContractualAportante()
         {
             ComponenteAportanteNovedad = new HashSet<ComponenteAportanteNovedad>();
+            NovedadContractualAportanteHistorico = new HashSet<NovedadContractualAportanteHistorico>();
         }
 
         public int NovedadContractualAportanteId { get; set; }
@@ -24,5 +25,6 @@ namespace asivamosffie.model.Models
         public virtual CofinanciacionAportante CofinanciacionAportante { get; set; }
         public virtual NovedadContractual NovedadContractual { get; set; }
         public virtual ICollection<ComponenteAportanteNovedad> ComponenteAportanteNovedad { get; set; }
+        public virtual ICollection<NovedadContractualAportanteHistorico> NovedadContractualAportanteHistorico { get; set; }
     }
 }

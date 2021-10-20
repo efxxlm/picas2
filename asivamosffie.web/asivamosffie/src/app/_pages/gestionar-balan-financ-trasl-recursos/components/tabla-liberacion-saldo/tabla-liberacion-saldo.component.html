@@ -80,7 +80,7 @@
               <div *ngIf="esVerDetalle === true">
                 {{ el.valorLiberar  | currency: 'COP':'symbol-narrow':'.0-0'  }}
               </div>
-              <div class="col d-flex input-saldo" *ngIf="el.saldo > 0 && !esVerDetalle">
+              <div class="col d-flex input-saldo" *ngIf="!esVerDetalle">
                 <mat-form-field class="full-width">
                   <input
                     matInput

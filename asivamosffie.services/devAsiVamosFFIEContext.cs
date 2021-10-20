@@ -123,6 +123,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ModificacionContractual> ModificacionContractual { get; set; }
         public virtual DbSet<NovedadContractual> NovedadContractual { get; set; }
         public virtual DbSet<NovedadContractualAportante> NovedadContractualAportante { get; set; }
+        public virtual DbSet<NovedadContractualAportanteHistorico> NovedadContractualAportanteHistorico { get; set; }
         public virtual DbSet<NovedadContractualClausula> NovedadContractualClausula { get; set; }
         public virtual DbSet<NovedadContractualDescripcion> NovedadContractualDescripcion { get; set; }
         public virtual DbSet<NovedadContractualDescripcionMotivo> NovedadContractualDescripcionMotivo { get; set; }
@@ -1143,7 +1144,7 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.ComponenteUsoNovedadHistorico)
                     .HasForeignKey(d => d.ComponenteUsoNovedadId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Component__Compo__4AF81212");
+                    .HasConstraintName("FK__Component__Compo__Historico");
             });
 
             modelBuilder.Entity<CompromisoSeguimiento>(entity =>
@@ -4386,6 +4387,29 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.NovedadContractualAportante)
                     .HasForeignKey(d => d.NovedadContractualId)
                     .HasConstraintName("FK_NovedadContractualAportante_NovedadContractual");
+            });
+
+            modelBuilder.Entity<NovedadContractualAportanteHistorico>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorAporte).HasColumnType("numeric(18, 9)");
+
+                entity.HasOne(d => d.NovedadContractualAportante)
+                    .WithMany(p => p.NovedadContractualAportanteHistorico)
+                    .HasForeignKey(d => d.NovedadContractualAportanteId)
+                    .HasConstraintName("FK__NovedadCo_Aportante_Historico");
             });
 
             modelBuilder.Entity<NovedadContractualClausula>(entity =>
@@ -11049,6 +11073,8 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.DisponibilidadPresupuestalId).HasColumnName("disponibilidadPresupuestalId");
+
+                entity.Property(e => e.EsNovedad).HasColumnName("esNovedad");
 
                 entity.Property(e => e.FuenteFinanciacionId).HasColumnName("fuenteFinanciacionId");
 

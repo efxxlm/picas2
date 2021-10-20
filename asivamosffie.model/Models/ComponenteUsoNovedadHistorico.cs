@@ -15,6 +15,6 @@ namespace asivamosffie.model.Models
         public bool? Liberado { get; set; }
         public decimal? Saldo { get; set; }
 
-        public virtual ComponenteFuenteNovedad ComponenteUsoNovedad { get; set; }
+        public virtual ComponenteUsoNovedad ComponenteUsoNovedad { get; set; }
     }
 }
