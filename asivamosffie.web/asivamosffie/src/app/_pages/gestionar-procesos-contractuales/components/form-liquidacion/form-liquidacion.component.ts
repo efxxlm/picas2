@@ -255,7 +255,7 @@ export class FormLiquidacionComponent implements OnInit {
 
 
   getDdp(disponibilidadPresupuestalId: number, numeroDdp: string ) {
-    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId, false, 0,false).subscribe((listas:any) => {
+    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId, false, 0,false,false).subscribe((listas:any) => {
       console.log(listas);
       let documento = '';
         if ( numeroDdp !== undefined ) {

@@ -14,7 +14,7 @@ import { DisponibilidadPresupuestalService } from 'src/app/core/_services/dispon
   styleUrls: ['./form-contratacion.component.scss']
 })
 export class FormContratacionComponent implements OnInit {
-  
+
   form         : FormGroup;
   sesionComiteId: number = 0;
   estadoCodigo: string;
@@ -150,7 +150,7 @@ export class FormContratacionComponent implements OnInit {
   };
 */
   getDdp(disponibilidadPresupuestalId: number, numeroDdp: string ) {
-    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId, false, 0,false).subscribe((listas:any) => {
+    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId, false, 0,false,false).subscribe((listas:any) => {
       console.log(listas);
       let documento = '';
         if ( numeroDdp !== undefined ) {

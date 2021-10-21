@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { FormBuilder} from '@angular/forms';
+import { FormBuilder, Validators} from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ReleaseBalanceService } from 'src/app/core/_services/releaseBalance/release-balance.service';
 import { Respuesta } from 'src/app/core/_services/common/common.service';
@@ -37,7 +37,6 @@ export class TablaLiberacionSaldoComponent implements OnInit {
   ];
   listAportantes : any[] = [];
   listaUsos : any[] = [];
-  addressForm = this.fb.group({});
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
   proyectoId = 0;
 
@@ -201,11 +200,12 @@ export class TablaLiberacionSaldoComponent implements OnInit {
       if(el.valorLiberar > el.saldo){
         if(positionDta != -1)
           this.dataSource.data[index].data[positionDta].valorLiberar = null;
+        el.valorLiberar = null;
         this.openDialog(
           '',
           '<b>El valor a liberar no puede ser mayor al saldo disponible.</b>'
         );
-        return false;
+        return;
       }
       this.dataSource.data.forEach(r=>{
         r.data.forEach(d => {
@@ -220,7 +220,7 @@ export class TablaLiberacionSaldoComponent implements OnInit {
           '',
           '<b>Los valores registrados superan el valor total del RP;es necesario revisar y ajustar estos valores .</b>'
         );
-        return false;
+        return;
       }
 
     }

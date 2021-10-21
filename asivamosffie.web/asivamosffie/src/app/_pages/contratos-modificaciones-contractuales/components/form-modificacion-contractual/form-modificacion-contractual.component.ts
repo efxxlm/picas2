@@ -92,7 +92,7 @@ export class FormModificacionContractualComponent implements OnInit {
   };
 
   getDdp(disponibilidadPresupuestalId: number, numeroDdp: string ) {
-    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId, true, this.novedadContractualRegistroPresupuestalId,false).subscribe((listas:any) => {
+    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId, true, this.novedadContractualRegistroPresupuestalId,false,false).subscribe((listas:any) => {
       console.log(listas);
       let documento = '';
         if ( numeroDdp !== undefined ) {

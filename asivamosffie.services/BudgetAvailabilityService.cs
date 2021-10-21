@@ -1330,7 +1330,7 @@ namespace asivamosffie.services
             return ListGrillaControlCronograma;
         }
 
-        public async Task<byte[]> GetPDFDDP(int id, string pUsurioGenero, bool esNovedad, int pRegistroPresupuestalId, bool esValidar)
+        public async Task<byte[]> GetPDFDDP(int id, string pUsurioGenero, bool esNovedad, int pRegistroPresupuestalId, bool esValidar, bool esLiberacion)
         {
             if (id == 0)
             {
@@ -1355,7 +1355,7 @@ namespace asivamosffie.services
             Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_De_DDP).ToString())
                 .Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
 
-            plantilla.Contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, false, esNovedad, novedadContractualRegistro, esValidar);
+            plantilla.Contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, false, esNovedad, novedadContractualRegistro, esValidar, esLiberacion);
             //return ConvertirPDF(plantilla);
             return Helpers.PDF.Convertir(plantilla, true);
         }
@@ -1403,7 +1403,7 @@ namespace asivamosffie.services
             return _converter.Convert(pdf);
         }
         ///Validar campos solicitues $$  nuevos 
-        private async Task<string> ReemplazarDatosDDPAsync(string pStrContenido, DisponibilidadPresupuestal pDisponibilidad, bool drp, bool esNovedad, NovedadContractualRegistroPresupuestal pRegistro, bool esValidar)
+        private async Task<string> ReemplazarDatosDDPAsync(string pStrContenido, DisponibilidadPresupuestal pDisponibilidad, bool drp, bool esNovedad, NovedadContractualRegistroPresupuestal pRegistro, bool esValidar, bool esLiberacion)
         {
             List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolderDDP).ToList();
             /*variables que pueden diferir de uno u otro tipo*/
@@ -1470,6 +1470,15 @@ namespace asivamosffie.services
                         {
                             aportante.FuentesFinanciacion.ForEach(fuente =>
                             {
+                                GestionFuenteFinanciacionHistorico FuenteHistorico = null;
+                                ContratacionProyectoAportanteHistorico aportanteHistorico = null;
+                                if (esLiberacion)
+                                {
+                                    FuenteHistorico = _context.GestionFuenteFinanciacionHistorico.Where(r => r.GestionFuenteFinanciacionId == fuente.GestionFuenteFinanciacionID).FirstOrDefault();
+                                    ContratacionProyectoAportante cpa = _context.ContratacionProyectoAportante.Where(r => r.CofinanciacionAportanteId == aportante.CofinanciacionAportanteId && r.ContratacionProyectoId == proyecto.ContratacionProyectoId).FirstOrDefault();
+                                    if (cpa != null)
+                                        aportanteHistorico = _context.ContratacionProyectoAportanteHistorico.Where(r=> r.ContratacionProyectoAportanteId == cpa.ContratacionProyectoAportanteId).FirstOrDefault();
+                                }
                                 var tr = plantilla_fuentes
                                     .Replace("[LLAVEMEN]", proyecto.LlaveMen)
                                     .Replace("[INSTITUCION]", proyecto.InstitucionEducativa)
@@ -1477,9 +1486,9 @@ namespace asivamosffie.services
                                     .Replace("[APORTANTE]", aportante.Nombre)
                                     .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", aportante.ValorAportanteAlProyecto != null ? aportante.ValorAportanteAlProyecto : 0))
                                     .Replace("[FUENTE]", fuente.Fuente)
-                                    .Replace("[SALDO_FUENTE]", "$ " + String.Format("{0:n0}", fuente.Saldo_actual_de_la_fuente > 0 ? fuente.Saldo_actual_de_la_fuente : 0))
-                                    .Replace("[VALOR_FUENTE]", "$ " + String.Format("{0:n0}", aportante.ValorAportanteAlProyecto != null ? aportante.ValorAportanteAlProyecto : 0))
-                                    .Replace("[NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", fuente.Nuevo_saldo_de_la_fuente > 0 ? fuente.Nuevo_saldo_de_la_fuente : 0));
+                                    .Replace("[SALDO_FUENTE]", "$ " + String.Format("{0:n0}", esLiberacion && FuenteHistorico != null ? FuenteHistorico.SaldoActual : fuente.Saldo_actual_de_la_fuente > 0 ? fuente.Saldo_actual_de_la_fuente : 0))
+                                    .Replace("[VALOR_FUENTE]", "$ " + String.Format("{0:n0}", esLiberacion && aportanteHistorico != null ? aportanteHistorico.ValorAporte : aportante.ValorAportanteAlProyecto != null ? aportante.ValorAportanteAlProyecto : 0))
+                                    .Replace("[NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", esLiberacion && FuenteHistorico != null ? FuenteHistorico.NuevoSaldo : fuente.Nuevo_saldo_de_la_fuente > 0 ? fuente.Nuevo_saldo_de_la_fuente : 0));
                                 tablafuentes += tr;
                             });
                         });
@@ -1491,13 +1500,18 @@ namespace asivamosffie.services
                                 int i = 0;
                                 foreach (var uso in componente.Uso)
                                 {
+                                    ComponenteUsoNovedadHistorico cuh = null;
 
+                                    if (esLiberacion)
+                                    {
+                                         cuh = _context.ComponenteUsoNovedadHistorico.Where(r => r.ComponenteUsoNovedadId == componente.ComponenteUsoId).FirstOrDefault();
+                                    }
                                     var fuentestring = plantilla_uso.Replace("[LLAVEMEN2]", proyecto.LlaveMen).
                                         Replace("[FASE]", componente.Fase).
                                         Replace("[APORTANTE]", componente.Aportante).
                                         Replace("[COMPONENTE]", componente.Componente).
                                         Replace("[USO]", uso).
-                                        Replace("[VALOR_USO]", "$ " + String.Format("{0:n0}", componente.ValorUso[i]).ToString());
+                                        Replace("[VALOR_USO]", "$ " + String.Format("{0:n0}", esLiberacion && cuh != null ? cuh.ValorUso : componente.ValorUso[i]).ToString());
                                     tablauso += fuentestring;
 
                                     i++;
@@ -1530,6 +1544,13 @@ namespace asivamosffie.services
 
                         foreach (var comp in compAp.ComponenteUso)
                         {
+                            ComponenteUsoHistorico cuh = null;
+
+                            if (esLiberacion)
+                            {
+                                cuh = _context.ComponenteUsoHistorico.Where(r => r.ComponenteUsoId == comp.ComponenteUsoId).FirstOrDefault();
+                            }
+
                             var usos = _context.Dominio.Where(x => x.Codigo == comp.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
                             uso.Add(usos.Count() > 0 ? usos.FirstOrDefault().Nombre : string.Empty);
                             string llavemen = compAp.ContratacionProyectoAportante.ContratacionProyecto.Proyecto.LlaveMen;
@@ -1538,7 +1559,7 @@ namespace asivamosffie.services
                                 Replace("[APORTANTE]", aportante).
                                 Replace("[COMPONENTE]", dom.FirstOrDefault().Nombre).
                                 Replace("[USO]", usos.FirstOrDefault().Nombre).
-                                Replace("[VALOR_USO]", "$ " + String.Format("{0:n0}", comp.ValorUso).ToString());
+                                Replace("[VALOR_USO]", "$ " + String.Format("{0:n0}", esLiberacion && cuh != null ? cuh.ValorUso : comp.ValorUso).ToString());
                             tablauso += fuentestring;
                         }
                     }
@@ -1568,6 +1589,23 @@ namespace asivamosffie.services
                 .Where(x => x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId && x.EsNovedad != true && x.Eliminado != true).
                 ToList();
 
+                if (esLiberacion)
+                {
+                    foreach (var gfa in gestionfuentes)
+                    {
+                        GestionFuenteFinanciacionHistorico gffh = _context.GestionFuenteFinanciacionHistorico.Where(r => r.GestionFuenteFinanciacionId == gfa.GestionFuenteFinanciacionId).FirstOrDefault();
+                        if (gffh != null)
+                        {
+                            gfa.SaldoActual = gffh.SaldoActual;
+                            gfa.ValorSolicitado = gffh.ValorSolicitado;
+                            gfa.NuevoSaldo = gffh.NuevoSaldo;
+                            gfa.SaldoActualGenerado = gffh.SaldoActual;
+                            gfa.ValorSolicitadoGenerado = gffh.ValorSolicitado;
+                            gfa.NuevoSaldoGenerado = gffh.NuevoSaldo;
+                        }
+                    }
+                }
+
                 if (esNovedad)
                 {
                     //traer todas las novedades que esten estado 5 y 8 
@@ -1589,18 +1627,37 @@ namespace asivamosffie.services
                             if (novedadContractualRegistroPresupuestalTmp.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal || novedadContractualRegistroPresupuestalTmp.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar)
                             {
                                 int positionGestion = gestionfuentes.FindIndex(r => r.FuenteFinanciacionId == gfa.FuenteFinanciacionId);
-
                                 if (positionGestion > -1)
                                 {
-                                    gestionfuentes[positionGestion].SaldoActual = gestionfuentes[positionGestion].SaldoActualGenerado ?? 0 + gfa.SaldoActualGenerado ?? 0;
-                                    gestionfuentes[positionGestion].ValorSolicitado = gestionfuentes[positionGestion].ValorSolicitadoGenerado ?? 0 + gfa.ValorSolicitadoGenerado ?? 0;
-                                    gestionfuentes[positionGestion].NuevoSaldo = gestionfuentes[positionGestion].NuevoSaldoGenerado ?? 0 + gfa.NuevoSaldoGenerado ?? 0;
-                                    gestionfuentes[positionGestion].SaldoActualGenerado = gestionfuentes[positionGestion].SaldoActualGenerado + gfa.SaldoActualGenerado;
-                                    gestionfuentes[positionGestion].ValorSolicitadoGenerado = gestionfuentes[positionGestion].ValorSolicitadoGenerado + gfa.ValorSolicitadoGenerado;
-                                    gestionfuentes[positionGestion].NuevoSaldoGenerado = gestionfuentes[positionGestion].NuevoSaldoGenerado + gfa.NuevoSaldoGenerado;
+                                    GestionFuenteFinanciacionHistorico gffh = null;
+                                    if (esLiberacion)
+                                    {
+                                        gffh = _context.GestionFuenteFinanciacionHistorico.Where(r => r.GestionFuenteFinanciacionId == gestionfuentes[positionGestion].GestionFuenteFinanciacionId).FirstOrDefault();
+                                    }
+
+                                    gestionfuentes[positionGestion].SaldoActual = esLiberacion && gffh != null ? gffh.SaldoActual : gestionfuentes[positionGestion].SaldoActualGenerado ?? 0 + gfa.SaldoActualGenerado ?? 0;
+                                    gestionfuentes[positionGestion].ValorSolicitado = esLiberacion && gffh != null ? gffh.ValorSolicitado : gestionfuentes[positionGestion].ValorSolicitadoGenerado ?? 0 + gfa.ValorSolicitadoGenerado ?? 0;
+                                    gestionfuentes[positionGestion].NuevoSaldo = esLiberacion && gffh != null ? gffh.NuevoSaldo : gestionfuentes[positionGestion].NuevoSaldoGenerado ?? 0 + gfa.NuevoSaldoGenerado ?? 0;
+                                    gestionfuentes[positionGestion].SaldoActualGenerado = esLiberacion && gffh != null ? gffh.SaldoActual : gestionfuentes[positionGestion].SaldoActualGenerado + gfa.SaldoActualGenerado;
+                                    gestionfuentes[positionGestion].ValorSolicitadoGenerado = esLiberacion && gffh != null ? gffh.ValorSolicitado : gestionfuentes[positionGestion].ValorSolicitadoGenerado + gfa.ValorSolicitadoGenerado;
+                                    gestionfuentes[positionGestion].NuevoSaldoGenerado = esLiberacion && gffh != null ? gffh.NuevoSaldo : gestionfuentes[positionGestion].NuevoSaldoGenerado + gfa.NuevoSaldoGenerado;
                                 }
                                 else
                                 {
+                                    GestionFuenteFinanciacionHistorico gffh = null;
+                                    if (esLiberacion)
+                                        gffh = _context.GestionFuenteFinanciacionHistorico.Where(r => r.GestionFuenteFinanciacionId == gfa.GestionFuenteFinanciacionId).FirstOrDefault();
+
+                                    if (esLiberacion && gffh != null)
+                                    {
+                                        gfa.SaldoActual = gffh.SaldoActual;
+                                        gfa.ValorSolicitado = gffh.ValorSolicitado;
+                                        gfa.NuevoSaldo = gffh.NuevoSaldo;
+                                        gfa.SaldoActualGenerado = gffh.SaldoActual;
+                                        gfa.ValorSolicitadoGenerado = gffh.ValorSolicitado;
+                                        gfa.NuevoSaldoGenerado = gffh.NuevoSaldo;
+
+                                    }
                                     gestionfuentes.Add(gfa);
                                 }
                             }
@@ -2878,7 +2935,7 @@ namespace asivamosffie.services
             }
 
             Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_DRP).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-            string contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, true, esNovedad, novedadContractualRegistro, false);
+            string contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, true, esNovedad, novedadContractualRegistro, false, false);
             plantilla.Contenido = contenido;
             //return ConvertirPDF(plantilla);
             return Helpers.PDF.Convertir(plantilla, true);

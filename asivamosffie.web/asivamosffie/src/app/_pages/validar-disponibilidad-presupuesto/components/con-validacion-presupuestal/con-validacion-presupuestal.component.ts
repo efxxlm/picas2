@@ -101,7 +101,7 @@ export class ConValidacionPresupuestalComponent implements OnInit {
     console.log(this.detailavailabilityBudget);
     const esNovedad = this.route.snapshot.paramMap.get('esNovedad');
     const novedadId = this.route.snapshot.paramMap.get('novedadId');
-    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id, esNovedad, novedadId,true).subscribe((listas:any) => {
+    this.disponibilidadServices.GenerateDDP(this.detailavailabilityBudget.id, esNovedad, novedadId,true,this.esLiberacion).subscribe((listas:any) => {
       console.log(listas);
       const documento = `${ this.detailavailabilityBudget.numeroDDP  }.pdf`;
         const text = documento,

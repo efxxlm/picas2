@@ -147,7 +147,7 @@
                     <strong>Fuente:</strong>
                     {{fuente.fuente}}
                     </p>
-                    <p>
+                    <p *ngIf="!esLiberacion">
                     <strong>Saldo actual de la fuente:</strong>
                     {{fuente.saldo_actual_de_la_fuente| currency:'':'symbol':'3.0'}}
                     </p>
@@ -155,7 +155,7 @@
                     <strong>Valor solicitado de la fuente:</strong>
                     {{fuente.valor_solicitado_de_la_fuente| currency:'':'symbol':'3.0'}}
                     </p>
-                    <p>
+                    <p *ngIf="!esLiberacion">
                     <strong>Nuevo saldo de la fuente:</strong>
                     {{fuente.nuevo_saldo_de_la_fuente| currency:'':'symbol':'3.0'}}
                     </p>

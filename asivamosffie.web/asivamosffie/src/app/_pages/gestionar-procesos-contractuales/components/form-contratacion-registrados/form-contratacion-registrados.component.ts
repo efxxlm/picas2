@@ -62,7 +62,7 @@ export class FormContratacionRegistradosComponent implements OnInit {
   getModalidadContrato( modalidadCodigo: string ) {
     if ( this.modalidadContratoArray.length > 0 ) {
       const modalidad = this.modalidadContratoArray.find( modalidad => modalidad.codigo === modalidadCodigo );
-      
+
       if ( modalidad !== undefined ) {
         return modalidad.nombre;
       }
@@ -114,9 +114,9 @@ export class FormContratacionRegistradosComponent implements OnInit {
       this.routes.navigate( [ '/procesosContractuales' ] );
       return;
     }
-    
+
     this.estadoCodigo = this.routes.getCurrentNavigation().extras.state.estadoCodigo;
-    
+
   }
 
   openDialog (modalTitle: string, modalText: string) {
@@ -127,8 +127,8 @@ export class FormContratacionRegistradosComponent implements OnInit {
   }
 
   getDdp(disponibilidadPresupuestalId: number, numeroDdp: string ) {
-    
-    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId, false, 0,false).subscribe((listas:any) => {
+
+    this.disponibilidadServices.GenerateDDP(disponibilidadPresupuestalId, false, 0,false,false).subscribe((listas:any) => {
       console.log(listas);
       let documento = '';
         if ( numeroDdp !== undefined ) {

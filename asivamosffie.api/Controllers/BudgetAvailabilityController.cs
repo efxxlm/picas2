@@ -134,13 +134,13 @@ namespace asivamosffie.api.Controllers
 
         [Route("GenerateDDP")]
         [HttpGet]
-        public async Task<IActionResult> GenerateDDP([FromQuery] int id, bool esNovedad, int pRegistroPresupuestalId, bool esValidar)
+        public async Task<IActionResult> GenerateDDP([FromQuery] int id, bool esNovedad, int pRegistroPresupuestalId, bool esValidar, bool esLiberacion)
         {
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                return File(await _budgetAvailabilityService.GetPDFDDP(id, UsuarioModificacion, esNovedad, pRegistroPresupuestalId, esValidar), "application/pdf");
+                return File(await _budgetAvailabilityService.GetPDFDDP(id, UsuarioModificacion, esNovedad, pRegistroPresupuestalId, esValidar, esLiberacion), "application/pdf");
             }
             catch (Exception ex)
             {
