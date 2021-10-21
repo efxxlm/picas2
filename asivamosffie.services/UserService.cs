@@ -538,7 +538,7 @@ namespace asivamosffie.services
         #region Business
         public async Task<bool> ValidateExistEmail(Usuario pUsuario)
         {
-            if (await _context.Usuario.AnyAsync(u => u.Email.ToLower() == pUsuario.Email.ToLower()))
+            if (await _context.Usuario.AnyAsync(u => u.Email.ToLower() == pUsuario.Email.ToLower() && u.UsuarioId != pUsuario.UsuarioId))
                 return true;
 
             return false;
