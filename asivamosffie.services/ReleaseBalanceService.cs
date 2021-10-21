@@ -553,7 +553,7 @@ namespace asivamosffie.services
 
                             if (usosN.FirstOrDefault()?.NovedadContractualRegistroPresupuestalId > 0)
                             {
-                                nrp = _context.NovedadContractualRegistroPresupuestal.Find(usos.FirstOrDefault().NovedadContractualRegistroPresupuestalId);
+                                nrp = _context.NovedadContractualRegistroPresupuestal.Find(usosN.FirstOrDefault().NovedadContractualRegistroPresupuestalId);
                             }
                             if (nrp != null)
                             {
