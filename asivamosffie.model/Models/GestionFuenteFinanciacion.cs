@@ -30,6 +30,7 @@ namespace asivamosffie.model.Models
         public decimal? ValorSolicitadoGenerado { get; set; }
         public decimal? NuevoSaldoGenerado { get; set; }
         public int? BalanceFinancieroTrasladoValorId { get; set; }
+        public decimal? ValorLiberado { get; set; }
 
         public virtual BalanceFinancieroTrasladoValor BalanceFinancieroTrasladoValor { get; set; }
         public virtual DisponibilidadPresupuestal DisponibilidadPresupuestal { get; set; }

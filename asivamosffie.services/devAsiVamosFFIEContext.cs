@@ -3368,6 +3368,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.ValorLiberado).HasColumnType("numeric(18, 2)");
+
                 entity.Property(e => e.ValorSolicitado).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.ValorSolicitadoGenerado).HasColumnType("numeric(18, 2)");
@@ -11863,8 +11865,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorAporte).HasColumnType("numeric(18, 2)");
 
                 entity.HasOne(d => d.FuenteFinanciacion)
-                    //.HasForeignKey(d => d.FuenteFinanciacionId)
                     .WithMany(p => p.VigenciaAporte)
+                    .HasForeignKey(d => d.FuenteFinanciacionId)
                     .HasConstraintName("FK_VigenciaAporte_FuenteFinanciacion");
             });
 

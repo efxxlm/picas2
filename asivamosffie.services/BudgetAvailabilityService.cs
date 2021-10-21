@@ -1448,6 +1448,13 @@ namespace asivamosffie.services
             string tablafuentes = string.Empty;
             string tablauso = string.Empty;
             string tablaproyecto = string.Empty;
+
+            VDisponibilidadPresupuestal vdpp = _context.VDisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId && r.EstadoSolicitudCodigo == "10" && r.TieneHistorico == true).FirstOrDefault();
+            bool tieneHistorico = false;
+
+            if (vdpp != null)
+                tieneHistorico = true;
+
             if (drp)
             {
                 int codtablafuentes = (int)ConstanCodigoPlantillas.DRP_TABLA_FUENTES;
@@ -1721,7 +1728,7 @@ namespace asivamosffie.services
                         .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x => x.ValorDocumento)).ToString())
                         .Replace("[DDP_FUENTE]", fuenteNombre)
                         .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar && !cumpleDdp ? (gestion.SaldoActualGenerado ?? 0) : gestion.SaldoActual).ToString())
-                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar && !cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gestion.ValorSolicitado).ToString())
+                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", tieneHistorico && !esLiberacion ? gestion.ValorLiberado != null ? -gestion.ValorLiberado : -0 : !esValidar && !cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gestion.ValorSolicitado).ToString())
                         .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar && !cumpleDdp ? (gestion.NuevoSaldoGenerado ?? 0) : gestion.NuevoSaldo).ToString());
 
                     //.Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", saldototal).ToString())
@@ -1940,7 +1947,7 @@ namespace asivamosffie.services
                 {
                     case ConstanCodigoVariablesPlaceHolders.DDP_FECHA:
                         pStrContenido = pStrContenido
-                            .Replace(place.Nombre, fechaComitetecnico != null ? ((DateTime)fechaComitetecnico).ToString("dd/MM/yyyy") : "");
+                            .Replace(place.Nombre, tieneHistorico && !esLiberacion && !drp ? ((DateTime)vdpp.FechaSolicitud).ToString("dd/MM/yyyy") : fechaComitetecnico != null ? ((DateTime)fechaComitetecnico).ToString("dd/MM/yyyy") : "");
                         break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_NUMERO_SOLICITUD:
                         pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.NumeroSolicitud); break;
