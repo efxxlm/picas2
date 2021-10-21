@@ -79,7 +79,7 @@
                                     <strong>Fuente:</strong>
                                     {{fuente.fuente}}
                                 </p>
-                            <p>
+                            <p *ngIf="detailavailabilityBudget?.tieneHistorico != true">
                                 <strong>Saldo actual de la fuente:</strong>
                                 {{ fuente.saldo_actual_de_la_fuente  | currency:'':'symbol':'3.0'}}
                             </p>
@@ -87,8 +87,8 @@
                                 <strong>Valor solicitado de la fuente:</strong>
                                 {{fuente.valor_solicitado_de_la_fuente | currency:'':'symbol':'3.0'}}
                             </p>
-                            <p>
-                                <strong>Nuevo saldo de la fuente:</strong>
+                            <p *ngIf="detailavailabilityBudget?.tieneHistorico != true">
+                              <strong>Nuevo saldo de la fuente:</strong>
                                 {{ (fuente.nuevo_saldo_de_la_fuente !== 0 ? fuente.nuevo_saldo_de_la_fuente : fuente.nuevo_saldo_de_la_fuente) | currency:'':'symbol':'3.0'}}
                             </p>
                              <!-- no esta ene l caso de uso<p>

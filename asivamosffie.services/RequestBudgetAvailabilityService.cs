@@ -51,7 +51,7 @@ namespace asivamosffie.services
                     //Include(x => x.DisponibilidadPresupuestalProyecto).
                     //Include(x => x.DisponibilidadPresupuestalObservacion).
                     FirstOrDefaultAsync();
-
+                VDisponibilidadPresupuestal vdpp = null;
                 if (ListDP != null)
                     ListDP.ValorTotalDisponibilidad = _commonService.GetValorTotalDisponibilidad(disponibilidadPresupuestalId,false);
 
@@ -515,6 +515,10 @@ namespace asivamosffie.services
                         plazoContratacion = _context.PlazoContratacion.Find(contratacionDP.PlazoContratacionId);
                     }
                     int existeNovedad = _context.NovedadContractualRegistroPresupuestal.Where(r => r.Eliminado != true && r.DisponibilidadPresupuestalId == ListDP.DisponibilidadPresupuestalId).Count();
+                    if (ListDP.EstadoSolicitudCodigo == "5" || ListDP.EstadoSolicitudCodigo == "8")
+                    {
+                        vdpp = _context.VDisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == ListDP.DisponibilidadPresupuestalId && r.EstadoSolicitudCodigo == "10" && r.TieneHistorico == true).FirstOrDefault();
+                    }
                     DetailValidarDisponibilidadPresupuesal detailDisponibilidadPresupuesal = new DetailValidarDisponibilidadPresupuesal
                     {
                         //TODO:Traer estos campos { Tipo de modificacion, Valor despues de la modificacion, Plazo despues de la modificacion, Detalle de la modificacion) => se toma del caso de uso de novedades contractuales
@@ -562,7 +566,8 @@ namespace asivamosffie.services
                         EstadoRegistro = blnEstado,
                         SesionComiteSolicitud = sesionComiteSolicitud,
                         ValorTotalDisponibilidad = ListDP.ValorTotalDisponibilidad,
-                        TieneNovedad = existeNovedad > 0 ? true : false
+                        TieneNovedad = existeNovedad > 0 ? true : false,
+                        TieneHistorico = vdpp != null ? true : false
                     };
 
                     ListDetailValidarDisponibilidadPresupuesal.Add(detailDisponibilidadPresupuesal);

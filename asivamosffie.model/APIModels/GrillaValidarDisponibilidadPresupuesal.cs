@@ -78,7 +78,7 @@ namespace asivamosffie.model.APIModels
         public decimal ValorTotalDisponibilidad { get; set; }
         public bool TieneNovedad { get; set; }
         public string EstadoSolicitudCodigo { get; set; }
-
+        public bool TieneHistorico { get; set; }
 
     }
 }
