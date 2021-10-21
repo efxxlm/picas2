@@ -101,6 +101,16 @@
             Programación de obra
           </mat-panel-title>
         </mat-expansion-panel-header>
+        <div class="d-flex mt-2em text-center" style="justify-content: center;">
+          <p class="mr-1em" style="margin-right: 2em;">Fecha Inicio ejecución de obra: 
+            <b *ngIf="contratacion.proyecto.contratoConstruccion.length > 0">
+              {{ contratacion.proyecto.contratoConstruccion[0].fechaInicioObra | date: 'dd/MM/yyyy' }}
+            </b>
+          </p>  
+          <p class="mr-1em" style="margin-right: 2em;">Fecha fin de ejecución: <b>{{ contratacion.proyecto.fechaFinEtapaObra | date: 'dd/MM/yyyy' }}</b></p>
+          <p class="mr-1em" style="margin-right: 2em;">Duración en semanas de la fase: <b>{{ contratacion.proyecto['plazoEnSemanas'] | number : '1.1-1' }}</b></p>
+          <p class="mr-1em" style="margin-right: 2em;">Valor total de la fase: <b> {{ contratacion.proyecto[ 'valorFaseConstruccion' ] | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
+        </div>
         <app-programacion-obra-verificar-requisitos [observacionesCompleted]="true"
         [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]">
         </app-programacion-obra-verificar-requisitos>
@@ -112,6 +122,13 @@
             Flujo de inversión de recursos
           </mat-panel-title>
         </mat-expansion-panel-header>
+        <div class="d-flex mt-2em text-center" style="justify-content: center;">
+          <p class="mr-1em" style="margin-right: 2em;">
+            Fecha Inicio: <b>{{ contratacion.proyecto.fechaInicioEtapaObra | date: 'dd/MM/yyyy' }}</b></p>
+            <p class="mr-1em" style="margin-right: 2em;">Fecha Fin: <b>{{ contratacion.proyecto.fechaFinEtapaObra | date: 'dd/MM/yyyy' }}</b></p>
+            <p class="mr-1em" style="margin-right: 2em;">Duración en semanas de la fase: <b>{{ contratacion.proyecto['plazoEnSemanas'] | number : '1.1-1' }}</b></p>
+            <p class="mr-1em" style="margin-right: 2em;">Valor total de la fase: <b> {{ contratacion.proyecto[ 'valorFaseConstruccion' ] | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
+        </div>
         <app-inversion-fljrecursos-verificar-requisitos [observacionesCompleted]="true"
           [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]">
         </app-inversion-fljrecursos-verificar-requisitos>
