@@ -1501,23 +1501,28 @@ namespace asivamosffie.services
                             aportante.FuentesFinanciacion.ForEach(fuente =>
                             {
                                 GestionFuenteFinanciacionHistorico FuenteHistorico = null;
-                                ContratacionProyectoAportanteHistorico aportanteHistorico = null;
+                                ProyectoAportanteHistorico paHistorico = null;
                                 if (esLiberacion)
                                 {
                                     FuenteHistorico = _context.GestionFuenteFinanciacionHistorico.Where(r => r.GestionFuenteFinanciacionId == fuente.GestionFuenteFinanciacionID).FirstOrDefault();
-                                    ContratacionProyectoAportante cpa = _context.ContratacionProyectoAportante.Where(r => r.CofinanciacionAportanteId == aportante.CofinanciacionAportanteId && r.ContratacionProyectoId == proyecto.ContratacionProyectoId).FirstOrDefault();
-                                    if (cpa != null)
-                                        aportanteHistorico = _context.ContratacionProyectoAportanteHistorico.Where(r=> r.ContratacionProyectoAportanteId == cpa.ContratacionProyectoAportanteId).FirstOrDefault();
+                                    Proyecto p = _context.Proyecto.Where(r => r.LlaveMen == proyecto.LlaveMen).FirstOrDefault();
+                                    if(p != null)
+                                    {
+                                        ProyectoAportante pa = _context.ProyectoAportante.Where(r => r.ProyectoId == p.ProyectoId && r.AportanteId == aportante.CofinanciacionAportanteId).FirstOrDefault();
+                                        if(pa != null)
+                                            paHistorico = _context.ProyectoAportanteHistorico.Where(r => r.ProyectoAportanteId == pa.ProyectoAportanteId).FirstOrDefault();
+
+                                    }
                                 }
                                 var tr = plantilla_fuentes
                                     .Replace("[LLAVEMEN]", proyecto.LlaveMen)
                                     .Replace("[INSTITUCION]", proyecto.InstitucionEducativa)
                                     .Replace("[SEDE]", proyecto.Sede)
                                     .Replace("[APORTANTE]", aportante.Nombre)
-                                    .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", aportante.ValorAportanteAlProyecto != null ? aportante.ValorAportanteAlProyecto : 0))
+                                    .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", esLiberacion && paHistorico != null ? paHistorico.ValorObra : aportante.ValorAportanteAlProyecto != null ? aportante.ValorAportanteAlProyecto : 0))
                                     .Replace("[FUENTE]", fuente.Fuente)
                                     .Replace("[SALDO_FUENTE]", "$ " + String.Format("{0:n0}", esLiberacion && FuenteHistorico != null ? FuenteHistorico.SaldoActual : fuente.Saldo_actual_de_la_fuente > 0 ? fuente.Saldo_actual_de_la_fuente : 0))
-                                    .Replace("[VALOR_FUENTE]", "$ " + String.Format("{0:n0}", esLiberacion && aportanteHistorico != null ? aportanteHistorico.ValorAporte : aportante.ValorAportanteAlProyecto != null ? aportante.ValorAportanteAlProyecto : 0))
+                                    .Replace("[VALOR_FUENTE]", "$ " + String.Format("{0:n0}", esLiberacion && paHistorico != null ? paHistorico.ValorObra : aportante.ValorAportanteAlProyecto != null ? aportante.ValorAportanteAlProyecto : 0))
                                     .Replace("[NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", esLiberacion && FuenteHistorico != null ? FuenteHistorico.NuevoSaldo : fuente.Nuevo_saldo_de_la_fuente > 0 ? fuente.Nuevo_saldo_de_la_fuente : 0));
                                 tablafuentes += tr;
                             });
