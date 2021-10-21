@@ -17,5 +17,6 @@ namespace asivamosffie.model.Models
         public int? NovedadContractualId { get; set; }
         public string TipoSolicitudCodigo { get; set; }
         public string NumeroContrato { get; set; }
+        public bool? TieneHistorico { get; set; }
     }
 }

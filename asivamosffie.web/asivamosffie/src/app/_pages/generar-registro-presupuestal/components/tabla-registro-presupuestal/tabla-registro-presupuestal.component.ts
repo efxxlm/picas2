@@ -21,6 +21,7 @@ export interface Contrato {
   esNovedad: boolean;
   novedadId: number;
   numeroOtroSi: string;
+  tieneHistorico?: boolean;
 }
 
 @Component({
@@ -52,7 +53,9 @@ export class TablaRegistroPresupuestalComponent implements OnInit {
           tipoSolicitud:element.tipoSolicitudEspecial,
           esNovedad: element.esNovedad,
           novedadId: element.novedadContractualRegistroPresupuestalId,
-          numeroOtroSi: element.numeroOtroSi != null ? element.numeroOtroSi : "" });
+          tieneHistorico: element.tieneHistorico != null ? element.tieneHistorico : false,
+          numeroOtroSi: element.numeroOtroSi != null ? element.numeroOtroSi : ""
+        });
       });
       this.dataSource = new MatTableDataSource(elementos);
       this.dataSource.sort = this.sort;
@@ -73,8 +76,8 @@ export class TablaRegistroPresupuestalComponent implements OnInit {
     this.router.navigate(['/generarRegistroPresupuestal/verDetalle', element.id]);
   }*/
 
-  verDetalle(id: number, esNovedad, novedadId, estado: string) {
-    if(estado == "Liberación de saldo"){
+  verDetalle(id: number, esNovedad, novedadId, tieneHistorico: boolean) {
+    if(tieneHistorico === true){
       this.router.navigate(['generarRegistroPresupuestal/conLiberacionSaldo', id, esNovedad, novedadId ? novedadId : 0]);
     }
     else{

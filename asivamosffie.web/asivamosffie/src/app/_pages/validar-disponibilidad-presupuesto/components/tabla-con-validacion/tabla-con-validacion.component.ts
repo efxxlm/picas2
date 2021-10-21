@@ -12,6 +12,7 @@ export interface PeriodicElement {
   estadoRegistro: boolean;
   esNovedad: boolean;
   novedadId: number;
+  tieneHistorico: boolean;
 }
 
 
@@ -45,7 +46,8 @@ export class TablaConValidacionComponent implements OnInit {
       elements.push({id:element.disponibilidadPresupuestalId,
         fecha:element.fechaSolicitud,estadoRegistro:element.estadoRegistro,numero:element.numeroSolicitud,
         tipo:element.tipoSolicitud, esNovedad: element.esNovedad,
-        novedadId: element.novedadContractualRegistroPresupuestalId
+        novedadId: element.novedadContractualRegistroPresupuestalId,
+        tieneHistorico: element.tieneHistorico != null ? element.tieneHistorico : false,
         })
     });
     this.dataSource = new MatTableDataSource(elements);
@@ -70,12 +72,12 @@ export class TablaConValidacionComponent implements OnInit {
     this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
-  verDetalle(id: number, esNovedad, novedadId) {
+  verDetalle(id: number, esNovedad, novedadId, tieneHistorico: boolean) {
     console.log(id, esNovedad, novedadId);
-    if(this.esGenerar == true){
+    if(this.esGenerar == true && tieneHistorico != true){
       this.router.navigate(['validarDisponibilidadPresupuesto/conDisponibilidadPresupuestal', id, esNovedad, novedadId ? novedadId : 0]);
     }
-    else if(this.esLiberacion == true){
+    else if(tieneHistorico == true){
       this.router.navigate(['validarDisponibilidadPresupuesto/conLiberacionSaldo', id, esNovedad, novedadId ? novedadId : 0]);
     }
     else{
