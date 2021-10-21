@@ -458,24 +458,6 @@ namespace asivamosffie.services
                                                         proyectoAportantesData.Add(pa);
                                                     }
                                                 }
-
-                                                await _context.Set<ContratacionProyectoAportante>()
-                                                            .Where(r => r.ContratacionProyectoAportanteId == cpa.ContratacionProyectoAportanteId)
-                                                            .UpdateAsync(r => new ContratacionProyectoAportante()
-                                                            {
-                                                                FechaModificacion = DateTime.Now,
-                                                                UsuarioModificacion = user,
-                                                                ValorAporte = valorUsoNuevo
-                                                            });
-                                                //creo un histórico con el valor actual
-                                                ContratacionProyectoAportanteHistorico contratacionProyectoAportanteHistorico = new ContratacionProyectoAportanteHistorico
-                                                {
-                                                    FechaCreacion = DateTime.Now,
-                                                    UsuarioCreacion = user,
-                                                    ValorAporte = valorUsoActual,
-                                                    ContratacionProyectoAportanteId = cpa.ContratacionProyectoAportanteId
-                                                };
-                                                _context.ContratacionProyectoAportanteHistorico.Add(contratacionProyectoAportanteHistorico);
                                             }
                                         }
                                     }
@@ -499,6 +481,38 @@ namespace asivamosffie.services
                                                     UsuarioModificacion = user,
                                                     ValorSolicitud = valorDrpNuevo
                                                 });
+
+                                //crear el registro histórico de gestion fuente financiación, con el valor actual del gff
+                                List<ContratacionProyectoAportante> cpaList = new List<ContratacionProyectoAportante>();
+                                if (dpp != null)
+                                    cpaList = _context.ContratacionProyectoAportante.Where(r => r.ContratacionProyectoId == cp.ContratacionProyectoId).ToList();
+
+                                foreach (var cppa in cpaList)
+                                {
+                                    decimal ValorAporteNuevo = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad != true && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId && r.CofinanciacionAportanteId == cppa.CofinanciacionAportanteId).ToList().Sum(r => r.ValorSolicitud);
+
+                                    decimal ValorAporteActual = cppa.ValorAporte;
+
+                                    await _context.Set<ContratacionProyectoAportante>()
+                                                .Where(r => r.ContratacionProyectoAportanteId == cppa.ContratacionProyectoAportanteId)
+                                                .UpdateAsync(r => new ContratacionProyectoAportante()
+                                                {
+                                                    FechaModificacion = DateTime.Now,
+                                                    UsuarioModificacion = user,
+                                                    ValorAporte = ValorAporteNuevo
+                                                });
+                                    //creo un histórico con el valor actual
+                                    ContratacionProyectoAportanteHistorico contratacionProyectoAportanteHistorico = new ContratacionProyectoAportanteHistorico
+                                    {
+                                        FechaCreacion = DateTime.Now,
+                                        UsuarioCreacion = user,
+                                        ValorAporte = ValorAporteActual,
+                                        ContratacionProyectoAportanteId = cppa.ContratacionProyectoAportanteId
+                                    };
+                                    _context.ContratacionProyectoAportanteHistorico.Add(contratacionProyectoAportanteHistorico);
+
+                                }
+
                                 //actualizar fuentes de financiacion con el nuevo valor
 
                                 //Actualizar gestiones fuentes de financiación fuente del componente Uso
@@ -527,10 +541,10 @@ namespace asivamosffie.services
                                         ComponenteAportante componenteAportante = _context.ComponenteAportante.Find(cu.ComponenteAportanteId);
                                         if (componenteAportante != null)
                                         {
-                                            ContratacionProyectoAportante cpa = _context.ContratacionProyectoAportante.Find(componenteAportante.ContratacionProyectoAportanteId);
-                                            if (cpa != null)
+                                            ContratacionProyectoAportante cpaa = _context.ContratacionProyectoAportante.Find(componenteAportante.ContratacionProyectoAportanteId);
+                                            if (cpaa != null)
                                             {
-                                                N_SaldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == cpa.CofinanciacionAportanteId).FirstOrDefault().SaldoActual ?? 0;
+                                                N_SaldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == cpaa.CofinanciacionAportanteId).FirstOrDefault().SaldoActual ?? 0;
                                             }
                                         }
                                         if (cu != null)
@@ -598,10 +612,6 @@ namespace asivamosffie.services
                                         decimal valorUsoNuevo = componenteUsoNovedadHistorico.ValorUso;
                                         valorDrpNuevoN += valorUsoNuevo;
 
-                                        GestionFuenteFinanciacion gff = null;
-                                        if (dpp != null)
-                                            gff = _context.GestionFuenteFinanciacion.Where(r => r.NovedadContractualRegistroPresupuestalId == uso.NovedadContractualRegistroPresupuestalId && r.EsNovedad == true && r.FuenteFinanciacionId == uso.FuenteFinanciacionId).FirstOrDefault();
-
                                         await _context.Set<ComponenteUsoNovedadHistorico>()
                                                             .Where(r => r.ComponenteUsoNovedadHistoricoId == uso.ComponenteUsoNovedadHistoricoId)
                                                             .UpdateAsync(r => new ComponenteUsoNovedadHistorico()
@@ -620,48 +630,6 @@ namespace asivamosffie.services
                                                                 UsuarioModificacion = user,
                                                                 ValorUso = valorUsoNuevo
                                                             });
-
-                                        //actualizar fuentes de financiacion con el nuevo valor
-
-                                        //Actualizar gestiones fuentes de financiación fuente del componente Uso
-                                        //crear el registro histórico de gestion fuente financiación, con el valor actual del gff
-                                        if (gff != null)
-                                        {
-                                            //valores actuales gff
-
-                                            decimal A_SaldoActual = gff.SaldoActual;
-                                            decimal A_ValorSolicitado = gff.ValorSolicitado;
-                                            decimal A_NuevoSaldo = gff.NuevoSaldo;
-
-                                            //Valores nuevos gff
-
-                                            decimal N_SaldoActual = A_SaldoActual;
-                                            decimal N_ValorSolicitado = valorUsoNuevo;
-                                            decimal N_NuevoSaldo = A_SaldoActual - valorUsoNuevo;
-
-                                            await _context.Set<GestionFuenteFinanciacion>()
-                                                            .Where(r => r.GestionFuenteFinanciacionId == gff.GestionFuenteFinanciacionId)
-                                                            .UpdateAsync(r => new GestionFuenteFinanciacion()
-                                                            {
-                                                                FechaModificacion = DateTime.Now,
-                                                                UsuarioModificacion = user,
-                                                                SaldoActual = N_SaldoActual,
-                                                                ValorSolicitado = N_ValorSolicitado,
-                                                                NuevoSaldo = N_NuevoSaldo
-                                                            });
-
-                                            GestionFuenteFinanciacionHistorico gestionFuenteFinanciacionHistorico = new GestionFuenteFinanciacionHistorico
-                                            {
-                                                FechaCreacion = DateTime.Now,
-                                                UsuarioCreacion = user,
-                                                GestionFuenteFinanciacionId = gff.GestionFuenteFinanciacionId,
-                                                SaldoActual = A_SaldoActual,
-                                                ValorSolicitado = A_ValorSolicitado,
-                                                NuevoSaldo = A_NuevoSaldo
-                                            };
-
-                                            _context.GestionFuenteFinanciacionHistorico.Add(gestionFuenteFinanciacionHistorico);
-                                        }
                                     }
                                 }
                                 //crear el registro histórico del ddp, con el valor actual del drp
@@ -673,6 +641,78 @@ namespace asivamosffie.services
                                     ValorSolicitud = valorDrpActualN
                                 };
                                 _context.NovedadContractualRegistroPresupuestalHistorico.Add(novedadContractualRegistroPresupuestalHistorico);
+
+                                //actualizar fuentes de financiacion con el nuevo valor
+
+                                //Actualizar gestiones fuentes de financiación fuente del componente Uso
+                                //crear el registro histórico de gestion fuente financiación, con el valor actual del gff
+                                List<GestionFuenteFinanciacion> gffList = new List<GestionFuenteFinanciacion>();
+                                if (nrp != null)
+                                    gffList = _context.GestionFuenteFinanciacion.Where(r => r.NovedadContractualRegistroPresupuestalId == nrp.NovedadContractualRegistroPresupuestalId && r.EsNovedad == true).ToList();
+
+                                foreach (var gff in gffList)
+                                {
+                                    List<VSaldoAliberar> usosF = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad != true && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId).ToList();
+
+
+                                    decimal A_SaldoActual = gff.SaldoActual;
+                                    decimal A_ValorSolicitado = gff.ValorSolicitado;
+                                    decimal A_NuevoSaldo = gff.NuevoSaldo;
+
+                                    decimal ValorUsoXFuenteA = 0;
+                                    decimal ValorUsoXFuenteN = 0;
+                                    decimal N_SaldoActual = 0;
+
+                                    foreach (var uso in usosF)
+                                    {
+                                        ComponenteUso cu = _context.ComponenteUso.Find(uso.ComponenteUsoId);
+                                        //obtengo componente Aportante
+                                        ComponenteAportante componenteAportante = _context.ComponenteAportante.Find(cu.ComponenteAportanteId);
+                                        if (componenteAportante != null)
+                                        {
+                                            ContratacionProyectoAportante cpa = _context.ContratacionProyectoAportante.Find(componenteAportante.ContratacionProyectoAportanteId);
+                                            if (cpa != null)
+                                            {
+                                                N_SaldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == cpa.CofinanciacionAportanteId).FirstOrDefault().SaldoActual ?? 0;
+                                            }
+                                        }
+                                        if (cu != null)
+                                        {
+                                            ComponenteUsoHistorico cuh = _context.ComponenteUsoHistorico.Where(r => r.ComponenteUsoId == cu.ComponenteUsoId).FirstOrDefault();
+                                            if (cu.FuenteFinanciacionId == gff.FuenteFinanciacionId)
+                                            {
+                                                ValorUsoXFuenteA += cu.ValorUso;
+                                                ValorUsoXFuenteN += cuh.ValorUso;
+                                            }
+                                        }
+
+                                    }
+
+                                    await _context.Set<GestionFuenteFinanciacion>()
+                                                    .Where(r => r.GestionFuenteFinanciacionId == gff.GestionFuenteFinanciacionId)
+                                                    .UpdateAsync(r => new GestionFuenteFinanciacion()
+                                                    {
+                                                        FechaModificacion = DateTime.Now,
+                                                        UsuarioModificacion = user,
+                                                        SaldoActual = N_SaldoActual,
+                                                        ValorSolicitado = ValorUsoXFuenteN,
+                                                        NuevoSaldo = N_SaldoActual + (ValorUsoXFuenteA - ValorUsoXFuenteN),
+                                                        ValorLiberado = ValorUsoXFuenteA - ValorUsoXFuenteN
+                                                    });
+
+                                    GestionFuenteFinanciacionHistorico gestionFuenteFinanciacionHistorico = new GestionFuenteFinanciacionHistorico
+                                    {
+                                        FechaCreacion = DateTime.Now,
+                                        UsuarioCreacion = user,
+                                        GestionFuenteFinanciacionId = gff.GestionFuenteFinanciacionId,
+                                        SaldoActual = A_SaldoActual,
+                                        ValorSolicitado = A_ValorSolicitado,
+                                        NuevoSaldo = A_NuevoSaldo
+                                    };
+
+                                    _context.GestionFuenteFinanciacionHistorico.Add(gestionFuenteFinanciacionHistorico);
+
+                                }
 
                                 //actualizo el drp con el nuevo valor de los usos
                                 await _context.Set<NovedadContractualRegistroPresupuestal>()
