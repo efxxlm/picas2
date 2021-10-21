@@ -635,29 +635,6 @@ namespace asivamosffie.services
 
                                             _context.GestionFuenteFinanciacionHistorico.Add(gestionFuenteFinanciacionHistorico);
                                         }
-                                        //obtengo componente Aportante
-                                        NovedadContractualAportante novedadContractualAportante = _context.NovedadContractualAportante.Where(r => r.NovedadContractualId == nrp.NovedadContractualId).FirstOrDefault();
-
-                                        if (novedadContractualAportante != null)
-                                        {
-                                            await _context.Set<NovedadContractualAportante>()
-                                                        .Where(r => r.NovedadContractualAportanteId == novedadContractualAportante.NovedadContractualAportanteId)
-                                                        .UpdateAsync(r => new NovedadContractualAportante()
-                                                        {
-                                                            FechaModificacion = DateTime.Now,
-                                                            UsuarioModificacion = user,
-                                                            ValorAporte = valorUsoNuevo
-                                                        });
-                                            //creo un histórico con el valor actual
-                                            NovedadContractualAportanteHistorico novedadContractualAportanteHistorico = new NovedadContractualAportanteHistorico
-                                            {
-                                                FechaCreacion = DateTime.Now,
-                                                UsuarioCreacion = user,
-                                                ValorAporte = valorUsoActual,
-                                                NovedadContractualAportanteId = novedadContractualAportante.NovedadContractualAportanteId
-                                            };
-                                            _context.NovedadContractualAportanteHistorico.Add(novedadContractualAportanteHistorico);
-                                        }
                                     }
                                 }
                                 //crear el registro histórico del ddp, con el valor actual del drp
@@ -679,6 +656,29 @@ namespace asivamosffie.services
                                                     UsuarioModificacion = user,
                                                     ValorSolicitud = valorDrpNuevoN
                                                 });
+                                //obtengo componente Aportante
+                                NovedadContractualAportante novedadContractualAportante = _context.NovedadContractualAportante.Where(r => r.NovedadContractualId == nrp.NovedadContractualId).FirstOrDefault();
+
+                                if (novedadContractualAportante != null)
+                                {
+                                    await _context.Set<NovedadContractualAportante>()
+                                                .Where(r => r.NovedadContractualAportanteId == novedadContractualAportante.NovedadContractualAportanteId)
+                                                .UpdateAsync(r => new NovedadContractualAportante()
+                                                {
+                                                    FechaModificacion = DateTime.Now,
+                                                    UsuarioModificacion = user,
+                                                    ValorAporte = valorDrpNuevoN
+                                                });
+                                    //creo un histórico con el valor actual
+                                    NovedadContractualAportanteHistorico novedadContractualAportanteHistorico = new NovedadContractualAportanteHistorico
+                                    {
+                                        FechaCreacion = DateTime.Now,
+                                        UsuarioCreacion = user,
+                                        ValorAporte = valorDrpActualN,
+                                        NovedadContractualAportanteId = novedadContractualAportante.NovedadContractualAportanteId
+                                    };
+                                    _context.NovedadContractualAportanteHistorico.Add(novedadContractualAportanteHistorico);
+                                }
                             }
 
                             #endregion
