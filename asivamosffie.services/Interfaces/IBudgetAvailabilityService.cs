@@ -37,7 +37,7 @@ namespace asivamosffie.services.Interfaces
             , string urlDestino, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
         Task<Respuesta> CreateDRP(int id, string usuarioModificacion, bool esNovedad, int RegistroPresupuestalId, string urlDestino, string mailServer, int mailPort, bool enableSSL, string password, string sender);
         Task<EstadosDisponibilidad> GetListGenerarRegistroPresupuestal();
-        Task<Byte[]> GetPDFDRP(int id, string usuarioModificacion, bool esNovedad, int pRegistroPresupuestalId);
+        Task<Byte[]> GetPDFDRP(int id, string usuarioModificacion, bool esNovedad, int pRegistroPresupuestalId, bool esLiberacion);
          
     }
 }

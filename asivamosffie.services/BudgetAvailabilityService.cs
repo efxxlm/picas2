@@ -2935,7 +2935,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<byte[]> GetPDFDRP(int id, string usuarioModificacion, bool esNovedad, int pRegistroPresupuestalId)
+        public async Task<byte[]> GetPDFDRP(int id, string usuarioModificacion, bool esNovedad, int pRegistroPresupuestalId, bool esLiberacion)
         {
             if (id == 0)
             {
@@ -2958,7 +2958,7 @@ namespace asivamosffie.services
             }
 
             Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_DRP).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-            string contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, true, esNovedad, novedadContractualRegistro, false, false);
+            string contenido = await ReemplazarDatosDDPAsync(plantilla.Contenido, disponibilidad, true, esNovedad, novedadContractualRegistro, false, esLiberacion);
             plantilla.Contenido = contenido;
             //return ConvertirPDF(plantilla);
             return Helpers.PDF.Convertir(plantilla, true);

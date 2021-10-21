@@ -175,7 +175,7 @@ export class GestionarDrpComponent implements OnInit {
 
   }
   descargarDRPBoton() {
-    this.disponibilidadServices.GenerateDRP(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId).subscribe((response: any) => {
+    this.disponibilidadServices.GenerateDRP(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId, this.esLiberacion).subscribe((response: any) => {
       console.log(response);
       if(this.esLiberacion != true){
         this.disponibilidadServices.GetDetailAvailabilityBudgetProyectNew(this.detailavailabilityBudget.id, this.esNovedad, this.novedadId)

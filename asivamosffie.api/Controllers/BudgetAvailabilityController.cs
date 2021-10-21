@@ -401,13 +401,13 @@ namespace asivamosffie.api.Controllers
 
         [Route("GenerateDRP")]
         [HttpGet]
-        public async Task<IActionResult> GenerateDRP(int id, bool esNovedad, int pRegistroPresupuestalId)
+        public async Task<IActionResult> GenerateDRP(int id, bool esNovedad, int pRegistroPresupuestalId, bool esLiberacion)
         {
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                return File(await _budgetAvailabilityService.GetPDFDRP(id, UsuarioModificacion, esNovedad, pRegistroPresupuestalId), "application/pdf");
+                return File(await _budgetAvailabilityService.GetPDFDRP(id, UsuarioModificacion, esNovedad, pRegistroPresupuestalId, esLiberacion), "application/pdf");
             }
             catch (Exception ex)
             {
