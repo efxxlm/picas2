@@ -51,27 +51,6 @@ export class FormGestionarUsuariosComponent implements OnInit {
         private gestionarUsuariosSvc: GestionarUsuariosService )
     {
         this.getDataUsuario();
-        this.formUsuario.get( 'correo' ).valueChanges
-            .pipe(
-                delay( 5000 )
-            )
-            .subscribe(
-                email => {
-                    if ( this.formUsuario.get( 'correo' ).dirty === true && this.formUsuario.get( 'correo' ).value !== null ) {
-                        const pUsuario = { email };
-
-                        this.gestionarUsuariosSvc.validateExistEmail( pUsuario )
-                            .subscribe(
-                                response => {
-                                    if ( response === true && this.formUsuario.get( 'correo' ).value === email ) {
-                                        this.openDialog( '', '<b>El correo ya fue utilizado, por favor verifique la información.</b>' );
-                                        this.formUsuario.get( 'correo' ).setValue( null );
-                                    }
-                                }
-                            );
-                    }
-                }
-            );
     }
 
     ngOnInit(): void {
@@ -137,7 +116,7 @@ export class FormGestionarUsuariosComponent implements OnInit {
                                                                                     if ( getUsuario.contratosAsignados !== undefined ) {
                                                                                         if ( getUsuario.contratosAsignados.length > 0 ) {
                                                                                             getUsuario.contratosAsignados.forEach( contrato => contratosAsignados.push( contrato.contratoId ) );
-                                                                                            
+
                                                                                         }
                                                                                     }
 
@@ -319,6 +298,10 @@ export class FormGestionarUsuariosComponent implements OnInit {
     guardar() {
         console.log( this.formUsuario );
         const contratosAsignados = [];
+        if(this.formUsuario.get( 'correo' ).value == null || this.formUsuario.get( 'correo' ).value == 'undefined' || this.formUsuario.get( 'correo' ).value == '' ){
+          this.openDialog( '', '<b>Por favor diligencie el campo de correo electrónico</b>' );
+          return;
+        }
 
         if ( this.formUsuario.get( 'contratos' ).value !== null ) {
             if ( this.formUsuario.get( 'contratos' ).value.length > 0 ) {
@@ -336,12 +319,14 @@ export class FormGestionarUsuariosComponent implements OnInit {
         if ( this.formUsuario.get( 'telefonoFijo' ).value !== null ) {
 
             if ( this.formUsuario.get( 'telefonoFijo' ).value.length < 7 ) {
-                this.openDialog( '', '<b>El numero de teléfono fijo no debe ser menor a 7 digitos</b>' );
+                this.openDialog( '', '<b>El número de teléfono fijo no debe ser menor a 7 digitos</b>' );
+                return;
             }
 
             if ( this.getValidateNumberPhone( 'telefonoFijo' ) === true ) {
-                this.openDialog( '', '<b>Debe Ingresar un numero de teléfono fijo valido.</b>' );
+                this.openDialog( '', '<b>Debe Ingresar un número de teléfono fijo válido.</b>' );
                 this.formUsuario.get( 'telefonoFijo' ).setValue( null );
+                return;
             }
 
         }
@@ -349,12 +334,14 @@ export class FormGestionarUsuariosComponent implements OnInit {
         if ( this.formUsuario.get( 'telefonoCelular' ).value !== null ) {
 
             if ( this.formUsuario.get( 'telefonoCelular' ).value.length < 10 ) {
-                this.openDialog( '', '<b>El numero de teléfono celular no debe ser menor a 10 digitos</b>' );
+                this.openDialog( '', '<b>El número de teléfono celular no debe ser menor a 10 dígitos</b>' );
+                return;
             }
 
             if ( this.getValidateNumberPhone( 'telefonoCelular' ) === true ) {
-                this.openDialog( '', '<b>Debe Ingresar un numero de teléfono celular valido.</b>' );
+                this.openDialog( '', '<b>Debe Ingresar un número de teléfono celular válido.</b>' );
                 this.formUsuario.get( 'telefonoCelular' ).setValue( null );
+                return;
             }
 
         }
@@ -395,6 +382,24 @@ export class FormGestionarUsuariosComponent implements OnInit {
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
+    }
+
+    validateExistEmail(email: any){
+      if (email !== null && email !== "" && email !== 'undefined') {
+        const pUsuario = { email: email,
+                           usuarioId:this.usuarioId
+                          };
+        this.gestionarUsuariosSvc.validateExistEmail( pUsuario )
+            .subscribe(
+                response => {
+                    if ( response === true && this.formUsuario.get( 'correo' ).value === email ) {
+                        this.openDialog( '', '<b>El correo ya fue utilizado, por favor verifique la información.</b>' );
+                        this.formUsuario.get( 'correo' ).setValue( null );
+                        return;
+                    }
+                }
+            );
+    }
     }
 
 }
