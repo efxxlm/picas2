@@ -506,6 +506,12 @@ namespace asivamosffie.services
         {
             if (pUsuario.PerfilId > 0)
             {
+                if (!Create)
+                {
+                    UsuarioPerfil usuarioPerfil = _context.UsuarioPerfil.Where(r => r.UsuarioId == pUsuario.UsuarioId).FirstOrDefault();
+                    if (usuarioPerfil == null)
+                        Create = true;
+                }
                 if (Create)
                 {
                     UsuarioPerfil usuarioPerfil = new UsuarioPerfil

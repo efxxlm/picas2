@@ -295,6 +295,12 @@ export class FormGestionarUsuariosComponent implements OnInit {
         }
     }
 
+    validateKeypress(event: KeyboardEvent) {
+      const alphanumeric = /[A-Za-z0-9-]/;
+      const inputChar = String.fromCharCode(event.charCode);
+      return alphanumeric.test(inputChar) ? true : false;
+    }
+
     guardar() {
         console.log( this.formUsuario );
         const contratosAsignados = [];
@@ -316,7 +322,7 @@ export class FormGestionarUsuariosComponent implements OnInit {
             }
         }
 
-        if ( this.formUsuario.get( 'telefonoFijo' ).value !== null ) {
+        if ( this.formUsuario.get( 'telefonoFijo' ).value !== null && this.formUsuario.get( 'telefonoFijo' ).value !== "") {
 
             if ( this.formUsuario.get( 'telefonoFijo' ).value.length < 7 ) {
                 this.openDialog( '', '<b>El número de teléfono fijo no debe ser menor a 7 digitos</b>' );
@@ -331,7 +337,7 @@ export class FormGestionarUsuariosComponent implements OnInit {
 
         }
 
-        if ( this.formUsuario.get( 'telefonoCelular' ).value !== null ) {
+        if ( this.formUsuario.get( 'telefonoCelular' ).value !== null && this.formUsuario.get( 'telefonoCelular' ).value !== "") {
 
             if ( this.formUsuario.get( 'telefonoCelular' ).value.length < 10 ) {
                 this.openDialog( '', '<b>El número de teléfono celular no debe ser menor a 10 dígitos</b>' );

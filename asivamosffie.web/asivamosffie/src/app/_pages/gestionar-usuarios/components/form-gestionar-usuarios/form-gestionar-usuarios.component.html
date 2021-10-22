@@ -423,6 +423,7 @@
                     #numeroIdentificacion
                     formControlName="numeroIdentificacion"
                     required
+                    (keypress)="validateKeypress($event)"
                   />
                 </mat-form-field>
                 <span
