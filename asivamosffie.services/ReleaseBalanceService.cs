@@ -652,7 +652,7 @@ namespace asivamosffie.services
 
                                 foreach (var gff in gffList)
                                 {
-                                    List<VSaldoAliberar> usosF = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad != true && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId).ToList();
+                                    List<VSaldoAliberar> usosF = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad == true && r.NovedadContractualRegistroPresupuestalId == nrp.NovedadContractualRegistroPresupuestalId).ToList();
 
 
                                     decimal A_SaldoActual = gff.SaldoActual;
@@ -665,21 +665,12 @@ namespace asivamosffie.services
 
                                     foreach (var uso in usosF)
                                     {
-                                        ComponenteUso cu = _context.ComponenteUso.Find(uso.ComponenteUsoId);
-                                        //obtengo componente Aportante
-                                        ComponenteAportante componenteAportante = _context.ComponenteAportante.Find(cu.ComponenteAportanteId);
-                                        if (componenteAportante != null)
-                                        {
-                                            ContratacionProyectoAportante cpa = _context.ContratacionProyectoAportante.Find(componenteAportante.ContratacionProyectoAportanteId);
-                                            if (cpa != null)
-                                            {
-                                                N_SaldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == cpa.CofinanciacionAportanteId).FirstOrDefault().SaldoActual ?? 0;
-                                            }
-                                        }
+                                        N_SaldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == uso.CofinanciacionAportanteId).FirstOrDefault().SaldoActual ?? 0;
+                                        ComponenteUsoNovedad cu = _context.ComponenteUsoNovedad.Find(uso.ComponenteUsoNovedadId);
                                         if (cu != null)
                                         {
-                                            ComponenteUsoHistorico cuh = _context.ComponenteUsoHistorico.Where(r => r.ComponenteUsoId == cu.ComponenteUsoId).FirstOrDefault();
-                                            if (cu.FuenteFinanciacionId == gff.FuenteFinanciacionId)
+                                            ComponenteUsoNovedadHistorico cuh = _context.ComponenteUsoNovedadHistorico.Where(r => r.ComponenteUsoNovedadId == cu.ComponenteUsoNovedadId).FirstOrDefault();
+                                            if (uso.FuenteFinanciacionId == gff.FuenteFinanciacionId)
                                             {
                                                 ValorUsoXFuenteA += cu.ValorUso;
                                                 ValorUsoXFuenteN += cuh.ValorUso;

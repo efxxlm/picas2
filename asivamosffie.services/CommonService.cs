@@ -954,8 +954,20 @@ namespace asivamosffie.services
                 if (disponibilidadPresupuestalh != null)
                 {
                     valorSolicitud = disponibilidadPresupuestalh.ValorSolicitud;
-                    // valorSolicitud += _context.NovedadContractualRegistroPresupuestal.Where(r => r.DisponibilidadPresupuestalId == disponibilidadPresupuestal.DisponibilidadPresupuestalId &&
-                    //     (r.EstadoSolicitudCodigo == "5" || r.EstadoSolicitudCodigo == "8")).Sum(r => r.ValorSolicitud);
+                    List<NovedadContractualRegistroPresupuestal> ncrList = _context.NovedadContractualRegistroPresupuestal.Where(r => r.DisponibilidadPresupuestalId == disponibilidadPresupuestal.DisponibilidadPresupuestalId && (r.EstadoSolicitudCodigo == "5" || r.EstadoSolicitudCodigo == "8")).ToList();
+
+                    foreach (var ncr in ncrList)
+                    {
+                        NovedadContractualRegistroPresupuestalHistorico ncrh = _context.NovedadContractualRegistroPresupuestalHistorico.Where(r => r.NovedadContractualRegistroPresupuestalId == ncr.NovedadContractualRegistroPresupuestalId).FirstOrDefault();
+                        if (ncrh != null)
+                        {
+                            valorSolicitud += ncrh.ValorSolicitud;
+                        }
+                        else
+                        {
+                            valorSolicitud += ncr.ValorSolicitud;
+                        }
+                    }
                 }
                 else
                 {

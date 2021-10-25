@@ -2635,9 +2635,16 @@ namespace asivamosffie.services
             NovedadContractualRegistroPresupuestalHistorico detailDPH = _context.NovedadContractualRegistroPresupuestalHistorico
                                                             .Where(x => x.NovedadContractualRegistroPresupuestalId == RegistroNovedadId)
                                                             .FirstOrDefault();
+            VDisponibilidadPresupuestal vdpp = null;
+            bool ddpGenerado = false;
             //validación multi
             if (detailDP != null)
             {
+                if (detailDP.EstadoSolicitudCodigo == "5" || detailDP.EstadoSolicitudCodigo == "8")
+                {
+                    ddpGenerado = true;
+                    vdpp = _context.VDisponibilidadPresupuestal.Where(r => r.NovedadContractualRegistroPresupuestalId == detailDP.NovedadContractualRegistroPresupuestalId && r.EstadoSolicitudCodigo == "10" && r.TieneHistorico == true).FirstOrDefault();
+                }
                 if (detailDP.DisponibilidadPresupuestal != null)
                 {
                     //novedad aplica a proyecto
@@ -2762,7 +2769,7 @@ namespace asivamosffie.services
                                       && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion);
 
                             string namefuente = funtename.Any() ? funtename.FirstOrDefault().Nombre : "";
-                            if (!esGenerar)
+                            if (!esGenerar || ddpGenerado == true)
                             {
                                 fuentes.Add(new GrillaFuentesFinanciacion
                                 {
@@ -2798,8 +2805,25 @@ namespace asivamosffie.services
                                 var usos = _context.Dominio.Where(x => x.Codigo == componenteUso.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
 
                                 uso.Add(usos.Count() > 0 ? usos.FirstOrDefault().Nombre : "");
-                                usovalor.Add(componenteUso.ValorUso);
-                                total += componenteUso.ValorUso;
+                                if (!esLiberacion)
+                                {
+                                    usovalor.Add(componenteUso.ValorUso);
+                                    total += componenteUso.ValorUso;
+                                }
+                                else
+                                {
+                                    ComponenteUsoNovedadHistorico cuh = _context.ComponenteUsoNovedadHistorico.Where(r => r.ComponenteUsoNovedadId == componenteUso.ComponenteUsoNovedadId).FirstOrDefault();
+                                    if (cuh != null)
+                                    {
+                                        usovalor.Add(cuh.ValorUso);
+                                        total += cuh.ValorUso;
+                                    }
+                                    else
+                                    {
+                                        usovalor.Add(componenteUso.ValorUso);
+                                        total += componenteUso.ValorUso;
+                                    }
+                                }
                             }
 
                             var dom = _context.Dominio.Where(x => x.Codigo == componente.TipoComponenteCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).ToList();
@@ -2823,13 +2847,29 @@ namespace asivamosffie.services
 
                     decimal valorproyecto = 0;
 
+
                     ppapor.ComponenteAportanteNovedad.ToList().ForEach(can =>
                     {
                         can.ComponenteFuenteNovedad.ToList().ForEach(cfn =>
                         {
                             cfn.ComponenteUsoNovedad.ToList().ForEach(cun =>
                             {
-                                valorproyecto = valorproyecto + cun.ValorUso;
+                                if (!esLiberacion)
+                                {
+                                    valorproyecto += cun.ValorUso;
+                                }
+                                else
+                                {
+                                    ComponenteUsoNovedadHistorico cuh = _context.ComponenteUsoNovedadHistorico.Where(r => r.ComponenteUsoNovedadId == cun.ComponenteUsoNovedadId).FirstOrDefault();
+                                    if(cuh != null)
+                                    {
+                                        valorproyecto += cuh.ValorUso;
+                                    }
+                                    else
+                                    {
+                                        valorproyecto += cun.ValorUso;
+                                    }
+                                }
                             });
                         });
                     });
@@ -2877,7 +2917,23 @@ namespace asivamosffie.services
                             {
                                 cfn.ComponenteUsoNovedad.ToList().ForEach(cun =>
                                 {
-                                    valorAportate = valorAportate + cun.ValorUso;
+                                    if (!esLiberacion)
+                                    {
+                                        valorAportate += cun.ValorUso;
+                                    }
+                                    else
+                                    {
+                                        ComponenteUsoNovedadHistorico cuh = _context.ComponenteUsoNovedadHistorico.Where(r => r.ComponenteUsoNovedadId == cun.ComponenteUsoNovedadId).FirstOrDefault();
+                                        if (cuh != null)
+                                        {
+                                            valorAportate += cuh.ValorUso;
+
+                                        }
+                                        else
+                                        {
+                                            valorAportate += cun.ValorUso;
+                                        }
+                                    }
                                 });
                             });
                         });
@@ -3027,7 +3083,9 @@ namespace asivamosffie.services
                     NovedadContractualRegistroPresupuestalId = detailDP.NovedadContractualRegistroPresupuestalId,
                     NovedadContractual = detailDP.NovedadContractualId != null ? _context.NovedadContractual.Where(x => x.NovedadContractualId == detailDP.NovedadContractualId).Include(x => x.NovedadContractualDescripcion).FirstOrDefault() : null,
                     EstadoRegistro = blnEstado,
-                    ValorTotalDisponibilidad = ValorTotalDisponibilidad
+                    ValorTotalDisponibilidad = ValorTotalDisponibilidad,
+                    TieneHistorico = vdpp != null ? true : false
+
                 };
                 ListDetailValidarDisponibilidadPresupuesal.Add(detailDisponibilidadPresupuesal);
             }
