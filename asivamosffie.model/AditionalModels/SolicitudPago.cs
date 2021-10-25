@@ -49,6 +49,9 @@ namespace asivamosffie.model.Models
          
         [NotMapped]
         public dynamic ValorXProyectoXFaseXAportanteXConcepto { get; set; }
+
+        [NotMapped]
+        public List<VAmortizacionXproyecto> VAmortizacionXproyecto { get; set; }
     }
 
 }

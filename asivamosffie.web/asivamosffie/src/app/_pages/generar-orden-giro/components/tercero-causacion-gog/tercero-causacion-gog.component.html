@@ -337,7 +337,7 @@
                                                             </label>
                                                         </div>
                                                         <div class="col">
-                                                            <mat-radio-group class="radioInput" formControlName="aplicaDescuentos" required>
+                                                            <mat-radio-group class="radioInput" formControlName="aplicaDescuentos" required [disabled]="concepto.get( 'conceptoPagoCriterio' ).value == '29'">
                                                                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                                                                 <mat-radio-button [value]="false">No</mat-radio-button>
                                                             </mat-radio-group>

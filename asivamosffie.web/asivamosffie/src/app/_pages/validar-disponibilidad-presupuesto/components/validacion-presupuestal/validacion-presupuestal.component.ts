@@ -121,8 +121,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
           }
         }
         else {//para tradicional
-          console.log(this.detailavailabilityBudget.valorSolicitud , " - ",this.valorGestionado, " - ", this.detailavailabilityBudget.estadoRegistro);
-          if (this.detailavailabilityBudget.valorSolicitud == this.valorGestionado && this.detailavailabilityBudget.estadoRegistro == true) {
+          if (this.detailavailabilityBudget.valorSolicitud == this.valorGestionado) {
             return true;
           }
           else {

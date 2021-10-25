@@ -553,6 +553,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                     }
                 }
             );
+            console.log(this.addressForm.get( 'criterios' ));
     }
 
     firstLetterUpperCase( texto:string ) {
@@ -1104,6 +1105,10 @@ export class TerceroCausacionGogComponent implements OnInit {
                 this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
                   const ordenGiroDetalleTerceroCausacionAportante = [];
 
+                    if(conceptoControl.get( 'conceptoPagoCriterio' ).value == "29"){
+                      conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).setValue(false);
+                    }
+
                     terceroCausacion = {
                         contratacionProyectoId: this.solicitudPagoFase.contratacionProyectoId,
                         ordenGiroDetalleTerceroCausacionId: conceptoControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
@@ -1234,7 +1239,7 @@ export class TerceroCausacionGogComponent implements OnInit {
         valorAportante.forEach(element1 => {
             this.solicitudPago.vConceptosUsosXsolicitudPagoId.forEach(element2 => {
                 if (
-                  element1.conceptoCodigo == element2.conceptoCodigo 
+                  element1.conceptoCodigo == element2.conceptoCodigo
                   // && element1.tipoUsoCodigo == element2.usoCodigo
                   ) {
                   valorConceptoAportante = element1.saldo;
