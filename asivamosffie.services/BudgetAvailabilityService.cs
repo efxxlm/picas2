@@ -1754,6 +1754,22 @@ namespace asivamosffie.services
                     }
                 }
 
+                bool cumpleDdp = false;
+                if (esNovedad)
+                {
+                    if (pRegistro.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal || pRegistro.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar)
+                    {
+                        cumpleDdp = true;
+                    }
+                }
+                else
+                {
+                    if (pDisponibilidad.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal || pDisponibilidad.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar)
+                    {
+                        cumpleDdp = true;
+                    }
+                }
+
                 if (esNovedad)
                 {
                     //traer todas las novedades que esten estado 5 y 8 
@@ -1783,12 +1799,12 @@ namespace asivamosffie.services
                                         gffh = _context.GestionFuenteFinanciacionHistorico.Where(r => r.GestionFuenteFinanciacionId == gestionfuentes[positionGestion].GestionFuenteFinanciacionId).FirstOrDefault();
                                     }
 
-                                    gestionfuentes[positionGestion].SaldoActual = esLiberacion && gffh != null ? gffh.SaldoActual : gestionfuentes[positionGestion].SaldoActualGenerado ?? 0 + gfa.SaldoActualGenerado ?? 0;
-                                    gestionfuentes[positionGestion].ValorSolicitado = esLiberacion && gffh != null ? gffh.ValorSolicitado : gestionfuentes[positionGestion].ValorSolicitadoGenerado ?? 0 + gfa.ValorSolicitadoGenerado ?? 0;
-                                    gestionfuentes[positionGestion].NuevoSaldo = esLiberacion && gffh != null ? gffh.NuevoSaldo : gestionfuentes[positionGestion].NuevoSaldoGenerado ?? 0 + gfa.NuevoSaldoGenerado ?? 0;
-                                    gestionfuentes[positionGestion].SaldoActualGenerado = esLiberacion && gffh != null ? gffh.SaldoActual : gestionfuentes[positionGestion].SaldoActualGenerado + gfa.SaldoActualGenerado;
-                                    gestionfuentes[positionGestion].ValorSolicitadoGenerado = esLiberacion && gffh != null ? gffh.ValorSolicitado : gestionfuentes[positionGestion].ValorSolicitadoGenerado + gfa.ValorSolicitadoGenerado;
-                                    gestionfuentes[positionGestion].NuevoSaldoGenerado = esLiberacion && gffh != null ? gffh.NuevoSaldo : gestionfuentes[positionGestion].NuevoSaldoGenerado + gfa.NuevoSaldoGenerado;
+                                    gestionfuentes[positionGestion].SaldoActual = gestionfuentes[positionGestion].SaldoActual + (esLiberacion && gffh != null ? gffh.SaldoActual : gfa.SaldoActual);
+                                    gestionfuentes[positionGestion].ValorSolicitado = gestionfuentes[positionGestion].ValorSolicitado + (esLiberacion && gffh != null ? gffh.ValorSolicitado : gfa.ValorSolicitado);
+                                    gestionfuentes[positionGestion].NuevoSaldo = gestionfuentes[positionGestion].NuevoSaldo + (esLiberacion && gffh != null ? gffh.NuevoSaldo : gfa.NuevoSaldo);
+                                    gestionfuentes[positionGestion].SaldoActualGenerado = gestionfuentes[positionGestion].SaldoActualGenerado + (esLiberacion && gffh != null ? gffh.SaldoActual : gfa.SaldoActualGenerado);
+                                    gestionfuentes[positionGestion].ValorSolicitadoGenerado = gestionfuentes[positionGestion].ValorSolicitadoGenerado + (esLiberacion && gffh != null ? gffh.ValorSolicitado : gfa.ValorSolicitadoGenerado);
+                                    gestionfuentes[positionGestion].NuevoSaldoGenerado = gestionfuentes[positionGestion].NuevoSaldoGenerado + (esLiberacion && gffh != null ? gffh.NuevoSaldo : gfa.NuevoSaldoGenerado);
                                 }
                                 else
                                 {
@@ -1816,21 +1832,6 @@ namespace asivamosffie.services
                 //empiezo con fuentes
 
                 decimal total = 0;
-                bool cumpleDdp = false;
-                if (esNovedad)
-                {
-                    if (pRegistro.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal || pRegistro.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar)
-                    {
-                        cumpleDdp = true;
-                    }
-                }
-                else
-                {
-                    if (pDisponibilidad.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal || pDisponibilidad.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar)
-                    {
-                        cumpleDdp = true;
-                    }
-                }
 
                 foreach (var gestion in gestionfuentes)
                 {
