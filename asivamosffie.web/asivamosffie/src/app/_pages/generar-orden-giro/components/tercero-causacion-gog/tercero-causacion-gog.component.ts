@@ -734,8 +734,10 @@ export class TerceroCausacionGogComponent implements OnInit {
                   }
                 });
                 if ( valueTotalDescuento != valorAmortizacion ) {
-                  this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null );
-                  this.openDialog( '', `<b>El valor del descuento debe ser igual valor solicitado.</b>` );
+                  if(valueTotalDescuento < 0 || valueTotalDescuento > valorAmortizacion){
+                    this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null );
+                  }
+                  this.openDialog( '', `<b>El valor del descuento de amortización debe ser igual al valor solicitado.</b>` );
                   return;
                 }
               }
