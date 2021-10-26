@@ -740,6 +740,37 @@ export class TerceroCausacionGogComponent implements OnInit {
                 }
               }
             }
+            //
+            if(this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get('nombreAportante').value != null){
+              let valorTotalAportante = 0;
+              let tipoAportante = this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get('nombreAportante').value?.tipoAportanteId;
+              const aportanteControl = this.getAportantes( index, jIndex ).controls.find(r => r.get( 'nombreAportante' ).value.tipoAportanteId === tipoAportante);
+              if(aportanteControl.value != null){
+                valorTotalAportante = aportanteControl.get( 'valorDescuento' ).value;
+              }
+              let totalXAportante = 0;
+              this.getDescuentos( index, jIndex ).controls.forEach(element => {
+                if(element.get( 'aportantesDescuento' ).value.length > 0){
+                  element.get( 'aportantesDescuento' ).value.forEach((desc: any, i: number) => {
+                      if(desc != null){
+                        if(desc.nombreAportante?.tipoAportanteId == tipoAportante){
+                          if(desc.valorDescuento > 0){
+                            totalXAportante += desc.valorDescuento;
+                          }
+                        }
+                      }
+                  });
+                }
+              });
+              //
+              console.log(totalXAportante);
+              console.log(valorTotalAportante);
+              if(totalXAportante > valorTotalAportante){
+                  this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null );
+                  this.openDialog( '', `El <b>valor del descuento</b> no puede ser superior al <b>valor facturado por el concepto para el aportante</b>` );
+                  return;
+              }
+            }
         }
 
         for ( const aportante of this.getConceptos( index ).controls[ jIndex ].get( 'aportantes' ).value ) {
@@ -747,8 +778,6 @@ export class TerceroCausacionGogComponent implements OnInit {
             totalDescuentoTecnica += aportante?.valorDescuentoTecnica;
         }
 
-        console.log(totalDescuentoTecnica);
-        console.log(totalAportantePorConcepto);
         if ( value !== null ) {
           value = value + totalDescuentoTecnica;
         }
@@ -1282,14 +1311,13 @@ export class TerceroCausacionGogComponent implements OnInit {
 
     validateMaxAportante( value: number, index: number, jIndex: number, kIndex: number, lIndex: number, nombreAportante: any, getAportantes: any ) {
       getAportantes.forEach(element => {
-        if (element.value.nombreAportante.nombreAportante === nombreAportante.nombreAportante)
-
         if ( value > element.value.valorDescuento ) {
             this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null )
             this.openDialog( '', `El <b>valor del descuento</b> no puede ser superior al <b>valor facturado por el concepto para el aportante</b>` );
         }
       });
   }
+
   disableSave(index: number){
     const conceptos = this.getConceptos( index )?.value;
     if(conceptos != null){
