@@ -279,7 +279,7 @@ namespace asivamosffie.services
 
             List<VDescuentosOdgxFuenteFinanciacionXaportante> ListDescuentos =
                                                                             _context.VDescuentosOdgxFuenteFinanciacionXaportante
-                                                                            .Where(r => r.OrdenGiroId == solicitudPago.OrdenGiroId)
+                                                                            .Where(r => r.ContratoId == solicitudPago.ContratoId)
                                                                             .ToList();
 
             List<VAportanteFuente> vAportanteFuenteUsos = _context.VAportanteFuente

@@ -12,5 +12,6 @@ namespace asivamosffie.model.Models
         public string TipoRecursosCodigo { get; set; }
         public int? ContratoId { get; set; }
         public decimal? ValorDescuento { get; set; }
+        public int SolicitudPagoId { get; set; }
     }
 }
