@@ -83,8 +83,8 @@ export class FormCriteriosPagoComponent implements OnInit {
         // Se obtiene la forma pago codigo dependiendo la fase seleccionada
         const FORMA_PAGO_CODIGO = this.esPreconstruccion === true ? this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo : this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo
         this.forma_pago_codigo = FORMA_PAGO_CODIGO;
-
         let LISTA_CRITERIOS_FORMA_PAGO = await this.registrarPagosSvc.getCriterioByFormaPagoCodigo( FORMA_PAGO_CODIGO ).toPromise()
+
         let seDiligencioAnticipo: boolean;
         let listaSolicitudesPago = [];
         let criterioAnticipo = null;
@@ -96,6 +96,7 @@ export class FormCriteriosPagoComponent implements OnInit {
        // this.montoMaximoPendiente = montoMaximoPendiente
 
         criterioAnticipo = LISTA_CRITERIOS_FORMA_PAGO //.find( value => value.nombre === 'Anticipo' )
+
         if ( this.manejoAnticipoRequiere === false || undefined ) {
             LISTA_CRITERIOS_FORMA_PAGO = LISTA_CRITERIOS_FORMA_PAGO.filter( value => value.nombre !== 'Anticipo' )
         }
@@ -128,7 +129,6 @@ export class FormCriteriosPagoComponent implements OnInit {
         if ( this.contrato.solicitudPago.length > 0 ) {
             listaSolicitudesPago = this.contrato.solicitudPago.filter( value => value.solicitudPagoId !== this.solicitudPago.solicitudPagoId )
         }
-
         if ( listaSolicitudesPago.length > 0 ) {
             listaSolicitudesPago.forEach( solicitud => {
                 if ( solicitud.solicitudPagoRegistrarSolicitudPago !== undefined && solicitud.solicitudPagoRegistrarSolicitudPago.length > 0 ) {
@@ -152,9 +152,7 @@ export class FormCriteriosPagoComponent implements OnInit {
         if ( seDiligencioAnticipo === true ) {
             LISTA_CRITERIOS_FORMA_PAGO = LISTA_CRITERIOS_FORMA_PAGO.filter( value => value.codigo !== criterioAnticipo.codigo )
         }
-
         this.criteriosArray = LISTA_CRITERIOS_FORMA_PAGO;
-
         if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago !== undefined && this.solicitudPago.solicitudPagoRegistrarSolicitudPago.length > 0 ) {
             this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0]
             this.solicitudPagoRegistrarSolicitudPagoId = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoRegistrarSolicitudPagoId
@@ -234,7 +232,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                             this.addressForm.markAllAsTouched();
                             this.criterios.markAllAsTouched();
 
-                            
+
                             for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
                                 // GET Criterio seleccionado
                                 const criterioSeleccionado = LISTA_CRITERIOS_FORMA_PAGO.filter( value => value.codigo === criterio.tipoCriterioCodigo );
@@ -252,7 +250,7 @@ export class FormCriteriosPagoComponent implements OnInit {
 
                                     criterio.solicitudPagoFaseCriterioConceptoPago.forEach( solicitudPagoFaseCriterioConceptoPago => {
                                         // console.log(solicitudPagoFaseCriterioConceptoPago);
-                                        
+
                                         const conceptoFind = conceptosDePago.find( concepto => concepto.codigo === solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio );
                                         // console.log(conceptoFind);
 
@@ -364,25 +362,25 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 }
                             });
                         }
-                        
+
                         this.ocultarAmortizacionAnticipo.emit( this.addressForm.get('criterioPago').value );
                     }
                 }
             }
         }
-        
 
         if (this.quitarOpcionAnticipo) {
             for (let i = 0; i < this.contrato.vAmortizacionXproyecto.length; i++) {
                 const element = this.contrato.vAmortizacionXproyecto[i];
-                if(element.tieneAnticipo === true) {
+                if(element.contratacionProyectoId == this.contratacionProyectoId){
+                  if(element.tieneAnticipo === true) {
                     console.log(element.tieneAnticipo);
-                    
                     // this.addressForm.get('criterioPago').setValue(null);
                     for (let j = 0; j < this.criteriosArray.length; j++) {
                         const element = this.criteriosArray[j];
                         if (element.codigo === '17') this.criteriosArray.splice(j, 1);
                     }
+                }
                 }
             };
         }
@@ -429,7 +427,7 @@ export class FormCriteriosPagoComponent implements OnInit {
         }
 
         if (
-            valorConcepto > this.getConceptos( index ).controls[ jIndex ].get( 'montoMaximo' ).value 
+            valorConcepto > this.getConceptos( index ).controls[ jIndex ].get( 'montoMaximo' ).value
         ) {
             this.openDialog( '', `El valor facturado al concepto no puede ser mayor al <b>Monto pendiente por facturar.</b>` );
             this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
@@ -617,7 +615,7 @@ export class FormCriteriosPagoComponent implements OnInit {
     }
 
     getvaluesConcepto( conceptos: any[], index: number, criterioCodigo: any, e ) {
-        
+
         this.getConceptos( index ).clear();
         this.criterios.controls[ index ].get( 'valorFacturado' ).setValue( null );
 
@@ -646,7 +644,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                 conceptosArray.forEach( async concepto => {
                   const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e ).toPromise();
                 //   console.log(montoMaximoPendienteNew);
-                  
+
                     this.getConceptos( index ).push(
                         this.fb.group(
                             {
@@ -686,7 +684,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                 conceptosArray.forEach( async concepto => {
                   const montoMaximoPendienteNew = await this.registrarPagosSvc.getMontoMaximoMontoPendiente( this.solicitudPago.solicitudPagoId, this.forma_pago_codigo, this.esPreconstruccion === true ? 'True' : 'False', this.contratacionProyectoId ,criterioCodigo, concepto.codigo, e ).toPromise();
                 //   console.log(montoMaximoPendienteNew);
-                  
+
                     this.getConceptos( index ).push(
                         this.fb.group(
                             {
@@ -791,11 +789,11 @@ export class FormCriteriosPagoComponent implements OnInit {
                 esAnticipio = true
             }
 
-            
+
             criterio.conceptos.forEach(element => {
                 element.usoCodigo = criterio.usoCodigo
             });
-            
+
             // console.log(criterio.conceptos);
 
             solicitudPagoFaseCriterio.push(
@@ -880,7 +878,7 @@ export class FormCriteriosPagoComponent implements OnInit {
         }
 
         console.log(this.solicitudPago);
-        
+
         this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
             .subscribe(
                 response => {
