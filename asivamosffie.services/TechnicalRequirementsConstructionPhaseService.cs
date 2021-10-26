@@ -1834,8 +1834,8 @@ namespace asivamosffie.services
 
             if (contrato != null)
             {
-                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddMonths(-(contrato.PlazoFase1PreMeses ?? 0));
-                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays(-(contrato.PlazoFase1PreDias ?? 0));
+                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddMonths((contrato.PlazoFase1PreMeses ?? 0));
+                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays((contrato.PlazoFase1PreDias ?? 0));
 
             }
 

@@ -706,13 +706,39 @@ export class TerceroCausacionGogComponent implements OnInit {
     }
     // Check valor del descuento de los conceptos
     validateDiscountValue( value: number, index: number, jIndex: number, kIndex: number, lIndex: number ) {
+      this.dialog.closeAll();
         let totalAportantePorConcepto = 0;
         let totalDescuentoTecnica = 0;
 
         if ( value !== null ) {
             if ( value < 0 ) {
                 this.getDescuentos( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null )
-                return
+                return;
+            }
+
+            //si el descuento es de amortización, el valor del descuento no puede ser mayor a el valor amortizado.
+            if(this.getDescuentos( index, jIndex ).controls[ kIndex ].get( 'tipoDescuento' ).value == "5"){
+              let valueTotalDescuento = 0;
+
+              if (this.solicitudPago.vAmortizacionXproyecto.length > 0) {
+                let valorAmortizacion = this.solicitudPago.vAmortizacionXproyecto[0].valorAnticipo ?? 0;
+                this.getDescuentos( index, jIndex ).controls.forEach(element => {
+                  if(element.get( 'aportantesDescuento' ).value.length > 0){
+                    element.get( 'aportantesDescuento' ).value.forEach((desc: { valorDescuento: number; }, i: number) => {
+                        if(desc != null){
+                          if(desc.valorDescuento > 0){
+                            valueTotalDescuento += desc.valorDescuento;
+                          }
+                        }
+                    });
+                  }
+                });
+                if ( valueTotalDescuento > valorAmortizacion ) {
+                  this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null );
+                  this.openDialog( '', `<b>El valor del descuento de amortización no puede ser mayor al solicitado.</b>` );
+                  return;
+                }
+              }
             }
         }
 
@@ -721,9 +747,12 @@ export class TerceroCausacionGogComponent implements OnInit {
             totalDescuentoTecnica += aportante?.valorDescuentoTecnica;
         }
 
+        console.log(totalDescuentoTecnica);
+        console.log(totalAportantePorConcepto);
         if ( value !== null ) {
           value = value + totalDescuentoTecnica;
         }
+
 
         if ( value > totalAportantePorConcepto ) {
             this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null )
