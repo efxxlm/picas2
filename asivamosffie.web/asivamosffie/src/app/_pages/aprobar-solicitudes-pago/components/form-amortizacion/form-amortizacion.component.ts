@@ -29,7 +29,7 @@ export class FormAmortizacionComponent implements OnInit {
     observacion: any;
     solicitudPagoObservacionId = 0;
     addressForm = this.fb.group({
-      porcentajeAmortizacion: [null, Validators.required],
+     // porcentajeAmortizacion: [null, Validators.required],
       valorAmortizacion: [{ value: null, disabled: true }, Validators.required]
     });
     estaEditando = false;
@@ -58,7 +58,7 @@ export class FormAmortizacionComponent implements OnInit {
         if (this.contrato.contratacion.disponibilidadPresupuestal.length > 0) {
             this.contrato.contratacion.disponibilidadPresupuestal.forEach( ddp => this.valorTotalDelContrato += ddp.valorSolicitud );
         }
-      
+
         if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0] !== undefined ) {
             if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase !== undefined && this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[ 0 ] !== undefined ) {
                 if (this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0) {
@@ -68,17 +68,17 @@ export class FormAmortizacionComponent implements OnInit {
                         }
                     }
                 }
-          
+
                 if ( this.solicitudPagoFase !== undefined ) {
                     if ( this.solicitudPagoFase.solicitudPagoFaseAmortizacion.length > 0 ) {
                         const solicitudPagoFaseAmortizacion = this.solicitudPagoFase.solicitudPagoFaseAmortizacion[0];
                         this.solicitudPagoFaseAmortizacionId = solicitudPagoFaseAmortizacion.solicitudPagoFaseAmortizacionId;
                         this.estaEditando = true;
-    
+
                         this.addressForm.markAllAsTouched();
                         this.addressForm.setValue(
                             {
-                                porcentajeAmortizacion: solicitudPagoFaseAmortizacion.porcentajeAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.porcentajeAmortizacion : null,
+                                //porcentajeAmortizacion: solicitudPagoFaseAmortizacion.porcentajeAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.porcentajeAmortizacion : null,
                                 valorAmortizacion: solicitudPagoFaseAmortizacion.valorAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.valorAmortizacion : null
                             }
                         );

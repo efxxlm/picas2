@@ -54,7 +54,7 @@
                             class="expansion-style sub-expansion-black"
                         >
                             <mat-expansion-panel-header class="expansion-style--header">
-                                <mat-panel-title class="expansion-style--title font-size-09em">
+                                <mat-panel-title class="expansion-style--title font-size-09em" [ngClass]="esVerDetalle === true || fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? '' : estadoSemaforoAmortizacion">
                                     Amortización del anticipo - {{ fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? 'Fase 1' : 'Fase 2' }}
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
@@ -67,7 +67,9 @@
                                                             [faseCodigo]="fase.get( 'codigo' ).value"
                                                             [amortizacionAnticipoCodigo]="registrarSolicitudPagoObs !== undefined ? registrarSolicitudPagoObs.amortizacionAnticipoCodigo : ''"
                                                             [contratacionProyectoId]="proyecto.get( 'contratacionProyectoId' ).value"
-                                                            [desabilitarAcordeonAmortizacionAnticipo]="desabilitarAcordeonAmortizacionAnticipo">
+                                                            [desabilitarAcordeonAmortizacionAnticipo]="desabilitarAcordeonAmortizacionAnticipo"
+                                                            (estadoAmortizacion)="estadoAmortizacion($event)"
+                                                            >
                             </app-form-amortizacion-anticipo>
                         </mat-expansion-panel>
 

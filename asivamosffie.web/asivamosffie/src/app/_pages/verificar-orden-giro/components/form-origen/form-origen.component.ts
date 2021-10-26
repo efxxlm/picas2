@@ -50,7 +50,7 @@ export class FormOrigenComponent implements OnInit {
     }
 
     async getOrigen() {
-        const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
+        const dataAportantes = await this.ordenGiroSvc.getAportantesNew( this.solicitudPago );
 
             // Get IDs
             if ( this.solicitudPago.ordenGiro !== undefined ) {
@@ -77,48 +77,50 @@ export class FormOrigenComponent implements OnInit {
                                         } );
                                     }
                                 } );
-
+                                console.log(this.listaAportantes);
                                 for ( const aportante of this.listaAportantes ) {
                                     const nombreAportante = dataAportantes.listaNombreAportante.find( nombreAportante => nombreAportante.cofinanciacionAportanteId === aportante.aportanteId );
-                                    const tipoAportante = dataAportantes.listaTipoAportante.find( tipoAportante => tipoAportante.dominioId === nombreAportante.tipoAportanteId );
+                                    const tipoAportante = dataAportantes.listaTipoAportante.find( tipoAportante => tipoAportante.dominioId === nombreAportante?.tipoAportanteId );
+                                    console.log(nombreAportante);
+                                    if(nombreAportante != null && nombreAportante != undefined){
+                                      this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante?.cofinanciacionAportanteId )
+                                      .subscribe( fuente => {
+                                          const fuenteRecurso = fuente.find( fuenteValue => fuenteValue.codigo === aportante.fuenteRecursoCodigo );
+                                          const cuentaBancaria = ( ) => {
+                                              if ( aportante.fuenteFinanciacion.cuentaBancaria.length > 1 ) {
+                                                  if ( aportante.cuentaBancariaId !== undefined ) {
+                                                      const cuenta = aportante.fuenteFinanciacion.cuentaBancaria.find( cuenta => cuenta.cuentaBancariaId === aportante.cuentaBancariaId );
 
-                                    this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId )
-                                        .subscribe( fuente => {
-                                            const fuenteRecurso = fuente.find( fuenteValue => fuenteValue.codigo === aportante.fuenteRecursoCodigo );
-                                            const cuentaBancaria = ( ) => {
-                                                if ( aportante.fuenteFinanciacion.cuentaBancaria.length > 1 ) {
-                                                    if ( aportante.cuentaBancariaId !== undefined ) {
-                                                        const cuenta = aportante.fuenteFinanciacion.cuentaBancaria.find( cuenta => cuenta.cuentaBancariaId === aportante.cuentaBancariaId );
-                                                        
-                                                        if ( cuenta !== undefined ) {
-                                                            return cuenta;
-                                                        } else {
-                                                            return null;
-                                                        }
-                                                    } else {
-                                                        return null;
-                                                    }
-                                                } else {
-                                                    return aportante.fuenteFinanciacion.cuentaBancaria[ 0 ];
-                                                }
-                                            }
+                                                      if ( cuenta !== undefined ) {
+                                                          return cuenta;
+                                                      } else {
+                                                          return null;
+                                                      }
+                                                  } else {
+                                                      return null;
+                                                  }
+                                              } else {
+                                                  return aportante.fuenteFinanciacion.cuentaBancaria[ 0 ];
+                                              }
+                                          }
 
-                                            if ( aportante.fuenteFinanciacion.cuentaBancaria.length === 1 ) {
-                                                totalCuenta++;
-                                            }
+                                          if ( aportante.fuenteFinanciacion.cuentaBancaria.length === 1 ) {
+                                              totalCuenta++;
+                                          }
 
-                                            this.aportantes.push(
-                                                this.fb.group(
-                                                    {
-                                                        tipoAportante: [ tipoAportante ],
-                                                        nombreAportante: [ nombreAportante ],
-                                                        fuente: [ fuenteRecurso ],
-                                                        listaCuentaBancaria: [ aportante.fuenteFinanciacion.cuentaBancaria ],
-                                                        cuentaBancariaId: [ cuentaBancaria(), Validators.required ]
-                                                    }
-                                                )
-                                            );
-                                        } );
+                                          this.aportantes.push(
+                                              this.fb.group(
+                                                  {
+                                                      tipoAportante: [ tipoAportante ],
+                                                      nombreAportante: [ nombreAportante ],
+                                                      fuente: [ fuenteRecurso ],
+                                                      listaCuentaBancaria: [ aportante.fuenteFinanciacion.cuentaBancaria ],
+                                                      cuentaBancariaId: [ cuentaBancaria(), Validators.required ]
+                                                  }
+                                              )
+                                          );
+                                      } );
+                                    }
                                 }
                             }
                         }

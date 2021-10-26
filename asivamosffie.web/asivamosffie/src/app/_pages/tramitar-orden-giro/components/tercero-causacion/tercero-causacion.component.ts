@@ -67,7 +67,7 @@ export class TerceroCausacionComponent implements OnInit {
         ]
     };
 
-    // Get formArray de addressForm 
+    // Get formArray de addressForm
     get criterios() {
         return this.addressForm.get( 'criterios' ) as FormArray;
     }
@@ -175,7 +175,7 @@ export class TerceroCausacionComponent implements OnInit {
                             const tipoPago = tiposDePago.find( tipoPago => tipoPago.codigo === criterioValue.tipoPagoCodigo );
                             // Get lista dominio de los conceptos de pago por tipo de pago codigo
                             const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPago.codigo );
-                            
+
                             // Get data de los conceptos diligenciados en el CU 4.1.7
                             for ( const conceptoValue of criterioValue.solicitudPagoFaseCriterioConceptoPago ) {
                                 const conceptoFind = conceptosDePago.find( value => value.codigo === conceptoValue.conceptoPagoCriterio );
@@ -193,13 +193,13 @@ export class TerceroCausacionComponent implements OnInit {
                             );
                         }
                     }
-                    const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
+                    const dataAportantes = await this.ordenGiroSvc.getAportantesNew( this.solicitudPago );
 
                         // Get boolean si es uno o varios aportantes
                         if ( dataAportantes.listaTipoAportante.length > 1 ) {
                             this.variosAportantes = true;
                         } else {
-                            
+
                             this.variosAportantes = false
                         }
                         // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
@@ -225,7 +225,7 @@ export class TerceroCausacionComponent implements OnInit {
                                                     const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === terceroCausacionDescuento.aportanteId );
                                                     let listaFuenteRecursos: any[] = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
                                                     const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === terceroCausacionDescuento.fuenteRecursosCodigo );
-                                                    
+
                                                     listaAportanteDescuentos.push(
                                                         this.fb.group(
                                                             {
@@ -252,14 +252,14 @@ export class TerceroCausacionComponent implements OnInit {
                                     // Get lista de aportantes
                                     // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
                                     this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
-    
+
                                     if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
                                         for ( const aportante of terceroCausacion.ordenGiroDetalleTerceroCausacionAportante ) {
                                             const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
                                             const tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
                                             let listaFuenteRecursos: any[] = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
                                             const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === aportante.fuenteRecursoCodigo );
-    
+
                                             listaAportantes.push(
                                                 this.fb.group(
                                                     {
@@ -276,7 +276,7 @@ export class TerceroCausacionComponent implements OnInit {
                                             )
                                         }
                                     }
-    
+
                                     for ( const concepto of criterio.listConceptos ) {
                                         conceptosDePago.push( this.fb.group(
                                             {
@@ -294,14 +294,14 @@ export class TerceroCausacionComponent implements OnInit {
                                                 ),
                                                 aportantes: this.fb.array( listaAportantes )
                                             }
-                                        ) ) 
+                                        ) )
                                     }
-    
+
                                     // Set formulario criterios
                                     // Get observaciones
                                     const historialObservaciones = [];
                                     let estadoSemaforo = 'sin-diligenciar';
-    
+
                                     const listaObservacionVerificar = await this.obsOrdenGiro.getObservacionOrdenGiroByMenuIdAndSolicitudPagoId(
                                         this.listaMenu.verificarOrdenGiro,
                                         this.ordenGiroId,
@@ -339,7 +339,7 @@ export class TerceroCausacionComponent implements OnInit {
                                     if ( obsArchivadasTramitar.length > 0 ) {
                                         obsArchivadasTramitar.forEach( obs => historialObservaciones.push( obs ) );
                                     }
-                                    // Get observacion actual    
+                                    // Get observacion actual
                                     const observacion = listaObservacionTramitar.find( obs => obs.archivada === false )
                                     if ( observacion !== undefined ) {
                                         if ( observacion.registroCompleto === false ) {
@@ -356,7 +356,7 @@ export class TerceroCausacionComponent implements OnInit {
                                     if ( estadoSemaforo === 'completo' ) {
                                         this.totalCompleto++;
                                     }
-    
+
                                     this.criterios.push( this.fb.group(
                                         {
                                             estadoSemaforo,
@@ -385,7 +385,7 @@ export class TerceroCausacionComponent implements OnInit {
                         if ( this.totalCompleto > 0 && this.totalCompleto === this.criterios.length ) {
                             this.estadoSemaforo.emit( 'completo' );
                         }
-                } 
+                }
             );
     }
 

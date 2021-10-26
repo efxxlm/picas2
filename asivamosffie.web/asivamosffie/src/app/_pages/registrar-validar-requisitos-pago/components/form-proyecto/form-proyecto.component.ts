@@ -26,7 +26,8 @@ export class FormProyectoComponent implements OnInit {
     postConstruccion = '3';
     solicitudPagoCargarFormaPago: any;
     solicitudPagoFase = [];
-    estadoSemaforoFase = 'sin-diligenciar'
+    estadoSemaforoFase = 'sin-diligenciar';
+    estadoSemaforoAmortizacion = 'sin-diligenciar';
     manejoAnticipoRequiere = false;
     addressForm = this.fb.group(
         {
@@ -59,9 +60,10 @@ export class FormProyectoComponent implements OnInit {
                         this.mostrarAmortizacion = true;
                     }
                 });
-                
+
             }
         }
+        console.log(this.fases);
     }
 
     async getDataProyecto() {
@@ -169,7 +171,7 @@ export class FormProyectoComponent implements OnInit {
                 const esPreconstruccion = fase.codigo === this.fasesContrato.preConstruccion ? true : false
                 let registroCompletoCriterio = 'sin-diligenciar'
                 let registroCompletoDescuentos = 'sin-diligenciar'
-                
+
                 if ( this.solicitudPagoFase.length > 0 ) {
                     const faseFind = this.solicitudPagoFase.find( value => value.esPreconstruccion === esPreconstruccion && value.contratacionProyectoId === this.proyecto.get( 'contratacionProyectoId' ).value )
 
@@ -230,7 +232,7 @@ export class FormProyectoComponent implements OnInit {
                 const esPreconstruccion = fase.codigo === this.fasesContrato.preConstruccion ? true : false
                 let registroCompletoCriterio = 'sin-diligenciar'
                 let registroCompletoDescuentos = 'sin-diligenciar'
-                
+
                 if ( this.solicitudPagoFase.length > 0 ) {
                     const faseFind = this.solicitudPagoFase.find( value => value.esPreconstruccion === esPreconstruccion && value.contratacionProyectoId === this.proyecto.get( 'contratacionProyectoId' ).value )
 
@@ -300,7 +302,7 @@ export class FormProyectoComponent implements OnInit {
                 }
               }
             }
-          
+
             // await this.registrarPagosSvc.createEditNewPayment( solicitudPago ).toPromise()
         }
     }
@@ -316,5 +318,9 @@ export class FormProyectoComponent implements OnInit {
             });
         }
     }
+
+    estadoAmortizacion(event) {
+      this.estadoSemaforoAmortizacion = event;
+  }
 
 }

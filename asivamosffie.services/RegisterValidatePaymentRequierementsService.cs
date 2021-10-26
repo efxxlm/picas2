@@ -2500,8 +2500,7 @@ namespace asivamosffie.services
         private bool ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoFaseAmortizacion solicitudPagoAmortizacion)
         {
             if (
-                     string.IsNullOrEmpty(solicitudPagoAmortizacion.PorcentajeAmortizacion.ToString())
-                  || string.IsNullOrEmpty(solicitudPagoAmortizacion.ValorAmortizacion.ToString()
+                     string.IsNullOrEmpty(solicitudPagoAmortizacion.ValorAmortizacion.ToString()
                     )
                 )
                 return false;

@@ -27,6 +27,7 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
     @Input() solicitudPagoCargarFormaPago: any;
     @Input() desabilitarAcordeonAmortizacionAnticipo: boolean;
     @Output() semaforoObservacion = new EventEmitter<boolean>();
+    @Output() estadoAmortizacion = new EventEmitter<any>();
     esPreconstruccion = true;
     solicitudPagoFase: any;
     solicitudPagoFaseAmortizacionId = 0;
@@ -35,8 +36,8 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
     observacion: any;
     solicitudPagoObservacionId = 0;
     addressForm = this.fb.group({
-        porcentajeAmortizacion: [null, Validators.required],
-        valorAmortizacion: [{ value: null, disabled: true }, Validators.required]
+        //porcentajeAmortizacion: [null, Validators.required],
+        valorAmortizacion: [{ value: null}, Validators.required]
     });
     estaEditando = false;
     fasesContrato = TiposDeFase;
@@ -58,12 +59,12 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
 
     ngOnInit(): void {
         this.getDataAmortizacion();
-        this. calcValorAmortizacion();
+        //this. calcValorAmortizacion();
 
         this.valorPorAmortizar = new FormControl({ value: this.getProyectoId(this.contratacionProyectoId), disabled: true }, [Validators.required, Validators.max(100)]);
 
         if (this.desabilitarAcordeonAmortizacionAnticipo) {
-            this.addressForm.get('porcentajeAmortizacion').disable()
+            this.addressForm.get('valorAmortizacion').disable()
         }
     }
 
@@ -79,7 +80,7 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
 
                 // console.log(porcentajeCalculo);
                 this.addressForm.get('valorAmortizacion').setValue(porcentajeCalculo);
-               
+
             } else {
                 this.addressForm.get('valorAmortizacion').setValue( 0 );
             }
@@ -140,8 +141,6 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
             this.contrato.contratacion.disponibilidadPresupuestal.forEach(ddp => this.valorTotalDelContrato += ddp.valorSolicitud);
         }
 
-        console.log('solicitudPago: ', this.solicitudPago);
-
         if (this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0] !== undefined) {
             if (this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase !== undefined && this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0] !== undefined) {
                 if (this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0) {
@@ -162,12 +161,12 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
 
                         this.addressForm.markAllAsTouched();
                         if (solicitudPagoFaseAmortizacion.valorAmortizacion) {
-                            this.addressForm.get('porcentajeAmortizacion').disable();
+                           // this.addressForm.get('porcentajeAmortizacion').disable();
                             this.bloquearValorAmortizacion = true;
                         }
                         this.addressForm.setValue(
                             {
-                                porcentajeAmortizacion: solicitudPagoFaseAmortizacion.porcentajeAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.porcentajeAmortizacion : null,
+                                //porcentajeAmortizacion: solicitudPagoFaseAmortizacion.porcentajeAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.porcentajeAmortizacion : null,
                                 valorAmortizacion: solicitudPagoFaseAmortizacion.valorAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.valorAmortizacion : null
                             }
                         );
@@ -217,6 +216,9 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
                 }
             }
         }
+        if(this.addressForm.get('valorAmortizacion').value != null){
+          this.estadoAmortizacion.emit('completo');
+        }
     }
 
     validateNumberKeypress(event: KeyboardEvent) {
@@ -238,6 +240,14 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
         }
         if (value < 0) {
             this.addressForm.get('porcentajeAmortizacion').setValue(0);
+        }
+    }
+
+    validateValueAmortizacion(value: any) {
+      if (value > this.valorPorAmortizar?.value) {
+          this.addressForm.get('valorAmortizacion').setValue(null);
+          this.openDialog('', `<b>El valor de la amortización no puede ser superior al saldo del anticipo.</b>`);
+          return;
         }
     }
 
@@ -311,7 +321,7 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
             {
                 solicitudPagoFaseAmortizacionId: this.solicitudPagoFaseAmortizacionId,
                 solicitudPagoFaseId: this.solicitudPagoFase ? this.solicitudPagoFase.solicitudPagoFaseId : null,
-                porcentajeAmortizacion: this.addressForm.get('porcentajeAmortizacion').value,
+                //porcentajeAmortizacion: this.addressForm.get('porcentajeAmortizacion').value,
                 valorAmortizacion: this.addressForm.get('valorAmortizacion').value
             }
         ];

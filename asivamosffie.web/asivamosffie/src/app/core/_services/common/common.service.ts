@@ -541,7 +541,7 @@ export class CommonService {
   vigenciasDesde2015(): number[]{
     const fecha = new Date();
     let vigencias: number[]=[];
-    for (let i = 2015; i < fecha.getFullYear(); i++){
+    for (let i = 2015; i < fecha.getFullYear() + 5; i++){
       vigencias.push(i);
     }
 

@@ -18,7 +18,7 @@ export class AmortizacionPagoComponent implements OnInit {
     solicitudPagoFaseAmortizacionId = 0;
     valorTotalDelContrato = 0;
     detalleForm: FormGroup = this.fb.group({
-        porcentajeAmortizacion: [null, Validators.required],
+        //porcentajeAmortizacion: [null, Validators.required],
         valorAmortizacion: [ { value: null, disabled: true } , Validators.required]
     });
 
@@ -40,7 +40,7 @@ export class AmortizacionPagoComponent implements OnInit {
             // Get detalle amortización
             this.detalleForm.setValue(
                 {
-                    porcentajeAmortizacion: solicitudPagoFaseAmortizacion.porcentajeAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.porcentajeAmortizacion : null,
+                    //porcentajeAmortizacion: solicitudPagoFaseAmortizacion.porcentajeAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.porcentajeAmortizacion : null,
                     valorAmortizacion: solicitudPagoFaseAmortizacion.valorAmortizacion !== undefined ? solicitudPagoFaseAmortizacion.valorAmortizacion : null
                 }
             );

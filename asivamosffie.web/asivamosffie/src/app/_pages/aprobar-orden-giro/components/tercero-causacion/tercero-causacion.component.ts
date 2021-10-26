@@ -205,7 +205,7 @@ export class TerceroCausacionComponent implements OnInit {
                             );
                         }
                     }
-                    const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
+                    const dataAportantes = await this.ordenGiroSvc.getAportantesNew( this.solicitudPago );
 
                         // Get boolean si es uno o varios aportantes
                         if ( dataAportantes.listaTipoAportante.length > 1 ) {

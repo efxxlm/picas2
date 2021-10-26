@@ -205,7 +205,7 @@ export class TerceroCausacionComponent implements OnInit {
                             );
                         }
                     }
-                    const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
+                    const dataAportantes = await this.ordenGiroSvc.getAportantesNew( this.solicitudPago );
                         // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
                         this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
                         // Get data del guardado de tercero de causacion
@@ -256,28 +256,30 @@ export class TerceroCausacionComponent implements OnInit {
                                     // Get lista de aportantes
                                     // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
                                     this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
-
+                                    console.log("dataAportantes: ",dataAportantes);
                                     if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
                                         for ( const aportante of terceroCausacion.ordenGiroDetalleTerceroCausacionAportante ) {
                                             const nombreAportante = dataAportantes.listaNombreAportante.find( nombre => nombre.cofinanciacionAportanteId === aportante.aportanteId );
-                                            const tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante.tipoAportanteId );
-                                            let listaFuenteRecursos: any[] = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
-                                            const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === aportante.fuenteRecursoCodigo );
+                                            if(nombreAportante != null && nombreAportante != undefined){
+                                              const tipoAportante = dataAportantes.listaTipoAportante.find( tipo => tipo.dominioId === nombreAportante?.tipoAportanteId );
+                                              let listaFuenteRecursos: any[] = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante?.cofinanciacionAportanteId ).toPromise();
+                                              const fuente = listaFuenteRecursos.find( fuente => fuente.codigo === aportante.fuenteRecursoCodigo );
 
-                                            listaAportantes.push(
-                                                this.fb.group(
-                                                    {
-                                                        ordenGiroDetalleTerceroCausacionAportanteId: [ aportante.ordenGiroDetalleTerceroCausacionAportanteId ],
-                                                        tipoAportante: [ tipoAportante, Validators.required ],
-                                                        listaNombreAportantes: [ [ nombreAportante ] ],
-                                                        nombreAportante: [ nombreAportante, Validators.required ],
-                                                        fuenteDeRecursos: [ listaFuenteRecursos ],
-                                                        fuenteRecursos: [ fuente, Validators.required ],
-                                                        fuenteFinanciacionId: [ fuente.fuenteFinanciacionId ],
-                                                        valorDescuento: [ aportante.valorDescuento, Validators.required ]
-                                                    }
-                                                )
-                                            )
+                                              listaAportantes.push(
+                                                  this.fb.group(
+                                                      {
+                                                          ordenGiroDetalleTerceroCausacionAportanteId: [ aportante.ordenGiroDetalleTerceroCausacionAportanteId ],
+                                                          tipoAportante: [ tipoAportante, Validators.required ],
+                                                          listaNombreAportantes: [ [ nombreAportante ] ],
+                                                          nombreAportante: [ nombreAportante, Validators.required ],
+                                                          fuenteDeRecursos: [ listaFuenteRecursos ],
+                                                          fuenteRecursos: [ fuente, Validators.required ],
+                                                          fuenteFinanciacionId: [ fuente.fuenteFinanciacionId ],
+                                                          valorDescuento: [ aportante.valorDescuento, Validators.required ]
+                                                      }
+                                                  )
+                                              )
+                                            }
                                         }
                                     }
 
@@ -391,6 +393,7 @@ export class TerceroCausacionComponent implements OnInit {
                         }
                 }
             );
+            console.log(this.criterios.controls);
     }
 
     firstLetterUpperCase( texto:string ) {
