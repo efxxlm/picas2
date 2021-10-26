@@ -2771,16 +2771,20 @@ namespace asivamosffie.services
                             string namefuente = funtename.Any() ? funtename.FirstOrDefault().Nombre : "";
                             if (!esGenerar || ddpGenerado == true)
                             {
+                                GestionFuenteFinanciacionHistorico gffh = null;
+                                if (esLiberacion)
+                                    gffh = _context.GestionFuenteFinanciacionHistorico.Where(r => r.GestionFuenteFinanciacionId == fuenteRegistro.GestionFuenteFinanciacionId).FirstOrDefault();
+
                                 fuentes.Add(new GrillaFuentesFinanciacion
                                 {
                                     Fuente = namefuente,
                                     Estado_de_las_fuentes = "",
                                     FuenteFinanciacionID = font.FuenteFinanciacionId,
-                                    Valor_solicitado_de_la_fuente = fuenteRegistro != null ? fuenteRegistro.ValorSolicitado: 0,
-                                    Nuevo_saldo_de_la_fuente = fuenteRegistro != null ? fuenteRegistro.NuevoSaldo : 0,
-                                    Saldo_actual_de_la_fuente = fuenteRegistro != null ? fuenteRegistro.SaldoActual : 0,
-                                    Nuevo_saldo_de_la_fuente_al_guardar = fuenteRegistro != null ? fuenteRegistro.NuevoSaldo : 0,
-                                    Saldo_actual_de_la_fuente_al_guardar = fuenteRegistro != null ? fuenteRegistro.SaldoActual : 0,
+                                    Valor_solicitado_de_la_fuente = fuenteRegistro != null ? gffh != null ? gffh.ValorSolicitado : fuenteRegistro.ValorSolicitado: 0,
+                                    Nuevo_saldo_de_la_fuente = fuenteRegistro != null ? gffh != null ? gffh.NuevoSaldo :  fuenteRegistro.NuevoSaldo : 0,
+                                    Saldo_actual_de_la_fuente = fuenteRegistro != null ? gffh != null ? gffh.SaldoActual :  fuenteRegistro.SaldoActual : 0,
+                                    Nuevo_saldo_de_la_fuente_al_guardar = fuenteRegistro != null ? gffh != null ? gffh.NuevoSaldo : fuenteRegistro.NuevoSaldo : 0,
+                                    Saldo_actual_de_la_fuente_al_guardar = fuenteRegistro != null ? gffh != null ? gffh.SaldoActual :  fuenteRegistro.SaldoActual : 0,
                                 });
                             }
                             else
