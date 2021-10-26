@@ -733,12 +733,10 @@ export class TerceroCausacionGogComponent implements OnInit {
                     });
                   }
                 });
-                if ( valueTotalDescuento != valorAmortizacion && valorAmortizacion > 0) {
-                  if(valueTotalDescuento > valorAmortizacion){
+                if ( valueTotalDescuento > valorAmortizacion) {
                     this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null );
-                  }
-                  this.openDialog( '', `<b>El valor del descuento de amortización debe ser igual al valor solicitado.</b>` );
-                  return;
+                    this.openDialog( '', `<b>El valor del descuento de amortización debe ser igual al valor solicitado.</b>` );
+                    return;
                 }
               }
             }
@@ -1097,6 +1095,39 @@ export class TerceroCausacionGogComponent implements OnInit {
 
         if(!alert){
           this.openDialog( '', `<b>Debe ingresar todos los valores facturados por aportante</b>` );
+          return;
+        }
+
+        alert =  true;
+        this.criterios.controls.forEach( ( criterioControl, indexCriterio ) => {
+          this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
+              if ( this.getDescuentos( indexCriterio, indexConcepto ).length > 0 && conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value === true ) {
+                  this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( ( element, indexDescuento ) => {
+                      if(element.get( 'tipoDescuento' ).value == "5"){
+                        let valueTotalDescuento = 0;
+                        if (this.solicitudPago.vAmortizacionXproyecto.length > 0) {
+                          let valorAmortizacion = this.solicitudPago.vAmortizacionXproyecto[0].valorAnticipo ?? 0;
+                          if(element.get( 'aportantesDescuento' ).value.length > 0){
+                            element.get( 'aportantesDescuento' ).value.forEach((desc: { valorDescuento: number; }, i: number) => {
+                                if(desc != null){
+                                  if(desc.valorDescuento > 0){
+                                    valueTotalDescuento += desc.valorDescuento;
+                                  }
+                                }
+                            });
+                          }
+                          if ( valueTotalDescuento != valorAmortizacion) {
+                              alert =  false;
+                          }
+                        }
+                      }
+                  } )
+              }
+          } )
+        });
+
+        if(!alert){
+          this.openDialog( '', `<b>El valor del descuento de amortización debe ser igual al valor solicitado.</b>` );
           return;
         }
 
