@@ -63,7 +63,6 @@ export class FormProyectoComponent implements OnInit {
 
             }
         }
-        console.log(this.fases);
     }
 
     async getDataProyecto() {
