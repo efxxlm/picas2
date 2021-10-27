@@ -11,14 +11,14 @@ import { RegistroPresupuestal } from '../fuenteFinanciacion/fuente-financiacion.
   providedIn: 'root'
 })
 export class CofinanciacionService {
-  
+
 
   constructor( private http: HttpClient ) {}
 
   vigenciasAcuerdoCofinanciacion(): number[]{
     const fecha = new Date();
     let vigencias: number[]=[];
-    for (let i = 2015; i <= fecha.getFullYear(); i++){
+    for (let i = 2015; i <= fecha.getFullYear() + 4; i++){
       vigencias.push(i);
     }
 
@@ -31,7 +31,7 @@ export class CofinanciacionService {
   }
 
   EliminarCofinanciacionByCofinanciacionId(idcof:number)
-  {    
+  {
     return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/EliminarCofinanciacionByCofinanciacionId?pCofinancicacionId=${idcof}`,null);
   }
 
@@ -47,7 +47,7 @@ export class CofinanciacionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/EliminarDocumentoAportanteId?pDocumentID=${DocumentoAporteId}`,null);
   }
 
-  listaAcuerdosCofinanciacion(){ 
+  listaAcuerdosCofinanciacion(){
     return this.http.get<Cofinanciacion[]>(`${environment.apiUrl}/Cofinancing/GetListCofinancing`);
   }
 
