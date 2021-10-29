@@ -363,7 +363,7 @@ namespace asivamosffie.services
                             if (usos.FirstOrDefault()?.DisponibilidadPresupuestalId > 0)
                             {
                                 drp = _context.DisponibilidadPresupuestal.Find(usos.FirstOrDefault().DisponibilidadPresupuestalId);
-                                dpp = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == usos.FirstOrDefault().DisponibilidadPresupuestalId && r.ProyectoId == balanceFinanciero.ProyectoId).FirstOrDefault();
+                                dpp = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == usos.FirstOrDefault().DisponibilidadPresupuestalId && r.ProyectoId == balanceFinanciero.ProyectoId && r.Eliminado != true).FirstOrDefault();
                             }
 
                             #region ddp
@@ -417,10 +417,10 @@ namespace asivamosffie.services
                                                 if (contratacionDP.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
                                                 {
                                                     int index = proyectoAportantesData.FindIndex(item => item.AportanteId == cpa.CofinanciacionAportanteId);
-                                                    if (index != -1)
+                                                    if (index > -1)
                                                     {
-                                                        proyectoAportantesData[index].ValorInterventoriaNuevo = valorUsoNuevo;
-                                                        proyectoAportantesData[index].ValorInterventoriaActual = valorUsoActual;
+                                                        proyectoAportantesData[index].ValorInterventoriaNuevo += valorUsoNuevo;
+                                                        proyectoAportantesData[index].ValorInterventoriaActual += valorUsoActual;
 
                                                     }
                                                     else
@@ -430,7 +430,9 @@ namespace asivamosffie.services
                                                             AportanteId = cpa.CofinanciacionAportanteId ?? 0,
                                                             ProyectoId = balanceFinanciero.ProyectoId,
                                                             ValorInterventoriaNuevo = valorUsoNuevo,
-                                                            ValorInterventoriaActual = valorUsoActual
+                                                            ValorInterventoriaActual = valorUsoActual,
+                                                            ValorObraNuevo = 0,
+                                                            ValorObraActual = 0
                                                         };
 
                                                         proyectoAportantesData.Add(pa);
@@ -439,10 +441,10 @@ namespace asivamosffie.services
                                                 else
                                                 {
                                                     int index = proyectoAportantesData.FindIndex(item => item.AportanteId == cpa.CofinanciacionAportanteId);
-                                                    if (index != -1)
+                                                    if (index > -1)
                                                     {
-                                                        proyectoAportantesData[index].ValorObraNuevo = valorUsoNuevo;
-                                                        proyectoAportantesData[index].ValorObraActual = valorUsoActual;
+                                                        proyectoAportantesData[index].ValorObraNuevo += valorUsoNuevo;
+                                                        proyectoAportantesData[index].ValorObraActual += valorUsoActual;
 
                                                     }
                                                     else
@@ -452,7 +454,9 @@ namespace asivamosffie.services
                                                             AportanteId = cpa.CofinanciacionAportanteId ?? 0,
                                                             ProyectoId = balanceFinanciero.ProyectoId,
                                                             ValorObraNuevo = valorUsoNuevo,
-                                                            ValorObraActual = valorUsoActual
+                                                            ValorObraActual = valorUsoActual,
+                                                            ValorInterventoriaNuevo = 0,
+                                                            ValorInterventoriaActual = 0,
                                                         };
 
                                                         proyectoAportantesData.Add(pa);
@@ -489,7 +493,9 @@ namespace asivamosffie.services
 
                                 foreach (var cppa in cpaList)
                                 {
-                                    decimal ValorAporteNuevo = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad != true && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId && r.CofinanciacionAportanteId == cppa.CofinanciacionAportanteId).ToList().Sum(r => r.ValorSolicitud);
+                                    decimal ValorUsoNuevo = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad != true && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId && r.CofinanciacionAportanteId == cppa.CofinanciacionAportanteId).ToList().Sum(r => r.ValorUso ?? 0);
+                                    decimal ValorALiberarNuevo = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad != true && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId && r.CofinanciacionAportanteId == cppa.CofinanciacionAportanteId).ToList().Sum(r => r.ValorLiberar ?? 0);
+                                    decimal ValorAporteNuevo = ValorUsoNuevo - ValorALiberarNuevo;
 
                                     decimal ValorAporteActual = cppa.ValorAporte;
 
@@ -519,7 +525,7 @@ namespace asivamosffie.services
                                 //crear el registro histórico de gestion fuente financiación, con el valor actual del gff
                                 List<GestionFuenteFinanciacion> gffList = new List<GestionFuenteFinanciacion>();
                                 if (dpp != null)
-                                    gffList = _context.GestionFuenteFinanciacion.Where(r => r.DisponibilidadPresupuestalProyectoId == dpp.DisponibilidadPresupuestalProyectoId && r.EsNovedad != true).ToList();
+                                    gffList = _context.GestionFuenteFinanciacion.Where(r => r.DisponibilidadPresupuestalProyectoId == dpp.DisponibilidadPresupuestalProyectoId && r.EsNovedad != true && r.Eliminado != true).ToList();
 
                                 foreach (var gff in gffList)
                                 {
@@ -746,7 +752,7 @@ namespace asivamosffie.services
                         foreach (var pad in proyectoAportantesData)
                         {
                             //actualizo el drp con el nuevo valor de los usos
-                            ProyectoAportante pa = _context.ProyectoAportante.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.AportanteId == pad.AportanteId).FirstOrDefault();
+                            ProyectoAportante pa = _context.ProyectoAportante.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.AportanteId == pad.AportanteId && r.Eliminado != true).FirstOrDefault();
                             if (pa != null)
                             {
                                 //actualizo el regitro con los valores nuevos
