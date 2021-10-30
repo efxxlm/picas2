@@ -200,27 +200,28 @@ export class TablaLiberacionSaldoComponent implements OnInit {
       if(el.valorLiberar > el.saldo){
         if(positionDta != -1)
           this.dataSource.data[index].data[positionDta].valorLiberar = null;
-        el.valorLiberar = null;
-        this.openDialog(
-          '',
-          '<b>El valor a liberar no puede ser mayor al saldo disponible.</b>'
-        );
-        return;
+          el.valorLiberar = null;
+          this.openDialog(
+            '',
+            '<b>El valor a liberar no puede ser mayor al saldo disponible.</b>'
+          );
+          return;
       }
       this.dataSource.data.forEach(r=>{
-        r.data.forEach(d => {
-          valorTotalLiberar += (d.valorUso - d.valorLiberar)
+        r.data.forEach((d: { valorLiberar: number; }) => {
+          valorTotalLiberar += d.valorLiberar ?? 0;
         });
       });
 
       if (valorTotalLiberar > valorSolicitud) {
         if(positionDta != -1)
           this.dataSource.data[index].data[positionDta].valorLiberar = null;
-        this.openDialog(
-          '',
-          '<b>Los valores registrados superan el valor total del RP;es necesario revisar y ajustar estos valores .</b>'
-        );
-        return;
+          el.valorLiberar = null;
+          this.openDialog(
+            '',
+            '<b>Los valores registrados superan el valor total del RP;es necesario revisar y ajustar estos valores .</b>'
+          );
+          return;
       }
 
     }

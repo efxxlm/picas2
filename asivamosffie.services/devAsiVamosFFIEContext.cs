@@ -342,6 +342,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VTablaOdgDescuento> VTablaOdgDescuento { get; set; }
         public virtual DbSet<VTablaOdgFacturado> VTablaOdgFacturado { get; set; }
         public virtual DbSet<VTablaOdgOtroDescuento> VTablaOdgOtroDescuento { get; set; }
+        public virtual DbSet<VTablasHistoricoLiberacion> VTablasHistoricoLiberacion { get; set; }
         public virtual DbSet<VTotalComprometidoXcontratacionProyectoTipoSolicitud> VTotalComprometidoXcontratacionProyectoTipoSolicitud { get; set; }
         public virtual DbSet<VUbicacionXproyecto> VUbicacionXproyecto { get; set; }
         public virtual DbSet<VUsosXsolicitudPago> VUsosXsolicitudPago { get; set; }
@@ -11428,6 +11429,45 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.DescuentoCodigo)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VTablasHistoricoLiberacion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_TablasHistoricoLiberacion");
+
+                entity.Property(e => e.DisponibilidadPresupuestalHistoricoId).HasColumnName("disponibilidadPresupuestalHistoricoId");
+
+                entity.Property(e => e.DisponibilidadPresupuestalId).HasColumnName("disponibilidadPresupuestalId");
+
+                entity.Property(e => e.DisponibilidadPresupuestalProyectoId).HasColumnName("DisponibilidadPresupuestalProyectoID");
+
+                entity.Property(e => e.EsNovedad).HasColumnName("esNovedad");
+
+                entity.Property(e => e.NuevoSaldo).HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.SaldoActual).HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.ValorAporte).HasColumnType("numeric(25, 9)");
+
+                entity.Property(e => e.ValorHistorico)
+                    .HasColumnName("valorHistorico")
+                    .HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.ValorInterventoria).HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.ValorObra).HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.ValorOriginal)
+                    .HasColumnName("valorOriginal")
+                    .HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.ValorSolicitado).HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.ValorSolicitud).HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.ValorTotalAportante).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VTotalComprometidoXcontratacionProyectoTipoSolicitud>(entity =>
