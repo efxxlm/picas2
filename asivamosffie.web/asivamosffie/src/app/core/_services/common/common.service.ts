@@ -560,6 +560,11 @@ export class CommonService {
   getVideos() {
     return this.http.get<any>(`${environment.apiUrl}/Common/GetVideos`);
   }
+
+  getLlaveMenByContratacionProyectoId(pContratacionProyectoId: number) {
+    return this.http.get(`${environment.apiUrl}/Common/GetLlaveMenByContratacionProyectoId?pContratacionProyectoId=${pContratacionProyectoId}`);
+  }
+
 }
 
 export interface Dominio{

@@ -267,6 +267,20 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetLlaveMenByContratacionProyectoId")]
+        [HttpGet]
+        public async Task<dynamic> GetLlaveMenByContratacionProyectoId([FromQuery] int pContratacionProyectoId)
+        {
+            try
+            {
+                return await common.GetLlaveMenByContratacionProyectoId(pContratacionProyectoId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
     }
 }

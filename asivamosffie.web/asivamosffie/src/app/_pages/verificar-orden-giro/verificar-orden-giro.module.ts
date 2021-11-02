@@ -21,10 +21,11 @@ import { DialogEnviarAprobacionComponent } from './components/dialog-enviar-apro
 import { FormOrigenComponent } from './components/form-origen/form-origen.component';
 import { TablaPorcntjParticGogComponent } from './components/tabla-porcntj-partic-gog/tabla-porcntj-partic-gog.component';
 import { TablaInfoFuenterecGogComponent } from './components/tabla-info-fuenterec-gog/tabla-info-fuenterec-gog.component';
+import { AmortizacionPagoComponent } from './components/amortizacion-pago/amortizacion-pago.component';
 
 
 @NgModule({
-  declarations: [ FormEstrategPagosGogComponent, VerificarOrdenGiroComponent, TablaVerificarOrdenGiroComponent, FormVerificarOrdenGiroComponent, InformacionGeneralComponent, TablaDatosSolicitudComponent, TablaAportantesComponent, DetalleGiroComponent, DescuentosDireccionTecnicaComponent, TerceroCausacionComponent, ObservacionesComponent, SoporteOrdenGiroComponent, DialogEnviarAprobacionComponent, FormOrigenComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent],
+  declarations: [ FormEstrategPagosGogComponent, VerificarOrdenGiroComponent, TablaVerificarOrdenGiroComponent, FormVerificarOrdenGiroComponent, InformacionGeneralComponent, TablaDatosSolicitudComponent, TablaAportantesComponent, DetalleGiroComponent, DescuentosDireccionTecnicaComponent, TerceroCausacionComponent, ObservacionesComponent, SoporteOrdenGiroComponent, DialogEnviarAprobacionComponent, FormOrigenComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent, AmortizacionPagoComponent],
   imports: [
     CommonModule,
     FormsModule,

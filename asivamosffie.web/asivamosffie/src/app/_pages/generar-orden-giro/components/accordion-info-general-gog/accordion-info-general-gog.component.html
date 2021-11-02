@@ -103,7 +103,7 @@
                 Porcentajes de participación
             </mat-panel-title>
         </mat-expansion-panel-header>
-        
+
         <app-tabla-porcntj-partic-gog *ngIf="solicitudPago.tablaPorcentajeParticipacion !== undefined && solicitudPago.tablaPorcentajeParticipacion.length > 0" [tablaPorcentajeParticipacion]="solicitudPago.tablaPorcentajeParticipacion"></app-tabla-porcntj-partic-gog>
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -115,4 +115,16 @@
 
         <app-tabla-info-fuenterec-gog *ngIf="solicitudPago.tablaInformacionFuenteRecursos !== undefined && solicitudPago.tablaInformacionFuenteRecursos.length > 0" [tablaInformacionFuenteRecursos]="solicitudPago.tablaInformacionFuenteRecursos"></app-tabla-info-fuenterec-gog>
     </mat-expansion-panel>
+    <mat-accordion>
+      <mat-expansion-panel class="expansion-style sub-expansion" *ngIf="solicitudPagoFase?.solicitudPagoFaseAmortizacion.length > 0">
+          <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title class="expansion-style--title">
+                 Amortización del anticipo
+              </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div *ngFor="let solicitudAmortizacion of solicitudPagoFase?.solicitudPagoFaseAmortizacion">
+            <app-amortizacion-pago [solicitudPagoFaseAmortizacion]="solicitudAmortizacion" [contratacionProyectoId]="solicitudPagoFase?.contratacionProyectoId"></app-amortizacion-pago>
+          </div>
+      </mat-expansion-panel>
+  </mat-accordion>
 </section>

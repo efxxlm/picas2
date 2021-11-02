@@ -118,7 +118,7 @@ namespace asivamosffie.services.Interfaces
         DateTime? GetFechaEstimadaFinalizacion(int pContratoId);
 
         decimal GetValorTotalDisponibilidad(int pDisponibilidadPresupuestalId, bool esLiberacion);
-
+        Task<dynamic> GetLlaveMenByContratacionProyectoId(int pContratacionProyectoId);
 
     }
 }

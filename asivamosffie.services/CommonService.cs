@@ -982,6 +982,21 @@ namespace asivamosffie.services
             return valorSolicitud;
         }
 
+        public async Task<dynamic> GetLlaveMenByContratacionProyectoId(int pContratacionProyectoId)
+        {
+            ContratacionProyecto cp = _context.ContratacionProyecto.Find(pContratacionProyectoId);
+            if (cp != null)
+            {
+                return await _context.Proyecto.Select(m => new
+                {
+                    m.ProyectoId,
+                    m.LlaveMen
+                }).Where(m => m.ProyectoId == cp.ProyectoId).ToListAsync();
+            }
+
+            return null;
+        }
+
     }
 
 }
