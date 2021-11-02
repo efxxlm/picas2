@@ -10347,9 +10347,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UsoNombre)
-                    .IsRequired()
-                    .HasMaxLength(250);
+                entity.Property(e => e.UsoNombre).HasMaxLength(250);
 
                 entity.Property(e => e.ValorConcepto).HasColumnType("decimal(38, 0)");
 

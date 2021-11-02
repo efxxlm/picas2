@@ -268,7 +268,8 @@ namespace asivamosffie.services
                                                                                             ConceptoNombre = "",
                                                                                             r.ValorUso,
                                                                                             r.ValorDescuento,
-                                                                                            Saldo = r.SaldoUso
+                                                                                            Saldo = r.SaldoUso,
+                                                                                            r.ContratacionProyectoId
                                                                                         });
         }
 

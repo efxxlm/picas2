@@ -19,5 +19,6 @@ namespace asivamosffie.model.Models
         public decimal ValorUso { get; set; }
         public decimal ValorDescuento { get; set; }
         public decimal? SaldoUso { get; set; }
+        public int? ContratacionProyectoId { get; set; }
     }
 }
