@@ -43,6 +43,7 @@ export class TerceroCausacionGogComponent implements OnInit {
     valorNetoGiro = 0;
     ordenGiroId = 0;
     ordenGiroDetalleId = 0;
+    tieneAmortizacion: boolean = false;
 
     // Get formArray de addressForm
     get criterios() {
@@ -582,9 +583,12 @@ export class TerceroCausacionGogComponent implements OnInit {
                     if ( totalRegistrosEnProceso > 0 && totalRegistrosEnProceso === this.criterios.length ) {
                         this.estadoSemaforo.emit( 'en-proceso' )
                     }
+
+                    this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+                    if(this.solicitudPagoFase?.solicitudPagoFaseAmortizacion.length > 0)
+                        this.tieneAmortizacion = true;
                 }
             );
-            console.log(this.addressForm.get( 'criterios' ));
     }
 
     firstLetterUpperCase( texto:string ) {
@@ -1128,12 +1132,32 @@ export class TerceroCausacionGogComponent implements OnInit {
           this.openDialog( '', `<b>Debe ingresar todos los valores facturados por aportante</b>` );
           return;
         }
+        //si tiene amortización el tipo de descuento debe ser obligatorio
+        if(this.tieneAmortizacion == true){
+          alert =  false;
+          this.criterios.controls.forEach( ( c, indexCriterio ) => {
+            this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
+                if ( this.getDescuentos( indexCriterio, indexConcepto ).length > 0 && conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value === true ) {
+                    this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( ( element ) => {
+                        if(element.get( 'tipoDescuento' ).value == "5"){
+                            alert = true;
+                        }
+                    } )
+                }
+            } )
+          });
+        }
+
+        if(!alert){
+          this.openDialog( '', `<b>Debe ingresar el descuento de amortización</b>` );
+          return;
+        }
 
         alert =  true;
         this.criterios.controls.forEach( ( criterioControl, indexCriterio ) => {
           this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
               if ( this.getDescuentos( indexCriterio, indexConcepto ).length > 0 && conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value === true ) {
-                  this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( ( element, indexDescuento ) => {
+                  this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( ( element ) => {
                       if(element.get( 'tipoDescuento' ).value == "5"){
                         let valueTotalDescuento = 0;
                         if (this.solicitudPago.vAmortizacionXproyecto.length > 0) {

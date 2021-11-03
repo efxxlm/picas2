@@ -733,13 +733,13 @@ namespace asivamosffie.services
             return true;
         }
 
-        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion)
+        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion,bool tieneAmortizacion)
         {
             if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Where(r => r.Eliminado != true).Sum(r => r.ValorDescuento) != pOrdenGiroDetalleTerceroCausacion.ValorFacturadoConcepto)
                 return false;
 
 
-            if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == false)
+            if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == false && !tieneAmortizacion)
                 return true;
 
             if (pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
@@ -766,11 +766,20 @@ namespace asivamosffie.services
                     return false;
             }
 
+            bool descuentoAmortizacion = false;
+
             foreach (var item in pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento)
             {
+                if (item.TipoDescuentoCodigo == "5")
+                    descuentoAmortizacion = true;
+
                 if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(item))
                     return false;
             }
+
+            if (tieneAmortizacion && !descuentoAmortizacion)
+                return false;
+
             return true;
         }
 
@@ -910,7 +919,7 @@ namespace asivamosffie.services
 
             foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
             {
-                if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(item))
+                if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(item,false))
                     return false;
             }
 
@@ -1000,7 +1009,8 @@ namespace asivamosffie.services
                     CreateEditOrdenGiroTercero(pOrdenGiro.OrdenGiroTercero.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
 
                 if (pOrdenGiro?.OrdenGiroDetalle.Count() > 0)
-                    CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle.FirstOrDefault(), pOrdenGiro.UsuarioCreacion);
+                    CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle.FirstOrDefault(), pOrdenGiro.UsuarioCreacion, pOrdenGiro.SolicitudPagoId);
+
 
                 Respuesta respuesta =
                      new Respuesta
@@ -1061,7 +1071,7 @@ namespace asivamosffie.services
             }
         }
 
-        private void CreateEditOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle, string pUsuarioCreacion)
+        private void CreateEditOrdenGiroDetalle(OrdenGiroDetalle pOrdenGiroDetalle, string pUsuarioCreacion, int solicitudPagoId)
         {
             if (pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago?.Count() > 0)
                 CreateEditOrdenGiroDetalleEstrategiaPago(pOrdenGiroDetalle.OrdenGiroDetalleEstrategiaPago.FirstOrDefault(), pUsuarioCreacion);
@@ -1076,7 +1086,7 @@ namespace asivamosffie.services
                 CreateEditOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.ToList(), pUsuarioCreacion);
 
             if (pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.Count() > 0)
-                CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.ToList(), pUsuarioCreacion);
+                CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.ToList(), pUsuarioCreacion, solicitudPagoId );
 
             if (pOrdenGiroDetalle?.OrdenGiroDetalleId == 0)
             {
@@ -1125,8 +1135,10 @@ namespace asivamosffie.services
             }
         }
 
-        private void CreateEditOrdenGiroDetalleTerceroCausacion(List<OrdenGiroDetalleTerceroCausacion> pListOrdenGiroDetalleTerceroCausacion, string pUsuarioCreacion)
+        private void CreateEditOrdenGiroDetalleTerceroCausacion(List<OrdenGiroDetalleTerceroCausacion> pListOrdenGiroDetalleTerceroCausacion, string pUsuarioCreacion, int solicitudPagoId)
         {
+            int tieneAmortizacion = _context.VAmortizacionXproyecto.Where(r => r.SolicitudPagoId == solicitudPagoId).Count();
+
             foreach (var pOrdenGiroDetalleTerceroCausacion in pListOrdenGiroDetalleTerceroCausacion)
             {
                 if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId == 0)
@@ -1134,7 +1146,7 @@ namespace asivamosffie.services
                     pOrdenGiroDetalleTerceroCausacion.UsuarioCreacion = pUsuarioCreacion;
                     pOrdenGiroDetalleTerceroCausacion.FechaCreacion = DateTime.Now;
                     pOrdenGiroDetalleTerceroCausacion.Eliminado = false;
-                    pOrdenGiroDetalleTerceroCausacion.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion);
+                    pOrdenGiroDetalleTerceroCausacion.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion, tieneAmortizacion > 0 ? true : false);
 
                     _context.OrdenGiroDetalleTerceroCausacion.Add(pOrdenGiroDetalleTerceroCausacion);
                 }
@@ -1155,7 +1167,7 @@ namespace asivamosffie.services
                                 UsuarioModificacion = pUsuarioCreacion,
                                 ConceptoCodigo = pOrdenGiroDetalleTerceroCausacion.ConceptoCodigo,
                                 ValorFacturadoConcepto = pOrdenGiroDetalleTerceroCausacion.ValorFacturadoConcepto,
-                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion)
+                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion, tieneAmortizacion > 0 ? true : false)
                             });
                 }
 
@@ -1329,6 +1341,7 @@ namespace asivamosffie.services
 
         private void CreateEditOrdenGiroTercero(OrdenGiroTercero pOrdenGiroTercero, string pUsuarioCreacion)
         {
+
             if (pOrdenGiroTercero.OrdenGiroTerceroId == 0)
             {
                 pOrdenGiroTercero.UsuarioCreacion = pUsuarioCreacion;
