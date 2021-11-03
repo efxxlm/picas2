@@ -91,7 +91,7 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
         if (this.contrato.vAmortizacionXproyecto.length > 0) {
             const proyectoId = this.contrato.vAmortizacionXproyecto.find(proyectoId => proyectoId.contratacionProyectoId === codigo);
             if (proyectoId !== undefined) {
-                return proyectoId.valorPorAmortizar;
+                return proyectoId.valorAnticipo;
             }
         }
     }
@@ -216,7 +216,7 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
                 }
             }
         }
-        if(this.addressForm.get('valorAmortizacion').value?.value != null){
+        if(this.addressForm.get('valorAmortizacion').value > 0){
           this.estadoAmortizacion.emit('completo');
         }
     }
