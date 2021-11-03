@@ -37,7 +37,7 @@
                                     <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ k + 1 }} </mat-card-title>
                                     <p>
                                         <strong>Saldo aportante para el concepto:</strong>
-                                        {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('tipoAportante').value.aportanteId) | currency: '' :'symbol-narrow':'.0-0' }}
+                                        {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('nombreAportante').value.cofinanciacionAportanteId) | currency: '' :'symbol-narrow':'.0-0' }}
                                     </p>
                                     <p>
                                         <b>
@@ -135,12 +135,12 @@
                                     <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ k + 1 }} </mat-card-title>
                                     <div class="row" style="padding-left: 0em !important;">
                                         <div class="col-md-9" [formGroup]="aportante">
-                                            <div class="row animatedDown" *ngIf="aportante.get('tipoAportante').value">
+                                            <div class="row animatedDown" *ngIf="aportante.get('nombreAportante').value">
                                                 <div class="col-md-11">
                                                     <div class="row">
                                                         <p>
                                                             <strong>Saldo aportante para el concepto:</strong>
-                                                            {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('tipoAportante').value.aportanteId) | currency: '' :'symbol-narrow':'.0-0' }}
+                                                            {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('nombreAportante').value.cofinanciacionAportanteId) | currency: '' :'symbol-narrow':'.0-0' }}
                                                         </p>
                                                     </div>
                                                 </div>
