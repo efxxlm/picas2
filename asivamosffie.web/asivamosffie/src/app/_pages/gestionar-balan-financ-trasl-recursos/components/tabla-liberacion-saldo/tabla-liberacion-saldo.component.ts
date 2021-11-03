@@ -176,6 +176,46 @@ export class TablaLiberacionSaldoComponent implements OnInit {
       return alphanumeric.test(inputChar) ? true : false;
     }
 
+    number(e: { keyCode: any }) {
+      const tecla = e.keyCode;
+      if (tecla === 8) {
+        return true;
+      } // Tecla de retroceso (para poder borrar)
+      if (tecla === 48) {
+        return true;
+      } // 0
+      if (tecla === 49) {
+        return true;
+      } // 1
+      if (tecla === 50) {
+        return true;
+      } // 2
+      if (tecla === 51) {
+        return true;
+      } // 3
+      if (tecla === 52) {
+        return true;
+      } // 4
+      if (tecla === 53) {
+        return true;
+      } // 5
+      if (tecla === 54) {
+        return true;
+      } // 6
+      if (tecla === 55) {
+        return true;
+      } // 7
+      if (tecla === 56) {
+        return true;
+      } // 8
+      if (tecla === 57) {
+        return true;
+      } // 9
+      const patron = /1/; // ver nota
+      const te = String.fromCharCode(tecla);
+      return patron.test(te);
+    }
+
     maxLength(e: any, n: number) {
       if (e.editor.getLength() > n) {
         e.editor.deleteText(n, e.editor.getLength());
@@ -195,10 +235,10 @@ export class TablaLiberacionSaldoComponent implements OnInit {
       let index = this.dataSource.data.findIndex(d => d.codigoUso == codigoUso);
       let positionDta = -1;
       if(index != -1){
-        positionDta = this.dataSource.data[index].data.findIndex(d => d.componenteUsoId == el.componenteUsoId);
+        positionDta = this.dataSource.data[index].data.findIndex((d: { componenteUsoId: any; }) => d.componenteUsoId == el.componenteUsoId);
       }
       if(el.valorLiberar > el.saldo){
-        if(positionDta != -1)
+        if(positionDta != -1){
           this.dataSource.data[index].data[positionDta].valorLiberar = null;
           el.valorLiberar = null;
           this.openDialog(
@@ -206,6 +246,7 @@ export class TablaLiberacionSaldoComponent implements OnInit {
             '<b>El valor a liberar no puede ser mayor al saldo disponible.</b>'
           );
           return;
+        }
       }
       this.dataSource.data.forEach(r=>{
         r.data.forEach((d: { valorLiberar: number; }) => {
@@ -214,7 +255,7 @@ export class TablaLiberacionSaldoComponent implements OnInit {
       });
 
       if (valorTotalLiberar > valorSolicitud) {
-        if(positionDta != -1)
+        if(positionDta != -1){
           this.dataSource.data[index].data[positionDta].valorLiberar = null;
           el.valorLiberar = null;
           this.openDialog(
@@ -222,8 +263,9 @@ export class TablaLiberacionSaldoComponent implements OnInit {
             '<b>Los valores registrados superan el valor total del RP;es necesario revisar y ajustar estos valores .</b>'
           );
           return;
+        }
       }
-
+      return;
     }
 
 }

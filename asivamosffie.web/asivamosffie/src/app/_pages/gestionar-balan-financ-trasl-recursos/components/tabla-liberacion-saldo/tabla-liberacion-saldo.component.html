@@ -84,18 +84,15 @@
                 <mat-form-field class="full-width">
                   <input
                     matInput
-                    #valorLiberar
+                    [(ngModel)]="el.valorLiberar"
                     min="0"
                     maxlength="20"
                     required
-                    currencyMask
-                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
-                    value="{{el.valorLiberar | currency: 'COP':'symbol-narrow':'.0-0' }}"
-                    [(ngModel)]="el.valorLiberar"
-                    (keypress)="validateNumberKeypress($event)"
+                    (keypress)="number($event)"
                     (ngModelChange)="validateSaldo(el, element.valorSolicitud,element.codigoUso)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
-                    oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    currencyMask
+                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                   />
                 </mat-form-field>
                 <span
@@ -104,16 +101,16 @@
                   matTooltip="Valor en ($) Pesos colombianos"
                   matTooltipClass="info-tooltip"
                 >
-                  {{ 20 - valorLiberar.value.length }}
+                  {{ 20 - (el.valorLiberar ? el.valorLiberar.toString().length : 0) }}
                 </span>
                 <span class="icon-incompleto">
                   <img
                     class="icon-incompleto--img"
                     src="assets/img/icon/incompleto.svg"
-                                  alt="este campo es requerido"
-                [matTooltipPosition]="'above'"
-                matTooltip="Debe ingresar la información en el campo para continuar"
-                matTooltipClass="info-tooltip"
+                    alt="este campo es requerido"
+                    [matTooltipPosition]="'above'"
+                    matTooltip="Debe ingresar la información en el campo para continuar"
+                    matTooltipClass="info-tooltip"
                     *ngIf="el.valorLiberar == null"
                   />
                 </span>

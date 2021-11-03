@@ -71,7 +71,7 @@
                                     Seguro {{ i + 1 }}
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
-                
+
                             <mat-card class="shipping-card border" align="left">
                                 <mat-card-header class="header-card header-card--margin">
                                     <mat-card-title class="header-card--text card-title-detalle">
@@ -83,12 +83,12 @@
                                         <p><b>Vigencia de la póliza: </b><em> {{ seguro.get( 'seguroPoliza' ).value.vigencia | date: 'dd/MM/yyyy' }} </em></p>
                                         <p><b>Vigencia actualizada de la póliza: </b><em> {{ seguro.get( 'fechaSeguro' ).value | date: 'dd/MM/yyyy' }} </em></p>
                                     </div>
-            
+
                                     <div class="mt-2em" *ngIf="seguro.get( 'tieneFechaAmparo' ).value === true">
                                         <p><b>Vigencia del amparo: </b><em> {{ seguro.get( 'seguroPoliza' ).value.vigenciaAmparo | date: 'dd/MM/yyyy' }} </em></p>
                                         <p><b>Vigencia actualizada del amparo: </b><em> {{ seguro.get( 'fechaAmparo' ).value | date: 'dd/MM/yyyy' }} </em></p>
                                     </div>
-            
+
                                     <div class="mt-2em" *ngIf="seguro.get( 'tieneValorAmparo' ).value === true">
                                         <p><b>Valor del amparo: </b><em> {{ seguro.get( 'seguroPoliza' ).value.valorAmparo | currency:'':'symbol-narrow':'.0-0' }} </em></p>
                                         <p><b>Valor del amparo: </b><em> {{ seguro.get( 'valorAmparo' ).value | currency:'':'symbol-narrow':'.0-0' }} </em></p>
@@ -97,7 +97,7 @@
                             </mat-card>
                         </mat-expansion-panel>
                     </mat-accordion>
-            
+
                 </section>
             </mat-accordion>
         </mat-expansion-panel>
@@ -108,10 +108,10 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <div style="text-align: center;">
-                <p *ngIf="contratoPolizaActualizacion.tieneObservacionEspecifica === true"><strong>¿Tiene observaciones especificas de la actualización?: </strong><em>Si</em></p>
-                <p *ngIf="contratoPolizaActualizacion.tieneObservacionEspecifica === false"><strong>¿Tiene observaciones especificas de la actualización?: </strong><em>No</em></p>
+                <p *ngIf="contratoPolizaActualizacion?.tieneObservacionEspecifica === true"><strong>¿Tiene observaciones especificas de la actualización?: </strong><em>Si</em></p>
+                <p *ngIf="contratoPolizaActualizacion?.tieneObservacionEspecifica === false"><strong>¿Tiene observaciones especificas de la actualización?: </strong><em>No</em></p>
             </div>
-            <mat-card class="shipping-card border" *ngIf="contratoPolizaActualizacion.tieneObservacionEspecifica === true">
+            <mat-card class="shipping-card border" *ngIf="contratoPolizaActualizacion?.tieneObservacionEspecifica === true">
                 <mat-card-header class="header-card header-card--margin">
                     <mat-card-title class="header-card--text card-title-detalle">
                         Observaciones especificas de la actualización
