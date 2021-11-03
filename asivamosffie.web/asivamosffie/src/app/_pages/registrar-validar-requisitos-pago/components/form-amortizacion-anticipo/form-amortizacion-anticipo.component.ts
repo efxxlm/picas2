@@ -216,7 +216,7 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
                 }
             }
         }
-        if(this.addressForm.get('valorAmortizacion').value != null){
+        if(this.addressForm.get('valorAmortizacion').value?.value != null){
           this.estadoAmortizacion.emit('completo');
         }
     }
