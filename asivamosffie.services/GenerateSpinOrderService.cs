@@ -739,6 +739,8 @@ namespace asivamosffie.services
             if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Where(r => r.Eliminado != true).Sum(r => r.ValorDescuento) != pOrdenGiroDetalleTerceroCausacion.ValorFacturadoConcepto)
                 return false;
 
+            if (pOrdenGiroDetalleTerceroCausacion.ConceptoCodigo == "29")//es anticipo
+                tieneAmortizacion = false;
 
             if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == false && !tieneAmortizacion)
                 return true;
