@@ -176,7 +176,7 @@ export class TerceroCausacionGogComponent implements OnInit {
 
                     //const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
                     let dataAportantes = await this.ordenGiroSvc.getAportantesNew( this.solicitudPago );
-
+                    console.log(dataAportantes);
                     for (let i = 0; i < dataAportantes.listaTipoAportante.length; i++) {
                         const element = dataAportantes.listaTipoAportante[i];
                         const element2 = this.solicitudPago.tablaInformacionFuenteRecursos[i];
@@ -1372,21 +1372,20 @@ export class TerceroCausacionGogComponent implements OnInit {
 
     // TODO: filtrar por proyecto y fase
     getValorAportante(codigo: string, aportanteId: any) {
+
       if (this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.length > 0) {
-        const conceptoCodigo = this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.filter(
-          conceptoCodigo => conceptoCodigo.conceptoCodigo == codigo
+        const conceptoCodigo = this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.filter((conceptoCodigo: { conceptoCodigo: string; solicitudPagoId: number; }) =>
+            conceptoCodigo.conceptoCodigo == codigo && conceptoCodigo.solicitudPagoId == this.solicitudPago?.solicitudPagoId
         );
-        const valorAportante = conceptoCodigo.filter(cc => cc.aportanteId == aportanteId);
-
-        let valorConceptoAportante;
-
-        valorAportante.forEach(element1 => {
-            this.solicitudPago.vConceptosUsosXsolicitudPagoId.forEach(element2 => {
+        const valorAportante = conceptoCodigo.filter((cc: { aportanteId: any; }) => cc.aportanteId == aportanteId);
+        let valorConceptoAportante = 0;
+        valorAportante.forEach((element1: { conceptoCodigo: any; saldo: any; }) => {
+            this.solicitudPago.vConceptosUsosXsolicitudPagoId.forEach((element2: { conceptoCodigo: any; }) => {
                 if (
                   element1.conceptoCodigo == element2.conceptoCodigo
                   // && element1.tipoUsoCodigo == element2.usoCodigo
                   ) {
-                  valorConceptoAportante = element1.saldo;
+                  valorConceptoAportante += element1.saldo ?? 0;
                 }
               });
             });
