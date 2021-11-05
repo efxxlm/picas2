@@ -123,7 +123,7 @@
               </mat-panel-title>
           </mat-expansion-panel-header>
           <div *ngFor="let solicitudAmortizacion of solicitudPagoFase?.solicitudPagoFaseAmortizacion">
-            <app-amortizacion-pago [solicitudPagoFaseAmortizacion]="solicitudAmortizacion" [contratacionProyectoId]="solicitudPagoFase?.contratacionProyectoId"></app-amortizacion-pago>
+            <app-amortizacion-pago [solicitudPagoFaseAmortizacion]="solicitudAmortizacion" [contratacionProyectoId]="solicitudPagoFase?.contratacionProyectoId" [vAmortizacionXproyecto]="solicitudPago?.vAmortizacionXproyecto[0]"></app-amortizacion-pago>
           </div>
       </mat-expansion-panel>
   </mat-accordion>

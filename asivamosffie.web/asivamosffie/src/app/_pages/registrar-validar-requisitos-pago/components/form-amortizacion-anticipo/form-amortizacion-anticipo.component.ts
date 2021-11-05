@@ -91,7 +91,11 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
         if (this.contrato.vAmortizacionXproyecto.length > 0) {
             const proyectoId = this.contrato.vAmortizacionXproyecto.find(proyectoId => proyectoId.contratacionProyectoId === codigo);
             if (proyectoId !== undefined) {
-                return proyectoId.valorAnticipo;
+                if(this.esVerDetalle != true){
+                    return proyectoId.valorAnticipo;
+                }else{
+                    return proyectoId.valorPorAmortizar;
+                }
             }
         }
     }

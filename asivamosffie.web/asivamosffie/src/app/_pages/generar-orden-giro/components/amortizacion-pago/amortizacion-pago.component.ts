@@ -10,8 +10,10 @@ export class AmortizacionPagoComponent implements OnInit {
 
     @Input() solicitudPagoFaseAmortizacion: any;
     @Input() contratacionProyectoId: number;
+    @Input() vAmortizacionXproyecto: any;
     valorAmortizacion = 0;
     llaveMen: any;
+    saldoAmortizar = 0;
 
     constructor(private commonSvc: CommonService)
     { }
@@ -19,6 +21,7 @@ export class AmortizacionPagoComponent implements OnInit {
     ngOnInit(): void {
         if ( this.solicitudPagoFaseAmortizacion != null ) {
             this.valorAmortizacion = this.solicitudPagoFaseAmortizacion.valorAmortizacion !== undefined ? this.solicitudPagoFaseAmortizacion.valorAmortizacion : null
+            this.saldoAmortizar = this.vAmortizacionXproyecto?.valorPorAmortizar !== undefined ? this.vAmortizacionXproyecto?.valorPorAmortizar : null;
             this.commonSvc.getLlaveMenByContratacionProyectoId(this.contratacionProyectoId)
             .subscribe((data)=>{
               this.llaveMen = data[0]?.llaveMen;
