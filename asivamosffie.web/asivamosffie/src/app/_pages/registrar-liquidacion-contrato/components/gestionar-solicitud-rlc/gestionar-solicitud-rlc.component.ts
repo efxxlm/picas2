@@ -27,6 +27,7 @@ export class GestionarSolicitudRlcComponent implements OnInit, OnDestroy {
         observaciones: [ null, Validators.required ],
         urlSoporte : [ null, Validators.required ]
     });
+    contratacionId = 0;
     editorStyle = {
         height: '50px'
     };
@@ -74,9 +75,8 @@ export class GestionarSolicitudRlcComponent implements OnInit, OnDestroy {
         this.faseUnoPreconstruccionSvc.getContratacionByContratoId( this.activatedRoute.snapshot.params.id )
             .subscribe( getContratacionByContratoId => {
                 this.contrato = getContratacionByContratoId;
-                console.log( this.contrato );
                 const contratacion = this.contrato.contratacion;
-
+                this.contratacionId = this.contrato?.contratacionId;
                 this.addressForm.setValue(
                     {
                         fechaEnvioFirmaContratista: contratacion.fechaFirmaEnvioContratista !== undefined ? contratacion.fechaFirmaEnvioContratista : null,
@@ -129,7 +129,7 @@ export class GestionarSolicitudRlcComponent implements OnInit, OnDestroy {
                     if ( response === true ) {
                         this.onSubmit();
                     }
-                } 
+                }
             );
     }
 

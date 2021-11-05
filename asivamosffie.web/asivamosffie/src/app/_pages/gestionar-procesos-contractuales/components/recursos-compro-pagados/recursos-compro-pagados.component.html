@@ -1,0 +1,68 @@
+<mat-accordion>
+  <mat-expansion-panel class="expansion-style sub-expansion-blue">
+      <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title">
+              Contrato de obra &nbsp;<span *ngIf="contratoObra">{{ contratoObra.numeroContrato }}</span>
+          </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-accordion>
+          <mat-expansion-panel class="expansion-style sub-expansion-gray">
+              <mat-expansion-panel-header class="expansion-style--header">
+                  <mat-panel-title class="expansion-style--title ">
+                      Recursos comprometidos
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+              <app-acordion-recursos-compro-pagados *ngIf="contratoObra" [contratacionProyecto]="contratoObra.contratacion.contratacionProyecto" [contratoId]="contratoObra.contratoId"></app-acordion-recursos-compro-pagados>
+          </mat-expansion-panel>
+          <mat-expansion-panel class="expansion-style sub-expansion-gray">
+              <mat-expansion-panel-header class="expansion-style--header">
+                  <mat-panel-title class="expansion-style--title ">
+                      Contratistas
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+              <app-lista-contratistas *ngIf="contratoObra" [contratista]="contratoObra.contratacion.contratista" [valorPagadoContratista]="contratoObra.valorPagadoContratista"></app-lista-contratistas>
+          </mat-expansion-panel>
+          <mat-expansion-panel class="expansion-style sub-expansion-gray">
+              <mat-expansion-panel-header class="expansion-style--header">
+                  <mat-panel-title class="expansion-style--title ">
+                      Valor total ordenes de giro
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+              <app-tabla-valtotal-og *ngIf="tablaOrdenGiroValorTotalObra" [tablaOrdenGiroValorTotal]="tablaOrdenGiroValorTotalObra"></app-tabla-valtotal-og>
+          </mat-expansion-panel>
+      </mat-accordion>
+  </mat-expansion-panel>
+  <mat-expansion-panel class="expansion-style sub-expansion-blue">
+      <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title">
+              Contrato de interventoría &nbsp;<span *ngIf="contratoInterventoria">{{ contratoInterventoria.numeroContrato }}</span>
+          </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-accordion>
+          <mat-expansion-panel class="expansion-style sub-expansion-gray">
+              <mat-expansion-panel-header class="expansion-style--header">
+                  <mat-panel-title class="expansion-style--title ">
+                      Recursos comprometidos
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+              <app-acordion-recursos-compro-pagados *ngIf="contratoInterventoria" [contratacionProyecto]="contratoInterventoria.contratacion.contratacionProyecto" [contratoId]="contratoInterventoria.contratoId"></app-acordion-recursos-compro-pagados>
+          </mat-expansion-panel>
+          <mat-expansion-panel class="expansion-style sub-expansion-gray">
+              <mat-expansion-panel-header class="expansion-style--header">
+                  <mat-panel-title class="expansion-style--title ">
+                      Contratistas
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+              <app-lista-contratistas *ngIf="contratoInterventoria" [contratista]="contratoInterventoria.contratacion.contratista" [valorPagadoContratista]="contratoInterventoria.valorPagadoContratista"></app-lista-contratistas>
+          </mat-expansion-panel>
+          <mat-expansion-panel class="expansion-style sub-expansion-gray">
+              <mat-expansion-panel-header class="expansion-style--header">
+                  <mat-panel-title class="expansion-style--title ">
+                      Valor total ordenes de giro
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+              <app-tabla-valtotal-og  *ngIf="tablaOrdenGiroValorTotalInterventoria" [tablaOrdenGiroValorTotal]="tablaOrdenGiroValorTotalInterventoria"></app-tabla-valtotal-og>
+          </mat-expansion-panel>
+      </mat-accordion>
+  </mat-expansion-panel>
+</mat-accordion>

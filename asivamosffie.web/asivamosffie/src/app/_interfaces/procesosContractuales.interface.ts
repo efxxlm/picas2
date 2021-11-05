@@ -105,6 +105,8 @@ interface ContratacionProyecto2 {
   contratacionProyectoAportante: any[];
   sesionSolicitudObservacionProyecto: any[];
   ejecucionPresupuestal?: any;
+  cumpleCondicionesTai?: boolean;
+  balanceFinancieroId?: number;
 }
 
 interface Proyecto {

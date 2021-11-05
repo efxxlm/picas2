@@ -136,6 +136,31 @@
             color: #3b3b3bec;
         }
     }
+    &.sub-expansion-blue {
+      .expansion-style--title {
+          background-color: $mainColor !important;
+          font-weight: 500;
+          color: #ffffff;
+          padding: .1em 1.5em;
+      }
+
+      span.mat-expansion-indicator::after{
+          color: $mainColor !important;
+      }
+    }
+
+    &.sub-expansion-gray {
+      .expansion-style--title {
+          background-color: #d1d1d1 !important;
+          font-weight: 500;
+          color: #0b254f;
+          padding: .1em 1.5em;
+      }
+
+      span.mat-expansion-indicator::after{
+        color: #d1d1d1 !important;
+      }
+    }
 }
 
 span.mat-expansion-indicator::after {

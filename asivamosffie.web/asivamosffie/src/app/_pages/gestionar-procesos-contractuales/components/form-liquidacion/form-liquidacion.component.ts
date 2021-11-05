@@ -101,12 +101,23 @@ export class FormLiquidacionComponent implements OnInit {
             }
           });
           //balance
+          this.financialBalanceService.getDataByProyectoId(r.proyectoId)
+          .subscribe( getDataByProyectoId => {
+              if( getDataByProyectoId.length > 0 ){
+                  this.data = getDataByProyectoId[0];
+                  if(this.data != null){
+                    r.cumpleCondicionesTai = this.data.cumpleCondicionesTai;
+                    if(this.data.balanceFinanciero.length > 0)
+                      r.balanceFinancieroId = this.data.balanceFinanciero[0].balanceFinancieroId;
+                  }
+              }
+          });
           //ejecución financiera
+          let dataTableEjpresupuestal: any[] = [];
+          let dataTableEjfinanciera: any[] = [];
           this.financialBalanceService.getEjecucionFinancieraXProyectoId(r.proyectoId).subscribe(data => {
-            let dataTableEjpresupuestal: any = null;
-            let dataTableEjfinanciera: any = null;
             data[0].forEach(element => {
-              dataTableEjpresupuestal = {
+              dataTableEjpresupuestal.push({
                 facturadoAntesImpuestos: element.facturadoAntesImpuestos,
                 nombre: element.nombre,
                 porcentajeEjecucionPresupuestal: element.porcentajeEjecucionPresupuestal,
@@ -114,19 +125,18 @@ export class FormLiquidacionComponent implements OnInit {
                 saldo: element.saldo,
                 tipoSolicitudCodigo: element.tipoSolicitudCodigo,
                 totalComprometido: element.totalComprometido
-              }
+              });
             });
             data[1].forEach(element => {
-              dataTableEjfinanciera = {
+              dataTableEjfinanciera.push({
                 nombre: element.nombre,
                 ordenadoGirarAntesImpuestos: element.ordenadoGirarAntesImpuestos,
                 porcentajeEjecucionFinanciera: element.porcentajeEjecucionFinanciera,
                 proyectoId: element.proyectoId,
                 saldo: element.saldo,
                 totalComprometido: element.totalComprometido
-              }
+              });
             });
-            console.log(dataTableEjfinanciera,dataTableEjpresupuestal);
             const element = {
               dataTableEjpresupuestal: dataTableEjpresupuestal,
               dataTableEjfinanciera: dataTableEjfinanciera
@@ -134,7 +144,6 @@ export class FormLiquidacionComponent implements OnInit {
             r.ejecucionPresupuestal = element;
           });
         });
-        console.log(this.contratacion.contratacionProyecto);
       }
       let rutaDocumento;
       if ( respuesta?.urlSoporteGestionar !== undefined ) {

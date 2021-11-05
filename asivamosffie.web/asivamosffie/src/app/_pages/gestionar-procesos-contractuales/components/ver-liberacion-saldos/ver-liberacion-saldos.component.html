@@ -1,0 +1,10 @@
+<mat-accordion *ngFor="let drp of drps">
+    <mat-expansion-panel class="expansion-style sub-expansion-gray">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                  {{ drp.numeroDrp }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-tabla-liberacion-saldo [tablaAportantes]="drp.aportantesGrid" [balanceFinanciero]="drp.balanceFinanciero"></app-tabla-liberacion-saldo>
+    </mat-expansion-panel>
+</mat-accordion>

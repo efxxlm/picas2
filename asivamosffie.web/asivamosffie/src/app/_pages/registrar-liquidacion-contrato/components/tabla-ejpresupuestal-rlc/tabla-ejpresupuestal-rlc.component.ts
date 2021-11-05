@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -8,36 +8,48 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./tabla-ejpresupuestal-rlc.component.scss']
 })
 export class TablaEjpresupuestalRlcComponent implements OnInit {
+  @Input() data: any[] = [];
+
   dataSource = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   displayedColumns: string[] = [
-    'componente',
+    'nombre',
     'totalComprometido',
-    'facturadoAntesdeImpuestos',
+    'facturadoAntesImpuestos',
     'saldo',
     'porcentajeEjecucionPresupuestal'
   ];
-  dataTable: any[] = [
-    {
-      componente: 'Obra',
-      totalComprometido: '$65.000.000',
-      facturadoAntesdeImpuestos: '$40.000.000',
-      saldo: '$25.000.000',
-      porcentajeEjecucionPresupuestal:'65%'
-    },
-    {
-      componente: 'Interventoría',
-      totalComprometido: '$40.000.000',
-      facturadoAntesdeImpuestos: '$28.000.000',
-      saldo: '$12.000.000',
-      porcentajeEjecucionPresupuestal:'70%'
-    }
-  ];
-  constructor() { }
+  dataTable: any[] = [];
+  total: any;
+
+  constructor() {}
 
   ngOnInit(): void {
+    this.loadTableData();
+  }
+
+  loadTableData() {
+    if (this.data.length > 0) {
+      this.dataTable = this.data;
+      this.total = {
+        totalComprometido: 0,
+        facturadoAntesImpuestos: 0,
+        saldo: 0,
+        porcentajeEjecucionPresupuestal: 0
+      };
+      this.dataTable.forEach(element => {
+        this.total.totalComprometido += element.totalComprometido;
+        this.total.facturadoAntesImpuestos = this.total.facturadoAntesImpuestos + element.facturadoAntesImpuestos;
+        this.total.saldo = this.total.saldo + element.saldo;
+        this.total.porcentajeEjecucionPresupuestal =
+          this.total.porcentajeEjecucionPresupuestal + element.porcentajeEjecucionPresupuestal;
+      });
+      if (this.total.porcentajeEjecucionPresupuestal > 0)
+        this.total.porcentajeEjecucionPresupuestal = this.total.porcentajeEjecucionPresupuestal / 2;
+    }
     this.loadDataSource();
   }
+
   loadDataSource() {
     this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.sort = this.sort;

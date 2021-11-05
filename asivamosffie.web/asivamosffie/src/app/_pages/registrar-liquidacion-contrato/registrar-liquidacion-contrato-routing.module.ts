@@ -10,6 +10,7 @@ import { GestionarSolicitudRlcComponent } from "./components/gestionar-solicitud
 import { RecursosComproPagadosRlcComponent } from "./components/recursos-compro-pagados-rlc/recursos-compro-pagados-rlc.component";
 import { RegistrarLiquidacionContratoComponent } from "./components/registrar-liquidacion-contrato/registrar-liquidacion-contrato.component";
 import { TrasladoRecursosRlcComponent } from "./components/traslado-recursos-rlc/traslado-recursos-rlc.component";
+import { VerLiberacionSaldosComponent } from "./components/ver-liberacion-saldos/ver-liberacion-saldos.component";
 
 export const customCurrencyMaskConfig = {
   align: "right",
@@ -39,28 +40,12 @@ const routes: Routes = [
     component: DetalleBalanceFinancieroRlcComponent
   },
   {
-    path: 'recursosComprometidos/:id',
-    component: RecursosComproPagadosRlcComponent
-  },
-  {
     path: 'detalleOrdengiro/:id',
     component: DetalleOgRlcComponent
   },
   {
-    path: 'ejecucionFinanciera/:id',
-    component: EjecucionFinancieraRlcComponent
-  },
-  {
-    path: 'trasladoRecursos/:id',
-    component: TrasladoRecursosRlcComponent
-  },
-  {
     path: 'detalleTraslado/:id',
     component: DetalleTrasladoRlcComponent
-  },
-  {
-    path: 'detalleInformeFinal/:id/:idContratacionProyecto',
-    component: DetalleInformeFinalRlcComponent
   },
   {
     path: 'verDetalleEditarSolicitud/:id',
@@ -69,8 +54,80 @@ const routes: Routes = [
   {
     path: 'verDetalleSolicitud/:id',
     component: GestionarSolicitudRlcComponent
-  }
-]; 
+  },
+  {
+    path: 'gestionarSolicitud/:id/verDetalleBalance/:proyectoId',
+    component: DetalleBalanceFinancieroRlcComponent
+  },
+  {
+    path: 'verDetalleEditarSolicitud/:id/verDetalleBalance/:proyectoId',
+    component: DetalleBalanceFinancieroRlcComponent
+  },
+  {
+    path: 'verDetalleSolicitud/:id/verDetalleBalance/:proyectoId',
+    component: DetalleBalanceFinancieroRlcComponent
+  },
+  {
+    path: 'gestionarSolicitud/:id/verDetalleBalance/:proyectoId/recursosComprometidos',
+    component: RecursosComproPagadosRlcComponent
+  },
+  {
+    path: 'verDetalleEditarSolicitud/:id/verDetalleBalance/:proyectoId/recursosComprometidos',
+    component: RecursosComproPagadosRlcComponent
+  },
+  {
+    path: 'verDetalleSolicitud/:id/verDetalleBalance/:proyectoId/recursosComprometidos',
+    component: RecursosComproPagadosRlcComponent
+  },
+  {
+    path: 'gestionarSolicitud/:id/verDetalleBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraRlcComponent
+  },
+  {
+    path: 'verDetalleEditarSolicitud/:id/verDetalleBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraRlcComponent
+  },
+  {
+    path: 'verDetalleSolicitud/:id/verDetalleBalance/:proyectoId/ejecucionFinanciera',
+    component: EjecucionFinancieraRlcComponent
+  },
+  {
+    path: 'gestionarSolicitud/:id/verDetalleBalance/:proyectoId/trasladoRecursos',
+    component: TrasladoRecursosRlcComponent
+  },
+  {
+    path: 'verDetalleEditarSolicitud/:id/verDetalleBalance/:proyectoId/trasladoRecursos',
+    component: TrasladoRecursosRlcComponent
+  },
+  {
+    path: 'verDetalleSolicitud/:id/verDetalleBalance/:proyectoId/trasladoRecursos',
+    component: TrasladoRecursosRlcComponent
+  },
+  {
+    path: 'gestionarSolicitud/:id/verDetalleBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'verDetalleEditarSolicitud/:id/verDetalleBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'verDetalleSolicitud/:id/verDetalleBalance/:proyectoId/liberacionSaldo',
+    component: VerLiberacionSaldosComponent
+  },
+  {
+    path: 'gestionarSolicitud/:id/verDetalleInformeFinal/:proyectoId',
+    component: DetalleInformeFinalRlcComponent
+  },
+  {
+    path: 'verDetalleEditarSolicitud/:id/verDetalleInformeFinal/:proyectoId',
+    component: DetalleInformeFinalRlcComponent
+  },
+  {
+    path: 'verDetalleSolicitud/:id/verDetalleInformeFinal/:proyectoId',
+    component: DetalleInformeFinalRlcComponent
+  },
+];
 @NgModule({
   imports: [RouterModule.forChild(routes),NgxCurrencyModule.forRoot(customCurrencyMaskConfig)],
   exports: [RouterModule]

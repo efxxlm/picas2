@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-lista-contratistas-rlc',
@@ -6,6 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./lista-contratistas-rlc.component.scss']
 })
 export class ListaContratistasRlcComponent implements OnInit {
+
+  @Input() contratista: any;
+  @Input() valorPagadoContratista: any;
 
   constructor() { }
 

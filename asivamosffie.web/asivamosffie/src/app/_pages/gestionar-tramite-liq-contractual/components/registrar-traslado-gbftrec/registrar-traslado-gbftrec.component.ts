@@ -26,20 +26,7 @@ export class RegistrarTrasladoGbftrecComponent implements OnInit {
       'valor',
       'saldo'
     ];
-    dataTable: any[] = [
-      {
-        drp: '1',
-        numDRP: 'IP_00090',
-        valor: '$100.000.000',
-        saldo: '$100.000.000'
-      },
-      {
-        drp: '2',
-        numDRP: 'IP_00123',
-        valor: '$5.000.000',
-        saldo: '$5.000.000'
-      },
-    ];
+    dataTable: any[] = [];
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -62,13 +49,13 @@ export class RegistrarTrasladoGbftrecComponent implements OnInit {
 
     async getProyectoId() {
         this.proyectoId = this.activatedRoute.snapshot.params.proyectoId;
-        const getDataByProyectoId = await this.balanceSvc.getDataByProyectoId( 557 /* this.proyectoId */ ).toPromise()
+        const getDataByProyectoId = await this.balanceSvc.getDataByProyectoId( this.proyectoId ).toPromise()
         let balanceFinancieroTraslado = []
 
         if( getDataByProyectoId.length > 0 ){
             this.proyecto = getDataByProyectoId[0]
             console.log( this.proyecto )
-            const balanceFinanciero: any = await this.balanceSvc.getBalanceFinanciero( 557 /* this.proyectoId */ ).toPromise()
+            const balanceFinanciero: any = await this.balanceSvc.getBalanceFinanciero( this.proyectoId ).toPromise()
             balanceFinancieroTraslado = balanceFinanciero.balanceFinancieroTraslado
 
             const traslado = balanceFinancieroTraslado.find( traslado => traslado.numeroOrdenGiro === this.numeroOrdenGiro )

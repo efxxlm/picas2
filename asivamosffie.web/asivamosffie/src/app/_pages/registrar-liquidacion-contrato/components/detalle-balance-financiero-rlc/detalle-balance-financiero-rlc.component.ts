@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
+import { ListaMenuSolicitudLiquidacion, ListaMenuSolicitudLiquidacionId, TipoObservacionLiquidacionContrato, TipoObservacionLiquidacionContratoCodigo } from 'src/app/_interfaces/estados-solicitud-liquidacion-contractual';
 
 @Component({
   selector: 'app-detalle-balance-financiero-rlc',
@@ -7,22 +9,56 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./detalle-balance-financiero-rlc.component.scss']
 })
 export class DetalleBalanceFinancieroRlcComponent implements OnInit {
-  idBalance: any;
-  constructor(private activatedRoute: ActivatedRoute, private router: Router) { }
+  estaEditando = false;
+  contratacionId: number;
+  balanceFinancieroId: number;//definir
+  listaMenu: ListaMenuSolicitudLiquidacion = ListaMenuSolicitudLiquidacionId;
+  listaTipoObservacionLiquidacionContratacion: TipoObservacionLiquidacionContrato = TipoObservacionLiquidacionContratoCodigo;
+  esRegistroNuevo: boolean;
+  esVerDetalle: boolean;
+  data : any;
+  proyectoId: number;
+  cumpleCondicionesTai: boolean = false;
 
-  ngOnInit(): void {
-    this.activatedRoute.params.subscribe(param => {
-      console.log(param.id);
-      this.idBalance = param.id;
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private financialBalanceService: FinancialBalanceService
+  ) {
+    this.route.params.subscribe((params: Params) => {
+      this.contratacionId = params.id;
+      this.proyectoId = params.proyectoId;
     });
   }
-  irRecursosComprometidos(id){
-    this.router.navigate(['/registrarLiquidacionContrato/recursosComprometidos', id]);
+  ngOnInit(): void {
+    this.getBalanceByProyectoId(this.proyectoId);
   }
-  verEjecucionFinanciera(id){
-    this.router.navigate(['/registrarLiquidacionContrato/ejecucionFinanciera', id]);
+
+  getBalanceByProyectoId(proyectoId: number) {
+    this.financialBalanceService.getDataByProyectoId(proyectoId)
+    .subscribe( getDataByProyectoId => {
+        if( getDataByProyectoId.length > 0 ){
+            this.data = getDataByProyectoId[0];
+            if(this.data != null){
+              this.cumpleCondicionesTai = this.data.cumpleCondicionesTai;
+              if(this.data.balanceFinanciero.length > 0)
+                this.balanceFinancieroId = this.data.balanceFinanciero[0].balanceFinancieroId;
+            }
+        }
+    });
   }
-  verTrasladoRecursos(id){
-    this.router.navigate(['/registrarLiquidacionContrato/trasladoRecursos', id]);
+
+  irRecursosComprometidos(){
+    this.router.navigate([`${ this.router.url }/recursosComprometidos`]);
   }
+  verEjecucionFinanciera(){
+    this.router.navigate([`${ this.router.url }/ejecucionFinanciera`]);
+  }
+  verTrasladoRecursos(){
+    this.router.navigate([`${ this.router.url }/trasladoRecursos`]);
+  }
+  verLiberacionSaldo(){
+    this.router.navigate([`${ this.router.url }/liberacionSaldo`]);
+  }
+
 }

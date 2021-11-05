@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-traslado-recursos-rlc',
@@ -11,37 +11,61 @@ import { Router } from '@angular/router';
   styleUrls: ['./traslado-recursos-rlc.component.scss']
 })
 export class TrasladoRecursosRlcComponent implements OnInit {
-  dataSource = new MatTableDataSource();
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  displayedColumns: string[] = [
-    'fechaTraslado',
-    'numTraslado',
-    'numContrato',
-    'numOrdenGiro',
-    'valorTraslado',
-    'estadoTraslado',
-    'gestion'
-  ];
-  dataTable: any[] = [{
-    fechaTraslado: '09/08/2021',
-    numTraslado: 'Tras_001',
-    numContrato: 'N000000',
-    numOrdenGiro: 'ODG_obra_222',
-    valorTraslado: '$5.000.000',
-    estadoTraslado: 'Con registro',
-    id: 1
-  }];
-  constructor(public dialog: MatDialog,private router: Router) { }
+  proyecto: any;
+    proyectoId = 0;
+    esRegistroNuevo = false;
+    esVerDetalle = true;
+    numeroOrdenGiro: string;
+    numeroTraslado: string;
+    dataSource = new MatTableDataSource();
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    displayedColumns: string[] = [
+      'drp',
+      'numDRP',
+      'valor',
+      'saldo'
+    ];
+    dataTable: any[] = [];
 
-  ngOnInit(): void {
-    this.loadTable();
-  }
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private routes: Router,
+        private location: Location,
+        private balanceSvc: FinancialBalanceService )
+    {
+        this.getProyectoId()
+        this.numeroOrdenGiro = this.activatedRoute.snapshot.params.numeroOrdenGiro
+    }
 
-  loadTable(){
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.sort = this.sort;
-  } 
-  verDetalleTraslado(id){
-    this.router.navigate(['/registrarLiquidacionContrato/detalleTraslado', id]);
-  }
+    ngOnInit(): void {
+        this.loadDataSource();
+    }
+
+    loadDataSource() {
+        this.dataSource = new MatTableDataSource(this.dataTable);
+        this.dataSource.sort = this.sort;
+    }
+
+    async getProyectoId() {
+        this.proyectoId = this.activatedRoute.snapshot.params.proyectoId;
+        const getDataByProyectoId = await this.balanceSvc.getDataByProyectoId( this.proyectoId ).toPromise()
+        let balanceFinancieroTraslado = []
+
+        if( getDataByProyectoId.length > 0 ){
+            this.proyecto = getDataByProyectoId[0]
+            console.log( this.proyecto )
+            const balanceFinanciero: any = await this.balanceSvc.getBalanceFinanciero( this.proyectoId ).toPromise()
+            balanceFinancieroTraslado = balanceFinanciero.balanceFinancieroTraslado
+
+            const traslado = balanceFinancieroTraslado.find( traslado => traslado.numeroOrdenGiro === this.numeroOrdenGiro )
+
+            if ( traslado !== undefined ) {
+                this.numeroTraslado = traslado.numeroTraslado
+            }
+        }
+    }
+
+    getRutaAnterior() {
+        this.location.back();
+    }
 }

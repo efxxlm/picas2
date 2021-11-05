@@ -33,9 +33,8 @@ export class TablaInformeFinalRlcComponent implements OnInit {
     { }
 
     async ngOnInit() {
-
-        for( const contratacionProyecto of this.contrato.contratacion.contratacionProyecto ) {
-            const proyecto = await this.registerContractualLiquidationRequestService.gridInformeFinal( contratacionProyecto.contratacionId, this.listaMenu.registrarSolicitudLiquidacionContratacion ).toPromise();
+            console.log(this.contrato);
+            const proyecto = await this.registerContractualLiquidationRequestService.gridInformeFinal( this.contrato?.contratacionId, this.listaMenu.registrarSolicitudLiquidacionContratacion ).toPromise();
 
             if ( proyecto !== null ) {
                 proyecto.forEach( registro => {
@@ -48,12 +47,11 @@ export class TablaInformeFinalRlcComponent implements OnInit {
                         sede: registro.sede,
                         estadoValidacion: registro.registroCompleto ? 'Con validación' : 'Sin validación',
                         registroCompleto: registro.registroCompleto ? 'Completo' : 'Incompleto',
-                        contratacionId: contratacionProyecto.contratacionId,
+                        contratacionId: this.contrato?.contratacionId,
                         proyectoId: registro.proyectoId
                     });
                 } )
             }
-        }
 
         this.dataSource = new MatTableDataSource( this.datosTabla );
     }

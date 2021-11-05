@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,6 +10,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./tabla-valtotal-og-rlc.component.scss']
 })
 export class TablaValtotalOgRlcComponent implements OnInit {
+
+  @Input() tablaOrdenGiroValorTotal: any[] = [];
+
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -21,39 +24,19 @@ export class TablaValtotalOgRlcComponent implements OnInit {
     'reteGarantiaAPagar',
     'otrosDescuentos',
     'aPagarAntesImpuestos',
-    'gestion'
+    //'gestion'
   ];
-  dataTable: any[] = [
-    {
-      numOrdenGiro: 'ODG_Obra_001',
-      contratista: 'Construir futuro',
-      facturado: '$67.000.000',
-      ansAplicado: '$500.000',
-      reteGarantiaAPagar: '$3.500.000',
-      otrosDescuentos: '$1.100.000',
-      aPagarAntesImpuestos: '$61.890.000',
-      id: 1
-    },
-    {
-      numOrdenGiro: 'ODG_Obra_326',
-      contratista: 'Contratista 2',
-      facturado: '$30.000.000',
-      ansAplicado: '$100.000',
-      reteGarantiaAPagar: '$500.000',
-      otrosDescuentos: '$810.000',
-      aPagarAntesImpuestos: '$26.590.000',
-      id: 2
-    }
-  ];
+
   constructor(
     private routes: Router
   ) { }
 
   ngOnInit(): void {
-    this.loadDataSource();
+    if(this.tablaOrdenGiroValorTotal.length > 0){
+      this.dataSource.data = this.tablaOrdenGiroValorTotal;
+    }
   }
   loadDataSource() {
-    this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';

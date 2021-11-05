@@ -72,20 +72,14 @@ namespace asivamosffie.services
                                   RegistroCompletoLiquidacion = ValidateCompleteRecordContractSettlement(pContratacion)
                               });
 
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
-                                               (int)enumeratorMenu.Registrar_liquidacion_contrato,
-                                               GeneralCodes.OperacionExitosa,
-                                               idAccion,
-                                               pContratacion.UsuarioModificacion,
-                                               ConstantCommonMessages.ContractSettlement.CREAR_LIQUIDACION)
-                    };
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_liquidacion_contrato, GeneralCodes.OperacionExitosa, idAccion, pContratacion.UsuarioCreacion, ConstantCommonMessages.ContractSettlement.CREAR_LIQUIDACION)
+                };
 
             }
             catch (Exception ex)
@@ -161,20 +155,14 @@ namespace asivamosffie.services
                                   FechaModificacion = DateTime.Now
                               });
 
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
-                                               (int)enumeratorMenu.Registrar_liquidacion_contrato,
-                                               GeneralCodes.OperacionExitosa,
-                                               idAccion,
-                                               contratacion.UsuarioModificacion,
-                                               ConstantCommonMessages.ContractSettlement.CREAR_LIQUIDACION)
-                    };
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_liquidacion_contrato, GeneralCodes.OperacionExitosa, idAccion, user, ConstantCommonMessages.ContractSettlement.CREAR_LIQUIDACION)
+                };
 
             }
             catch (Exception ex)

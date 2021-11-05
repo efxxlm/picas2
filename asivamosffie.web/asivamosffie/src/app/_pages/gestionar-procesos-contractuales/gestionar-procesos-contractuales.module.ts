@@ -18,7 +18,6 @@ import { TablaRecursosAportantesComponent } from './components/tabla-recursos-ap
 import { FormRecursosPagadosComponent } from './components/form-recursos-pagados/form-recursos-pagados.component';
 import { TablaRecursosPagadosComponent } from './components/tabla-recursos-pagados/tabla-recursos-pagados.component';
 import { TablaOtrosDescuentosComponent } from './components/tabla-otros-descuentos/tabla-otros-descuentos.component';
-import { FormEjecucionFinancieraComponent } from './components/form-ejecucion-financiera/form-ejecucion-financiera.component';
 import { FormRegistroTramiteComponent } from './components/form-registro-tramite/form-registro-tramite.component';
 import { TablaSolicitudesEnviadasComponent } from './components/tabla-solicitudes-enviadas/tabla-solicitudes-enviadas.component';
 import { DomSafePipe } from '../../_pipes/dom-safe.pipe';
@@ -27,6 +26,15 @@ import { FormContratacionRegistradosComponent } from './components/form-contrata
 import { TablaInformeAnexosComponent } from './components/tabla-informe-anexos/tabla-informe-anexos.component';
 import { TablaSolicitudesDevueltasComponent } from './components/tabla-solicitudes-devueltas/tabla-solicitudes-devueltas.component';
 import { DialogObservacionesComponent } from './components/dialog-observaciones/dialog-observaciones.component';
+import { TablaFuentesUsosComponent } from './components/tabla-fuentes-usos/tabla-fuentes-usos.component';
+import { TablaValtotalOgComponent } from './components/tabla-valtotal-og/tabla-valtotal-og.component';
+import { ListaContratistasComponent } from './components/lista-contratistas/lista-contratistas.component';
+import { AcordionRecursosComproPagadosComponent } from './components/acordion-recursos-compro-pagados/acordion-recursos-compro-pagados.component';
+import { RecursosComproPagadosComponent } from './components/recursos-compro-pagados/recursos-compro-pagados.component';
+import { TablaEjpresupuestalComponent } from './components/tabla-ejpresupuestal/tabla-ejpresupuestal.component';
+import { TablaEjfinancieraComponent } from './components/tabla-ejfinanciera/tabla-ejfinanciera.component';
+import { TablaLiberacionSaldoComponent } from './components/tabla-liberacion-saldo/tabla-liberacion-saldo.component';
+import { VerLiberacionSaldosComponent } from './components/ver-liberacion-saldos/ver-liberacion-saldos.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +51,6 @@ import { DialogObservacionesComponent } from './components/dialog-observaciones/
     FormRecursosPagadosComponent,
     TablaRecursosPagadosComponent,
     TablaOtrosDescuentosComponent,
-    FormEjecucionFinancieraComponent,
     FormRegistroTramiteComponent,
     TablaRegistradosComponent,
     FormContratacionRegistradosComponent,
@@ -51,7 +58,16 @@ import { DialogObservacionesComponent } from './components/dialog-observaciones/
     DomSafePipe,
     TablaInformeAnexosComponent,
     TablaSolicitudesDevueltasComponent,
-    DialogObservacionesComponent
+    DialogObservacionesComponent,
+    TablaEjfinancieraComponent,
+    TablaEjpresupuestalComponent,
+    RecursosComproPagadosComponent,
+    AcordionRecursosComproPagadosComponent,
+    ListaContratistasComponent,
+    TablaValtotalOgComponent,
+    TablaFuentesUsosComponent,
+    TablaLiberacionSaldoComponent,
+    VerLiberacionSaldosComponent
   ],
   imports: [
     CommonModule,
