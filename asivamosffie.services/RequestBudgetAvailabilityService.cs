@@ -294,7 +294,7 @@ namespace asivamosffie.services
                                     nombreAportante = getNombreAportante(confinanciacion);
                                     var componenteAp = _context.ComponenteAportante.Where(x => x.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId == ListDP.ContratacionId
                                     && x.ContratacionProyectoAportante.ContratacionProyecto.ProyectoId == proyectospp.ProyectoId &&
-                                    x.ContratacionProyectoAportante.CofinanciacionAportanteId == confinanciacion.CofinanciacionAportanteId)
+                                    x.ContratacionProyectoAportante.CofinanciacionAportanteId == confinanciacion.CofinanciacionAportanteId && x.Eliminado != true)
                                         .Include(x => x.ComponenteUso).ToList();
                                     foreach (var compAp in componenteAp)
                                     {

@@ -1674,7 +1674,7 @@ namespace asivamosffie.services
                 if (esNovedad != true)
                 {
                     var componenteAp = _context.ComponenteAportante
-                        .Where(x => x.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId == pDisponibilidad.ContratacionId)
+                        .Where(x => x.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId == pDisponibilidad.ContratacionId && x.Eliminado != true)
                         .Include(x => x.ComponenteUso)
                         .Include(x => x.ContratacionProyectoAportante)
                         .ThenInclude(x => x.ContratacionProyecto)
