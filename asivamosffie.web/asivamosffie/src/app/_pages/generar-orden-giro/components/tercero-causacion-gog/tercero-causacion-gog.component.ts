@@ -244,7 +244,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                     }
 
                         // Get cantidad de aportantes para limitar cuantos aportantes se pueden agregar en el formulario
-                        this.cantidadAportantes = dataAportantes.listaTipoAportante.length;
+                        this.cantidadAportantes = dataAportantes.listaNombreAportante.length;
                         // Get data del guardado de tercero de causacion
                         for ( const criterio of listCriterios ) {
                           let totalCompleto  = 0;
@@ -1243,8 +1243,6 @@ export class TerceroCausacionGogComponent implements OnInit {
                 } )
             } );
 
-            console.log(this.valorNetoGiro);
-
             this.criterios.controls.forEach( ( criterioControl, indexCriterio ) => {
                 let terceroCausacion: any;
                 this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
@@ -1255,7 +1253,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                     }
 
                     terceroCausacion = {
-                        contratacionProyectoId: this.solicitudPagoFase.contratacionProyectoId,
+                        contratacionProyectoId: this.contratacionProyectoId,
                         ordenGiroDetalleTerceroCausacionId: conceptoControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
                         valorNetoGiro: this.valorNetoGiro,
                         ordenGiroDetalleId: this.ordenGiroDetalleId,
