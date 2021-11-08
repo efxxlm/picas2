@@ -655,9 +655,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                     totalValueAportante += aportanteControl.get( 'valorDescuento' ).value;
                 }
             } )
-
             if (
-                value > this.getValorAportante(this.getConceptos( index ).controls[ jIndex ].get('conceptoPagoCriterio').value, this.getAportantes( index, jIndex ).controls[ kIndex ].get('tipoAportante').value.aportanteId)
+                value > this.getValorAportante(this.getConceptos( index ).controls[ jIndex ].get('conceptoPagoCriterio').value, this.getAportantes( index, jIndex ).controls[ kIndex ].get('nombreAportante').value.cofinanciacionAportanteId)
             ) {
                 this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
                 this.openDialog( '', `<b>El valor facturado por el concepto para el aportante no puede ser mayor al valor aportante para el concepto.</b>` )
