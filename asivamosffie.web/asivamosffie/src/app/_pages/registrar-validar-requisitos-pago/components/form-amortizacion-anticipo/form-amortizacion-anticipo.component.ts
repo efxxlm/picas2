@@ -91,11 +91,13 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
         if (this.contrato.vAmortizacionXproyecto.length > 0) {
             const proyectoId = this.contrato.vAmortizacionXproyecto.find(proyectoId => proyectoId.contratacionProyectoId === codigo);
             if (proyectoId !== undefined) {
-                if(this.esVerDetalle != true){
+              console.log(proyectoId.valorPorAmortizar);
+                return proyectoId.valorPorAmortizar;
+                /*if(this.esVerDetalle != true){
                     return proyectoId.valorAnticipo;
                 }else{
                     return proyectoId.valorPorAmortizar;
-                }
+                }*/
             }
         }
     }
@@ -223,6 +225,9 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
         if(this.addressForm.get('valorAmortizacion').value > 0){
           this.estadoAmortizacion.emit('completo');
         }
+        console.log(this.bloquearValorAmortizacion);
+        if(this.bloquearValorAmortizacion === true)
+          this.addressForm.get('valorAmortizacion').disable();
     }
 
     validateNumberKeypress(event: KeyboardEvent) {
@@ -248,11 +253,13 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
     }
 
     validateValueAmortizacion(value: any) {
-      if (value > this.valorPorAmortizar?.value) {
+      if(!this.bloquearValorAmortizacion){
+        if (value > this.valorPorAmortizar?.value) {
           this.addressForm.get('valorAmortizacion').setValue(null);
           this.openDialog('', `<b>El valor de la amortización no puede ser superior al saldo del anticipo.</b>`);
           return;
         }
+      }
     }
 
     onSubmit() {

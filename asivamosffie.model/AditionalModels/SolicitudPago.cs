@@ -52,6 +52,9 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public List<VAmortizacionXproyecto> VAmortizacionXproyecto { get; set; }
+
+        [NotMapped]
+        public dynamic TablaDRPODG { get; set; }
     }
 
 }

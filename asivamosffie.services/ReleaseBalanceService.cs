@@ -91,20 +91,23 @@ namespace asivamosffie.services
                                     da.SaldoPresupuestal = cuh.Saldo;
                             }
                         });
-                        drps.Add(new
+                        if (datosAportante.Count() > 0)
                         {
-                            DisponibilidadPresupuestalHistoricoId = dpph != null ? dpph.DisponibilidadPresupuestalHistoricoId : 0,
-                            NovedadContractualRegistroPresupuestalHistoricoId = 0,
-                            drp.NumeroDrp,
-                            drp.DisponibilidadPresupuestalId,
-                            NovedadContractualRegistroPresupuestalId = 0,
-                            cp.ProyectoId,
-                            cp.ContratacionId,
-                            AportantesGrid = datosAportante,
-                            drp.ValorSolicitud,
-                            BalanceFinanciero = balanceFinanciero,
-                            EsNovedad = false
-                        });
+                            drps.Add(new
+                            {
+                                DisponibilidadPresupuestalHistoricoId = dpph != null ? dpph.DisponibilidadPresupuestalHistoricoId : 0,
+                                NovedadContractualRegistroPresupuestalHistoricoId = 0,
+                                drp.NumeroDrp,
+                                drp.DisponibilidadPresupuestalId,
+                                NovedadContractualRegistroPresupuestalId = 0,
+                                cp.ProyectoId,
+                                cp.ContratacionId,
+                                AportantesGrid = datosAportante,
+                                drp.ValorSolicitud,
+                                BalanceFinanciero = balanceFinanciero,
+                                EsNovedad = false
+                            });
+                        }
                         //Novedades
                         List<NovedadContractualRegistroPresupuestal> drpNs = _context.NovedadContractualRegistroPresupuestal
                         .Where(r => r.Eliminado != true && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId && r.NumeroDrp != null && (r.EstadoSolicitudCodigo == "5" || r.EstadoSolicitudCodigo == "8")).ToList();
@@ -161,20 +164,23 @@ namespace asivamosffie.services
                                             da.SaldoPresupuestal = cuhn.Saldo;
                                     }
                                 });
-                                drps.Add(new
+                                if (datosAportanteNovedad.Count() > 0)
                                 {
-                                    DisponibilidadPresupuestalHistoricoId = 0,
-                                    NovedadContractualRegistroPresupuestalHistoricoId = dpphN != null ? dpphN.NovedadContractualRegistroPresupuestalHistoricoId : 0,
-                                    drpN.NumeroDrp,
-                                    drpN.DisponibilidadPresupuestalId,
-                                    drpN.NovedadContractualRegistroPresupuestalId,
-                                    cp.ProyectoId,
-                                    cp.ContratacionId,
-                                    AportantesGrid = datosAportanteNovedad,
-                                    drpN.ValorSolicitud,
-                                    BalanceFinanciero = balanceFinanciero,
-                                    EsNovedad = true
-                                });
+                                    drps.Add(new
+                                    {
+                                        DisponibilidadPresupuestalHistoricoId = 0,
+                                        NovedadContractualRegistroPresupuestalHistoricoId = dpphN != null ? dpphN.NovedadContractualRegistroPresupuestalHistoricoId : 0,
+                                        drpN.NumeroDrp,
+                                        drpN.DisponibilidadPresupuestalId,
+                                        drpN.NovedadContractualRegistroPresupuestalId,
+                                        cp.ProyectoId,
+                                        cp.ContratacionId,
+                                        AportantesGrid = datosAportanteNovedad,
+                                        drpN.ValorSolicitud,
+                                        BalanceFinanciero = balanceFinanciero,
+                                        EsNovedad = true
+                                    });
+                                }
                             }
                         }
                     }

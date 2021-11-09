@@ -755,7 +755,7 @@ export class TerceroCausacionGogComponent implements OnInit {
               let valueTotalDescuento = 0;
 
               if (this.solicitudPago.vAmortizacionXproyecto.length > 0) {
-                let valorAmortizacion = this.solicitudPago.vAmortizacionXproyecto[0].valorAnticipo ?? 0;
+                let valorAmortizacion = this.solicitudPago.vAmortizacionXproyecto[0].valorAnticipoAmortizado ?? 0;
                 this.getDescuentos( index, jIndex ).controls.forEach(element => {
                   if(element.get( 'aportantesDescuento' ).value.length > 0){
                     element.get( 'aportantesDescuento' ).value.forEach((desc: { valorDescuento: number; }, i: number) => {
@@ -767,6 +767,9 @@ export class TerceroCausacionGogComponent implements OnInit {
                     });
                   }
                 });
+                console.log(valueTotalDescuento);
+                console.log(valorAmortizacion);
+
                 if ( valueTotalDescuento > valorAmortizacion) {
                     this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null );
                     this.openDialog( '', `<b>El valor del descuento de amortización debe ser igual al valor solicitado.</b>` );
@@ -1160,7 +1163,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                       if(element.get( 'tipoDescuento' ).value == "5"){
                         let valueTotalDescuento = 0;
                         if (this.solicitudPago.vAmortizacionXproyecto.length > 0) {
-                          let valorAmortizacion = this.solicitudPago.vAmortizacionXproyecto[0].valorAnticipo ?? 0;
+                          let valorAmortizacion = this.solicitudPago.vAmortizacionXproyecto[0].valorAnticipoAmortizado  ?? 0;
                           if(element.get( 'aportantesDescuento' ).value.length > 0){
                             element.get( 'aportantesDescuento' ).value.forEach((desc: { valorDescuento: number; }, i: number) => {
                                 if(desc != null){
@@ -1170,6 +1173,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 }
                             });
                           }
+                          console.log(valueTotalDescuento);
+                          console.log(valorAmortizacion);
                           if ( valueTotalDescuento != valorAmortizacion) {
                               alert =  false;
                           }
@@ -1179,6 +1184,7 @@ export class TerceroCausacionGogComponent implements OnInit {
               }
           } )
         });
+
 
         if(!alert){
           this.openDialog( '', `<b>El valor del descuento de amortización debe ser igual al valor solicitado.</b>` );

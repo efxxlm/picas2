@@ -173,33 +173,7 @@ export class GestionarBalanFinancTraslRecComponent implements OnInit {
   }
 
   validarBalance( registro: any ) {
-    let cumpleValidar = false;
-    if ( registro.balanceFinancieroId === undefined ) {
-      if(registro.validarSinLiberacion === true && registro.estadoBalanceCodigo == "0"){
-        cumpleValidar = true;
-      }
-    }
-    if(!cumpleValidar){
-      this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/validarBalance', registro.proyectoId]);
-    }else{
-        const pBalanceFinanciero = {
-            balanceFinancieroId: 0,
-            proyectoId: registro.proyectoId,
-            requiereTransladoRecursos: false,
-            cumpleCondicionesTai: false
-        };
-        this.balanceSvc.createEditBalanceFinanciero(pBalanceFinanciero)
-        .subscribe((respuesta: Respuesta) => {
-            this.openDialog('', respuesta.message);
-            this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/verDetalleBalance', registro.proyectoId]);
-            return;
-          },
-          err => {
-            this.openDialog('', err.message);
-            this.ngOnInit();
-            return;
-          });
-        }
+    this.routes.navigate(['/gestionarBalanceFinancieroTrasladoRecursos/validarBalance', registro.proyectoId]);
   }
 
 }
