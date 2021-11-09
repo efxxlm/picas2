@@ -1140,7 +1140,19 @@ namespace asivamosffie.services
 
         private void CreateEditOrdenGiroDetalleTerceroCausacion(List<OrdenGiroDetalleTerceroCausacion> pListOrdenGiroDetalleTerceroCausacion, string pUsuarioCreacion, int solicitudPagoId)
         {
-            int tieneAmortizacion = _context.VAmortizacionXproyecto.Where(r => r.SolicitudPagoId == solicitudPagoId).Count();
+            int tieneAmortizacion = 0;
+
+            SolicitudPagoRegistrarSolicitudPago sp = _context.SolicitudPagoRegistrarSolicitudPago.Where(r => r.SolicitudPagoId == solicitudPagoId && r.Eliminado != true).Include(r => r.SolicitudPagoFase).FirstOrDefault();
+            if (sp != null)
+            {
+                foreach (var spf in sp.SolicitudPagoFase)
+                {
+                    if (tieneAmortizacion <= 0)
+                    {
+                        tieneAmortizacion = _context.SolicitudPagoFaseAmortizacion.Where(r => r.SolicitudPagoFaseId == spf.SolicitudPagoFaseId && r.Eliminado != true).Count();
+                    }
+                }
+            }
 
             foreach (var pOrdenGiroDetalleTerceroCausacion in pListOrdenGiroDetalleTerceroCausacion)
             {
