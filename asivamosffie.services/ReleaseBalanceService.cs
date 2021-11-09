@@ -374,6 +374,7 @@ namespace asivamosffie.services
                             {
                                 decimal valorDrpNuevo = 0;
                                 decimal valorDrpActual = drp.ValorSolicitud;
+                                decimal valorALiberarTotal = 0;
 
                                 foreach (var uso in usos)
                                 {
@@ -387,6 +388,7 @@ namespace asivamosffie.services
                                         decimal valorUsoActual = componenteUso.ValorUso;
                                         decimal valorUsoNuevo = componenteUsoHistorico.ValorUso;
                                         valorDrpNuevo += valorUsoNuevo;
+                                        valorALiberarTotal += (valorUsoActual - valorUsoNuevo);
 
                                         await _context.Set<ComponenteUsoHistorico>()
                                                             .Where(r => r.ComponenteUsoHistoricoId == uso.ComponenteUsoHistoricoId)
@@ -486,7 +488,7 @@ namespace asivamosffie.services
                                                 {
                                                     FechaModificacion = DateTime.Now,
                                                     UsuarioModificacion = user,
-                                                    ValorSolicitud = valorDrpNuevo
+                                                    ValorSolicitud = valorDrpActual - valorALiberarTotal
                                                 });
 
                                 //crear el registro histórico de gestion fuente financiación, con el valor actual del gff
@@ -612,6 +614,7 @@ namespace asivamosffie.services
                                 {
                                     decimal valorDrpNuevoN = 0;
                                     decimal valorDrpActualN = nrp != null ? nrp.ValorSolicitud : 0;
+                                    decimal valorALiberarTotalN = 0;
 
                                     foreach (var uso in usosN)
                                     {
@@ -623,6 +626,7 @@ namespace asivamosffie.services
                                             decimal valorUsoActual = componenteUsoNovedad.ValorUso;
                                             decimal valorUsoNuevo = componenteUsoNovedadHistorico.ValorUso;
                                             valorDrpNuevoN += valorUsoNuevo;
+                                            valorALiberarTotalN += (valorUsoActual - valorUsoNuevo);
 
                                             await _context.Set<ComponenteUsoNovedadHistorico>()
                                                                 .Where(r => r.ComponenteUsoNovedadHistoricoId == uso.ComponenteUsoNovedadHistoricoId)
@@ -725,7 +729,7 @@ namespace asivamosffie.services
                                                     {
                                                         FechaModificacion = DateTime.Now,
                                                         UsuarioModificacion = user,
-                                                        ValorSolicitud = valorDrpNuevoN
+                                                        ValorSolicitud = valorDrpActualN - valorALiberarTotalN
                                                     });
                                     //obtengo componente Aportante
                                     //crear el registro histórico de gestion fuente financiación, con el valor actual del gff
