@@ -360,7 +360,7 @@ namespace asivamosffie.services
                     if (balanceFinanciero != null)
                     {
                         DisponibilidadPresupuestal drp = null;
-                        DisponibilidadPresupuestalProyecto dpp = null;
+                        List<DisponibilidadPresupuestalProyecto> dpps = new List<DisponibilidadPresupuestalProyecto>();
 
                         List<ContratacionProyecto> contratacionProyectos = _context.ContratacionProyecto.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.Eliminado != true).ToList();
                         List<ProyectoAportante> proyectoAportantesData = new List<ProyectoAportante>();
@@ -372,7 +372,7 @@ namespace asivamosffie.services
                             if (usos.FirstOrDefault()?.DisponibilidadPresupuestalId > 0)
                             {
                                 drp = _context.DisponibilidadPresupuestal.Find(usos.FirstOrDefault().DisponibilidadPresupuestalId);
-                                dpp = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == usos.FirstOrDefault().DisponibilidadPresupuestalId && r.ProyectoId == balanceFinanciero.ProyectoId && r.Eliminado != true).FirstOrDefault();
+                                dpps = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == usos.FirstOrDefault().DisponibilidadPresupuestalId && r.ProyectoId == balanceFinanciero.ProyectoId && r.Eliminado != true).ToList();
                             }
 
                             #region ddp
@@ -415,7 +415,7 @@ namespace asivamosffie.services
                                                                 ValorUso = valorUsoNuevo
                                                             });
 
-                                        
+
                                         //obtengo componente Aportante
                                         ComponenteAportante componenteAportante = _context.ComponenteAportante.Find(componenteUso.ComponenteAportanteId);
                                         if (componenteAportante != null)
@@ -477,15 +477,21 @@ namespace asivamosffie.services
                                         }
                                     }
                                 }
-                                //crear el registro histórico del ddp, con el valor actual del drp
-                                DisponibilidadPresupuestalHistorico disponibilidadPresupuestalHistorico = new DisponibilidadPresupuestalHistorico
+                                DisponibilidadPresupuestalHistorico disponibilidadPresupuestalHistorico = null;
+                                disponibilidadPresupuestalHistorico = _context.DisponibilidadPresupuestalHistorico.Where(r => r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId).FirstOrDefault();
+
+                                if (disponibilidadPresupuestalHistorico == null)
                                 {
-                                    FechaCreacion = DateTime.Now,
-                                    UsuarioCreacion = user,
-                                    DisponibilidadPresupuestalId = drp.DisponibilidadPresupuestalId,
-                                    ValorSolicitud = valorDrpActual
-                                };
-                                _context.DisponibilidadPresupuestalHistorico.Add(disponibilidadPresupuestalHistorico);
+                                    //crear el registro histórico del ddp, con el valor actual del drp
+                                    disponibilidadPresupuestalHistorico = new DisponibilidadPresupuestalHistorico
+                                    {
+                                        FechaCreacion = DateTime.Now,
+                                        UsuarioCreacion = user,
+                                        DisponibilidadPresupuestalId = drp.DisponibilidadPresupuestalId,
+                                        ValorSolicitud = valorDrpActual
+                                    };
+                                    _context.DisponibilidadPresupuestalHistorico.Add(disponibilidadPresupuestalHistorico);
+                                }
 
                                 //actualizo el drp con el nuevo valor de los usos
                                 await _context.Set<DisponibilidadPresupuestal>()
@@ -499,7 +505,7 @@ namespace asivamosffie.services
 
                                 //crear el registro histórico de gestion fuente financiación, con el valor actual del gff
                                 List<ContratacionProyectoAportante> cpaList = new List<ContratacionProyectoAportante>();
-                                if (dpp != null)
+                                if (dpps.Count() > 0)
                                     cpaList = _context.ContratacionProyectoAportante.Where(r => r.ContratacionProyectoId == cp.ContratacionProyectoId && r.Eliminado != true).ToList();
 
                                 foreach (var cppa in cpaList)
@@ -535,13 +541,17 @@ namespace asivamosffie.services
                                 //Actualizar gestiones fuentes de financiación fuente del componente Uso
                                 //crear el registro histórico de gestion fuente financiación, con el valor actual del gff
                                 List<GestionFuenteFinanciacion> gffList = new List<GestionFuenteFinanciacion>();
-                                if (dpp != null)
-                                    gffList = _context.GestionFuenteFinanciacion.Where(r => r.DisponibilidadPresupuestalProyectoId == dpp.DisponibilidadPresupuestalProyectoId && r.EsNovedad != true && r.Eliminado != true).ToList();
+
+                                foreach (var dpp in dpps)
+                                {
+                                    gffList.AddRange(_context.GestionFuenteFinanciacion.Where(r => r.DisponibilidadPresupuestalProyectoId == dpp.DisponibilidadPresupuestalProyectoId && r.EsNovedad != true && r.Eliminado != true).ToList());
+
+                                }
 
                                 foreach (var gff in gffList)
                                 {
-                                    List<VSaldoAliberar> usosF = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad != true && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId).ToList();
- 
+                                    List<VSaldoAliberar> usosF = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad != true && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId && r.FuenteFinanciacionId == gff.FuenteFinanciacionId).ToList();
+
 
                                     decimal A_SaldoActual = gff.SaldoActual;
                                     decimal A_ValorSolicitado = gff.ValorSolicitado;
@@ -608,9 +618,20 @@ namespace asivamosffie.services
 
                             List<NovedadContractualRegistroPresupuestal> nrps = new List<NovedadContractualRegistroPresupuestal>();
 
-                            if (dpp != null)
+                            if (drp != null)
                             {
-                                nrps = _context.NovedadContractualRegistroPresupuestal.Where(r => r.DisponibilidadPresupuestalId == dpp.DisponibilidadPresupuestalId && r.Eliminado != true && (r.EstadoSolicitudCodigo == "5" || r.EstadoSolicitudCodigo == "8")).ToList();
+                                List<VSaldoAliberar> listNView = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad == true).ToList();
+                                foreach (var i in listNView)
+                                {
+                                    if (i.NovedadContractualRegistroPresupuestalId > 0)
+                                    {
+                                        if (!nrps.Any(r => r.NovedadContractualRegistroPresupuestalId == i.NovedadContractualRegistroPresupuestalId))
+                                        {
+                                            NovedadContractualRegistroPresupuestal n = _context.NovedadContractualRegistroPresupuestal.Find(i.NovedadContractualRegistroPresupuestalId);
+                                            nrps.Add(n);
+                                        }
+                                    }
+                                }
                             }
                             foreach (var nrp in nrps)
                             {
@@ -691,42 +712,50 @@ namespace asivamosffie.services
                                             }
 
                                         }
+                                        if (usosF.Count() > 0)
+                                        {
+                                            await _context.Set<GestionFuenteFinanciacion>()
+                                                            .Where(r => r.GestionFuenteFinanciacionId == gff.GestionFuenteFinanciacionId)
+                                                            .UpdateAsync(r => new GestionFuenteFinanciacion()
+                                                            {
+                                                                FechaModificacion = DateTime.Now,
+                                                                UsuarioModificacion = user,
+                                                                SaldoActual = N_SaldoActual,
+                                                                ValorSolicitado = ValorUsoXFuenteN,
+                                                                NuevoSaldo = N_SaldoActual + (ValorUsoXFuenteA - ValorUsoXFuenteN),
+                                                                ValorLiberado = ValorUsoXFuenteA - ValorUsoXFuenteN
+                                                            });
+                                            GestionFuenteFinanciacionHistorico gestionFuenteFinanciacionHistorico = new GestionFuenteFinanciacionHistorico
+                                            {
+                                                FechaCreacion = DateTime.Now,
+                                                UsuarioCreacion = user,
+                                                GestionFuenteFinanciacionId = gff.GestionFuenteFinanciacionId,
+                                                SaldoActual = A_SaldoActual,
+                                                ValorSolicitado = A_ValorSolicitado,
+                                                NuevoSaldo = A_NuevoSaldo
+                                            };
 
-                                        await _context.Set<GestionFuenteFinanciacion>()
-                                                        .Where(r => r.GestionFuenteFinanciacionId == gff.GestionFuenteFinanciacionId)
-                                                        .UpdateAsync(r => new GestionFuenteFinanciacion()
-                                                        {
-                                                            FechaModificacion = DateTime.Now,
-                                                            UsuarioModificacion = user,
-                                                            SaldoActual = N_SaldoActual,
-                                                            ValorSolicitado = ValorUsoXFuenteN,
-                                                            NuevoSaldo = N_SaldoActual + (ValorUsoXFuenteA - ValorUsoXFuenteN),
-                                                            ValorLiberado = ValorUsoXFuenteA - ValorUsoXFuenteN
-                                                        });
+                                            _context.GestionFuenteFinanciacionHistorico.Add(gestionFuenteFinanciacionHistorico);
 
-                                        GestionFuenteFinanciacionHistorico gestionFuenteFinanciacionHistorico = new GestionFuenteFinanciacionHistorico
+                                        }
+
+                                    }
+                                    NovedadContractualRegistroPresupuestalHistorico novedadContractualRegistroPresupuestalHistorico = null;
+                                    novedadContractualRegistroPresupuestalHistorico = _context.NovedadContractualRegistroPresupuestalHistorico.Where(r => r.NovedadContractualRegistroPresupuestalId == nrp.NovedadContractualRegistroPresupuestalId).FirstOrDefault();
+                                    
+                                    if (novedadContractualRegistroPresupuestalHistorico == null)
+                                    {
+                                        //crear el registro histórico del ddp, con el valor actual del drp
+                                        novedadContractualRegistroPresupuestalHistorico = new NovedadContractualRegistroPresupuestalHistorico
                                         {
                                             FechaCreacion = DateTime.Now,
                                             UsuarioCreacion = user,
-                                            GestionFuenteFinanciacionId = gff.GestionFuenteFinanciacionId,
-                                            SaldoActual = A_SaldoActual,
-                                            ValorSolicitado = A_ValorSolicitado,
-                                            NuevoSaldo = A_NuevoSaldo
+                                            NovedadContractualRegistroPresupuestalId = nrp.NovedadContractualRegistroPresupuestalId,
+                                            ValorSolicitud = valorDrpActualN
                                         };
-
-                                        _context.GestionFuenteFinanciacionHistorico.Add(gestionFuenteFinanciacionHistorico);
+                                        _context.NovedadContractualRegistroPresupuestalHistorico.Add(novedadContractualRegistroPresupuestalHistorico);
 
                                     }
-
-                                    //crear el registro histórico del ddp, con el valor actual del drp
-                                    NovedadContractualRegistroPresupuestalHistorico novedadContractualRegistroPresupuestalHistorico = new NovedadContractualRegistroPresupuestalHistorico
-                                    {
-                                        FechaCreacion = DateTime.Now,
-                                        UsuarioCreacion = user,
-                                        NovedadContractualRegistroPresupuestalId = nrp.NovedadContractualRegistroPresupuestalId,
-                                        ValorSolicitud = valorDrpActualN
-                                    };
-                                    _context.NovedadContractualRegistroPresupuestalHistorico.Add(novedadContractualRegistroPresupuestalHistorico);
 
                                     //actualizo el drp con el nuevo valor de los usos
                                     await _context.Set<NovedadContractualRegistroPresupuestal>()
@@ -740,7 +769,7 @@ namespace asivamosffie.services
                                     //obtengo componente Aportante
                                     //crear el registro histórico de gestion fuente financiación, con el valor actual del gff
                                     List<NovedadContractualAportante> ncaList = new List<NovedadContractualAportante>();
-                                    if (dpp != null)
+                                    if (drp != null)
                                         ncaList = _context.NovedadContractualAportante.Where(r => r.NovedadContractualId == nrp.NovedadContractualId && r.Eliminado != true).ToList();
 
                                     foreach (var cppa in ncaList)
