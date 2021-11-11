@@ -484,14 +484,33 @@ export class TerceroCausacionGogComponent implements OnInit {
                           //
                         // Set formulario criterios
                         // Get observaciones
+                        console.log(terceroCausacionxCriterio);
                         if(terceroCausacionxCriterio?.length > 0){
                           const totalTerceroCriterio = terceroCausacionxCriterio?.length;
-                          terceroCausacionxCriterio.forEach(element => {
-                            if(element.registroCompleto === true){
+                          terceroCausacionxCriterio.forEach((element: any) => {
+                            let registroCompleto = true;
+                            element.ordenGiroDetalleTerceroCausacionAportante.forEach((terceroCausacionAportante: any) => {
+                              if (
+                                  (terceroCausacionAportante.fuenteRecursoCodigo == "" || terceroCausacionAportante.fuenteRecursoCodigo == null)
+                                  || terceroCausacionAportante.aportanteId == 0
+                                  || (terceroCausacionAportante.conceptoPagoCodigo == "" || terceroCausacionAportante.conceptoPagoCodigo == null)
+                                  || terceroCausacionAportante.valorDescuento == 0
+                                  || terceroCausacionAportante.fuenteFinanciacionId == 0
+                                ){
+                                  registroCompleto = false;
+                                }
+                            });
+                            element.ordenGiroDetalleTerceroCausacionDescuento.forEach((terceroCausacionDescuento: any) => {
+                              if (terceroCausacionDescuento.registroCompleto == false){
+                                  registroCompleto = false;
+                              }
+                            });
+                            if(registroCompleto === true){
                               totalCompleto++;
                             }else{
                               totalIncompleto++;
                             }
+
                           });
                           let estadoSemaforo = 'en-proceso';
 
@@ -502,7 +521,6 @@ export class TerceroCausacionGogComponent implements OnInit {
                           }else{
                             estadoSemaforo = 'en-proceso';
                           }
-                          console.log(estadoSemaforo);
                           let obsVerificar = undefined;
                           let obsAprobar = undefined;
                           let obsTramitar = undefined;
