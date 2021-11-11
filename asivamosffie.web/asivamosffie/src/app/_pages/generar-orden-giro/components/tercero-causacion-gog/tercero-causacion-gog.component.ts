@@ -754,8 +754,8 @@ export class TerceroCausacionGogComponent implements OnInit {
             if(this.getDescuentos( index, jIndex ).controls[ kIndex ].get( 'tipoDescuento' ).value == "5"){
               let valueTotalDescuento = 0;
 
-              if (this.solicitudPago.vAmortizacionXproyecto.length > 0) {
-                let valorAmortizacion = this.solicitudPago.vAmortizacionXproyecto[0].valorAnticipoAmortizado ?? 0;
+              if(this.solicitudPagoFase?.solicitudPagoFaseAmortizacion.length > 0){
+                let valorAmortizacion = this.solicitudPagoFase?.solicitudPagoFaseAmortizacion[0].valorAmortizacion ?? 0;
                 this.getDescuentos( index, jIndex ).controls.forEach(element => {
                   if(element.get( 'aportantesDescuento' ).value.length > 0){
                     element.get( 'aportantesDescuento' ).value.forEach((desc: { valorDescuento: number; }, i: number) => {
@@ -1162,8 +1162,9 @@ export class TerceroCausacionGogComponent implements OnInit {
                   this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( ( element ) => {
                       if(element.get( 'tipoDescuento' ).value == "5"){
                         let valueTotalDescuento = 0;
-                        if (this.solicitudPago.vAmortizacionXproyecto.length > 0) {
-                          let valorAmortizacion = this.solicitudPago.vAmortizacionXproyecto[0].valorAnticipoAmortizado  ?? 0;
+
+                        if(this.solicitudPagoFase?.solicitudPagoFaseAmortizacion.length > 0){
+                          let valorAmortizacion = this.solicitudPagoFase?.solicitudPagoFaseAmortizacion[0].valorAmortizacion ?? 0;
                           if(element.get( 'aportantesDescuento' ).value.length > 0){
                             element.get( 'aportantesDescuento' ).value.forEach((desc: { valorDescuento: number; }, i: number) => {
                                 if(desc != null){
