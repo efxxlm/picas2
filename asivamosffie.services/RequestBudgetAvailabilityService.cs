@@ -729,7 +729,7 @@ namespace asivamosffie.services
 
                                             foreach (var comp in compAp.ComponenteUso)
                                             {
-                                                ComponenteUsoHistorico cuh = _context.ComponenteUsoHistorico.Where(r => r.ComponenteUsoId == comp.ComponenteUsoId).FirstOrDefault();
+                                                ComponenteUsoHistorico cuh = _context.ComponenteUsoHistorico.Where(r => r.ComponenteUsoId == comp.ComponenteUsoId && r.Liberado == true).FirstOrDefault();
                                                 var usos = _context.Dominio.Where(x => x.Codigo == comp.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
                                                 uso.Add(usos.Count() > 0 ? usos.FirstOrDefault().Nombre : string.Empty);
                                                 usovalor.Add(cuh != null ? cuh.ValorUso : comp.ValorUso);
