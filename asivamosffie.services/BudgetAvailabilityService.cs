@@ -1086,6 +1086,7 @@ namespace asivamosffie.services
                                                                            x.Eliminado != true &&
                                                                            x.EsNovedad == true
                                                                            )
+                                                                    .Include(r => r.FuenteFinanciacion)
                                                                     .ToList();
 
                     novedadContractualRegistroPresupuestal.EstadoSolicitudCodigo = estado.ToString();
