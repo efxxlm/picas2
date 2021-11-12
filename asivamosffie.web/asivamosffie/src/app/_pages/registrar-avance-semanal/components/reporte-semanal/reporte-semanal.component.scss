@@ -44,6 +44,14 @@ p-table {
     margin-right: auto;
 }
 
+.border-none-td td {
+  border: none;
+}
+
+.border-1 {
+  border: solid 1px #000 !important;
+}
+
 /* tr {
     mso-height-source: auto;
   }
