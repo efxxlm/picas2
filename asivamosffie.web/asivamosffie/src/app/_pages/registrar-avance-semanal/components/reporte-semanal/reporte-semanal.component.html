@@ -146,8 +146,23 @@
           {{ infoGeneralInterventoria?.fase2ValorAcumulado | currency: '':'symbol-narrow':'.0-0' }}
         </td>
       </tr>
+      <tr>
+        <td>
+          SUPERVISIÓN UG FFIE
+        </td>
+        <td colspan="7">
 
-      SUPERVISIÓN UG FFIE
+        </td>
+      </tr>
+      <tr>
+        <td>
+          LOCALIZACIÓN DEL PROYECTO:
+        </td>
+        <td colspan="7">
+
+        </td>
+      </tr>
+
     </tbody>
   </table>
   <table>
@@ -371,7 +386,7 @@
           ¿Cuantas actividades ejecutó?
         </td>
         <td>
-          _____________________________
+          {{ cantidadActividades }}
         </td>
       </tr>
       <tr>
@@ -389,6 +404,45 @@
           Manejo de materiales e insumos
         </td>
       </tr>
+      <ng-container *ngIf="gestionObraAmbiental?.tieneManejoMaterialesInsumo == true">
+        <tr
+          *ngFor="let prov of gestionObraAmbiental.manejoMaterialesInsumo.manejoMaterialesInsumosProveedor"
+        >
+          <td>
+            
+          </td>
+          <td>
+            Proveedor
+          </td>
+          <td>
+            {{ prov.proveedor }}
+          </td>
+          <td>
+            Requiere permisos ambientales y/o mineros:
+          </td>
+          <td>
+            
+          </td>
+          <td>
+            SI
+          </td>
+          <td>
+            _________
+          </td>
+          <td>
+            NO
+          </td>
+          <td>
+            _________
+          </td>
+          <td>
+            Relacionar permiso:
+          </td>
+          <td>
+            {{ prov.urlRegistroFotografico }}
+          </td>
+        </tr>
+      </ng-container>
       <tr>
         <td>
           
@@ -421,7 +475,7 @@
           Relacionar permiso:
         </td>
         <td>
-          _________
+          <!-- {{ gestionObraAmbiental.manejoMaterialesInsumo.url }} -->
         </td>
       </tr>
       <tr>
@@ -460,43 +514,8 @@
         </td>
       </tr>
       <tr>
-        <td>
-          
-        </td>
-        <td>
-          Proveedor
-        </td>
-        <td>
-          _________
-        </td>
-        <td>
-          Requiere permisos ambientales y/o mineros:
-        </td>
-        <td>
-          
-        </td>
-        <td>
-          SI
-        </td>
-        <td>
-          _________
-        </td>
-        <td>
-          NO
-        </td>
-        <td>
-          _________
-        </td>
-        <td>
-          Relacionar permiso:
-        </td>
-        <td>
-          _________
-        </td>
-      </tr>
-      <tr>
-        <td>
-          Los materiales de construcción se encontraron protegidos y demarcados correctamente:											
+        <td class="text-center">
+          Los materiales de construcción se encontraron protegidos y demarcados correctamente:
         </td>
         <td>
           SI
@@ -548,21 +567,52 @@
           URL para registro fotográfico
         </td>
       </tr>
+      <ng-container *ngIf="gestionObraAmbiental && gestionObraAmbiental.tieneManejoResiduosConstruccionDemolicion == true">
+        <tr
+          *ngFor="
+            let rcd of gestionObraAmbiental.manejoResiduosConstruccionDemolicion.manejoResiduosConstruccionDemolicionGestor
+          ">
+          <td>
+            
+          </td>
+          <td>
+            Gestor de RCD
+          </td>
+          <td>
+            {{ rcd.nombreGestorResiduos }}
+          </td>
+          <td>
+            El gestor presenta permisos ambientales o soporte válido:
+          </td>
+          <td>
+            
+          </td>
+          <td>
+            SI
+          </td>
+          <td>
+            _________
+          </td>
+          <td>
+            NO
+          </td>
+          <td>
+            _________
+          </td>
+          <td>
+            URL para relacionar permiso o soporte:
+          </td>
+          <td>
+            {{ rcd.url }}
+          </td>
+        </tr>
+      </ng-container>
       <tr>
         <td>
           
         </td>
-        <td>
-          Gestor de RCD
-        </td>
-        <td>
-          _________
-        </td>
-        <td>
-          El gestor presenta permisos ambientales o soporte válido:
-        </td>
-        <td>
-          
+        <td colspan="3">
+          Se reutilizaron temporal o permanente los RCD para el porcentaje de aprovechamiento obligatorio:
         </td>
         <td>
           SI
@@ -577,50 +627,20 @@
           _________
         </td>
         <td>
-          Relacionar permiso:
+          Cantidad (ton):
         </td>
         <td>
-          _________
-        </td>
-      </tr>
-      <tr>
-        <td>
-          
-        </td>
-        <td>
-          Proveedor
-        </td>
-        <td>
-          _________
-        </td>
-        <td>
-          Requiere permisos ambientales y/o mineros:
-        </td>
-        <td>
-          
-        </td>
-        <td>
-          SI
-        </td>
-        <td>
-          _________
-        </td>
-        <td>
-          NO
-        </td>
-        <td>
-          _________
-        </td>
-        <td>
-          Relacionar permiso:
-        </td>
-        <td>
-          _________
+          {{ gestionObraAmbiental ? gestionObraAmbiental.manejoResiduosConstruccionDemolicion.cantidadToneladas : '' }}
         </td>
       </tr>
       <tr>
         <td>
-          Los materiales de construcción se encontraron protegidos y demarcados correctamente:
+          Manejo de residuos peligros y especiales
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Los residuos de construcción y demolición (RCD) fueron cuantificados en toneladas, clasificados, acopiados y protegidos correctamente:
         </td>
         <td>
           SI
@@ -641,6 +661,158 @@
           URL para registro fotográfico
         </td>
       </tr>
+      <tr>
+        <td>
+          
+        </td>
+        <td>
+          Gestor de RCD
+        </td>
+        <td>
+          _________
+        </td>
+        <td>
+          El gestor presenta permisos ambientales o soporte válido:
+        </td>
+        <td>
+          SI
+        </td>
+        <td>
+          _________
+        </td>
+        <td>
+          NO
+        </td>
+        <td>
+          _________
+        </td>
+        <td>
+          URL para relacionar permiso o soporte:
+        </td>
+        <td>
+          _________
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center">
+          Se reutilizaron temporal o permanente los RCD para el porcentaje de aprovechamiento obligatorio:
+        </td>
+        <td>
+          SI
+        </td>
+        <td>
+          _________
+        </td>
+        <td>
+          NO
+        </td>
+        <td>
+          _________
+        </td>
+        <td>
+          Observaciones
+        </td>
+        <td>
+          Cantidad (ton):
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <strong>
+            Manejo de residuos de construcción y demolición
+          </strong>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          
+        </td>
+        <td colspan="3">
+          Los residuos peligrosos y especiales se clasificaron y acopiaron en lugares seguros
+        </td>
+        <td>
+          SI
+        </td>
+        <td>
+          _________
+        </td>
+        <td>
+          NO
+        </td>
+        <td>
+          _________
+        </td>
+        <td>
+          Observaciones
+        </td>
+        <td>
+          URL para registro fotográfico
+        </td>
+      </tr>
+      <tr>
+        <td>
+          
+        </td>
+        <td>
+          Gestor autorizado
+        </td>
+        <td>
+          _________
+        </td>
+        <td>
+          Presenta permisos o soporte válido:
+        </td>
+        <td>
+          SI
+        </td>
+        <td>
+          _________
+        </td>
+        <td>
+          NO
+        </td>
+        <td>
+          _________
+        </td>
+        <td>
+          URL para relacionar permiso o soporte:
+        </td>
+        <td>
+          _________
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <strong>
+            Otra
+          </strong>
+        </td>
+      </tr>
+      
+      <tr>
+        <td>
+          
+        </td>
+        <td>
+          Fecha de la actividad
+        </td>
+        <td>
+          {{ gestionObraAmbiental.manejoOtro.fechaActividad | date: 'dd/MM/yyyy' }}
+        </td>
+        <td>
+          Actividad realizada
+        </td>
+        <td>
+          _____________________________
+        </td>
+        <td>
+          URL para relacionar evidencia o soporte:
+        </td>
+        <td>
+          {{ gestionObraAmbiental.manejoOtro.urlSoporteGestion }}
+        </td>
+      </tr>
+
     </tbody>
   </table>
   <table>
@@ -746,7 +918,7 @@
           Cantidad de accidentes laborales registrados en la semana
         </td>
         <td>
-          ___________________________
+          {{ gestionCalidad.gestionObraCalidadEnsayoLaboratorio.length }}
         </td>
       </tr>
       <tr>
@@ -835,6 +1007,318 @@
         </td>
         <td>
           _________
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table>
+    <tbody class="text-left border-none-td">
+      <tr>
+        <td colspan="5" class="bg-gray p-table font-weight-bold border-1 text-center">7. GESTION SOCIAL</td>
+      </tr>
+      <tr>
+      <tr>
+        <td>
+          TOTAL EMPLEOS GENERADOS:
+        </td>
+        <td>
+          _____________________________
+        </td>
+        <td class="text-center">
+          No. DE REUNIONES CON COMUNIDAD:
+        </td>
+        <td>
+          _____________________________
+        </td>
+        <td rowspan="4">
+          <strong>
+            OBSERVACIONES
+          </strong>
+          <div style="width: 400px; height: 200px;">
+
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          EMPLEOS DIRECTOS GENERADOS:
+        </td>
+        <td>
+          _____________________________
+        </td>
+        <td class="text-center">
+          No DE CHARLAS REALIZADAS PERSONAL DE LA OBRA
+        </td>
+        <td>
+          _____________________________
+        </td>
+      </tr>
+      <tr>
+        <td>
+          EMPLEOS INDIRECTOS GENERADOS:
+        </td>
+        <td>
+          _____________________________
+        </td>
+        <td class="text-center">
+          No DE PQRS RECIBIDAS:
+        </td>
+        <td>
+          _____________________________
+        </td>
+      </tr>
+      <tr>
+        <td>
+          
+        </td>
+        <td>
+          
+        </td>
+        <td class="text-center">
+          No DE PQRS ATENDIDAS:
+        </td>
+        <td>
+          
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table>
+    <tbody class="text-left">
+      <tr>
+        <td colspan="2" class="bg-gray p-table font-weight-bold text-center">8. ACTIVIDADES REALIZADAS</td>
+      </tr>
+      <tr>
+      <tr>
+        <td class="w-50">
+          <strong>
+            TECNICAS:
+          </strong>
+        </td>
+        <td>
+          <div style="height: 300px;">
+
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="w-50">
+          <strong>
+            LEGALES:
+          </strong>
+        </td>
+        <td>
+          <div style="height: 300px;">
+
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="w-50">
+          <strong>
+            ADMINISTRATIVAS- FINANCIERAS:
+          </strong>
+        </td>
+        <td>
+          <div style="height: 300px;">
+
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table>
+    <tbody class="text-left">
+      <tr>
+        <td colspan="2" class="bg-gray p-table font-weight-bold text-center">9. ACTIVIDADES A REALIZAR LA SIGUIENTE SEMANA</td>
+      </tr>
+      <tr>
+      <tr>
+        <td class="w-50">
+          <strong>
+            TECNICAS:
+          </strong>
+        </td>
+        <td>
+          <div style="height: 300px;">
+
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="w-50">
+          <strong>
+            LEGALES:
+          </strong>
+        </td>
+        <td>
+          <div style="height: 300px;">
+
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="w-50">
+          <strong>
+            ADMINISTRATIVAS- FINANCIERAS:
+          </strong>
+        </td>
+        <td>
+          <div style="height: 300px;">
+
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table>
+    <tbody class="text-left">
+      <tr>
+        <td colspan="2" class="bg-gray p-table font-weight-bold text-center">RESUMEN GENERAL DEL ESTADO DEL CONTRATO</td>
+      </tr>
+      <tr>
+      <tr>
+        <td colspan="2">
+          <div style="height: 150px;">
+
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="w-50">
+          <strong>
+            OBSERVACIONES
+          </strong>
+        </td>
+        <td class="w-50 p-0">
+          <table>
+            <tbody class="text-left border-none-td">
+              <tr>
+                <td colspan="2" class="border-bottom-1">
+                  <strong>
+                    INTERVENTORIA
+                  </strong>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>
+                    Coordinador Firma
+                  </strong>
+                </td>
+                <td>
+                  ______________________________________________________
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>
+                    Nombre
+                  </strong>
+                </td>
+                <td>
+                  ______________________________________________________
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>
+                    No de Matricula
+                  </strong>
+                </td>
+                <td>
+                  ______________________________________________________
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>
+                    Residenter Firma
+                  </strong>
+                </td>
+                <td>
+                  ______________________________________________________
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>
+                    Nombre
+                  </strong>
+                </td>
+                <td>
+                  ______________________________________________________
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>
+                    No de Matricula
+                  </strong>
+                </td>
+                <td>
+                  ______________________________________________________
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <div class="text-center vertical-align-bottom height-column-2">
+            <strong>7. REGISTRO FOTOGRÁFICO.</strong>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="text-left">
+          <div>
+            <table>
+              <tr>
+                <td colspan="2">
+                  <div style="height: 200px;">
+
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+              </tr>
+              <tr>
+                <td class="height-column-2" colspan="2">
+                  Descripción:
+                </td>
+              </tr>
+            </table>
+            <table>
+              <tr>
+                <td colspan="2">
+                  <div style="height: 200px;">
+
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+              </tr>
+              <tr>
+                <td class="height-column-2" colspan="2">
+                  Descripción:
+                </td>
+              </tr>
+            </table>
+          </div>
         </td>
       </tr>
     </tbody>
