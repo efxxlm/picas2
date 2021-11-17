@@ -6,6 +6,9 @@ table {
 td {
   border: solid 1px #000;
   min-width: 3em;
+  vertical-align: top;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
 }
 
 p-table {
@@ -60,22 +63,35 @@ strong,
   width: 50%;
 }
 
-td {
-  vertical-align: top;
-  padding-left: 0.2em;
-  padding-right: 0.2em;
-}
-
 .p-0 {
   padding: 0;
 }
 
 .height-column-2 {
-  height: 46px
+  height: 46px;
 }
 
 .vertical-align-bottom {
-  vertical-align: bottom
+  vertical-align: bottom;
+}
+
+.hr-line {
+  margin-top: 1.5em;
+  margin-bottom: 0;
+  border-top: none;
+  border-bottom: solid 1px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 4em;
+  padding: 0 8em;
+  margin-bottom: 1.5em;
+}
+
+.height-1 {
+  height: 22px;
 }
 
 /* tr {
