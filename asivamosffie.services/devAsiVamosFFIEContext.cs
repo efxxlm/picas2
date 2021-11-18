@@ -8681,6 +8681,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.NumeroSolicitud)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VAmortizacionTotalXproyecto>(entity =>
@@ -10129,7 +10133,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(1)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SaldoUso).HasColumnType("decimal(30, 0)");
+                entity.Property(e => e.SaldoUso).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.TipoUsoCodigo)
                     .HasMaxLength(2)

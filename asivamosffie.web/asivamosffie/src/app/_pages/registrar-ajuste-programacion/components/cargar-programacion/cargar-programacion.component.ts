@@ -4,6 +4,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogValidacionRegistroComponent } from '../dialog-validacion-registro/dialog-validacion-registro.component'
 import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
+import { ReprogrammingService } from 'src/app/core/_services/reprogramming/reprogramming.service';
 
 @Component({
   selector: 'app-cargar-programacion',
@@ -23,7 +24,7 @@ export class CargarProgramacionComponent {
       ajusteProgramacionInfo: any
     },
     private dialogRef: MatDialogRef<CargarProgramacionComponent>,
-    private faseUnoConstruccionSvc: FaseUnoConstruccionService,
+    private reprogramacionSvc: ReprogrammingService,
 
   ) {
     this.declararInputFile();
@@ -61,9 +62,9 @@ export class CargarProgramacionComponent {
       data: { modalTitle, modalText }
     });
   };
-  
+
   openDialogConfirmar (modalTitle: string, modalText: string) {
-    const confirmarDialog = this.dialog.open(ModalDialogComponent, { 
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
       width: '40em',
       data : { modalTitle, modalText, siNoBoton:true }
     });
@@ -71,7 +72,7 @@ export class CargarProgramacionComponent {
      confirmarDialog.afterClosed()
      .subscribe( response => {
        if ( response === true ) {
-           this.faseUnoConstruccionSvc.transferMassiveLoadAdjustmentProgramming( this.idProject, 
+           this.reprogramacionSvc.transferMassiveLoadAdjustmentProgramming( this.idProject,
                                                                                 this.data.ajusteProgramacionInfo.proyectoId,
                                                                                 this.data.ajusteProgramacionInfo.contratoId )
              .subscribe(
@@ -81,7 +82,7 @@ export class CargarProgramacionComponent {
                },
                err => this.openDialogResponse( '', err.message )
              )
-         } 
+         }
      });
   }
 
@@ -91,13 +92,13 @@ export class CargarProgramacionComponent {
         return;
       };
       console.log( inputNode.files[0], this.data );
-  
-        this.faseUnoConstruccionSvc.uploadFileToValidateAdjustmentProgramming( this.data.ajusteProgramacionInfo.ajusteProgramacionId, 
-                                                                               this.data.ajusteProgramacionInfo.contratacionProyectoId, 
-                                                                               this.data.ajusteProgramacionInfo.novedadContractualId, 
-                                                                               this.data.ajusteProgramacionInfo.contratoId, 
-                                                                               this.data.ajusteProgramacionInfo.proyectoId, 
-                                                                               inputNode.files[0]  
+
+        this.reprogramacionSvc.uploadFileToValidateAdjustmentProgramming( this.data.ajusteProgramacionInfo.ajusteProgramacionId,
+                                                                               this.data.ajusteProgramacionInfo.contratacionProyectoId,
+                                                                               this.data.ajusteProgramacionInfo.novedadContractualId,
+                                                                               this.data.ajusteProgramacionInfo.contratoId,
+                                                                               this.data.ajusteProgramacionInfo.proyectoId,
+                                                                               inputNode.files[0]
                                                                               )
         .subscribe(
           ( response: any ) => {

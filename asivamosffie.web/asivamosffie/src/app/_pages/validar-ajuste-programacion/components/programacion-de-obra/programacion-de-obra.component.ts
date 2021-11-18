@@ -4,6 +4,7 @@ import { FormControl, Validators, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
+import { ReprogrammingService } from 'src/app/core/_services/reprogramming/reprogramming.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -38,10 +39,10 @@ export class ProgramacionDeObraComponent implements OnInit, OnChanges {
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
-    private faseUnoConstruccionService: FaseUnoConstruccionService,
+    private reprogrammingsvc: ReprogrammingService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    
+
     ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -106,20 +107,20 @@ export class ProgramacionDeObraComponent implements OnInit, OnChanges {
         {
           ajusteProgramacionId: this.ajusteProgramacionId,
           observaciones: this.addressForm.value.observaciones,
-          
+
         }
       ]
     }
 
-    this.faseUnoConstruccionService.CreateEditObservacionAjusteProgramacion( ajuste, true )
+    this.reprogrammingsvc.CreateEditObservacionAjusteProgramacion( ajuste, true )
       .subscribe( respuesta => {
         this.openDialog('', respuesta.message);
         if (respuesta.code === "200")
           this.router.navigate(["/validarAjusteProgramacion"]);
       });
 
-    
+
   }
-  
+
 
 }

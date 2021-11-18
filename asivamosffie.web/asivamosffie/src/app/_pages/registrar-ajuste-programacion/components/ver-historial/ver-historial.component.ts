@@ -14,7 +14,7 @@ export class VerHistorialComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     if (this.router.getCurrentNavigation().extras.replaceUrl) {
-      this.router.navigateByUrl('/registratAjusteProgramacion');
+      this.router.navigateByUrl('/registrarAjusteProgramacion');
       return;
     };
 

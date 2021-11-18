@@ -399,7 +399,7 @@ const routes: Routes = [
         .then(m => m.GestionarNovedadesAprobadasModule)
       },
       {
-        path: 'registratAjusteProgramacion',
+        path: 'registrarAjusteProgramacion',
         canLoad: [ ActualUserGuard ],
         loadChildren: () => import('./_pages/registrar-ajuste-programacion/registrar-ajuste-programacion.module')
         .then(m => m.RegistrarAjusteProgramacionModule)

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
+import { ReprogrammingService } from 'src/app/core/_services/reprogramming/reprogramming.service';
 
 @Component({
   selector: 'app-validar-ajuste',
@@ -15,14 +15,14 @@ export class ValidarAjusteComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private faseUnoConstruccionService: FaseUnoConstruccionService,
-    
+    private reprogrammingService: ReprogrammingService,
+
   ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.detalleId = params.id;
-      this.faseUnoConstruccionService.GetAjusteProgramacionById( this.detalleId )
+      this.reprogrammingService.GetAjusteProgramacionById( this.detalleId )
         .subscribe( ajuste => {
           this.ajusteProgramacion = ajuste;
         });

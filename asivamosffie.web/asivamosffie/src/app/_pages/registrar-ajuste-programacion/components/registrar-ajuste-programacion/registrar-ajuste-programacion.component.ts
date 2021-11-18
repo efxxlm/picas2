@@ -14,10 +14,10 @@ export class RegistrarAjusteProgramacionComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute
-  ) 
+  )
   {
     if (this.router.getCurrentNavigation().extras.replaceUrl) {
-      this.router.navigateByUrl('/registratAjusteProgramacion');
+      this.router.navigateByUrl('/registrarAjusteProgramacion');
       return;
     };
 
@@ -25,7 +25,7 @@ export class RegistrarAjusteProgramacionComponent implements OnInit {
       console.log( this.router.getCurrentNavigation().extras.state.ajusteProgramacion )
       this.ajusteProgramacionInfo = this.router.getCurrentNavigation().extras.state.ajusteProgramacion
     }
-      
+
 
    }
 
@@ -33,6 +33,7 @@ export class RegistrarAjusteProgramacionComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       this.detalleId = params.id;
       console.log(this.detalleId);
+      console.log(this.ajusteProgramacionInfo);
     });
   }
 
