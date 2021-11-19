@@ -67,7 +67,7 @@ export class ReporteSemanalComponent implements OnInit {
       )
       .subscribe(response => {
         this.dataReporteSemanal = response;
-        console.log(this.dataReporteSemanal);
+        console.log('dataReporteSemanal', this.dataReporteSemanal);
         if (this.dataReporteSemanal !== undefined) {
           this.infoGeneralObra = this.dataReporteSemanal.informacionGeneral[0][0];
           this.infoGeneralInterventoria = this.dataReporteSemanal.informacionGeneral[1][0];
@@ -155,14 +155,16 @@ export class ReporteSemanalComponent implements OnInit {
               }
             }
           }
-          this.gestionCalidad =
-            this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraCalidad[0];
-          this.gestionSST =
-            this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
-          this.gestionSocial =
-            this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial[0];
-          this.actividadesARealizar = this.dataReporteSemanal.seguimientoSemanalReporteActividad[0];
-          this.registroFotografico = this.dataReporteSemanal.seguimientoSemanalRegistroFotografico[0];
+
+          if (this.dataReporteSemanal.seguimientoSemanalGestionObra.length > 0) {
+            this.gestionCalidad = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraCalidad[0];
+            this.gestionSST = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
+            this.gestionSocial = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial[0];
+            this.actividadesARealizar = this.dataReporteSemanal.seguimientoSemanalReporteActividad[0];
+            this.registroFotografico = this.dataReporteSemanal.seguimientoSemanalRegistroFotografico[0];
+          }
+
+
         }
       });
   }
