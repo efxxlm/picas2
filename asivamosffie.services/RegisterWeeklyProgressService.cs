@@ -40,9 +40,9 @@ namespace asivamosffie.services
                         {
                             UsuarioModificacion = pAuthor,
                             FechaModificacion = DateTime.Now,
-                            RegistroCompleto = true 
+                            RegistroCompleto = true
                         });
-                  
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -266,8 +266,13 @@ namespace asivamosffie.services
         {
             try
             {
+                int? intSeguimientoSemanal = 0;
                 if (pContratacionProyectoId > 0)
-                    pSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto).FirstOrDefault().SeguimientoSemanalId;
+                    intSeguimientoSemanal = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)?.FirstOrDefault()?.SeguimientoSemanalId;
+
+                if (!intSeguimientoSemanal.HasValue)
+                    intSeguimientoSemanal = pSeguimientoSemanalId;
+
 
                 SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
                       .Include(r => r.SeguimientoDiario)
@@ -328,7 +333,7 @@ namespace asivamosffie.services
                     Contrato c = _context.Contrato.Where(r => r.ContratacionId == cp.ContratacionId && r.Eliminado != true).FirstOrDefault();
                     if (c != null)
                     {
-                        if (_contractualControversy.ValidarCumpleTaiContratista(c.ContratoId,false,false,0))
+                        if (_contractualControversy.ValidarCumpleTaiContratista(c.ContratoId, false, false, 0))
                         {
                             DateTime? fechaActuacion = _contractualControversy.FechaActuacionTaiContratista(c.ContratoId);
                             if (fechaActuacion != null)
