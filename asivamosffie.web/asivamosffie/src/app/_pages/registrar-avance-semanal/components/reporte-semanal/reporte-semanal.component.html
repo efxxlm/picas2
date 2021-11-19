@@ -7108,11 +7108,15 @@
       <td colspan="3" class="xl434" style="font-size: 6pt; text-align: left; border-right: 0.5pt solid black">
         REGION
       </td>
-      <td colspan="5" class="xl427" style="border-left: 0px; border-right: 0.5pt solid black">&nbsp;</td>
+      <td colspan="5" class="xl427" style="border-left: 0px; border-right: 0.5pt solid black">&
+        {{ dataReporteSemanal.informacionGeneralProyecto[0].ubicacion.region }}
+      </td>
       <td colspan="3" class="xl429" style="font-size: 6pt; text-align: left; border-right: 0.5pt solid black">
         MUNICIPIO
       </td>
-      <td colspan="9" class="xl429" style="border-right: 0.5pt solid black">&nbsp;</td>
+      <td colspan="9" class="xl429" style="border-right: 0.5pt solid black">
+        {{ dataReporteSemanal.informacionGeneralProyecto[0].ubicacion.municipio }}
+      </td>
       <td
         colspan="2"
         class="xl435"
@@ -7120,15 +7124,21 @@
       >
         SEMANA No
       </td>
-      <td class="xl192" style="border-top: 0px; border-left: 0px">&nbsp;</td>
+      <td class="xl192" style="border-top: 0px; border-left: 0px">
+        {{ dataReporteSemanal.informacionGeneralProyecto[0].semanaNo }}
+      </td>
       <td class="xl192" style="border-top: 0px; border-left: 0.5pt solid black; font-size: 6pt; text-align: center">
         DEL
       </td>
-      <td colspan="4" class="xl436" style="border-left: 0.5pt solid black">&nbsp;</td>
+      <td colspan="4" class="xl436" style="border-left: 0.5pt solid black">
+      {{ dataReporteSemanal.informacionGeneralProyecto[0].semanaInicio }}
+    </td>
       <td class="xl192" style="border-top: 0px; border-left: 0.5pt solid black; font-size: 6pt; text-align: center">
         AL
       </td>
-      <td colspan="3" class="xl436" style="border-right: 0.5pt solid black; border-left: 0.5pt solid black">&nbsp;</td>
+      <td colspan="3" class="xl436" style="border-right: 0.5pt solid black; border-left: 0.5pt solid black">
+      {{ dataReporteSemanal.informacionGeneralProyecto[0].semanaFin }}
+    </td>
     </tr>
     <tr class="xl81" style="height: 29.25pt">
       <td class="xl81" style="height: 29.25pt"></td>
@@ -7137,7 +7147,9 @@
         colspan="12"
         class="xl431"
         style="font-size: 6pt; border-top: 1px solid black; border-right: 1pt solid black; border-left: 0px"
-      ></td>
+      >
+      {{ dataReporteSemanal.informacionGeneralProyecto[0].localizacionProyecto }}
+    </td>
     </tr>
     <tr class="xl81" style="height: 27.75pt">
       <td class="xl81" style="height: 27.75pt"></td>
@@ -7146,7 +7158,9 @@
         colspan="12"
         class="xl424"
         style="font-size: 6pt; border-top: 1px solid black; border-right: 1pt solid black; border-left: 0px"
-      ></td>
+      >
+      {{ dataReporteSemanal.informacionGeneralProyecto[0].localizacionProyecto }}
+    </td>
     </tr>
     <tr class="xl81" style="height: 26.25pt">
       <td class="xl81" style="height: 26.25pt"></td>
