@@ -437,6 +437,18 @@ namespace asivamosffie.model.Models
             {
                 entity.Property(e => e.EstadoCodigo).HasMaxLength(10);
 
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.ContratacionProyecto)
                     .WithMany(p => p.AjusteProgramacion)
                     .HasForeignKey(d => d.ContratacionProyectoId)

@@ -22,7 +22,7 @@ export class ValidarAjusteComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.detalleId = params.id;
-      this.reprogrammingService.GetAjusteProgramacionById( this.detalleId )
+      this.reprogrammingService.getAjusteProgramacionById( this.detalleId )
         .subscribe( ajuste => {
           this.ajusteProgramacion = ajuste;
         });

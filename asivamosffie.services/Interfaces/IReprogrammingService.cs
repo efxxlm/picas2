@@ -20,5 +20,9 @@ namespace asivamosffie.services.Interfaces
                                                                                 int pAjusteProgramacionId, int pContratacionProyectId, int pNovedadContractualId,
                                                                                 int pContratoId, int pProyectoId);
         Task<Respuesta> TransferMassiveLoadAdjustmentInvestmentFlow(string pIdDocument, string pUsuarioModifico, int pProyectoId, int pContratoId);
+        Task<List<ArchivoCargue>> GetLoadAdjustProgrammingGrid(int pAjusteProgramacionId);
+        Task<List<ArchivoCargue>> GetLoadAdjustInvestmentFlowGrid(int pAjusteProgramacionId);
+        Task<Respuesta> DeleteAdjustProgrammingOrInvestmentFlow(int pArchivoCargueId, int pAjusteProgramacionId, string pUsuario);
+
     }
 }

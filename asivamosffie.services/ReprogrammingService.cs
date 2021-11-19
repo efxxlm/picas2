@@ -63,10 +63,51 @@ namespace asivamosffie.services
                 return ajustePragramacionObservacion;
             }
 
+            public async Task<List<ArchivoCargue>> GetLoadAdjustProgrammingGrid(int pAjusteProgramacionId)
+            {
+                List<ArchivoCargue> listaCargas = _context.ArchivoCargue
+                                                                .Where(a => a.ReferenciaId == pAjusteProgramacionId &&
+                                                                            a.Eliminado != true &&
+                                                                            a.OrigenId == int.Parse(OrigenArchivoCargue.AjusteProgramacionObra))
+                                                                .ToList();
+
+
+                listaCargas.ForEach(archivo =>
+                {
+                    archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Válidos" : "Fallido";
+                    archivo.TempAjustePragramacionObservacion = _context.AjustePragramacionObservacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsObra == true && r.ArchivoCargueId == archivo.ArchivoCargueId && r.Eliminado != true).FirstOrDefault();
+
+                });
+
+                return listaCargas;
+
+            }
+
+            public async Task<List<ArchivoCargue>> GetLoadAdjustInvestmentFlowGrid(int pAjusteProgramacionId)
+            {
+                List<ArchivoCargue> listaCargas = _context.ArchivoCargue
+                                                                .Where(a => a.ReferenciaId == pAjusteProgramacionId &&
+                                                                       a.Eliminado != true &&
+                                                                       a.OrigenId == int.Parse(OrigenArchivoCargue.AjusteFlujoInversion))
+                                                                .ToList();
+
+
+                listaCargas.ForEach(archivo =>
+                {
+                    archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Válidos" : "Fallido";
+                    archivo.TempAjustePragramacionObservacion = _context.AjustePragramacionObservacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsObra != true && r.ArchivoCargueId == archivo.ArchivoCargueId && r.Eliminado != true).FirstOrDefault();
+
+                });
+
+                return listaCargas;
+
+
+            }
+
         #endregion
 
         #region VALIDACIONES
-            private async Task<bool> ValidarRegistroCompletoValidacionAjusteProgramacion(int id)
+        private async Task<bool> ValidarRegistroCompletoValidacionAjusteProgramacion(int id)
             {
                 bool esCompleto = true;
 
@@ -136,18 +177,10 @@ namespace asivamosffie.services
                 else
                 {
                     strCrearEditar = "CREAR OBSERVACION AJUSTE PROGRAMACION";
+                    pObservacion.FechaCreacion = DateTime.Now;
+                    pObservacion.UsuarioCreacion = pUsuarioCreacion;
+                    _context.AjustePragramacionObservacion.Add(pObservacion);
 
-                    AjustePragramacionObservacion ajustePragramacionObservacion = new AjustePragramacionObservacion
-                    {
-                        FechaCreacion = DateTime.Now,
-                        UsuarioCreacion = pUsuarioCreacion,
-
-                        AjusteProgramacionId = pObservacion.AjusteProgramacionId,
-                        Observaciones = pObservacion.Observaciones,
-                        EsObra = esObra,
-                    };
-
-                    _context.AjustePragramacionObservacion.Add(ajustePragramacionObservacion);
                 }
 
                 return respuesta;
@@ -161,7 +194,7 @@ namespace asivamosffie.services
                         IsException = true,
                         IsValidation = false,
                         Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_seguimiento_diario, GeneralCodes.Error, idAccion, pObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pObservacion.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
         }
@@ -184,7 +217,7 @@ namespace asivamosffie.services
                 //ajusteProgramacion.UsuarioModificacion = pUsuario;
                 //ajusteProgramacion.FechaModificacion = DateTime.Now;
 
-                ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_validacion_a_la_programacion;
+                //ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_validacion_a_la_programacion;
 
                 if (esObra == true)
                 {
@@ -224,14 +257,14 @@ namespace asivamosffie.services
                 }
 
                 ajusteProgramacion.RegistroCompletoValidacion = await ValidarRegistroCompletoValidacionAjusteProgramacion(ajusteProgramacion.AjusteProgramacionId);
-                //if (ajusteProgramacion.RegistroCompletoValidacion.Value)
+                /*if (ajusteProgramacion.RegistroCompletoValidacion)
                 {
-                    ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_validacion_a_la_programacion;
+                    ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.;
                 }
-                //else
+                else
                 {
-                    //ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.Enviada_al_supervisor;
-                }
+                    ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.Enviada_al_supervisor;
+                }*/
                 _context.SaveChanges();
 
                 return
@@ -241,7 +274,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_seguimiento_diario, GeneralCodes.OperacionExitosa, idAccion, pUsuario, CreateEdit)
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuario, CreateEdit)
                     };
 
             }
@@ -254,10 +287,80 @@ namespace asivamosffie.services
                         IsException = true,
                         IsValidation = false,
                         Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_seguimiento_diario, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
                     };
             }
         }
+
+        public async Task<Respuesta> DeleteAdjustProgrammingOrInvestmentFlow(int pArchivoCargueId, int pAjusteProgramacionId,string pUsuario)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Archivo_Cargue, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                string strCrearEditar = string.Empty;
+
+                if (pArchivoCargueId > 0)
+                {
+                    strCrearEditar = "ELIMINAR ARCHIVO CARGE - AJUSTE PROGRAMACIÓN OBRA";
+
+                    await _context.Set<ArchivoCargue>().Where(r => r.ArchivoCargueId == pArchivoCargueId)
+                                               .UpdateAsync(r => new ArchivoCargue()
+                                               {
+                                                   FechaModificacion = DateTime.Now,
+                                                   UsuarioModificacion = pUsuario,
+                                                   Eliminado = true
+                                               });
+
+
+                    await _context.Set<AjustePragramacionObservacion>().Where(r => r.ArchivoCargueId == pArchivoCargueId)
+                                               .UpdateAsync(r => new AjustePragramacionObservacion()
+                                               {
+                                                   FechaModificacion = DateTime.Now,
+                                                   UsuarioModificacion = pUsuario,
+                                                   Eliminado = true,
+                                                   AjusteProgramacionId = pAjusteProgramacionId
+                                               });
+
+                    bool state = await ValidarRegistroCompletoValidacionAjusteProgramacion(pAjusteProgramacionId);
+                    AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
+                    if (ajusteProgramacion != null)
+                    {
+                        ajusteProgramacion.FechaModificacion = DateTime.Now;
+                        ajusteProgramacion.UsuarioModificacion = pUsuario;
+                        ajusteProgramacion.RegistroCompletoValidacion = state;
+                        ajusteProgramacion.AjusteProgramacionId = pAjusteProgramacionId;
+                        _context.AjusteProgramacion.Update(ajusteProgramacion);
+                    }
+
+                }
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuario, strCrearEditar)
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
+                    };
+            }
+        }
+
         public async Task<Respuesta> EnviarAlSupervisorAjusteProgramacion(int pAjusteProgramacionId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             string CreateEdit = string.Empty;
@@ -305,7 +408,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
                     };
             }
             catch (Exception ex)
@@ -317,7 +420,7 @@ namespace asivamosffie.services
                         IsException = true,
                         IsValidation = false,
                         Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
                     };
             }
         }
@@ -487,7 +590,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
                     };
             }
             catch (Exception ex)
@@ -499,7 +602,7 @@ namespace asivamosffie.services
                         IsException = true,
                         IsValidation = false,
                         Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
                     };
             }
         }
@@ -525,6 +628,8 @@ namespace asivamosffie.services
                 ajusteProgramacionTemp.ContratacionProyectoId = pContratacionProyectId;
                 ajusteProgramacionTemp.NovedadContractualId = pNovedadContractualId;
                 ajusteProgramacionTemp.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion;
+                ajusteProgramacionTemp.FechaCreacion = DateTime.Now;
+                ajusteProgramacionTemp.UsuarioCreacion = pUsuarioCreo;
 
                 _context.AjusteProgramacion.Add(ajusteProgramacionTemp);
                 _context.SaveChanges();
@@ -861,7 +966,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
                     };
                 }
 
@@ -877,7 +982,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
                 };
             }
 
@@ -897,9 +1002,8 @@ namespace asivamosffie.services
             {
                 AjusteProgramacion ajusteProgramacionTemp = new AjusteProgramacion();
 
-                //ajusteProgramacion.UsuarioCreacion = pUsuarioCreo;
-                //ajusteProgramacion.FechaCreacion = DateTime.Now;
-
+                ajusteProgramacionTemp.UsuarioCreacion = pUsuarioCreo;
+                ajusteProgramacionTemp.FechaCreacion = DateTime.Now;
                 ajusteProgramacionTemp.ContratacionProyectoId = pContratacionProyectId;
                 ajusteProgramacionTemp.NovedadContractualId = pNovedadContractualId;
 
@@ -1164,7 +1268,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL FLUJO IN")
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL FLUJO IN")
                     };
                 }
             }
@@ -1176,7 +1280,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = ConstantMessagesCargueElegibilidad.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioCreo, "VALIDAR EXCEL FLUJO INV")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuarioCreo, "VALIDAR EXCEL FLUJO INV")
                 };
             }
 
@@ -1280,7 +1384,7 @@ namespace asivamosffie.services
                      IsException = false,
                      IsValidation = true,
                      Code = GeneralCodes.CamposVacios,
-                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.CamposVacios, idAccion, pUsuarioModifico, "")
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.CamposVacios, idAccion, pUsuarioModifico, "")
                  };
             }
             try
@@ -1416,7 +1520,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = true,
                         Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModifico, "Cantidad de registros subidos : " + listTempProgramacion.Count())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModifico, "Cantidad de registros subidos : " + listTempProgramacion.Count())
                     };
                 }
                 else
@@ -1428,7 +1532,7 @@ namespace asivamosffie.services
                             IsException = false,
                             IsValidation = true,
                             Code = GeneralCodes.OperacionExitosa,
-                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.NoExitenArchivos, idAccion, pUsuarioModifico, "")
+                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.NoExitenArchivos, idAccion, pUsuarioModifico, "")
                         };
                 }
             }
@@ -1441,7 +1545,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = true,
                         Code = ConstantMessagesCargueElegibilidad.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.CargueProyectosMasivos, pUsuarioModifico, ex.InnerException.ToString())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.CargueProyectosMasivos, pUsuarioModifico, ex.InnerException.ToString())
                     };
             }
 
@@ -1672,7 +1776,7 @@ namespace asivamosffie.services
                             IsException = false,
                             IsValidation = true,
                             Code = GeneralCodes.OperacionExitosa,
-                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.NoExitenArchivos, idAccion, pUsuarioModifico, "")
+                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.NoExitenArchivos, idAccion, pUsuarioModifico, "")
                         };
                 }
             }
@@ -1685,7 +1789,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = true,
                         Code = ConstantMessagesCargueElegibilidad.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.CargueMasivoProyecto, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.CargueProyectosMasivos, pUsuarioModifico, ex.InnerException.ToString())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.CargueProyectosMasivos, pUsuarioModifico, ex.InnerException.ToString())
                     };
             }
 

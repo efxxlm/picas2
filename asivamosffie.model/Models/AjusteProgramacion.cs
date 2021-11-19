@@ -25,6 +25,10 @@ namespace asivamosffie.model.Models
         public int? ObservacionDevolucionFlujoInversion { get; set; }
         public bool? RegistroCompleto { get; set; }
         public bool? RegistroCompletoValidacion { get; set; }
+        public DateTime? FechaCreacion { get; set; }
+        public string UsuarioCreacion { get; set; }
+        public DateTime? FechaModificacion { get; set; }
+        public string UsuarioModificacion { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual NovedadContractual NovedadContractual { get; set; }

@@ -72,7 +72,7 @@ export class CargarFlujoComponent {
      confirmarDialog.afterClosed()
      .subscribe( response => {
        if ( response === true ) {
-           this.reprogrammingSvc.TransferMassiveLoadAdjustmentInvestmentFlow( this.idProject,
+           this.reprogrammingSvc.transferMassiveLoadAdjustmentInvestmentFlow( this.idProject,
                                                                                     this.data.ajusteProgramacionInfo.proyectoId,
                                                                                     this.data.ajusteProgramacionInfo.contratoId
                                                                                   )
@@ -94,7 +94,7 @@ export class CargarFlujoComponent {
     };
     console.log( inputNode.files[0], this.data );
 
-      this.reprogrammingSvc.UploadFileToValidateAdjustmentInvestmentFlow( this.data.ajusteProgramacionInfo.ajusteProgramacionId,
+      this.reprogrammingSvc.uploadFileToValidateAdjustmentInvestmentFlow( this.data.ajusteProgramacionInfo.ajusteProgramacionId,
                                                                              this.data.ajusteProgramacionInfo.contratacionProyectoId,
                                                                              this.data.ajusteProgramacionInfo.novedadContractualId,
                                                                              this.data.ajusteProgramacionInfo.contratoId,
@@ -103,7 +103,6 @@ export class CargarFlujoComponent {
                                                                             )
       .subscribe(
         ( response: any ) => {
-          console.log( response );
           if ( response.data.cargaValida === true && response.data.cantidadDeRegistros === response.data.cantidadDeRegistrosValidos ) {
             this.idProject = response.data.llaveConsulta;
             this.openDialogConfirmar(

@@ -57,7 +57,7 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
   ) { }
 
   ngAfterViewInit() {
-    this.reprogrammingService.GetAjusteProgramacionGrid()
+    this.reprogrammingService.getAjusteProgramacionGrid()
       .subscribe(respuesta => {
         this.dataSource = new MatTableDataSource(respuesta.filter( r => r.estadoCodigo === '3' || r.estadoCodigo === '4' || r.estadoCodigo === '5' || r.estadoCodigo === '6' ));
         this.dataSource.sort = this.sort;
@@ -88,7 +88,7 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
   }
 
   Aprobar(id){
-    this.reprogrammingService.AprobarAjusteProgramacion( id )
+    this.reprogrammingService.aprobarAjusteProgramacion( id )
       .subscribe( respuesta => {
         this.openDialog('', respuesta.message);
         if (respuesta.code === "200")

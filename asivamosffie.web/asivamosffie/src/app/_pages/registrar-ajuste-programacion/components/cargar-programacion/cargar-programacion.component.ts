@@ -3,7 +3,6 @@ import { FormControl, Validators } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogValidacionRegistroComponent } from '../dialog-validacion-registro/dialog-validacion-registro.component'
-import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 import { ReprogrammingService } from 'src/app/core/_services/reprogramming/reprogramming.service';
 
 @Component({

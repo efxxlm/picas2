@@ -3,7 +3,6 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { FormControl, Validators, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 import { ReprogrammingService } from 'src/app/core/_services/reprogramming/reprogramming.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -112,7 +111,7 @@ export class ProgramacionDeObraComponent implements OnInit, OnChanges {
       ]
     }
 
-    this.reprogrammingsvc.CreateEditObservacionAjusteProgramacion( ajuste, true )
+    this.reprogrammingsvc.createEditObservacionAjusteProgramacion( ajuste, true )
       .subscribe( respuesta => {
         this.openDialog('', respuesta.message);
         if (respuesta.code === "200")

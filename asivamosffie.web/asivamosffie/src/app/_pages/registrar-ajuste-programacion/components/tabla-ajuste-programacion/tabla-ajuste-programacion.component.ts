@@ -52,8 +52,13 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
 
   ngAfterViewInit() {
 
-    this.reprogrammingServices.GetAjusteProgramacionGrid()
+    this.reprogrammingServices.getAjusteProgramacionGrid()
       .subscribe(respuesta => {
+        respuesta.forEach(element => {
+          element.novedadesSeleccionadas = element.novedadesSeleccionadas
+            ? element.novedadesSeleccionadas.slice(0, -1)
+            : '';
+        });
         this.dataSource = new MatTableDataSource( respuesta );
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -64,8 +69,6 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
         };
         this.paginator._intl.previousPageLabel = 'Anterior';
       });
-
-
   }
 
   applyFilter(event: Event) {
@@ -79,7 +82,7 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
 
   RegistrarNuevo( ajusteProgramacion ){
     console.log(ajusteProgramacion)
-    this.router.navigate( [ '/registrarAjusteProgramacion/registrarAjusteProgramacion', 0 ], { state: { ajusteProgramacion } } )
+    this.router.navigate( [ '/registrarAjusteProgramacion/registrarAjusteProgramacion', ajusteProgramacion.ajusteProgramacionId ?? 0 ], { state: { ajusteProgramacion } } )
   }
 
   openDialog (modalTitle: string, modalText: string) {
@@ -92,7 +95,7 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
   EnviarASupervisor( ajuste ){
     console.log( ajuste.ajusteProgramacionId )
 
-    this.reprogrammingServices.EnviarAlSupervisorAjusteProgramacion( ajuste.ajusteProgramacionId )
+    this.reprogrammingServices.enviarAlSupervisorAjusteProgramacion( ajuste.ajusteProgramacionId )
       .subscribe( respuesta => {
         this.openDialog('', respuesta.message)
         if ( respuesta.code == "200" )

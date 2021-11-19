@@ -189,5 +189,47 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetLoadAdjustProgrammingGrid")]
+        [HttpGet]
+        public async Task<List<ArchivoCargue>> GetLoadAdjustProgrammingGrid(int pAjusteProgramacionId)
+        {
+            try
+            {
+                return await _reprogrammingService.GetLoadAdjustProgrammingGrid(pAjusteProgramacionId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("GetLoadAdjustInvestmentFlowGrid")]
+        [HttpGet]
+        public async Task<List<ArchivoCargue>> GetLoadAdjustInvestmentFlowGrid(int pAjusteProgramacionId)
+        {
+            try
+            {
+                return await _reprogrammingService.GetLoadAdjustInvestmentFlowGrid(pAjusteProgramacionId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("DeleteAdjustProgrammingOrInvestmentFlow")]
+        [HttpPost]
+        public async Task<Respuesta> DeleteAdjustProgrammingOrInvestmentFlow([FromQuery] int pArchivoCargueId, [FromQuery] int pAjusteProgramacionId)
+        {
+            try
+            {
+                string usuario = HttpContext.User.FindFirst("User").Value;
+                return await _reprogrammingService.DeleteAdjustProgrammingOrInvestmentFlow(pArchivoCargueId, pAjusteProgramacionId, usuario);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -3,10 +3,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { CargarProgramacionComponent } from '../cargar-programacion/cargar-programacion.component';
 import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component'
 import { CargarFlujoComponent } from '../cargar-flujo/cargar-flujo.component';
+import { ReprogrammingService } from 'src/app/core/_services/reprogramming/reprogramming.service';
 
 export interface VerificacionDiaria {
   id: string;
@@ -17,16 +16,8 @@ export interface VerificacionDiaria {
   estadoCargue: string;
 }
 
-const ELEMENT_DATA: VerificacionDiaria[] = [
-  {
-    id: '1',
-    fechaCargue: '10/08/2020',
-    numeroToalRegistros: '5',
-    numeroRegistrosValidos: '3',
-    numeroRegistrosInalidos: '2',
-    estadoCargue: 'Fallido',
-  }
-];
+const ELEMENT_DATA: VerificacionDiaria[] = [];
+
 @Component({
   selector: 'app-flujo-intervencion-recursos',
   templateUrl: './flujo-intervencion-recursos.component.html',
@@ -35,25 +26,36 @@ const ELEMENT_DATA: VerificacionDiaria[] = [
 export class FlujoIntervencionRecursosComponent implements AfterViewInit, OnInit  {
 
   displayedColumns: string[] = [
-    'fechaCargue',
-    'numeroToalRegistros',
-    'numeroRegistrosValidos',
-    'numeroRegistrosInalidos',
+    'fechaCreacion',
+    'cantidadRegistros',
+    'cantidadRegistrosValidos',
+    'cantidadRegistrosInvalidos',
     'estadoCargue',
     'id'
   ];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   @Input() ajusteProgramacionInfo:any;
 
   constructor(
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private reprogrammingService : ReprogrammingService
   ) { }
 
   ngOnInit(): void {
+    if (this.ajusteProgramacionInfo?.ajusteProgramacionId !== 0 && this.ajusteProgramacionInfo?.ajusteProgramacionId !== undefined) {
+      this.reprogrammingService.getLoadAdjustInvestmentFlowGrid(this.ajusteProgramacionInfo?.ajusteProgramacionId)
+        .subscribe((response: any[]) => {
+          //response = response.filter( p => p.estadoCargue == 'Válidos' )
+          this.dataSource = new MatTableDataSource(response);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        })
+    };
   }
 
   openCargarFlujo() {
@@ -83,14 +85,6 @@ export class FlujoIntervencionRecursosComponent implements AfterViewInit, OnInit
   }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      return (page + 1).toString() + ' de ' + length.toString();
-    };
-    this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
   applyFilter(event: Event) {

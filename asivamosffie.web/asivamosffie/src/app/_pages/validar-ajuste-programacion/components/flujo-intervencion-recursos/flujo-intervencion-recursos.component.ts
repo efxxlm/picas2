@@ -2,7 +2,6 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { FormControl, Validators, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 import { ReprogrammingService } from 'src/app/core/_services/reprogramming/reprogramming.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -93,10 +92,8 @@ export class FlujoIntervencionRecursosComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
-    // console.log(this.addressForm.value);
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
-    console.log(this.addressForm.value)
 
     let ajuste = {
       ajusteProgramacionId: this.ajusteProgramacionId,
@@ -111,7 +108,7 @@ export class FlujoIntervencionRecursosComponent implements OnInit, OnChanges {
       ]
     }
 
-    this.reprogrammingSvc.CreateEditObservacionAjusteProgramacion( ajuste, false )
+    this.reprogrammingSvc.createEditObservacionAjusteProgramacion( ajuste, false )
       .subscribe( respuesta => {
         this.openDialog('', respuesta.message);
         if (respuesta.code === "200")
