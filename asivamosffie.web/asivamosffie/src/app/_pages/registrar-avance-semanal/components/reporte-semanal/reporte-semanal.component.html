@@ -6723,13 +6723,15 @@
           border-top: 1pt solid black;
           height: 83.4pt;
           width: 243pt;
-          text-align: left;
+          text-align: center;
         "
       >
-        <span
+        <!-- <span
           style="position: absolute; z-index: 1; margin-left: 86px; margin-top: 5px; width: 134px; height: 103px"
         ></span
-        ><span> </span>
+        ><span> </span> -->
+        <img src="assets/img/pdf/informe-esmanal/image001.png" alt="ffie"
+        style="margin-top: 5px; width: 134px; height: 103px">
       </td>
       <td
         colspan="18"
@@ -6851,16 +6853,17 @@
     </tr>
     <tr class="xl82" style="height: 35.4pt">
       <td class="xl82" style="height: 35.4pt"></td>
-      <td colspan="10" class="xl342" style="border-right: 1px solid black; font-size: 9pt">
-        CONTRATO DE OBRA<span> </span>No. {{ infoGeneralObra?.contratoNumero }}
+      <td colspan="10" class="xl342" style="border-right: 1px solid black; font-size: 9pt; min-width: 437px;">
+        CONTRATO DE OBRA<span> </span>
+        No. {{ infoGeneralObra?.contratoNumero }}
       </td>
-      <td colspan="10" class="xl339" style="font-size: 9pt; border-right: 1px solid black; border-left: 0px">
+      <td colspan="10" class="xl339" style="font-size: 9pt; border-right: 1px solid black; border-left: 0px; min-width: 608px;">
         FECHA INICIO {{ infoGeneralObra?.contratoFechaInicio | date: 'dd/MM/yyyy' }}
       </td>
-      <td colspan="4" class="xl339" style="font-size: 9pt; border-right: 1px solid black; border-left: 0px">
-        CONTRATO DE INTERVENTORÍA<span> </span>No. {{ infoGeneralInterventoria?.contratoNumero }}
+      <td colspan="4" class="xl339" style="font-size: 9pt; border-right: 1px solid black; border-left: 0px; min-width: 437px;">
+        CONTRATO DE INTERVENTORÍA<span> </span> No. {{ infoGeneralInterventoria?.contratoNumero }}
       </td>
-      <td colspan="8" class="xl345" style="font-size: 9pt; border-right: 1pt solid black; border-left: 0px">
+      <td colspan="8" class="xl345" style="font-size: 9pt; border-right: 1pt solid black; border-left: 0px; min-width: 608px;">
         FECHA INICIO {{ infoGeneralInterventoria?.contratoFechaInicio | date: 'dd/MM/yyyy' }}
       </td>
     </tr>
@@ -7131,13 +7134,13 @@
         DEL
       </td>
       <td colspan="4" class="xl436" style="border-left: 0.5pt solid black">
-      {{ dataReporteSemanal.informacionGeneralProyecto[0].semanaInicio }}
+      {{ dataReporteSemanal.informacionGeneralProyecto[0].semanaInicio | date: 'dd/MM/yyyy' }}
     </td>
       <td class="xl192" style="border-top: 0px; border-left: 0.5pt solid black; font-size: 6pt; text-align: center">
         AL
       </td>
       <td colspan="3" class="xl436" style="border-right: 0.5pt solid black; border-left: 0.5pt solid black">
-      {{ dataReporteSemanal.informacionGeneralProyecto[0].semanaFin }}
+      {{ dataReporteSemanal.informacionGeneralProyecto[0].semanaFin | date: 'dd/MM/yyyy' }}
     </td>
     </tr>
     <tr class="xl81" style="height: 29.25pt">
@@ -9893,7 +9896,7 @@
           border-right: 1pt solid black;
         "
       >
-        4. GESTION AMBIENTAL
+        4. GESTIÓN AMBIENTAL
       </td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -9935,7 +9938,7 @@
         <div
           *ngIf="
             dataReporteSemanal?.seguimientoSemanalGestionObra.length > 0 &&
-            dataReporteSemanal?.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental[0]
+            dataReporteSemanal?.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAlerta[0].seguimientoSemanalGestionObraAmbiental[0]
               .seEjecutoGestionAmbiental == true
           "
         >
@@ -9965,7 +9968,7 @@
         <div
           *ngIf="
             dataReporteSemanal?.seguimientoSemanalGestionObra.length > 0 &&
-            dataReporteSemanal?.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental[0]
+            dataReporteSemanal?.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAlerta[0].seguimientoSemanalGestionObraAmbiental[0]
               .seEjecutoGestionAmbiental == false
           "
         >
@@ -9998,7 +10001,7 @@
       style="mso-height-source: userset; height: 13.2pt"
       *ngIf="
         dataReporteSemanal?.seguimientoSemanalGestionObra.length > 0 &&
-        dataReporteSemanal?.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental[0]
+        dataReporteSemanal?.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAlerta[0].seguimientoSemanalGestionObraAmbiental[0]
           .seEjecutoGestionAmbiental == true
       "
     >
@@ -10648,7 +10651,7 @@
           background: #d9d9d9;
         "
       >
-        5. GESTION CALIDAD
+        5. GESTIÓN CALIDAD
       </td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -11003,7 +11006,7 @@
           background: #d9d9d9;
         "
       >
-        6. GESTION DE SEGURIDAD Y SALUD EN EL TRABAJO
+        6. GESTIÓN DE SEGURIDAD Y SALUD EN EL TRABAJO
       </td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -11570,7 +11573,7 @@
           background: #d9d9d9;
         "
       >
-        7. GESTION SOCIAL
+        7. GESTIÓN SOCIAL
       </td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
