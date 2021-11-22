@@ -4,8 +4,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 import { Router } from '@angular/router';
+import { ReprogrammingService } from 'src/app/core/_services/reprogramming/reprogramming.service';
 
 export interface VerificacionDiaria {
   id: string;
@@ -17,17 +17,6 @@ export interface VerificacionDiaria {
   estadoRegistro: string;
 }
 
-const ELEMENT_DATA: VerificacionDiaria[] = [
-  {
-    id: '1',
-    fechaAprobacionPoliza: '21/06/2020',
-    numeroContrato: 'C223456789',
-    llaveMEN: 'LL03260326',
-    tipoNovedad: 'ModProrroga',
-    fechaNovedad: '04/07/2020',
-    estadoRegistro: 'Sin ajustes',
-  }
-];
 
 @Component({
   selector: 'app-tabla-ajuste-programacion',
@@ -52,19 +41,24 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
 
   constructor(
     private dialog: MatDialog,
-    private faseConstruccionServices: FaseUnoConstruccionService,
+    private reprogrammingServices: ReprogrammingService,
     private router: Router,
 
-  ) 
+  )
   {
-    
+
 
    }
 
   ngAfterViewInit() {
 
-    this.faseConstruccionServices.GetAjusteProgramacionGrid()
+    this.reprogrammingServices.getAjusteProgramacionGrid()
       .subscribe(respuesta => {
+        respuesta.forEach(element => {
+          element.novedadesSeleccionadas = element.novedadesSeleccionadas
+            ? element.novedadesSeleccionadas.slice(0, -1)
+            : '';
+        });
         this.dataSource = new MatTableDataSource( respuesta );
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -75,8 +69,6 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
         };
         this.paginator._intl.previousPageLabel = 'Anterior';
       });
-
-
   }
 
   applyFilter(event: Event) {
@@ -89,28 +81,28 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
   }
 
   RegistrarNuevo( ajusteProgramacion ){
-    console.log('ss')
-    this.router.navigate( [ '/registratAjusteProgramacion/registrarAjusteProgramacion', 0 ], { state: { ajusteProgramacion } } )
+    console.log(ajusteProgramacion)
+    this.router.navigate( [ '/registrarAjusteProgramacion/registrarAjusteProgramacion', ajusteProgramacion.ajusteProgramacionId ?? 0 ], { state: { ajusteProgramacion } } )
   }
 
   openDialog (modalTitle: string, modalText: string) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
+    });
   };
 
   EnviarASupervisor( ajuste ){
     console.log( ajuste.ajusteProgramacionId )
 
-    this.faseConstruccionServices.EnviarAlSupervisorAjusteProgramacion( ajuste.ajusteProgramacionId )
+    this.reprogrammingServices.enviarAlSupervisorAjusteProgramacion( ajuste.ajusteProgramacionId )
       .subscribe( respuesta => {
         this.openDialog('', respuesta.message)
         if ( respuesta.code == "200" )
-          this.ngAfterViewInit()        
+          this.ngAfterViewInit()
       })
   }
   verDetalle(ajusteProgramacion){
-    this.router.navigate( [ '/registratAjusteProgramacion/verHistorial', 0 ], { state: { ajusteProgramacion } } )
+    this.router.navigate( [ '/registrarAjusteProgramacion/verHistorial', 0 ], { state: { ajusteProgramacion } } )
   }
 }

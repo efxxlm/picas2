@@ -96,11 +96,11 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
                             if ( this.solicitudPago.ordenGiro.ordenGiroTercero !== undefined ) {
                                 if ( this.solicitudPago.ordenGiro.ordenGiroTercero.length > 0 ) {
                                     this.ordenGiroTercero = this.solicitudPago.ordenGiro.ordenGiroTercero[0];
-                
+
                                     if ( this.ordenGiroTercero.ordenGiroTerceroTransferenciaElectronica !== undefined ) {
                                         if ( this.ordenGiroTercero.ordenGiroTerceroTransferenciaElectronica.length > 0 ) {
                                             const ordenGiroTerceroTransferenciaElectronica = this.ordenGiroTercero.ordenGiroTerceroTransferenciaElectronica[0];
-                
+
                                             if ( ordenGiroTerceroTransferenciaElectronica.registroCompleto === false ) {
                                                 this.estadoSemaforos.acordeonInformacionGeneral = 'en-proceso';
                                             }
@@ -109,11 +109,11 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
                                             }
                                         }
                                     }
-                
+
                                     if ( this.ordenGiroTercero.ordenGiroTerceroChequeGerencia !== undefined ) {
                                         if ( this.ordenGiroTercero.ordenGiroTerceroChequeGerencia.length > 0 ) {
                                             const ordenGiroTerceroChequeGerencia = this.ordenGiroTercero.ordenGiroTerceroChequeGerencia[0];
-                
+
                                             if ( ordenGiroTerceroChequeGerencia.registroCompleto === false ) {
                                                 this.estadoSemaforos.acordeonInformacionGeneral = 'en-proceso';
                                             }
@@ -210,7 +210,7 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
 
     checkTieneDescuentos( esPreconstruccion: boolean, proyecto ) {
         const solicitudPagoFase = proyecto.fases.find( solicitudPagoFase => solicitudPagoFase.esPreconstruccion === esPreconstruccion );
-        
+
         if ( solicitudPagoFase !== undefined ) {
             if ( solicitudPagoFase.tieneDescuento === true ) {
                 return true;
@@ -229,7 +229,8 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
                 arraySemaforoelement.push(element.estadoSemaforo)
             }
         });
-        if (arraySemaforoelement.every(n => n === 'completo')) return 'completo'
+        if (arraySemaforoelement.every(n => n === 'completo') && proyecto.semaforoDetalle?.semaforoOrigen === 'completo') return 'completo'
+        if (arraySemaforoelement.every(n => n === 'completo') && proyecto.semaforoDetalle?.semaforoOrigen === 'sin-diligenciar') return 'en-proceso'
         if (arraySemaforoelement.some(n => n === 'sin-diligenciar')) return 'sin-diligenciar'
         else return 'sin-diligenciar'
     }

@@ -484,14 +484,33 @@ export class TerceroCausacionGogComponent implements OnInit {
                           //
                         // Set formulario criterios
                         // Get observaciones
+                        console.log(terceroCausacionxCriterio);
                         if(terceroCausacionxCriterio?.length > 0){
                           const totalTerceroCriterio = terceroCausacionxCriterio?.length;
-                          terceroCausacionxCriterio.forEach(element => {
-                            if(element.registroCompleto === true){
+                          terceroCausacionxCriterio.forEach((element: any) => {
+                            let registroCompleto = true;
+                            element.ordenGiroDetalleTerceroCausacionAportante.forEach((terceroCausacionAportante: any) => {
+                              if (
+                                  (terceroCausacionAportante.fuenteRecursoCodigo == "" || terceroCausacionAportante.fuenteRecursoCodigo == null)
+                                  || terceroCausacionAportante.aportanteId == 0
+                                  || (terceroCausacionAportante.conceptoPagoCodigo == "" || terceroCausacionAportante.conceptoPagoCodigo == null)
+                                  || terceroCausacionAportante.valorDescuento == 0
+                                  || terceroCausacionAportante.fuenteFinanciacionId == 0
+                                ){
+                                  registroCompleto = false;
+                                }
+                            });
+                            element.ordenGiroDetalleTerceroCausacionDescuento.forEach((terceroCausacionDescuento: any) => {
+                              if (terceroCausacionDescuento.registroCompleto == false){
+                                  registroCompleto = false;
+                              }
+                            });
+                            if(registroCompleto === true){
                               totalCompleto++;
                             }else{
                               totalIncompleto++;
                             }
+
                           });
                           let estadoSemaforo = 'en-proceso';
 
@@ -502,7 +521,6 @@ export class TerceroCausacionGogComponent implements OnInit {
                           }else{
                             estadoSemaforo = 'en-proceso';
                           }
-                          console.log(estadoSemaforo);
                           let obsVerificar = undefined;
                           let obsAprobar = undefined;
                           let obsTramitar = undefined;
@@ -754,8 +772,8 @@ export class TerceroCausacionGogComponent implements OnInit {
             if(this.getDescuentos( index, jIndex ).controls[ kIndex ].get( 'tipoDescuento' ).value == "5"){
               let valueTotalDescuento = 0;
 
-              if (this.solicitudPago.vAmortizacionXproyecto.length > 0) {
-                let valorAmortizacion = this.solicitudPago.vAmortizacionXproyecto[0].valorAnticipoAmortizado ?? 0;
+              if(this.solicitudPagoFase?.solicitudPagoFaseAmortizacion.length > 0){
+                let valorAmortizacion = this.solicitudPagoFase?.solicitudPagoFaseAmortizacion[0].valorAmortizacion ?? 0;
                 this.getDescuentos( index, jIndex ).controls.forEach(element => {
                   if(element.get( 'aportantesDescuento' ).value.length > 0){
                     element.get( 'aportantesDescuento' ).value.forEach((desc: { valorDescuento: number; }, i: number) => {
@@ -1162,8 +1180,9 @@ export class TerceroCausacionGogComponent implements OnInit {
                   this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( ( element ) => {
                       if(element.get( 'tipoDescuento' ).value == "5"){
                         let valueTotalDescuento = 0;
-                        if (this.solicitudPago.vAmortizacionXproyecto.length > 0) {
-                          let valorAmortizacion = this.solicitudPago.vAmortizacionXproyecto[0].valorAnticipoAmortizado  ?? 0;
+
+                        if(this.solicitudPagoFase?.solicitudPagoFaseAmortizacion.length > 0){
+                          let valorAmortizacion = this.solicitudPagoFase?.solicitudPagoFaseAmortizacion[0].valorAmortizacion ?? 0;
                           if(element.get( 'aportantesDescuento' ).value.length > 0){
                             element.get( 'aportantesDescuento' ).value.forEach((desc: { valorDescuento: number; }, i: number) => {
                                 if(desc != null){

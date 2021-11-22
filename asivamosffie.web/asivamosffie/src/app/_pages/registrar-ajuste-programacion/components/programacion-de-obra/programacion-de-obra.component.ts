@@ -6,6 +6,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CargarProgramacionComponent } from '../cargar-programacion/cargar-programacion.component';
 import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component'
+import { ReprogrammingService } from 'src/app/core/_services/reprogramming/reprogramming.service';
+import { CommonService, Respuesta } from 'src/app/core/_services/common/common.service';
+import { Router } from '@angular/router';
 
 export interface VerificacionDiaria {
   id: string;
@@ -16,16 +19,8 @@ export interface VerificacionDiaria {
   estadoCargue: string;
 }
 
-const ELEMENT_DATA: VerificacionDiaria[] = [
-  {
-    id: '1',
-    fechaCargue: '10/08/2020',
-    numeroToalRegistros: '5',
-    numeroRegistrosValidos: '3',
-    numeroRegistrosInalidos: '2',
-    estadoCargue: 'Fallido',
-  }
-];
+const ELEMENT_DATA: VerificacionDiaria[] = [];
+
 @Component({
   selector: 'app-programacion-de-obra',
   templateUrl: './programacion-de-obra.component.html',
@@ -34,32 +29,44 @@ const ELEMENT_DATA: VerificacionDiaria[] = [
 export class ProgramacionDeObraComponent implements AfterViewInit, OnInit  {
 
   displayedColumns: string[] = [
-    'fechaCargue',
-    'numeroToalRegistros',
-    'numeroRegistrosValidos',
-    'numeroRegistrosInalidos',
+    'fechaCreacion',
+    'cantidadRegistros',
+    'cantidadRegistrosValidos',
+    'cantidadRegistrosInvalidos',
     'estadoCargue',
     'id'
   ];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   @Input() ajusteProgramacionInfo:any;
 
   constructor(
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private reprogrammingService : ReprogrammingService,
+    private commonSvc: CommonService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
+    if (this.ajusteProgramacionInfo?.ajusteProgramacionId !== 0 && this.ajusteProgramacionInfo?.ajusteProgramacionId !== undefined) {
+      this.reprogrammingService.getLoadAdjustProgrammingGrid(this.ajusteProgramacionInfo?.ajusteProgramacionId)
+        .subscribe((response: any[]) => {
+          //response = response.filter( p => p.estadoCargue == 'Válidos' )
+          this.dataSource = new MatTableDataSource(response);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        })
+    };
   }
 
   openCargarProgramacion() {
-    console.log( this.ajusteProgramacionInfo )
     const dialogRef = this.dialog.open(CargarProgramacionComponent, {
       width: '75em',
-       data: { ajusteProgramacionInfo: this.ajusteProgramacionInfo } 
+       data: { ajusteProgramacionInfo: this.ajusteProgramacionInfo }
     });
     dialogRef.afterClosed()
     .subscribe(response => {
@@ -69,10 +76,10 @@ export class ProgramacionDeObraComponent implements AfterViewInit, OnInit  {
     })
   }
 
-  openObservaciones(id: string) {
+  openObservaciones(dataFile: any) {
     const dialogCargarProgramacion = this.dialog.open(DialogObservacionesComponent, {
       width: '75em',
-      // data: { }
+       data: { esObra: true, ajusteProgramacionInfo: this.ajusteProgramacionInfo, dataFile: dataFile}
     });
     dialogCargarProgramacion.afterClosed()
       .subscribe(response => {
@@ -82,15 +89,31 @@ export class ProgramacionDeObraComponent implements AfterViewInit, OnInit  {
       })
   }
 
+  openDialogTrueFalse(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    return dialogRef.afterClosed();
+  }
+
+
+  openDialog(modalTitle: string, modalText: string) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+     this.router.navigate(['/registrarAjusteProgramacion'], {});
+    });
+  }
+
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      return (page + 1).toString() + ' de ' + length.toString();
-    };
-    this.paginator._intl.previousPageLabel = 'Anterior';
+  }
+
+  onClose(): void {
+    this.dialog.closeAll();
   }
 
   applyFilter(event: Event) {
@@ -100,6 +123,32 @@ export class ProgramacionDeObraComponent implements AfterViewInit, OnInit  {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  descargar(element: any) {
+    this.commonSvc.getFileById(element.archivoCargueId)
+      .subscribe(respuesta => {
+        const documento = 'ProgramacionObra.xlsx';
+        const  blob = new Blob([respuesta], { type: 'application/octet-stream' });
+        const  anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/octet-stream', anchor.download, anchor.href].join(':');
+        anchor.click();
+      });
+  }
+
+  eliminar(element: any) {
+    this.openDialogTrueFalse('', '<b>¿Está seguro de eliminar esta información?</b>').subscribe(value => {
+      if (value === true) {
+        this.reprogrammingService.deleteAdjustProgrammingOrInvestmentFlow(element.archivoCargueId, this.ajusteProgramacionInfo.ajusteProgramacionId)
+        .subscribe((respuesta: Respuesta) => {
+          this.onClose();
+          this.openDialog('', respuesta.message);
+          return;
+        })
+      }
+    });
   }
 
 }

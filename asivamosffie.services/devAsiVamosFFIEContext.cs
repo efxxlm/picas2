@@ -437,6 +437,18 @@ namespace asivamosffie.model.Models
             {
                 entity.Property(e => e.EstadoCodigo).HasMaxLength(10);
 
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.ContratacionProyecto)
                     .WithMany(p => p.AjusteProgramacion)
                     .HasForeignKey(d => d.ContratacionProyectoId)
@@ -8681,6 +8693,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.NumeroSolicitud)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VAmortizacionTotalXproyecto>(entity =>
@@ -10129,7 +10145,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(1)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SaldoUso).HasColumnType("decimal(30, 0)");
+                entity.Property(e => e.SaldoUso).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.TipoUsoCodigo)
                     .HasMaxLength(2)

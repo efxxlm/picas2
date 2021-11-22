@@ -32,23 +32,51 @@
         </strong>
         {{ ajusteProgramacionInfo.novedadesSeleccionadas }}
       </p>
-      <p>
-        <strong>
-          Fecha de incio:
+      <p *ngIf="modificaFecha">
+        <strong >
+          Fecha de inicio:
         </strong>
-        30/06/2020
+        {{
+          (novedad?.contrato?.fechaActaInicioFase2
+            ? novedad?.contrato?.fechaActaInicioFase2
+            : novedad?.contrato?.fechaActaInicioFase1
+          ) | date: 'dd/MM/yyyy'
+        }}
       </p>
-      <p>
+      <p  *ngIf="modificaFecha">
         <strong>
           Fecha final antes de la modificación:
         </strong>
-        09/11/2022
+        {{
+          (novedad?.contrato?.fechaTerminacionFase2
+            ? novedad?.contrato?.fechaTerminacionFase2
+            : novedad?.contrato?.fechaTerminacion
+          ) | date: 'dd/MM/yyyy'
+        }}
       </p>
-      <p>
-        <strong>
+      <p *ngIf="modificaFecha">
+        <strong >
           Nueva fecha de finalización:
         </strong>
-        15/02/2023
+        {{
+          (novedad?.contrato?.fechaEstimadaFinalizacion ? novedad?.contrato?.fechaEstimadaFinalizacion :
+            novedad?.contrato?.fechaTerminacionFase2
+            ? novedad?.contrato?.fechaTerminacionFase2
+            : novedad?.contrato?.fechaTerminacion
+          ) | date: 'dd/MM/yyyy'
+        }}
+      </p>
+      <p *ngIf="esAdicion">
+        <strong >
+          Valor inicial:
+        </strong>
+        {{ novedad?.contrato?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud | currency: 'COP':'symbol-narrow':'.0-0'  }}
+      </p>
+      <p *ngIf="esAdicion">
+        <strong >
+          Valor después de la modificación:
+        </strong>
+        {{ novedad?.contrato?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud + presupuestoAdicionalSolicitado | currency: 'COP':'symbol-narrow':'.0-0'  }}
       </p>
       <p>
         <strong>
@@ -66,37 +94,37 @@
         <strong>
           Tipo de intervención:
         </strong>
-        Remodelación
+        {{ novedad?.proyectosSeleccionado?.tipoIntervencion }}
       </p>
       <p>
         <strong>
           Departamento:
         </strong>
-        Boyacá
+        {{ novedad?.proyectosSeleccionado?.departamento }}
       </p>
       <p>
         <strong>
           Institución Educativa:
         </strong>
-        Nuestra Señora del Carmen
+        {{ novedad?.proyectosSeleccionado?.institucionEducativa }}
       </p>
       <p>
         <strong>
           Sede:
         </strong>
-        Unica sede
+        {{ novedad?.proyectosSeleccionado?.sede }}
       </p>
       <p>
         <strong>
           Municipio:
         </strong>
-        Susacón
+        {{ novedad?.proyectosSeleccionado?.municipio }}
       </p>
       <p>
         <strong>
           Valor total del proyecto:
         </strong>
-        $ 60.000.000
+        {{ novedad?.proyectosSeleccionado?.valorTotal | currency: '':'symbol':'3.0' }}
       </p>
     </mat-card-content>
   </mat-card>
@@ -105,7 +133,6 @@
     <app-expansion-panel
                         [ajusteProgramacionInfo]="ajusteProgramacionInfo"
     >
-
     </app-expansion-panel>
   </div>
 </section>

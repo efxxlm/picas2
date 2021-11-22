@@ -64,7 +64,7 @@ export class FaseUnoConstruccionService {
     return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditObservacionesCarga`, archivo );
   }
 
-  createEditObservacionDiagnostico( contratoConstruccion ){ 
+  createEditObservacionDiagnostico( contratoConstruccion ){
     return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacionDiagnostico?esSupervisor=false`, contratoConstruccion );
   }
 
@@ -76,26 +76,26 @@ export class FaseUnoConstruccionService {
     return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacionManejoAnticipo?esSupervisor=false`, contratoConstruccion );
   }
 
-  createEditObservacionProgramacionObra( contratoConstruccion ){  
+  createEditObservacionProgramacionObra( contratoConstruccion ){
     return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacionProgramacionObra?esSupervisor=false`, contratoConstruccion );
   }
 
-  createEditObservacionFlujoInversion( contratoConstruccion ){  
+  createEditObservacionFlujoInversion( contratoConstruccion ){
     return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacionFlujoInversion?esSupervisor=false`, contratoConstruccion );
   }
 
-  createEditObservacionPerfil( contratacionPerfil ){  
+  createEditObservacionPerfil( contratacionPerfil ){
     return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacionPerfil?esSupervisor=false`, contratacionPerfil );
   }
 
-  aprobarInicio( id ){  
+  aprobarInicio( id ){
     return this.http.post<Respuesta>( `${ this.urlApi }/aprobarInicio?pContratoId=${ id }`, null );
   }
-  
+
 
   //Peticiones POST Carga Masiva "Programación de obra"
   uploadFileToValidateProgramming ( pContratoConstruccinId: number, pContratoId: number, pProyectoId: number, documento: File ) {
-    const formData = new FormData(); 
+    const formData = new FormData();
     formData.append('file', documento, documento.name);
     return this.http.post( `${ this.urlApi }/UploadFileToValidateProgramming?pContratoConstruccinId=${ pContratoConstruccinId }&pContratoId=${ pContratoId }&pProyectoId=${ pProyectoId }`, formData )
   }
@@ -105,7 +105,7 @@ export class FaseUnoConstruccionService {
   };
   //Peticiones POST Carga Masiva "Flujo de inversión de recursos"
   uploadFileToValidateInvestmentFlow ( pContratoConstruccinId: number, pContratoId: number, pProyectoId: number, documento: File ) {
-    const formData = new FormData(); 
+    const formData = new FormData();
     formData.append('file', documento, documento.name);
     return this.http.post( `${ this.urlApi }/UploadFileToValidateInvestmentFlow?pContratoConstruccinId=${ pContratoConstruccinId }&pContratoId=${ pContratoId }&pProyectoId=${ pProyectoId }`, formData )
   };
@@ -130,54 +130,14 @@ export class FaseUnoConstruccionService {
   deleteArchivoCargue ( pArchivoCargueId: number, pContratoConstruccionId:number, pEsFlujoInvserion: boolean ) {
     return this.http.delete<Respuesta>( `${ this.urlApi }/DeleteArchivoCargue?pArchivoCargueId=${ pArchivoCargueId }&pContratoConstruccionId=${ pContratoConstruccionId }&pEsFlujoInvserion=${ pEsFlujoInvserion }` );
   };
-  
+
   GenerateDRP(id)
-  {        
+  {
     return this.http.get(`${ this.urlApi }/GenerateDRP?pContratoId=${id}`, { responseType: "blob" } );
   }
 
-  CalcularYGuardarFechaInicioContrato(construccion){ 
+  CalcularYGuardarFechaInicioContrato(construccion){
     return this.http.post(`${ this.urlApi }/CalcularYGuardarFechaInicioContrato`,construccion);
-  }
-
-  GetAjusteProgramacionGrid ( ) {
-    return this.http.get<any[]>( `${ this.urlApi }/GetAjusteProgramacionGrid` );
-  };
-
-  uploadFileToValidateAdjustmentProgramming ( pAjusteProgramacionId: number, pContratacionProyectId: number, pNovedadContractualId: number, pContratoId: number, pProyectoId: number, documento: File ) {
-    const formData = new FormData(); 
-    formData.append('file', documento, documento.name);
-    return this.http.post( `${ this.urlApi }/uploadFileToValidateAdjustmentProgramming?pAjusteProgramacionId=${ pAjusteProgramacionId }&pContratacionProyectId=${ pContratacionProyectId }&pNovedadContractualId=${ pNovedadContractualId }&pContratoId=${pContratoId}&pProyectoId=${pProyectoId}`, formData )
-  };
-
-  transferMassiveLoadAdjustmentProgramming ( pIdDocument: string, pProyectoId, pContratoId ) {
-    return this.http.post<Respuesta>( `${ this.urlApi }/transferMassiveLoadAdjustmentProgramming?pIdDocument=${ pIdDocument }&pProyectoId=${pProyectoId}&pContratoId=${pContratoId}`, '' )
-  };
-
-  UploadFileToValidateAdjustmentInvestmentFlow ( pAjusteProgramacionId: number, pContratacionProyectId: number, pNovedadContractualId: number, pContratoId: number, pProyectoId: number, documento: File ) {
-    const formData = new FormData(); 
-    formData.append('file', documento, documento.name);
-    return this.http.post( `${ this.urlApi }/UploadFileToValidateAdjustmentInvestmentFlow?pAjusteProgramacionId=${ pAjusteProgramacionId }&pContratacionProyectId=${ pContratacionProyectId }&pNovedadContractualId=${ pNovedadContractualId }&pContratoId=${pContratoId}&pProyectoId=${pProyectoId}`, formData )
-  };
-
-  TransferMassiveLoadAdjustmentInvestmentFlow( pIdDocument: string, pProyectoId: number, pContratoId: number ) {
-    return this.http.post<Respuesta>( `${ this.urlApi }/TransferMassiveLoadAdjustmentInvestmentFlow?pIdDocument=${ pIdDocument }&pProyectoId=${pProyectoId}&pContratoId=${pContratoId}`, '' )
-  };
-
-  EnviarAlSupervisorAjusteProgramacion( id ){  
-    return this.http.post<Respuesta>( `${ this.urlApi }/EnviarAlSupervisorAjusteProgramacion?pAjusteProgramacionId=${ id }`, null );
-  }
-
-  CreateEditObservacionAjusteProgramacion( ajusteProgramacion, esObra ){ 
-    return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditObservacionAjusteProgramacion?esObra=${esObra}`, ajusteProgramacion );
-  }
-
-  GetAjusteProgramacionById( id ){ 
-    return this.http.get<any>( `${ this.urlApi }/GetAjusteProgramacionById?pAjusteProgramacionId=${id}`);
-  }
-
-  AprobarAjusteProgramacion( id ){  
-    return this.http.post<Respuesta>( `${ this.urlApi }/AprobarAjusteProgramacion?pAjusteProgramacionId=${ id }`, null );
   }
 
 }

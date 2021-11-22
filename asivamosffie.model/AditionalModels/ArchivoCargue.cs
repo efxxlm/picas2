@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using asivamosffie.model.Models;
-using asivamosffie.model.APIModels;
-using System.ComponentModel.DataAnnotations.Schema;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks; 
-using asivamosffie.model.Models; 
-using asivamosffie.model.APIModels;
-using System.IO;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Http;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace asivamosffie.model.Models
 {
@@ -19,6 +6,9 @@ namespace asivamosffie.model.Models
     {
         [NotMapped]
         public string estadoCargue  { get; set; }
+
+        [NotMapped]
+        public AjustePragramacionObservacion TempAjustePragramacionObservacion { get; set; }
 
     }
 }

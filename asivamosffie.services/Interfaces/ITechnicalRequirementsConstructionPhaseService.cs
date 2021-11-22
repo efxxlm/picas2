@@ -43,21 +43,7 @@ namespace asivamosffie.services.Interfaces
         Proyecto CalcularFechaInicioContrato(int pContratoConstruccionId);
         Proyecto CalcularFechaInicioContratoFase2(int pContratoConstruccionId);
         Proyecto CalcularYGuardarFechaInicioContrato(int pContratoConstruccionId, DateTime pFechaInicioObra, int pContratoId, int pProyectoId, string pUsuarioModificacion);
-        Task<List<VAjusteProgramacion>> GetAjusteProgramacionGrid();
-        Task<Respuesta> UploadFileToValidateAdjustmentProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pAjusteProgramacionId, int pContratacionProyectId, int pNovedadContractualId,
-                                                                                int pContratoId, int pProyectoId);
-        Task<Respuesta> TransferMassiveLoadAdjustmentProgramming(string pIdDocument, string pUsuarioModifico, int pProyectoId, int pContratoId);
-        Task<Respuesta> UploadFileToValidateAdjustmentInvestmentFlow(IFormFile pFile, string pFilePatch, string pUsuarioCreo,
-                                                                                int pAjusteProgramacionId, int pContratacionProyectId, int pNovedadContractualId,
-                                                                                int pContratoId, int pProyectoId);
+        Proyecto CalcularFechasContrato(int pProyectoId, DateTime? pFechaInicioObra, int pContratoId);
 
-        Task<Respuesta> TransferMassiveLoadAdjustmentInvestmentFlow(string pIdDocument, string pUsuarioModifico, int pProyectoId, int pContratoId);
-
-        Task<Respuesta> EnviarAlSupervisorAjusteProgramacion(int pAjusteProgramacionId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
-        Task<Respuesta> CreateEditObservacionAjusteProgramacion(AjusteProgramacion pAjusteProgramacion, bool esObra, string pUsuario);
-        Task<AjusteProgramacion> GetAjusteProgramacionById(int pAjusteProgramacionId);
-        Task<Respuesta> AprobarAjusteProgramacion(int pAjusteProgramacionId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
-
-
-    }
+      }
 }

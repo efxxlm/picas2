@@ -4,8 +4,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 import { Router } from '@angular/router';
+import { ReprogrammingService } from 'src/app/core/_services/reprogramming/reprogramming.service';
 
 export interface VerificacionDiaria {
   id: string;
@@ -52,12 +52,12 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
 
   constructor(
     private dialog: MatDialog,
-    private faseConstruccionServices: FaseUnoConstruccionService,
+    private reprogrammingService: ReprogrammingService,
     private router: Router,
   ) { }
 
   ngAfterViewInit() {
-    this.faseConstruccionServices.GetAjusteProgramacionGrid()
+    this.reprogrammingService.getAjusteProgramacionGrid()
       .subscribe(respuesta => {
         this.dataSource = new MatTableDataSource(respuesta.filter( r => r.estadoCodigo === '3' || r.estadoCodigo === '4' || r.estadoCodigo === '5' || r.estadoCodigo === '6' ));
         this.dataSource.sort = this.sort;
@@ -88,7 +88,7 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
   }
 
   Aprobar(id){
-    this.faseConstruccionServices.AprobarAjusteProgramacion( id )
+    this.reprogrammingService.aprobarAjusteProgramacion( id )
       .subscribe( respuesta => {
         this.openDialog('', respuesta.message);
         if (respuesta.code === "200")

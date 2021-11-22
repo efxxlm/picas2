@@ -1,6 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { Respuesta } from 'src/app/core/_services/common/common.service';
+import { ReprogrammingService } from 'src/app/core/_services/reprogramming/reprogramming.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -10,7 +13,13 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class DialogObservacionesComponent implements OnInit {
 
-  formObservacion: FormGroup;
+  observaciones = this.fb.group({
+    ajustePragramacionObservacionId: [null, Validators.required],
+    ajusteProgramacionId: [null, Validators.required],
+    observaciones: [null, Validators.required],
+    esObra: [null, Validators.required],
+    archivoCargueId: [true, Validators.required]
+  });
 
   config = {
     toolbar: [
@@ -22,18 +31,19 @@ export class DialogObservacionesComponent implements OnInit {
   };
   constructor(
     private fb: FormBuilder,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private reprogrammingSvc: ReprogrammingService,
+    private router: Router,
+    @Inject(MAT_DIALOG_DATA) public data,
     ) {
-    this.crearFormulario();
   }
 
-  ngOnInit(): void { }
-
-  crearFormulario() {
-    this.formObservacion = this.fb.group({
-      causaRechazo: [null, Validators.required]
-    });
+  ngOnInit(): void {
+    if(this.data.dataFile.tempAjustePragramacionObservacion!= null){
+      this.observaciones.patchValue(this.data.dataFile.tempAjustePragramacionObservacion);
+    }
   }
+
 
   textoLimpio(texto: string) {
     let saltosDeLinea = 0;
@@ -77,9 +87,12 @@ export class DialogObservacionesComponent implements OnInit {
   };
 
   openDialogGuardar(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+     this.router.navigate(['/registrarAjusteProgramacion'], {});
     });
   }
 
@@ -88,9 +101,34 @@ export class DialogObservacionesComponent implements OnInit {
   }
 
   guardar() {
-    console.log(this.formObservacion.value);
-    this.onClose();
-    this.openDialogGuardar('', '<b>La información ha sido guardada exitosamente.</b>');
+    this.observaciones.value.ajusteProgramacionId = this.data.ajusteProgramacionInfo.ajusteProgramacionId,
+    this.observaciones.value.esObra = true;
+    const ajustePragramacionObservacion = [];
+    ajustePragramacionObservacion.push(
+      {
+        ajustePragramacionObservacionId: 0,
+        ajusteProgramacionId: this.observaciones.value.ajusteProgramacionId,
+        observaciones: this.observaciones.value.observaciones,
+        esObra: true,
+        archivoCargueId: this.data.dataFile.archivoCargueId
+      }
+    );
+
+    const ajusteProgramacion = {
+      ajusteProgramacionId: this.observaciones.value.ajusteProgramacionId,
+      tieneObservacionesProgramacionObra: true,
+      ajustePragramacionObservacion: ajustePragramacionObservacion
+    }
+    this.createEditObservacionAjusteProgramacion(ajusteProgramacion);
+  }
+
+  createEditObservacionAjusteProgramacion(pAjusteProgramacion: any) {
+    this.reprogrammingSvc.createEditObservacionAjusteProgramacion(pAjusteProgramacion, true)
+      .subscribe((respuesta: Respuesta) => {
+        this.onClose();
+        this.openDialogGuardar('', respuesta.message);
+        return;
+      })
   }
 
 }
