@@ -273,6 +273,7 @@ namespace asivamosffie.services
                 if (!intSeguimientoSemanal.HasValue)
                     intSeguimientoSemanal = pSeguimientoSemanalId;
 
+                pSeguimientoSemanalId = intSeguimientoSemanal ?? 0;
 
                 SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
                       .Include(r => r.SeguimientoDiario)
