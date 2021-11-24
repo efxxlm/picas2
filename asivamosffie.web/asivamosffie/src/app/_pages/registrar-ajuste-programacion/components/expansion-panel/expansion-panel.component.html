@@ -8,36 +8,30 @@
 <mat-accordion>
   <mat-expansion-panel class="expansion-style">
     <mat-expansion-panel-header class="expansion-style--header">
-      <mat-panel-title class="expansion-style--title" [ngClass]="{
-        'sin-diligenciar':true,
-        'en-proceso':false,
-        'completo':false,
-        'en-alerta':false
-      }">
+      <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforoObra">
       Programación de obra
       </mat-panel-title>
     </mat-expansion-panel-header>
     <app-programacion-de-obra
                               [ajusteProgramacionInfo]="ajusteProgramacionInfo"
+                              (estadoSemaforo)="estadoSemaforoObra = $event"
     >
-
     </app-programacion-de-obra>
   </mat-expansion-panel>
 
-  
+
   <mat-expansion-panel class="expansion-style">
     <mat-expansion-panel-header class="expansion-style--header">
-      <mat-panel-title class="expansion-style--title" [ngClass]="{
-        'sin-diligenciar':true,
-        'en-proceso':false,
-        'completo':false,
-        'en-alerta':false
-      }">
+      <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforoFlujo">
       Flujo de inversión de recursos
       </mat-panel-title>
     </mat-expansion-panel-header>
     <app-flujo-intervencion-recursos
                                     [ajusteProgramacionInfo]="ajusteProgramacionInfo"
+                                    [novedadContractualRegistroPresupuestal]="novedadContractualRegistroPresupuestal"
+                                    [plazoContratacion] ="plazoContratacion"
+                                    [valorContrato] = "valorContrato"
+                                    (estadoSemaforo)="estadoSemaforoFlujo = $event"
     >
 
     </app-flujo-intervencion-recursos>

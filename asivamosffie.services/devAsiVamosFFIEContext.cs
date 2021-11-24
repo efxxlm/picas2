@@ -287,6 +287,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportante> VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportante { get; set; }
         public virtual DbSet<VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportanteXuso> VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportanteXuso { get; set; }
         public virtual DbSet<VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso> VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso { get; set; }
+        public virtual DbSet<VFechasValidacionAjusteProgramacion> VFechasValidacionAjusteProgramacion { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoId> VFuentesUsoXcontratoId { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoIdXproyecto> VFuentesUsoXcontratoIdXproyecto { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
@@ -9580,6 +9581,17 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.ValorUso).HasColumnType("numeric(38, 2)");
+            });
+
+            modelBuilder.Entity<VFechasValidacionAjusteProgramacion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FechasValidacionAjusteProgramacion");
+
+                entity.Property(e => e.FechaFin).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaInicio).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<VFuentesUsoXcontratoId>(entity =>

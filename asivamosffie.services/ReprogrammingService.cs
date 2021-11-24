@@ -74,7 +74,7 @@ namespace asivamosffie.services
 
                 listaCargas.ForEach(archivo =>
                 {
-                    archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Válidos" : "Fallido";
+                    archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Válido" : "Fallido";
                     archivo.TempAjustePragramacionObservacion = _context.AjustePragramacionObservacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsObra == true && r.ArchivoCargueId == archivo.ArchivoCargueId && r.Eliminado != true).FirstOrDefault();
 
                 });
@@ -94,7 +94,7 @@ namespace asivamosffie.services
 
                 listaCargas.ForEach(archivo =>
                 {
-                    archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Válidos" : "Fallido";
+                    archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Válido" : "Fallido";
                     archivo.TempAjustePragramacionObservacion = _context.AjustePragramacionObservacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsObra != true && r.ArchivoCargueId == archivo.ArchivoCargueId && r.Eliminado != true).FirstOrDefault();
 
                 });
@@ -321,6 +321,17 @@ namespace asivamosffie.services
                                                    Eliminado = true,
                                                    AjusteProgramacionId = pAjusteProgramacionId
                                                });
+
+                    //se pueden borrar , no es necesario dejar el registro.
+
+                    List<AjusteProgramacionObra> listaAjusteProgramacionObra = _context.AjusteProgramacionObra.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                    _context.AjusteProgramacionObra.RemoveRange(listaAjusteProgramacionObra);
+
+                    List<TempProgramacion> listaTempAjusteProgramacionObra = _context.TempProgramacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                    _context.TempProgramacion.RemoveRange(listaTempAjusteProgramacionObra);
+
+                    List<AjusteProgramacionFlujo> listaAjusteProgramacionFlujo = _context.AjusteProgramacionFlujo.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                    _context.AjusteProgramacionFlujo.RemoveRange(listaAjusteProgramacionFlujo);
 
                     bool state = await ValidarRegistroCompletoValidacionAjusteProgramacion(pAjusteProgramacionId);
                     AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
@@ -656,16 +667,17 @@ namespace asivamosffie.services
             AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
 
             DateTime? fechaInicioContrato = proyectoTemp.FechaInicioEtapaObra;
-            DateTime fechaFinalContrato = proyectoTemp.FechaFinEtapaObra;
+            //DateTime fechaFinalContrato = proyectoTemp.FechaFinEtapaObra;
+            DateTime fechaFinalContrato = _commonService.GetFechaEstimadaFinalizacion(pContratoId) ?? proyectoTemp.FechaFinEtapaObra;
 
-            novedadContractual.NovedadContractualDescripcion.ToList().ForEach(ncd =>
+           /* novedadContractual.NovedadContractualDescripcion.ToList().ForEach(ncd =>
             {
                 if (ncd.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio && ajusteProgramacion.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion)
                 {
                     double cantidadDiasAgregados = (ncd.FechaFinSuspension.Value - ncd.FechaInicioSuspension.Value).TotalDays;
                     proyectoTemp.FechaFinEtapaObra = proyectoTemp.FechaFinEtapaObra.AddDays(cantidadDiasAgregados);
                 }
-            });
+            });*/
 
             int CantidadRegistrosVacios = 0;
             int CantidadResgistrosValidos = 0;
@@ -859,6 +871,32 @@ namespace asivamosffie.services
                                 worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                                 tieneErrores = true;
                             }
+                            // No se pueden programar actividades en fechas donde se ejecuto avance semanal o programacion v1.
+                            // temp = Fechas del registro que esta leyendo
+                            // fechaAct = Fecha de registros existentes
+
+                            bool validacionFecha = false;
+
+                            List<VFechasValidacionAjusteProgramacion> vFechas = _context.VFechasValidacionAjusteProgramacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                            foreach (var fechaAct in vFechas)
+                            {
+                                if (!((temp.FechaInicio.Date < fechaAct.FechaInicio && temp.FechaFin.Date < fechaAct.FechaInicio) || (temp.FechaInicio.Date > fechaAct.FechaFin)))
+                                {
+                                    validacionFecha = true;
+                                    break;
+                                }
+                            }
+
+                            if (validacionFecha)
+                            {
+                                worksheet.Cells[i, 4].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+
+                                worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                worksheet.Cells[i, 5].AddComment("No se pueden programar nuevas actividades en fechas en que ya se ejecutaron actividades.", "Admin");
+                                tieneErrores = true;
+                            }
 
                             #endregion validacion fechas
 
@@ -1049,12 +1087,12 @@ namespace asivamosffie.services
             //    numberOfWeeks++;
 
             //Capitulos cargados
-            AjusteProgramacionObra[] listaProgramacion = _context.AjusteProgramacionObra
-                                                                .Where(
-                                                                        p => p.AjusteProgramacionId == pAjusteProgramacionId &&
-                                                                        p.TipoActividadCodigo == "C")
-                                                                .OrderBy(p => p.AjusteProgramacionObraId)
-                                                                .ToArray();
+            //AjusteProgramacionObra[] listaProgramacion = _context.AjusteProgramacionObra
+            //                                                    .Where(
+            //                                                            p => p.AjusteProgramacionId == pAjusteProgramacionId &&
+            //                                                            p.TipoActividadCodigo == "C")
+            //                                                    .OrderBy(p => p.AjusteProgramacionObraId)
+            //                                                    .ToArray();
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -1104,7 +1142,7 @@ namespace asivamosffie.services
                         estructuraValidaValidacionGeneral = false;
                         mensajeRespuesta = "Numero de semanas no es igual al del proyecto";
                     }
-
+                    /*
                     //valida numero capitulos
                     if (listaProgramacion.Count() != cantidadCapitulos && worksheet.Cells[1, 1].Comment == null)
                     {
@@ -1114,7 +1152,7 @@ namespace asivamosffie.services
                         tieneErrores = true;
                         estructuraValidaValidacionGeneral = false;
                         mensajeRespuesta = "Numero de capitulos no es igual a la programacion";
-                    }
+                    }*/
 
                     decimal sumaTotal = 0;
 
@@ -1169,10 +1207,6 @@ namespace asivamosffie.services
                                     worksheet.Cells[i, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                                     tieneErrores = true;
                                     tieneErroresCapitulo = true;
-                                }
-                                else
-                                {
-                                    temp.AjusteProgramacionObraId = listaProgramacion[i - 2].AjusteProgramacionObraId;
                                 }
 
                                 #endregion Capitulo
@@ -1461,14 +1495,17 @@ namespace asivamosffie.services
                                                                 .Include(x => x.NovedadContractualDescripcion)
                                                                 .FirstOrDefault(x => x.NovedadContractualId == ajusteProgramacion.NovedadContractualId);
 
-                    novedadContractual.NovedadContractualDescripcion.ToList().ForEach(ncd =>
+                    DateTime fechaFinalContrato = _commonService.GetFechaEstimadaFinalizacion(pContratoId) ?? proyecto.FechaFinEtapaObra;
+                    proyecto.FechaFinEtapaObra = fechaFinalContrato;
+
+                    /*novedadContractual.NovedadContractualDescripcion.ToList().ForEach(ncd =>
                     {
                         if (ncd.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio && ajusteProgramacion.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion)
                         {
                             double cantidadDiasAgregados = (ncd.FechaFinSuspension.Value - ncd.FechaInicioSuspension.Value).TotalDays;
                             proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays(cantidadDiasAgregados);
                         }
-                    });
+                    });*/
 
                     MesEjecucion[] meses = _context.MesEjecucion.Where(x => x.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId).ToArray();
 

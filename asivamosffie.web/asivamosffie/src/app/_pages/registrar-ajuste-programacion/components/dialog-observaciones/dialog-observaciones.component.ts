@@ -18,7 +18,9 @@ export class DialogObservacionesComponent implements OnInit {
     ajusteProgramacionId: [null, Validators.required],
     observaciones: [null, Validators.required],
     esObra: [null, Validators.required],
-    archivoCargueId: [true, Validators.required]
+    archivoCargueId: [true, Validators.required],
+    tieneObservacionesProgramacionObra: [null, Validators.required],
+    tieneObservacionesFlujoInversion: [null, Validators.required],
   });
 
   config = {
@@ -101,29 +103,31 @@ export class DialogObservacionesComponent implements OnInit {
   }
 
   guardar() {
-    this.observaciones.value.ajusteProgramacionId = this.data.ajusteProgramacionInfo.ajusteProgramacionId,
-    this.observaciones.value.esObra = true;
+    this.observaciones.value.ajusteProgramacionId = this.data.ajusteProgramacionInfo.ajusteProgramacionId;
+    this.observaciones.value.esObra = this.data.esObra;
+
     const ajustePragramacionObservacion = [];
     ajustePragramacionObservacion.push(
       {
-        ajustePragramacionObservacionId: 0,
+        ajustePragramacionObservacionId: this.observaciones.value.ajustePragramacionObservacionId ?? 0,
         ajusteProgramacionId: this.observaciones.value.ajusteProgramacionId,
         observaciones: this.observaciones.value.observaciones,
-        esObra: true,
+        esObra: this.data.esObra,
         archivoCargueId: this.data.dataFile.archivoCargueId
       }
     );
 
     const ajusteProgramacion = {
       ajusteProgramacionId: this.observaciones.value.ajusteProgramacionId,
-      tieneObservacionesProgramacionObra: true,
+      tieneObservacionesProgramacionObra: this.data.esObra == true ? true : this.data.ajusteProgramacionInfo?.tieneObservacionesProgramacionObra,
+      tieneObservacionesFlujoInversion: this.data.esObra != true ? true : this.data.ajusteProgramacionInfo?.tieneObservacionesFlujoInversion,
       ajustePragramacionObservacion: ajustePragramacionObservacion
     }
     this.createEditObservacionAjusteProgramacion(ajusteProgramacion);
   }
 
   createEditObservacionAjusteProgramacion(pAjusteProgramacion: any) {
-    this.reprogrammingSvc.createEditObservacionAjusteProgramacion(pAjusteProgramacion, true)
+    this.reprogrammingSvc.createEditObservacionAjusteProgramacion(pAjusteProgramacion, this.data.esObra)
       .subscribe((respuesta: Respuesta) => {
         this.onClose();
         this.openDialogGuardar('', respuesta.message);

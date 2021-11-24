@@ -129,9 +129,12 @@
     </mat-card-content>
   </mat-card>
 
-  <div class="mb-2em">
+  <div class="mb-2em" *ngIf="novedad?.contrato?.contratacion">
     <app-expansion-panel
                         [ajusteProgramacionInfo]="ajusteProgramacionInfo"
+                        [novedadContractualRegistroPresupuestal] = "novedad?.novedadContractualRegistroPresupuestal[0]"
+                        [plazoContratacion] = "novedad?.contrato?.contratacion?.plazoContratacion"
+                        [valorContrato] = "novedad?.contrato?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud + presupuestoAdicionalSolicitado"
     >
     </app-expansion-panel>
   </div>

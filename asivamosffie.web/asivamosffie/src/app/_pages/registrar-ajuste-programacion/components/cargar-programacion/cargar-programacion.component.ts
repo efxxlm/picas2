@@ -4,6 +4,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogValidacionRegistroComponent } from '../dialog-validacion-registro/dialog-validacion-registro.component'
 import { ReprogrammingService } from 'src/app/core/_services/reprogramming/reprogramming.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cargar-programacion',
@@ -24,6 +25,7 @@ export class CargarProgramacionComponent {
     },
     private dialogRef: MatDialogRef<CargarProgramacionComponent>,
     private reprogramacionSvc: ReprogrammingService,
+    private router: Router
 
   ) {
     this.declararInputFile();
@@ -56,10 +58,15 @@ export class CargarProgramacionComponent {
   }
 
   openDialogResponse (modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    const dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => this.router.navigate(['/registrarAjusteProgramacion']));
+      return;
+    });
+
   };
 
   openDialogConfirmar (modalTitle: string, modalText: string) {
@@ -109,7 +116,7 @@ export class CargarProgramacionComponent {
                 ` <br>Número de registros en el archivo: <b>${ response.data.cantidadDeRegistros }</b><br>
                 Número de registros válidos: <b>${ response.data.cantidadDeRegistrosValidos }</b><br>
                 Número de registros inválidos: <b>${ response.data.cantidadDeRegistrosInvalidos }</b><br><br>
-                <b>¿Desea realizar el cargue del flujo de inversión?</b>
+                <b>¿Desea realizar el cargue de la programación de obra?</b>
                 `
               )
             } else if (response.data.cargaValida === true) {
@@ -135,18 +142,14 @@ export class CargarProgramacionComponent {
 
 
   openDialog(modalTitle: string, modalText: string, redirect?: boolean) {
-    let dialogRef = this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
-    if (redirect) {
-      dialogRef.afterClosed().subscribe(result => {
-
-        location.reload();
-        //this.router.navigate(["/cargarMasivamente"], {});
-
-      });
-    }
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => this.router.navigate(['/registrarAjusteProgramacion']));
+      return;
+    });
   }
 
   openDialogSiNo(modalTitle: string, modalText: string) {

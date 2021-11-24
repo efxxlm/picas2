@@ -5,6 +5,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { DialogValidacionRegistroComponent } from '../dialog-validacion-registro/dialog-validacion-registro.component'
 import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 import { ReprogrammingService } from 'src/app/core/_services/reprogramming/reprogramming.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class CargarFlujoComponent {
     },
     private dialogRef: MatDialogRef<CargarFlujoComponent>,
     private reprogrammingSvc: ReprogrammingService,
+    private router: Router
   ) {
     this.declararInputFile();
   }
@@ -57,9 +59,13 @@ export class CargarFlujoComponent {
   }
 
   openDialogResponse (modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    const dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => this.router.navigate(['/registrarAjusteProgramacion']));
+      return;
     });
   };
 
@@ -135,18 +141,14 @@ export class CargarFlujoComponent {
   };
 
   openDialog(modalTitle: string, modalText: string, redirect?: boolean) {
-    let dialogRef = this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
-    if (redirect) {
-      dialogRef.afterClosed().subscribe(result => {
-
-        location.reload();
-        //this.router.navigate(["/cargarMasivamente"], {});
-
-      });
-    }
+    dialogRef.afterClosed().subscribe(result => {
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => this.router.navigate(['/registrarAjusteProgramacion']));
+      return;
+    });
   }
 
   openDialogSiNo(modalTitle: string, modalText: string) {

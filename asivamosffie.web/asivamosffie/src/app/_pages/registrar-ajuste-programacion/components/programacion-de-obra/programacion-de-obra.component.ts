@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -40,8 +40,10 @@ export class ProgramacionDeObraComponent implements AfterViewInit, OnInit  {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-
   @Input() ajusteProgramacionInfo:any;
+  @Output() estadoSemaforo = new EventEmitter<string>();
+
+  existeRegistroValido = false;
 
   constructor(
     public dialog: MatDialog,
@@ -54,13 +56,25 @@ export class ProgramacionDeObraComponent implements AfterViewInit, OnInit  {
     if (this.ajusteProgramacionInfo?.ajusteProgramacionId !== 0 && this.ajusteProgramacionInfo?.ajusteProgramacionId !== undefined) {
       this.reprogrammingService.getLoadAdjustProgrammingGrid(this.ajusteProgramacionInfo?.ajusteProgramacionId)
         .subscribe((response: any[]) => {
-          //response = response.filter( p => p.estadoCargue == 'Válidos' )
-          this.dataSource = new MatTableDataSource(response);
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-          this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+          if(response.length > 0){
+            this.dataSource = new MatTableDataSource(response);
+            response.forEach(r =>{
+              if(!this.existeRegistroValido){
+                if(r.estadoCargue == 'Válido')
+                  this.existeRegistroValido = true;
+              }
+            });
+            if(this.existeRegistroValido == true){
+              this.estadoSemaforo.emit( 'completo' );
+            }else{
+              this.estadoSemaforo.emit( 'sin-diligenciar' );
+            }
+          }
         })
     };
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
   }
 
   openCargarProgramacion() {
@@ -105,7 +119,7 @@ export class ProgramacionDeObraComponent implements AfterViewInit, OnInit  {
       data: { modalTitle, modalText }
     });
     dialogRef.afterClosed().subscribe(result => {
-     this.router.navigate(['/registrarAjusteProgramacion'], {});
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => this.router.navigate(['/registrarAjusteProgramacion']));
     });
   }
 
