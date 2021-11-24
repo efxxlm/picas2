@@ -55,6 +55,7 @@
         public string DirectoryBaseAjusteProgramacionObra { get; set; }
 
         public string DirectoryBaseAjusteProgramacionFlujo { get; set; }
+        public string DirectoryCharts { get; set; }
     }
 
 }

@@ -191,6 +191,7 @@ namespace asivamosffie.api
             services.AddTransient<IContractualNoveltyService, ContractualNoveltyService>();
             services.AddTransient<IDerivativeActionService, DerivativeActionService>();
             services.AddTransient<IMonitoringURL, MonitoringURLService>();
+            services.AddTransient<IPruebaConceptoService, PruebaConceptoService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
