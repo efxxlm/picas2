@@ -122,8 +122,8 @@
                  Amortización del anticipo
               </mat-panel-title>
           </mat-expansion-panel-header>
-          <div *ngFor="let solicitudAmortizacion of solicitudPagoFase?.solicitudPagoFaseAmortizacion">
-            <app-amortizacion-pago [solicitudPagoFaseAmortizacion]="solicitudAmortizacion" [contratacionProyectoId]="solicitudPagoFase?.contratacionProyectoId" [vAmortizacionXproyecto]="solicitudPago?.vAmortizacionXproyecto[0]"></app-amortizacion-pago>
+          <div *ngFor="let solicitudAmortizacion of solicitudesPagoFase">
+            <app-amortizacion-pago [solicitudPagoFaseAmortizacion]="solicitudAmortizacion?.solicitudPagoFaseAmortizacion[0]" [contratacionProyectoId]="solicitudAmortizacion?.contratacionProyectoId" [vAmortizacion]="solicitudPago?.vAmortizacionXproyecto"></app-amortizacion-pago>
           </div>
       </mat-expansion-panel>
   </mat-accordion>

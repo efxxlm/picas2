@@ -682,11 +682,11 @@ namespace asivamosffie.services
                                     //crear el registro histórico de gestion fuente financiación, con el valor actual del gff
                                     List<GestionFuenteFinanciacion> gffList = new List<GestionFuenteFinanciacion>();
                                     if (nrp != null)
-                                        gffList = _context.GestionFuenteFinanciacion.Where(r => r.NovedadContractualRegistroPresupuestalId == nrp.NovedadContractualRegistroPresupuestalId && r.EsNovedad == true && r.Eliminado != true).ToList();
+                                        gffList = _context.GestionFuenteFinanciacion.Where(r => r.NovedadContractualRegistroPresupuestalId == nrp.NovedadContractualRegistroPresupuestalId && r.EsNovedad == true && r.Eliminado != true ).ToList();
 
                                     foreach (var gff in gffList)
                                     {
-                                        List<VSaldoAliberar> usosF = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad == true && r.NovedadContractualRegistroPresupuestalId == nrp.NovedadContractualRegistroPresupuestalId).ToList();
+                                        List<VSaldoAliberar> usosF = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad == true && r.NovedadContractualRegistroPresupuestalId == nrp.NovedadContractualRegistroPresupuestalId && r.FuenteFinanciacionId == gff.FuenteFinanciacionId).ToList();
 
 
                                         decimal A_SaldoActual = gff.SaldoActual;

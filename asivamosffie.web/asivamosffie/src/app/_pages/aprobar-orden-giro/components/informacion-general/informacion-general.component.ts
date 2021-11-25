@@ -35,6 +35,7 @@ export class InformacionGeneralComponent implements OnInit {
     listaBancos: Dominio[] = [];
     valorTotalFactura = 0;
     solicitudPagoFase: any;
+    solicitudesPagoFase: any[] = [];
     ordenGiroTercero: any;
     addressForm: FormGroup;
     historialObservaciones: any[] = [];
@@ -95,6 +96,7 @@ export class InformacionGeneralComponent implements OnInit {
     ngOnInit(): void {
         if ( this.solicitudPago.tipoSolicitudCodigo !== this.listaTipoSolicitud.expensas && this.solicitudPago.tipoSolicitudCodigo !== this.listaTipoSolicitud.otrosCostos ) {
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+            this.solicitudesPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase;
 
             //this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( criterio => this.valorTotalFactura += criterio.valorFacturado );
         }
