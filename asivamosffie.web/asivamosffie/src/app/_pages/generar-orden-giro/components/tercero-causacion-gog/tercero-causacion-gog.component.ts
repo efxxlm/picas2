@@ -44,6 +44,7 @@ export class TerceroCausacionGogComponent implements OnInit {
     ordenGiroId = 0;
     ordenGiroDetalleId = 0;
     tieneAmortizacion: boolean = false;
+    solicitudesPagoFase: any[];
 
     // Get formArray de addressForm
     get criterios() {
@@ -95,6 +96,7 @@ export class TerceroCausacionGogComponent implements OnInit {
     async getTerceroCausacion() {
         this.tipoDescuentoArray = await this.commonSvc.listaDescuentosOrdenGiro().toPromise();
         this.listaTipoDescuento = await this.commonSvc.listaDescuentosOrdenGiro().toPromise();
+
         // Get IDs
         if ( this.solicitudPago.ordenGiro !== undefined ) {
             this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
@@ -601,10 +603,17 @@ export class TerceroCausacionGogComponent implements OnInit {
                     if ( totalRegistrosEnProceso > 0 && totalRegistrosEnProceso === this.criterios.length ) {
                         this.estadoSemaforo.emit( 'en-proceso' )
                     }
+                    this.solicitudesPagoFase = this.solicitudPago?.solicitudPagoRegistrarSolicitudPago[0]?.solicitudPagoFase;
 
-                    this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+                    if(this.solicitudesPagoFase.length > 0){
+                      let solicitudPagoFaseTmp = this.solicitudesPagoFase.find(r => r.contratacionProyectoId == this.contratacionProyectoId);
+                      if(solicitudPagoFaseTmp != null)
+                        this.solicitudPagoFase = solicitudPagoFaseTmp;
+                    }
+
                     if(this.solicitudPagoFase?.solicitudPagoFaseAmortizacion.length > 0)
                         this.tieneAmortizacion = true;
+
                 }
             );
     }
@@ -771,7 +780,6 @@ export class TerceroCausacionGogComponent implements OnInit {
             //si el descuento es de amortización, el valor del descuento no puede ser mayor a el valor amortizado.
             if(this.getDescuentos( index, jIndex ).controls[ kIndex ].get( 'tipoDescuento' ).value == "5"){
               let valueTotalDescuento = 0;
-
               if(this.solicitudPagoFase?.solicitudPagoFaseAmortizacion.length > 0){
                 let valorAmortizacion = this.solicitudPagoFase?.solicitudPagoFaseAmortizacion[0].valorAmortizacion ?? 0;
                 this.getDescuentos( index, jIndex ).controls.forEach(element => {
