@@ -11,5 +11,6 @@ namespace asivamosffie.model.Models
         public string Nombre { get; set; }
         public bool? EsPreConstruccion { get; set; }
         public string FaseId { get; set; }
+        public int ContratacionProyectoId { get; set; }
     }
 }

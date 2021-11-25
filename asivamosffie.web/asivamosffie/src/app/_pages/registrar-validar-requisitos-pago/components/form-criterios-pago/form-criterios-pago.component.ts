@@ -412,7 +412,8 @@ export class FormCriteriosPagoComponent implements OnInit {
     }
 
     async getValorTotalConceptos( index: number, jIndex: number, valorConcepto: number ) {
-      const usoByConcepto = await this.registrarPagosSvc.getUsoByConceptoPagoCriterioCodigo( this.getConceptos( index ).controls[ jIndex ].get( 'conceptoPagoCriterio' ).value, this.solicitudPago.contratoId );
+      let usoByConcepto = await this.registrarPagosSvc.getUsoByConceptoPagoCriterioCodigo( this.getConceptos( index ).controls[ jIndex ].get( 'conceptoPagoCriterio' ).value, this.solicitudPago.contratoId );
+      usoByConcepto = usoByConcepto.filter(r => r.contratacionProyectoId == this.contratacionProyectoId);
 
       let sumaValoresConcepto = 0;
       this.criterios.controls.forEach(criterios => {
@@ -426,6 +427,7 @@ export class FormCriteriosPagoComponent implements OnInit {
           this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
         }
 
+
         if (
             valorConcepto > this.getConceptos( index ).controls[ jIndex ].get( 'montoMaximo' ).value
         ) {
@@ -436,7 +438,6 @@ export class FormCriteriosPagoComponent implements OnInit {
         if ( usoByConcepto.length > 0 ) {
             let valorTotalUso = 0;
             usoByConcepto.forEach( uso => valorTotalUso += uso.valorUso );
-
             if ( valorConcepto > valorTotalUso ) {
                 this.openDialog( '', `El valor facturado al concepto no puede ser mayor al uso asociado <b>${ usoByConcepto[ usoByConcepto.length -1 ].nombre }.</b>` );
                 this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
