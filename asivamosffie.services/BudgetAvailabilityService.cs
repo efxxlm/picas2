@@ -1791,7 +1791,7 @@ namespace asivamosffie.services
                         {
                             if (novedadContractualRegistroPresupuestalTmp.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal || novedadContractualRegistroPresupuestalTmp.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar)
                             {
-                                int positionGestion = gestionfuentes.FindIndex(r => r.FuenteFinanciacionId == gfa.FuenteFinanciacionId);
+                                int positionGestion = gestionfuentes.FindIndex(r => r.FuenteFinanciacionId == gfa.FuenteFinanciacionId && r.DisponibilidadPresupuestalProyectoId == gfa.DisponibilidadPresupuestalProyectoId);
                                 if (positionGestion > -1)
                                 {
                                     GestionFuenteFinanciacionHistorico gffh = null;
