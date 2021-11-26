@@ -416,10 +416,7 @@ export class FormCriteriosPagoComponent implements OnInit {
       if(valorConcepto != null){
         this.solicitudesPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase;
         let solicitudPagoFase = this.solicitudesPagoFase.find(r => r.contratacionProyectoId == this.contratacionProyectoId);
-        let valorAmortizacion = 0;
-        if(solicitudPagoFase != null){
-          valorAmortizacion = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
-        }
+
         let usoByConcepto = await this.registrarPagosSvc.getUsoByConceptoPagoCriterioCodigo( this.getConceptos( index ).controls[ jIndex ].get( 'conceptoPagoCriterio' ).value, this.solicitudPago.contratoId );
         usoByConcepto = usoByConcepto.filter(r => r.contratacionProyectoId == this.contratacionProyectoId);
 
@@ -436,11 +433,17 @@ export class FormCriteriosPagoComponent implements OnInit {
             return;
           }
 
-          if ( !(valorConcepto <= valorAmortizacion) ) {
-            this.openDialog( '', `El valor amortizado no puede ser mayor al valor facturado` );
-            this.criterios.controls[ index ].get( 'valorFacturado' ).setValue( null );
-            this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
-            return;
+          let valorAmortizacion = 0;
+          if(solicitudPagoFase != null){
+            valorAmortizacion = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
+            if(solicitudPagoFase?.solicitudPagoFaseAmortizacion[0] != null){
+              if ( !(valorConcepto <= valorAmortizacion) ) {
+                this.openDialog( '', `El valor amortizado no puede ser mayor al valor facturado` );
+                this.criterios.controls[ index ].get( 'valorFacturado' ).setValue( null );
+                this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
+                return;
+              }
+            }
           }
 
           if (
@@ -794,14 +797,6 @@ export class FormCriteriosPagoComponent implements OnInit {
         this.criterios.markAllAsTouched();
         const solicitudPagoFaseCriterio = [];
         let esAnticipio = false;
-
-        this.solicitudesPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase;
-        let solicitudPagoFase = this.solicitudesPagoFase.find(r => r.contratacionProyectoId == this.contratacionProyectoId);
-        let valorAmortizacion = 0;
-        if(solicitudPagoFase != null){
-          valorAmortizacion = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
-        }
-        console.log(this.getConceptos);
 
         this.criterios.controls.forEach( control => {
             const criterio = control.value;
