@@ -53,6 +53,7 @@ export class FormCriteriosPagoComponent implements OnInit {
     forma_pago_codigo: string;
     usosParaElConceoto: any[]
     quitarOpcionAnticipo = true;
+    solicitudesPagoFase : any[];
 
     get criterios() {
         return this.addressForm.get( 'criterios' ) as FormArray;
@@ -412,53 +413,72 @@ export class FormCriteriosPagoComponent implements OnInit {
     }
 
     async getValorTotalConceptos( index: number, jIndex: number, valorConcepto: number ) {
-      let usoByConcepto = await this.registrarPagosSvc.getUsoByConceptoPagoCriterioCodigo( this.getConceptos( index ).controls[ jIndex ].get( 'conceptoPagoCriterio' ).value, this.solicitudPago.contratoId );
-      usoByConcepto = usoByConcepto.filter(r => r.contratacionProyectoId == this.contratacionProyectoId);
-
-      let sumaValoresConcepto = 0;
-      this.criterios.controls.forEach(criterios => {
-          criterios.get('conceptos').value.forEach(concepto => {
-              sumaValoresConcepto += concepto.valorFacturadoConcepto
-          });
-      });
-
-
-        if(valorConcepto < 0){
-          this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
+      if(valorConcepto != null){
+        this.solicitudesPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase;
+        let solicitudPagoFase = this.solicitudesPagoFase.find(r => r.contratacionProyectoId == this.contratacionProyectoId);
+        let valorAmortizacion = 0;
+        if(solicitudPagoFase != null){
+          valorAmortizacion = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
         }
+        let usoByConcepto = await this.registrarPagosSvc.getUsoByConceptoPagoCriterioCodigo( this.getConceptos( index ).controls[ jIndex ].get( 'conceptoPagoCriterio' ).value, this.solicitudPago.contratoId );
+        usoByConcepto = usoByConcepto.filter(r => r.contratacionProyectoId == this.contratacionProyectoId);
+
+        let sumaValoresConcepto = 0;
+        this.criterios.controls.forEach(criterios => {
+            criterios.get('conceptos').value.forEach(concepto => {
+                sumaValoresConcepto += concepto.valorFacturadoConcepto
+            });
+        });
 
 
-        if (
-            valorConcepto > this.getConceptos( index ).controls[ jIndex ].get( 'montoMaximo' ).value
-        ) {
-            this.openDialog( '', `El valor facturado al concepto no puede ser mayor al <b>Monto pendiente por facturar.</b>` );
+          if(valorConcepto < 0){
             this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
-        }
+            return;
+          }
 
-        if ( usoByConcepto.length > 0 ) {
-            let valorTotalUso = 0;
-            usoByConcepto.forEach( uso => valorTotalUso += uso.valorUso );
-            if ( valorConcepto > valorTotalUso ) {
-                this.openDialog( '', `El valor facturado al concepto no puede ser mayor al uso asociado <b>${ usoByConcepto[ usoByConcepto.length -1 ].nombre }.</b>` );
-                this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
-            }
-        }
-
-        if ( valorConcepto > this.criterios.controls[ index ].get( 'montoMaximo' ).value ) {
-            this.openDialog( '', `<b>El valor facturado al concepto no puede ser mayor al monto maximo del criterio.</b>` );
+          if ( !(valorConcepto <= valorAmortizacion) ) {
+            this.openDialog( '', `El valor amortizado no puede ser mayor al valor facturado` );
+            this.criterios.controls[ index ].get( 'valorFacturado' ).setValue( null );
             this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
-        }
-        if ( this.getConceptos( index ).length > 0 ) {
-            let valorTotalCriterios = 0;
+            return;
+          }
 
-            this.getConceptos( index ).controls.forEach( concepto => {
-                if ( concepto.value.valorFacturadoConcepto !== null ) {
-                    valorTotalCriterios += concepto.value.valorFacturadoConcepto;
-                }
-            } );
+          if (
+              valorConcepto > this.getConceptos( index ).controls[ jIndex ].get( 'montoMaximo' ).value
+          ) {
+              this.openDialog( '', `El valor facturado al concepto no puede ser mayor al <b>Monto pendiente por facturar.</b>` );
+              this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
+              return;
+          }
 
-            this.criterios.controls[ index ].get( 'valorFacturado' ).setValue( valorTotalCriterios );
-        }
+          if ( usoByConcepto.length > 0 ) {
+              let valorTotalUso = 0;
+              usoByConcepto.forEach( uso => valorTotalUso += uso.valorUso );
+              if ( valorConcepto > valorTotalUso ) {
+                  this.openDialog( '', `El valor facturado al concepto no puede ser mayor al uso asociado <b>${ usoByConcepto[ usoByConcepto.length -1 ].nombre }.</b>` );
+                  this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
+                  return;
+              }
+          }
+
+          if ( valorConcepto > this.criterios.controls[ index ].get( 'montoMaximo' ).value ) {
+              this.openDialog( '', `<b>El valor facturado al concepto no puede ser mayor al monto maximo del criterio.</b>` );
+              this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
+              return;
+          }
+          if ( this.getConceptos( index ).length > 0 ) {
+              let valorTotalCriterios = 0;
+
+              this.getConceptos( index ).controls.forEach( concepto => {
+                  if ( concepto.value.valorFacturadoConcepto !== null ) {
+                      valorTotalCriterios += concepto.value.valorFacturadoConcepto;
+                  }
+              } );
+
+              this.criterios.controls[ index ].get( 'valorFacturado' ).setValue( valorTotalCriterios );
+          }
+      }
+      return;
     }
 
     verifyValorTotalConceptos( index?: number ) {
@@ -774,6 +794,14 @@ export class FormCriteriosPagoComponent implements OnInit {
         this.criterios.markAllAsTouched();
         const solicitudPagoFaseCriterio = [];
         let esAnticipio = false;
+
+        this.solicitudesPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase;
+        let solicitudPagoFase = this.solicitudesPagoFase.find(r => r.contratacionProyectoId == this.contratacionProyectoId);
+        let valorAmortizacion = 0;
+        if(solicitudPagoFase != null){
+          valorAmortizacion = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
+        }
+        console.log(this.getConceptos);
 
         this.criterios.controls.forEach( control => {
             const criterio = control.value;

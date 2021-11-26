@@ -1402,26 +1402,28 @@ export class TerceroCausacionGogComponent implements OnInit {
 
     // TODO: filtrar por proyecto y fase
     getValorAportante(codigo: string, aportanteId: any) {
-
-      if (this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.length > 0) {
-        const conceptoCodigo = this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.filter((conceptoCodigo: { conceptoCodigo: string; solicitudPagoId: number; }) =>
-            conceptoCodigo.conceptoCodigo == codigo && conceptoCodigo.solicitudPagoId == this.solicitudPago?.solicitudPagoId
-        );
-        const valorAportante = conceptoCodigo.filter((cc: { aportanteId: any; }) => cc.aportanteId == aportanteId);
-        let valorConceptoAportante = 0;
-        valorAportante.forEach((element1: { conceptoCodigo: any; saldo: any; }) => {
-            this.solicitudPago.vConceptosUsosXsolicitudPagoId.forEach((element2: { conceptoCodigo: any; }) => {
-                if (
-                  element1.conceptoCodigo == element2.conceptoCodigo
-                  // && element1.tipoUsoCodigo == element2.usoCodigo
-                  ) {
-                  valorConceptoAportante += element1.saldo ?? 0;
-                }
+      if(aportanteId > 0 && codigo != null){
+        if (this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.length > 0) {
+          const conceptoCodigo = this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.filter((conceptoCodigo: { conceptoCodigo: string; solicitudPagoId: number; contratacionProyectoId: number; }) =>
+              conceptoCodigo.conceptoCodigo == codigo && conceptoCodigo.solicitudPagoId == this.solicitudPago?.solicitudPagoId && conceptoCodigo.contratacionProyectoId == this.contratacionProyectoId
+          );
+          const valorAportante = conceptoCodigo.filter((cc: { aportanteId: any; }) => cc.aportanteId == aportanteId);
+          let valorConceptoAportante = 0;
+          valorAportante.forEach((element1: { conceptoCodigo: any; saldo: any; }) => {
+              this.solicitudPago.vConceptosUsosXsolicitudPagoId.forEach((element2: { conceptoCodigo: any; }) => {
+                  if (
+                    element1.conceptoCodigo == element2.conceptoCodigo
+                    // && element1.tipoUsoCodigo == element2.usoCodigo
+                    ) {
+                    valorConceptoAportante += element1.saldo ?? 0;
+                  }
+                });
               });
-            });
 
-        if (valorAportante) return valorConceptoAportante ?? 0;
+          if (valorAportante) return valorConceptoAportante ?? 0;
+        }
       }
+      return 0;
     }
 
     validateMaxAportante( value: number, index: number, jIndex: number, kIndex: number, lIndex: number, nombreAportante: any, getAportantes: any ) {
