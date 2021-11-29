@@ -248,6 +248,17 @@ export class TablaLiberacionSaldoComponent implements OnInit {
           return;
         }
       }
+      if(el.valorLiberar > el.valorUso){
+        if(positionDta != -1){
+          this.dataSource.data[index].data[positionDta].valorLiberar = null;
+          el.valorLiberar = null;
+          this.openDialog(
+            '',
+            '<b>El valor a liberar no puede ser mayor al valor del uso.</b>'
+          );
+          return;
+        }
+      }
       this.dataSource.data.forEach(r=>{
         r.data.forEach((d: { valorLiberar: number; }) => {
           valorTotalLiberar += d.valorLiberar ?? 0;
