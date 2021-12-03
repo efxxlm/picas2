@@ -997,6 +997,31 @@ namespace asivamosffie.services
             return null;
         }
 
+        public decimal GetValorContrato(int pContratacionId, string tipo, bool? fase)
+        {
+            decimal valor = 0;
+            //var a = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == pContratacionId).ToList().Sum(r => r.ValorDrp) ?? 0;
+            List<VDrpXfaseXcontratacionIdXnovedad> lContratacion = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == pContratacionId).ToList();//.Sum(r => r.ValorDrp) ?? 0;
+            if (lContratacion != null && lContratacion.Count > 0)
+            {
+                switch (tipo)
+                {
+                    case "original":
+                        valor = lContratacion.Where(v => v.EsPreConstruccion == fase && v.EsDrpOriginal > 0).Sum(r => r.ValorDrp) ?? 0;
+                        break;
+                    case "acumulado":
+                        valor = lContratacion.Where(v => v.EsPreConstruccion == fase && v.EsDrpOriginal == 0).Sum(r => r.ValorDrp) ?? 0;
+                        break;
+                    case "total":
+                        valor = lContratacion.Where(v => v.EsDrpOriginal > 0).Sum(r => r.ValorDrp) ?? 0;
+                        break;
+                    case "totalAcumulado":
+                        valor = lContratacion.Where(v => v.EsDrpOriginal == 0).Sum(r => r.ValorDrp) ?? 0;
+                        break;
+                }
+            }
+            return valor;
+        }
     }
 
 }

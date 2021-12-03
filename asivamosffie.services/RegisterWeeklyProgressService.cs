@@ -422,18 +422,29 @@ namespace asivamosffie.services
                                                               ContratoTipo = r.TipoSolicitudCodigo.Equals(ConstanCodigoTipoContrato.Obra) ? ConstanCodigoTipoContratacionSTRING.Obra : ConstanCodigoTipoContratacionSTRING.Interventoria,
                                                               ContratoNumero = r.Contrato.FirstOrDefault().NumeroContrato,
                                                               ContratoFechaInicio = r.Contrato.FirstOrDefault().ContratoPoliza.Where(r => r.FechaAprobacion.HasValue).FirstOrDefault().FechaAprobacion,
+                                                              Contratista = r.ContratistaId.HasValue ? r.Contratista.Nombre : "",
 
+                                                              Fase1PlazoInicial = $"M: {r.Contrato.FirstOrDefault().PlazoFase1PreMeses} D: {r.Contrato.FirstOrDefault().PlazoFase1PreDias}", 
                                                               Fase1Inicio = r.Contrato.FirstOrDefault().FechaActaInicioFase1,
                                                               Fase1Fin = r.Contrato.FirstOrDefault().FechaTerminacion,
-                                                              Fase1Valor = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == true && v.EsDrpOriginal > 0).Sum(r => r.ValorDrp) ?? 0,
-                                                              Fase1ValorAcumulado = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == true && v.EsDrpOriginal == 0).Sum(r => r.ValorDrp) ?? 0,
-                                                              Fase1PlazoAcumulado = r.Contrato.FirstOrDefault().FechaTerminacion - r.Contrato.FirstOrDefault().FechaActaInicioFase1,
+                                                              //Fase1Valor = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == true && v.EsDrpOriginal > 0).Sum(r => r.ValorDrp) ?? 0,
+                                                              //Fase1ValorAcumulado = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == true && v.EsDrpOriginal == 0).Sum(r => r.ValorDrp) ?? 0,
+                                                              Fase1Valor = _commonService.GetValorContrato(r.ContratacionId, "original", true),
+                                                              Fase1ValorAcumulado = _commonService.GetValorContrato(r.ContratacionId, "acumulado", true),
 
+                                                              Fase2PlazoInicial = $"M: {r.Contrato.FirstOrDefault().PlazoFase2ConstruccionMeses} D: {r.Contrato.FirstOrDefault().PlazoFase2ConstruccionDias}",
                                                               Fase2Inicio = r.Contrato.FirstOrDefault().FechaActaInicioFase2,
                                                               Fase2Fin = r.Contrato.FirstOrDefault().FechaTerminacionFase2,
-                                                              Fase2Valor = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == false && v.EsDrpOriginal > 0).Sum(r => r.ValorDrp) ?? 0,
-                                                              Fase2ValorAcumulado = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == false && v.EsDrpOriginal == 0).Sum(r => r.ValorDrp) ?? 0,
+                                                              //Fase2Valor = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == false && v.EsDrpOriginal > 0).Sum(r => r.ValorDrp) ?? 0,
+                                                              //Fase2ValorAcumulado = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == false && v.EsDrpOriginal == 0).Sum(r => r.ValorDrp) ?? 0,
+                                                              Fase2Valor = _commonService.GetValorContrato(r.ContratacionId, "original", false),
+                                                              Fase2ValorAcumulado = _commonService.GetValorContrato(r.ContratacionId, "acumulado", false),
                                                               Fase2PlazoAcumulado = r.Contrato.FirstOrDefault().FechaTerminacionFase2 - r.Contrato.FirstOrDefault().FechaActaInicioFase2,
+
+                                                              ValorTotal = _commonService.GetValorContrato(r.ContratacionId, "total", null),
+                                                              ValorTotalAcumulado = _commonService.GetValorContrato(r.ContratacionId, "totalAcumulado", null),
+
+                                                              Supervisor = r.Contrato.FirstOrDefault().SupervisorId.HasValue ? $"{r.Contrato.FirstOrDefault().Supervisor.PrimerNombre} {r.Contrato.FirstOrDefault().Supervisor.PrimerApellido}" : ""
                                                           })
                                                        );
                 }

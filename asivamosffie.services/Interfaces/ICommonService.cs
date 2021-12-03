@@ -119,6 +119,7 @@ namespace asivamosffie.services.Interfaces
 
         decimal GetValorTotalDisponibilidad(int pDisponibilidadPresupuestalId, bool esLiberacion);
         Task<dynamic> GetLlaveMenByContratacionProyectoId(int pContratacionProyectoId);
+        decimal GetValorContrato(int pContratacionId, string tipo, bool? fase);
 
     }
 }
