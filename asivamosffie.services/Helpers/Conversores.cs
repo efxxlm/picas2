@@ -9,8 +9,14 @@ namespace asivamosffie.services.Helpers
     {
         public static string NumeroALetras(this decimal numberAsString)
         { 
-            var entero = Convert.ToInt64(Math.Truncate(numberAsString)); 
-            var res = NumeroALetras(Convert.ToDouble(entero)) + " pesos";
+            var entero = Convert.ToInt64(Math.Truncate(numberAsString));
+            string numero = NumeroALetras(Convert.ToDouble(entero));
+            string lastWord = numero[(numero.LastIndexOf(' ') + 1)..];
+            if(lastWord == "MILLON" || lastWord == "BILLONES" || lastWord == "MILLONES")
+            {
+                numero +=  " De ";
+            }
+            var res = numero + " pesos";
             return res;
         }
 
@@ -64,15 +70,15 @@ namespace asivamosffie.services.Helpers
             }
             else if (value == 1000000)
             {
-                num2Text = "UN MILLON DE ";
+                num2Text = "UN MILLON";
             }
             else if (value < 2000000)
             {
-                num2Text = "UN MILLON DE " + NumeroALetras(value % 1000000);
+                num2Text = "UN MILLON" + NumeroALetras(value % 1000000);
             }
             else if (value < 1000000000000)
             {
-                num2Text = NumeroALetras(Math.Truncate(value / 1000000)) + " MILLONES DE ";
+                num2Text = NumeroALetras(Math.Truncate(value / 1000000)) + " MILLONES";
                 if ((value - Math.Truncate(value / 1000000) * 1000000) > 0)
                 {
                     num2Text = num2Text + " " + NumeroALetras(value - Math.Truncate(value / 1000000) * 1000000);
@@ -82,7 +88,7 @@ namespace asivamosffie.services.Helpers
             else if (value < 2000000000000) num2Text = "UN BILLON " + NumeroALetras(value - Math.Truncate(value / 1000000000000) * 1000000000000);
             else
             {
-                num2Text = NumeroALetras(Math.Truncate(value / 1000000000000)) + " BILLONES DE ";
+                num2Text = NumeroALetras(Math.Truncate(value / 1000000000000)) + " BILLONES";
                 if ((value - Math.Truncate(value / 1000000000000) * 1000000000000) > 0)
                 {
                     num2Text = num2Text + " " + NumeroALetras(value - Math.Truncate(value / 1000000000000) * 1000000000000);
