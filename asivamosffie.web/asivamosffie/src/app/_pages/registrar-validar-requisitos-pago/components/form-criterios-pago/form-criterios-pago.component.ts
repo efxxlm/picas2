@@ -414,8 +414,6 @@ export class FormCriteriosPagoComponent implements OnInit {
 
     async getValorTotalConceptos( index: number, jIndex: number, valorConcepto: number ) {
       if(valorConcepto != null){
-        this.solicitudesPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase;
-        let solicitudPagoFase = this.solicitudesPagoFase.find(r => r.contratacionProyectoId == this.contratacionProyectoId);
 
         let usoByConcepto = await this.registrarPagosSvc.getUsoByConceptoPagoCriterioCodigo( this.getConceptos( index ).controls[ jIndex ].get( 'conceptoPagoCriterio' ).value, this.solicitudPago.contratoId );
         usoByConcepto = usoByConcepto.filter(r => r.contratacionProyectoId == this.contratacionProyectoId);
@@ -431,19 +429,6 @@ export class FormCriteriosPagoComponent implements OnInit {
           if(valorConcepto < 0){
             this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
             return;
-          }
-
-          let valorAmortizacion = 0;
-          if(solicitudPagoFase != null){
-            valorAmortizacion = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
-            if(solicitudPagoFase?.solicitudPagoFaseAmortizacion[0] != null){
-              if ( !(valorConcepto <= valorAmortizacion) ) {
-                this.openDialog( '', `El valor amortizado no puede ser mayor al valor facturado` );
-                this.criterios.controls[ index ].get( 'valorFacturado' ).setValue( null );
-                this.getConceptos( index ).controls[ jIndex ].get( 'valorFacturadoConcepto' ).setValue( null );
-                return;
-              }
-            }
           }
 
           if (
@@ -797,6 +782,9 @@ export class FormCriteriosPagoComponent implements OnInit {
         this.criterios.markAllAsTouched();
         const solicitudPagoFaseCriterio = [];
         let esAnticipio = false;
+        this.solicitudesPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase;
+        let solicitudPagoFase = this.solicitudesPagoFase.find(r => r.contratacionProyectoId == this.contratacionProyectoId);
+        let cumpleCondiciones = true;
 
         this.criterios.controls.forEach( control => {
             const criterio = control.value;
@@ -806,6 +794,22 @@ export class FormCriteriosPagoComponent implements OnInit {
                 valorTotalConceptos += control.get( 'valorFacturado' ).value;
             }
             */
+
+            let valorAmortizacion = 0;
+            if(solicitudPagoFase != null){
+              if(cumpleCondiciones == true){
+                valorAmortizacion = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
+                if(solicitudPagoFase?.solicitudPagoFaseAmortizacion[0] != null){
+                  console.log(control.get( 'conceptos' ).value[0]);
+                  if ( (control.get( 'valorFacturado' ).value <= valorAmortizacion) ) {
+                    this.openDialog( '', `El valor amortizado no puede ser mayor al valor facturado` );
+                    control.get( 'conceptos' ).value[0].valorFacturadoConcepto = control.get( 'conceptos' ).value[0].valorFacturadoConcepto - control.get( 'valorFacturado' ).value;
+                    control.get( 'valorFacturado' ).setValue( null );
+                    cumpleCondiciones = false;
+                  }
+                }
+              }
+            }
 
             const criterioAnticipo = this.criteriosArray.find( value => value.nombre === 'Anticipo' && criterio.tipoCriterioCodigo === value.codigo )
 
@@ -902,187 +906,34 @@ export class FormCriteriosPagoComponent implements OnInit {
         }
 
         console.log(this.solicitudPago);
+        if(cumpleCondiciones == true){
+          this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
+          .subscribe(
+              response => {
+                  this.openDialog( '', `<b>${ response.message }</b>` );
+                  if ( this.observacion !== undefined ) {
+                      this.observacion.archivada = !this.observacion.archivada;
+                      this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( this.observacion ).subscribe();
+                  }
 
-        this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
-            .subscribe(
-                response => {
-                    this.openDialog( '', `<b>${ response.message }</b>` );
-                    if ( this.observacion !== undefined ) {
-                        this.observacion.archivada = !this.observacion.archivada;
-                        this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( this.observacion ).subscribe();
-                    }
-
-                    this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
-                        .subscribe(
-                            () => {
-                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                                    () => this.routes.navigate(
-                                        [
-                                            '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
-                                        ]
-                                    )
-                                );
-                            }
-                        );
-                },
-                err => this.openDialog( '', `<b>${ err.message }</b>` )
-            )
-
-        /*
-        if ( this.contratacionProyectoId === 0 ) {
-            let valorTotalConceptos = 0;
-            const solicitudPagoFaseCriterio = [];
-
-            this.criterios.controls.forEach( control => {
-                const criterio = control.value;
-
-                if ( control.get( 'valorFacturado' ).value !== null ) {
-                    valorTotalConceptos += control.get( 'valorFacturado' ).value;
-                }
-
-                solicitudPagoFaseCriterio.push(
-                    {
-                        tipoCriterioCodigo: criterio.tipoCriterioCodigo,
-                        solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
-                        tipoPagoCodigo: criterio.tipoPago !== null ? criterio.tipoPago.codigo : null,
-                        valorFacturado: control.get( 'valorFacturado' ).value,
-                        solicitudPagoFaseCriterioConceptoPago: criterio.conceptos,
-                        solicitudPagoFaseId: criterio.solicitudPagoFaseId,
-                        solicitudPagoFaseCriterioProyecto: []
-                    }
-                );
-            } );
-
-            if ( this.esPreconstruccion === true ) {
-                if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
-                    for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
-                        if ( solicitudPagoFase.esPreconstruccion === true ) {
-                            solicitudPagoFase.solicitudPagoFaseCriterio = solicitudPagoFaseCriterio;
-                        }
-                    }
-                }
-            }
-
-            if ( this.esPreconstruccion === false ) {
-                if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
-                    for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
-                        if ( solicitudPagoFase.esPreconstruccion === false ) {
-                            solicitudPagoFase.solicitudPagoFaseCriterio = solicitudPagoFaseCriterio;
-                        }
-                    }
-                }
-            }
-
-            /*if ( this.montoMaximoPendiente !== valorTotalConceptos ) {
-                this.openDialog( '', '<b>La sumatoria del valor total de los conceptos, no corresponde con el monto máximo a pagar. Verifique por favor</b>' )
-                return;
-            }
-
-            this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
-                .subscribe(
-                    response => {
-                        this.openDialog( '', `<b>${ response.message }</b>` );
-                        if ( this.observacion !== undefined ) {
-                            this.observacion.archivada = !this.observacion.archivada;
-                            this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( this.observacion ).subscribe();
-                        }
-                        this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
-                            .subscribe(
-                                () => {
-                                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                                        () => this.routes.navigate(
-                                            [
-                                                '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
-                                            ]
-                                        )
-                                    );
-                                }
-                            );
-                    },
-                    err => this.openDialog( '', `<b>${ err.message }</b>` )
-                );
-        } else {
-            let valorTotalConceptos = 0;
-
-            const solicitudPagoFaseCriterio = [];
-            this.criterios.controls.forEach( control => {
-                const criterio = control.value;
-                const solicitudPagoFaseCriterioProyecto = [];
-                solicitudPagoFaseCriterioProyecto.push(
-                    {
-                        contratacionProyectoId: this.contratacionProyectoId,
-                        solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
-                        valorFacturado: criterio.valorFacturado
-                    }
-                );
-
-                if ( control.get( 'valorFacturado' ).value !== null ) {
-                    valorTotalConceptos += control.get( 'valorFacturado' ).value;
-                }
-
-                solicitudPagoFaseCriterio.push(
-                    {
-                        tipoCriterioCodigo: criterio.tipoCriterioCodigo,
-                        solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
-                        tipoPagoCodigo: criterio.tipoPago !== null ? criterio.tipoPago.codigo : null,
-                        valorFacturado: control.get( 'valorFacturado' ).value,
-                        solicitudPagoFaseCriterioConceptoPago: criterio.conceptos,
-                        solicitudPagoFaseId: criterio.solicitudPagoFaseId,
-                        solicitudPagoFaseCriterioProyecto
-                    }
-                );
-            } );
-
-            if ( this.esPreconstruccion === true ) {
-                if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
-                    for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
-                        if ( solicitudPagoFase.esPreconstruccion === true ) {
-                            solicitudPagoFase.solicitudPagoFaseCriterio = solicitudPagoFaseCriterio;
-                        }
-                    }
-                }
-            }
-
-            if ( this.esPreconstruccion === false ) {
-                if ( this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase.length > 0 ) {
-                    for ( const solicitudPagoFase of this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase ) {
-                        if ( solicitudPagoFase.esPreconstruccion === false ) {
-                            solicitudPagoFase.solicitudPagoFaseCriterio = solicitudPagoFaseCriterio;
-                        }
-                    }
-                }
-            }
-
-            /*if ( this.montoMaximoPendiente !== valorTotalConceptos ) {
-                this.openDialog( '', '<b>La sumatoria del valor total de los conceptos, no corresponde con el monto máximo a pagar. Verifique por favor</b>' )
-                return;
-            }
-
-            this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
-                .subscribe(
-                    response => {
-                        this.openDialog( '', `<b>${ response.message }</b>` );
-                        if ( this.observacion !== undefined ) {
-                            this.observacion.archivada = !this.observacion.archivada;
-                            this.obsMultipleSvc.createUpdateSolicitudPagoObservacion( this.observacion ).subscribe();
-                        }
-                        this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
-                            .subscribe(
-                                () => {
-                                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                                        () => this.routes.navigate(
-                                            [
-                                                '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
-                                            ]
-                                        )
-                                    );
-                                }
-                            );
-                    },
-                    err => this.openDialog( '', `<b>${ err.message }</b>` )
-                );
+                  this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
+                      .subscribe(
+                          () => {
+                              this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                  () => this.routes.navigate(
+                                      [
+                                          '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
+                                      ]
+                                  )
+                              );
+                          }
+                      );
+              },
+              err => this.openDialog( '', `<b>${ err.message }</b>` )
+          )
+        }else{
+          return;
         }
-        */
     }
 
     criterioPago() {
