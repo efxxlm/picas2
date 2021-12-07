@@ -3043,6 +3043,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = ConstantMessagesGenerateBudget.OperacionExitosa,
+                    Data = DisponibilidadCancelar.NumeroDrp,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Registro_Presupuestal, ConstantMessagesGenerateBudget.OperacionExitosa, idAccion, pUsuarioModificacion, "GENERAR DRP REGISTRO PRESUPUESTAL")
                 };
 
