@@ -3033,50 +3033,20 @@ namespace asivamosffie.services
                     }
                 }
 
-
+                //Enviar Correo
+                await EnviarCorreoJuridica(DisponibilidadCancelar);
                 _context.SaveChanges();
-                //envio correo a juridica
-                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DRPNotificacion);
-                string template = TemplateRecoveryPassword.Contenido;
 
-                template = template.Replace("_LinkF_", urlDestino);
-                template = template.Replace("[NUMEROCONTRATO]", DisponibilidadCancelar.Contratacion.Contrato.FirstOrDefault().NumeroContrato);
-                template = template.Replace("[FECHACONTRATO]", DisponibilidadCancelar.Contratacion.Contrato.FirstOrDefault().FechaFirmaContrato != null ? Convert.ToDateTime(DisponibilidadCancelar.Contratacion.Contrato.FirstOrDefault().FechaFirmaContrato).ToString("dd/MM/yyyy") : "");
-                template = template.Replace("[TIPOSOLICITUD]", DisponibilidadCancelar.EsNovedadContractual == null ? ConstanStringTipoSolicitudContratacion.contratacion : !Convert.ToBoolean(DisponibilidadCancelar.EsNovedadContractual) ? ConstanStringTipoSolicitudContratacion.contratacion : ConstanStringTipoSolicitudContratacion.novedadContractual);//esto va a cambiar
-                template = template.Replace("[NUMERODRP]", DisponibilidadCancelar.NumeroDrp);
-                template = template.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroDdp);
-                /*busco usuario Juridico*/
-                var usuarioJuridico = _context.UsuarioPerfil.Where(x => (x.PerfilId == (int)EnumeratorPerfil.Juridica ||
-                x.PerfilId == (int)EnumeratorPerfil.Financiera || x.PerfilId == (int)EnumeratorPerfil.Tecnica)
-                ).Include(y => y.Usuario).ToList();
-                bool blEnvioCorreo = true;
-                foreach (var usuario in usuarioJuridico)
+                return new Respuesta
                 {
-                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Usuario.Email, "DRP Generada", template, pSentender, pPassword, pMailServer, pMailPort);
-                }
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesGenerateBudget.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Registro_Presupuestal, ConstantMessagesGenerateBudget.OperacionExitosa, idAccion, pUsuarioModificacion, "GENERAR DRP REGISTRO PRESUPUESTAL")
+                };
 
-                if (blEnvioCorreo)
-                {
-                    return new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = ConstantMessagesGenerateBudget.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Registro_Presupuestal, ConstantMessagesGenerateBudget.OperacionExitosa, idAccion, pUsuarioModificacion, "GENERAR DRP REGISTRO PRESUPUESTAL")
-                    };
-                }
-                else
-                {
-                    return new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = ConstantMessagesGenerateBudget.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Registro_Presupuestal, ConstantMessagesGenerateBudget.Error, idAccion, pUsuarioModificacion, "ERROR ENVIO MAIL GENERAR DRP REGISTRO PRESUPUESTAL")
-                    };
-                }
+
             }
             catch (Exception ex)
             {
@@ -3091,6 +3061,25 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Registro_Presupuestal, ConstantMessagesGenerateBudget.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
+        }
+
+        private async Task<bool> EnviarCorreoJuridica(DisponibilidadPresupuestal DisponibilidadCancelar)
+        {
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.DRPNotificacion));
+            string strContenido = template.Contenido;
+
+            strContenido = strContenido.Replace("[NUMEROCONTRATO]", DisponibilidadCancelar.Contratacion.Contrato.FirstOrDefault().NumeroContrato);
+            strContenido = strContenido.Replace("[FECHACONTRATO]", DisponibilidadCancelar.Contratacion.Contrato.FirstOrDefault().FechaFirmaContrato != null ? Convert.ToDateTime(DisponibilidadCancelar.Contratacion.Contrato.FirstOrDefault().FechaFirmaContrato).ToString("dd/MM/yyyy") : "");
+            strContenido = strContenido.Replace("[TIPOSOLICITUD]", DisponibilidadCancelar.EsNovedadContractual == null ? ConstanStringTipoSolicitudContratacion.contratacion : !Convert.ToBoolean(DisponibilidadCancelar.EsNovedadContractual) ? ConstanStringTipoSolicitudContratacion.contratacion : ConstanStringTipoSolicitudContratacion.novedadContractual);//esto va a cambiar
+            strContenido = strContenido.Replace("[NUMERODRP]", DisponibilidadCancelar.NumeroDrp);
+            strContenido = strContenido.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroDdp);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                            new List<EnumeratorPerfil>
+                                                      {
+                                                                        EnumeratorPerfil.Juridica
+                                                      };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, "DRP Generada");
         }
 
         public async Task<byte[]> GetPDFDRP(int id, string usuarioModificacion, bool esNovedad, int pRegistroPresupuestalId, bool esLiberacion)
