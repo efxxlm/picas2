@@ -18,11 +18,11 @@ namespace asivamosffie.api.Controllers
     public class PruebaConceptoController : Controller
     {
 
-        private readonly IPruebaConceptoService _pruebaConceptoService;
+        private readonly IGenerarGraficoService _pruebaConceptoService;
         private readonly IOptions<AppSettings> _settings;
 
 
-        public PruebaConceptoController(IPruebaConceptoService pruebaConceptoService, IOptions<AppSettings> settings)
+        public PruebaConceptoController(IGenerarGraficoService pruebaConceptoService, IOptions<AppSettings> settings)
         {
             _pruebaConceptoService = pruebaConceptoService;
             _settings = settings;

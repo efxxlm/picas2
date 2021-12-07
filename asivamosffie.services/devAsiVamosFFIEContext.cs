@@ -335,6 +335,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VSaldosFuenteXaportanteId> VSaldosFuenteXaportanteId { get; set; }
         public virtual DbSet<VSaldosFuenteXaportanteIdValidar> VSaldosFuenteXaportanteIdValidar { get; set; }
         public virtual DbSet<VSeguimientoSemanalRegistrar> VSeguimientoSemanalRegistrar { get; set; }
+        public virtual DbSet<V_SeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion> V_SeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion { get; set; }
         public virtual DbSet<VSesionParticipante> VSesionParticipante { get; set; }
         public virtual DbSet<VSetHistDefensaJudicial> VSetHistDefensaJudicial { get; set; }
         public virtual DbSet<VSetHistDefensaJudicialContratacionProyecto> VSetHistDefensaJudicialContratacionProyecto { get; set; }
@@ -11208,6 +11209,17 @@ namespace asivamosffie.model.Models
                 entity.ToView("V_SeguimientoSemanalRegistrar");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+            });
+
+
+            modelBuilder.Entity<V_SeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_SeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion");
+
+                entity.Property(e => e.AvanceFisicoSemanal).HasColumnType("decimal(18, 0)");
+                entity.Property(e => e.ProgramacionSemanal).HasColumnType("decimal(18, 0)");
             });
 
             modelBuilder.Entity<VSesionParticipante>(entity =>

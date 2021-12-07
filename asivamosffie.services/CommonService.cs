@@ -1022,6 +1022,27 @@ namespace asivamosffie.services
             }
             return valor;
         }
+
+        public string GetMonthDaysDifferences(DateTime startDate, DateTime endDate)
+        {
+            DateTime baseDate = new DateTime(1,1,1);
+            int diffDays = endDate.Subtract(startDate).Days;
+            DateTime newDate = baseDate.AddDays(diffDays);
+            //string diff = $"{end.Year - baseDate.Year} years, {end.Month - baseDate.Month} months and {end.Day - baseDate.Day} days";
+            string diff = $"M: {((newDate.Year - baseDate.Year) * 12) + (newDate.Month - baseDate.Month)} D: {newDate.Day - baseDate.Day}";
+            return diff;
+        }
+
+        public string GetAccumulateMonthDaysDifferences(DateTime startDate, DateTime endDate, int pContratoId)
+        {
+            DateTime? cEndDate = GetFechaEstimadaFinalizacion(pContratoId);
+            DateTime baseDate = new DateTime(1, 1, 1);
+            int diffDays = cEndDate.HasValue ? cEndDate.Value.Subtract(startDate).Days : endDate.Subtract(startDate).Days;
+            DateTime newDate = baseDate.AddDays(diffDays);
+
+            string diff = $"M: {((newDate.Year - baseDate.Year)*12) + (newDate.Month - baseDate.Month)} D: {newDate.Day - baseDate.Day}";
+            return diff;
+        }
     }
 
 }

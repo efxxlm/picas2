@@ -15,7 +15,9 @@ namespace asivamosffie.model.Models
          
         [NotMapped]
         public List<dynamic> AvanceFisico { get; set; }
-         
+        [NotMapped]
+        public string AvanceFisicoGrafica { get; set; }
+
         [NotMapped]
         public dynamic AvanceAcumulado { get; set; }
 

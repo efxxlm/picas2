@@ -97,7 +97,8 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _registerWeeklyProgressService.GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(pContratacionProyectoId, pSeguimientoSemanalId);
+                string path = _settings.Value.DirectoryBase + _settings.Value.DirectoryCharts;
+                return await _registerWeeklyProgressService.GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(pContratacionProyectoId, pSeguimientoSemanalId, path);
             }
 
             catch (Exception ex)

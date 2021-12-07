@@ -19,15 +19,33 @@ using System.Text;
 using asivamosffie.model.AditionalModels;
 using System.Net.Http;
 using System.IO;
+//using Newtonsoft.Json;
 
 namespace asivamosffie.services
 {
-    public class PruebaConceptoService : IPruebaConceptoService
+    public class GenerarGraficoService : IGenerarGraficoService
     {
         private static readonly HttpClient Client = new HttpClient();
 
-        public PruebaConceptoService()
+        public GenerarGraficoService()
         { }
+
+        public async Task<object> CreateChartasFile(string path, ChartConfig config)
+        {
+            var jsonChartConfig = JsonSerializer.Serialize(config);
+            Chart qc = new Chart
+            {
+                Width = 500,
+                Height = 300,
+                Config = jsonChartConfig
+            };
+            var ByteArray = await ToByteArray(qc);
+
+            File.WriteAllBytes(path, ByteArray);
+
+            var save = File.Exists(path);
+            return save ? path : "";
+        }
 
         public async Task<object> CreateChartasFile(string path)
         {

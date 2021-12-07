@@ -73,19 +73,22 @@ namespace asivamosffie.services
         private readonly IContractualControversy _contractualControversy;
         //private readonly ICheckWeeklyProgressService _checkWeeklyProgressService;
         private readonly devAsiVamosFFIEContext _context;
+        private readonly IGenerarGraficoService _generarGraficoService;
 
         public RegisterWeeklyProgressService(
             devAsiVamosFFIEContext context,
             ICommonService commonService,
             //     ICheckWeeklyProgressService checkWeeklyProgressService,
             IDocumentService documentService,
-            IContractualControversy contractualControversy)
+            IContractualControversy contractualControversy,
+            IGenerarGraficoService generarGraficoService)
         {
             //     _checkWeeklyProgressService = checkWeeklyProgressService;
             _documentService = documentService;
             _commonService = commonService;
             _context = context;
             _contractualControversy = contractualControversy;
+            _generarGraficoService = generarGraficoService;
         }
 
         #endregion
@@ -262,7 +265,7 @@ namespace asivamosffie.services
             };
         }
 
-        public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId)
+        public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId, string pRutaGrafico)
         {
             try
             {
@@ -326,7 +329,7 @@ namespace asivamosffie.services
                 await GetModInfoSeguimientoSemanal(seguimientoSemanal);
 
                 GetInformacionGeneral(seguimientoSemanal);
-                GetAvanceFisico(seguimientoSemanal);
+                await GetAvanceFisico(seguimientoSemanal, pRutaGrafico);
                 //si es tai -> cambiar fecha fin 
                 ContratacionProyecto cp = _context.ContratacionProyecto.Find(pContratacionProyectoId);
                 if (cp != null)
@@ -358,7 +361,7 @@ namespace asivamosffie.services
             }
         }
 
-        private void GetAvanceFisico(SeguimientoSemanal seguimientoSemanal)
+        /*private void GetAvanceFisico(SeguimientoSemanal seguimientoSemanal)
         {
             List<dynamic> TablaInversionPorCapitulos = new List<dynamic>();
             int Count = 1;
@@ -387,6 +390,53 @@ namespace asivamosffie.services
             }
 
             seguimientoSemanal.AvanceFisico = TablaInversionPorCapitulos;
+        }*/
+
+        private async Task GetAvanceFisico(SeguimientoSemanal seguimientoSemanal, string rutaGrafico)
+        {
+            List<dynamic> lAvanceFisicoxActividad = new List<dynamic>();
+            ChartConfig oChartConfig = null;
+            int Count = 1;
+            //seguimientoSemanal.SeguimientoSemanalId
+            var lSeguimientoSemanalProgramacion = _context.V_SeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion.Where(x => x.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && x.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).ToList();
+            if (lSeguimientoSemanalProgramacion.Count() > 0)
+            {
+                foreach (var item in lSeguimientoSemanalProgramacion)
+                {
+                    lAvanceFisicoxActividad.Add(
+                                                    new
+                                                    {
+                                                        Num = Count,
+                                                        Capitulo = item.Actividad,      
+                                                        Programacion = item.ProgramacionSemanal,
+                                                        Ejectutado = item.AvanceFisicoSemanal,
+                                                        Desviacion = (item.AvanceFisicoSemanal / item.ProgramacionSemanal - 100) / 100
+                                                    }
+                                                );
+                    Count++;
+                }
+
+                var a = lAvanceFisicoxActividad.Select(y => y.Capitulo).Cast<string>().ToList();
+                var b = lAvanceFisicoxActividad.Select(y => y.Programacion).Cast<decimal>().ToList();
+                oChartConfig = new ChartConfig
+                {
+                    type = "bar",
+                    options = new model.AditionalModels.Options { title = new Title { display = true, text = "SEGUIMIENTO POR CAPÍTULOS" }//,
+                                                                    //scales = new Scales { xAxes = new List<XAx> { new XAx { stacked = true } }, yAxes = new List<YAx> { new YAx { stacked = true } } }
+                                                                },
+                    data = new Data
+                    {
+                        labels = lAvanceFisicoxActividad.Select(y => y.Capitulo).Cast<string>().ToList(),
+                        datasets = new List<Dataset> { new Dataset { label = "Programación", fill = false, backgroundColor = "rgb(255, 99, 132)", data = lAvanceFisicoxActividad.Select(y => y.Programacion).Cast<decimal>().ToList() },
+                                                                    new Dataset { label = "Ejecutado", fill = false, backgroundColor = "rgb(54, 162, 235)", data = lAvanceFisicoxActividad.Select(y => y.Ejectutado).Cast<decimal>().ToList() },
+                                                                    new Dataset { label = "Desviación", fill = false, backgroundColor = "rgb(75, 192, 192)", data = lAvanceFisicoxActividad.Select(y => y.Desviacion).Cast<decimal>().ToList() } }
+                    }
+                };
+                rutaGrafico += $"SeguimientoSemanalAvanceFisico-{seguimientoSemanal.SeguimientoSemanalId}-{seguimientoSemanal.ContratacionProyectoId}.png";
+            }
+
+            seguimientoSemanal.AvanceFisico = lAvanceFisicoxActividad;
+            seguimientoSemanal.AvanceFisicoGrafica = oChartConfig != null ? (string)await _generarGraficoService.CreateChartasFile(rutaGrafico, oChartConfig) : "";
         }
 
         private void GetInformacionGeneral(SeguimientoSemanal pSeguimientoSemanal)
@@ -422,9 +472,11 @@ namespace asivamosffie.services
                                                               ContratoTipo = r.TipoSolicitudCodigo.Equals(ConstanCodigoTipoContrato.Obra) ? ConstanCodigoTipoContratacionSTRING.Obra : ConstanCodigoTipoContratacionSTRING.Interventoria,
                                                               ContratoNumero = r.Contrato.FirstOrDefault().NumeroContrato,
                                                               ContratoFechaInicio = r.Contrato.FirstOrDefault().ContratoPoliza.Where(r => r.FechaAprobacion.HasValue).FirstOrDefault().FechaAprobacion,
+                                                              
                                                               Contratista = r.ContratistaId.HasValue ? r.Contratista.Nombre : "",
 
-                                                              Fase1PlazoInicial = $"M: {r.Contrato.FirstOrDefault().PlazoFase1PreMeses} D: {r.Contrato.FirstOrDefault().PlazoFase1PreDias}", 
+                                                              //Fase1PlazoInicial = $"M: {r.Contrato.FirstOrDefault().PlazoFase1PreMeses} D: {r.Contrato.FirstOrDefault().PlazoFase1PreDias}", 
+                                                              Fase1PlazoInicial = _commonService.GetMonthDaysDifferences(r.Contrato.FirstOrDefault().FechaActaInicioFase1.Value, r.Contrato.FirstOrDefault().FechaTerminacion.Value),
                                                               Fase1Inicio = r.Contrato.FirstOrDefault().FechaActaInicioFase1,
                                                               Fase1Fin = r.Contrato.FirstOrDefault().FechaTerminacion,
                                                               //Fase1Valor = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == true && v.EsDrpOriginal > 0).Sum(r => r.ValorDrp) ?? 0,
@@ -432,14 +484,18 @@ namespace asivamosffie.services
                                                               Fase1Valor = _commonService.GetValorContrato(r.ContratacionId, "original", true),
                                                               Fase1ValorAcumulado = _commonService.GetValorContrato(r.ContratacionId, "acumulado", true),
 
-                                                              Fase2PlazoInicial = $"M: {r.Contrato.FirstOrDefault().PlazoFase2ConstruccionMeses} D: {r.Contrato.FirstOrDefault().PlazoFase2ConstruccionDias}",
+                                                              //Fase2PlazoInicial = $"M: {r.Contrato.FirstOrDefault().PlazoFase2ConstruccionMeses} D: {r.Contrato.FirstOrDefault().PlazoFase2ConstruccionDias}",
+                                                              Fase2PlazoInicial = _commonService.GetMonthDaysDifferences(r.Contrato.FirstOrDefault().FechaActaInicioFase2.Value, r.Contrato.FirstOrDefault().FechaTerminacionFase2.Value),
                                                               Fase2Inicio = r.Contrato.FirstOrDefault().FechaActaInicioFase2,
                                                               Fase2Fin = r.Contrato.FirstOrDefault().FechaTerminacionFase2,
                                                               //Fase2Valor = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == false && v.EsDrpOriginal > 0).Sum(r => r.ValorDrp) ?? 0,
                                                               //Fase2ValorAcumulado = _context.VDrpXfaseXcontratacionIdXnovedad.Where(v => v.ContratacionId == r.ContratacionId && v.EsPreConstruccion == false && v.EsDrpOriginal == 0).Sum(r => r.ValorDrp) ?? 0,
                                                               Fase2Valor = _commonService.GetValorContrato(r.ContratacionId, "original", false),
                                                               Fase2ValorAcumulado = _commonService.GetValorContrato(r.ContratacionId, "acumulado", false),
-                                                              Fase2PlazoAcumulado = r.Contrato.FirstOrDefault().FechaTerminacionFase2 - r.Contrato.FirstOrDefault().FechaActaInicioFase2,
+                                                              //Fase2PlazoAcumulado = r.Contrato.FirstOrDefault().FechaTerminacionFase2 - r.Contrato.FirstOrDefault().FechaActaInicioFase2,
+
+                                                              PlazoInicial = _commonService.GetMonthDaysDifferences(r.Contrato.FirstOrDefault().FechaActaInicioFase1.Value, r.Contrato.FirstOrDefault().FechaTerminacionFase2.Value),
+                                                              PlazoAcumulado = _commonService.GetAccumulateMonthDaysDifferences(r.Contrato.FirstOrDefault().FechaActaInicioFase1.Value, r.Contrato.FirstOrDefault().FechaTerminacionFase2.Value, r.Contrato.FirstOrDefault().ContratoId),
 
                                                               ValorTotal = _commonService.GetValorContrato(r.ContratacionId, "total", null),
                                                               ValorTotalAcumulado = _commonService.GetValorContrato(r.ContratacionId, "totalAcumulado", null),
