@@ -19,6 +19,7 @@ using asivamosffie.services.Helpers.Constants;
 using asivamosffie.services.Helpers;
 using asivamosffie.model.AditionalModels;
 using Microsoft.Extensions.Options;
+using Microsoft.Data.SqlClient;
 
 namespace asivamosffie.services
 {
@@ -330,6 +331,8 @@ namespace asivamosffie.services
 
                 GetInformacionGeneral(seguimientoSemanal);
                 await GetAvanceFisico(seguimientoSemanal, pRutaGrafico);
+                await GetSeguimientoFinanciero(seguimientoSemanal, pRutaGrafico);
+
                 //si es tai -> cambiar fecha fin 
                 ContratacionProyecto cp = _context.ContratacionProyecto.Find(pContratacionProyectoId);
                 if (cp != null)
@@ -398,7 +401,7 @@ namespace asivamosffie.services
             ChartConfig oChartConfig = null;
             int Count = 1;
             //seguimientoSemanal.SeguimientoSemanalId
-            var lSeguimientoSemanalProgramacion = _context.V_SeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion.Where(x => x.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && x.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).ToList();
+            List<VSeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion> lSeguimientoSemanalProgramacion = _context.VSeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion.Where(x => x.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && x.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).ToList();
             if (lSeguimientoSemanalProgramacion.Count() > 0)
             {
                 foreach (var item in lSeguimientoSemanalProgramacion)
@@ -407,17 +410,15 @@ namespace asivamosffie.services
                                                     new
                                                     {
                                                         Num = Count,
-                                                        Capitulo = item.Actividad,      
-                                                        Programacion = item.ProgramacionSemanal,
-                                                        Ejectutado = item.AvanceFisicoSemanal,
-                                                        Desviacion = (item.AvanceFisicoSemanal / item.ProgramacionSemanal - 100) / 100
+                                                        Capitulo = item.Capitulo,      
+                                                        Programacion = item.ProgramacionCapitulo,
+                                                        Ejectutado = item.AvanceFisicoCapitulo,
+                                                        Desviacion = (item.AvanceFisicoCapitulo / item.ProgramacionCapitulo - 100) / 100
                                                     }
                                                 );
                     Count++;
                 }
 
-                var a = lAvanceFisicoxActividad.Select(y => y.Capitulo).Cast<string>().ToList();
-                var b = lAvanceFisicoxActividad.Select(y => y.Programacion).Cast<decimal>().ToList();
                 oChartConfig = new ChartConfig
                 {
                     type = "bar",
@@ -428,8 +429,8 @@ namespace asivamosffie.services
                     {
                         labels = lAvanceFisicoxActividad.Select(y => y.Capitulo).Cast<string>().ToList(),
                         datasets = new List<Dataset> { new Dataset { label = "Programación", fill = false, backgroundColor = "rgb(255, 99, 132)", data = lAvanceFisicoxActividad.Select(y => y.Programacion).Cast<decimal>().ToList() },
-                                                                    new Dataset { label = "Ejecutado", fill = false, backgroundColor = "rgb(54, 162, 235)", data = lAvanceFisicoxActividad.Select(y => y.Ejectutado).Cast<decimal>().ToList() },
-                                                                    new Dataset { label = "Desviación", fill = false, backgroundColor = "rgb(75, 192, 192)", data = lAvanceFisicoxActividad.Select(y => y.Desviacion).Cast<decimal>().ToList() } }
+                                                        new Dataset { label = "Ejecutado", fill = false, backgroundColor = "rgb(54, 162, 235)", data = lAvanceFisicoxActividad.Select(y => y.Ejectutado).Cast<decimal>().ToList() },
+                                                        new Dataset { label = "Desviación", fill = false, backgroundColor = "rgb(75, 192, 192)", data = lAvanceFisicoxActividad.Select(y => y.Desviacion).Cast<decimal>().ToList() } }
                     }
                 };
                 rutaGrafico += $"SeguimientoSemanalAvanceFisico-{seguimientoSemanal.SeguimientoSemanalId}-{seguimientoSemanal.ContratacionProyectoId}.png";
@@ -437,6 +438,62 @@ namespace asivamosffie.services
 
             seguimientoSemanal.AvanceFisico = lAvanceFisicoxActividad;
             seguimientoSemanal.AvanceFisicoGrafica = oChartConfig != null ? (string)await _generarGraficoService.CreateChartasFile(rutaGrafico, oChartConfig) : "";
+        }
+
+        private async Task GetSeguimientoFinanciero(SeguimientoSemanal seguimientoSemanal, string rutaGrafico)
+        {
+            List<dynamic> lAvanceFinancieroxMes = new List<dynamic>();
+            ChartConfig oChartConfig = null;
+
+            SqlParameter[] parameterList = new SqlParameter[]
+            {
+                new SqlParameter("@SeguimientoSemanalId", seguimientoSemanal.SeguimientoSemanalId)
+            };
+
+            List<SeguimientoSemanalFinancieroXMes> lSeguimientoSemanalFinancieroXMes = (List<SeguimientoSemanalFinancieroXMes>)await _commonService.ExcuteSqlStoredProcedure<SeguimientoSemanalFinancieroXMes>("usp_GetMonthlyFinancialMonitoring", parameterList, 1);
+            
+            if (lSeguimientoSemanalFinancieroXMes.Count() > 0)
+            {
+                decimal pa = 0, ea = 0;
+                foreach (var item in lSeguimientoSemanalFinancieroXMes)
+                {
+                    pa += item.Valor.Value; 
+                    ea += item.ValorEjecutado.Value;
+
+                    lAvanceFinancieroxMes.Add(
+                                                    new
+                                                    {
+                                                        Num = "MES " + item.NumeroMes,
+                                                        Programado = item.Valor,
+                                                        Ejecutado = item.ValorEjecutado,
+                                                        ProgramadoAcumulado = pa,
+                                                        EjecutadoAcumulado = ea
+                                                    }
+                                                );
+                }
+
+                oChartConfig = new ChartConfig
+                {
+                    type = "line",
+                    options = new model.AditionalModels.Options
+                    {
+                        title = new Title { display = true, text = "SEGUIMIENTO FINANCIERO" }
+                    },
+                    data = new Data
+                    {
+                        labels = lAvanceFinancieroxMes.Select(y => y.Num).Cast<string>().ToList(),
+                        datasets = new List<Dataset> { new Dataset { label = "Programado", fill = false, backgroundColor = "rgb(255, 99, 132)", borderColor = "rgb(255, 99, 132)", data = lAvanceFinancieroxMes.Select(y => y.Programado).Cast<decimal>().ToList() },
+                                                        new Dataset { label = "Ejecutado", fill = false, backgroundColor = "rgb(54, 162, 235)", borderColor = "rgb(54, 162, 235)", data = lAvanceFinancieroxMes.Select(y => y.Ejecutado).Cast<decimal>().ToList() },
+                                                        new Dataset { label = "Programado Acumulado", fill = false, backgroundColor = "rgb(75, 192, 192)", borderColor = "rgb(75, 192, 192)", data = lAvanceFinancieroxMes.Select(y => y.ProgramadoAcumulado).Cast<decimal>().ToList() },
+                                                        new Dataset { label = "Ejecutado Acumulado", fill = false, backgroundColor = "rgb(255, 205, 86)", borderColor = "rgb(255, 205, 86)", data = lAvanceFinancieroxMes.Select(y => y.EjecutadoAcumulado).Cast<decimal>().ToList() }
+                                                     }
+                    }
+                };
+                rutaGrafico += $"SeguimientoSemanalSeguimientoFinanciero-{seguimientoSemanal.SeguimientoSemanalId}-{seguimientoSemanal.ContratacionProyectoId}.png";
+            }
+
+            seguimientoSemanal.SeguimientoFinanciero= lAvanceFinancieroxMes;
+            seguimientoSemanal.SeguimientoFinancieroGrafica = oChartConfig != null ? (string)await _generarGraficoService.CreateChartasFile(rutaGrafico, oChartConfig) : "";
         }
 
         private void GetInformacionGeneral(SeguimientoSemanal pSeguimientoSemanal)

@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using asivamosffie.model.Models;
 using asivamosffie.model.APIModels;
 using asivamosffie.services.Helpers.Enumerator;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace asivamosffie.services.Interfaces
 {
@@ -122,5 +124,7 @@ namespace asivamosffie.services.Interfaces
         decimal GetValorContrato(int pContratacionId, string tipo, bool? fase);
         string GetMonthDaysDifferences(DateTime startDate, DateTime endDate);
         string GetAccumulateMonthDaysDifferences(DateTime startDate, DateTime endDate, int pContratoId);
+        Task<object> ExcuteSqlStoredProcedure<T>(string query, SqlParameter[] parameterList, int ListorObject);
+        Task<DataTable> ExcuteSqlStoredProcedure(string query, SqlParameter[] parameterList);
     }
 }

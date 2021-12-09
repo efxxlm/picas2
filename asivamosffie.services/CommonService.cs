@@ -5,12 +5,14 @@ using asivamosffie.services.Helpers;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -1042,6 +1044,79 @@ namespace asivamosffie.services
 
             string diff = $"M: {((newDate.Year - baseDate.Year)*12) + (newDate.Month - baseDate.Month)} D: {newDate.Day - baseDate.Day}";
             return diff;
+        }
+
+        public async Task<object> ExcuteSqlStoredProcedure<T>(string query, SqlParameter[] parameterList, int ListorObject)
+        {
+            List<T> lobj = null;
+            object obj = null;
+            if (_context.ChangeTracker.LazyLoadingEnabled != false)
+                _context.ChangeTracker.LazyLoadingEnabled = false;
+            using (var command = _context.Database.GetDbConnection().CreateCommand())
+            {
+                if (parameterList != null)
+                    command.Parameters.AddRange(parameterList);
+
+                command.CommandTimeout = 0;
+                command.CommandText = query;
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                if (command.Connection.State != System.Data.ConnectionState.Open)
+                    command.Connection.Open();
+
+                System.Data.Common.DbDataReader reader = await command.ExecuteReaderAsync();
+
+                if (reader.HasRows)
+                {
+                    var jsonRes = "";
+                    while (await reader.ReadAsync())
+                        jsonRes += reader.GetTextReader(0).ReadToEnd();
+
+                    try
+                    {
+                        if (ListorObject == 1)
+                        { lobj = JsonConvert.DeserializeObject<List<T>>(jsonRes); }
+                        else
+                        { obj = JsonConvert.DeserializeObject<T>(jsonRes); }
+                    }
+                    catch (Exception ex) { }
+                }
+                try { reader.Dispose(); } catch (Exception e) { }
+                command.Connection.Close();
+            }
+
+            return ListorObject == 1 ? lobj ?? new List<T>() : obj ?? (T)Activator.CreateInstance(typeof(T));
+        }
+
+        public async Task<DataTable> ExcuteSqlStoredProcedure(string query, SqlParameter[] parameterList)
+        {
+            DataTable dataTable = null;
+            if (_context.ChangeTracker.LazyLoadingEnabled != false)
+                _context.ChangeTracker.LazyLoadingEnabled = false;
+            using (var command = _context.Database.GetDbConnection().CreateCommand())
+            {
+                if (parameterList != null)
+                    command.Parameters.AddRange(parameterList);
+
+                command.CommandTimeout = 0;
+                command.CommandText = query;
+                command.CommandType = CommandType.StoredProcedure;
+
+                if (command.Connection.State != ConnectionState.Open)
+                    command.Connection.Open();
+
+                System.Data.Common.DbDataReader reader = await command.ExecuteReaderAsync();
+
+                if (reader.HasRows)
+                {
+                    dataTable = new DataTable();
+                    dataTable.Load(reader);
+                }
+                try { reader.Dispose(); } catch (Exception e) { }
+                command.Connection.Close();
+            }
+
+            return dataTable;
         }
     }
 
