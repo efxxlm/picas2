@@ -51,7 +51,7 @@ export class FormCriteriosPagoComponent implements OnInit {
     criteriosArray: { codigo: string, nombre: string, porcentaje: number }[] = [];
     estaEditando = false;
     forma_pago_codigo: string;
-    usosParaElConceoto: any[]
+    usosParaElConceoto: any[] = [];
     quitarOpcionAnticipo = true;
     solicitudesPagoFase : any[];
 
@@ -617,10 +617,19 @@ export class FormCriteriosPagoComponent implements OnInit {
     }
 
     getvaluesConceptoPagoCodigo(e) {
-        this.registrarPagosSvc.getUsoByConceptoPagoCodigo( e[0].codigo )
-        .subscribe(response => {
-            this.usosParaElConceoto = response;
-        })
+        this.usosParaElConceoto = [];
+        e.forEach((e: { codigo: any; }) => {
+          this.registrarPagosSvc.getUsoByConceptoPagoCodigo( e.codigo )
+          .subscribe(response => {
+            if(response != null){
+              response.forEach((r: { codigo: any; }) => {
+                if(!this.usosParaElConceoto?.find(u =>u.codigo == r.codigo)){
+                  this.usosParaElConceoto.push(r);
+                }
+              });
+            }
+          })
+        });
     }
 
     getvaluesConcepto( conceptos: any[], index: number, criterioCodigo: any, e ) {
