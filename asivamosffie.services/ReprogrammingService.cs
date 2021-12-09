@@ -44,26 +44,46 @@ namespace asivamosffie.services
                                                                     .Include(x => x.AjustePragramacionObservacion)
                                                                     .FirstOrDefaultAsync(x => x.AjusteProgramacionId == pAjusteProgramacionId);
 
-                ajusteProgramacion.ObservacionObra = getObservacion(ajusteProgramacion, true);
-                ajusteProgramacion.ObservacionFlujo = getObservacion(ajusteProgramacion, false);
+                ajusteProgramacion.ObservacionObra = getObservacion(ajusteProgramacion, true, true, ajusteProgramacion.ArchivoCargueIdProgramacionObra);
+                ajusteProgramacion.ObservacionObraHistorico = getObservacionHistorico(ajusteProgramacion, true);
+                ajusteProgramacion.ObservacionObraInterventor = getObservacion(ajusteProgramacion, true, false, ajusteProgramacion.ArchivoCargueIdProgramacionObra);
+                ajusteProgramacion.ObservacionFlujo = getObservacion(ajusteProgramacion, false, true, ajusteProgramacion.ArchivoCargueIdFlujoInversion);
+                ajusteProgramacion.ObservacionFlujoHistorico = getObservacionHistorico(ajusteProgramacion, false);
+                ajusteProgramacion.ObservacionFlujoInterventor = getObservacion(ajusteProgramacion, false, false, ajusteProgramacion.ArchivoCargueIdFlujoInversion);
 
-                return ajusteProgramacion;
+            return ajusteProgramacion;
             }
 
-            private AjustePragramacionObservacion getObservacion(AjusteProgramacion pAjusteProgramacion, bool? pEsObra)
+            private AjustePragramacionObservacion getObservacion(AjusteProgramacion pAjusteProgramacion, bool? pEsObra, bool? pEsSupervisor, int? pArchivoCargueId)
             {
                 AjustePragramacionObservacion ajustePragramacionObservacion = pAjusteProgramacion.AjustePragramacionObservacion.ToList()
                             .Where(r =>
                                         r.Archivada != true &&
                                         r.Eliminado != true &&
-                                        r.EsObra == pEsObra
+                                        r.EsObra == pEsObra &&
+                                        r.EsSupervisor == pEsSupervisor &&
+                                        r.ArchivoCargueId == pArchivoCargueId
                                     )
                             .FirstOrDefault();
 
                 return ajustePragramacionObservacion;
             }
 
-            public async Task<List<ArchivoCargue>> GetLoadAdjustProgrammingGrid(int pAjusteProgramacionId)
+            private List<AjustePragramacionObservacion> getObservacionHistorico(AjusteProgramacion pAjusteProgramacion, bool? pEsObra)
+            {
+            List < AjustePragramacionObservacion> ajustePragramacionObservacion = pAjusteProgramacion.AjustePragramacionObservacion.ToList()
+                            .Where(r =>
+                                        r.Archivada == true &&
+                                        r.Eliminado != true &&
+                                        r.EsObra == pEsObra &&
+                                        r.EsSupervisor == true
+                                    )
+                            .ToList();
+
+                return ajustePragramacionObservacion;
+            }
+
+        public async Task<List<ArchivoCargue>> GetLoadAdjustProgrammingGrid(int pAjusteProgramacionId)
             {
                 List<ArchivoCargue> listaCargas = _context.ArchivoCargue
                                                                 .Where(a => a.ReferenciaId == pAjusteProgramacionId &&
@@ -116,8 +136,8 @@ namespace asivamosffie.services
                                                             .FirstOrDefaultAsync(cc => cc.AjusteProgramacionId == id);
 
 
-                ap.ObservacionObra = getObservacion(ap, true);
-                ap.ObservacionFlujo = getObservacion(ap, false);
+                ap.ObservacionObra = getObservacion(ap, true, true, ap.ArchivoCargueIdProgramacionObra);
+                ap.ObservacionFlujo = getObservacion(ap, false, true, ap.ArchivoCargueIdFlujoInversion);
 
                 if (
                      ap.TieneObservacionesProgramacionObra == null ||
@@ -199,6 +219,50 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> CreateEditObservacionFile(AjusteProgramacion pAjusteProgramacion, bool esObra, string pUsuario)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Observacion_Ajuste_Programacion, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = "";
+
+            try
+            {
+                CreateEdit = "AJUSTE AJUSTE PROGRAMACION";
+                int idObservacion = 0;
+
+                if (pAjusteProgramacion.AjustePragramacionObservacion.Count() > 0)
+                    idObservacion = pAjusteProgramacion.AjustePragramacionObservacion.FirstOrDefault().AjusteProgramacionId.Value;
+
+                AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacion.AjusteProgramacionId);
+
+                 await CreateEditObservacionAjusteProgramacion(pAjusteProgramacion.AjustePragramacionObservacion.FirstOrDefault(), pUsuario, esObra);
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuario, CreateEdit)
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
+                    };
+            }
+        }
+
         public async Task<Respuesta> CreateEditObservacionAjusteProgramacion(AjusteProgramacion pAjusteProgramacion, bool esObra, string pUsuario)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Observacion_Ajuste_Programacion, (int)EnumeratorTipoDominio.Acciones);
@@ -214,10 +278,10 @@ namespace asivamosffie.services
 
                 AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacion.AjusteProgramacionId);
 
-                //ajusteProgramacion.UsuarioModificacion = pUsuario;
-                //ajusteProgramacion.FechaModificacion = DateTime.Now;
+                ajusteProgramacion.UsuarioModificacion = pUsuario;
+                ajusteProgramacion.FechaModificacion = DateTime.Now;
 
-                //ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_validacion_a_la_programacion;
+                ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_validacion_a_la_programacion;
 
                 if (esObra == true)
                 {
@@ -257,14 +321,6 @@ namespace asivamosffie.services
                 }
 
                 ajusteProgramacion.RegistroCompletoValidacion = await ValidarRegistroCompletoValidacionAjusteProgramacion(ajusteProgramacion.AjusteProgramacionId);
-                /*if (ajusteProgramacion.RegistroCompletoValidacion)
-                {
-                    ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.;
-                }
-                else
-                {
-                    ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.Enviada_al_supervisor;
-                }*/
                 _context.SaveChanges();
 
                 return
@@ -333,6 +389,13 @@ namespace asivamosffie.services
                     List<AjusteProgramacionFlujo> listaAjusteProgramacionFlujo = _context.AjusteProgramacionFlujo.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
                     _context.AjusteProgramacionFlujo.RemoveRange(listaAjusteProgramacionFlujo);
 
+                    List<TempFlujoInversion> listaTempFlujoInversion = _context.TempFlujoInversion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                    _context.TempFlujoInversion.RemoveRange(listaTempFlujoInversion);
+
+                    List<SeguimientoSemanalTemp> listaSeguimientoSemanalTemp = _context.SeguimientoSemanalTemp.Where(r => r.AjusteProgramaionId == pAjusteProgramacionId).ToList();
+                    _context.SeguimientoSemanalTemp.RemoveRange(listaSeguimientoSemanalTemp);
+                    
+
                     bool state = await ValidarRegistroCompletoValidacionAjusteProgramacion(pAjusteProgramacionId);
                     AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
                     if (ajusteProgramacion != null)
@@ -341,6 +404,13 @@ namespace asivamosffie.services
                         ajusteProgramacion.UsuarioModificacion = pUsuario;
                         ajusteProgramacion.RegistroCompletoValidacion = state;
                         ajusteProgramacion.AjusteProgramacionId = pAjusteProgramacionId;
+
+                        if (ajusteProgramacion.ArchivoCargueIdFlujoInversion == pArchivoCargueId)
+                            ajusteProgramacion.ArchivoCargueIdFlujoInversion = null;
+
+                        if (ajusteProgramacion.ArchivoCargueIdProgramacionObra == pArchivoCargueId)
+                            ajusteProgramacion.ArchivoCargueIdProgramacionObra = null;
+
                         _context.AjusteProgramacion.Update(ajusteProgramacion);
                     }
 
@@ -372,46 +442,181 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> EnviarAlSupervisorAjusteProgramacion(int pAjusteProgramacionId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        public async Task<Respuesta> EnviarAlSupervisorAjusteProgramacion(int pAjusteProgramacionId, string pUsuarioCreacion)
         {
             string CreateEdit = string.Empty;
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.EnviarAlSupervisorAjusteProgramacion, (int)EnumeratorTipoDominio.Acciones);
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.EnviarReprogramacionASupervisor));
+            string strContenido = template.Contenido;
 
             try
             {
-                //Contrato contrato = _context.Contrato.Where(c => c.ContratoId == pContratoId).Include(x => x.Contratacion).FirstOrDefault();
                 AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
-                //envio correo
-                //envio correo a supervisor
-                //Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AprobarRequisitosTecnicosFase2);
+                if (ajusteProgramacion != null)
+                {
+                    ContratacionProyecto cp = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == ajusteProgramacion.ContratacionProyectoId).Include(r => r.Proyecto).FirstOrDefault();
+                    if (cp != null)
+                    {
+                        Contrato contrato = _context.Contrato.Where(r => r.ContratacionId == cp.ContratacionId).FirstOrDefault();
+                        strContenido = strContenido
+                                      .Replace("[LLAVE_MEN]", cp.Proyecto.LlaveMen)
+                                      .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                                      ;
 
-                //string ncontrato = "";
-                //string fechaContrato = "";
-                //string template = TemplateRecoveryPassword.Contenido.
-                //    Replace("[NUMEROCONTRATO]", contrato.NumeroContrato).
-                //    Replace("_LinkF_", pDominioFront).
-                //    Replace("[FECHAVERIFICACION]", DateTime.Now.ToString("dd/MM/yyyy")).
-                //    Replace("[CANTIDADPROYECTOSASOCIADOS]", _context.ContratoConstruccion.Where(x => x.RegistroCompleto == true && x.ContratoId == contrato.ContratoId).Count().ToString()).
-                //    Replace("[CANTIDADPROYECTOSVERIFICADOS]", _context.ContratoConstruccion.Where(x => x.RegistroCompleto == true && x.ContratoId == contrato.ContratoId).Count().ToString()).
-                //    Replace("[TIPOCONTRATO]", contrato.Contratacion.TipoSolicitudCodigo == "1" ? "obra" : "interventoría");//OBRA O INTERVENTORIA
+                    }
+                }
 
+                List<EnumeratorPerfil> perfilsEnviarCorreo = new List<EnumeratorPerfil>{EnumeratorPerfil.Supervisor};
 
-                //var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Apoyo).Include(y => y.Usuario).ToList();
-                //foreach (var usuarioadmin in usuariosadmin)
-                //{
-                //    bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioadmin.Usuario.Email, "Aprobacion de requisitos técnicos de inicio para fase 2-construcción", template, pSender, pPassword, pMailServer, pMailPort);
-                //}
-
-                //Contrato contrato = _context.Contrato.Find(pContratoId);
-                //jflorez, este evento solo sucede cuando esta completo y se aprueban los requisitos, por ello seteo el dato 20201202
-                //contrato.FechaAprobacionRequisitosConstruccionInterventor = DateTime.Now;
-
-                //ajusteProgramacion.UsuarioModificacion = pUsuarioCreacion;
-                //ajusteProgramacion.FechaModificacion = DateTime.Now;
+                _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
 
                 ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.Enviada_al_supervisor;
+                ajusteProgramacion.TieneObservacionesFlujoInversion = null;
+                ajusteProgramacion.TieneObservacionesProgramacionObra = null;
+
+                /**
+                 * Elimino los archivos fallidos y las observaciones del interventor al momento del envío
+                */
+                List<ArchivoCargue> listaCargas = _context.ArchivoCargue
+                                                .Where(a => a.ReferenciaId == pAjusteProgramacionId &&
+                                                       a.ArchivoCargueId != ajusteProgramacion.ArchivoCargueIdFlujoInversion &&
+                                                       a.ArchivoCargueId != ajusteProgramacion.ArchivoCargueIdProgramacionObra &&
+                                                       a.Eliminado != true &&
+                                                       a.OrigenId == int.Parse(OrigenArchivoCargue.AjusteFlujoInversion) || a.OrigenId == int.Parse(OrigenArchivoCargue.AjusteProgramacionObra))
+                                                .ToList();
+
+
+                listaCargas.ForEach(archivo =>
+                {
+                    if (archivo.CantidadRegistros != archivo.CantidadRegistrosValidos)
+                    {
+                        archivo.Eliminado = true;
+                        _context.Set<AjustePragramacionObservacion>()
+                                          .Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsSupervisor != true && r.ArchivoCargueId == archivo.ArchivoCargueId)
+                                                              .UpdateAsync(r => new AjustePragramacionObservacion()
+                                                              {
+                                                                  FechaModificacion = DateTime.Now,
+                                                                  UsuarioModificacion = pUsuarioCreacion,
+                                                                  Eliminado = true
+                                                              });
+                    }
+                });
 
                 _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        public async Task<Respuesta> EnviarAlInterventor(int pAjusteProgramacionId, string pUsuarioCreacion)
+        {
+            string CreateEdit = string.Empty;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.EnviarAlSupervisorAjusteProgramacion, (int)EnumeratorTipoDominio.Acciones);
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.EnviarReprogramacionAInterventor));
+            string strContenido = template.Contenido;
+            try
+            {
+                AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
+                if (ajusteProgramacion != null)
+                {
+                    ContratacionProyecto cp = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == ajusteProgramacion.ContratacionProyectoId).Include(r => r.Proyecto).FirstOrDefault();
+                    if (cp != null)
+                    {
+                        Contrato contrato = _context.Contrato.Where(r => r.ContratacionId == cp.ContratacionId).FirstOrDefault();
+                        strContenido = strContenido
+                                      .Replace("[LLAVE_MEN]", cp.Proyecto.LlaveMen)
+                                      .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                                      ;
+
+                    }
+                }
+
+                List<EnumeratorPerfil> perfilsEnviarCorreo = new List<EnumeratorPerfil> { EnumeratorPerfil.Interventor };
+
+                _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+                ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.Con_observaciones_del_supervisor;
+                ajusteProgramacion.RegistroCompleto = false;
+                ajusteProgramacion.RegistroCompletoValidacion = false;
+
+                //si se devuelve por flujo de inversion borro para que empiece nuevo ciclo
+                if (ajusteProgramacion.TieneObservacionesFlujoInversion == true)
+                {
+                    await _context.Set<ArchivoCargue>()
+                                  .Where(r => r.ArchivoCargueId == ajusteProgramacion.ArchivoCargueIdFlujoInversion)
+                                                      .UpdateAsync(r => new ArchivoCargue()
+                                                      {
+                                                          FechaModificacion = DateTime.Now,
+                                                          UsuarioModificacion = pUsuarioCreacion,
+                                                          Activo = false
+                                                      });
+                    ajusteProgramacion.ArchivoCargueIdFlujoInversion = null;
+
+                    //se pueden borrar , no es necesario dejar el registro.
+
+                    List<AjusteProgramacionFlujo> listaAjusteProgramacionFlujo = _context.AjusteProgramacionFlujo.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                    _context.AjusteProgramacionFlujo.RemoveRange(listaAjusteProgramacionFlujo);
+
+                    List<TempFlujoInversion> listaTempFlujoInversion = _context.TempFlujoInversion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                    _context.TempFlujoInversion.RemoveRange(listaTempFlujoInversion);
+
+                    List<SeguimientoSemanalTemp> listaSeguimientoSemanalTemp = _context.SeguimientoSemanalTemp.Where(r => r.AjusteProgramaionId == pAjusteProgramacionId).ToList();
+                    _context.SeguimientoSemanalTemp.RemoveRange(listaSeguimientoSemanalTemp);
+                }
+
+                //si se devuelve por programacion borro para que empiece nuevo ciclo
+
+                if (ajusteProgramacion.TieneObservacionesProgramacionObra == true)
+                {
+                    await _context.Set<ArchivoCargue>()
+                                  .Where(r => r.ArchivoCargueId == ajusteProgramacion.ArchivoCargueIdProgramacionObra)
+                                                      .UpdateAsync(r => new ArchivoCargue()
+                                                      {
+                                                          FechaModificacion = DateTime.Now,
+                                                          UsuarioModificacion = pUsuarioCreacion,
+                                                          Activo = false
+                                                      });
+                    ajusteProgramacion.ArchivoCargueIdProgramacionObra = null;
+
+                    //se pueden borrar , no es necesario dejar el registro.
+
+                    List<AjusteProgramacionObra> listaAjusteProgramacionObra = _context.AjusteProgramacionObra.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                    _context.AjusteProgramacionObra.RemoveRange(listaAjusteProgramacionObra);
+
+                    List<TempProgramacion> listaTempAjusteProgramacionObra = _context.TempProgramacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                    _context.TempProgramacion.RemoveRange(listaTempAjusteProgramacionObra);
+                }
+
+                await _context.Set<AjustePragramacionObservacion>()
+                                  .Where(r => r.AjusteProgramacionId == ajusteProgramacion.AjusteProgramacionId && r.EsSupervisor == true)
+                                                      .UpdateAsync(r => new AjustePragramacionObservacion()
+                                                      {
+                                                          FechaModificacion = DateTime.Now,
+                                                          UsuarioModificacion = pUsuarioCreacion,
+                                                          Archivada = true
+                                                      });
+
+                _context.SaveChanges();
+
                 return
                     new Respuesta
                     {
@@ -1628,6 +1833,11 @@ namespace asivamosffie.services
                 {
                     ajusteProgramacionId = listTempFlujoInversion.FirstOrDefault().AjusteProgramacionId.Value;
 
+                    List<AjusteProgramacionFlujo> listaFlujo = _context.AjusteProgramacionFlujo
+                                                            .Where(p => p.AjusteProgramacionId == ajusteProgramacionId)
+                                                            .ToList();
+                    _context.AjusteProgramacionFlujo.RemoveRange(listaFlujo);
+
                     AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(ajusteProgramacionId);
 
                     ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
@@ -1671,8 +1881,8 @@ namespace asivamosffie.services
                                                                     .ToList();
 
                         // eliminar registros cargados
-                        List<AjusteProgramacionFlujo> listaFlujo = _context.AjusteProgramacionFlujo.Where(r => r.AjusteProgramacionId == ajusteProgramacionId).ToList();
-                        _context.AjusteProgramacionFlujo.RemoveRange(listaFlujo);
+                        List<AjusteProgramacionFlujo> listaFlujoOld = _context.AjusteProgramacionFlujo.Where(r => r.AjusteProgramacionId == ajusteProgramacionId).ToList();
+                        _context.AjusteProgramacionFlujo.RemoveRange(listaFlujoOld);
 
                         // elimina los existentes
                         _context.SeguimientoSemanalTemp.RemoveRange(listaSeguimientos);

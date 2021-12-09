@@ -81,8 +81,11 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
   }
 
   RegistrarNuevo( ajusteProgramacion ){
-    console.log(ajusteProgramacion)
-    this.router.navigate( [ '/registrarAjusteProgramacion/registrarAjusteProgramacion', ajusteProgramacion.ajusteProgramacionId ?? 0 ], { state: { ajusteProgramacion } } )
+    if(ajusteProgramacion.ajusteProgramacionId > 0){
+      this.router.navigate( [ '/registrarAjusteProgramacion/verDetalleEditarAjusteProgramacion', ajusteProgramacion.ajusteProgramacionId], { state: { ajusteProgramacion } } )
+    }else{
+      this.router.navigate( [ '/registrarAjusteProgramacion/registrarAjusteProgramacion',  ajusteProgramacion.ajusteProgramacionId ?? 0 ], { state: { ajusteProgramacion } } )
+    }
   }
 
   openDialog (modalTitle: string, modalText: string) {
@@ -103,6 +106,6 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
       })
   }
   verDetalle(ajusteProgramacion){
-    this.router.navigate( [ '/registrarAjusteProgramacion/verHistorial', 0 ], { state: { ajusteProgramacion } } )
+    this.router.navigate( [ '/registrarAjusteProgramacion/verDetalleAjusteProgramacion', ajusteProgramacion.ajusteProgramacionId ], { state: { ajusteProgramacion } } )
   }
 }

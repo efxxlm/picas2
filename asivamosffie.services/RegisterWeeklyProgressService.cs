@@ -401,7 +401,8 @@ namespace asivamosffie.services
             ChartConfig oChartConfig = null;
             int Count = 1;
             //seguimientoSemanal.SeguimientoSemanalId
-            List<VSeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion> lSeguimientoSemanalProgramacion = _context.VSeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion.Where(x => x.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && x.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).ToList();
+            
+            List<VSeguimientoSemanalXseguimientoSemanalAvanceFisicoProgramacion> lSeguimientoSemanalProgramacion = _context.VSeguimientoSemanalXseguimientoSemanalAvanceFisicoProgramacion.Where(x => x.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && x.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).ToList();
             if (lSeguimientoSemanalProgramacion.Count() > 0)
             {
                 foreach (var item in lSeguimientoSemanalProgramacion)

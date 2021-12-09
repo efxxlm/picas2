@@ -335,7 +335,9 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VSaldosFuenteXaportanteId> VSaldosFuenteXaportanteId { get; set; }
         public virtual DbSet<VSaldosFuenteXaportanteIdValidar> VSaldosFuenteXaportanteIdValidar { get; set; }
         public virtual DbSet<VSeguimientoSemanalRegistrar> VSeguimientoSemanalRegistrar { get; set; }
-        public virtual DbSet<VSeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion> VSeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion { get; set; }
+        public virtual DbSet<VSeguimientoSemanalXflujoInversion> VSeguimientoSemanalXflujoInversion { get; set; }
+        public virtual DbSet<VSeguimientoSemanalXflujoInversionOdg> VSeguimientoSemanalXflujoInversionOdg { get; set; }
+        public virtual DbSet<VSeguimientoSemanalXseguimientoSemanalAvanceFisicoProgramacion> VSeguimientoSemanalXseguimientoSemanalAvanceFisicoProgramacion { get; set; }
         public virtual DbSet<VSesionParticipante> VSesionParticipante { get; set; }
         public virtual DbSet<VSetHistDefensaJudicial> VSetHistDefensaJudicial { get; set; }
         public virtual DbSet<VSetHistDefensaJudicialContratacionProyecto> VSetHistDefensaJudicialContratacionProyecto { get; set; }
@@ -413,6 +415,8 @@ namespace asivamosffie.model.Models
             modelBuilder.Entity<AjustePragramacionObservacion>(entity =>
             {
                 entity.Property(e => e.EsObra).HasColumnName("esObra");
+
+                entity.Property(e => e.EsSupervisor).HasColumnName("esSupervisor");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
@@ -8670,6 +8674,10 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
+                entity.Property(e => e.EstadoDescripcion)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
                 entity.Property(e => e.EstadoNombre)
                     .IsRequired()
                     .HasMaxLength(250);
@@ -11211,15 +11219,44 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
             });
 
+            modelBuilder.Entity<VSeguimientoSemanalXflujoInversion>(entity =>
+            {
+                entity.HasNoKey();
 
-            modelBuilder.Entity<VSeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion>(entity =>
+                entity.ToView("V_SeguimientoSemanalXFlujoInversion");
+
+                entity.Property(e => e.FechaFin).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaInicio).HasColumnType("datetime");
+
+                entity.Property(e => e.Valor).HasColumnType("numeric(18, 2)");
+            });
+
+            modelBuilder.Entity<VSeguimientoSemanalXflujoInversionOdg>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_SeguimientoSemanalXFlujoInversionODG");
+
+                entity.Property(e => e.FechaRegistroCompletoAprobar).HasColumnType("datetime");
+
+                entity.Property(e => e.ValorFacturado).HasColumnType("numeric(38, 2)");
+            });
+
+            modelBuilder.Entity<VSeguimientoSemanalXseguimientoSemanalAvanceFisicoProgramacion>(entity =>
             {
                 entity.HasNoKey();
 
                 entity.ToView("V_SeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion");
 
-                entity.Property(e => e.ProgramacionCapitulo).HasColumnType("decimal(18, 0)");
-                entity.Property(e => e.AvanceFisicoCapitulo).HasColumnType("decimal(18, 0)");
+                entity.Property(e => e.AvanceFisicoCapitulo).HasColumnType("decimal(38, 3)");
+
+                entity.Property(e => e.Capitulo)
+                    .IsRequired()
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ProgramacionCapitulo).HasColumnType("decimal(3, 0)");
             });
 
             modelBuilder.Entity<VSesionParticipante>(entity =>

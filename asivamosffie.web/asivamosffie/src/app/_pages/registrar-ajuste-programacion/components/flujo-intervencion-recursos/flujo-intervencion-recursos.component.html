@@ -90,13 +90,15 @@
             Ver detalle
           </button>
           <button mat-button color="warn" mat-raised-button color="accent" class="btn-table info-button"
+          *ngIf="!esVerDetalle || (esVerDetalle && element.tempAjustePragramacionObservacion != null && element.tempAjustePragramacionObservacion.observaciones && element.tempAjustePragramacionObservacion.observaciones != '')"
           [class.sin-diligenciar]="!element.tempAjustePragramacionObservacion"
           [class.en-proceso]="element.tempAjustePragramacionObservacion != null && (!element.tempAjustePragramacionObservacion.observaciones || element.tempAjustePragramacionObservacion.observaciones == '')"
           [class.completo]="element.tempAjustePragramacionObservacion != null && element.tempAjustePragramacionObservacion.observaciones && element.tempAjustePragramacionObservacion.observaciones != ''" type="button"
           (click)="openObservaciones(element)">
-          Observaciones
+          <span *ngIf="!esVerDetalle">Observaciones</span>
+          <span *ngIf="esVerDetalle">Ver Observaciones</span>
         </button>
-        <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button" (click)="eliminar(element)">
+        <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button" (click)="eliminar(element)"*ngIf="!esVerDetalle">
           Eliminar
         </button>
         </td>

@@ -77,6 +77,7 @@ export interface NovedadContractual{
         vaComite ?: boolean,
         novedadContractualRegistroPresupuestal?: any[],
 
+        proyectosSeleccionado?: any[],
 
 }
 

@@ -15,8 +15,12 @@ const routes: Routes = [
     component: RegistrarAjusteProgramacionComponent
   },
   {
-    path: 'verHistorial/:id',
-    component: VerHistorialComponent
+    path: 'verDetalleEditarAjusteProgramacion/:id',
+    component: RegistrarAjusteProgramacionComponent
+  },
+  {
+    path: 'verDetalleAjusteProgramacion/:id',
+    component: RegistrarAjusteProgramacionComponent
   }
 ];
 

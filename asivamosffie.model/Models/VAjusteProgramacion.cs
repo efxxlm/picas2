@@ -11,6 +11,7 @@ namespace asivamosffie.model.Models
         public string NovedadesSeleccionadas { get; set; }
         public DateTime? FechaSolictud { get; set; }
         public string EstadoNombre { get; set; }
+        public string EstadoDescripcion { get; set; }
         public string EstadoCodigo { get; set; }
         public int? AjusteProgramacionId { get; set; }
         public bool? TieneObservacionesFlujoInversion { get; set; }
@@ -27,5 +28,7 @@ namespace asivamosffie.model.Models
         public int ContratoId { get; set; }
         public bool? RegistroCompletoValidacion { get; set; }
         public string NumeroSolicitud { get; set; }
+        public int? ArchivoCargueIdFlujoInversion { get; set; }
+        public int? ArchivoCargueIdProgramacionObra { get; set; }
     }
 }

@@ -11,6 +11,8 @@ export class ExpansionPanelComponent implements OnInit {
   @Input() novedadContractualRegistroPresupuestal:any;
   @Input() plazoContratacion:any;
   @Input() valorContrato:number;
+  @Input() esVerDetalle:boolean;
+
   estadoSemaforoObra = 'sin-diligenciar';
   estadoSemaforoFlujo= 'sin-diligenciar';
 

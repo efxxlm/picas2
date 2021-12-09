@@ -28,8 +28,16 @@ export class ReprogrammingService {
       return this.http.post<Respuesta>( `${ this.urlApi }/EnviarAlSupervisorAjusteProgramacion?pAjusteProgramacionId=${ id }`, null );
     }
 
+    enviarAlInterventor( id ){
+      return this.http.post<Respuesta>( `${ this.urlApi }/EnviarAlInterventor?pAjusteProgramacionId=${ id }`, null );
+    }
+
     createEditObservacionAjusteProgramacion( ajusteProgramacion, esObra ){
       return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditObservacionAjusteProgramacion?esObra=${esObra}`, ajusteProgramacion );
+    }
+
+    createEditObservacionFile( ajusteProgramacion, esObra ){
+      return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditObservacionFile?esObra=${esObra}`, ajusteProgramacion );
     }
 
     uploadFileToValidateAdjustmentProgramming ( pAjusteProgramacionId: number, pContratacionProyectId: number, pNovedadContractualId: number, pContratoId: number, pProyectoId: number, documento: File ) {

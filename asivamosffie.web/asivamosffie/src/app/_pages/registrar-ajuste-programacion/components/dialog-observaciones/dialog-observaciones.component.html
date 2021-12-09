@@ -21,7 +21,7 @@
     </span>
   </section>
 
-  <form autocomplete="off" [formGroup]="observaciones" (ngSubmit)="guardar()">
+  <form autocomplete="off" [formGroup]="observaciones" (ngSubmit)="guardar()" *ngIf="!data.esVerDetalle">
 
     <div class="d-flex align-items-center mt-1em">
       <div class="text-area-quill">
@@ -44,4 +44,11 @@
       </button>
     </div>
   </form>
+  <div *ngIf="data.esVerDetalle">
+    <mat-card class="shipping-card mainGris">
+      <mat-card-content style="text-align: left;">
+        <div [innerHtml]="observaciones.get('observaciones').value"></div>
+      </mat-card-content>
+  </mat-card>
+  </div>
 </section>
