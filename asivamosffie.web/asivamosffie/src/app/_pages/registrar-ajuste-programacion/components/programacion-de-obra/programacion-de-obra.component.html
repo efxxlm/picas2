@@ -2,7 +2,7 @@
   <button mat-raised-button color="accent" type="button" class="mb-1em" (click)="openCargarProgramacion()" [disabled]="existeRegistroValido === true">
     Cargar programación
   </button>
-  <button mat-raised-button color="accent" class="ml-1em" (click)="openObservaciones('', true)" *ngIf="ajusteProgramacion?.observacionObraHistorico?.length > 0">
+  <button mat-raised-button color="accent" class="ml-1em" (click)="openObservaciones('', true)" *ngIf="ajusteProgramacion?.tieneObservacionesProgramacionObra && ajusteProgramacion?.observacionObraHistorico?.length > 0">
     Obs. Supervisor
   </button>
   <div *ngIf="this.dataSource.data.length > 0">

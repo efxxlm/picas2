@@ -18,7 +18,7 @@
       Ver documento de registro presupuestal
   </button>
 
-  <button mat-raised-button color="accent" class="tabs--btn" (click)="openObservaciones('', true)" *ngIf="ajusteProgramacion?.observacionObraHistorico?.length > 0">
+  <button mat-raised-button color="accent" class="tabs--btn" (click)="openObservaciones('', true)" *ngIf="ajusteProgramacion?.tieneObservacionesFlujoInversion && ajusteProgramacion?.observacionObraHistorico?.length > 0">
     Ver observaciones supervisor
   </button>
 
