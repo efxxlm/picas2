@@ -170,7 +170,7 @@ export class FormModificacionContractualComponent implements OnInit {
   }
 
   innerObservacion ( observacion: string ) {
-    const observacionHtml = observacion.replace( '"', '' );
+    const observacionHtml = observacion?.replace( '"', '' );
     return observacionHtml;
   }
 
