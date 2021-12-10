@@ -51,7 +51,7 @@
       <span *ngIf="ajusteProgramacion?.tieneObservacionesProgramacionObra"> Si</span>
       <span *ngIf="!ajusteProgramacion?.tieneObservacionesProgramacionObra"> No</span>
     </p>
-    <p *ngIf="ajusteProgramacion?.observacionObraHistorico[0]" [innerHTML]="ajusteProgramacion?.observacionObraHistorico[0]?.observaciones">
+    <p *ngIf="ajusteProgramacion?.observacionObraHistorico[0] && ajusteProgramacion?.tieneObservacionesProgramacionObra" [innerHTML]="ajusteProgramacion?.observacionObraHistorico[0]?.observaciones">
     </p>
   </mat-card-content>
 </mat-card>

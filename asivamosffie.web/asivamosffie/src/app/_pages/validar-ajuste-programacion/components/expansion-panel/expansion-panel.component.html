@@ -12,7 +12,7 @@
         '': esVerDetalle,
         'sin-diligenciar':!esVerDetalle && (ajusteProgramacion?.observacionObra == null || ajusteProgramacion?.observacionObra == undefined || ajusteProgramacion?.tieneObservacionesProgramacionObra == null),
         'en-proceso':!esVerDetalle && (ajusteProgramacion?.tieneObservacionesProgramacionObra == true && (ajusteProgramacion?.observacionObra?.observaciones == null || ajusteProgramacion?.observacionObra?.observaciones == '')) ,
-        'completo':!esVerDetalle && (ajusteProgramacion?.observacionObra && ajusteProgramacion?.tieneObservacionesProgramacionObra != null)
+        'completo':!esVerDetalle && ((ajusteProgramacion?.observacionObra && ajusteProgramacion?.tieneObservacionesProgramacionObra != null) || !ajusteProgramacion?.tieneObservacionesProgramacionObra)
       }">
       Programación de obra
       </mat-panel-title>
@@ -30,7 +30,7 @@
         '': esVerDetalle,
         'sin-diligenciar':!esVerDetalle && (ajusteProgramacion?.observacionFlujo == null || ajusteProgramacion?.observacionFlujo == undefined || ajusteProgramacion?.tieneObservacionesFlujoInversion == null),
         'en-proceso':!esVerDetalle && (ajusteProgramacion?.tieneObservacionesFlujoInversion == true && (ajusteProgramacion?.observacionFlujo?.observaciones == null || ajusteProgramacion?.observacionFlujo?.observaciones == '')) ,
-        'completo':!esVerDetalle && (ajusteProgramacion?.observacionFlujo && ajusteProgramacion?.tieneObservacionesFlujoInversion != null)
+        'completo':!esVerDetalle && ((ajusteProgramacion?.observacionFlujo && ajusteProgramacion?.tieneObservacionesFlujoInversion != null) || !ajusteProgramacion?.tieneObservacionesFlujoInversion)
       }">
       Flujo de inversión de recursos
       </mat-panel-title>

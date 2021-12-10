@@ -51,7 +51,7 @@
       <span *ngIf="ajusteProgramacion?.tieneObservacionesFlujoInversion"> Si</span>
       <span *ngIf="!ajusteProgramacion?.tieneObservacionesFlujoInversion"> No</span>
     </p>
-    <p *ngIf="ajusteProgramacion?.observacionFlujoHistorico[0]" [innerHTML]="ajusteProgramacion?.observacionFlujoHistorico[0]?.observaciones">
+    <p *ngIf="ajusteProgramacion?.observacionFlujoHistorico[0] && ajusteProgramacion?.tieneObservacionesFlujoInversion" [innerHTML]="ajusteProgramacion?.observacionFlujoHistorico[0]?.observaciones">
     </p>
   </mat-card-content>
 </mat-card>

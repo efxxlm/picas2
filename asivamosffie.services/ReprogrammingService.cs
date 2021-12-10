@@ -64,6 +64,7 @@ namespace asivamosffie.services
                                         r.EsSupervisor == pEsSupervisor &&
                                         r.ArchivoCargueId == pArchivoCargueId
                                     )
+                            .OrderByDescending(r => r.AjustePragramacionObservacionId)
                             .FirstOrDefault();
 
                 return ajustePragramacionObservacion;
@@ -78,6 +79,7 @@ namespace asivamosffie.services
                                         r.EsObra == pEsObra &&
                                         r.EsSupervisor == true
                                     )
+                            .OrderByDescending(r => r.AjustePragramacionObservacionId)
                             .ToList();
 
                 return ajustePragramacionObservacion;
@@ -95,7 +97,7 @@ namespace asivamosffie.services
                 listaCargas.ForEach(archivo =>
                 {
                     archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Válido" : "Fallido";
-                    archivo.TempAjustePragramacionObservacion = _context.AjustePragramacionObservacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsObra == true && r.ArchivoCargueId == archivo.ArchivoCargueId && r.Eliminado != true).FirstOrDefault();
+                    archivo.TempAjustePragramacionObservacion = _context.AjustePragramacionObservacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsObra == true && r.ArchivoCargueId == archivo.ArchivoCargueId && r.Eliminado != true && r.EsSupervisor != true).FirstOrDefault();
 
                 });
 
@@ -115,7 +117,7 @@ namespace asivamosffie.services
                 listaCargas.ForEach(archivo =>
                 {
                     archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Válido" : "Fallido";
-                    archivo.TempAjustePragramacionObservacion = _context.AjustePragramacionObservacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsObra != true && r.ArchivoCargueId == archivo.ArchivoCargueId && r.Eliminado != true).FirstOrDefault();
+                    archivo.TempAjustePragramacionObservacion = _context.AjustePragramacionObservacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsObra != true && r.ArchivoCargueId == archivo.ArchivoCargueId && r.Eliminado != true && r.EsSupervisor != true).FirstOrDefault();
 
                 });
 
@@ -488,7 +490,7 @@ namespace asivamosffie.services
 
                 listaCargas.ForEach(archivo =>
                 {
-                    if (archivo.CantidadRegistros != archivo.CantidadRegistrosValidos)
+                    if ((archivo.CantidadRegistros != archivo.CantidadRegistrosValidos) || archivo.Activo != true)
                     {
                         archivo.Eliminado = true;
                         _context.Set<AjustePragramacionObservacion>()
@@ -929,7 +931,7 @@ namespace asivamosffie.services
                             temp.UsuarioCreacion = pUsuarioCreo;
                             temp.AjusteProgramacionId = pAjusteProgramacionId;
 
-                            List<AjusteProgramacionFlujo> listaFlujo = _context.AjusteProgramacionFlujo.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                            /*List<AjusteProgramacionFlujo> listaFlujo = _context.AjusteProgramacionFlujo.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
 
                             if (listaFlujo.Count() > 1)
                             {
@@ -940,7 +942,7 @@ namespace asivamosffie.services
                                 CantidadResgistrosValidos--;
                                 estructuraValidaValidacionGeneral = false;
                                 mensajeRespuesta = "se debe eliminar una carga de flujo de inversión asociada a este Proyecto";
-                            }
+                            }*/
 
                             #region Tipo Actividad
                             // #1

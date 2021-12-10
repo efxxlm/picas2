@@ -18,6 +18,10 @@
       Ver documento de registro presupuestal
   </button>
 
+  <button mat-raised-button color="accent" class="tabs--btn" (click)="openObservaciones('', true)" *ngIf="ajusteProgramacion?.observacionObraHistorico?.length > 0">
+    Ver observaciones supervisor
+  </button>
+
   <button mat-raised-button color="accent" class="tabs--btn" (click)="openCargarFlujo()" [disabled]="existeRegistroValido === true"
       >
       Cargar flujo de inversión de recursos
@@ -89,16 +93,20 @@
           <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button" (click)="descargar(element)">
             Ver detalle
           </button>
-          <button mat-button color="warn" mat-raised-button color="accent" class="btn-table info-button"
-          *ngIf="!esVerDetalle || (esVerDetalle && element.tempAjustePragramacionObservacion != null && element.tempAjustePragramacionObservacion.observaciones && element.tempAjustePragramacionObservacion.observaciones != '')"
+          <button mat-button color="warn" mat-raised-button color="accent" class="btn-table"
+          *ngIf="!esVerDetalle && (element.activo == true && element.tempAjustePragramacionObservacion != null && element.tempAjustePragramacionObservacion.observaciones && element.tempAjustePragramacionObservacion.observaciones != '')"
           [class.sin-diligenciar]="!element.tempAjustePragramacionObservacion"
           [class.en-proceso]="element.tempAjustePragramacionObservacion != null && (!element.tempAjustePragramacionObservacion.observaciones || element.tempAjustePragramacionObservacion.observaciones == '')"
           [class.completo]="element.tempAjustePragramacionObservacion != null && element.tempAjustePragramacionObservacion.observaciones && element.tempAjustePragramacionObservacion.observaciones != ''" type="button"
-          (click)="openObservaciones(element)">
-          <span *ngIf="!esVerDetalle">Observaciones</span>
-          <span *ngIf="esVerDetalle">Ver Observaciones</span>
+          (click)="openObservaciones(element, false)">
+          <span>Observaciones</span>
         </button>
-        <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button" (click)="eliminar(element)"*ngIf="!esVerDetalle">
+        <button mat-button color="warn" mat-raised-button color="accent" class="btn-table"
+          *ngIf="(esVerDetalle || !element.activo) && (element.tempAjustePragramacionObservacion != null && element.tempAjustePragramacionObservacion.observaciones && element.tempAjustePragramacionObservacion.observaciones != '')"
+          (click)="openObservaciones(element, false)">
+          <span>Ver Observaciones</span>
+        </button>
+        <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button" (click)="eliminar(element)" *ngIf="!esVerDetalle && element.activo == true">
           Eliminar
         </button>
         </td>

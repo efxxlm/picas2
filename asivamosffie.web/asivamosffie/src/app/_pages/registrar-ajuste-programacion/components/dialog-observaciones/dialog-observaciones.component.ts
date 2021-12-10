@@ -41,6 +41,7 @@ export class DialogObservacionesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.data);
     if(this.data.dataFile.tempAjustePragramacionObservacion!= null){
       this.observaciones.patchValue(this.data.dataFile.tempAjustePragramacionObservacion);
     }

@@ -43,6 +43,7 @@ export class ProgramacionDeObraComponent implements AfterViewInit, OnInit  {
   @Input() ajusteProgramacionInfo:any;
   @Input() esVerDetalle:any;
   @Output() estadoSemaforo = new EventEmitter<string>();
+  @Input() ajusteProgramacion:any;
 
   existeRegistroValido = false;
 
@@ -85,10 +86,17 @@ export class ProgramacionDeObraComponent implements AfterViewInit, OnInit  {
     })
   }
 
-  openObservaciones(dataFile: any) {
+  openObservaciones(dataFile: any, esSupervisor: boolean) {
     const dialogCargarProgramacion = this.dialog.open(DialogObservacionesComponent, {
       width: '75em',
-       data: { esObra: true, ajusteProgramacionInfo: this.ajusteProgramacionInfo, dataFile: dataFile, esVerDetalle: this.esVerDetalle}
+       data: {
+         esObra: true,
+         ajusteProgramacionInfo: this.ajusteProgramacionInfo,
+         dataFile: dataFile,
+         esVerDetalle: this.esVerDetalle == true ? this.esVerDetalle : !dataFile.activo ? true : false,
+         esSupervisor: esSupervisor,
+         observacionesHistorico: this.ajusteProgramacion?.observacionObraHistorico
+        }
     });
     dialogCargarProgramacion.afterClosed()
       .subscribe(response => {

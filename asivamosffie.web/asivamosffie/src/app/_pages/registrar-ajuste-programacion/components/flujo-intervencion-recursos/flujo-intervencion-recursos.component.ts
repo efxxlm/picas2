@@ -48,6 +48,8 @@ export class FlujoIntervencionRecursosComponent implements AfterViewInit, OnInit
   @Input() valorContrato:number;
   @Input() esVerDetalle:number;
   @Output() estadoSemaforo = new EventEmitter<string>();
+  @Input() ajusteProgramacion:any;
+
   existeRegistroValido = false;
 
   constructor(
@@ -97,10 +99,17 @@ export class FlujoIntervencionRecursosComponent implements AfterViewInit, OnInit
     this.dialog.closeAll();
   }
 
-  openObservaciones(dataFile: any) {
+  openObservaciones(dataFile: any, esSupervisor: boolean) {
     const dialogCargarProgramacion = this.dialog.open(DialogObservacionesComponent, {
       width: '75em',
-       data: { esObra: false, ajusteProgramacionInfo: this.ajusteProgramacionInfo, dataFile: dataFile, esVerDetalle: this.esVerDetalle}
+       data: {
+         esObra: false,
+         ajusteProgramacionInfo: this.ajusteProgramacionInfo,
+         dataFile: dataFile,
+         esVerDetalle: this.esVerDetalle ? this.esVerDetalle : !dataFile.activo ? true : false,
+         esSupervisor: esSupervisor,
+         observacionesHistorico: this.ajusteProgramacion?.observacionFlujoHistorico
+        }
     });
     dialogCargarProgramacion.afterClosed()
       .subscribe(response => {
