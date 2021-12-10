@@ -12,7 +12,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
+    
     public class ParametricController : Controller
     {
         private readonly IParametricService _parametricService;
