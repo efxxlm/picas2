@@ -263,7 +263,6 @@ export class FormCriteriosPagoComponent implements OnInit {
                                                   const conceptoDePagoArray = [];
                                                   conceptosDePagoSeleccionados.push( conceptoFind );
                                                   this.getvaluesConceptoPagoCodigo(conceptosDePagoSeleccionados)
-                                                  console.log(this.usosParaElConceoto);
                                                   conceptoDePagoArray.push(
                                                       this.fb.group(
                                                           {
@@ -402,7 +401,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 this.getvaluesConceptoPagoCodigoXConcepto(conceptoTmp, i , j)
                             });
                         });
-                        }, 1000);
+                        }, 2000);
                     }
                 }
             }
@@ -822,6 +821,17 @@ export class FormCriteriosPagoComponent implements OnInit {
         });
     }
 
+    openDialogEliminar(modalTitle: string, modalText: string) {
+      const dialogRef = this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle, modalText }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        this.guardar();
+        return;
+      });
+    }
+
     openDialogTrueFalse(modalTitle: string, modalText: string) {
 
         const dialogRef = this.dialog.open(ModalDialogComponent, {
@@ -882,6 +892,8 @@ export class FormCriteriosPagoComponent implements OnInit {
         this.criterios.markAllAsTouched();
         const solicitudPagoFaseCriterio = [];
         let esAnticipio = false;
+
+        //variables para validación de amortización
         this.solicitudesPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase;
         let solicitudPagoFase = this.solicitudesPagoFase.find(r => r.contratacionProyectoId == this.contratacionProyectoId);
         let cumpleCondiciones = true;
@@ -889,18 +901,27 @@ export class FormCriteriosPagoComponent implements OnInit {
         this.criterios.controls.forEach( control => {
             const criterio = control.value;
             let valorAmortizacion = 0;
+
             if(solicitudPagoFase != null){
-              if(cumpleCondiciones == true){
-                valorAmortizacion = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
-                if(solicitudPagoFase?.solicitudPagoFaseAmortizacion[0] != null){
-                  console.log(control.get( 'conceptos' ).value[0]);
-                  if ( (control.get( 'valorFacturado' ).value <= valorAmortizacion) ) {
-                    this.openDialog( '', `El valor amortizado no puede ser mayor al valor facturado` );
-                    control.get( 'conceptos' ).value[0].valorFacturadoConcepto = control.get( 'conceptos' ).value[0].valorFacturadoConcepto - control.get( 'valorFacturado' ).value;
-                    control.get( 'valorFacturado' ).setValue( null );
-                    cumpleCondiciones = false;
+              if(solicitudPagoFase?.solicitudPagoFaseAmortizacion[0] != null){
+                this.criterios.controls.forEach( control => {
+                  valorAmortizacion = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
+                  if(cumpleCondiciones == true){
+                      let valorFacturadoOnlyUsoAnticipo = 0;
+                      let usoCodigoAnticipo = this.contrato?.vAmortizacionXproyecto?.find((r: { tieneAnticipo: boolean; }) => r.tieneAnticipo == true)?.usoCodigo;
+                      control.get( 'conceptos' ).value.forEach((concepto: { usoCodigo: any, valorFacturadoConcepto: number }) => {
+                        if(concepto.usoCodigo == usoCodigoAnticipo){
+                          valorFacturadoOnlyUsoAnticipo += concepto.valorFacturadoConcepto ?? 0;
+                        }
+                      });
+                      if ( (valorFacturadoOnlyUsoAnticipo <= valorAmortizacion) ) {
+                        this.openDialog( '', `El valor amortizado no puede ser mayor al valor facturado` );
+                        control.get( 'conceptos' ).value[0].valorFacturadoConcepto = control.get( 'conceptos' ).value[0].valorFacturadoConcepto - control.get( 'valorFacturado' ).value;
+                        control.get( 'valorFacturado' ).setValue( null );
+                        cumpleCondiciones = false;
+                      }
                   }
-                }
+                });
               }
             }
 
@@ -1054,37 +1075,69 @@ export class FormCriteriosPagoComponent implements OnInit {
 
     eliminaConcepto(i: number, j: number){
       const solicitudPagoFaseCriterioConceptoPagoId = this.getConceptos( i ).controls[ j ].get( 'solicitudPagoFaseCriterioConceptoPagoId' )?.value ?? 0;
+      let usoCodigo = this.getConceptos( i ).controls[ j ].get( 'usoCodigo' )?.value;
+      const valorFacturadoConcepto = this.getConceptos( i ).controls[ j ].get( 'valorFacturadoConcepto' )?.value ?? 0;
 
-      this.openDialogTrueFalse('', '¿Está seguro de eliminar esta información?').subscribe(value => {
-        if (value === true) {
-          this.getConceptos( i ).removeAt( j );
+      //validación amortización
+      this.solicitudesPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase;
+      let solicitudPagoFase = this.solicitudesPagoFase.find(r => r.contratacionProyectoId == this.contratacionProyectoId);
+      let cumpleCondiciones = true;
+      let valorAmortizacion = 0;
+      let usoCodigoAnticipo = this.contrato?.vAmortizacionXproyecto?.find((r: { tieneAnticipo: boolean; }) => r.tieneAnticipo == true)?.usoCodigo;
 
-          if (solicitudPagoFaseCriterioConceptoPagoId > 0) {
-            this.registrarPagosSvc.DeleteSolicitudPagoFaseCriterioConceptoPago( solicitudPagoFaseCriterioConceptoPagoId )
-            .subscribe(
-                () => {
-                    this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
-                    location.reload();
-                    return;
-                },
-                err => this.openDialog( '', `<b>${ err.message }</b>` )
-            )
-          } else {
-            if ( this.getConceptos( i ).length > 0 ) {
-              let valorTotalCriterios = 0;
-
-              this.getConceptos( i ).controls.forEach( concepto => {
-                  if ( concepto.value.valorFacturadoConcepto !== null ) {
-                      valorTotalCriterios += concepto.value.valorFacturadoConcepto;
+      if(usoCodigo == usoCodigoAnticipo){
+        if(solicitudPagoFase != null){
+          if(solicitudPagoFase?.solicitudPagoFaseAmortizacion[0] != null){
+            this.criterios.controls.forEach( control => {
+              valorAmortizacion = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
+              if(cumpleCondiciones == true){
+                let valorFacturadoOnlyUsoAnticipo = 0;
+                control.get( 'conceptos' ).value.forEach((concepto: { usoCodigo: any, valorFacturadoConcepto: number }) => {
+                  if(concepto.usoCodigo == usoCodigoAnticipo){
+                    valorFacturadoOnlyUsoAnticipo += concepto.valorFacturadoConcepto ?? 0;
                   }
-              } );
-
-              this.criterios.controls[ i ].get( 'valorFacturado' ).setValue( valorTotalCriterios );
-            }
-            this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+                });
+                if ( (valorFacturadoOnlyUsoAnticipo - valorFacturadoConcepto <= valorAmortizacion) ) {
+                  this.openDialog( '', `El valor amortizado no puede ser mayor al valor facturado` );
+                  cumpleCondiciones = false;
+                }
+              }
+            });
           }
         }
-      });
+      }
+
+      if(cumpleCondiciones){
+        this.openDialogTrueFalse('', '¿Está seguro de eliminar esta información?').subscribe(value => {
+          if (value === true) {
+            this.getConceptos( i ).removeAt( j );
+
+            if (solicitudPagoFaseCriterioConceptoPagoId > 0) {
+              this.registrarPagosSvc.DeleteSolicitudPagoFaseCriterioConceptoPago( solicitudPagoFaseCriterioConceptoPagoId )
+              .subscribe(
+                  () => {
+                      this.openDialogEliminar( '', '<b>La información se ha eliminado correctamente.</b>' );
+                      this.criterios.controls[i].get( 'valorFacturado' ).setValue( this.criterios.controls[i].get( 'valorFacturado' ).value - valorFacturadoConcepto );
+                  },
+                  err => this.openDialog( '', `<b>${ err.message }</b>` )
+              )
+            } else {
+              if ( this.getConceptos( i ).length > 0 ) {
+                let valorTotalCriterios = 0;
+
+                this.getConceptos( i ).controls.forEach( concepto => {
+                    if ( concepto.value.valorFacturadoConcepto !== null ) {
+                        valorTotalCriterios += concepto.value.valorFacturadoConcepto;
+                    }
+                } );
+
+                this.criterios.controls[ i ].get( 'valorFacturado' ).setValue( valorTotalCriterios );
+              }
+              this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+            }
+          }
+        });
+      }
   }
 
 }
