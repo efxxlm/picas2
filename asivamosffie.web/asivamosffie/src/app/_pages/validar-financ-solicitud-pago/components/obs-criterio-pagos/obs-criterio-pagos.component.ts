@@ -267,6 +267,33 @@ export class ObsCriterioPagosComponent implements OnInit {
                                                   );
 
                                                   const montoMaximo = this.montoMaximoPendiente !== 0 ? ( this.montoMaximoPendiente * criterioSeleccionado[0].porcentaje ) : 0;
+                                                  let existeCriterio = false;
+                                                  let i ;
+                                                  this.criterios.controls.forEach((c, index) => {
+                                                    if(c.get('solicitudPagoFaseId').value == this.solicitudPagoFase.solicitudPagoFaseId && c.get('solicitudPagoFaseCriterioId').value == criterio.solicitudPagoFaseCriterioId){
+                                                      existeCriterio = true;
+                                                      i = index;
+                                                      c.get('conceptos').value.forEach(conceptoOld =>{
+                                                        conceptoDePagoArray.push(
+                                                          this.fb.group(
+                                                            {
+                                                                solicitudPagoFaseCriterioConceptoPagoId: [ conceptoOld?.solicitudPagoFaseCriterioConceptoPagoId ],
+                                                                solicitudPagoFaseCriterioId: [ conceptoOld?.solicitudPagoFaseCriterioId ],
+                                                                conceptoPagoCriterioNombre: [ conceptoOld?.conceptoPagoCriterioNombre ],
+                                                                usoCodigo: [ conceptoOld?.usoCodigo ],
+                                                                conceptoPagoCriterio: [ conceptoOld?.conceptoPagoCriterio ],
+                                                                valorFacturadoConcepto: [ conceptoOld?.valorFacturadoConcepto ],
+                                                                montoMaximo: conceptoOld?.montoMaximo
+
+                                                            }
+                                                          )
+                                                        )
+                                                      });
+                                                    }
+                                                  });
+                                                  if(existeCriterio){
+                                                    this.criterios.removeAt(i);
+                                                  }
 
                                                   this.criterios.push(
                                                       this.fb.group(
@@ -959,16 +986,27 @@ export class ObsCriterioPagosComponent implements OnInit {
         */
     }
 
+
     getvaluesConceptoPagoCodigo(e) {
-        this.registrarPagosSvc.getUsoByConceptoPagoCodigo( e[0].codigo )
+      this.usosParaElConceoto = [];
+      e.forEach((e: { codigo: any; }) => {
+        this.registrarPagosSvc.getUsoByConceptoPagoCodigo( e.codigo )
         .subscribe(response => {
-            this.usosParaElConceoto = response;
+          if(response != null){
+            response.forEach((r: { codigo: any; }) => {
+              if(!this.usosParaElConceoto?.find(u =>u.codigo == r.codigo)){
+                this.usosParaElConceoto.push(r);
+              }
+            });
+          }
         })
-    }
+      });
+  }
+
 
     getUsosParaElConceoto(usoCodigo) {
         const nombreUso = this.usosParaElConceoto.find( uso => uso.codigo === usoCodigo)
-        return nombreUso.nombre;
+        return nombreUso?.nombre;
     }
 
 }

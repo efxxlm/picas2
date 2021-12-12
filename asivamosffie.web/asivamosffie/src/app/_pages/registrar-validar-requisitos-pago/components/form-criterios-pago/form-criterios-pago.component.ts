@@ -292,7 +292,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                                                             {
                                                                 solicitudPagoFaseCriterioConceptoPagoId: [ conceptoOld?.solicitudPagoFaseCriterioConceptoPagoId ],
                                                                 solicitudPagoFaseCriterioId: [ conceptoOld?.solicitudPagoFaseCriterioId ],
-                                                                conceptoPagoCriterioNombre: [ conceptoOld?.nombre ],
+                                                                conceptoPagoCriterioNombre: [ conceptoOld?.conceptoPagoCriterioNombre ],
                                                                 usoCodigo: [ conceptoOld?.usoCodigo ],
                                                                 conceptoPagoCriterio: [ conceptoOld?.conceptoPagoCriterio ],
                                                                 conceptoPago: [ conceptoOld?.conceptoPago ],
