@@ -916,8 +916,6 @@ export class FormCriteriosPagoComponent implements OnInit {
                       });
                       if ( (valorFacturadoOnlyUsoAnticipo <= valorAmortizacion) ) {
                         this.openDialog( '', `El valor amortizado no puede ser mayor al valor facturado` );
-                        control.get( 'conceptos' ).value[0].valorFacturadoConcepto = control.get( 'conceptos' ).value[0].valorFacturadoConcepto - control.get( 'valorFacturado' ).value;
-                        control.get( 'valorFacturado' ).setValue( null );
                         cumpleCondiciones = false;
                       }
                   }
