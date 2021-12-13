@@ -1184,13 +1184,17 @@ export class TerceroCausacionGogComponent implements OnInit {
           alert =  false;
           this.criterios.controls.forEach( ( c, indexCriterio ) => {
             this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
+              let usoCodigoAnticipo = this.solicitudPago?.contratoSon?.vAmortizacionXproyecto?.find((r: { tieneAnticipo: boolean; }) => r.tieneAnticipo == true)?.usoCodigo;
+              let usoCodigoConcepto = conceptoControl.get( 'usoCodigo' ).value;
+              if(usoCodigoAnticipo == usoCodigoConcepto){
                 if ( this.getDescuentos( indexCriterio, indexConcepto ).length > 0 && conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value === true ) {
-                    this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( ( element ) => {
-                        if(element.get( 'tipoDescuento' ).value == "5"){
-                            alert = true;
-                        }
-                    } )
-                }
+                  this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( ( element ) => {
+                      if(element.get( 'tipoDescuento' ).value == "5"){
+                          alert = true;
+                      }
+                  } )
+              }
+              }
             } )
           });
         }
