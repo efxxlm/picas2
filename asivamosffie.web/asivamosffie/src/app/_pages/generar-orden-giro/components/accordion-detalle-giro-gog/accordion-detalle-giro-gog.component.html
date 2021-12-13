@@ -54,7 +54,7 @@
                                             [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
                                             [solicitudPagoFase]="solicitudPagoFase"
                                             [esVerDetalle]="esVerDetalle"
-                                            (estadoSemaforo)="solicitudPagoFase.estadoSemaforo = $event; checkSemaforoProyecto()">
+                                            (estadoSemaforo)="solicitudPagoFase.estadoSemaforo = $event;">
                 </app-desc-dir-tecnica-gog>
             </mat-expansion-panel>
         </mat-accordion>
@@ -71,7 +71,7 @@
                                             [contratacionProyectoId]="contratacionProyectoId"
                                             [solicitudPagoFase]="solicitudPagoFase"
                                             [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
-                                            (estadoSemaforo)="solicitudPagoFase.estadoSemaforoCausacion = $event; checkSemaforoProyecto()">
+                                            (estadoSemaforo)="solicitudPagoFase.estadoSemaforoCausacion = $event">
                 </app-tercero-causacion-gog>
             </mat-expansion-panel>
         </mat-accordion>
@@ -83,9 +83,9 @@
                     Origen
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <div align="center">
+            <!--<div align="center">
                 <b>Consecutivo: {{ solicitudPago.ordenGiro !== undefined ? solicitudPago.ordenGiro.consecutivoOrigen : '' }} </b>
-            </div>
+            </div>-->
 
             <app-form-origen    [solicitudPago]="solicitudPago"
                                 [esVerDetalle]="esVerDetalle"
