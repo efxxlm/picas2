@@ -274,7 +274,8 @@ export class FormCriteriosPagoComponent implements OnInit {
                                                               conceptoPago: [conceptosDePagoSeleccionados.find(r => r.codigo == solicitudPagoFaseCriterioConceptoPago.conceptoPagoCriterio) ],
                                                               valorFacturadoConcepto: [ solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto !== undefined ? solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto : null ],
                                                               montoMaximo: response.montoMaximo,
-                                                              usosParaElConcepto: []
+                                                              usosParaElConcepto: [],
+                                                              oldValue: [ solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto !== undefined ? solicitudPagoFaseCriterioConceptoPago.valorFacturadoConcepto : null ],
                                                           }
                                                       )
                                                   );
@@ -298,7 +299,8 @@ export class FormCriteriosPagoComponent implements OnInit {
                                                                 conceptoPago: [ conceptoOld?.conceptoPago ],
                                                                 valorFacturadoConcepto: [ conceptoOld?.valorFacturadoConcepto],
                                                                 montoMaximo: conceptoOld?.montoMaximo,
-                                                                usosParaElConcepto: conceptoOld?.usosParaElConcepto
+                                                                usosParaElConcepto: conceptoOld?.usosParaElConcepto,
+                                                                oldValue: conceptoOld?.oldValue
                                                             }
                                                           )
                                                         )
@@ -898,30 +900,63 @@ export class FormCriteriosPagoComponent implements OnInit {
         let solicitudPagoFase = this.solicitudesPagoFase.find(r => r.contratacionProyectoId == this.contratacionProyectoId);
         let cumpleCondiciones = true;
 
-        this.criterios.controls.forEach( control => {
-            const criterio = control.value;
-            let valorAmortizacion = 0;
+        let valorAmortizacion = 0;
 
-            if(solicitudPagoFase != null){
-              if(solicitudPagoFase?.solicitudPagoFaseAmortizacion[0] != null){
-                this.criterios.controls.forEach( control => {
-                  valorAmortizacion = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
-                  if(cumpleCondiciones == true){
-                      let valorFacturadoOnlyUsoAnticipo = 0;
-                      let usoCodigoAnticipo = this.contrato?.vAmortizacionXproyecto?.find((r: { tieneAnticipo: boolean; }) => r.tieneAnticipo == true)?.usoCodigo;
-                      control.get( 'conceptos' ).value.forEach((concepto: { usoCodigo: any, valorFacturadoConcepto: number }) => {
-                        if(concepto.usoCodigo == usoCodigoAnticipo){
-                          valorFacturadoOnlyUsoAnticipo += concepto.valorFacturadoConcepto ?? 0;
-                        }
-                      });
-                      if ( (valorFacturadoOnlyUsoAnticipo <= valorAmortizacion) ) {
-                        this.openDialog( '', `El valor amortizado no puede ser mayor al valor facturado` );
-                        cumpleCondiciones = false;
-                      }
+        if(solicitudPagoFase != null){
+          if(solicitudPagoFase?.solicitudPagoFaseAmortizacion[0] != null){
+            this.criterios.controls.forEach( control => {
+              valorAmortizacion = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
+              if(cumpleCondiciones == true){
+                  let valorFacturadoOnlyUsoAnticipo = 0;
+                  let usoCodigoAnticipo = this.contrato?.vAmortizacionXproyecto?.find((r: { tieneAnticipo: boolean; }) => r.tieneAnticipo == true)?.usoCodigo;
+                  control.get( 'conceptos' ).value.forEach((concepto: { usoCodigo: any, valorFacturadoConcepto: number }) => {
+                    if(concepto.usoCodigo == usoCodigoAnticipo){
+                      valorFacturadoOnlyUsoAnticipo += concepto.valorFacturadoConcepto ?? 0;
+                    }
+                  });
+                  if ( (valorFacturadoOnlyUsoAnticipo <= valorAmortizacion) ) {
+                    this.openDialog( '', `El valor amortizado no puede ser mayor al valor facturado` );
+                    cumpleCondiciones = false;
+                  }
+              }
+            });
+          }
+        }
+
+        //validación monto máximo por conceptos --> solución temporal!
+        if(cumpleCondiciones == true){
+          this.criterios.controls.forEach( control => {
+                const conceptosTmp = [];
+                control.get( 'conceptos' ).value.forEach(concepto => {
+                  const conceptoIndex = conceptosTmp.findIndex(r => r.usoCodigo == concepto.usoCodigo);
+
+                  if ( conceptoIndex !== -1 ) {
+                    conceptosTmp[conceptoIndex].valorFacturadoConcepto += concepto.valorFacturadoConcepto;
+                  }else{
+                    //entra si se modifico, pero esto se debe cambiar de antes, el valor del monto máximo es un error así como esta en servicio
+                    if(concepto.oldValue != concepto.valorFacturadoConcepto){
+                      conceptosTmp.push({
+                        montoMaximo: concepto.montoMaximo,
+                        valorFacturadoConcepto: concepto.valorFacturadoConcepto,
+                        usoCodigo: concepto.usoCodigo,
+                        usoNombre: concepto.usosParaElConcepto.find(r => r.codigo == concepto.usoCodigo)?.nombre,
+                      })
+                    }
                   }
                 });
-              }
-            }
+                conceptosTmp.forEach(c => {
+                  if(cumpleCondiciones == true){
+                    if(c.valorFacturadoConcepto > c.montoMaximo){
+                      this.openDialog( '', 'La suma de los valores facturados para el uso <strong>'+ c.usoNombre + '</strong> superan el monto máximo.'  );
+                      cumpleCondiciones = false;
+                    }
+                  }
+                });
+          });
+        }
+
+        this.criterios.controls.forEach( control => {
+            const criterio = control.value;
 
             const criterioAnticipo = this.criteriosArray.find( value => value.nombre === 'Anticipo' && criterio.tipoCriterioCodigo === value.codigo )
 
@@ -1010,8 +1045,7 @@ export class FormCriteriosPagoComponent implements OnInit {
             }
         }
 
-        console.log(this.solicitudPago);
-        if(cumpleCondiciones == true){
+        if(cumpleCondiciones){
           this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
           .subscribe(
               response => {
