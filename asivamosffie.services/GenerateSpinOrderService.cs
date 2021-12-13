@@ -594,6 +594,7 @@ namespace asivamosffie.services
                                 else
                                 {
                                     item.SaldoUso -= ValorUsoResta;
+                                    break;
                                 }
                             }
                             else
@@ -728,6 +729,7 @@ namespace asivamosffie.services
                                     else
                                     {
                                         item.SaldoUso -= ValorUsoResta;
+                                        break;
                                     }
                                 }
                                 else
