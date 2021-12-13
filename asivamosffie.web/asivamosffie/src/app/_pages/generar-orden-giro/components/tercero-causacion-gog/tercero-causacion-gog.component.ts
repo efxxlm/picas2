@@ -416,6 +416,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                               {
                                   ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
                                   conceptoPagoCriterio: [ concepto.codigo ],
+                                  usoCodigo: [ usoByConcepto[0]?.tipoUsoCodigo ],
                                   nombre: [ concepto.nombre ],
                                   valorTotalUso: [ valorTotalUso ],
                                   valorFacturadoConcepto: [ concepto.valorFacturadoConcepto ],
@@ -445,6 +446,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 {
                                     ordenGiroDetalleTerceroCausacionId: [ 0 ],
                                     conceptoPagoCriterio: [ concepto.codigo ],
+                                    usoCodigo: [ usoByConcepto[0]?.tipoUsoCodigo ],
                                     nombre: [ concepto.nombre ],
                                     valorTotalUso: [ valorTotalUso ],
                                     valorFacturadoConcepto: [ concepto.valorFacturadoConcepto ],
@@ -779,27 +781,44 @@ export class TerceroCausacionGogComponent implements OnInit {
 
             //si el descuento es de amortización, el valor del descuento no puede ser mayor a el valor amortizado.
             if(this.getDescuentos( index, jIndex ).controls[ kIndex ].get( 'tipoDescuento' ).value == "5"){
-              let valueTotalDescuento = 0;
-              if(this.solicitudPagoFase?.solicitudPagoFaseAmortizacion.length > 0){
-                let valorAmortizacion = this.solicitudPagoFase?.solicitudPagoFaseAmortizacion[0].valorAmortizacion ?? 0;
-                this.getDescuentos( index, jIndex ).controls.forEach(element => {
-                  if(element.get( 'aportantesDescuento' ).value.length > 0){
-                    element.get( 'aportantesDescuento' ).value.forEach((desc: { valorDescuento: number; }, i: number) => {
-                        if(desc != null){
-                          if(desc.valorDescuento > 0){
-                            valueTotalDescuento += desc.valorDescuento;
-                          }
-                        }
-                    });
-                  }
-                });
-                console.log(valueTotalDescuento);
-                console.log(valorAmortizacion);
+              let usoCodigoAnticipo = this.solicitudPago?.contratoSon?.vAmortizacionXproyecto?.find((r: { tieneAnticipo: boolean; }) => r.tieneAnticipo == true)?.usoCodigo;
+              let usoCodigo = this.getConceptos( index ).controls[ jIndex ].get( 'usoCodigo' )?.value;
+              if(usoCodigoAnticipo == usoCodigo){
+                if(this.solicitudPagoFase?.solicitudPagoFaseAmortizacion.length > 0){
+                  let valorAmortizacion = this.solicitudPagoFase?.solicitudPagoFaseAmortizacion[0].valorAmortizacion ?? 0;
+                  let valorTotalXConceptoAnticipo = 0;
 
-                if ( valueTotalDescuento > valorAmortizacion) {
-                    this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null );
-                    this.openDialog( '', `<b>El valor del descuento de amortización debe ser igual al valor solicitado.</b>` );
-                    return;
+                  this.getConceptos( index ).controls.forEach( ( conceptoControl, indexConcepto ) => {
+                    let usoCodigoConcepto = conceptoControl.get( 'usoCodigo' ).value;
+                    if(usoCodigoAnticipo == usoCodigoConcepto){
+                      if ( this.getDescuentos( index, indexConcepto ).length > 0 && conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value === true ) {
+                        this.getDescuentos( index, indexConcepto ).controls.forEach( ( element ) => {
+                            if(element.get( 'tipoDescuento' ).value == "5"){
+                              let valueTotalDescuento = 0;
+
+                              if(this.solicitudPagoFase?.solicitudPagoFaseAmortizacion.length > 0){
+                                if(element.get( 'aportantesDescuento' ).value.length > 0){
+                                  element.get( 'aportantesDescuento' ).value.forEach((desc: { valorDescuento: number; }, i: number) => {
+                                      if(desc != null){
+                                        if(desc.valorDescuento > 0){
+                                          valueTotalDescuento += desc.valorDescuento;
+                                        }
+                                      }
+                                  });
+                                }
+                                valorTotalXConceptoAnticipo += valueTotalDescuento;
+                              }
+                            }
+                        } )
+                      }
+                    }
+                  });
+
+                  if ( valorTotalXConceptoAnticipo > valorAmortizacion) {
+                      this.getAportanteDescuentos( index, jIndex, kIndex ).controls[ lIndex ].get( 'valorDescuento' ).setValue( null );
+                      this.openDialog( '', `<b>El valor del descuento de amortización debe ser igual al valor solicitado.</b>` );
+                      return;
+                  }
                 }
               }
             }
@@ -1182,15 +1201,23 @@ export class TerceroCausacionGogComponent implements OnInit {
         }
 
         alert =  true;
-        this.criterios.controls.forEach( ( criterioControl, indexCriterio ) => {
-          this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
-              if ( this.getDescuentos( indexCriterio, indexConcepto ).length > 0 && conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value === true ) {
+
+        if(this.tieneAmortizacion == true){
+
+          this.criterios.controls.forEach( ( criterioControl, indexCriterio ) => {
+            let valorAmortizacion = this.solicitudPagoFase?.solicitudPagoFaseAmortizacion[0].valorAmortizacion ?? 0;
+            let valorTotalXConceptoAnticipo = 0;
+
+            this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
+              let usoCodigoAnticipo = this.solicitudPago?.contratoSon?.vAmortizacionXproyecto?.find((r: { tieneAnticipo: boolean; }) => r.tieneAnticipo == true)?.usoCodigo;
+              let usoCodigoConcepto = conceptoControl.get( 'usoCodigo' ).value;
+              if(usoCodigoAnticipo == usoCodigoConcepto){
+                if ( this.getDescuentos( indexCriterio, indexConcepto ).length > 0 && conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value === true ) {
                   this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( ( element ) => {
                       if(element.get( 'tipoDescuento' ).value == "5"){
                         let valueTotalDescuento = 0;
 
                         if(this.solicitudPagoFase?.solicitudPagoFaseAmortizacion.length > 0){
-                          let valorAmortizacion = this.solicitudPagoFase?.solicitudPagoFaseAmortizacion[0].valorAmortizacion ?? 0;
                           if(element.get( 'aportantesDescuento' ).value.length > 0){
                             element.get( 'aportantesDescuento' ).value.forEach((desc: { valorDescuento: number; }, i: number) => {
                                 if(desc != null){
@@ -1200,18 +1227,18 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 }
                             });
                           }
-                          console.log(valueTotalDescuento);
-                          console.log(valorAmortizacion);
-                          if ( valueTotalDescuento != valorAmortizacion) {
-                              alert =  false;
-                          }
+                          valorTotalXConceptoAnticipo += valueTotalDescuento;
                         }
                       }
                   } )
+                }
               }
-          } )
-        });
-
+            });
+            if (valorTotalXConceptoAnticipo != valorAmortizacion) {
+              alert =  false;
+            }
+          });
+        }
 
         if(!alert){
           this.openDialog( '', `<b>El valor del descuento de amortización debe ser igual al valor solicitado.</b>` );
