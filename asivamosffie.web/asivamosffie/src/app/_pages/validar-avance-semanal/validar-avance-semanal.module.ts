@@ -34,7 +34,8 @@ import { TablaValidarAvanceSemanalComponent } from './components/tabla-validar-a
 import { FormValidarSeguimientoSemanalComponent } from './components/form-validar-seguimiento-semanal/form-validar-seguimiento-semanal.component';
 import { ConsultarBitacoraComponent } from './components/consultar-bitacora/consultar-bitacora.component';
 import { VerDetalleMuestrasComponent } from './components/ver-detalle-muestras/ver-detalle-muestras.component';
-
+import { ObservacionesDetalleAvanceComponent } from './components/observaciones-detalle-avance/observaciones-detalle-avance.component';
+import { SoporteProjectComponent } from './components/soporte-project/soporte-project.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,9 @@ import { VerDetalleMuestrasComponent } from './components/ver-detalle-muestras/v
     RegistroFotograficoComponent,
     ComiteObraComponent,
     TablaConsultarBitacoraComponent,
-    VerDetalleAvanceSemanalComponent
+    VerDetalleAvanceSemanalComponent,
+    ObservacionesDetalleAvanceComponent,
+    SoporteProjectComponent
   ],
   imports: [
     CommonModule,

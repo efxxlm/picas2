@@ -34,10 +34,11 @@ import { ConsultarBitacoraComponent } from './components/consultar-bitacora/cons
 import { VerDetalleMuestrasComponent } from './components/ver-detalle-muestras/ver-detalle-muestras.component';
 import { TablaConsultarBitacoraComponent } from './components/tabla-consultar-bitacora/tabla-consultar-bitacora.component';
 import { VerDetalleAvanceSemanalComponent } from './components/ver-detalle-avance-semanal/ver-detalle-avance-semanal.component';
-
+import { ObservacionesDetalleAvanceComponent } from './components/observaciones-detalle-avance/observaciones-detalle-avance.component';
+import { SoporteProjectComponent } from './components/soporte-project/soporte-project.component';
 
 @NgModule({
-  declarations: [VerificarAvanceSemanalComponent, TablaVerificarAvanceSemanalComponent, FormVerificarSeguimientoSemanalComponent, VerificarAvanceFisicoComponent, TablaAvanceResumenAlertasComponent, DialogAvanceResumenAlertasComponent, TablaDisponibilidadMaterialComponent, TablaAvanceFisicoComponent, DialogAvanceAcumuladoComponent, AvanceFinancieroComponent, TablaAvanceFinancieroComponent, GestionDeObraComponent, GestionAmbientalComponent, GestionCalidadComponent, GestionSstComponent, GestionSocialComponent, AlertasRelevantesComponent, ManejoMaterialInsumoComponent, ManejoResiduosConstruccionComponent, ManejoResiduosPeligrososComponent, OtrosManejosComponent, ReporteActividadesComponent, FormReporteActividadesRealizadasComponent, RegistroFotograficoComponent, ComiteObraComponent, ConsultarBitacoraComponent, VerDetalleMuestrasComponent, TablaConsultarBitacoraComponent, VerDetalleAvanceSemanalComponent],
+  declarations: [VerificarAvanceSemanalComponent, TablaVerificarAvanceSemanalComponent, FormVerificarSeguimientoSemanalComponent, VerificarAvanceFisicoComponent, TablaAvanceResumenAlertasComponent, DialogAvanceResumenAlertasComponent, TablaDisponibilidadMaterialComponent, TablaAvanceFisicoComponent, DialogAvanceAcumuladoComponent, AvanceFinancieroComponent, TablaAvanceFinancieroComponent, GestionDeObraComponent, GestionAmbientalComponent, GestionCalidadComponent, GestionSstComponent, GestionSocialComponent, AlertasRelevantesComponent, ManejoMaterialInsumoComponent, ManejoResiduosConstruccionComponent, ManejoResiduosPeligrososComponent, OtrosManejosComponent, ReporteActividadesComponent, FormReporteActividadesRealizadasComponent, RegistroFotograficoComponent, ComiteObraComponent, ConsultarBitacoraComponent, VerDetalleMuestrasComponent, TablaConsultarBitacoraComponent, VerDetalleAvanceSemanalComponent, ObservacionesDetalleAvanceComponent, SoporteProjectComponent],
   imports: [
     CommonModule,
     MaterialModule,
