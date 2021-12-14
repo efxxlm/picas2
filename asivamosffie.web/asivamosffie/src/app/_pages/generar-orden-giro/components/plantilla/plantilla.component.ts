@@ -60,6 +60,8 @@ export class PlantillaComponent implements OnInit {
   infoPlantilla: any;
   tablaOrdenGiro = [];
   valorNetoGiro = 0;
+  listAportantes : string = '';
+  listA = [];
   descuentos = { valorTotal: 0, retegarantia: 0, ans: 0, otrosDescuentos: 0 };
 
   get aportantes() {
@@ -96,6 +98,23 @@ export class PlantillaComponent implements OnInit {
         descuento => (this.valorNetoGiro -= descuento.valorDescuento)
       );
     }
+
+    solicitudPago.tablaPorcentajeParticipacion.forEach(tp => {
+      tp.listAportantes.forEach(element => {
+        if(!this.listA.find(r => r.nombreAportante == element.nombreAportante))
+          this.listA.push({nombreAportante: element.nombreAportante});
+      });
+    });
+
+    this.listA.forEach(element => {
+      if(this.listAportantes == ''){
+        this.listAportantes += element.nombreAportante;
+      }else{
+        if(this.listAportantes)
+        this.listAportantes += ", "+ element.nombreAportante;
+      }
+    });
+
     for (
       let i = 0;
       i <
