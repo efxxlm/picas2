@@ -5,7 +5,7 @@ namespace asivamosffie.model.Models
     public partial class ControlRecurso
     {
         [NotMapped]
-        public VigenciaAporte VigenciaAporte { get; set; }
+        public CofinanciacionDocumento VigenciaAporte { get; set; }
 
     }
 }
