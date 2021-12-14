@@ -118,8 +118,8 @@
           </td>
           <td style="border: solid 1px #000">{{ solicitudPago.contratoSon.numeroContrato }}</td>
           <td style="border: solid 1px #000"></td>
-          <td style="border: solid 1px #000" colspan="3" rowspan="2">
-            {{ solicitudPago.tablaPorcentajeParticipacion[0].listAportantes[0].nombreAportante }}
+          <td style="border: solid 1px #000; max-width: 200px;" colspan="3" rowspan="2">
+            <span style="font-weight: 700;">Aportante (s): </span>{{ listAportantes }}
           </td>
         </tr>
         <tr>

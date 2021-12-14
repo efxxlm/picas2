@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController] 
     public class AutenticacionController : ControllerBase
     {
         public readonly IAutenticacionService autenticacion;

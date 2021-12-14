@@ -1,4 +1,4 @@
-<div class="text-center">
+<div class="text-center" *ngIf="!esVerDetalle">
   <p class="info-container">
     <span class="info-text sin-diligenciar">Sin diligenciar</span>
     <span class="info-text en-proceso">En proceso</span>
@@ -9,16 +9,17 @@
   <mat-expansion-panel class="expansion-style">
     <mat-expansion-panel-header class="expansion-style--header">
       <mat-panel-title class="expansion-style--title" [ngClass]="{
-        'sin-diligenciar':true,
-        'en-proceso':false,
-        'completo':false,
-        'en-alerta':false
+        '': esVerDetalle,
+        'sin-diligenciar':!esVerDetalle && (ajusteProgramacion?.observacionObra == null || ajusteProgramacion?.observacionObra == undefined || ajusteProgramacion?.tieneObservacionesProgramacionObra == null),
+        'en-proceso':!esVerDetalle && (ajusteProgramacion?.tieneObservacionesProgramacionObra == true && (ajusteProgramacion?.observacionObra?.observaciones == null || ajusteProgramacion?.observacionObra?.observaciones == '')) ,
+        'completo':!esVerDetalle && ((ajusteProgramacion?.observacionObra && ajusteProgramacion?.tieneObservacionesProgramacionObra != null) || !ajusteProgramacion?.tieneObservacionesProgramacionObra)
       }">
       Programación de obra
       </mat-panel-title>
     </mat-expansion-panel-header>
     <app-programacion-de-obra
                               [ajusteProgramacion]="ajusteProgramacion"
+                              [esVerDetalle]="esVerDetalle"
     >
 
     </app-programacion-de-obra>
@@ -26,16 +27,17 @@
   <mat-expansion-panel class="expansion-style">
     <mat-expansion-panel-header class="expansion-style--header">
       <mat-panel-title class="expansion-style--title" [ngClass]="{
-        'sin-diligenciar':true,
-        'en-proceso':false,
-        'completo':false,
-        'en-alerta':false
+        '': esVerDetalle,
+        'sin-diligenciar':!esVerDetalle && (ajusteProgramacion?.observacionFlujo == null || ajusteProgramacion?.observacionFlujo == undefined || ajusteProgramacion?.tieneObservacionesFlujoInversion == null),
+        'en-proceso':!esVerDetalle && (ajusteProgramacion?.tieneObservacionesFlujoInversion == true && (ajusteProgramacion?.observacionFlujo?.observaciones == null || ajusteProgramacion?.observacionFlujo?.observaciones == '')) ,
+        'completo':!esVerDetalle && ((ajusteProgramacion?.observacionFlujo && ajusteProgramacion?.tieneObservacionesFlujoInversion != null) || !ajusteProgramacion?.tieneObservacionesFlujoInversion)
       }">
       Flujo de inversión de recursos
       </mat-panel-title>
     </mat-expansion-panel-header>
     <app-flujo-intervencion-recursos
                                       [ajusteProgramacion]="ajusteProgramacion"
+                                      [esVerDetalle]="esVerDetalle"
     >
 
     </app-flujo-intervencion-recursos>

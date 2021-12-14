@@ -120,7 +120,9 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                             const conceptoP = [];
                             if(conceptosDePago != null){
                               conceptosDePago.forEach(element => {
-                                conceptoP.push(element)
+                                if(this.solicitudPago?.vConceptosUsosXsolicitudPagoId.find(r => r.conceptoCodigo == element.codigo)){
+                                  conceptoP.push(element)
+                                }
                               });
                             }
                             // Get data del formulario de los conceptos seleccionados
@@ -498,6 +500,14 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                 const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( codigo );
                 const tipoPago = tiposDePago.find( tipoPago => tipoPago.codigo === criterio.tipoPagoCodigo );
                 const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPago.codigo );
+                const conceptoP = [];
+                if(conceptosDePago != null){
+                  conceptosDePago.forEach(element => {
+                    if(this.solicitudPago?.vConceptosUsosXsolicitudPagoId.find(r => r.conceptoCodigo == element.codigo)){
+                      conceptoP.push(element)
+                    }
+                  });
+                }
 
                 this.getCriterios( index ).push( this.fb.group(
                     {
@@ -506,7 +516,7 @@ export class FormDescuentosGogComponent implements OnInit, OnChanges {
                         criterioCodigo: [ this.criteriosArray.find( criterio => criterio.codigo === codigo ).codigo ],
                         tipoPagoNombre: [ tipoPago.nombre ],
                         tipoPagoCodigo: [ tipoPago.codigo ],
-                        conceptosDePago: [ conceptosDePago ],
+                        conceptosDePago: [ conceptoP ],
                         concepto: [ null, Validators.required ],
                         conceptos: this.fb.array( [] )
                     }

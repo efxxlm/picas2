@@ -6,7 +6,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        
+
 
         <section class="d-flex justify-content-center table-responsive tabla-gris mt-3em">
             <table mat-table [dataSource]="dataSource" matSort style="width: 90%">
@@ -53,7 +53,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        
+
 
         <section class="d-flex justify-content-center table-responsive tabla-gris mt-3em">
             <table mat-table [dataSource]="dataSourceFuentes" matSort style="width: 90%">
@@ -248,9 +248,9 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <div class="mt-1em text-center">
+        <!--<div class="mt-1em text-center">
             <b>Consecutivo: {{ solicitudPago.ordenGiro !== undefined ? solicitudPago.ordenGiro.consecutivoOrigen : '' }} </b>
-        </div>
+        </div>-->
 
         <app-form-origen [solicitudPago]="solicitudPago"></app-form-origen>
     </mat-expansion-panel>

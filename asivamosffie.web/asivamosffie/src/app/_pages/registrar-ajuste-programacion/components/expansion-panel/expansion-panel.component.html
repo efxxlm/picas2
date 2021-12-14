@@ -1,4 +1,4 @@
-<div class="text-center">
+<div class="text-center" *ngIf="!esVerDetalle">
   <p class="info-container">
     <span class="info-text sin-diligenciar">Sin diligenciar</span>
     <span class="info-text en-proceso">En proceso</span>
@@ -8,13 +8,15 @@
 <mat-accordion>
   <mat-expansion-panel class="expansion-style">
     <mat-expansion-panel-header class="expansion-style--header">
-      <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforoObra">
+      <mat-panel-title class="expansion-style--title" [ngClass]="!esVerDetalle ? estadoSemaforoObra : ''">
       Programación de obra
       </mat-panel-title>
     </mat-expansion-panel-header>
     <app-programacion-de-obra
                               [ajusteProgramacionInfo]="ajusteProgramacionInfo"
+                              [esVerDetalle]= "esVerDetalle"
                               (estadoSemaforo)="estadoSemaforoObra = $event"
+                              [ajusteProgramacion]="ajusteProgramacion"
     >
     </app-programacion-de-obra>
   </mat-expansion-panel>
@@ -22,7 +24,7 @@
 
   <mat-expansion-panel class="expansion-style">
     <mat-expansion-panel-header class="expansion-style--header">
-      <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforoFlujo">
+      <mat-panel-title class="expansion-style--title" [ngClass]="!esVerDetalle ? estadoSemaforoFlujo : ''">
       Flujo de inversión de recursos
       </mat-panel-title>
     </mat-expansion-panel-header>
@@ -31,7 +33,9 @@
                                     [novedadContractualRegistroPresupuestal]="novedadContractualRegistroPresupuestal"
                                     [plazoContratacion] ="plazoContratacion"
                                     [valorContrato] = "valorContrato"
+                                    [esVerDetalle]= "esVerDetalle"
                                     (estadoSemaforo)="estadoSemaforoFlujo = $event"
+                                    [ajusteProgramacion]="ajusteProgramacion"
     >
 
     </app-flujo-intervencion-recursos>

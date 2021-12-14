@@ -2,19 +2,23 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { FormControl, Validators, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ReprogrammingService } from 'src/app/core/_services/reprogramming/reprogramming.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 
 @Component({
   selector: 'app-flujo-intervencion-recursos',
   templateUrl: './flujo-intervencion-recursos.component.html',
   styleUrls: ['./flujo-intervencion-recursos.component.scss']
 })
-export class FlujoIntervencionRecursosComponent implements OnInit, OnChanges {
+export class FlujoIntervencionRecursosComponent implements OnInit , OnChanges {
 
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
-    observaciones: [null, Validators.required]
+    observaciones: [null, Validators.required],
+    ajustePragramacionObservacionId: [null, Validators.required],
+    ajusteProgramacionId: [null, Validators.required],
   });
 
   estaEditando = false;
@@ -33,6 +37,7 @@ export class FlujoIntervencionRecursosComponent implements OnInit, OnChanges {
 
   ajusteProgramacionId: number;
   @Input() ajusteProgramacion: any;
+  @Input() esVerDetalle: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -40,18 +45,21 @@ export class FlujoIntervencionRecursosComponent implements OnInit, OnChanges {
     private reprogrammingSvc: ReprogrammingService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-
+    private commonSvc: CommonService,
     ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ( changes.ajusteProgramacion )
       {
-        this.addressForm.get('tieneObservaciones').setValue( this.ajusteProgramacion.tieneObservacionesFlujoInversion )
-        this.addressForm.get('observaciones').setValue( this.ajusteProgramacion.observacionFlujo ? this.ajusteProgramacion.observacionFlujo.observaciones : '' )
+        this.addressForm.get('tieneObservaciones').setValue( this.ajusteProgramacion?.tieneObservacionesFlujoInversion )
+        this.addressForm.get('observaciones').setValue( this.ajusteProgramacion?.observacionFlujo ? this.ajusteProgramacion?.observacionFlujo?.observaciones : '' )
+        this.addressForm.get('ajustePragramacionObservacionId').setValue( this.ajusteProgramacion?.observacionFlujo ? this.ajusteProgramacion?.observacionFlujo?.ajustePragramacionObservacionId : 0 )
+        this.addressForm.get('ajusteProgramacionId').setValue( this.ajusteProgramacionId)
       }
   }
 
   ngOnInit(): void {
+    console.log(this.ajusteProgramacion);
     this.activatedRoute.params.subscribe( parametros => {
       this.ajusteProgramacionId = parametros.id;
     });
@@ -102,8 +110,11 @@ export class FlujoIntervencionRecursosComponent implements OnInit, OnChanges {
       AjustePragramacionObservacion: [
         {
           ajusteProgramacionId: this.ajusteProgramacionId,
+          ajustePragramacionObservacionId: this.addressForm.value.ajustePragramacionObservacionId,
           observaciones: this.addressForm.value.observaciones,
-
+          esSupervisor: true,
+          esObra: false,
+          archivoCargueId: this.ajusteProgramacion.archivoCargueIdFlujoInversion
         }
       ]
     }
@@ -116,6 +127,32 @@ export class FlujoIntervencionRecursosComponent implements OnInit, OnChanges {
       });
 
 
+  }
+
+  descargar(element: any) {
+    this.commonSvc.getFileById(element.archivoCargueIdFlujoInversion)
+      .subscribe(respuesta => {
+        const documento = 'FlujoInversion.xlsx';
+        const  blob = new Blob([respuesta], { type: 'application/octet-stream' });
+        const  anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/octet-stream', anchor.download, anchor.href].join(':');
+        anchor.click();
+      });
+  }
+
+  openObservaciones(dataFile: any) {
+    const dialogCargarProgramacion = this.dialog.open(DialogObservacionesComponent, {
+      width: '75em',
+       data: { ajusteProgramacion: this.ajusteProgramacion, esInterventor: true, esObra: false}
+    });
+    dialogCargarProgramacion.afterClosed()
+      .subscribe(response => {
+        if (response) {
+          console.log(response);
+        };
+      })
   }
 
 }

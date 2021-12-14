@@ -4,32 +4,20 @@
   </button>
 
   <h1 class="title-menu--h1">
-    Observaciones flujo de inversión de recursos
+    Observaciones <span *ngIf="!data.esObra">flujo de inversión de recursos</span><span *ngIf="data.esObra">programación de obra</span>
   </h1>
-
-  <section class="flex-center mt-05em">
-    <span>
-      Fecha de validación:
-      <strong>
-        10/08/2020
-      </strong>
-    </span>
-    <span>
-      Estado de la validación:
-      <strong>
-        Enviada al interventor
-      </strong>
-    </span>
-  </section>
 </div>
 <div class="d-flex align-items-center mt-1em">
   <div class="text-area-quill">
     <label class="text-area-quill--label align-left-label">
-      Observaciones a la nueva programación de obra
+      Observaciones del interventor
     </label>
     <div>
-      10/08/2020
-      El archivo presenta un error, cargue de nuevo para validarlo
+      <strong *ngIf="data.esObra">{{ data?.ajusteProgramacion?.observacionObraInterventor?.fechaCreacion | date: 'dd/MM/yyyy' }}</strong>
+      <strong *ngIf="!data.esObra">{{ data?.ajusteProgramacion?.observacionFlujoInterventor?.fechaCreacion | date: 'dd/MM/yyyy' }}</strong>
+      <div [innerHtml]="data?.ajusteProgramacion?.observacionObraInterventor?.observaciones" *ngIf="data.esObra"></div>
+      <div [innerHtml]="data?.ajusteProgramacion?.observacionFlujoInterventor?.observaciones" *ngIf="!data.esObra"></div>
+
     </div>
   </div>
 </div>

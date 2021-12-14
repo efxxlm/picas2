@@ -41,6 +41,7 @@ export class DialogObservacionesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.data);
     if(this.data.dataFile.tempAjustePragramacionObservacion!= null){
       this.observaciones.patchValue(this.data.dataFile.tempAjustePragramacionObservacion);
     }
@@ -113,21 +114,20 @@ export class DialogObservacionesComponent implements OnInit {
         ajusteProgramacionId: this.observaciones.value.ajusteProgramacionId,
         observaciones: this.observaciones.value.observaciones,
         esObra: this.data.esObra,
-        archivoCargueId: this.data.dataFile.archivoCargueId
+        archivoCargueId: this.data.dataFile.archivoCargueId,
+        esSupervisor: false
       }
     );
 
     const ajusteProgramacion = {
       ajusteProgramacionId: this.observaciones.value.ajusteProgramacionId,
-      tieneObservacionesProgramacionObra: this.data.esObra == true ? true : this.data.ajusteProgramacionInfo?.tieneObservacionesProgramacionObra,
-      tieneObservacionesFlujoInversion: this.data.esObra != true ? true : this.data.ajusteProgramacionInfo?.tieneObservacionesFlujoInversion,
       ajustePragramacionObservacion: ajustePragramacionObservacion
     }
-    this.createEditObservacionAjusteProgramacion(ajusteProgramacion);
+    this.createEditObservacionFile(ajusteProgramacion);
   }
 
-  createEditObservacionAjusteProgramacion(pAjusteProgramacion: any) {
-    this.reprogrammingSvc.createEditObservacionAjusteProgramacion(pAjusteProgramacion, this.data.esObra)
+  createEditObservacionFile(pAjusteProgramacion: any) {
+    this.reprogrammingSvc.createEditObservacionFile(pAjusteProgramacion, this.data.esObra)
       .subscribe((respuesta: Respuesta) => {
         this.onClose();
         this.openDialogGuardar('', respuesta.message);

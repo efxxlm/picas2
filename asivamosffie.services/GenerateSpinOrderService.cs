@@ -594,6 +594,7 @@ namespace asivamosffie.services
                                 else
                                 {
                                     item.SaldoUso -= ValorUsoResta;
+                                    break;
                                 }
                             }
                             else
@@ -608,7 +609,7 @@ namespace asivamosffie.services
                             {
                                 Uso.Nombre,
                                 ValorUso = String.Format("{0:n0}", ValorUso),
-                                Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : ValorUso)
+                                Saldo = String.Format("{0:n0}", Saldo > 0 ? (ValorUso - Saldo) < 0 ? 0 : ValorUso - Saldo : ValorUso)
                             });
                         }
                         else
@@ -728,6 +729,7 @@ namespace asivamosffie.services
                                     else
                                     {
                                         item.SaldoUso -= ValorUsoResta;
+                                        break;
                                     }
                                 }
                                 else
@@ -739,7 +741,8 @@ namespace asivamosffie.services
                             {
                                 Uso.Nombre,
                                 ValorUso = String.Format("{0:n0}", ValorUso),
-                                Saldo = String.Format("{0:n0}", ValorUso > Saldo ? ValorUso - Saldo : 0)
+                                Saldo = String.Format("{0:n0}", Saldo > 0 ? (ValorUso - Saldo) < 0 ? 0 : ValorUso - Saldo : ValorUso)
+
                             });
                         }
                         else

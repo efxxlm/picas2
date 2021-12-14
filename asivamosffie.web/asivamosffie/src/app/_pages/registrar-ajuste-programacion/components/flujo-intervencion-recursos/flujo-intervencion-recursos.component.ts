@@ -46,7 +46,10 @@ export class FlujoIntervencionRecursosComponent implements AfterViewInit, OnInit
   @Input() novedadContractualRegistroPresupuestal:any;
   @Input() plazoContratacion:any;
   @Input() valorContrato:number;
+  @Input() esVerDetalle:number;
   @Output() estadoSemaforo = new EventEmitter<string>();
+  @Input() ajusteProgramacion:any;
+
   existeRegistroValido = false;
 
   constructor(
@@ -64,24 +67,19 @@ export class FlujoIntervencionRecursosComponent implements AfterViewInit, OnInit
           //response = response.filter( p => p.estadoCargue == 'Válidos' )
           if(response.length > 0){
             this.dataSource = new MatTableDataSource(response);
-            response.forEach(r =>{
-              if(!this.existeRegistroValido){
-                if(r.estadoCargue == 'Válido')
-                  this.existeRegistroValido = true;
-              }
-            });
-            if(this.existeRegistroValido == true){
-              this.estadoSemaforo.emit( 'completo' );
-            }else{
-              this.estadoSemaforo.emit( 'sin-diligenciar' );
-            }
           }
           this.dataSource = new MatTableDataSource(response);
-        })
+        });
+
+        if(this.ajusteProgramacionInfo?.archivoCargueIdFlujoInversion > 0)
+          this.existeRegistroValido = true;
+
+        if(this.existeRegistroValido == true){
+          this.estadoSemaforo.emit( 'completo' );
+        }else{
+          this.estadoSemaforo.emit( 'sin-diligenciar' );
+        }
     };
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
   }
 
   openCargarFlujo() {
@@ -101,10 +99,17 @@ export class FlujoIntervencionRecursosComponent implements AfterViewInit, OnInit
     this.dialog.closeAll();
   }
 
-  openObservaciones(dataFile: any) {
+  openObservaciones(dataFile: any, esSupervisor: boolean) {
     const dialogCargarProgramacion = this.dialog.open(DialogObservacionesComponent, {
       width: '75em',
-       data: { esObra: false, ajusteProgramacionInfo: this.ajusteProgramacionInfo, dataFile: dataFile}
+       data: {
+         esObra: false,
+         ajusteProgramacionInfo: this.ajusteProgramacionInfo,
+         dataFile: dataFile,
+         esVerDetalle: this.esVerDetalle ? this.esVerDetalle : !dataFile.activo ? true : false,
+         esSupervisor: esSupervisor,
+         observacionesHistorico: this.ajusteProgramacion?.observacionFlujoHistorico
+        }
     });
     dialogCargarProgramacion.afterClosed()
       .subscribe(response => {
@@ -134,6 +139,23 @@ export class FlujoIntervencionRecursosComponent implements AfterViewInit, OnInit
   }
 
   ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.paginator._intl.nextPageLabel = 'Siguiente';
+    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+      if (length === 0 || pageSize === 0) {
+        return '0 de ' + length;
+      }
+      length = Math.max(length, 0);
+      const startIndex = page * pageSize;
+      // If the start index exceeds the list length, do not try and fix the end index to the end.
+      const endIndex = startIndex < length ?
+        Math.min(startIndex + pageSize, length) :
+        startIndex + pageSize;
+      return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+    };
+    this.paginator._intl.previousPageLabel = 'Anterior';
   }
 
   applyFilter(event: Event) {

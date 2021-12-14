@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dialog-observaciones',
@@ -7,20 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DialogObservacionesComponent implements OnInit {
 
-  listaObservaciones = [
-    {
-      fecha: '25/10/2020',
-      historial: 'EN las actividades de la semana 1 no concuerda con la actividad de seguimiento de semana 2'
-    },
-    {
-      fecha: '20/10/2020',
-      historial: 'El archivo presenta un error, cargue de nuevo para validarlo'
-    }
-  ]
-
-  constructor() { }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data,
+  ) { }
 
   ngOnInit(): void {
+    console.log(this.data);
   }
 
 }

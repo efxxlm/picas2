@@ -1,5 +1,6 @@
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
@@ -10,7 +11,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
+    [Authorize]
     public class RegisterContractSettlementController : ControllerBase
     {
         public readonly IRegisterContractSettlementService _registerContractSettlementService;

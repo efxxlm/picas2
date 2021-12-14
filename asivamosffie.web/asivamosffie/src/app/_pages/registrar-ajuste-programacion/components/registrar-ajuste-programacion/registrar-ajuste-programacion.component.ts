@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute, Params, UrlSegment } from '@angular/router';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 import * as moment from 'moment';
@@ -19,6 +19,9 @@ export class RegistrarAjusteProgramacionComponent implements OnInit {
   presupuestoAdicionalSolicitado = 0; //X novedad
   esAdicion: boolean = false;
   modificaFecha: boolean = false;
+  esVerDetalle: boolean = false;
+  esRegistroNuevo: boolean = false;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -34,6 +37,22 @@ export class RegistrarAjusteProgramacionComponent implements OnInit {
       console.log( this.router.getCurrentNavigation().extras.state.ajusteProgramacion )
       this.ajusteProgramacionInfo = this.router.getCurrentNavigation().extras.state.ajusteProgramacion
     }
+    this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if ( urlSegment.path === 'registrarAjusteProgramacion' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = true;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleEditarAjusteProgramacion' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = false;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleAjusteProgramacion' ) {
+          this.esVerDetalle = true;
+          return;
+      }
+    });
 
 
    }

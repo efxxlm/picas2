@@ -22,6 +22,17 @@
     <p>
       Explore en su computador o dispositivo y seleccione el documento que desea cargar los formatos permitidos son: mpp
     </p>
-    <button mat-raised-button color="accent" [disabled]="documentFile.invalid" type="button">Guardar</button>
   </mat-card-content>
 </mat-card>
+
+<div class="text-center mt-1em">
+  <button
+    mat-button
+    color="warn"
+    class="btn-guardar"
+    type="button"
+    [disabled]="documentFile.invalid"
+  >
+    <img src="assets/img/icon/guardar.svg" alt="Regresar" />
+  </button>
+</div>

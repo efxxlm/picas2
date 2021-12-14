@@ -1,7 +1,8 @@
 <div class="text-center mt-1em mb-1em">
-  <button mat-raised-button color="accent">Descargar archivo</button>
+  <button mat-raised-button color="accent" (click)="descargar(ajusteProgramacion)">Descargar archivo</button>
+  <button mat-raised-button color="accent" class="ml-1em" (click)="openObservaciones(ajusteProgramacion)" *ngIf="ajusteProgramacion?.observacionFlujoInterventor != null">Obs. Interventor</button>
 </div>
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="!esVerDetalle">
   <div class="row justify-content-center mb-2em">
     <div class="pr-1">
       <label class="label-left" for="tieneObservaciones">
@@ -41,3 +42,16 @@
     </button>
   </div>
 </form>
+<mat-card class="shipping-card var-main-gris" *ngIf="esVerDetalle">
+  <mat-card-content>
+    <p>
+      <strong>
+        ¿Desde la supervisión tiene observaciones al nuevo flujo de inversiones de recursos?
+      </strong>
+      <span *ngIf="ajusteProgramacion?.tieneObservacionesFlujoInversion"> Si</span>
+      <span *ngIf="!ajusteProgramacion?.tieneObservacionesFlujoInversion"> No</span>
+    </p>
+    <p *ngIf="ajusteProgramacion?.observacionFlujoHistorico[0] && ajusteProgramacion?.tieneObservacionesFlujoInversion" [innerHTML]="ajusteProgramacion?.observacionFlujoHistorico[0]?.observaciones">
+    </p>
+  </mat-card-content>
+</mat-card>

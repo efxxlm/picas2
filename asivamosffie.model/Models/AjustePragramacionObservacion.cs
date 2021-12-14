@@ -16,6 +16,7 @@ namespace asivamosffie.model.Models
         public bool? Archivada { get; set; }
         public bool? EsObra { get; set; }
         public int? ArchivoCargueId { get; set; }
+        public bool? EsSupervisor { get; set; }
 
         public virtual AjusteProgramacion AjusteProgramacion { get; set; }
     }

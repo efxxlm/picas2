@@ -8,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class ExpansionPanelComponent implements OnInit {
 
   @Input() ajusteProgramacion: any;
-
+  @Input() esVerDetalle: boolean;
   constructor() { }
 
   ngOnInit(): void {

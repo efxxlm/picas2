@@ -96,7 +96,7 @@ namespace asivamosffie.services
 
             retorno.AsociadoASolicitud = asociadoASolicitudes > 0 ? true : false;
             retorno.ComprometidoEnDdp = vSaldosFuenteXaportanteId != null ? vSaldosFuenteXaportanteId.ComprometidoEnDdp : 0;
-            retorno.SaldoActual = vSaldosFuenteXaportanteId != null ?  (decimal)(vSaldosFuenteXaportanteId.SaldoActual)  : 0;
+            retorno.SaldoActual = vSaldosFuenteXaportanteId != null ?  (decimal)(vSaldosFuenteXaportanteId.SaldoActual ?? 0)  : 0;
 
             return retorno;
         }

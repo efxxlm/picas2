@@ -2,6 +2,9 @@
   <button mat-raised-button color="accent" type="button" class="mb-1em" (click)="openCargarProgramacion()" [disabled]="existeRegistroValido === true">
     Cargar programación
   </button>
+  <button mat-raised-button color="accent" class="ml-1em" (click)="openObservaciones('', true)" *ngIf="ajusteProgramacion?.tieneObservacionesProgramacionObra && ajusteProgramacion?.observacionObraHistorico?.length > 0">
+    Obs. Supervisor
+  </button>
   <div *ngIf="this.dataSource.data.length > 0">
     <div class="busqueda" >
       <mat-form-field appearance="outline" class="busqueda--input">
@@ -67,14 +70,20 @@
             <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button" (click)="descargar(element)">
               Ver detalle
             </button>
-            <button mat-button color="warn" mat-raised-button color="accent" class="btn-table info-button"
+            <button mat-button color="warn" mat-raised-button color="accent" class="btn-table"
+              *ngIf="!esVerDetalle && (element.activo == true && element.tempAjustePragramacionObservacion != null && element.tempAjustePragramacionObservacion.observaciones && element.tempAjustePragramacionObservacion.observaciones != '')"
               [class.sin-diligenciar]="!element.tempAjustePragramacionObservacion"
               [class.en-proceso]="element.tempAjustePragramacionObservacion != null && (!element.tempAjustePragramacionObservacion.observaciones || element.tempAjustePragramacionObservacion.observaciones == '')"
               [class.completo]="element.tempAjustePragramacionObservacion != null && element.tempAjustePragramacionObservacion.observaciones && element.tempAjustePragramacionObservacion.observaciones != ''" type="button"
-              (click)="openObservaciones(element)">
-              Observaciones
+              (click)="openObservaciones(element, false)">
+              <span>Observaciones</span>
             </button>
-            <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button" (click)="eliminar(element)">
+            <button mat-button color="warn" mat-raised-button color="accent" class="btn-table"
+              *ngIf="(esVerDetalle || !element.activo) && (element.tempAjustePragramacionObservacion != null && element.tempAjustePragramacionObservacion.observaciones && element.tempAjustePragramacionObservacion.observaciones != '')"
+              (click)="openObservaciones(element, false)">
+              <span>Ver Observaciones</span>
+            </button>
+            <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button" (click)="eliminar(element)" *ngIf="!esVerDetalle && element.activo == true">
               Eliminar
             </button>
           </td>

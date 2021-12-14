@@ -14,5 +14,17 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public AjustePragramacionObservacion ObservacionFlujo { get; set; }
 
+        [NotMapped]
+        public List<AjustePragramacionObservacion> ObservacionObraHistorico { get; set; }
+
+        [NotMapped]
+        public List<AjustePragramacionObservacion> ObservacionFlujoHistorico { get; set; }
+
+        [NotMapped]
+        public AjustePragramacionObservacion ObservacionObraInterventor { get; set; }
+
+        [NotMapped]
+        public AjustePragramacionObservacion ObservacionFlujoInterventor { get; set; }
+
     }
 }

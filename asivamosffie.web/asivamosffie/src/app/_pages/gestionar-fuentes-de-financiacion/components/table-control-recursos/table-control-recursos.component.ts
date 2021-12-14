@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FuenteFinanciacionService } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { TiposAportante } from 'src/app/core/_services/common/common.service';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
   @Input() valorComprometidoDDP: number ;
   @Input() saldoActual: number ;
 
+  tipoAportante = TiposAportante;
   dataTable = [];
   displayedColumns: string[] = [
     'fechaCreacion',
@@ -57,13 +59,22 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
       this.dataTable = [];
       this.fuenteFinanciacionServices.getSourceFundingBySourceFunding( this.idFuente ).subscribe( listaFuentes => {
         listaFuentes.forEach(element => {
+          let vigencia = '';
+          console.log(element.fuenteFinanciacion.aportante.tipoAportanteId);
+          if(this.isETOrThirdParty(element.fuenteFinanciacion.aportante.tipoAportanteId)){
+            //cofinanciacionDocumento
+            vigencia = element.cofinanciacionDocumento?.vigenciaAporte;
+          }else{
+            //VigenciaAporte
+            vigencia = element.vigenciaAporte?.tipoVigenciaCodigo;
+          }
           this.dataTable.push({
             fechaCreacion: element.fechaCreacion,
             nombreCuentaBanco: element.cuentaBancaria.nombreCuentaBanco,
             numeroCuentaBanco: element.cuentaBancaria.numeroCuentaBanco,
             aportanteId: element.fuenteFinanciacion.aportanteId,
             numeroRp: element.registroPresupuestal ? element.registroPresupuestal.numeroRp : 'No aplica',
-            vigenciaCofinanciacionId: element.fuenteFinanciacion.aportante.cofinanciacion.vigenciaCofinanciacionId,
+            vigenciaCofinanciacionId: vigencia,
             fechaConsignacion: element.fechaConsignacion,
             valorConsignacion: element.valorConsignacion,
             controlRecursoId: element.controlRecursoId
@@ -170,6 +181,10 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
       return;
     }
     this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",e.controlRecursoId);
+  }
+
+  isETOrThirdParty = function(tipoAportanteId: number) {
+    return !this.tipoAportante.FFIE.includes(tipoAportanteId.toString());
   }
 
 }

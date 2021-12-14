@@ -11,7 +11,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<VAjusteProgramacion>> GetAjusteProgramacionGrid();
         Task<AjusteProgramacion> GetAjusteProgramacionById(int pAjusteProgramacionId);
         Task<Respuesta> AprobarAjusteProgramacion(int pAjusteProgramacionId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
-        Task<Respuesta> EnviarAlSupervisorAjusteProgramacion(int pAjusteProgramacionId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
+        Task<Respuesta> EnviarAlSupervisorAjusteProgramacion(int pAjusteProgramacionId, string pUsuarioCreacion);
         Task<Respuesta> CreateEditObservacionAjusteProgramacion(AjusteProgramacion pAjusteProgramacion, bool esObra, string pUsuario);
         Task<Respuesta> UploadFileToValidateAdjustmentProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pAjusteProgramacionId, int pContratacionProyectId, int pNovedadContractualId,
                                                                         int pContratoId, int pProyectoId);
@@ -23,6 +23,8 @@ namespace asivamosffie.services.Interfaces
         Task<List<ArchivoCargue>> GetLoadAdjustProgrammingGrid(int pAjusteProgramacionId);
         Task<List<ArchivoCargue>> GetLoadAdjustInvestmentFlowGrid(int pAjusteProgramacionId);
         Task<Respuesta> DeleteAdjustProgrammingOrInvestmentFlow(int pArchivoCargueId, int pAjusteProgramacionId, string pUsuario);
+        Task<Respuesta> CreateEditObservacionFile(AjusteProgramacion pAjusteProgramacion, bool esObra, string pUsuario);
+        Task<Respuesta> EnviarAlInterventor(int pAjusteProgramacionId, string pUsuarioCreacion);
 
     }
 }

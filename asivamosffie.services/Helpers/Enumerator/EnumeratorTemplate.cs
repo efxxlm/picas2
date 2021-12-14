@@ -147,7 +147,10 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         //Balance Financiero 5.3.1
         EnviarBalanceFinanciero = 148,
+        /*Reprogramación*/
 
+        EnviarReprogramacionASupervisor = 149,
+        EnviarReprogramacionAInterventor = 152,
 
     }
 }

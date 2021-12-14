@@ -3,8 +3,10 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { FormControl, Validators, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ReprogrammingService } from 'src/app/core/_services/reprogramming/reprogramming.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 
 @Component({
   selector: 'app-programacion-de-obra',
@@ -15,7 +17,9 @@ export class ProgramacionDeObraComponent implements OnInit, OnChanges {
 
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
-    observaciones: [null, Validators.required]
+    observaciones: [null, Validators.required],
+    ajustePragramacionObservacionId: [null, Validators.required],
+    ajusteProgramacionId: [null, Validators.required],
   });
 
   estaEditando = false;
@@ -34,6 +38,7 @@ export class ProgramacionDeObraComponent implements OnInit, OnChanges {
 
   ajusteProgramacionId: number;
   @Input() ajusteProgramacion: any;
+  @Input() esVerDetalle: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -41,14 +46,17 @@ export class ProgramacionDeObraComponent implements OnInit, OnChanges {
     private reprogrammingsvc: ReprogrammingService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-
+    private commonSvc: CommonService,
     ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ( changes.ajusteProgramacion )
       {
-        this.addressForm.get('tieneObservaciones').setValue( this.ajusteProgramacion.tieneObservacionesProgramacionObra )
-        this.addressForm.get('observaciones').setValue( this.ajusteProgramacion.observacionObra ? this.ajusteProgramacion.observacionObra.observaciones : '' )
+        this.addressForm.get('tieneObservaciones').setValue( this.ajusteProgramacion?.tieneObservacionesProgramacionObra )
+        this.addressForm.get('observaciones').setValue( this.ajusteProgramacion?.observacionObra ? this.ajusteProgramacion?.observacionObra?.observaciones : '' )
+        this.addressForm.get('ajustePragramacionObservacionId').setValue( this.ajusteProgramacion?.observacionObra ? this.ajusteProgramacion?.observacionObra?.ajustePragramacionObservacionId : 0 )
+        this.addressForm.get('ajusteProgramacionId').setValue( this.ajusteProgramacionId)
+
       }
   }
 
@@ -93,20 +101,19 @@ export class ProgramacionDeObraComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
-    // console.log(this.addressForm.value);
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
-    console.log(this.addressForm.value)
-
     let ajuste = {
       ajusteProgramacionId: this.ajusteProgramacionId,
       tieneObservacionesProgramacionObra: this.addressForm.value.tieneObservaciones,
-
       AjustePragramacionObservacion: [
         {
           ajusteProgramacionId: this.ajusteProgramacionId,
+          ajustePragramacionObservacionId: this.addressForm.value.ajustePragramacionObservacionId,
           observaciones: this.addressForm.value.observaciones,
-
+          esSupervisor: true,
+          esObra: true,
+          archivoCargueId: this.ajusteProgramacion.archivoCargueIdProgramacionObra
         }
       ]
     }
@@ -121,5 +128,30 @@ export class ProgramacionDeObraComponent implements OnInit, OnChanges {
 
   }
 
+  descargar(element: any) {
+    this.commonSvc.getFileById(element.archivoCargueIdProgramacionObra)
+      .subscribe(respuesta => {
+        const documento = 'ProgramacionObra.xlsx';
+        const  blob = new Blob([respuesta], { type: 'application/octet-stream' });
+        const  anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/octet-stream', anchor.download, anchor.href].join(':');
+        anchor.click();
+      });
+  }
+
+  openObservaciones(dataFile: any) {
+    const dialogCargarProgramacion = this.dialog.open(DialogObservacionesComponent, {
+      width: '75em',
+       data: { ajusteProgramacion: this.ajusteProgramacion, esInterventor: true, esObra: true}
+    });
+    dialogCargarProgramacion.afterClosed()
+      .subscribe(response => {
+        if (response) {
+          console.log(response);
+        };
+      })
+  }
 
 }

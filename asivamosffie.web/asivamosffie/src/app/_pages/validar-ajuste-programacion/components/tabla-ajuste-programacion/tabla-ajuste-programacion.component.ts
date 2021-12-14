@@ -17,18 +17,6 @@ export interface VerificacionDiaria {
   estadoRegistro: string;
 }
 
-const ELEMENT_DATA: VerificacionDiaria[] = [
-  {
-    id: '1',
-    fechaAprobacionPoliza: '21/06/2020',
-    numeroContrato: 'C223456789',
-    llaveMEN: 'LL03260326',
-    tipoNovedad: 'ModProrroga',
-    fechaNovedad: '04/07/2020',
-    estadoRegistro: 'Sin ajustes',
-  }
-];
-
 @Component({
   selector: 'app-tabla-ajuste-programacion',
   templateUrl: './tabla-ajuste-programacion.component.html',
@@ -59,6 +47,11 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.reprogrammingService.getAjusteProgramacionGrid()
       .subscribe(respuesta => {
+        respuesta.forEach(element => {
+          element.novedadesSeleccionadas = element.novedadesSeleccionadas
+            ? element.novedadesSeleccionadas.slice(0, -1)
+            : '';
+        });
         this.dataSource = new MatTableDataSource(respuesta.filter( r => r.estadoCodigo === '3' || r.estadoCodigo === '4' || r.estadoCodigo === '5' || r.estadoCodigo === '6' ));
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -94,6 +87,29 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
         if (respuesta.code === "200")
         this.ngAfterViewInit();
       })
+  }
+
+  enviarInterventor(id){
+    this.reprogrammingService.enviarAlInterventor( id )
+      .subscribe( respuesta => {
+        this.openDialog('', respuesta.message);
+        if (respuesta.code === "200")
+        this.ngAfterViewInit();
+      })
+  }
+
+
+
+  validar( ajusteProgramacion , esRegistroNuevo){
+    if(esRegistroNuevo){
+      this.router.navigate( [ '/validarAjusteProgramacion/validar', ajusteProgramacion.ajusteProgramacionId], { state: { ajusteProgramacion } } )
+    }else{
+      this.router.navigate( [ '/validarAjusteProgramacion/verDetalleEditar', ajusteProgramacion.ajusteProgramacionId], { state: { ajusteProgramacion } } )
+    }
+  }
+
+  verDetalle( ajusteProgramacion){
+      this.router.navigate( [ '/validarAjusteProgramacion/verDetalle', ajusteProgramacion.ajusteProgramacionId], { state: { ajusteProgramacion } } )
   }
 
 }

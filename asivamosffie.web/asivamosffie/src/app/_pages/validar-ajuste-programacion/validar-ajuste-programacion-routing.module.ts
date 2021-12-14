@@ -15,6 +15,14 @@ const routes: Routes = [
     component: ValidarAjusteComponent
   },
   {
+    path: 'verDetalleEditar/:id',
+    component: ValidarAjusteComponent
+  },
+  {
+    path: 'verDetalle/:id',
+    component: ValidarAjusteComponent
+  },
+  {
     path: 'historial/:id',
     component: HistorialComponent
   }

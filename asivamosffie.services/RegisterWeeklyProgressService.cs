@@ -330,9 +330,12 @@ namespace asivamosffie.services
                 await GetModInfoSeguimientoSemanal(seguimientoSemanal);
 
                 GetInformacionGeneral(seguimientoSemanal);
+
                 await GetAvanceFisico(seguimientoSemanal, pRutaGrafico);
                 await GetSeguimientoFinanciero(seguimientoSemanal, pRutaGrafico);
                 await GetRegistroAnticipo(seguimientoSemanal);
+
+
 
                 //si es tai -> cambiar fecha fin 
                 ContratacionProyecto cp = _context.ContratacionProyecto.Find(pContratacionProyectoId);
@@ -402,7 +405,8 @@ namespace asivamosffie.services
             ChartConfig oChartConfig = null;
             int Count = 1;
             //seguimientoSemanal.SeguimientoSemanalId
-            List<VSeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion> lSeguimientoSemanalProgramacion = _context.VSeguimientoSemanalXSeguimientoSemanalAvanceFisicoProgramacion.Where(x => x.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && x.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).ToList();
+
+            List<VSeguimientoSemanalXseguimientoSemanalAvanceFisicoProgramacion> lSeguimientoSemanalProgramacion = _context.VSeguimientoSemanalXseguimientoSemanalAvanceFisicoProgramacion.Where(x => x.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && x.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).ToList();
             if (lSeguimientoSemanalProgramacion.Count() > 0)
             {
                 foreach (var item in lSeguimientoSemanalProgramacion)
@@ -411,7 +415,7 @@ namespace asivamosffie.services
                                                     new
                                                     {
                                                         Num = Count,
-                                                        Capitulo = item.Capitulo,      
+                                                        Capitulo = item.Capitulo,
                                                         Programacion = item.ProgramacionCapitulo,
                                                         Ejectutado = item.AvanceFisicoCapitulo,
                                                         Desviacion = (item.AvanceFisicoCapitulo / item.ProgramacionCapitulo - 100) / 100
@@ -423,9 +427,11 @@ namespace asivamosffie.services
                 oChartConfig = new ChartConfig
                 {
                     type = "bar",
-                    options = new model.AditionalModels.Options { title = new Title { display = true, text = "SEGUIMIENTO POR CAPÍTULOS" }//,
-                                                                    //scales = new Scales { xAxes = new List<XAx> { new XAx { stacked = true } }, yAxes = new List<YAx> { new YAx { stacked = true } } }
-                                                                },
+                    options = new model.AditionalModels.Options
+                    {
+                        title = new Title { display = true, text = "SEGUIMIENTO POR CAPÍTULOS" }//,
+                                                                                                //scales = new Scales { xAxes = new List<XAx> { new XAx { stacked = true } }, yAxes = new List<YAx> { new YAx { stacked = true } } }
+                    },
                     data = new Data
                     {
                         labels = lAvanceFisicoxActividad.Select(y => y.Capitulo).Cast<string>().ToList(),
@@ -452,13 +458,13 @@ namespace asivamosffie.services
             };
 
             List<SeguimientoSemanalFinancieroXMes> lSeguimientoSemanalFinancieroXMes = (List<SeguimientoSemanalFinancieroXMes>)await _commonService.ExcuteSqlStoredProcedure<SeguimientoSemanalFinancieroXMes>("usp_GetMonthlyFinancialMonitoring", parameterList, 1);
-            
+
             if (lSeguimientoSemanalFinancieroXMes.Count() > 0)
             {
                 decimal pa = 0, ea = 0;
                 foreach (var item in lSeguimientoSemanalFinancieroXMes)
                 {
-                    pa += item.Valor.Value; 
+                    pa += item.Valor.Value;
                     ea += item.ValorEjecutado.Value;
 
                     lAvanceFinancieroxMes.Add(
@@ -493,7 +499,7 @@ namespace asivamosffie.services
                 rutaGrafico += $"SeguimientoSemanalSeguimientoFinanciero-{seguimientoSemanal.SeguimientoSemanalId}-{seguimientoSemanal.ContratacionProyectoId}.png";
             }
 
-            seguimientoSemanal.SeguimientoFinanciero= lAvanceFinancieroxMes;
+            seguimientoSemanal.SeguimientoFinanciero = lAvanceFinancieroxMes;
             seguimientoSemanal.SeguimientoFinancieroGrafica = oChartConfig != null ? (string)await _generarGraficoService.CreateChartasFile(rutaGrafico, oChartConfig) : "";
         }
 
@@ -554,7 +560,7 @@ namespace asivamosffie.services
                                                               ContratoTipo = r.TipoSolicitudCodigo.Equals(ConstanCodigoTipoContrato.Obra) ? ConstanCodigoTipoContratacionSTRING.Obra : ConstanCodigoTipoContratacionSTRING.Interventoria,
                                                               ContratoNumero = r.Contrato.FirstOrDefault().NumeroContrato,
                                                               ContratoFechaInicio = r.Contrato.FirstOrDefault().ContratoPoliza.Where(r => r.FechaAprobacion.HasValue).FirstOrDefault().FechaAprobacion,
-                                                              
+
                                                               Contratista = r.ContratistaId.HasValue ? r.Contratista.Nombre : "",
 
                                                               //Fase1PlazoInicial = $"M: {r.Contrato.FirstOrDefault().PlazoFase1PreMeses} D: {r.Contrato.FirstOrDefault().PlazoFase1PreDias}", 
