@@ -50,7 +50,8 @@ namespace asivamosffie.services
                     .ToListAsync();
 
                 ControlGrid.ForEach(r =>{
-                    r.VigenciaAporte = _context.CofinanciacionDocumento.Find(r.VigenciaAporteId);
+                    r.CofinanciacionDocumento = _context.CofinanciacionDocumento.Find(r.VigenciaAporteId);
+                    r.VigenciaAporte = _context.VigenciaAporte.Find(r.VigenciaAporteId);
                 });
 
                 return ControlGrid.OrderBy(r => r.RegistroPresupuestal?.NumeroRp).ThenByDescending(r => r.RegistroPresupuestalId).ToList();
