@@ -63,7 +63,7 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
             numeroCuentaBanco: element.cuentaBancaria.numeroCuentaBanco,
             aportanteId: element.fuenteFinanciacion.aportanteId,
             numeroRp: element.registroPresupuestal ? element.registroPresupuestal.numeroRp : 'No aplica',
-            vigenciaCofinanciacionId: element.fuenteFinanciacion.aportante.cofinanciacion.vigenciaCofinanciacionId,
+            vigenciaCofinanciacionId: element.vigenciaAporte?.tipoVigenciaCodigo,
             fechaConsignacion: element.fechaConsignacion,
             valorConsignacion: element.valorConsignacion,
             controlRecursoId: element.controlRecursoId
