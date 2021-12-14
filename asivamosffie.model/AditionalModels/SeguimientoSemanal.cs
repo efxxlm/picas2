@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using asivamosffie.model.Models;
 using System.ComponentModel.DataAnnotations.Schema;
+using asivamosffie.model.AditionalModels;
 
 namespace asivamosffie.model.Models
 {
@@ -21,6 +22,8 @@ namespace asivamosffie.model.Models
         public List<dynamic> SeguimientoFinanciero { get; set; }
         [NotMapped]
         public string SeguimientoFinancieroGrafica { get; set; }
+        [NotMapped]
+        public RegistroAnticipo RegistroAnticipo { get; set; }
         [NotMapped]
         public dynamic AvanceAcumulado { get; set; }
 

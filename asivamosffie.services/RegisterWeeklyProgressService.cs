@@ -274,10 +274,10 @@ namespace asivamosffie.services
                 if (pContratacionProyectoId > 0)
                     intSeguimientoSemanal = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)?.FirstOrDefault()?.SeguimientoSemanalId;
 
-                if (!intSeguimientoSemanal.HasValue)
-                    intSeguimientoSemanal = pSeguimientoSemanalId;
+                if (intSeguimientoSemanal.HasValue && pSeguimientoSemanalId == 0)
+                    pSeguimientoSemanalId = intSeguimientoSemanal.Value;
 
-                pSeguimientoSemanalId = intSeguimientoSemanal ?? 0;
+                //pSeguimientoSemanalId = intSeguimientoSemanal ?? 0;
 
                 SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
                       .Include(r => r.SeguimientoDiario)
@@ -332,6 +332,7 @@ namespace asivamosffie.services
                 GetInformacionGeneral(seguimientoSemanal);
                 await GetAvanceFisico(seguimientoSemanal, pRutaGrafico);
                 await GetSeguimientoFinanciero(seguimientoSemanal, pRutaGrafico);
+                await GetRegistroAnticipo(seguimientoSemanal);
 
                 //si es tai -> cambiar fecha fin 
                 ContratacionProyecto cp = _context.ContratacionProyecto.Find(pContratacionProyectoId);
@@ -494,6 +495,30 @@ namespace asivamosffie.services
 
             seguimientoSemanal.SeguimientoFinanciero= lAvanceFinancieroxMes;
             seguimientoSemanal.SeguimientoFinancieroGrafica = oChartConfig != null ? (string)await _generarGraficoService.CreateChartasFile(rutaGrafico, oChartConfig) : "";
+        }
+
+        private async Task GetRegistroAnticipo(SeguimientoSemanal seguimientoSemanal)
+        {
+
+            SqlParameter[] parameterList = new SqlParameter[]
+            {
+                new SqlParameter("@ContratacionProyectoId", seguimientoSemanal.ContratacionProyectoId)
+            };
+
+            RegistroAnticipo registroAnticipo = (RegistroAnticipo)await _commonService.ExcuteSqlStoredProcedure<RegistroAnticipo>("usp_GetAdvancePaymentRecord", parameterList, 2);
+
+            if (registroAnticipo != null && registroAnticipo.ContratacionProyectoId != 0 && registroAnticipo.RegistroIndividualAnticipo != null)
+            {
+                double sA = 0;
+                foreach (var item in registroAnticipo.RegistroIndividualAnticipo)
+                {
+                    sA += item.ValorAmortizacion.Value;
+                    item.SaldoAmortizar = registroAnticipo.ValorAnticipo.Value - sA;
+                }
+                registroAnticipo.TotalGirosSolicitadosAprobados = registroAnticipo.RegistroIndividualAnticipo.Count();
+            }
+
+            seguimientoSemanal.RegistroAnticipo = registroAnticipo;
         }
 
         private void GetInformacionGeneral(SeguimientoSemanal pSeguimientoSemanal)
