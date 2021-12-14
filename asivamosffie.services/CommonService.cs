@@ -512,7 +512,7 @@ namespace asivamosffie.services
 
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
         {
-            return await _context.Contratacion.Where(r => r.ContratacionId.Equals(pContratacionId)).FirstOrDefaultAsync();
+            return await _context.Contratacion.Where(r => r.ContratacionId.Equals(pContratacionId)).Include(r => r.PlazoContratacion).FirstOrDefaultAsync();
         }
 
         public async Task<Contratista> GetContratistaByContratistaId(int pContratistaId)
