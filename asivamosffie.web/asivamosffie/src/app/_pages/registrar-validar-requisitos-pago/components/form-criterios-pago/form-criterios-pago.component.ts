@@ -874,11 +874,23 @@ export class FormCriteriosPagoComponent implements OnInit {
                             }
                             this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionados );
                             this.ocultarAmortizacionAnticipo.emit( this.addressForm.get('criterioPago').value );
-                            this.registrarPagosSvc.DeleteSolicitudPagoFaseCriterioConceptoPago( pSolicitudPagoFaseCriterioConceptoId )
+                            this.registrarPagosSvc.DeleteSolicitudPagoFaseCriterioConceptoPago( pSolicitudPagoFaseCriterioConceptoId , false)
                                 .subscribe(
                                     () => {
                                         this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
-                                        location.reload();
+                                        //location.reload();
+                                        this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPago.solicitudPagoId )
+                                          .subscribe(
+                                              () => {
+                                                  this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                                      () => this.routes.navigate(
+                                                          [
+                                                              '/registrarValidarRequisitosPago/verDetalleEditar',  this.solicitudPago.contratoId, this.solicitudPago.solicitudPagoId
+                                                          ]
+                                                      )
+                                                  );
+                                              }
+                                          );
                                     },
                                     err => this.openDialog( '', `<b>${ err.message }</b>` )
                                 )
@@ -1145,7 +1157,7 @@ export class FormCriteriosPagoComponent implements OnInit {
             this.getConceptos( i ).removeAt( j );
 
             if (solicitudPagoFaseCriterioConceptoPagoId > 0) {
-              this.registrarPagosSvc.DeleteSolicitudPagoFaseCriterioConceptoPago( solicitudPagoFaseCriterioConceptoPagoId )
+              this.registrarPagosSvc.DeleteSolicitudPagoFaseCriterioConceptoPago( solicitudPagoFaseCriterioConceptoPagoId , true)
               .subscribe(
                   () => {
                       this.openDialogEliminar( '', '<b>La información se ha eliminado correctamente.</b>' );

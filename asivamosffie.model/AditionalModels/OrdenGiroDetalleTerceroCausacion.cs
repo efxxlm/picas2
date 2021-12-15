@@ -13,7 +13,8 @@ namespace asivamosffie.model.Models
 {
     public partial class OrdenGiroDetalleTerceroCausacion
     {
-       
-    
+
+        [NotMapped]
+        public bool TieneAmortizacion { get; set; }
     }
 }

@@ -169,9 +169,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("DeleteSolicitudPagoFaseCriterioConceptoPago")]
-        public async Task<IActionResult> DeleteSolicitudPagoFaseCriterioConceptoPago([FromQuery] int pSolicitudPagoFaseCriterioConceptoId)
+        public async Task<IActionResult> DeleteSolicitudPagoFaseCriterioConceptoPago([FromQuery] int pSolicitudPagoFaseCriterioConceptoId, bool pEsConcepto)
         {
-            return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPagoFaseCriterioConceptoPago(pSolicitudPagoFaseCriterioConceptoId, HttpContext.User.FindFirst("User").Value));
+            return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPagoFaseCriterioConceptoPago(pSolicitudPagoFaseCriterioConceptoId, pEsConcepto, HttpContext.User.FindFirst("User").Value));
         }
 
         [HttpPost]

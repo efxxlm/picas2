@@ -109,8 +109,8 @@ export class RegistrarRequisitosPagoService {
     return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudPagoFaseCriterio?pSolicitudPagoFaseCriterioId=${ pSolicitudPagoFaseCriterioId }`, '' );
   }
   // Eliminar criterio del contrato
-  DeleteSolicitudPagoFaseCriterioConceptoPago( pSolicitudPagoFaseCriterioConceptoId: number ) {
-    return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudPagoFaseCriterioConceptoPago?pSolicitudPagoFaseCriterioConceptoId=${ pSolicitudPagoFaseCriterioConceptoId }`, '' );
+  DeleteSolicitudPagoFaseCriterioConceptoPago( pSolicitudPagoFaseCriterioConceptoId: number , pEsConcepto: boolean) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudPagoFaseCriterioConceptoPago?pSolicitudPagoFaseCriterioConceptoId=${ pSolicitudPagoFaseCriterioConceptoId }&pEsConcepto=${ pEsConcepto }`, '' );
   }
   // Eliminar criterio del proyecto
   deleteSolicitudPagoFaseCriterioProyecto( SolicitudPagoFaseCriterioProyectoId: number ) {

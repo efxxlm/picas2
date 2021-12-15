@@ -124,7 +124,7 @@ export class TerceroCausacionGogComponent implements OnInit {
             this.fasePreConstruccionFormaPagoCodigo = this.solicitudPago.solicitudPagoCargarFormaPago[0];
         }
         // Get data valor neto giro
-        this.solicitudPagoFaseCriterio.forEach( criterio => this.valorNetoGiro += criterio.valorFacturado );
+        /*this.solicitudPagoFaseCriterio.forEach( criterio => this.valorNetoGiro += criterio.valorFacturado );
         if ( this.solicitudPagoFaseFacturaDescuento.length > 0 ) {
             this.solicitudPagoFaseFacturaDescuento.forEach( descuento => this.valorNetoGiro -= descuento.valorDescuento );
         }
@@ -135,7 +135,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                     this.valorNetoGiro -= descuento.valorDescuento
                 });
             });
-        } );
+        } );*/
+
         /*
             get listaCriterios para lista desplegable
             Se reutilizan los servicios del CU 4.1.7 "Solicitud de pago"
@@ -488,7 +489,6 @@ export class TerceroCausacionGogComponent implements OnInit {
                           //
                         // Set formulario criterios
                         // Get observaciones
-                        console.log(terceroCausacionxCriterio);
                         if(terceroCausacionxCriterio?.length > 0){
                           const totalTerceroCriterio = terceroCausacionxCriterio?.length;
                           terceroCausacionxCriterio.forEach((element: any) => {
@@ -1293,19 +1293,22 @@ export class TerceroCausacionGogComponent implements OnInit {
             this.openDialog( '', `<b>Debe diligenciar como minimo los aportantes seleccionados en el acordeon descuentos de dirección tecnica - ${ this.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }.</b>` );
             return
         }
+        console.log(this.valorNetoGiro);
         const getOrdenGiroDetalleTerceroCausacion = ( ) => {
             const listaTerceroCausacion = [];
-            this.criterios.controls.forEach( ( criterioControl, indexCriterio ) => {
+            /*this.criterios.controls.forEach( ( criterioControl, indexCriterio ) => {
                 this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
                     if ( this.getDescuentos( indexCriterio, indexConcepto ).length > 0 && conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value === true ) {
                         this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( ( descuentoControl, indexDescuento ) => {
                             this.getAportanteDescuentos( indexCriterio, indexConcepto, indexDescuento ).controls.forEach( aportanteDescuento => {
-                                this.valorNetoGiro -= aportanteDescuento.get( 'valorDescuento' ).value
+                              console.log("entra? ");
+
+                              this.valorNetoGiro -= aportanteDescuento.get( 'valorDescuento' ).value
                             } )
                         } )
                     }
                 } )
-            } );
+            } );*/
 
             this.criterios.controls.forEach( ( criterioControl, indexCriterio ) => {
                 let terceroCausacion: any;
@@ -1315,11 +1318,22 @@ export class TerceroCausacionGogComponent implements OnInit {
                     if(conceptoControl.get( 'conceptoPagoCriterio' ).value == "29"){
                       conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).setValue(false);
                     }
+                    let totalDescuentoxConcepto = 0;
+                    if ( this.getDescuentos( indexCriterio, indexConcepto ).length > 0 && conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value === true ) {
+                      this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( ( descuentoControl, indexDescuento ) => {
+                          this.getAportanteDescuentos( indexCriterio, indexConcepto, indexDescuento ).controls.forEach( aportanteDescuento => {
+                            totalDescuentoxConcepto += aportanteDescuento.get( 'valorDescuento' ).value
+                          } )
+                      } )
+                    }
+
+                    console.log("ValorConcepto: ",conceptoControl.get( 'valorFacturadoConcepto' ).value);
+                    console.log("TotalDecuento:", totalDescuentoxConcepto);
 
                     terceroCausacion = {
                         contratacionProyectoId: this.contratacionProyectoId,
                         ordenGiroDetalleTerceroCausacionId: conceptoControl.get( 'ordenGiroDetalleTerceroCausacionId' ).value,
-                        valorNetoGiro: this.valorNetoGiro,
+                        valorNetoGiro: conceptoControl.get( 'valorFacturadoConcepto' ).value - totalDescuentoxConcepto,
                         ordenGiroDetalleId: this.ordenGiroDetalleId,
                         esPreconstruccion: this.esPreconstruccion,
                         conceptoPagoCriterio: criterioControl.get( 'tipoCriterioCodigo' ).value,

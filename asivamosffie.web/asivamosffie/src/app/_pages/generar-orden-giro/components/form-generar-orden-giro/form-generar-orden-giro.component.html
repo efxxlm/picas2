@@ -87,6 +87,25 @@
             </app-accordion-detalle-giro-gog>
         </mat-expansion-panel>
 
+        <mat-accordion>
+          <mat-expansion-panel class="expansion-style">
+              <mat-expansion-panel-header class="expansion-style--header">
+                  <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? ( estadoSemaforos.semaforoOrigen !== undefined ? estadoSemaforos.semaforoOrigen : '' ) : ''">
+                      Origen
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+              <!--<div align="center">
+                  <b>Consecutivo: {{ solicitudPago.ordenGiro !== undefined ? solicitudPago.ordenGiro.consecutivoOrigen : '' }} </b>
+              </div>-->
+
+              <app-form-origen    [solicitudPago]="solicitudPago"
+                                  [esVerDetalle]="esVerDetalle"
+                                  (estadoSemaforo)="estadoSemaforos.semaforoOrigen = $event">
+              </app-form-origen>
+          </mat-expansion-panel>
+      </mat-accordion>
+
+
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle ? '' : estadoSemaforos.acordeonObservacion">
