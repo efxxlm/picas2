@@ -54,7 +54,7 @@
                                             [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
                                             [solicitudPagoFase]="solicitudPagoFase"
                                             [esVerDetalle]="esVerDetalle"
-                                            (estadoSemaforo)="solicitudPagoFase.estadoSemaforo = $event;">
+                                            (estadoSemaforo)="solicitudPagoFase.estadoSemaforo = $event; checkSemaforoProyecto()">
                 </app-desc-dir-tecnica-gog>
             </mat-expansion-panel>
         </mat-accordion>
@@ -71,28 +71,11 @@
                                             [contratacionProyectoId]="contratacionProyectoId"
                                             [solicitudPagoFase]="solicitudPagoFase"
                                             [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
-                                            (estadoSemaforo)="solicitudPagoFase.estadoSemaforoCausacion = $event">
+                                            (estadoSemaforo)="solicitudPagoFase.estadoSemaforoCausacion = $event; checkSemaforoProyecto()">
                 </app-tercero-causacion-gog>
             </mat-expansion-panel>
         </mat-accordion>
     </div>
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="esVerDetalle === false ? ( listaSemaforos.semaforoOrigen !== undefined ? listaSemaforos.semaforoOrigen : '' ) : ''">
-                    Origen
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <!--<div align="center">
-                <b>Consecutivo: {{ solicitudPago.ordenGiro !== undefined ? solicitudPago.ordenGiro.consecutivoOrigen : '' }} </b>
-            </div>-->
-
-            <app-form-origen    [solicitudPago]="solicitudPago"
-                                [esVerDetalle]="esVerDetalle"
-                                (estadoSemaforo)="listaSemaforos.semaforoOrigen = $event">
-            </app-form-origen>
-        </mat-expansion-panel>
-    </mat-accordion>
 
     <!--
         Se comentan los acordeones Observaciones y Soporte de orden de giro por cambios de orden de giro a flujo multiproyecto 08/07/2021

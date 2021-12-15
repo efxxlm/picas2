@@ -6697,6 +6697,10 @@
   </a>
 </div>
 
+<div class="text-center mt-2em mb-2em print-d-none">
+  <button mat-raised-button color="accent" (click)="downloadPDF()">Guardar</button>
+</div>
+
 <div class="parent mt-2em adjustTemplate" id="example-pdf">
   <table
     width="100%"
@@ -6707,6 +6711,9 @@
       margin-left: auto;
       margin-right: auto;
       border-right: 1px solid;
+
+      transform: scale(0.7);
+      transform-origin: left top;
     "
   >
     <tr class="xl82" style="height: 36.6pt">
@@ -6875,8 +6882,10 @@
       <td
         colspan="10"
         class="xl443"
-        style="font-size: 6pt; border-right: 1px solid black; border-left: 0px; border-top: 1px solid black"
-      ></td>
+        style="font-size: 12px; border-right: 1px solid black; border-left: 0px; border-top: 1px solid black"
+      >
+      {{ infoGeneralObra?.contratista }}
+    </td>
       <td
         colspan="4"
         class="xl339"
@@ -6887,123 +6896,124 @@
       <td
         colspan="8"
         class="xl443"
-        style="font-size: 6pt; border-right: 1px solid black; border-left: 0px; border-top: 1px solid black"
-      ></td>
-    </tr>
-    <tr style="height: 8.4pt">
-      <td class="xl82" style="height: 8.4pt"></td>
-      <td colspan="20" class="xl420" style="border-right: 0.5pt solid black; border-top: 1px solid black"></td>
-      <td
-        colspan="12"
-        class="xl410"
-        style="border-right: 1pt solid black; border-left: 0px; border-top: 1px solid black"
-      ></td>
+        style="font-size: 12px; border-right: 1px solid black; border-left: 0px; border-top: 1px solid black"
+      >
+      {{ infoGeneralInterventoria?.contratista }}
+    </td>
     </tr>
     <tr style="height: 22.5pt">
       <td class="xl81" style="height: 22.5pt"></td>
-      <td colspan="5" class="xl347" style="font-size: 6pt; border-top: 1px solid black">PLAZO INICIAL FASE 1:</td>
+      <td colspan="5" class="xl347" style="font-size: 12px; border-top: 1px solid black">PLAZO INICIAL FASE 1:</td>
       <td
         class="xl408"
         colspan="5"
-        style="font-size: 6pt; border-top: 1px solid black; border-right: 0.5pt solid black"
-      ></td>
-      <td class="xl198" colspan="5" style="font-size: 6pt; border-top: 1px solid black">PLAZO INICIAL FASE 2:</td>
+        style="font-size: 12px; border-top: 1px solid black; border-right: 0.5pt solid black"
+      >
+        {{ infoGeneralObra?.fase1PlazoInicial }}
+      </td>
+      <td class="xl198" colspan="5" style="font-size: 12px; border-top: 1px solid black">PLAZO INICIAL FASE 2:</td>
       <td
         class="xl408"
         colspan="5"
-        style="font-size: 6pt; border-right: 0.5pt solid black; border-top: 1px solid black"
-      ></td>
-      <td colspan="2" class="xl406" style="font-size: 6pt; border-left: 0px; border-top: 1px solid black">
+        style="font-size: 12px; border-right: 0.5pt solid black; border-top: 1px solid black"
+      >
+      {{ infoGeneralObra?.fase2PlazoInicial }}
+    </td>
+      <td colspan="2" class="xl406" style="font-size: 12px; border-left: 0px; border-top: 1px solid black">
         PLAZO INICIAL FASE 1:
       </td>
       <td
         class="xl408"
         colspan="2"
-        style="font-size: 6pt; border-right: 0.5pt solid black; border-top: 1px solid black"
-      ></td>
-      <td class="xl198" colspan="4" style="font-size: 6pt; border-top: 1px solid black">PLAZO INICIAL FASE 2:</td>
+        style="font-size: 12px; border-right: 0.5pt solid black; border-top: 1px solid black"
+      >
+      {{ infoGeneralInterventoria?.fase1PlazoInicial }}
+    </td>
+      <td class="xl198" colspan="4" style="font-size: 12px; border-top: 1px solid black">PLAZO INICIAL FASE 2:</td>
       <td
         class="xl408"
         colspan="4"
-        style="font-size: 6pt; border-right: 1pt solid black; border-top: 1px solid black"
-      ></td>
+        style="font-size: 12px; border-right: 1pt solid black; border-top: 1px solid black"
+      >
+      {{ infoGeneralInterventoria?.fase2PlazoInicial }}
+    </td>
     </tr>
     <tr style="height: 22.5pt">
       <td class="xl81" style="height: 22.5pt"></td>
-      <td colspan="5" class="xl414" style="font-size: 6pt; border-top: 1px solid black">FECHA TERMINACION FASE 1:</td>
+      <td colspan="5" class="xl414" style="font-size: 12px; border-top: 1px solid black">FECHA TERMINACION FASE 1:</td>
       <td
         colspan="5"
         class="xl358"
-        style="font-size: 6pt; border-top: 1px solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 1px solid black; border-right: 0.5pt solid black"
       >
         {{ infoGeneralObra?.fase1Fin | date: 'dd/MM/yyyy' }}
       </td>
-      <td class="xl196" colspan="5" style="font-size: 6pt; border-top: 1px solid black">FECHA TERMINACION FASE 2:</td>
+      <td class="xl196" colspan="5" style="font-size: 12px; border-top: 1px solid black">FECHA TERMINACION FASE 2:</td>
       <td
         colspan="5"
         class="xl358"
-        style="font-size: 6pt; border-right: 0.5pt solid black; border-top: 1px solid black"
+        style="font-size: 12px; border-right: 0.5pt solid black; border-top: 1px solid black"
       >
         {{ infoGeneralObra?.fase2Fin | date: 'dd/MM/yyyy' }}
       </td>
-      <td colspan="2" class="xl353" style="font-size: 6pt; border-left: 0px; border-top: 1px solid black">
+      <td colspan="2" class="xl353" style="font-size: 12px; border-left: 0px; border-top: 1px solid black">
         FECHA TERMINACION FASE 1:
       </td>
       <td
         colspan="2"
         class="xl358"
-        style="font-size: 6pt; border-right: 0.5pt solid black; border-top: 1px solid black"
+        style="font-size: 12px; border-right: 0.5pt solid black; border-top: 1px solid black"
       >
         {{ infoGeneralInterventoria?.fase1Fin | date: 'dd/MM/yyyy' }}
       </td>
-      <td class="xl196" colspan="4" style="font-size: 6pt; border-top: 1px solid black">FECHA TERMINACION FASE 2:</td>
-      <td colspan="4" class="xl358" style="font-size: 6pt; border-right: 1pt solid black; border-top: 1px solid black">
+      <td class="xl196" colspan="4" style="font-size: 12px; border-top: 1px solid black">FECHA TERMINACION FASE 2:</td>
+      <td colspan="4" class="xl358" style="font-size: 12px; border-right: 1pt solid black; border-top: 1px solid black">
         {{ infoGeneralInterventoria?.fase2Fin | date: 'dd/MM/yyyy' }}
       </td>
     </tr>
     <tr style="height: 22.5pt">
       <td class="xl81" style="height: 22.5pt"></td>
-      <td colspan="5" class="xl357" style="font-size: 6pt; border-top: 1px solid black">PLAZO ACUM FASE 1:</td>
+      <td colspan="5" class="xl357" style="font-size: 12px; border-top: 1px solid black">PLAZO ACUM FASE 1:</td>
       <td
         colspan="5"
         class="xl418"
-        style="font-size: 6pt; border-top: 1px solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 1px solid black; border-right: 0.5pt solid black"
       >
         {{ infoGeneralObra?.fase1PlazoAcumulado }}
       </td>
-      <td colspan="5" class="xl419" style="font-size: 6pt; border-top: 1px solid black">PLAZO ACUMU FASE 2:</td>
+      <td colspan="5" class="xl419" style="font-size: 12px; border-top: 1px solid black">PLAZO ACUMU FASE 2:</td>
       <td
         colspan="5"
         class="xl358"
-        style="font-size: 6pt; border-right: 0.5pt solid black; border-top: 1px solid black"
+        style="font-size: 12px; border-right: 0.5pt solid black; border-top: 1px solid black"
       >
         {{ infoGeneralObra?.fase2PlazoAcumulado }}
       </td>
-      <td colspan="2" class="xl353" style="font-size: 6pt; border-left: 0px; border-top: 1px solid black">
+      <td colspan="2" class="xl353" style="font-size: 12px; border-left: 0px; border-top: 1px solid black">
         PLAZO ACUM FASE 1:
       </td>
       <td
         colspan="2"
         class="xl358"
-        style="font-size: 6pt; border-right: 0.5pt solid black; border-top: 1px solid black"
+        style="font-size: 12px; border-right: 0.5pt solid black; border-top: 1px solid black"
       >
         {{ infoGeneralInterventoria?.fase1PlazoAcumulado }}
       </td>
-      <td colspan="4" class="xl419" style="font-size: 6pt; border-left: 0px; border-top: 1px solid black">
+      <td colspan="4" class="xl419" style="font-size: 12px; border-left: 0px; border-top: 1px solid black">
         PLAZO ACUM FASE 2:
       </td>
-      <td colspan="4" class="xl358" style="font-size: 6pt; border-right: 1pt solid black; border-top: 1px solid black">
+      <td colspan="4" class="xl358" style="font-size: 12px; border-right: 1pt solid black; border-top: 1px solid black">
         {{ infoGeneralInterventoria?.fase2PlazoAcumulado }}
       </td>
     </tr>
     <tr class="xl81" style="height: 22.5pt">
       <td class="xl81" style="height: 22.5pt"></td>
-      <td colspan="5" class="xl357" style="font-size: 6pt; border-top: 1px solid black">VALOR DE LA FASE 1:</td>
+      <td colspan="5" class="xl357" style="font-size: 12px; border-top: 1px solid black">VALOR DE LA FASE 1:</td>
       <td
         colspan="5"
         class="xl358"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-right: 0.5pt solid black;
           border-top: 1px solid black;
           border-right: 0.5pt solid black;
@@ -7011,92 +7021,104 @@
       >
         {{ infoGeneralObra?.fase1Valor | currency: '':'symbol-narrow':'.0-0' }}
       </td>
-      <td class="xl196" colspan="5" style="font-size: 6pt; border-top: 1px solid black">VALOR ADICIONAL F 1:</td>
+      <td class="xl196" colspan="5" style="font-size: 12px; border-top: 1px solid black">VALOR ADICIONAL F 1:</td>
       <td
         colspan="5"
         class="xl358"
-        style="font-size: 6pt; border-right: 0.5pt solid black; border-top: 1px solid black"
-      ></td>
-      <td colspan="2" class="xl353" style="font-size: 6pt; border-left: 0px; border-top: 1px solid black">
+        style="font-size: 12px; border-right: 0.5pt solid black; border-top: 1px solid black"
+      >
+        {{ infoGeneralObra?.fase1ValorAcumulado | currency: '':'symbol-narrow':'.0-0' }}
+      </td>
+      <td colspan="2" class="xl353" style="font-size: 12px; border-left: 0px; border-top: 1px solid black">
         VALOR DE LA FASE 1:
       </td>
       <td
         colspan="2"
         class="xl358"
-        style="font-size: 6pt; border-right: 0.5pt solid black; border-top: 1px solid black"
+        style="font-size: 12px; border-right: 0.5pt solid black; border-top: 1px solid black"
       >
         {{ infoGeneralInterventoria?.fase1Valor | currency: '':'symbol-narrow':'.0-0' }}
       </td>
-      <td class="xl196" colspan="4" style="font-size: 6pt; border-top: 1px solid black">VALOR ADICIONAL F 1:</td>
+      <td class="xl196" colspan="4" style="font-size: 12px; border-top: 1px solid black">VALOR ADICIONAL F 1:</td>
       <td
         colspan="4"
         class="xl358"
-        style="font-size: 6pt; border-top: 1px solid black; border-right: 1pt solid black"
-      ></td>
+        style="font-size: 12px; border-top: 1px solid black; border-right: 1pt solid black"
+      >
+      {{ infoGeneralInterventoria?.fase1ValorAcumulado | currency: '':'symbol-narrow':'.0-0' }}
+    </td>
     </tr>
     <tr class="xl81" style="height: 22.5pt">
       <td class="xl81" style="height: 22.5pt"></td>
-      <td colspan="5" class="xl357" style="font-size: 6pt; border-top: 1px solid black">VALOR DE LA FASE 2:</td>
+      <td colspan="5" class="xl357" style="font-size: 12px; border-top: 1px solid black">VALOR DE LA FASE 2:</td>
       <td
         colspan="5"
         class="xl358"
-        style="font-size: 6pt; border-top: 1px solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 1px solid black; border-right: 0.5pt solid black"
       >
         {{ infoGeneralObra?.fase2Valor | currency: '':'symbol-narrow':'.0-0' }}
       </td>
-      <td class="xl196" colspan="5" style="font-size: 6pt; border-top: 1px solid black">VALOR ADICIONAL F 2:</td>
+      <td class="xl196" colspan="5" style="font-size: 12px; border-top: 1px solid black">VALOR ADICIONAL F 2:</td>
       <td
         colspan="5"
         class="xl358"
-        style="font-size: 6pt; border-top: 1px solid black; border-right: 0.5pt solid black"
-      ></td>
-      <td colspan="2" class="xl353" style="font-size: 6pt; border-top: 1px solid black; border-left: 0px">
+        style="font-size: 12px; border-top: 1px solid black; border-right: 0.5pt solid black"
+      >
+      {{ infoGeneralObra?.fase2ValorAcumulado | currency: '':'symbol-narrow':'.0-0' }}
+      </td>
+      <td colspan="2" class="xl353" style="font-size: 12px; border-top: 1px solid black; border-left: 0px">
         VALOR DE LA FASE 2:
       </td>
       <td
         colspan="2"
         class="xl358"
-        style="font-size: 6pt; border-right: 0.5pt solid black; border-top: 1px solid black"
+        style="font-size: 12px; border-right: 0.5pt solid black; border-top: 1px solid black"
       >
         {{ infoGeneralInterventoria?.fase2Valor | currency: '':'symbol-narrow':'.0-0' }}
       </td>
-      <td class="xl196" colspan="4" style="font-size: 6pt; border-top: 1px solid black">VALOR ADICIONAL F 2:</td>
+      <td class="xl196" colspan="4" style="font-size: 12px; border-top: 1px solid black">VALOR ADICIONAL F 2:</td>
       <td
         colspan="4"
         class="xl358"
-        style="font-size: 6pt; border-top: 1px solid black; border-right: 1pt solid black"
-      ></td>
+        style="font-size: 12px; border-top: 1px solid black; border-right: 1pt solid black"
+      >
+        {{ infoGeneralInterventoria?.fase2ValorAcumulado | currency: '':'symbol-narrow':'.0-0' }}
+      </td>
     </tr>
     <tr class="xl81" style="height: 22.5pt">
       <td class="xl81" style="height: 22.5pt"></td>
-      <td colspan="5" class="xl438" style="font-size: 6pt; border-top: 1px solid black">VALOR DEL ACTA:</td>
+      <td colspan="5" class="xl438" style="font-size: 12px; border-top: 1px solid black">VALOR DEL ACTA:</td>
       <td
         colspan="5"
         class="xl439"
-        style="font-size: 6pt; border-top: 1px solid black; border-right: 0.5pt solid black"
-      ></td>
-      <td class="xl200" colspan="5" style="font-size: 6pt; border-top: 1px solid black">VALOR ACUMULADO:</td>
+        style="font-size: 12px; border-top: 1px solid black; border-right: 0.5pt solid black"
+      >
+        {{ infoGeneralObra?.valorTotal | currency: '':'symbol-narrow':'.0-0' }}
+      </td>
+      <td class="xl200" colspan="5" style="font-size: 12px; border-top: 1px solid black">VALOR ACUMULADO:</td>
       <td
         colspan="5"
         class="xl439"
-        style="font-size: 6pt; border-top: 1px solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 1px solid black; border-right: 0.5pt solid black"
       >
         {{ infoGeneralObra?.fase2ValorAcumulado | currency: '':'symbol-narrow':'.0-0' }}
       </td>
-      <td colspan="2" class="xl355" style="font-size: 6pt; border-top: 1px solid black; border-left: 0px">
+      <td colspan="2" class="xl355" style="font-size: 12px; border-top: 1px solid black; border-left: 0px">
         VALOR DEL ACTA:
       </td>
       <td
         colspan="2"
         class="xl439"
-        style="font-size: 6pt; border-right: 0.5pt solid black; border-top: 1px solid black"
-      ></td>
-      <td class="xl200" colspan="4" style="font-size: 6pt; border-top: 1px solid black">VALOR ACUMULADO:</td>
-      <td colspan="4" class="xl439" style="font-size: 6pt; border-top: 1px solid black; border-right: 1pt solid black">
+        style="font-size: 12px; border-right: 0.5pt solid black; border-top: 1px solid black"
+      >
+        {{ infoGeneralInterventoria?.valorTotal | currency: '':'symbol-narrow':'.0-0' }}
+      </td>
+      <td class="xl200" colspan="4" style="font-size: 12px; border-top: 1px solid black">VALOR ACUMULADO:</td>
+      <td colspan="4" class="xl439" style="font-size: 12px; border-top: 1px solid black; border-right: 1pt solid black">
         {{ infoGeneralInterventoria?.fase2ValorAcumulado | currency: '':'symbol-narrow':'.0-0' }}
       </td>
     </tr>
-    <tr class="xl81" style="height: 22.5pt">
+    <!-- <tr class="xl81" style="height: 22.5pt">
       <td class="xl81" style="height: 22.5pt"></td>
       <td colspan="32" class="xl347" style="font-size: 9pt; border-top: 1px solid black; border-right: 1pt solid black">
         ** Inserte las filas que requiera según el número de suspensiones y reinicios.
@@ -7105,16 +7127,16 @@
     <tr class="xl81" style="height: 22.5pt">
       <td class="xl81" style="height: 22.5pt"></td>
       <td class="xl194" colspan="32" style="border-top: 1px solid black; background: #d9d9d9"></td>
-    </tr>
+    </tr> -->
     <tr class="xl81" height="34" style="mso-height-source: userset; height: 25.2pt">
       <td height="34" class="xl81" style="height: 25.2pt"></td>
-      <td colspan="3" class="xl434" style="font-size: 6pt; text-align: left; border-right: 0.5pt solid black">
+      <td colspan="3" class="xl434" style="font-size: 12px; text-align: left; border-right: 0.5pt solid black">
         REGION
       </td>
       <td colspan="5" class="xl427" style="border-left: 0px; border-right: 0.5pt solid black">&
         {{ dataReporteSemanal.informacionGeneralProyecto[0].ubicacion.region }}
       </td>
-      <td colspan="3" class="xl429" style="font-size: 6pt; text-align: left; border-right: 0.5pt solid black">
+      <td colspan="3" class="xl429" style="font-size: 12px; text-align: left; border-right: 0.5pt solid black">
         MUNICIPIO
       </td>
       <td colspan="9" class="xl429" style="border-right: 0.5pt solid black">
@@ -7123,20 +7145,20 @@
       <td
         colspan="2"
         class="xl435"
-        style="font-size: 6pt; text-align: center; border-right: 0.5pt solid black; font-weight: 700"
+        style="font-size: 12px; text-align: center; border-right: 0.5pt solid black; font-weight: 700"
       >
         SEMANA No
       </td>
       <td class="xl192" style="border-top: 0px; border-left: 0px">
         {{ dataReporteSemanal.informacionGeneralProyecto[0].semanaNo }}
       </td>
-      <td class="xl192" style="border-top: 0px; border-left: 0.5pt solid black; font-size: 6pt; text-align: center">
+      <td class="xl192" style="border-top: 0px; border-left: 0.5pt solid black; font-size: 12px; text-align: center">
         DEL
       </td>
       <td colspan="4" class="xl436" style="border-left: 0.5pt solid black">
       {{ dataReporteSemanal.informacionGeneralProyecto[0].semanaInicio | date: 'dd/MM/yyyy' }}
     </td>
-      <td class="xl192" style="border-top: 0px; border-left: 0.5pt solid black; font-size: 6pt; text-align: center">
+      <td class="xl192" style="border-top: 0px; border-left: 0.5pt solid black; font-size: 12px; text-align: center">
         AL
       </td>
       <td colspan="3" class="xl436" style="border-right: 0.5pt solid black; border-left: 0.5pt solid black">
@@ -7145,22 +7167,22 @@
     </tr>
     <tr class="xl81" style="height: 29.25pt">
       <td class="xl81" style="height: 29.25pt"></td>
-      <td colspan="20" class="xl385" style="font-size: 6pt; border-top: 1px solid black">SUPERVISIÓN UG FFIE</td>
+      <td colspan="20" class="xl385" style="font-size: 12px; border-top: 1px solid black">SUPERVISIÓN UG FFIE</td>
       <td
         colspan="12"
         class="xl431"
-        style="font-size: 6pt; border-top: 1px solid black; border-right: 1pt solid black; border-left: 0px"
+        style="font-size: 12px; border-top: 1px solid black; border-right: 1pt solid black; border-left: 0px"
       >
-      {{ dataReporteSemanal.informacionGeneralProyecto[0].localizacionProyecto }}
+      {{ infoGeneralInterventoria?.supervisor }}
     </td>
     </tr>
     <tr class="xl81" style="height: 27.75pt">
       <td class="xl81" style="height: 27.75pt"></td>
-      <td colspan="20" class="xl422" style="font-size: 6pt; border-top: 1px solid black">LOCALIZACIÓN DEL PROYECTO:</td>
+      <td colspan="20" class="xl422" style="font-size: 12px; border-top: 1px solid black">LOCALIZACIÓN DEL PROYECTO:</td>
       <td
         colspan="12"
         class="xl424"
-        style="font-size: 6pt; border-top: 1px solid black; border-right: 1pt solid black; border-left: 0px"
+        style="font-size: 12px; border-top: 1px solid black; border-right: 1pt solid black; border-left: 0px"
       >
       {{ dataReporteSemanal.informacionGeneralProyecto[0].localizacionProyecto }}
     </td>
@@ -7238,7 +7260,7 @@
         width="346"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           font-family: Arial, sans-serif;
           text-align: left;
@@ -7254,7 +7276,7 @@
         class="xl287"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-family: Arial, sans-serif;
           text-align: center;
           font-weight: 700;
@@ -7271,7 +7293,7 @@
         width="267"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-family: Arial, sans-serif;
           text-align: center;
           vertical-align: middle;
@@ -7292,7 +7314,7 @@
         style="
           border-top: 1px solid black;
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           font-family: Arial, sans-serif;
           vertical-align: middle;
@@ -7308,18 +7330,20 @@
       >
         Desv.
       </td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black"></td>
+      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;" [attr.rowspan]="avanceFisico.length + 2">
+        <img *ngIf="avanceFisicoGrafica" [src]="avanceFisicoGrafica" alt="Avance Fisico Grafica" style="width: 97%; margin: 1em;">
+      </td>
     </tr>
     <tr class="xl89" style="height: 13.2pt" *ngFor="let avance of avanceFisico; let i = index">
       <td class="xl89" style="height: 13.2pt">&nbsp;</td>
-      <td class="xl208" style="font-size: 6pt; border-top: 1pt solid black">{{ avance.num | number: '2.0' }}</td>
+      <td class="xl208" style="font-size: 12px; border-top: 1pt solid black">{{ avance.num | number: '2.0' }}</td>
       <td
         colspan="8"
         class="xl292"
         width="346"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           font-family: Arial, sans-serif;
           text-align: left;
@@ -7337,7 +7361,7 @@
         class="xl287"
         style="
           color: red;
-          font-size: 6pt;
+          font-size: 12px;
           font-family: Arial, sans-serif;
           text-align: center;
           vertical-align: middle;
@@ -7353,7 +7377,7 @@
         width="267"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-family: Arial, sans-serif;
           text-align: center;
           vertical-align: middle;
@@ -7373,7 +7397,7 @@
         style="
           border-top: 1px solid black;
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           font-family: Arial, sans-serif;
           vertical-align: middle;
@@ -7386,47 +7410,41 @@
           width: 52pt;
         "
       >
-        <!-- {{ avance.desviacion.toFixed(2) }}% -->
         {{ avance.desviacion }}%
       </td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black"></td>
     </tr>
-    <!-- <tr class="xl81" height="26" style="height: 19.5pt">
-      <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
-      <td class="xl252">&nbsp;</td>
-      <td class="xl241">&nbsp;</td>
-      <td class="xl241">&nbsp;</td>
-      <td class="xl241">&nbsp;</td>
-      <td class="xl241">&nbsp;</td>
-      <td class="xl241">&nbsp;</td>
-      <td class="xl241">&nbsp;</td>
-      <td class="xl242">&nbsp;</td>
-      <td class="xl242">&nbsp;</td>
-      <td class="xl242">&nbsp;</td>
-      <td class="xl242">&nbsp;</td>
-      <td class="xl242">&nbsp;</td>
-      <td class="xl242">&nbsp;</td>
+    <tr class="xl89" style="height: 13.2pt">
+      <td class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td class="xl89" style="height: 13.2pt; border-left: solid 2px;"></td>
+      <td
+        colspan="8"
+        class="xl89"
+        width="346"
+        style="height: 13.2pt"
+      >
+      </td>
       <td
         colspan="4"
-        class="xl465"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 1pt solid black;
-          border-left: 0.5pt solid black;
-          background: white;
-        "
+        class="xl89"
+        style="height: 13.2pt"
       >
-        $ 280,00
+        {{ sumaTotal | currency: '':'symbol-narrow':'.0-0' }}
       </td>
-      <td class="xl211" colspan="15" style="border-right: 0.5pt solid black"></td>
-    </tr> -->
+      <td
+        colspan="4"
+        class="xl89"
+        width="267"
+        style="height: 13.2pt"
+      >
+      </td>
+      <td
+        colspan="3"
+        class="xl89"
+        width="69"
+        style="height: 13.2pt"
+      >
+      </td>
+    </tr>
     <tr class="xl81" height="26" style="height: 19.2pt">
       <td height="26" class="xl81" style="height: 19.2pt"></td>
       <td
@@ -7467,49 +7485,9 @@
       <td class="xl235" style="border-top: 0px">&nbsp;</td>
       <td class="xl235" style="border-top: 0px">&nbsp;</td>
       <td class="xl235" style="border-top: 0px" colspan="6">&nbsp;</td>
-      <td style="text-align: left" valign="top">
-        <span style="position: absolute; z-index: 2; margin-left: 24px; margin-top: 2px; width: 50%; font-size: 6pt"
-          >Imagen</span
-        ><span>
-          <table>
-            <tr>
-              <td
-                height="26"
-                class="xl254"
-                width="61"
-                style="
-                  color: black;
-                  font-size: 6pt;
-                  font-weight: 700;
-                  font-family: Arial, sans-serif;
-                  text-align: center;
-                  vertical-align: middle;
-                  border-top: 1pt solid black;
-                  border-right: none;
-                  border-bottom: none;
-                  border-left: 1pt solid black;
-                  height: 19.5pt;
-                  border-top: 0px;
-                  width: 46pt;
-                "
-              >
-                &nbsp;
-              </td>
-            </tr>
-          </table>
-        </span>
+      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;" [attr.rowspan]="dataReporteSemanal.seguimientoFinanciero.length + 7">
+        <img *ngIf="seguimientoFinancieroGrafica" [src]="seguimientoFinancieroGrafica" alt="Seguimiento Financiero Grafica" style="width: 97%; margin: 1em;">
       </td>
-      <td class="xl235" style="border-top: 0px">&nbsp;</td>
-      <td class="xl235" style="border-top: 0px">&nbsp;</td>
-      <td class="xl235" style="border-top: 0px">&nbsp;</td>
-      <td class="xl235" style="border-top: 0px">&nbsp;</td>
-      <td class="xl235" style="border-top: 0px">&nbsp;</td>
-      <td class="xl235" style="border-top: 0px">&nbsp;</td>
-      <td class="xl235" style="border-top: 0px">&nbsp;</td>
-      <td class="xl235" style="border-top: 0px">&nbsp;</td>
-      <td class="xl235" style="border-top: 0px">&nbsp;</td>
-      <td class="xl235" style="border-top: 0px">&nbsp;</td>
-      <td colspan="2" rowspan="19" class="xl477">&nbsp;</td>
     </tr>
     <tr class="xl81" height="31" style="height: 23.4pt">
       <td height="31" class="xl202" style="height: 23.4pt">&nbsp;</td>
@@ -7525,17 +7503,6 @@
       <td class="xl81"></td>
       <td class="xl81"></td>
       <td class="xl81"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
       <td class="xl216"></td>
       <td class="xl216"></td>
       <td class="xl216"></td>
@@ -7557,17 +7524,6 @@
       <td class="xl216"></td>
       <td class="xl216"></td>
       <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
     </tr>
     <tr class="xl81" height="26" style="height: 19.5pt">
       <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
@@ -7586,17 +7542,6 @@
       <td class="xl216"></td>
       <td class="xl216"></td>
       <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
     </tr>
     <tr class="xl81" height="26" style="height: 19.5pt">
       <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
@@ -7607,7 +7552,7 @@
         width="744"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           font-family: Arial, sans-serif;
           text-align: center;
@@ -7624,17 +7569,6 @@
         PERÍODO DE FACTURACIÓN
       </td>
       <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
     </tr>
     <tr class="xl81" height="26" style="height: 19.5pt">
       <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
@@ -7645,7 +7579,7 @@
         width="346"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           font-family: Arial, sans-serif;
           text-align: center;
@@ -7667,7 +7601,7 @@
         width="398"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           font-family: Arial, sans-serif;
           text-align: center;
@@ -7684,17 +7618,6 @@
         Acumulado Mensual
       </td>
       <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
     </tr>
     <tr class="xl81" height="26" style="height: 19.5pt">
       <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
@@ -7705,7 +7628,7 @@
         colspan="4"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           font-family: Arial, sans-serif;
           text-align: center;
@@ -7727,7 +7650,7 @@
         width="173"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           font-family: Arial, sans-serif;
           text-align: center;
@@ -7749,7 +7672,7 @@
         width="167"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           font-family: Arial, sans-serif;
           text-align: center;
@@ -7771,7 +7694,7 @@
         width="231"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           font-family: Arial, sans-serif;
           text-align: center;
@@ -7788,26 +7711,15 @@
         EJECUTADO
       </td>
       <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
     </tr>
-    <tr class="xl81" height="26" style="height: 19.5pt">
+    <tr class="xl81" height="26" style="height: 19.5pt" *ngFor="let seguimiento of dataReporteSemanal.seguimientoFinanciero; let i = index">
       <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
       <td
         class="xl239"
         width="82"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           font-family: Arial, sans-serif;
           vertical-align: middle;
@@ -7820,14 +7732,14 @@
           width: 61pt;
         "
       >
-        MES 1
+        {{ seguimiento.num }}
       </td>
       <td
         class="xl246"
         width="173"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-family: Arial, sans-serif;
           text-align: center;
           vertical-align: middle;
@@ -7839,7 +7751,7 @@
         "
         colspan="4"
       >
-        $ 1
+      {{ seguimiento.programado | currency: '':'symbol-narrow':'.0-0' }}
       </td>
       <td
         colspan="5"
@@ -7847,7 +7759,7 @@
         width="173"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-family: Arial, sans-serif;
           text-align: center;
           vertical-align: middle;
@@ -7860,7 +7772,7 @@
           width: 130pt;
         "
       >
-        $ 0
+      {{ seguimiento.ejecutado }}%
       </td>
       <td
         colspan="5"
@@ -7868,7 +7780,7 @@
         width="167"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-family: Arial, sans-serif;
           text-align: center;
           vertical-align: middle;
@@ -7880,7 +7792,7 @@
           width: 125pt;
         "
       >
-        $ 1
+      {{ seguimiento.programadoAcumulado | currency: '':'symbol-narrow':'.0-0' }}
       </td>
       <td
         colspan="4"
@@ -7888,7 +7800,7 @@
         width="231"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-family: Arial, sans-serif;
           text-align: center;
           vertical-align: middle;
@@ -7901,1398 +7813,53 @@
           width: 173pt;
         "
       >
-        $ 0
+      {{ seguimiento.ejecutadoAcumulado  }}%
       </td>
       <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
+      <td class="xl216">&nbsp;</td>
       <td class="xl216" colspan="10"></td>
-    </tr>
-    <tr class="xl81" height="26" style="height: 19.5pt">
-      <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
-      <td
-        class="xl239"
-        width="82"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          border-left: 1pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          width: 61pt;
-        "
-      >
-        MES 2
-      </td>
-      <td
-        class="xl246"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          background: #f2f2f2;
-          white-space: normal;
-          border-top: 0px;
-          border-left: none;
-          width: 130pt;
-        "
-        colspan="4"
-      >
-        $ 5
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 130pt;
-        "
-      >
-        $ 3
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="167"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          width: 125pt;
-        "
-      >
-        $ 6
-      </td>
-      <td
-        colspan="4"
-        class="xl269"
-        width="231"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 173pt;
-        "
-      >
-        $ 3
-      </td>
-      <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-    </tr>
-    <tr class="xl81" height="26" style="height: 19.5pt">
-      <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
-      <td
-        class="xl239"
-        width="82"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          border-left: 1pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          width: 61pt;
-        "
-      >
-        MES 3
-      </td>
-      <td
-        class="xl246"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          background: #f2f2f2;
-          white-space: normal;
-          border-top: 0px;
-          border-left: none;
-          width: 130pt;
-        "
-        colspan="4"
-      >
-        $ 5
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 130pt;
-        "
-      >
-        $ 3
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="167"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          width: 125pt;
-        "
-      >
-        $ 11
-      </td>
-      <td
-        colspan="4"
-        class="xl269"
-        width="231"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 173pt;
-        "
-      >
-        $ 6
-      </td>
-      <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-    </tr>
-    <tr class="xl81" height="26" style="height: 19.5pt">
-      <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
-      <td
-        class="xl239"
-        width="82"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          border-left: 1pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          width: 61pt;
-        "
-      >
-        MES 4
-      </td>
-      <td
-        class="xl246"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          background: #f2f2f2;
-          white-space: normal;
-          border-top: 0px;
-          border-left: none;
-          width: 130pt;
-        "
-        colspan="4"
-      >
-        $ 25
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 130pt;
-        "
-      >
-        $ 20
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="167"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          width: 125pt;
-        "
-      >
-        $ 36
-      </td>
-      <td
-        colspan="4"
-        class="xl269"
-        width="231"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 173pt;
-        "
-      >
-        $ 26
-      </td>
-      <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-    </tr>
-    <tr class="xl81" height="26" style="height: 19.5pt">
-      <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
-      <td
-        class="xl239"
-        width="82"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          border-left: 1pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          width: 61pt;
-        "
-      >
-        MES 5
-      </td>
-      <td
-        class="xl246"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          background: #f2f2f2;
-          white-space: normal;
-          border-top: 0px;
-          border-left: none;
-          width: 130pt;
-        "
-        colspan="4"
-      >
-        $ 12
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 130pt;
-        "
-      >
-        $ 10
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="167"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          width: 125pt;
-        "
-      >
-        $ 48
-      </td>
-      <td
-        colspan="4"
-        class="xl269"
-        width="231"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 173pt;
-        "
-      >
-        $ 36
-      </td>
-      <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-    </tr>
-    <tr class="xl81" height="26" style="height: 19.5pt">
-      <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
-      <td
-        class="xl239"
-        width="82"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          border-left: 1pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          width: 61pt;
-        "
-      >
-        MES 6
-      </td>
-      <td
-        class="xl246"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          background: #f2f2f2;
-          white-space: normal;
-          border-top: 0px;
-          border-left: none;
-          width: 130pt;
-        "
-        colspan="4"
-      >
-        $ 15
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 130pt;
-        "
-      >
-        $ 14
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="167"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          width: 125pt;
-        "
-      >
-        $ 63
-      </td>
-      <td
-        colspan="4"
-        class="xl269"
-        width="231"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 173pt;
-        "
-      >
-        $ 50
-      </td>
-      <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-    </tr>
-    <tr class="xl81" height="26" style="height: 19.5pt">
-      <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
-      <td
-        class="xl239"
-        width="82"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          border-left: 1pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          width: 61pt;
-        "
-      >
-        MES 7
-      </td>
-      <td
-        class="xl246"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          background: #f2f2f2;
-          white-space: normal;
-          border-top: 0px;
-          border-left: none;
-          width: 130pt;
-        "
-        colspan="4"
-      >
-        $ 20
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 130pt;
-        "
-      >
-        $ 18
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="167"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          width: 125pt;
-        "
-      >
-        $ 83
-      </td>
-      <td
-        colspan="4"
-        class="xl269"
-        width="231"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 173pt;
-        "
-      >
-        $ 68
-      </td>
-      <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-    </tr>
-    <tr class="xl81" height="26" style="height: 19.5pt">
-      <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
-      <td
-        class="xl239"
-        width="82"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          border-left: 1pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          width: 61pt;
-        "
-      >
-        MES 8
-      </td>
-      <td
-        class="xl246"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          background: #f2f2f2;
-          white-space: normal;
-          border-top: 0px;
-          border-left: none;
-          width: 130pt;
-        "
-        colspan="4"
-      >
-        $ 30
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 130pt;
-        "
-      >
-        $ 25
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="167"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          width: 125pt;
-        "
-      >
-        $ 113
-      </td>
-      <td
-        colspan="4"
-        class="xl269"
-        width="231"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 173pt;
-        "
-      >
-        $ 93
-      </td>
-      <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-    </tr>
-    <tr class="xl81" height="26" style="height: 19.5pt">
-      <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
-      <td
-        class="xl239"
-        width="82"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          border-left: 1pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          width: 61pt;
-        "
-      >
-        MES 9
-      </td>
-      <td
-        class="xl246"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          background: #f2f2f2;
-          white-space: normal;
-          border-top: 0px;
-          border-left: none;
-          width: 130pt;
-        "
-        colspan="4"
-      >
-        $ 50
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 130pt;
-        "
-      >
-        $ 45
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="167"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          width: 125pt;
-        "
-      >
-        $ 163
-      </td>
-      <td
-        colspan="4"
-        class="xl269"
-        width="231"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 173pt;
-        "
-      >
-        $ 138
-      </td>
-      <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-    </tr>
-    <tr class="xl81" height="26" style="height: 19.5pt">
-      <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
-      <td
-        class="xl239"
-        width="82"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          border-left: 1pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          width: 61pt;
-        "
-      >
-        MES 10
-      </td>
-      <td
-        class="xl246"
-        width="173"
-        colspan="4"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          background: #f2f2f2;
-          white-space: normal;
-          border-top: 0px;
-          border-left: none;
-          width: 130pt;
-        "
-      >
-        $ 35
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 130pt;
-        "
-      >
-        $ 30
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="167"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          width: 125pt;
-        "
-      >
-        $ 198
-      </td>
-      <td
-        colspan="4"
-        class="xl269"
-        width="231"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 173pt;
-        "
-      >
-        $ 168
-      </td>
-      <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-    </tr>
-    <tr class="xl81" height="26" style="height: 19.5pt">
-      <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
-      <td
-        class="xl239"
-        width="82"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          border-left: 1pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          width: 61pt;
-        "
-      >
-        MES 11
-      </td>
-      <td
-        class="xl246"
-        width="173"
-        colspan="4"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          background: #f2f2f2;
-          white-space: normal;
-          border-top: 0px;
-          border-left: none;
-          width: 130pt;
-        "
-      >
-        $ 20
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 130pt;
-        "
-      >
-        $ 15
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="167"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          width: 125pt;
-        "
-      >
-        $ 218
-      </td>
-      <td
-        colspan="4"
-        class="xl269"
-        width="231"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 173pt;
-        "
-      >
-        $ 183
-      </td>
-      <td class="xl216"></td>
-      <td class="xl255">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-    </tr>
-    <tr class="xl81" height="26" style="height: 19.5pt">
-      <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
-      <td
-        class="xl239"
-        width="82"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          border-left: 1pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          width: 61pt;
-        "
-      >
-        MES 12
-      </td>
-      <td
-        class="xl246"
-        colspan="4"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          background: #f2f2f2;
-          white-space: normal;
-          border-top: 0px;
-          border-left: none;
-          width: 130pt;
-        "
-      >
-        $ 15
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 130pt;
-        "
-      >
-        $ 10
-      </td>
-      <td
-        colspan="5"
-        class="xl269"
-        width="167"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          width: 125pt;
-        "
-      >
-        $ 233
-      </td>
-      <td
-        colspan="4"
-        class="xl269"
-        width="231"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 173pt;
-        "
-      >
-        $ 193
-      </td>
-      <td class="xl216"></td>
-      <td class="xl256">&nbsp;</td>
-      <td class="xl244">&nbsp;</td>
-      <td class="xl244">&nbsp;</td>
-      <td class="xl244">&nbsp;</td>
-      <td class="xl244">&nbsp;</td>
-      <td class="xl244">&nbsp;</td>
-      <td class="xl244">&nbsp;</td>
-      <td class="xl244">&nbsp;</td>
-      <td class="xl244">&nbsp;</td>
-      <td class="xl244">&nbsp;</td>
-      <td class="xl244">&nbsp;</td>
     </tr>
     <tr class="xl81" height="22" style="height: 17.25pt">
       <td height="22" class="xl81" style="height: 17.25pt"></td>
       <td
-        class="xl239"
+        class="xl255"
         width="82"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          border-left: 1pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          width: 61pt;
-        "
       >
-        MES 13
       </td>
       <td
-        class="xl246"
+        class="xl204"
         colspan="4"
         width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          background: #f2f2f2;
-          white-space: normal;
-          border-top: 0px;
-          border-left: none;
-          width: 130pt;
-        "
       >
-        $ 12
       </td>
       <td
         colspan="5"
-        class="xl269"
+        class="xl204"
         width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 130pt;
-        "
       >
-        $ 11
       </td>
       <td
         colspan="5"
-        class="xl269"
+        class="xl204"
         width="167"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          width: 125pt;
-        "
       >
-        $ 245
       </td>
       <td
         colspan="4"
-        class="xl269"
+        class="xl204"
         width="231"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 173pt;
-        "
       >
-        $ 204
       </td>
-      <td class="xl216"></td>
+      <td class="xl204"></td>
+      <td class="xl204"></td>
+      <td class="xl204"></td>
+      <td class="xl204"></td>
       <td
         colspan="2"
         class="xl502"
         style="
           color: black;
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           text-align: center;
           vertical-align: middle;
@@ -9310,7 +7877,7 @@
         class="xl290"
         style="
           color: windowtext;
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           text-align: center;
           vertical-align: middle;
@@ -9321,113 +7888,44 @@
           border-left: none;
         "
       >
-        280
+      {{ infoGeneralObra?.valorTotal | currency: '':'symbol-narrow':'.0-0' }}
       </td>
       <td class="xl216"></td>
     </tr>
     <tr class="xl81" height="22" style="height: 17.25pt">
       <td height="22" class="xl81" style="height: 17.25pt"></td>
       <td
-        class="xl239"
+        class="xl255"
         width="82"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          border-left: 1pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          width: 61pt;
-        "
       >
-        MES 14
       </td>
       <td
-        class="xl246"
+        class="xl204"
         width="173"
         colspan="4"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          background: #f2f2f2;
-          white-space: normal;
-          border-top: 0px;
-          border-left: none;
-          width: 130pt;
-        "
       >
-        $ 10
       </td>
       <td
         colspan="5"
-        class="xl269"
+        class="xl204"
         width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 130pt;
-        "
       >
-        $ 9
       </td>
       <td
         colspan="5"
-        class="xl269"
+        class="xl204"
         width="167"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          width: 125pt;
-        "
       >
-        $ 255
       </td>
       <td
         colspan="4"
-        class="xl269"
+        class="xl204"
         width="231"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 173pt;
-        "
       >
-        $ 213
       </td>
+      <td class="xl216"></td>
+      <td class="xl216"></td>
+      <td class="xl216"></td>
       <td class="xl216"></td>
       <td
         rowspan="2"
@@ -9443,6 +7941,8 @@
           border: 0.5pt solid black;
           white-space: normal;
           width: 121pt;
+          vertical-align: inherit;
+          line-height: 1.4;
         "
       >
         VALOR TOTAL ANTICIPO
@@ -9455,12 +7955,14 @@
           font-size: 5pt;
           font-weight: 700;
           font-family: Arial, sans-serif;
-
+  
           text-align: center;
           vertical-align: top;
           border: 0.5pt solid black;
           white-space: normal;
           width: 81pt;
+          vertical-align: inherit;
+          line-height: 1.4;
         "
         width="109"
       >
@@ -9480,6 +7982,8 @@
           border: 0.5pt solid black;
           white-space: normal;
           width: 87pt;
+          vertical-align: inherit;
+          line-height: 1.4;
         "
       >
         DIFERENCIA CORRESPONDIENTE IMPUESTO CONTRIBUCIÓN ESPECIAL (5%)y ESTAPILLA PRO UNIVERSIDAD(1%)
@@ -9498,6 +8002,8 @@
           border: 0.5pt solid black;
           white-space: normal;
           width: 81pt;
+          vertical-align: inherit;
+          line-height: 1.4;
         "
       >
         TOTAL GIROS SOLICITADOS APROBADOS PARA DESEMBOLSO
@@ -9516,6 +8022,8 @@
           border: 0.5pt solid black;
           white-space: normal;
           width: 85pt;
+          vertical-align: inherit;
+          line-height: 1.4;
         "
       >
         SALDO DE ANTICIPO POR SOLICITAR<span style="mso-spacerun: yes"></span>
@@ -9534,6 +8042,8 @@
           border: 0.5pt solid black;
           white-space: normal;
           width: 106pt;
+          vertical-align: inherit;
+          line-height: 1.4;
         "
       >
         AMORTIZACIÓN ANTICIPO<br />
@@ -9554,6 +8064,8 @@
           white-space: normal;
           border-right: 1pt solid black;
           width: 102pt;
+          vertical-align: inherit;
+          line-height: 1.4;
         "
       >
         SALDO POR AMORTIIZAR
@@ -9562,105 +8074,33 @@
     <tr class="xl81" height="22" style="height: 17.25pt">
       <td height="22" class="xl81" style="height: 17.25pt"></td>
       <td
-        class="xl239"
+        class="xl255"
         width="82"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          border-left: 1pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          width: 61pt;
-        "
       >
-        MES 15
       </td>
       <td
-        class="xl246"
+        class="xl204"
         colspan="4"
         width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          background: #f2f2f2;
-          white-space: normal;
-          border-top: 0px;
-          border-left: none;
-          width: 130pt;
-        "
       >
-        $ 5
       </td>
       <td
         colspan="5"
-        class="xl269"
+        class="xl204"
         width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 130pt;
-        "
       >
-        $ 35
       </td>
       <td
         colspan="5"
-        class="xl269"
+        class="xl204"
         width="167"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          width: 125pt;
-        "
       >
-        $ 260
       </td>
       <td
         colspan="4"
-        class="xl269"
+        class="xl204"
         width="231"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 173pt;
-        "
       >
-        $ 248
       </td>
       <td class="xl216"></td>
       <td class="xl221" width="0" style="border-top: 0px">&nbsp;</td>
@@ -9668,214 +8108,63 @@
     <tr class="xl81" height="22" style="height: 17.25pt">
       <td height="22" class="xl81" style="height: 17.25pt"></td>
       <td
-        class="xl239"
+        class="xl255"
         width="82"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-weight: 700;
-          font-family: Arial, sans-serif;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-right: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          border-left: 1pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          width: 61pt;
-        "
       >
-        MES 16
       </td>
       <td
-        class="xl246"
+        class="xl204"
         colspan="4"
         width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          background: #f2f2f2;
-          white-space: normal;
-          border-top: 0px;
-          border-left: none;
-          width: 130pt;
-        "
       >
-        $ 20
       </td>
       <td
         colspan="5"
-        class="xl269"
+        class="xl204"
         width="173"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 130pt;
-        "
       >
-        $ 32
       </td>
       <td
         colspan="5"
-        class="xl269"
+        class="xl2xl20469"
         width="167"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          width: 125pt;
-        "
       >
-        $ 280
       </td>
       <td
         colspan="4"
-        class="xl269"
+        class="xl204"
         width="231"
-        style="
-          color: black;
-          font-size: 6pt;
-          font-family: Arial, sans-serif;
-          text-align: center;
-          vertical-align: middle;
-          border-top: 0.5pt solid black;
-          border-bottom: 0.5pt solid black;
-          background: #f2f2f2;
-          white-space: normal;
-          border-right: 0.5pt solid black;
-          border-left: none;
-          width: 173pt;
-        "
       >
-        $ 280
       </td>
       <td class="xl216"></td>
-      <td class="xl285" width="162" style="font-size: 6pt; width: 121pt">56</td>
-      <td class="xl282" width="109" style="font-size: 6pt; border-left: none; width: 81pt">56</td>
-      <td class="xl282" width="116" style="font-size: 6pt; border-left: none; width: 87pt">0</td>
-      <td class="xl282" width="109" style="border-left: none; width: 81pt">&nbsp;</td>
-      <td class="xl282" width="114" style="border-left: none; width: 85pt">&nbsp;</td>
-      <td class="xl282" width="140" style="border-left: none; width: 106pt">&nbsp;</td>
-      <td class="xl282" width="136" style="border-right: 1pt solid black; border-left: none; width: 102pt">&nbsp;</td>
-    </tr>
-    <tr class="xl81" height="22" style="height: 17.25pt">
-      <td height="22" class="xl81" style="height: 17.25pt"></td>
-      <td class="xl213" width="82" style="width: 61pt" colspan="6">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl203">&nbsp;</td>
-      <td class="xl203">&nbsp;</td>
-      <td class="xl204" width="94" style="width: 70pt">&nbsp;</td>
-      <td class="xl204" width="82" style="width: 61pt">&nbsp;</td>
       <td class="xl216"></td>
       <td class="xl216"></td>
       <td class="xl216"></td>
-      <td class="xl221" width="0" style="border-top: 0px">&nbsp;</td>
-      <td class="xl285" width="162" style="width: 121pt">&nbsp;</td>
-      <td class="xl282" width="109" style="border-left: 0px; width: 81pt">&nbsp;</td>
-      <td class="xl282" width="116" style="border-left: 0px; width: 87pt">&nbsp;</td>
-      <td class="xl282" width="109" style="border-left: 0px; width: 81pt">&nbsp;</td>
-      <td class="xl282" width="114" style="border-left: 0px; width: 85pt">&nbsp;</td>
-      <td class="xl282" width="140" style="border-left: 0px; width: 106pt">&nbsp;</td>
-      <td class="xl282" width="136" style="border-right: 1pt solid black; border-left: 0px; width: 102pt">&nbsp;</td>
-    </tr>
-    <tr class="xl81" height="22" style="height: 17.25pt">
-      <td height="22" class="xl81" style="height: 17.25pt"></td>
-      <td class="xl213" width="82" style="border-top: 0px; width: 61pt" colspan="6">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl203">&nbsp;</td>
-      <td class="xl203">&nbsp;</td>
-      <td class="xl204" width="94" style="width: 70pt">&nbsp;</td>
-      <td class="xl204" width="82" style="width: 61pt">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl221" width="0" style="border-top: 0px">&nbsp;</td>
-      <td class="xl285" width="162" style="width: 121pt">&nbsp;</td>
-      <td class="xl282" width="109" style="border-left: 0px; width: 81pt">&nbsp;</td>
-      <td class="xl282" width="116" style="border-left: 0px; width: 87pt">&nbsp;</td>
-      <td class="xl282" width="109" style="border-left: 0px; width: 81pt">&nbsp;</td>
-      <td class="xl282" width="114" style="border-left: 0px; width: 85pt">&nbsp;</td>
-      <td class="xl282" width="140" style="border-left: 0px; width: 106pt">&nbsp;</td>
-      <td class="xl282" width="136" style="border-right: 1pt solid black; border-left: 0px; width: 102pt">&nbsp;</td>
-    </tr>
-    <tr class="xl81" height="28" style="height: 21pt">
-      <td height="28" class="xl81" style="height: 21pt"></td>
-      <td class="xl213" width="82" style="border-top: 0px; width: 61pt" colspan="6">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl202">&nbsp;</td>
-      <td class="xl203">&nbsp;</td>
-      <td class="xl203">&nbsp;</td>
-      <td class="xl204" width="94" style="width: 70pt">&nbsp;</td>
-      <td class="xl204" width="82" style="width: 61pt">&nbsp;</td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl216"></td>
-      <td class="xl220" width="0" style="border-top: 0px;border-bottom: 0px">&nbsp;</td>
-      <td class="xl285" width="162" style="width: 121pt">&nbsp;</td>
-      <td class="xl282" width="109" style="border-left: 0px; width: 81pt">&nbsp;</td>
-      <td class="xl282" width="116" style="border-left: 0px; width: 87pt">&nbsp;</td>
-      <td class="xl282" width="109" style="border-left: 0px; width: 81pt">&nbsp;</td>
-      <td class="xl282" width="114" style="border-left: 0px; width: 85pt">&nbsp;</td>
-      <td class="xl282" width="140" style="border-left: 0px; width: 106pt">&nbsp;</td>
-      <td class="xl282" width="136" style="border-right: 1pt solid black; border-left: 0px; width: 102pt">&nbsp;</td>
-    </tr>
-    <tr class="xl81" height="21" style="height: 15.75pt">
-      <td height="21" class="xl81" style="height: 15.75pt"></td>
-      <td class="xl240" colspan="6">&nbsp;</td>
-      <td class="xl241">&nbsp;</td>
-      <td class="xl241">&nbsp;</td>
-      <td class="xl241">&nbsp;</td>
-      <td class="xl241">&nbsp;</td>
-      <td class="xl241">&nbsp;</td>
-      <td class="xl241">&nbsp;</td>
-      <td class="xl242">&nbsp;</td>
-      <td class="xl242">&nbsp;</td>
-      <td class="xl243" width="94" style="width: 70pt">&nbsp;</td>
-      <td class="xl243" width="82" style="width: 61pt">&nbsp;</td>
-      <td class="xl244">&nbsp;</td>
-      <td class="xl244">&nbsp;</td>
-      <td class="xl244">&nbsp;</td>
-      <td class="xl245">&nbsp;</td>
-      <td class="xl286" width="162" style="width: 121pt">&nbsp;</td>
-      <td class="xl283" width="109" style="border-left: 0px; width: 81pt">&nbsp;</td>
-      <td class="xl283" width="116" style="border-left: 0px; width: 87pt">&nbsp;</td>
-      <td class="xl283" width="109" style="border-left: 0px; width: 81pt">&nbsp;</td>
-      <td class="xl283" width="114" style="border-left: 0px; width: 85pt">&nbsp;</td>
-      <td class="xl283" width="140" style="border-left: 0px; width: 106pt">&nbsp;</td>
-      <td class="xl283" width="136" style="border-right: 1pt solid black; border-left: 0px; width: 102pt">&nbsp;</td>
+      <td class="xl285" width="162" style="font-size: 12px; vertical-align: inherit; width: 121pt">
+        {{ dataReporteSemanal.registroAnticipo.valorAnticipo | currency: '':'symbol-narrow':'.0-0' }}
+      </td>
+      <td class="xl282" width="109" style="font-size: 12px; vertical-align: inherit; border-left: none; width: 81pt">
+        {{ dataReporteSemanal.registroAnticipo.valorAnticipoDesembolsado | currency: '':'symbol-narrow':'.0-0' }}
+      </td>
+      <td class="xl282" width="116" style="font-size: 12px; vertical-align: inherit; border-left: none; width: 87pt">
+        {{ dataReporteSemanal.registroAnticipo.diferenciaCorrespondienteImpuestos | currency: '':'symbol-narrow':'.0-0' }}
+      </td>
+      <td class="xl282" width="109" style="font-size: 12px; vertical-align: inherit;border-left: none; width: 81pt">
+        {{ dataReporteSemanal.registroAnticipo.totalGirosSolicitadosAprobados  }}
+      </td>
+      <td class="xl282" width="114" style="font-size: 12px; vertical-align: inherit;border-left: none; width: 85pt">
+        {{ dataReporteSemanal.registroAnticipo.saldoAnticipoPorSolicitar }}
+      </td>
+      <td class="xl282" width="140" style="font-size: 12px; vertical-align: inherit;border-left: none; width: 106pt">
+        <div style="border-bottom: solid 1px;" *ngFor="let amortizacion of dataReporteSemanal.registroAnticipo.registroIndividualAnticipo">
+          {{ amortizacion.valorAmortizacion }}
+        </div>
+      </td>
+      <td class="xl282" width="136" style="font-size: 12px; vertical-align: inherit;border-right: 1pt solid black; border-left: none; width: 102pt">
+        <div style="border-bottom: solid 1px;" *ngFor="let amortizacion of dataReporteSemanal.registroAnticipo.registroIndividualAnticipo">
+          {{ amortizacion.saldoAmortizar }}
+        </div>
+      </td>
     </tr>
     <tr class="xl81" height="34" style="mso-height-source: userset; height: 26.25pt">
       <td height="34" class="xl81" style="height: 26.25pt"></td>
@@ -9906,7 +8195,7 @@
         class="xl280"
         width="862"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           width: 645pt;
           border-bottom: 0.5pt solid black;
           font-weight: 700;
@@ -9918,7 +8207,7 @@
       <td
         class="xl257"
         width="69"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; width: 52pt; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; width: 52pt; border-right: 0.5pt solid black"
       >
         SI
       </td>
@@ -9927,7 +8216,7 @@
         width="61"
         colspan="2"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-top: 0px;
           border-bottom: 0.5pt solid black;
           width: 46pt;
@@ -9948,7 +8237,7 @@
       <td
         class="xl257"
         width="69"
-        style="font-size: 6pt; width: 52pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 52pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         NO
       </td>
@@ -9957,7 +8246,7 @@
         width="61"
         colspan="2"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-top: 0px;
           border-bottom: 0.5pt solid black;
           width: 46pt;
@@ -9977,14 +8266,20 @@
       </td>
       <td colspan="8" style="border-bottom: 0.5pt solid black; border-right: 0.5pt solid black">&nbsp;</td>
     </tr>
-    <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
+    <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt"
+      *ngIf="
+        dataReporteSemanal?.seguimientoSemanalGestionObra.length > 0 &&
+        dataReporteSemanal?.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAlerta[0].seguimientoSemanalGestionObraAmbiental[0]
+          .seEjecutoGestionAmbiental == false
+      "
+    >
       <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
       <td
         colspan="18"
         class="xl280"
         width="862"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           width: 645pt;
           font-weight: 700;
           border-bottom: 0.5pt solid black;
@@ -10011,14 +8306,14 @@
         class="xl280"
         width="862"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           width: 645pt;
           font-weight: 700;
           border-bottom: 0.5pt solid black;
           border-right: 0.5pt solid black;
         "
       >
-        ¿Cuantas actividades ejecutó?
+        ¿Cuántas actividades ejecutó?
       </td>
       <td colspan="14" style="border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; font-size: 9pt">
         {{ cantidadActividades }}
@@ -10030,7 +8325,7 @@
         colspan="32"
         class="xl528"
         width="1817"
-        style="font-size: 6pt; border-bottom: 1pt solid black; border-right: 1pt solid black; width: 1360pt"
+        style="font-size: 12px; border-bottom: 1pt solid black; border-right: 1pt solid black; width: 1360pt"
       >
         (Las posibilidades de actividades a reportar son: manejo de materiales e insumos, manejo de residuos de
         construcción y demolición, manejo de residuos peligros y especiales, otra)
@@ -10042,7 +8337,7 @@
         colspan="32"
         class="xl528"
         width="1817"
-        style="font-size: 6pt; border-right: 1pt solid black; width: 1360pt; font-weight: 700"
+        style="font-size: 12px; border-right: 1pt solid black; width: 1360pt; font-weight: 700"
       >
         Tipos de actividades
       </td>
@@ -10059,7 +8354,7 @@
         class="xl528"
         width="1817"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-right: 1pt solid black;
           border-top: 1pt solid black;
           border-bottom: 0.5pt solid black;
@@ -10083,7 +8378,7 @@
           class="xl528"
           width="173"
           style="
-            font-size: 6pt;
+            font-size: 12px;
             width: 130pt;
             border-bottom: 0.5pt solid black;
             border-right: 0.5pt solid black;
@@ -10095,7 +8390,7 @@
         <td
           class="xl96"
           width="35"
-          style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
+          style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
           colspan="7"
         >
           &nbsp;{{ prov.proveedor }}
@@ -10104,7 +8399,7 @@
           colspan="5"
           class="xl261"
           width="398"
-          style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+          style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
         >
           Requiere permisos ambientales y/o mineros:
         </td>
@@ -10112,7 +8407,7 @@
           colspan="2"
           class="xl152"
           width="173"
-          style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
         >
           SI
         </td>
@@ -10120,7 +8415,7 @@
           colspan="2"
           class="xl152"
           width="173"
-          style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
         >
           <div *ngIf="prov.requierePermisosAmbientalesMineros == true">x</div>
         </td>
@@ -10128,7 +8423,7 @@
           colspan="2"
           class="xl152"
           width="173"
-          style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
         >
           NO
         </td>
@@ -10136,7 +8431,7 @@
           colspan="2"
           class="xl152"
           width="173"
-          style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
         >
           <div *ngIf="prov.requierePermisosAmbientalesMineros == false">x</div>
         </td>
@@ -10144,7 +8439,7 @@
           colspan="10"
           class="xl152"
           width="173"
-          style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
         >
           Relacionar permiso: {{ prov.urlRegistroFotografico }}
         </td>
@@ -10161,7 +8456,7 @@
         colspan="14"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       >
         Los materiales de construcción se encontraron protegidos y demarcados correctamente:
       </td>
@@ -10169,7 +8464,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         SI
       </td>
@@ -10177,7 +8472,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionObraAmbiental && gestionObraAmbiental.manejoMaterialesInsumo.estanProtegidosDemarcadosMateriales == true">
           x
@@ -10187,7 +8482,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         NO
       </td>
@@ -10195,7 +8490,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionObraAmbiental && gestionObraAmbiental.manejoMaterialesInsumo.estanProtegidosDemarcadosMateriales == false">
           x
@@ -10205,7 +8500,7 @@
         colspan="10"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         Relacionar permiso: {{ gestionObraAmbiental.manejoMaterialesInsumo.url }}
       </td>
@@ -10222,7 +8517,7 @@
         class="xl528"
         width="1817"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-right: 1pt solid black;
           border-top: 1pt solid black;
           border-bottom: 0.5pt solid black;
@@ -10244,7 +8539,7 @@
         colspan="14"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       >
         Los residuos de construcción y demolición (RCD) fueron cuantificados en toneladas, clasificados, acopiados y
         protegidos correctamente:
@@ -10253,7 +8548,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         SI
       </td>
@@ -10261,7 +8556,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionObraAmbiental && gestionObraAmbiental.manejoResiduosConstruccionDemolicion.estaCuantificadoRcd == true">x</div>
       </td>
@@ -10269,7 +8564,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         NO
       </td>
@@ -10277,7 +8572,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionObraAmbiental && gestionObraAmbiental.manejoResiduosConstruccionDemolicion.estaCuantificadoRcd == false">x</div>
       </td>
@@ -10285,7 +8580,7 @@
         colspan="10"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         Observaciones
         <div [innerHTML]="gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacion"></div>
@@ -10307,7 +8602,7 @@
           class="xl528"
           width="173"
           style="
-            font-size: 6pt;
+            font-size: 12px;
             width: 130pt;
             border-bottom: 0.5pt solid black;
             border-right: 0.5pt solid black;
@@ -10319,7 +8614,7 @@
         <td
           class="xl96"
           width="35"
-          style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
+          style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
           colspan="7"
         >
           &nbsp;{{ rcd.nombreGestorResiduos }}
@@ -10328,7 +8623,7 @@
           colspan="5"
           class="xl261"
           width="398"
-          style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+          style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
         >
           El gestor presenta permisos ambientales o soporte válido:
         </td>
@@ -10336,7 +8631,7 @@
           colspan="2"
           class="xl152"
           width="173"
-          style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
         >
           SI
         </td>
@@ -10344,7 +8639,7 @@
           colspan="2"
           class="xl152"
           width="173"
-          style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
         >
           <div *ngIf="rcd.tienePermisoAmbiental == true">x</div>
         </td>
@@ -10352,7 +8647,7 @@
           colspan="2"
           class="xl152"
           width="173"
-          style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
         >
           NO
         </td>
@@ -10360,7 +8655,7 @@
           colspan="2"
           class="xl152"
           width="173"
-          style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
         >
           <div *ngIf="rcd.tienePermisoAmbiental == false">x</div>
         </td>
@@ -10368,7 +8663,7 @@
           colspan="5"
           class="xl152"
           width="173"
-          style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
         >
           URL para relacionar permiso o soporte:
         </td>
@@ -10376,7 +8671,7 @@
           colspan="5"
           class="xl152"
           width="173"
-          style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
         >
           {{ rcd.url }}
         </td>
@@ -10393,7 +8688,7 @@
         colspan="14"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       >
         Se reutilizaron temporal o permanente los RCD para el porcentaje de aprovechamiento obligatorio:
       </td>
@@ -10401,7 +8696,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         SI
       </td>
@@ -10409,7 +8704,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionObraAmbiental && gestionObraAmbiental.manejoResiduosConstruccionDemolicion.seReutilizadorResiduos == true">
           x
@@ -10419,7 +8714,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         NO
       </td>
@@ -10427,7 +8722,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionObraAmbiental && gestionObraAmbiental.manejoResiduosConstruccionDemolicion.seReutilizadorResiduos == false">
           x
@@ -10437,7 +8732,7 @@
         colspan="5"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         Cantidad (ton):
       </td>
@@ -10445,7 +8740,7 @@
         colspan="5"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         &nbsp;{{ gestionObraAmbiental.manejoResiduosConstruccionDemolicion.cantidadToneladas }}
       </td>
@@ -10462,7 +8757,7 @@
         class="xl528"
         width="1817"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-right: 1pt solid black;
           border-top: 1pt solid black;
           border-bottom: 0.5pt solid black;
@@ -10484,7 +8779,7 @@
         colspan="14"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       >
         Los residuos peligrosos y especiales se clasificaron y acopiaron en lugares seguros
       </td>
@@ -10492,7 +8787,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         SI
       </td>
@@ -10500,7 +8795,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionObraAmbiental && gestionObraAmbiental.manejoResiduosPeligrososEspeciales.estanClasificados == true">x</div>
       </td>
@@ -10508,7 +8803,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         NO
       </td>
@@ -10516,7 +8811,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionObraAmbiental && gestionObraAmbiental.manejoResiduosPeligrososEspeciales.estanClasificados == false">x</div>
       </td>
@@ -10524,7 +8819,7 @@
         colspan="5"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         Observaciones
       </td>
@@ -10532,7 +8827,7 @@
         colspan="5"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div [innerHTML]="gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacion"></div>
       </td>
@@ -10549,7 +8844,7 @@
         class="xl528"
         width="1817"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-right: 1pt solid black;
           border-top: 1pt solid black;
           border-bottom: 0.5pt solid black;
@@ -10571,7 +8866,7 @@
         colspan="6"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       >
         Fecha de la actividad
       </td>
@@ -10579,7 +8874,7 @@
         colspan="6"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       >
         &nbsp;{{ gestionObraAmbiental.manejoOtro.fechaActividad | date: 'dd/MM/yyyy' }}
       </td>
@@ -10587,7 +8882,7 @@
         colspan="6"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       >
         Actividad realizada
       </td>
@@ -10595,7 +8890,7 @@
         colspan="4"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       >
         <div [innerHTML]="gestionObraAmbiental.manejoOtro.actividad"></div>
       </td>
@@ -10603,7 +8898,7 @@
         colspan="4"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       >
         URL para relacionar evidencia o soporte:
       </td>
@@ -10611,7 +8906,7 @@
         colspan="6"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       >
         &nbsp;{{ gestionObraAmbiental.manejoOtro.urlSoporteGestion }}
       </td>
@@ -10623,7 +8918,7 @@
         class="xl528"
         width="1817"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-right: 1pt solid black;
           border-top: 1pt solid black;
           border-bottom: 0.5pt solid black;
@@ -10661,7 +8956,7 @@
         class="xl528"
         width="1817"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-right: 1pt solid black;
           border-top: 1pt solid black;
           border-bottom: 0.5pt solid black;
@@ -10679,7 +8974,7 @@
         class="xl280"
         width="862"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           width: 645pt;
           border-bottom: 0.5pt solid black;
           font-weight: 700;
@@ -10693,7 +8988,7 @@
         width="61"
         colspan="6"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-top: 0px;
           border-bottom: 0.5pt solid black;
           width: 46pt;
@@ -10706,7 +9001,7 @@
       </td>
       <td
         colspan="8"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700"
       >
         &nbsp;(Si la respuestas es Si, se continuarán con los siguientes campos)
       </td>
@@ -10718,7 +9013,7 @@
         class="xl280"
         width="862"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           width: 645pt;
           border-bottom: 0.5pt solid black;
           font-weight: 700;
@@ -10732,7 +9027,7 @@
         width="61"
         colspan="6"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-top: 0px;
           border-bottom: 0.5pt solid black;
           width: 46pt;
@@ -10755,7 +9050,7 @@
           width="862"
           style="
             border-top: 0.5pt solid black;
-            font-size: 6pt;
+            font-size: 12px;
             width: 645pt;
             font-weight: 700;
             border-right: 0.5pt solid black;
@@ -10781,7 +9076,7 @@
           colspan="18"
           class="xl213"
           width="862"
-          style="font-size: 6pt; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
         ></td>
         <td
           class="xl262"
@@ -10801,7 +9096,7 @@
           colspan="18"
           class="xl213"
           width="862"
-          style="font-size: 6pt; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
         ></td>
         <td
           class="xl262"
@@ -10821,7 +9116,7 @@
           colspan="18"
           class="xl213"
           width="862"
-          style="font-size: 6pt; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
         ></td>
         <td
           class="xl262"
@@ -10841,7 +9136,7 @@
           colspan="18"
           class="xl213"
           width="862"
-          style="font-size: 6pt; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
         ></td>
         <td
           class="xl262"
@@ -10861,7 +9156,7 @@
           colspan="18"
           class="xl213"
           width="862"
-          style="font-size: 6pt; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
         ></td>
         <td
           class="xl262"
@@ -10887,7 +9182,7 @@
           colspan="18"
           class="xl213"
           width="862"
-          style="font-size: 6pt; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
+          style="font-size: 12px; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
         ></td>
         <td
           class="xl262"
@@ -10910,7 +9205,7 @@
             width="862"
             style="
               border-top: 0.5pt solid black;
-              font-size: 6pt;
+              font-size: 12px;
               width: 645pt;
               font-weight: 700;
               border-right: 0.5pt solid black;
@@ -10936,7 +9231,7 @@
             colspan="18"
             class="xl212"
             width="862"
-            style="font-size: 6pt; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
+            style="font-size: 12px; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
           ></td>
           <td
             class="xl262"
@@ -10956,7 +9251,7 @@
             colspan="18"
             class="xl212"
             width="862"
-            style="font-size: 6pt; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
+            style="font-size: 12px; width: 645pt; font-weight: 700; border-right: 0.5pt solid black"
           ></td>
           <td
             class="xl262"
@@ -10974,7 +9269,7 @@
     </ng-container>
     </ng-container>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
-      <td height="42" class="xl89" style="height: 13.2pt">&nbsp;</td>
+      <td height="42" class="xl89" style="height: 13.2pt; border-left: solid 2px;">&nbsp;</td>
       <td
         colspan="32"
         class="xl261"
@@ -11016,9 +9311,10 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-bottom: 0.5pt solid black;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
           width: 298pt;
           font-weight: 700;
         "
@@ -11029,7 +9325,7 @@
         colspan="18"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       ></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -11039,9 +9335,10 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-bottom: 0.5pt solid black;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
           width: 298pt;
           font-weight: 700;
         "
@@ -11053,7 +9350,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         SI
       </td>
@@ -11061,7 +9358,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div></div>
       </td>
@@ -11069,7 +9366,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         NO
       </td>
@@ -11077,7 +9374,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div></div>
       </td>
@@ -11085,7 +9382,7 @@
         colspan="5"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         Observaciones
       </td>
@@ -11093,7 +9390,7 @@
         colspan="5"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       ></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -11103,9 +9400,10 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-bottom: 0.5pt solid black;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
           width: 298pt;
           font-weight: 700;
         "
@@ -11116,7 +9414,7 @@
         colspan="4"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
       <ng-container *ngIf="gestionSST">
         {{ gestionSST.cantidadAccidentes }}
@@ -11126,7 +9424,7 @@
         colspan="14"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       ></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -11136,9 +9434,10 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-bottom: 0.5pt solid black;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
           width: 298pt;
           font-weight: 700;
         "
@@ -11149,7 +9448,7 @@
         colspan="18"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       >
       <ng-container *ngIf="gestionSST">
         <span *ngFor="let accidente of gestionSST.seguridadSaludCausaAccidente">
@@ -11165,9 +9464,10 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-bottom: 0.5pt solid black;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
           width: 298pt;
           font-weight: 700;
         "
@@ -11178,7 +9478,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         SI
       </td>
@@ -11186,7 +9486,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionSST && gestionSST.seRealizoCapacitacion == true">x</div>
       </td>
@@ -11194,7 +9494,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         NO
       </td>
@@ -11202,7 +9502,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionSST && gestionSST.seRealizoCapacitacion == false">x</div>
       </td>
@@ -11211,7 +9511,7 @@
         class="xl152"
         width="173"
         *ngIf="gestionSST && gestionSST.seRealizoCapacitacion == true"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         Tema de la capacitación
       </td>
@@ -11220,7 +9520,7 @@
         class="xl152"
         width="173"
         *ngIf="gestionSST && gestionSST.seRealizoCapacitacion == true"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div [innerHTML]="gestionSST.temaCapacitacion"></div>
       </td>
@@ -11229,7 +9529,7 @@
         class="xl152"
         width="173"
         *ngIf="gestionSST && gestionSST.seRealizoCapacitacion == false"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         Observaciones
       </td>
@@ -11238,7 +9538,7 @@
         class="xl152"
         width="173"
         *ngIf="gestionSST && gestionSST.seRealizoCapacitacion == false"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div [innerHTML]="gestionSST.observacionCapacitacion"></div>
       </td>
@@ -11250,9 +9550,10 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-bottom: 0.5pt solid black;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
           width: 298pt;
           font-weight: 700;
         "
@@ -11263,7 +9564,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         SI
       </td>
@@ -11271,7 +9572,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionSST && gestionSST.seRealizoRevisionElementosProteccion == true">x</div>
       </td>
@@ -11279,7 +9580,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         NO
       </td>
@@ -11287,7 +9588,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionSST && gestionSST.seRealizoRevisionElementosProteccion == false">x</div>
       </td>
@@ -11303,7 +9604,7 @@
         class="xl152"
         width="173"
         *ngIf="gestionSST && gestionSST.seRealizoRevisionElementosProteccion == false"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         Observaciones
       </td>
@@ -11312,7 +9613,7 @@
         class="xl152"
         width="173"
         *ngIf="gestionSST && gestionSST.seRealizoRevisionElementosProteccion == false"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div [innerHTML]="gestionSST.observacionRevisionElementosProteccion"></div>
       </td>
@@ -11329,9 +9630,10 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-bottom: 0.5pt solid black;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
           width: 298pt;
           font-weight: 700;
         "
@@ -11342,7 +9644,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         Cumple
       </td>
@@ -11350,7 +9652,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionSST && gestionSST.cumpleRevisionElementosProyeccion == true">x</div>
       </td>
@@ -11358,7 +9660,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         No Cumple
       </td>
@@ -11366,7 +9668,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionSST && gestionSST.cumpleRevisionElementosProyeccion == false">x</div>
       </td>
@@ -11374,7 +9676,7 @@
         colspan="18"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       ></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -11384,9 +9686,10 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-bottom: 0.5pt solid black;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
           width: 298pt;
           font-weight: 700;
         "
@@ -11398,7 +9701,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         SI
       </td>
@@ -11406,7 +9709,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionSST && gestionSST.seRealizoRevisionSenalizacion == true">x</div>
       </td>
@@ -11414,7 +9717,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         NO
       </td>
@@ -11422,7 +9725,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionSST && gestionSST.seRealizoRevisionSenalizacion == false">x</div>
       </td>
@@ -11438,7 +9741,7 @@
         class="xl152"
         width="173"
         *ngIf="gestionSST && gestionSST.seRealizoRevisionSenalizacion == false"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         Observaciones
       </td>
@@ -11447,7 +9750,7 @@
         class="xl152"
         width="173"
         *ngIf="gestionSST && gestionSST.seRealizoRevisionSenalizacion == false"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div [innerHTML]="gestionSST.observacionRevisionSenalizacion"></div>
       </td>
@@ -11464,9 +9767,10 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-bottom: 0.5pt solid black;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
           width: 298pt;
           font-weight: 700;
         "
@@ -11477,7 +9781,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         Cumple
       </td>
@@ -11485,7 +9789,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionSST && gestionSST.cumpleRevisionSenalizacion == true">x</div>
       </td>
@@ -11493,7 +9797,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         No Cumple
       </td>
@@ -11501,7 +9805,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionSST && gestionSST.cumpleRevisionSenalizacion == false">x</div>
       </td>
@@ -11509,7 +9813,7 @@
         colspan="18"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       ></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -11519,9 +9823,10 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           border-bottom: 0.5pt solid black;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
           width: 298pt;
           font-weight: 700;
         "
@@ -11532,7 +9837,7 @@
         colspan="4"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
       <ng-container *ngIf="gestionSST">
         {{ gestionSST.urlSoporteGestion }}
@@ -11542,7 +9847,7 @@
         colspan="14"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       ></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -11582,7 +9887,7 @@
         colspan="6"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-left: solid 2px; width: 298pt"
       >
         Total empleos generados
       </td>
@@ -11590,7 +9895,7 @@
         colspan="4"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
       <ng-container *ngIf="gestionSocial">
         {{ gestionSocial.cantidadTotalEmpleos }}
@@ -11600,7 +9905,7 @@
         colspan="6"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       >
         ¿Se realizaron reuniones, socializaciones o capacitaciones con la comunidad durante la semana?
       </td>
@@ -11608,7 +9913,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         SI
       </td>
@@ -11616,7 +9921,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionSocial && gestionSocial.seRealizaronReuniones == true">x</div>
       </td>
@@ -11624,7 +9929,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         NO
       </td>
@@ -11632,7 +9937,7 @@
         colspan="2"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div *ngIf="gestionSocial && gestionSocial.seRealizaronReuniones == false">x</div>
       </td>
@@ -11641,14 +9946,14 @@
         class="xl152"
         width="173"
         *ngIf="gestionSocial && gestionSocial.seRealizaronReuniones == true"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       ></td>
       <td
         colspan="3"
         class="xl152"
         width="173"
         *ngIf="gestionSocial && gestionSocial.seRealizaronReuniones == false"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         Observaciones
       </td>
@@ -11657,7 +9962,7 @@
         class="xl152"
         width="173"
         *ngIf="gestionSocial && gestionSocial.seRealizaronReuniones == false"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div [innerHTML]="gestionSocial.observaciones"></div>
       </td>
@@ -11668,7 +9973,7 @@
         colspan="6"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-left: solid 2px; width: 298pt"
       >
         Empleos directos generados
       </td>
@@ -11676,7 +9981,7 @@
         colspan="4"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
       <ng-container *ngIf="gestionSocial">
         {{ gestionSocial.cantidadEmpleosDirectos }}
@@ -11687,7 +9992,7 @@
         class="xl261"
         width="398"
         *ngIf="gestionSocial && gestionSocial.seRealizaronReuniones == true"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       >
         Tema tratado con la comunidad
       </td>
@@ -11696,7 +10001,7 @@
         class="xl152"
         width="173"
         *ngIf="gestionSocial && gestionSocial.seRealizaronReuniones == true"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div [innerHTML]="gestionSocial.temaComunidad"></div>
       </td>
@@ -11705,7 +10010,7 @@
         class="xl152"
         width="173"
         *ngIf="gestionSocial && gestionSocial.seRealizaronReuniones == false"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       ></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -11714,7 +10019,7 @@
         colspan="6"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-left: solid 2px; width: 298pt"
       >
         Empleos indirectos generados
       </td>
@@ -11722,7 +10027,7 @@
         colspan="4"
         class="xl152"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
       <ng-container *ngIf="gestionSocial">
         {{ gestionSocial.cantidadEmpleosIndirectos }}
@@ -11733,7 +10038,7 @@
         class="xl261"
         width="398"
         *ngIf="gestionSocial && gestionSocial.seRealizaronReuniones == true"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
       >
         Conclusiones
       </td>
@@ -11742,7 +10047,7 @@
         class="xl152"
         width="173"
         *ngIf="gestionSocial && gestionSocial.seRealizaronReuniones == true"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         <div [innerHTML]="gestionSocial.conclusion"></div>
       </td>
@@ -11751,7 +10056,7 @@
         class="xl152"
         width="173"
         *ngIf="gestionSocial && gestionSocial.seRealizaronReuniones == false"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       ></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -11760,7 +10065,7 @@
         colspan="6"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-left: solid 2px; width: 298pt"
       >
         URL soporte de la gestión social:
       </td>
@@ -11769,7 +10074,7 @@
         class="xl152"
         width="173"
         *ngIf="gestionSocial && gestionSocial.seRealizaronReuniones == true"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
       <ng-container *ngIf="gestionSocial">
         {{ gestionSocial.urlSoporteGestion }}
@@ -11782,7 +10087,7 @@
         colspan="32"
         class="xl261"
         width="398"
-        style="border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-left: solid 2px; width: 298pt"
       ></td>
     </tr>
     <tr class="xl81" height="34" style="mso-height-source: userset; height: 25.5pt">
@@ -11810,7 +10115,7 @@
     </tr>
     <tr class="xl89" height="26" style="mso-height-source: userset; height: 19.95pt">
       <td height="26" class="xl89" style="height: 19.95pt">&nbsp;</td>
-      <td colspan="32" class="xl126" style="border-right: 0.5pt solid black; font-size: 6pt; font-weight: 700">
+      <td colspan="32" class="xl126" style="border-right: 0.5pt solid black; font-size: 12px; font-weight: 700">
         TECNICAS:
       </td>
     </tr>
@@ -11825,7 +10130,7 @@
       <td
         colspan="32"
         class="xl311"
-        style="border-right: 0.5pt solid black; font-size: 6pt; border-top: 0.5pt solid black; font-weight: 700"
+        style="border-right: 0.5pt solid black; font-size: 12px; border-top: 0.5pt solid black; font-weight: 700"
       >
         LEGALES:
       </td>
@@ -11841,7 +10146,7 @@
       <td
         colspan="32"
         class="xl311"
-        style="border-right: 0.5pt solid black; font-size: 6pt; border-top: 0.5pt solid black; font-weight: 700"
+        style="border-right: 0.5pt solid black; font-size: 12px; border-top: 0.5pt solid black; font-weight: 700"
       >
         ADMINISTRATIVAS-FINANCIERAS:
       </td>
@@ -11877,7 +10182,7 @@
     </tr>
     <tr class="xl89" height="26" style="mso-height-source: userset; height: 19.95pt">
       <td height="26" class="xl89" style="height: 19.95pt">&nbsp;</td>
-      <td colspan="32" class="xl126" style="border-right: 0.5pt solid black; font-size: 6pt; font-weight: 700">
+      <td colspan="32" class="xl126" style="border-right: 0.5pt solid black; font-size: 12px; font-weight: 700">
         TECNICAS:
       </td>
     </tr>
@@ -11892,7 +10197,7 @@
       <td
         colspan="32"
         class="xl311"
-        style="font-size: 6pt; border-right: 0.5pt solid black; border-top: 0.5pt solid black; font-weight: 700"
+        style="font-size: 12px; border-right: 0.5pt solid black; border-top: 0.5pt solid black; font-weight: 700"
       >
         LEGALES:
       </td>
@@ -11908,7 +10213,7 @@
       <td
         colspan="32"
         class="xl311"
-        style="font-size: 6pt; border-top: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700"
+        style="font-size: 12px; border-top: 0.5pt solid black; border-right: 0.5pt solid black; font-weight: 700"
       >
         ADMINISTRATIVAS-FINANCIERAS:
       </td>
@@ -11947,7 +10252,7 @@
         colspan="32"
         class="xl261"
         width="398"
-        style="border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 298pt"
+        style="border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-left: solid 2px; width: 298pt"
       ></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -11957,11 +10262,12 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           border-top: 0.5pt solid black;
           text-align: center;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
         "
       >
         OBSERVACIONES
@@ -11971,7 +10277,7 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           border-top: 0.5pt solid black;
           text-align: left;
@@ -11988,18 +10294,19 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           border-top: 0.5pt solid black;
           text-align: center;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
         "
       ></td>
       <td
         colspan="6"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
       >
         Coordinador Firma
       </td>
@@ -12007,7 +10314,7 @@
         colspan="7"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
       ></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -12017,18 +10324,19 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           border-top: 0.5pt solid black;
           text-align: center;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
         "
       ></td>
       <td
         colspan="6"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
       >
         Nombre
       </td>
@@ -12036,7 +10344,7 @@
         colspan="7"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
       ></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -12046,18 +10354,19 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           border-top: 0.5pt solid black;
           text-align: center;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
         "
       ></td>
       <td
         colspan="6"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
       >
         No de Matricula
       </td>
@@ -12065,7 +10374,7 @@
         colspan="7"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
       ></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -12075,18 +10384,19 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           border-top: 0.5pt solid black;
           text-align: center;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
         "
       ></td>
       <td
         colspan="6"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
       >
         Residenter Firma
       </td>
@@ -12094,7 +10404,7 @@
         colspan="7"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
       ></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -12104,18 +10414,19 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           border-top: 0.5pt solid black;
           text-align: center;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
         "
       ></td>
       <td
         colspan="6"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
       >
         Nombre
       </td>
@@ -12123,7 +10434,7 @@
         colspan="7"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
       ></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -12133,18 +10444,19 @@
         class="xl261"
         width="398"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           font-weight: 700;
           border-top: 0.5pt solid black;
           text-align: center;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
         "
       ></td>
       <td
         colspan="6"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
       >
         No de Matricula
       </td>
@@ -12152,7 +10464,7 @@
         colspan="7"
         class="xl261"
         width="398"
-        style="font-size: 6pt; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
+        style="font-size: 12px; border-top: 0.5pt solid black; text-align: left; border-right: 0.5pt solid black"
       ></td>
     </tr>
     <tr class="xl89" height="42" style="mso-height-source: userset; height: 13.2pt">
@@ -12165,6 +10477,7 @@
           border-bottom: 0.5pt solid black;
           border-top: 0.5pt solid black;
           border-right: 0.5pt solid black;
+          border-left: solid 2px;
           width: 298pt;
         "
       ></td>
@@ -12197,14 +10510,14 @@
         colspan="10"
         class="xl528"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         URL con soporte
       </td>
       <td
         class="xl96"
         width="35"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
         colspan="22"
       >
       <ng-container *ngIf="registroFotografico">
@@ -12218,14 +10531,14 @@
         colspan="10"
         class="xl528"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
+        style="font-size: 12px; width: 130pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"
       >
         Observaciones
       </td>
       <td
         class="xl96"
         width="35"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
         colspan="22"
       >
         <div *ngIf="registroFotografico" [innerHTML]="registroFotografico.descripcion"></div>
@@ -12236,7 +10549,7 @@
       <td
         class="xl96"
         width="35"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-left: solid 2px;width: 26pt"
         colspan="32"
       >
         &nbsp;
@@ -12248,7 +10561,7 @@
         colspan="32"
         class="xl528"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-right: 0.5pt solid black; font-weight: 700"
+        style="font-size: 12px; width: 130pt; border-right: 0.5pt solid black; font-weight: 700"
       >
         FIRMA INTERVENTOR ( DIRECTOR DE INTERVENTORÍA)
       </td>
@@ -12260,7 +10573,7 @@
         class="xl528"
         width="173"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           width: 130pt;
           border-bottom: 0.5pt solid black;
           border-right: 0.5pt solid black;
@@ -12275,7 +10588,7 @@
       <td
         class="xl96"
         width="35"
-        style="font-size: 6pt; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; width: 26pt"
+        style="font-size: 12px; border-bottom: 0.5pt solid black; border-right: 0.5pt solid black; border-left: solid 2px; width: 26pt"
         colspan="32"
       >
         &nbsp;
@@ -12287,7 +10600,7 @@
         colspan="32"
         class="xl528"
         width="173"
-        style="font-size: 6pt; width: 130pt; border-right: 0.5pt solid black; font-weight: 700"
+        style="font-size: 12px; width: 130pt; border-right: 0.5pt solid black; font-weight: 700"
       >
         * VoBo SUPERVISOR (FIRMA)
       </td>
@@ -12299,7 +10612,7 @@
         class="xl528"
         width="173"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           width: 130pt;
           border-bottom: 0.5pt solid black;
           border-right: 0.5pt solid black;
@@ -12316,7 +10629,7 @@
         class="xl528"
         width="173"
         style="
-          font-size: 6pt;
+          font-size: 12px;
           width: 130pt;
           border-bottom: 0.5pt solid black;
           border-right: 0.5pt solid black;
@@ -12327,8 +10640,4 @@
       </td>
     </tr>
   </table>
-</div>
-
-<div class="text-center mt-2em mb-2em print-d-none">
-  <button mat-raised-button color="accent" (click)="downloadPDF()">Guardar</button>
 </div>

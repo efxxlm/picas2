@@ -26,7 +26,8 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
         acordeonInformacionGeneral: 'sin-diligenciar',
         acordeonEstrategiaPago: 'sin-diligenciar',
         acordeonObservacion: 'sin-diligenciar',
-        acordeonSoporteOrdenGiro: 'sin-diligenciar'
+        acordeonSoporteOrdenGiro: 'sin-diligenciar',
+        semaforoOrigen: 'sin-diligenciar',
     }
 
     constructor(
@@ -229,8 +230,8 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
                 arraySemaforoelement.push(element.estadoSemaforo)
             }
         });
-        if (arraySemaforoelement.every(n => n === 'completo') && proyecto.semaforoDetalle?.semaforoOrigen === 'completo') return 'completo'
-        if (arraySemaforoelement.every(n => n === 'completo') && proyecto.semaforoDetalle?.semaforoOrigen === 'sin-diligenciar') return 'en-proceso'
+        if (arraySemaforoelement.every(n => n === 'completo')) return 'completo'
+        if (arraySemaforoelement.every(n => n === 'completo')) return 'en-proceso'
         if (arraySemaforoelement.some(n => n === 'sin-diligenciar')) return 'sin-diligenciar'
         else return 'sin-diligenciar'
     }

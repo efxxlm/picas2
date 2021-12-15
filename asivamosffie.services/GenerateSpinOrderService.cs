@@ -878,17 +878,17 @@ namespace asivamosffie.services
             if (pOrdenGiroDetalleTerceroCausacion.ConceptoCodigo == "29")//es anticipo
                 tieneAmortizacion = false;
 
-            if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == false && !tieneAmortizacion)
-                return true;
+            if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == false && tieneAmortizacion)
+                return false;
 
-            if (pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
-               || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.ConceptoPagoCriterio)
+            if (//pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
+               string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.ConceptoPagoCriterio)
                || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.ConceptoCodigo)
                || string.IsNullOrEmpty(pOrdenGiroDetalleTerceroCausacion.TipoPagoCodigo)
-               || pOrdenGiroDetalleTerceroCausacion.ValorNetoGiro == 0
                || !pOrdenGiroDetalleTerceroCausacion.TieneDescuento.HasValue
                 ) return false;
-            if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() == 0)
+
+            if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento.Count() == 0 && pOrdenGiroDetalleTerceroCausacion.TieneDescuento == true)
                 return false;
 
 
@@ -1276,28 +1276,66 @@ namespace asivamosffie.services
 
         private void CreateEditOrdenGiroDetalleTerceroCausacion(List<OrdenGiroDetalleTerceroCausacion> pListOrdenGiroDetalleTerceroCausacion, string pUsuarioCreacion, int solicitudPagoId)
         {
-            int tieneAmortizacion = 0;
+            bool tieneAmortizacion = false;
+            string usoAnticipo = string.Empty;
+            decimal valorAmortizacion = 0;
 
             SolicitudPagoRegistrarSolicitudPago sp = _context.SolicitudPagoRegistrarSolicitudPago.Where(r => r.SolicitudPagoId == solicitudPagoId && r.Eliminado != true).Include(r => r.SolicitudPagoFase).FirstOrDefault();
             if (sp != null)
             {
                 foreach (var spf in sp.SolicitudPagoFase)
                 {
-                    if (tieneAmortizacion <= 0)
+                    if (!tieneAmortizacion)
                     {
-                        tieneAmortizacion = _context.SolicitudPagoFaseAmortizacion.Where(r => r.SolicitudPagoFaseId == spf.SolicitudPagoFaseId && r.Eliminado != true).Count();
+                        SolicitudPagoFaseAmortizacion spfa = _context.SolicitudPagoFaseAmortizacion.Where(r => r.SolicitudPagoFaseId == spf.SolicitudPagoFaseId && r.Eliminado != true).FirstOrDefault();
+                        tieneAmortizacion = spfa != null ? true : false;
+                        if (tieneAmortizacion)
+                        {
+                            //diferenciar por uso 
+                            valorAmortizacion = spfa.ValorAmortizacion ?? 0;
+                            SolicitudPagoFaseCriterioConceptoPago spfacp = _context.SolicitudPagoFaseCriterioConceptoPago.Find(spfa.SolicitudPagoFaseCriterioConceptoPagoId);
+                            if (spfacp != null)
+                                usoAnticipo = spfacp.UsoCodigo;
+                        }   
+
+                    }
+                }
+            }
+            decimal valorDescuentoAmortizacion = 0;
+            foreach (var pOrdenGiroDetalleTerceroCausacion in pListOrdenGiroDetalleTerceroCausacion)
+            {
+                string usoCodigo = string.Empty;
+
+                ConceptoPagoUso conceptoPagoUso = _context.ConceptoPagoUso.Where(r => r.ConceptoPagoCodigo == pOrdenGiroDetalleTerceroCausacion.ConceptoCodigo).FirstOrDefault();
+                if (conceptoPagoUso != null)
+                    usoCodigo = conceptoPagoUso.Uso;
+
+                bool tieneAmortizacionXUso = tieneAmortizacion && !string.IsNullOrEmpty(usoAnticipo) && usoAnticipo == usoCodigo ? true : false;
+                pOrdenGiroDetalleTerceroCausacion.TieneAmortizacion = tieneAmortizacionXUso;
+
+                if (tieneAmortizacion && !string.IsNullOrEmpty(usoAnticipo) && usoAnticipo == usoCodigo)
+                {
+                    foreach (var descuento in pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento)
+                    {
+                        if (descuento.TipoDescuentoCodigo == "5")
+                            valorDescuentoAmortizacion += descuento.ValorDescuento ?? 0;
                     }
                 }
             }
 
             foreach (var pOrdenGiroDetalleTerceroCausacion in pListOrdenGiroDetalleTerceroCausacion)
             {
+                ////truquito si no tiene descuentos pero el valor de amortización esta ok, no hace la validación en registro completo,
+                ////esto porque no todos los conceptos tienen el descuento, conque uno solo lo tenga y sea igual al valor amorizado basta
+                if (pOrdenGiroDetalleTerceroCausacion.TieneAmortizacion == true && pOrdenGiroDetalleTerceroCausacion.TieneDescuento == false && valorDescuentoAmortizacion == valorAmortizacion)
+                    pOrdenGiroDetalleTerceroCausacion.TieneAmortizacion = false;
+
                 if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId == 0)
                 {
                     pOrdenGiroDetalleTerceroCausacion.UsuarioCreacion = pUsuarioCreacion;
                     pOrdenGiroDetalleTerceroCausacion.FechaCreacion = DateTime.Now;
                     pOrdenGiroDetalleTerceroCausacion.Eliminado = false;
-                    pOrdenGiroDetalleTerceroCausacion.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion, tieneAmortizacion > 0 ? true : false);
+                    pOrdenGiroDetalleTerceroCausacion.RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion, pOrdenGiroDetalleTerceroCausacion.TieneAmortizacion);
 
                     _context.OrdenGiroDetalleTerceroCausacion.Add(pOrdenGiroDetalleTerceroCausacion);
                 }
@@ -1318,7 +1356,7 @@ namespace asivamosffie.services
                                 UsuarioModificacion = pUsuarioCreacion,
                                 ConceptoCodigo = pOrdenGiroDetalleTerceroCausacion.ConceptoCodigo,
                                 ValorFacturadoConcepto = pOrdenGiroDetalleTerceroCausacion.ValorFacturadoConcepto,
-                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion, tieneAmortizacion > 0 ? true : false)
+                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion, pOrdenGiroDetalleTerceroCausacion.TieneAmortizacion)
                             });
                 }
 

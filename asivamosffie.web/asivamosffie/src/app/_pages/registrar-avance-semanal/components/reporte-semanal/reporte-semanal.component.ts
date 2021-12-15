@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -11,7 +11,7 @@ import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarA
   styleUrls: ['./reporte-semanal.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ReporteSemanalComponent implements OnInit {
+export class ReporteSemanalComponent implements OnInit, AfterViewInit {
   contratacionProyectoId: string;
   seguimientoSemanalId: string;
   dataReporteSemanal: any;
@@ -32,6 +32,8 @@ export class ReporteSemanalComponent implements OnInit {
   residuosConstruccionId = 0; // ID residuos de construccion.
   residuosPeligrososId = 0; // ID residuos peligrosos.
   manejoOtrosId = 0; // ID manejo de otros.
+  avanceFisicoGrafica = '';
+  seguimientoFinancieroGrafica = '';
   public sumaTotal;
 
   constructor(
@@ -52,6 +54,10 @@ export class ReporteSemanalComponent implements OnInit {
         this.seguimientoSemanalId
       );
     });
+  }
+
+  ngAfterViewInit() {
+    setTimeout(this.downloadPDF, 2000);
   }
 
   getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId(
@@ -157,25 +163,31 @@ export class ReporteSemanalComponent implements OnInit {
           }
 
           if (this.dataReporteSemanal.seguimientoSemanalGestionObra.length > 0) {
-            this.gestionCalidad = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraCalidad[0];
-            this.gestionSST = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
-            this.gestionSocial = this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial[0];
+            this.gestionCalidad =
+              this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraCalidad[0];
+            this.gestionSST =
+              this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
+            this.gestionSocial =
+              this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial[0];
             this.actividadesARealizar = this.dataReporteSemanal.seguimientoSemanalReporteActividad[0];
             this.registroFotografico = this.dataReporteSemanal.seguimientoSemanalRegistroFotografico[0];
           }
 
-
+          this.avanceFisicoGrafica = this.dataReporteSemanal.actividadesARealizar
+            ? this.dataReporteSemanal.actividadesARealizar.split('wwwfrontend/')[1]
+            : '';
+          this.seguimientoFinancieroGrafica = this.dataReporteSemanal.seguimientoFinancieroGrafica
+            ? this.dataReporteSemanal.seguimientoFinancieroGrafica.split('wwwfrontend/')[1]
+            : '';
         }
       });
   }
   calcularTotal(data) {
     let total = 0;
     data.forEach(element => {
-      console.log(element);
       total += element.programacion;
       this.sumaTotal = total;
     });
-    console.log(this.sumaTotal);
   }
   downloadPDF() {
     window.print();

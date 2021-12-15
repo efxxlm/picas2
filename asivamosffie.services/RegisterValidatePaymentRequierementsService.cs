@@ -254,7 +254,12 @@ namespace asivamosffie.services
                     EstadoSolicitudPago = ((int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion).ToString();
                 }
                 else
+                {
                     CompleteRecord = false;
+                    if(EstadoSolicitudPago == ((int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion).ToString())
+                        EstadoSolicitudPago = ((int)EnumEstadoSolicitudPago.En_proceso_de_registro).ToString();
+
+                }
 
                 await _context.Set<SolicitudPago>()
                               .Where(s => s.SolicitudPagoId == SolicitudPagoId)
@@ -398,7 +403,7 @@ namespace asivamosffie.services
         //    }
         //}
 
-        public async Task<Respuesta> DeleteSolicitudPagoFaseCriterioConceptoPago(int pSolicitudPagoFaseCriterioConceptoId, string pUsuarioModificacion)
+        public async Task<Respuesta> DeleteSolicitudPagoFaseCriterioConceptoPago(int pSolicitudPagoFaseCriterioConceptoId, bool pEsConcepto, string pUsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Criterio_Pago, (int)EnumeratorTipoDominio.Acciones);
 
@@ -421,16 +426,33 @@ namespace asivamosffie.services
                                                                                                            .FirstOrDefault();
 
                 solicitudPagoFaseCriterioOld.ValorFacturado -= solicitudPagoFaseCriterioConceptoPagoOld.ValorFacturadoConcepto;
-
-
                 await _context.Set<SolicitudPagoFaseCriterio>()
                                                         .Where(r => r.SolicitudPagoFaseCriterioId == solicitudPagoFaseCriterioOld.SolicitudPagoFaseCriterioId)
                                                                                                                                                     .UpdateAsync(r => new SolicitudPagoFaseCriterio
                                                                                                                                                     {
-                                                                                                                                                        FechaModificacion = DateTime.Now,
-                                                                                                                                                        UsuarioModificacion = pUsuarioModificacion,
-                                                                                                                                                        ValorFacturado = solicitudPagoFaseCriterioOld.ValorFacturado
+                                                                                                                                                            FechaModificacion = DateTime.Now,
+                                                                                                                                                            UsuarioModificacion = pUsuarioModificacion,
+                                                                                                                                                            ValorFacturado = solicitudPagoFaseCriterioOld.ValorFacturado,
+                                                                                                                                                            Eliminado = pEsConcepto == true ? false : true
                                                                                                                                                     });
+                //le quito el que estoy eliminando 
+                if (!pEsConcepto)
+                {
+                    int totalCriterios = _context.SolicitudPagoFaseCriterio.Where(r => r.SolicitudPagoFaseId == solicitudPagoFaseCriterioOld.SolicitudPagoFaseId && r.Eliminado != true && r.RegistroCompleto == true).Count();
+
+                    if ((totalCriterios - 1) < 1)
+                    {
+                        await _context.Set<SolicitudPagoFase>()
+                                            .Where(r => r.SolicitudPagoFaseId == solicitudPagoFaseCriterioOld.SolicitudPagoFaseId)
+                                                                                                                                        .UpdateAsync(r => new SolicitudPagoFase
+                                                                                                                                        {
+                                                                                                                                            FechaModificacion = DateTime.Now,
+                                                                                                                                            UsuarioModificacion = pUsuarioModificacion,
+                                                                                                                                            RegistroCompleto = false,
+                                                                                                                                            RegistroCompletoCriterio = false
+                                                                                                                                        });
+                    }
+                }
 
                 return
                      new Respuesta
@@ -2523,6 +2545,9 @@ namespace asivamosffie.services
 
         private bool ValidateCompleteRecordSolicitudPagoFaseCriterio2(ICollection<SolicitudPagoFaseCriterio> ListsolicitudPagoFaseCriterio)
         {
+            if(ListsolicitudPagoFaseCriterio.Count == 0)
+               return false;
+
             foreach (var solicitudPagoFaseCriterio in ListsolicitudPagoFaseCriterio)
             {
                 if (
