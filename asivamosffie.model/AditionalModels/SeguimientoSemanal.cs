@@ -44,6 +44,9 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public dynamic InfoProyecto { get; set; }
+
+        [NotMapped]
+        public bool? AjusteProgramacion { get; set; }
     }
 
 

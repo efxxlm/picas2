@@ -20,6 +20,7 @@ using asivamosffie.services.Helpers;
 using asivamosffie.model.AditionalModels;
 using Microsoft.Extensions.Options;
 using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Http;
 
 namespace asivamosffie.services
 {
@@ -335,7 +336,7 @@ namespace asivamosffie.services
                 await GetSeguimientoFinanciero(seguimientoSemanal, pRutaGrafico);
                 await GetRegistroAnticipo(seguimientoSemanal);
 
-
+                await GetAjusteProgramacion(seguimientoSemanal);
 
                 //si es tai -> cambiar fecha fin 
                 ContratacionProyecto cp = _context.ContratacionProyecto.Find(pContratacionProyectoId);
@@ -525,6 +526,18 @@ namespace asivamosffie.services
             }
 
             seguimientoSemanal.RegistroAnticipo = registroAnticipo;
+        }
+
+        private async Task GetAjusteProgramacion(SeguimientoSemanal seguimientoSemanal)
+        {
+            try
+            {
+                AjusteProgramacionFlujo apf = await _context.AjusteProgramacionFlujo.Where(r => r.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId)
+                                                                                    .Include(r => r.AjusteProgramacion).FirstOrDefaultAsync();
+
+                seguimientoSemanal.AjusteProgramacion = apf != null && apf.AjusteProgramacionFlujoId != 0 && apf.AjusteProgramacion != null && apf.AjusteProgramacion.EstadoCodigo.Equals("5");
+            }
+            catch { }
         }
 
         private void GetInformacionGeneral(SeguimientoSemanal pSeguimientoSemanal)
@@ -2241,7 +2254,6 @@ namespace asivamosffie.services
                 _context.SeguimientoSemanalAvanceFisico.Add(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
 
                 CrearEditarSeguimientoSemanalAvanceFisicoProgramacion(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoProgramacion, pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().UsuarioCreacion);
-
             }
             else
             {
@@ -2253,6 +2265,8 @@ namespace asivamosffie.services
                 seguimientoSemanalAvanceFisicoOld.EstadoObraCodigo = ValidarEstadoDeObraBySeguimientoSemanalId(pSeguimientoSemanal.SeguimientoSemanalId);
                 seguimientoSemanalAvanceFisicoOld.ProgramacionSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
                 seguimientoSemanalAvanceFisicoOld.AvanceFisicoSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
+
+                seguimientoSemanalAvanceFisicoOld.Observaciones = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().Observaciones;
 
                 CrearEditarSeguimientoSemanalAvanceFisicoProgramacion(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoProgramacion, pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().UsuarioCreacion);
 
@@ -3627,6 +3641,58 @@ namespace asivamosffie.services
 
         #endregion
 
+        public async Task<Respuesta> UploadFileSeguimientoSemanalAvanceFisico(IFormFile pFile, int pContratacionProyectoId, string pDirectorioBase, string pDirectorioEspecifico)
+        {
+            try
+            {
+                string strFilePatch = string.Empty;
+                bool crearFile = false;
+
+                if (pFile != null && pFile.Length > 0)
+                {
+                    strFilePatch = Path.Combine(pDirectorioBase, pDirectorioEspecifico, pContratacionProyectoId.ToString());
+                    crearFile = await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
+                }
+                else 
+                {
+                    return new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = false,
+                        IsValidation = true,
+                        Code = GeneralCodes.EntradaInvalida,
+                        Message = "No se encontró el archivo"
+                    };
+                }
+
+                ContratacionProyecto ContratacionProyecto = _context.ContratacionProyecto.Find(pContratacionProyectoId);
+
+                ContratacionProyecto.SuportProyectRuta = Path.Combine(strFilePatch, pFile.FileName);
+
+                _context.Update(ContratacionProyecto);
+                await _context.SaveChangesAsync();
+
+                return new Respuesta
+                {
+
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.Error,
+                    Message = ex.InnerException.ToString()
+                };
+            }
+        }
 
     }
 }

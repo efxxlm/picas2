@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using asivamosffie.model.Models;
 using asivamosffie.model.APIModels;
+using Microsoft.AspNetCore.Http;
 
 namespace asivamosffie.services.Interfaces
 {
@@ -41,5 +42,6 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> DeleteManejoMaterialesInsumosProveedor(int ManejoMaterialesInsumosProveedorId, string pUsuarioModificacion);
 
         Task<Respuesta> DeleteResiduosConstruccionDemolicionGestor(int ResiduosConstruccionDemolicionGestorId, string pUsuarioModificacion);
+        Task<Respuesta> UploadFileSeguimientoSemanalAvanceFisico(IFormFile pFile, int pContratacionProyectoId, string pDirectorioBase, string pDirectorioEspecifico);
     }
 }

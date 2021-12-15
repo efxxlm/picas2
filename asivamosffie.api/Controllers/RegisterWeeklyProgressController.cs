@@ -93,6 +93,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId")]
         [HttpGet]
+        [AllowAnonymous]
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId([FromQuery] int pContratacionProyectoId, int pSeguimientoSemanalId)
         {
             try
@@ -233,6 +234,27 @@ namespace asivamosffie.api.Controllers
             {
                 respuesta.Data = ex.ToString();
                 return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("UploadFileSeguimientoSemanalAvanceFisico")]
+        [AllowAnonymous]
+        public async Task<IActionResult> UploadFileSeguimientoSemanalAvanceFisico(IFormFile pFile, [FromForm]int pContratacionProyectoId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+
+                if (pFile.Length > 0 && (pFile.FileName.Contains(".mpp") || pFile.FileName.Contains(".mppx")))
+                {
+                    respuesta = await _registerWeeklyProgressService.UploadFileSeguimientoSemanalAvanceFisico(pFile, pContratacionProyectoId, _settings.Value.DirectoryBase, _settings.Value.DirectoryBaseSeguimientoSemanalAvanceFisico);
+                }
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
             }
         }
 

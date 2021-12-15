@@ -325,6 +325,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRegistrarPersonalObra> VRegistrarPersonalObra { get; set; }
         public virtual DbSet<VRendimientodXcuentaBancaria> VRendimientodXcuentaBancaria { get; set; }
         public virtual DbSet<VReporteProyectos> VReporteProyectos { get; set; }
+        public virtual DbSet<VRequiereAnticipoXcontratacionProyecto> VRequiereAnticipoXcontratacionProyecto { get; set; }
         public virtual DbSet<VRequisitosTecnicosConstruccionAprobar> VRequisitosTecnicosConstruccionAprobar { get; set; }
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
@@ -10979,6 +10980,13 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoProyecto).HasMaxLength(250);
             });
 
+            modelBuilder.Entity<VRequiereAnticipoXcontratacionProyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_RequiereAnticipoXContratacionProyecto");
+            });
+
             modelBuilder.Entity<VRequisitosTecnicosConstruccionAprobar>(entity =>
             {
                 entity.HasNoKey();
@@ -11989,7 +11997,6 @@ namespace asivamosffie.model.Models
 
             OnModelCreatingPartial(modelBuilder);
         }
-
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
