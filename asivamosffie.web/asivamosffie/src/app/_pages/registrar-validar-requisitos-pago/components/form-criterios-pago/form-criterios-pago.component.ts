@@ -917,9 +917,9 @@ export class FormCriteriosPagoComponent implements OnInit {
         if(solicitudPagoFase != null){
           if(solicitudPagoFase?.solicitudPagoFaseAmortizacion[0] != null){
             this.criterios.controls.forEach( control => {
+              let valorFacturadoOnlyUsoAnticipo = 0;
               valorAmortizacion = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
               if(cumpleCondiciones == true){
-                  let valorFacturadoOnlyUsoAnticipo = 0;
                   let usoCodigoAnticipo = this.contrato?.vAmortizacionXproyecto?.find((r: { tieneAnticipo: boolean; }) => r.tieneAnticipo == true)?.usoCodigo;
                   control.get( 'conceptos' ).value.forEach((concepto: { usoCodigo: any, valorFacturadoConcepto: number }) => {
                     if(concepto.usoCodigo == usoCodigoAnticipo){
