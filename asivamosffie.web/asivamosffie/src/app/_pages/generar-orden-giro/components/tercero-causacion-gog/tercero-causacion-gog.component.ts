@@ -1225,21 +1225,18 @@ export class TerceroCausacionGogComponent implements OnInit {
                 if ( this.getDescuentos( indexCriterio, indexConcepto ).length > 0 && conceptoControl.get( 'descuento' ).get( 'aplicaDescuentos' ).value === true ) {
                   this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( ( element ) => {
                       if(element.get( 'tipoDescuento' ).value == "5"){
-                        let valueTotalDescuento = 0;
-
                         if(this.solicitudPagoFase?.solicitudPagoFaseAmortizacion.length > 0){
                           if(element.get( 'aportantesDescuento' ).value.length > 0){
                             element.get( 'aportantesDescuento' ).value.forEach((desc: any, i: number) => {
                                 if(desc != null){
                                   if(desc.valorDescuento > 0){
-                                    valueTotalDescuento += desc.valorDescuento;
                                     //ahora tambien se tiene en cuenta el aportante
                                     listXAportante.forEach(a => {
                                       if(a.aportanteId == desc.nombreAportante?.cofinanciacionAportanteId){
                                         if(a.valueTotalDescuento != undefined && a.valueTotalDescuento != null){
-                                          a.valueTotalDescuento += valueTotalDescuento;
+                                          a.valueTotalDescuento += desc.valorDescuento;
                                         }else{
-                                          a.valueTotalDescuento = valueTotalDescuento;
+                                          a.valueTotalDescuento = desc.valorDescuento;
                                         }
                                         a.nombreAportante = desc.nombreAportante?.nombreAportante;
                                       }
