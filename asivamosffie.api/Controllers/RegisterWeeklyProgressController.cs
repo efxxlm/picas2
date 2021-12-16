@@ -91,6 +91,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("GetSeguimientoSemanalBySeguimientoSemanalId")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<SeguimientoSemanal> GetSeguimientoSemanalBySeguimientoSemanalId([FromQuery] int pSeguimientoSemanalId)
+        {
+            try
+            { 
+                return await _registerWeeklyProgressService.GetSeguimientoSemanalBySeguimientoSemanalId(pSeguimientoSemanalId, _settings.Value.DirectoryCharts);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [Route("GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId")]
         [HttpGet]
         [AllowAnonymous]

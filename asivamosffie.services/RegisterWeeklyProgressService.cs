@@ -266,6 +266,98 @@ namespace asivamosffie.services
                 seguimientoSemanals.LastOrDefault().FechaFin
             };
         }
+        public async Task<SeguimientoSemanal> GetSeguimientoSemanalBySeguimientoSemanalId(int pSeguimientoSemanalId, string pRutaGrafico)
+        {
+            try
+            {
+                SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
+                      .Include(r => r.SeguimientoDiario)
+                              .ThenInclude(r => r.SeguimientoDiarioObservaciones)
+                          //Financiero
+                          .Include(r => r.SeguimientoSemanalAvanceFinanciero)
+                       //Fisico
+                       .Include(r => r.SeguimientoSemanalAvanceFisico)
+                          .ThenInclude(r => r.SeguimientoSemanalAvanceFisicoProgramacion)
+                                .ThenInclude(r => r.Programacion)
+                                .ThenInclude(r => r.FlujoInversion)
+                       //Gestion Obra
+                       //Gestion Obra Ambiental
+                       .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                         // Gestion Obra Calidad
+                         .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                                .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                    .ThenInclude(r => r.EnsayoLaboratorioMuestra)
+
+                      // Gestion Obra Calidad + Observaciones
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                         .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                             .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                 .ThenInclude(r => r.ObservacionSupervisor)
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                         .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                             .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                 .ThenInclude(r => r.ObservacionApoyo)
+
+                         //   Gestion Obra Calidad
+                         .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
+                                .ThenInclude(r => r.SeguridadSaludCausaAccidente)
+
+                        //Gestion Obra Social
+                        .Include(r => r.SeguimientoSemanalGestionObra)
+                           .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
+
+                       .Include(r => r.SeguimientoSemanalGestionObra)
+                           .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
+
+                       .Include(r => r.SeguimientoSemanalReporteActividad)
+                       .Include(r => r.SeguimientoSemanalRegistroFotografico)
+                       .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
+
+                       .FirstOrDefaultAsync();
+
+                await GetModInfoSeguimientoSemanal(seguimientoSemanal);
+
+                GetInformacionGeneral(seguimientoSemanal);
+
+                await GetAvanceFisico(seguimientoSemanal, pRutaGrafico);
+                await GetSeguimientoFinanciero(seguimientoSemanal, pRutaGrafico);
+                await GetRegistroAnticipo(seguimientoSemanal);
+
+                await GetAjusteProgramacion(seguimientoSemanal);
+
+                //si es tai -> cambiar fecha fin 
+                ContratacionProyecto cp = _context.ContratacionProyecto.Find(seguimientoSemanal.ContratacionProyectoId);
+                if (cp != null)
+                {
+                    Contrato c = _context.Contrato.Where(r => r.ContratacionId == cp.ContratacionId && r.Eliminado != true).FirstOrDefault();
+                    if (c != null)
+                    {
+                        if (_contractualControversy.ValidarCumpleTaiContratista(c.ContratoId, false, false, 0))
+                        {
+                            DateTime? fechaActuacion = _contractualControversy.FechaActuacionTaiContratista(c.ContratoId);
+                            if (fechaActuacion != null)
+                            {
+                                if (((DateTime)fechaActuacion).Date >= ((DateTime)seguimientoSemanal.FechaInicio).Date && ((DateTime)fechaActuacion).Date <= ((DateTime)seguimientoSemanal.FechaFin).Date)
+                                {
+                                    if (((DateTime)fechaActuacion).Date < ((DateTime)seguimientoSemanal.FechaFin).Date)
+                                    {
+                                        seguimientoSemanal.FechaFin = fechaActuacion;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return seguimientoSemanal;
+            }
+            catch (Exception ex)
+            {
+                return new SeguimientoSemanal();
+            }
+        }
 
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId, string pRutaGrafico)
         {
@@ -332,11 +424,12 @@ namespace asivamosffie.services
 
                 GetInformacionGeneral(seguimientoSemanal);
 
-                await GetAvanceFisico(seguimientoSemanal, pRutaGrafico);
-                await GetSeguimientoFinanciero(seguimientoSemanal, pRutaGrafico);
-                await GetRegistroAnticipo(seguimientoSemanal);
+                //await GetAvanceFisico(seguimientoSemanal, pRutaGrafico);
+                //await GetSeguimientoFinanciero(seguimientoSemanal, pRutaGrafico);
 
-                await GetAjusteProgramacion(seguimientoSemanal);
+                // await GetRegistroAnticipo(seguimientoSemanal);
+
+                //   await GetAjusteProgramacion(seguimientoSemanal);
 
                 //si es tai -> cambiar fecha fin 
                 ContratacionProyecto cp = _context.ContratacionProyecto.Find(pContratacionProyectoId);
@@ -3653,7 +3746,7 @@ namespace asivamosffie.services
                     strFilePatch = Path.Combine(pDirectorioBase, pDirectorioEspecifico, pContratacionProyectoId.ToString());
                     crearFile = await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
                 }
-                else 
+                else
                 {
                     return new Respuesta
                     {
