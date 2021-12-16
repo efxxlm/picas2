@@ -78,14 +78,13 @@
                     *ngIf="element.registroCompletoMuestra === true">
                     Enviar muestras a verificación
             </button>
-            <a mat-raised-button
-              color="accent"
-              class="btn-table"
-
-              [routerLink]="[ 'informeSemanal', 0, element.seguimientoSemanalId ]"
+            <button mat-raised-button
+            color="accent"
+            class="btn-table"
+            [routerLink]="[ 'informeSemanal', 0, element.seguimientoSemanalId ]"
             >
             Informe Semanal
-            </a>
+           </button>
           </td>
         </ng-container>
 

@@ -34,6 +34,10 @@ const routes: Routes = [
     component: ConsultarEditarBitacoraComponent
   },
   {
+    path: 'consultarEditarBitacora/:id/informeSemanal/:pContratacionProyectoId/:pSeguimientoSemanalId',
+    component: ReporteSemanalComponent
+  },
+  {
     path: 'consultarEditarBitacora/:id/verDetalleAvanceSemanal/:idAvance',
     component: VerDetalleAvanceSemanalComponent
   },

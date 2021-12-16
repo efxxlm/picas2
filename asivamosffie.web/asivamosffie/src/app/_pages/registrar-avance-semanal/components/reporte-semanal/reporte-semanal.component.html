@@ -7134,13 +7134,13 @@
         REGION
       </td>
       <td colspan="5" class="xl427" style="border-left: 0px; border-right: 0.5pt solid black">&
-        {{ dataReporteSemanal.informacionGeneralProyecto[0].ubicacion.region }}
+        {{ dataReporteSemanal?.informacionGeneralProyecto[0]?.ubicacion.region }}
       </td>
       <td colspan="3" class="xl429" style="font-size: 12px; text-align: left; border-right: 0.5pt solid black">
         MUNICIPIO
       </td>
       <td colspan="9" class="xl429" style="border-right: 0.5pt solid black">
-        {{ dataReporteSemanal.informacionGeneralProyecto[0].ubicacion.municipio }}
+        {{ dataReporteSemanal?.informacionGeneralProyecto[0]?.ubicacion.municipio }}
       </td>
       <td
         colspan="2"
@@ -7150,19 +7150,19 @@
         SEMANA No
       </td>
       <td class="xl192" style="border-top: 0px; border-left: 0px">
-        {{ dataReporteSemanal.informacionGeneralProyecto[0].semanaNo }}
+        {{ dataReporteSemanal?.informacionGeneralProyecto[0]?.semanaNo }}
       </td>
       <td class="xl192" style="border-top: 0px; border-left: 0.5pt solid black; font-size: 12px; text-align: center">
         DEL
       </td>
       <td colspan="4" class="xl436" style="border-left: 0.5pt solid black">
-      {{ dataReporteSemanal.informacionGeneralProyecto[0].semanaInicio | date: 'dd/MM/yyyy' }}
+      {{ dataReporteSemanal?.informacionGeneralProyecto[0]?.semanaInicio | date: 'dd/MM/yyyy' }}
     </td>
       <td class="xl192" style="border-top: 0px; border-left: 0.5pt solid black; font-size: 12px; text-align: center">
         AL
       </td>
       <td colspan="3" class="xl436" style="border-right: 0.5pt solid black; border-left: 0.5pt solid black">
-      {{ dataReporteSemanal.informacionGeneralProyecto[0].semanaFin | date: 'dd/MM/yyyy' }}
+      {{ dataReporteSemanal?.informacionGeneralProyecto[0]?.semanaFin | date: 'dd/MM/yyyy' }}
     </td>
     </tr>
     <tr class="xl81" style="height: 29.25pt">
@@ -7184,7 +7184,7 @@
         class="xl424"
         style="font-size: 12px; border-top: 1px solid black; border-right: 1pt solid black; border-left: 0px"
       >
-      {{ dataReporteSemanal.informacionGeneralProyecto[0].localizacionProyecto }}
+      {{ dataReporteSemanal?.informacionGeneralProyecto[0]?.localizacionProyecto }}
     </td>
     </tr>
     <tr class="xl81" style="height: 26.25pt">
@@ -7485,7 +7485,7 @@
       <td class="xl235" style="border-top: 0px">&nbsp;</td>
       <td class="xl235" style="border-top: 0px">&nbsp;</td>
       <td class="xl235" style="border-top: 0px" colspan="6">&nbsp;</td>
-      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;" [attr.rowspan]="dataReporteSemanal.seguimientoFinanciero.length + 7">
+      <td class="xl211" colspan="12" style="border-right: 0.5pt solid black;" [attr.rowspan]="dataReporteSemanal?.seguimientoFinanciero?.length + 7">
         <img *ngIf="seguimientoFinancieroGrafica" [src]="seguimientoFinancieroGrafica" alt="Seguimiento Financiero Grafica" style="width: 97%; margin: 1em;">
       </td>
     </tr>
@@ -7712,7 +7712,7 @@
       </td>
       <td class="xl216"></td>
     </tr>
-    <tr class="xl81" height="26" style="height: 19.5pt" *ngFor="let seguimiento of dataReporteSemanal.seguimientoFinanciero; let i = index">
+    <tr class="xl81" height="26" style="height: 19.5pt" *ngFor="let seguimiento of dataReporteSemanal?.seguimientoFinanciero; let i = index">
       <td height="26" class="xl202" style="height: 19.5pt">&nbsp;</td>
       <td
         class="xl239"
@@ -7955,7 +7955,7 @@
           font-size: 5pt;
           font-weight: 700;
           font-family: Arial, sans-serif;
-  
+
           text-align: center;
           vertical-align: top;
           border: 0.5pt solid black;
@@ -8141,28 +8141,28 @@
       <td class="xl216"></td>
       <td class="xl216"></td>
       <td class="xl285" width="162" style="font-size: 12px; vertical-align: inherit; width: 121pt">
-        {{ dataReporteSemanal.registroAnticipo.valorAnticipo | currency: '':'symbol-narrow':'.0-0' }}
+        {{ dataReporteSemanal?.registroAnticipo?.valorAnticipo | currency: '':'symbol-narrow':'.0-0' }}
       </td>
       <td class="xl282" width="109" style="font-size: 12px; vertical-align: inherit; border-left: none; width: 81pt">
-        {{ dataReporteSemanal.registroAnticipo.valorAnticipoDesembolsado | currency: '':'symbol-narrow':'.0-0' }}
+        {{ dataReporteSemanal?.registroAnticipo?.valorAnticipoDesembolsado | currency: '':'symbol-narrow':'.0-0' }}
       </td>
       <td class="xl282" width="116" style="font-size: 12px; vertical-align: inherit; border-left: none; width: 87pt">
-        {{ dataReporteSemanal.registroAnticipo.diferenciaCorrespondienteImpuestos | currency: '':'symbol-narrow':'.0-0' }}
+        {{ dataReporteSemanal?.registroAnticipo?.diferenciaCorrespondienteImpuestos | currency: '':'symbol-narrow':'.0-0' }}
       </td>
       <td class="xl282" width="109" style="font-size: 12px; vertical-align: inherit;border-left: none; width: 81pt">
-        {{ dataReporteSemanal.registroAnticipo.totalGirosSolicitadosAprobados  }}
+        {{ dataReporteSemanal?.registroAnticipo?.totalGirosSolicitadosAprobados  }}
       </td>
       <td class="xl282" width="114" style="font-size: 12px; vertical-align: inherit;border-left: none; width: 85pt">
-        {{ dataReporteSemanal.registroAnticipo.saldoAnticipoPorSolicitar }}
+        {{ dataReporteSemanal?.registroAnticipo?.saldoAnticipoPorSolicitar }}
       </td>
       <td class="xl282" width="140" style="font-size: 12px; vertical-align: inherit;border-left: none; width: 106pt">
-        <div style="border-bottom: solid 1px;" *ngFor="let amortizacion of dataReporteSemanal.registroAnticipo.registroIndividualAnticipo">
-          {{ amortizacion.valorAmortizacion | currency: '':'symbol-narrow':'.0-0' }}
+        <div style="border-bottom: solid 1px;" *ngFor="let amortizacion of dataReporteSemanal?.registroAnticipo?.registroIndividualAnticipo">
+          {{ amortizacion?.valorAmortizacion | currency: '':'symbol-narrow':'.0-0' }}
         </div>
       </td>
       <td class="xl282" width="136" style="font-size: 12px; vertical-align: inherit;border-right: 1pt solid black; border-left: none; width: 102pt">
-        <div style="border-bottom: solid 1px;" *ngFor="let amortizacion of dataReporteSemanal.registroAnticipo.registroIndividualAnticipo">
-          {{ amortizacion.saldoAmortizar | currency: '':'symbol-narrow':'.0-0' }}
+        <div style="border-bottom: solid 1px;" *ngFor="let amortizacion of dataReporteSemanal?.registroAnticipo?.registroIndividualAnticipo">
+          {{ amortizacion?.saldoAmortizar | currency: '':'symbol-narrow':'.0-0' }}
         </div>
       </td>
     </tr>
@@ -8226,7 +8226,7 @@
         &nbsp;
         <div
           *ngIf="
-            dataReporteSemanal?.seguimientoSemanalGestionObra.length > 0 &&
+            dataReporteSemanal?.seguimientoSemanalGestionObra?.length > 0 &&
             dataReporteSemanal?.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAlerta[0].seguimientoSemanalGestionObraAmbiental[0]
               .seEjecutoGestionAmbiental == true
           "
@@ -9035,7 +9035,7 @@
         "
       >
       <ng-container *ngIf="gestionCalidad">
-        {{ gestionCalidad.gestionObraCalidadEnsayoLaboratorio.length }}  
+        {{ gestionCalidad.gestionObraCalidadEnsayoLaboratorio.length }}
       </ng-container>
       </td>
       <td colspan="8" style="border-bottom: 0.5pt solid black; border-right: 0.5pt solid black"></td>

@@ -24,6 +24,12 @@ export class RegistrarAvanceSemanalService {
         );
     }
 
+    getSeguimientoSemanalBySeguimientoSemanalId( pSeguimientoSemanalId: number ) {
+      return this.http.get(
+        `${ this.urlApi }/GetSeguimientoSemanalBySeguimientoSemanalId?pSeguimientoSemanalId=${ pSeguimientoSemanalId }`
+      );
+    }
+
     getEnsayoLaboratorioMuestras( pGestionObraCalidadEnsayoLaboratorioId: number ) {
         return this.http.get<any[]>( `${ this.urlApi }/GetEnsayoLaboratorioMuestras?pGestionObraCalidadEnsayoLaboratorioId=${ pGestionObraCalidadEnsayoLaboratorioId }` );
     }

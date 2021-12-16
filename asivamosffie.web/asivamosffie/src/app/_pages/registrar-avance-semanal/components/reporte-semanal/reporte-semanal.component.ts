@@ -49,15 +49,140 @@ export class ReporteSemanalComponent implements OnInit, AfterViewInit {
       this.seguimientoSemanalId = params.pSeguimientoSemanalId;
       // console.log(this.contratacionProyectoId);
       // console.log(this.seguimientoSemanalId);
-      this.getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId(
+      /*this.getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId(
         this.contratacionProyectoId,
         this.seguimientoSemanalId
+      );*/
+      this.getSeguimientoSemanalBySeguimientoSemanalId(
+        this.seguimientoSemanalId
       );
+
     });
   }
 
   ngAfterViewInit() {
     setTimeout(this.downloadPDF, 2000);
+  }
+
+  getSeguimientoSemanalBySeguimientoSemanalId(
+    pSeguimientoSemanalId
+  ) {
+    //0-156
+    // console.log(pContratacionProyectoId);
+    this.registrarAvanceSemanalService
+      .getSeguimientoSemanalBySeguimientoSemanalId(
+        pSeguimientoSemanalId
+      )
+      .subscribe(response => {
+        this.dataReporteSemanal = response;
+        console.log('dataReporteSemanal', this.dataReporteSemanal);
+        if (this.dataReporteSemanal !== undefined) {
+          this.infoGeneralObra = this.dataReporteSemanal.informacionGeneral[0][0];
+          this.infoGeneralInterventoria = this.dataReporteSemanal.informacionGeneral[1][0];
+          this.seguimientoSemanalId = this.dataReporteSemanal.seguimientoSemanalId;
+          this.avanceFisico = this.dataReporteSemanal.avanceFisico;
+          this.calcularTotal(this.avanceFisico);
+          this.seguimientoSemanalGestionObraId =
+            this.dataReporteSemanal.seguimientoSemanalGestionObra.length > 0
+              ? this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraId
+              : 0;
+          if (
+            this.dataReporteSemanal.seguimientoSemanalGestionObra.length > 0 &&
+            this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental.length > 0
+          ) {
+            this.cantidadActividades = 0;
+            this.gestionObraAmbiental =
+              this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental[0];
+
+            if (this.gestionObraAmbiental.seEjecutoGestionAmbiental !== undefined) {
+              this.gestionAmbiental = true;
+            } else {
+              this.gestionAmbiental = false;
+            }
+
+            if (this.gestionObraAmbiental.seEjecutoGestionAmbiental === false) {
+              // ID gestionAmbiental
+              this.gestionAmbientalId = this.gestionObraAmbiental.seguimientoSemanalGestionObraAmbientalId;
+              /* Verificacion con Julian Martinez y John Portela
+                  if ( this.esVerDetalle === false ) {
+                      this.registrarAvanceSemanalService.getObservacionSeguimientoSemanal(parseInt(this.seguimientoSemanalId), this.gestionAmbientalId, this.tipoObservacionAmbiental.gestionAmbientalCodigo )
+                          .subscribe(
+                              response => {
+                                  this.obsApoyo = response.find( obs => obs.archivada === false && obs.esSupervisor === false );
+                                  this.obsSupervisor = response.find( obs => obs.archivada === false && obs.esSupervisor === true );
+                                  this.historialGestionAmbiental = response;
+
+                                  if ( this.obsApoyo !== undefined || this.obsSupervisor !== undefined ) {
+                                      this.tieneObservacion.emit();
+                                  }
+
+                                  this.tablaHistorialgestionAmbiental = new MatTableDataSource( this.historialGestionAmbiental );
+                              }
+                          );
+                  }
+                  */
+            }
+            if (this.gestionObraAmbiental.tieneManejoMaterialesInsumo === true) {
+              // ID manejo de materiales e insumos
+              if (this.gestionObraAmbiental.manejoMaterialesInsumo !== undefined) {
+                this.manejoMaterialInsumoId =
+                  this.gestionObraAmbiental.manejoMaterialesInsumo.manejoMaterialesInsumosId;
+              }
+
+              this.cantidadActividades++;
+            }
+            if (this.gestionObraAmbiental.tieneManejoResiduosConstruccionDemolicion === true) {
+              // ID residuos construccion
+              if (this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion !== undefined) {
+                this.residuosConstruccionId =
+                  this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.manejoResiduosConstruccionDemolicionId;
+              }
+
+              this.cantidadActividades++;
+            }
+            if (this.gestionObraAmbiental.tieneManejoResiduosPeligrososEspeciales === true) {
+              // ID residuos peligrosos
+              if (this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales !== undefined) {
+                this.residuosPeligrososId =
+                  this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.manejoResiduosPeligrososEspecialesId;
+              }
+
+              this.cantidadActividades++;
+            }
+            if (this.gestionObraAmbiental.tieneManejoOtro === true) {
+              // ID manejo de otros
+              if (this.gestionObraAmbiental.manejoOtro !== undefined) {
+                this.manejoOtrosId = this.gestionObraAmbiental.manejoOtro.manejoOtroId;
+              }
+
+              this.cantidadActividades++;
+            }
+            if (this.gestionObraAmbiental.seEjecutoGestionAmbiental === true) {
+              if (this.cantidadActividades > 0) {
+                this.cantidadActividades = this.cantidadActividades;
+              }
+            }
+          }
+
+          if (this.dataReporteSemanal.seguimientoSemanalGestionObra.length > 0) {
+            this.gestionCalidad =
+              this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraCalidad[0];
+            this.gestionSST =
+              this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
+            this.gestionSocial =
+              this.dataReporteSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial[0];
+            this.actividadesARealizar = this.dataReporteSemanal.seguimientoSemanalReporteActividad[0];
+            this.registroFotografico = this.dataReporteSemanal.seguimientoSemanalRegistroFotografico[0];
+          }
+
+          this.avanceFisicoGrafica = this.dataReporteSemanal.actividadesARealizar
+            ? this.dataReporteSemanal.actividadesARealizar.split('wwwfrontend/')[1]
+            : '';
+          this.seguimientoFinancieroGrafica = this.dataReporteSemanal.seguimientoFinancieroGrafica
+            ? this.dataReporteSemanal.seguimientoFinancieroGrafica.split('wwwfrontend/')[1]
+            : '';
+        }
+      });
   }
 
   getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId(
