@@ -8157,12 +8157,12 @@
       </td>
       <td class="xl282" width="140" style="font-size: 12px; vertical-align: inherit;border-left: none; width: 106pt">
         <div style="border-bottom: solid 1px;" *ngFor="let amortizacion of dataReporteSemanal.registroAnticipo.registroIndividualAnticipo">
-          {{ amortizacion.valorAmortizacion }}
+          {{ amortizacion.valorAmortizacion | currency: '':'symbol-narrow':'.0-0' }}
         </div>
       </td>
       <td class="xl282" width="136" style="font-size: 12px; vertical-align: inherit;border-right: 1pt solid black; border-left: none; width: 102pt">
         <div style="border-bottom: solid 1px;" *ngFor="let amortizacion of dataReporteSemanal.registroAnticipo.registroIndividualAnticipo">
-          {{ amortizacion.saldoAmortizar }}
+          {{ amortizacion.saldoAmortizar | currency: '':'symbol-narrow':'.0-0' }}
         </div>
       </td>
     </tr>
