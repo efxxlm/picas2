@@ -251,6 +251,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VAportanteFuente> VAportanteFuente { get; set; }
         public virtual DbSet<VAportanteFuenteUso> VAportanteFuenteUso { get; set; }
         public virtual DbSet<VAportanteFuenteUsoProyecto> VAportanteFuenteUsoProyecto { get; set; }
+        public virtual DbSet<VAportantesXanticipoXcontrato> VAportantesXanticipoXcontrato { get; set; }
         public virtual DbSet<VAportantesXcriterio> VAportantesXcriterio { get; set; }
         public virtual DbSet<VComponenteUsoNovedad> VComponenteUsoNovedad { get; set; }
         public virtual DbSet<VCompromisoSeguimiento> VCompromisoSeguimiento { get; set; }
@@ -8798,6 +8799,15 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorUso).HasColumnType("numeric(38, 2)");
             });
 
+            modelBuilder.Entity<VAportantesXanticipoXcontrato>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_AportantesXAnticipoXContrato");
+
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
+            });
+
             modelBuilder.Entity<VAportantesXcriterio>(entity =>
             {
                 entity.HasNoKey();
@@ -11774,9 +11784,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SaldoPresupuestal).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.SaldoPresupuestal).HasColumnType("numeric(38, 1)");
 
-                entity.Property(e => e.ValorFacturado).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.ValorFacturado).HasColumnType("numeric(38, 1)");
 
                 entity.Property(e => e.ValorSolicitudDdp)
                     .HasColumnName("ValorSolicitudDDP")

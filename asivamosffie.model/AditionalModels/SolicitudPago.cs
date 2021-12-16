@@ -55,6 +55,10 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public dynamic TablaDRPODG { get; set; }
+
+        [NotMapped]
+        public List<VAportantesXanticipoXcontrato> VAportantesXanticipoXcontrato { get; set; }
+        
     }
 
 }

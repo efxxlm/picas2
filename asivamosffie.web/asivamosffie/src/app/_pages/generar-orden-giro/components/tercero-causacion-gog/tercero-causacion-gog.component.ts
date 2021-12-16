@@ -1150,6 +1150,7 @@ export class TerceroCausacionGogComponent implements OnInit {
 
     onSubmit( index: number ) {
         let alert = true;
+        let alert2 = true;
         const conceptos = this.getConceptos( index )?.value;
         if(conceptos != null){
           if(conceptos.length > 0){
@@ -1207,11 +1208,16 @@ export class TerceroCausacionGogComponent implements OnInit {
         alert =  true;
 
         if(this.tieneAmortizacion == true){
-
+          let valorAmortizacion = this.solicitudPagoFase?.solicitudPagoFaseAmortizacion[0].valorAmortizacion ?? 0;
+          let valorTotalXConceptoAnticipo = 0;
+          let listXAportante = this.solicitudPago.vAportantesXanticipoXcontrato?.filter(r => r.contratacionProyectoId == this.contratacionProyectoId);
+          listXAportante.forEach(a => {
+              if(a.valueTotalDescuento != undefined && a.valueTotalDescuento != null){
+                a.valueTotalDescuento = 0;
+              }
+              a.nombreAportante = '';
+          });
           this.criterios.controls.forEach( ( criterioControl, indexCriterio ) => {
-            let valorAmortizacion = this.solicitudPagoFase?.solicitudPagoFaseAmortizacion[0].valorAmortizacion ?? 0;
-            let valorTotalXConceptoAnticipo = 0;
-
             this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
               let usoCodigoAnticipo = this.solicitudPago?.contratoSon?.vAmortizacionXproyecto?.find((r: { tieneAnticipo: boolean; }) => r.tieneAnticipo == true)?.usoCodigo;
               let usoCodigoConcepto = conceptoControl.get( 'usoCodigo' ).value;
@@ -1223,28 +1229,54 @@ export class TerceroCausacionGogComponent implements OnInit {
 
                         if(this.solicitudPagoFase?.solicitudPagoFaseAmortizacion.length > 0){
                           if(element.get( 'aportantesDescuento' ).value.length > 0){
-                            element.get( 'aportantesDescuento' ).value.forEach((desc: { valorDescuento: number; }, i: number) => {
+                            element.get( 'aportantesDescuento' ).value.forEach((desc: any, i: number) => {
                                 if(desc != null){
                                   if(desc.valorDescuento > 0){
                                     valueTotalDescuento += desc.valorDescuento;
+                                    //ahora tambien se tiene en cuenta el aportante
+                                    listXAportante.forEach(a => {
+                                      if(a.aportanteId == desc.nombreAportante?.cofinanciacionAportanteId){
+                                        if(a.valueTotalDescuento != undefined && a.valueTotalDescuento != null){
+                                          a.valueTotalDescuento += valueTotalDescuento;
+                                        }else{
+                                          a.valueTotalDescuento = valueTotalDescuento;
+                                        }
+                                        a.nombreAportante = desc.nombreAportante?.nombreAportante;
+                                      }
+                                    });
                                   }
                                 }
                             });
                           }
-                          valorTotalXConceptoAnticipo += valueTotalDescuento;
                         }
                       }
                   } )
                 }
               }
             });
-            if (valorTotalXConceptoAnticipo != valorAmortizacion) {
-              alert =  false;
-            }
           });
+          console.log(listXAportante);
+
+          listXAportante.forEach(a => {
+              valorTotalXConceptoAnticipo += a.valueTotalDescuento;
+              if(a.valueTotalDescuento > a.valorDescuento){
+                if(alert2){
+                  this.openDialog( '', 'El descuento de amortización para el aportante <b>'+a.nombreAportante +'</b> supera el valor del aportante en el anticipo.' );
+                  alert2 =  false;
+                }
+              }
+          });
+
+          if (valorTotalXConceptoAnticipo != valorAmortizacion) {
+            alert =  false;
+          }
         }
 
-        if(!alert){
+        if(!alert2){
+          return;
+        }
+
+        if(!alert && alert2){
           this.openDialog( '', `<b>El valor del descuento de amortización debe ser igual al valor solicitado.</b>` );
           return;
         }
@@ -1293,7 +1325,6 @@ export class TerceroCausacionGogComponent implements OnInit {
             this.openDialog( '', `<b>Debe diligenciar como minimo los aportantes seleccionados en el acordeon descuentos de dirección tecnica - ${ this.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }.</b>` );
             return
         }
-        console.log(this.valorNetoGiro);
         const getOrdenGiroDetalleTerceroCausacion = ( ) => {
             const listaTerceroCausacion = [];
             /*this.criterios.controls.forEach( ( criterioControl, indexCriterio ) => {

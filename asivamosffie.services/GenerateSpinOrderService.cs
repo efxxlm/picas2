@@ -185,7 +185,7 @@ namespace asivamosffie.services
                 SolicitudPago.ContratoSon.ListProyectos = await _registerValidatePayment.GetProyectosByIdContrato((int)SolicitudPago.ContratoId);
                 SolicitudPago.ValorXProyectoXFaseXAportanteXConcepto = GetInfoValorValorXProyectoXFaseXAportanteXConcepto(SolicitudPago.ContratoSon.ContratacionId);
                 SolicitudPago.VAmortizacionXproyecto = _context.VAmortizacionXproyecto.Where(r => r.SolicitudPagoId == SolicitudPagoId).ToList();
-
+                SolicitudPago.VAportantesXanticipoXcontrato = _context.VAportantesXanticipoXcontrato.Where(r => r.ContratoId == SolicitudPago.ContratoId).ToList();
             }
             ValidateTerceroGiro(SolicitudPago);
 
