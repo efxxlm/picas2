@@ -175,8 +175,8 @@ export class ReporteSemanalComponent implements OnInit, AfterViewInit {
             this.registroFotografico = this.dataReporteSemanal.seguimientoSemanalRegistroFotografico[0];
           }
 
-          this.avanceFisicoGrafica = this.dataReporteSemanal.actividadesARealizar
-            ? this.dataReporteSemanal.actividadesARealizar.split('wwwfrontend/')[1]
+          this.avanceFisicoGrafica = this.dataReporteSemanal.avanceFisicoGrafica
+            ? this.dataReporteSemanal.avanceFisicoGrafica.split('wwwfrontend/')[1]
             : '';
           this.seguimientoFinancieroGrafica = this.dataReporteSemanal.seguimientoFinancieroGrafica
             ? this.dataReporteSemanal.seguimientoFinancieroGrafica.split('wwwfrontend/')[1]
