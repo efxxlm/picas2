@@ -1117,6 +1117,7 @@ namespace asivamosffie.services
                         gestion.NuevoSaldoGenerado = saldoActual - valorSolicitado;
 
                         _context.GestionFuenteFinanciacion.Update(gestion);
+                        _context.SaveChanges();//para que tome el nuevo saldo
                     }
                 }
                 else
@@ -1150,7 +1151,7 @@ namespace asivamosffie.services
                         _context.GestionFuenteFinanciacion
                         .Include(f => f.FuenteFinanciacion).ThenInclude(a => a.Aportante)
                         .Where(x => !(bool)x.Eliminado
-                        && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId).ToList();
+                        && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId && x.EsNovedad != true).ToList();
 
                     //TODO VALIDAR SI LOS PARAMETROS  
                     List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = await
@@ -1165,23 +1166,15 @@ namespace asivamosffie.services
                         gestion.FechaModificacion = DateTime.Now;
                         gestion.UsuarioModificacion = pUsuarioModificacion.ToUpper();
 
-                        foreach (var DetailValidarDisponibilidadPresupuesal in ListDetailValidarDisponibilidadPresupuesal)
-                        {
-                            foreach (var Aportantes in DetailValidarDisponibilidadPresupuesal.Aportantes)
-                            {
-                                if (Aportantes.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId)
-                                {
-                                    var vSaldosFuenteXaportanteId = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId)?.FirstOrDefault();
-                                    decimal saldoActual = vSaldosFuenteXaportanteId.SaldoActual ?? 0;
-                                    decimal valorSolicitado = Aportantes.FuentesFinanciacion.Where(r => r.FuenteFinanciacionID == gestion.FuenteFinanciacionId).Select(r => r.Valor_solicitado_de_la_fuente).FirstOrDefault();
-                                    gestion.SaldoActualGenerado = saldoActual;
-                                    gestion.ValorSolicitadoGenerado = valorSolicitado;
-                                    gestion.NuevoSaldoGenerado = saldoActual - valorSolicitado;
+                        var vSaldosFuenteXaportanteId = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId).FirstOrDefault();
+                        decimal saldoActual = vSaldosFuenteXaportanteId.SaldoActual ?? 0;
+                        decimal valorSolicitado = gestion.ValorSolicitado;
+                        gestion.SaldoActualGenerado = saldoActual;
+                        gestion.ValorSolicitadoGenerado = valorSolicitado;
+                        gestion.NuevoSaldoGenerado = saldoActual - valorSolicitado;
 
-                                    _context.GestionFuenteFinanciacion.Update(gestion);
-                                }
-                            }
-                        }
+                        _context.GestionFuenteFinanciacion.Update(gestion);
+                        _context.SaveChanges();//para que tome el nuevo saldo
 
 
                     }
