@@ -1,154 +1,160 @@
 <section class="text-center" *ngIf="esVerDetalle === false && seguimientoSemanal !== undefined">
-    <div class="colorMainColor">
-        <p>Estado de la obra: <b> {{ seguimientoSemanal.infoProyecto.estadoObra }} </b> </p>
-    </div>
+  <div class="colorMainColor">
+    <p>
+      Estado de la obra: <b> {{ seguimientoSemanal.infoProyecto.estadoObra }} </b>
+    </p>
+  </div>
 
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                    Resumen de alertas generadas
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+  <mat-accordion>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title"> Resumen de alertas generadas </mat-panel-title>
+      </mat-expansion-panel-header>
 
-            <mat-accordion class="mt-2em">
-                <mat-expansion-panel class="expansion-style sub-expansion-black">
-                    <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title">
-                            Disponibilidad de personal
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-        
-                    <app-tabla-avance-resumen-alertas [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"></app-tabla-avance-resumen-alertas>
-                </mat-expansion-panel>
+      <mat-accordion class="mt-2em">
+        <mat-expansion-panel class="expansion-style sub-expansion-black">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title"> Disponibilidad de personal </mat-panel-title>
+          </mat-expansion-panel-header>
 
-                <mat-expansion-panel class="expansion-style sub-expansion-black">
-                    <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title">
-                            Disponibilidad de material, equipo o productividad
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-
-                    <app-tabla-disponibilidad-material [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"></app-tabla-disponibilidad-material>
-                </mat-expansion-panel>
-            </mat-accordion>
-
+          <app-tabla-avance-resumen-alertas
+            [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"
+          ></app-tabla-avance-resumen-alertas>
         </mat-expansion-panel>
 
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAvanceFisico">
-                    Avance físico
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+        <mat-expansion-panel class="expansion-style sub-expansion-black">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+              Disponibilidad de material, equipo o productividad
+            </mat-panel-title>
+          </mat-expansion-panel-header>
 
-            <app-tabla-avance-fisico    [seguimientoSemanal]="seguimientoSemanal"
-                                        *ngIf="seguimientoSemanal.flujoInversion.length > 0"
-                                        (estadoSemaforoAlerta)="semaforoAvanceFisico = $event; estadoSemaforoAvanceFisico.emit( $event )"
-                                        [avanceFisicoObs]="avanceFisicoObs"
-                                        (tieneObservacion)="semaforoAvanceFisico = 'en-proceso'; estadoSemaforoAvanceFisico.emit( 'en-proceso' )">
-            </app-tabla-avance-fisico>
+          <app-tabla-disponibilidad-material
+            [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"
+          ></app-tabla-disponibilidad-material>
         </mat-expansion-panel>
+      </mat-accordion>
+    </mat-expansion-panel>
 
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAvanceFisico">
-                    Observaciones
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAvanceFisico">
+          Avance físico
+        </mat-panel-title>
+      </mat-expansion-panel-header>
 
-            <app-observaciones-detalle-avance></app-observaciones-detalle-avance>
-        </mat-expansion-panel>
+      <app-tabla-avance-fisico
+        [seguimientoSemanal]="seguimientoSemanal"
+        *ngIf="seguimientoSemanal.flujoInversion.length > 0"
+        (estadoSemaforoAlerta)="semaforoAvanceFisico = $event; estadoSemaforoAvanceFisico.emit($event)"
+        [avanceFisicoObs]="avanceFisicoObs"
+        (tieneObservacion)="semaforoAvanceFisico = 'en-proceso'; estadoSemaforoAvanceFisico.emit('en-proceso')"
+      >
+      </app-tabla-avance-fisico>
+    </mat-expansion-panel>
 
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAvanceFisico">
-                    Soporte Project
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAvanceFisico">
+          Observaciones
+        </mat-panel-title>
+      </mat-expansion-panel-header>
 
-            <app-soporte-project></app-soporte-project>
-        </mat-expansion-panel>
-    </mat-accordion>
+      <app-observaciones-detalle-avance [seguimientoSemanal]="seguimientoSemanal"></app-observaciones-detalle-avance>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAvanceFisico">
+          Soporte Project
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <app-soporte-project [pContratacionProyectoId]="pContratacionProyectoId"></app-soporte-project>
+    </mat-expansion-panel>
+  </mat-accordion>
 </section>
 
 <section class="text-center" *ngIf="esVerDetalle === true">
-    <div>
-        <p>Estado de la obra: <b> {{ seguimientoSemanal.infoProyecto.estadoObra }} </b> </p>
-    </div>
+  <div>
+    <p>
+      Estado de la obra: <b> {{ seguimientoSemanal.infoProyecto.estadoObra }} </b>
+    </p>
+  </div>
 
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                    Resumen de alertas generadas
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+  <mat-accordion>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title"> Resumen de alertas generadas </mat-panel-title>
+      </mat-expansion-panel-header>
 
-            <mat-accordion>
-                <mat-expansion-panel class="expansion-style sub-expansion-black">
-                    <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title">
-                            Disponibilidad de personal
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-        
-                    <app-tabla-avance-resumen-alertas [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"></app-tabla-avance-resumen-alertas>
-                </mat-expansion-panel>
+      <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion-black">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title"> Disponibilidad de personal </mat-panel-title>
+          </mat-expansion-panel-header>
 
-                <mat-expansion-panel class="expansion-style sub-expansion-black">
-                    <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title">
-                            Disponibilidad de material, equipo o productividad
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-
-                    <app-tabla-disponibilidad-material [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"></app-tabla-disponibilidad-material>
-                </mat-expansion-panel>
-            </mat-accordion>
+          <app-tabla-avance-resumen-alertas
+            [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"
+          ></app-tabla-avance-resumen-alertas>
         </mat-expansion-panel>
 
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                    Avance físico
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+        <mat-expansion-panel class="expansion-style sub-expansion-black">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+              Disponibilidad de material, equipo o productividad
+            </mat-panel-title>
+          </mat-expansion-panel-header>
 
-            <app-tabla-avance-fisico [seguimientoSemanal]="seguimientoSemanal" [avanceFisicoObs]="avanceFisicoObs" [esVerDetalle]="esVerDetalle"></app-tabla-avance-fisico>
+          <app-tabla-disponibilidad-material
+            [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"
+          ></app-tabla-disponibilidad-material>
         </mat-expansion-panel>
+      </mat-accordion>
+    </mat-expansion-panel>
 
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                    Observaciones
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title"> Avance físico </mat-panel-title>
+      </mat-expansion-panel-header>
 
-            <div class="flex-editor mt-2em">
-                <mat-card class="shipping-card w-80 border">
-                    <mat-card-header class="header-card">
-                        <mat-card-title class="header-card--text">
-                            Observaciones al avance físico
-                        </mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <section></section>
-                    </mat-card-content>
-                </mat-card>
-              </div>
-        </mat-expansion-panel>
+      <app-tabla-avance-fisico
+        [seguimientoSemanal]="seguimientoSemanal"
+        [avanceFisicoObs]="avanceFisicoObs"
+        [esVerDetalle]="esVerDetalle"
+      ></app-tabla-avance-fisico>
+    </mat-expansion-panel>
 
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                    Soporte Project
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+    <mat-expansion-panel
+      class="expansion-style sub-expansion"
+      *ngIf="seguimientoSemanal.infoProyecto.estadoObra !== 'Con ejecución normal'"
+    >
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title"> Observaciones </mat-panel-title>
+      </mat-expansion-panel-header>
 
-            <div class="text-center">
-                <button mat-raised-button color="accent">Descargar soporte project</button>
-            </div>
-        </mat-expansion-panel>
-    </mat-accordion>
+      <div class="flex-editor mt-2em">
+        <mat-card class="shipping-card w-80 border">
+          <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text"> Observaciones al avance físico </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <section class="text-left">
+              <div [innerHTML]="seguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones"></div>
+            </section>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title"> Soporte Project </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="text-center">
+        <button mat-raised-button color="accent">Descargar soporte project</button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 </section>

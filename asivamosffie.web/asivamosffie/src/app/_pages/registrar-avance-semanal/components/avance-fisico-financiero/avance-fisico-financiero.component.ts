@@ -10,6 +10,7 @@ export class AvanceFisicoFinancieroComponent implements OnInit {
   @Input() esVerDetalle = false;
   @Input() seguimientoSemanal: any;
   @Input() avanceFisicoObs: string;
+  @Input() pContratacionProyectoId: any;
   @Output() estadoSemaforoAvanceFisico = new EventEmitter<string>();
   semaforoAvanceFisico = 'sin-diligenciar';
   sinRegistros = false;

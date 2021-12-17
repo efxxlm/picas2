@@ -41,6 +41,15 @@ export class RegistrarAvanceSemanalService {
     saveUpdateSeguimientoSemanal( pSeguimientoSemanal: any ) {
         return this.http.post<Respuesta>( `${ this.urlApi }/SaveUpdateSeguimientoSemanal`, pSeguimientoSemanal );
     }
+    
+    UploadFileSeguimientoSemanalAvanceFisico(pContratacionProyectoId: number, pFile: File) {
+        const formData = new FormData();
+        formData.append('pFile', pFile, pFile.name);
+        return this.http.post<Respuesta>(
+          `${this.urlApi}/UploadFileSeguimientoSemanalAvanceFisico?pContratacionProyectoId=${pContratacionProyectoId}`,
+          formData
+        );
+    }
 
     createEditEnsayoLaboratorioMuestra( pGestionObraCalidadEnsayoLaboratorio: any ) {
         return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditEnsayoLaboratorioMuestra`, pGestionObraCalidadEnsayoLaboratorio );

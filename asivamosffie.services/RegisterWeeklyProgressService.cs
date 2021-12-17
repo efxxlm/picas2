@@ -380,8 +380,8 @@ namespace asivamosffie.services
                        //Fisico
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
                           .ThenInclude(r => r.SeguimientoSemanalAvanceFisicoProgramacion)
-                                .ThenInclude(r => r.Programacion)
-                                .ThenInclude(r => r.FlujoInversion)
+                                 .ThenInclude(r => r.Programacion)
+                                //.ThenInclude(r => r.FlujoInversion)
                        //Gestion Obra
                        //Gestion Obra Ambiental
                        .Include(r => r.SeguimientoSemanalGestionObra)

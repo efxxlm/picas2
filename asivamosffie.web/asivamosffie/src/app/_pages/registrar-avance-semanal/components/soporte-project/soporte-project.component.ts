@@ -1,5 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-soporte-project',
@@ -7,12 +10,14 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./soporte-project.component.scss']
 })
 export class SoporteProjectComponent implements OnInit {
+  @Input() pContratacionProyectoId: any;
 
   archivo: string;
 
   documentFile: FormControl;
+  file: any;
 
-  constructor() { }
+  constructor(private avanceSemanalSvc: RegistrarAvanceSemanalService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.declararDocumentFile();
@@ -24,10 +29,28 @@ export class SoporteProjectComponent implements OnInit {
 
   fileName(event: any) {
     if (event.target.files.length > 0) {
-      const file = event.target.files[0];
+      this.file = event.target.files[0];
       this.archivo = event.target.files[0].name;
-
-    }
+    }    
   }
 
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  guardar() {
+    console.log('file: ', this.file);
+    
+    this.avanceSemanalSvc
+      .UploadFileSeguimientoSemanalAvanceFisico(this.pContratacionProyectoId, this.file)
+      .subscribe(
+        async response => {
+          this.openDialog('', `<b>${response.message}</b>`);
+        },
+        err => this.openDialog('', `<b>${err.message}</b>`)
+      );
+  }
 }
