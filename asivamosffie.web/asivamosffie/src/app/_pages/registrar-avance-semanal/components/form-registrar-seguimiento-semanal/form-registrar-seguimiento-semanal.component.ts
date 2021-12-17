@@ -21,6 +21,7 @@ export class FormRegistrarSeguimientoSemanalComponent implements OnInit, OnDestr
   esRegistroNuevo: any;
   dataGestionAmbiental: any;
   tieneObsAvanceFinanciero = false;
+  pContratacionProyectoId: any;
 
   constructor(
     private avanceSemanalSvc: RegistrarAvanceSemanalService,
@@ -85,6 +86,7 @@ export class FormRegistrarSeguimientoSemanalComponent implements OnInit, OnDestr
   }
 
   ngOnInit(): void {
+    this.pContratacionProyectoId = this.activatedRoute.snapshot.params.id;
   }
 
   valuePendingSemaforo( value: string, tipoSemaforo: string ) {

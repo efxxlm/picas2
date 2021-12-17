@@ -1,5 +1,5 @@
 <form [formGroup]="formObservaciones" novalidate (ngSubmit)="onSubmit()">
-  <div class="row justify-content-center align-items-center">
+  <!-- <div class="row justify-content-center align-items-center">
     <div class="col-md-12">
       <div class="row justify-content-center align-items-center" style="width: 100%">
         <div class="pr-1">
@@ -16,10 +16,10 @@
         <span class="required-form-group m-0 margin-required">*</span>
       </div>
     </div>
-  </div>
+  </div> -->
+  <!-- *ngIf="formObservaciones.get('tieneObservaciones').value == true" -->
   <div
     class="d-flex mt-2em align-items-center animatedDown"
-    *ngIf="formObservaciones.get('tieneObservaciones').value == true"
     align="left"
   >
     <div
@@ -77,8 +77,7 @@
       class="btn-guardar"
       type="submit"
       [disabled]="
-        formObservaciones.get('tieneObservaciones').invalid ||
-        (formObservaciones.get('tieneObservaciones').value === true && formObservaciones.get('observaciones').invalid)
+        formObservaciones.get('observaciones').invalid
       "
     >
       <img src="assets/img/icon/guardar.svg" alt="Regresar" />
