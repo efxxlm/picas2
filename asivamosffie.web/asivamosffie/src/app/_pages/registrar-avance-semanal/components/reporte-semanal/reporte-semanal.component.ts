@@ -61,7 +61,7 @@ export class ReporteSemanalComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    setTimeout(this.downloadPDF, 2000);
+    // setTimeout(this.downloadPDF, 2000);
   }
 
   getSeguimientoSemanalBySeguimientoSemanalId(
@@ -182,6 +182,9 @@ export class ReporteSemanalComponent implements OnInit, AfterViewInit {
             ? this.dataReporteSemanal.seguimientoFinancieroGrafica.split('wwwfrontend/')[1]
             : '';
         }
+
+        setTimeout(this.downloadPDF, 2000);
+
       });
   }
 

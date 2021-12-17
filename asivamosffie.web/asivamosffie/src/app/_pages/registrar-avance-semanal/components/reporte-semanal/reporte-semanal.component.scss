@@ -1,5 +1,16 @@
 td {
   width: auto !important;
+  max-width: 12em;
+}
+
+td,
+p {
+  white-space: normal;
+}
+
+p {
+  line-height: 1.3;
+  padding: 0.2em;
 }
 // table {
 //   border-collapse: collapse;
