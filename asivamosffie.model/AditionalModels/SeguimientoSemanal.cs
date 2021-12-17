@@ -47,6 +47,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public bool? AjusteProgramacion { get; set; }
+        [NotMapped]
+        public string SuportProyectRuta { get; set; }
     }
 
 

@@ -453,7 +453,9 @@ namespace asivamosffie.services
                             }
                         }
                     }
+                    seguimientoSemanal.SuportProyectRuta = cp.SuportProyectRuta;
                 }
+                
                 return seguimientoSemanal;
             }
             catch (Exception ex)
