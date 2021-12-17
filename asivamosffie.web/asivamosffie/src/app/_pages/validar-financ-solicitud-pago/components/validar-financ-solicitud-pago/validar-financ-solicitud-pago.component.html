@@ -54,14 +54,14 @@
                         [ngClass]="{'sin-diligenciar' : element.registroCompletoValidacionFinanciera === false, 'completo' : element.registroCompletoValidacionFinanciera === true }"
                         style="margin-right: 0em;"></span>
                     <br>
-                    {{ element.registroCompletoValidacionFinanciera === true ? 'Completo' : 'Incompleto' }} 
+                    {{ element.registroCompletoValidacionFinanciera === true ? 'Completo' : 'Incompleto' }}
                 </td>
             </ng-container>
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
                 <td mat-cell *matCellDef="let element" align="center">
                     <ng-container *ngIf="element.tipoSolicitudCodigo !== tipoSolicitud.expensas; else esExpensas">
-                        
+
                         <button mat-raised-button
                                 color="accent"
                                 class="btn-table"
@@ -90,7 +90,7 @@
                                 color="accent"
                                 class="btn-table"
                                 (click)="changueStatusSolicitudPago( element.solicitudPagoId )"
-                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera && element.registroCompletoValidacionFinanciera === true && element.tieneSubsanacion === false">
+                                *ngIf="element.estadoCodigo === listaEstadoSolicitudPago.enProcesoValidacionFinanciera && element.registroCompletoValidacionFinanciera === true && element.tieneSubsanacion === false && element.estaRechazada !== true">
                                 Enviar para orden de giro
                         </button>
 

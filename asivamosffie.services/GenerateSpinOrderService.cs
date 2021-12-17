@@ -814,6 +814,9 @@ namespace asivamosffie.services
                 SolicitudPago solicitudPago = await GetSolicitudPagoBySolicitudPagoId(pSolicitudPago);
                 blRegistroCompleto = ValidarRegistroCompletoOrdenGiro(solicitudPago.OrdenGiro);
 
+                if(blRegistroCompleto == true)
+                    blRegistroCompleto = ValidarCantidadProyectos(solicitudPago);
+
                 DateTime? CompleteRecordDate = null;
                 if (blRegistroCompleto)
                     CompleteRecordDate = DateTime.Now;
@@ -990,6 +993,40 @@ namespace asivamosffie.services
                 if (!ValidarRegistroCompletoOrdenGiroTercero(item))
                     return false;
             }
+
+            return true;
+        }
+
+        private bool ValidarCantidadProyectos(SolicitudPago pSolicitudPago)
+        {
+            //validar si los dos proyectos existen en tercero de causación
+            List<dynamic> contratacionProyectoSp = new List<dynamic>();
+            List<dynamic> contratacionProyectoOdg = new List<dynamic>();
+
+            foreach (var sp in pSolicitudPago?.SolicitudPagoRegistrarSolicitudPago)
+            {
+                foreach (var spf in sp.SolicitudPagoFase)
+                {
+                    if (!contratacionProyectoSp.Contains(spf.ContratacionProyectoId))
+                    {
+                        contratacionProyectoSp.Add(spf.ContratacionProyectoId);
+                    }
+                }
+            }
+
+            foreach (var odg in pSolicitudPago.OrdenGiro.OrdenGiroDetalle)
+            {
+                foreach (var odgt in odg.OrdenGiroDetalleTerceroCausacion)
+                {
+                    if (!contratacionProyectoOdg.Contains(odgt.ContratacionProyectoId))
+                    {
+                        contratacionProyectoOdg.Add(odgt.ContratacionProyectoId);
+                    }
+                }
+            }
+
+            if (contratacionProyectoSp != contratacionProyectoOdg)
+                return false;
 
             return true;
         }

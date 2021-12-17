@@ -258,4 +258,20 @@
 
         </mat-expansion-panel>
     </mat-accordion>
+    <div class="mt-3em">
+      <mat-card class="shipping-card border"
+                align="left"
+                style="width: 80%"
+                *ngIf="contrato.solicitudPagoOnly.observacionDevolucionOrdenGiro !== undefined">
+        <mat-card-header class="header-card">
+          <mat-card-title class="header-card--text card-title-detalle">
+            Devolución de generar orden de giro
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <section  [innerHTML]="contrato.solicitudPagoOnly.observacionDevolucionOrdenGiro" style="margin-left: 2em"
+          ></section>
+        </mat-card-content>
+      </mat-card>
+    </div>
 </section>

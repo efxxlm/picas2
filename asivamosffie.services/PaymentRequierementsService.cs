@@ -25,7 +25,7 @@ namespace asivamosffie.services
             _commonService = commonService;
             _context = context;
         }
-       
+
         #region Financiera
         private void ActualizarSacFinanciera(SolicitudPago pSolicitudPago)
         {
@@ -410,8 +410,8 @@ namespace asivamosffie.services
                 if (pSolicitudPagoObservacion.MenuId == (int)enumeratorMenu.Verificar_solicitud_de_pago
                     || pSolicitudPagoObservacion.MenuId == (int)enumeratorMenu.Autorizar_solicitud_de_pago)
                     intCantidadDependenciasSolicitudPago = 1;
-                   // intCantidadDependenciasSolicitudPago = CantidadDependenciasSolicitudPago(solicitudPago);
-                    
+                // intCantidadDependenciasSolicitudPago = CantidadDependenciasSolicitudPago(solicitudPago);
+
                 int intCantidadObservacionesSolicitudPago = _context.SolicitudPagoObservacion.Where(r => r.SolicitudPagoId == pSolicitudPagoObservacion.SolicitudPagoId
                                                               && r.MenuId == pSolicitudPagoObservacion.MenuId
                                                               && r.Eliminado != true
@@ -552,7 +552,7 @@ namespace asivamosffie.services
                             //#6 Observacion Amortizacion
                             intCantidadDependenciasSolicitudPago++;
                         }
-                    } 
+                    }
                 }
             }
 
@@ -611,9 +611,10 @@ namespace asivamosffie.services
                     UsuarioModificacion = pSolicitudPago.UsuarioCreacion
                 }); ;
         }
+
         #endregion
 
-    
+
         #region  Emails
         public async Task<Respuesta> ChangueStatusSolicitudPago(SolicitudPago pSolicitudPago)
         {
@@ -653,7 +654,7 @@ namespace asivamosffie.services
                 ///4.1.9
                 if (intEstadoCodigo == (int)EnumEstadoSolicitudPago.Solicitud_devuelta_por_coordinardor)
                 {
-                   // ArchivarSolicitudPagoObservacion(pSolicitudPago);
+                    // ArchivarSolicitudPagoObservacion(pSolicitudPago);
                     await SendEmailToDeclineValidate(pSolicitudPago.SolicitudPagoId);
                 }
 
@@ -696,17 +697,45 @@ namespace asivamosffie.services
 
                 //Crear URl aprobar
                 if (intEstadoCodigo >= (int)EnumEstadoOrdenGiro.Solicitud_devuelta_a_equipo_de_facturacion_por_generar_orden_de_giro)
+                {
                     ReturnOrdenGiroSolicitudPago(pSolicitudPago);
+
+                    SolicitudPagoListaChequeo spl = _context.SolicitudPagoListaChequeo.Where(r => r.SolicitudPagoId == pSolicitudPago.SolicitudPagoId).FirstOrDefault();
+                    if (spl != null)
+                    {
+                        _context.Set<SolicitudPagoListaChequeoRespuesta>()
+                            .Where(s => s.SolicitudPagoListaChequeoId == spl.SolicitudPagoListaChequeoId)
+                            .Update(s => new SolicitudPagoListaChequeoRespuesta()
+                            {
+                                RespuestaCodigo = null,
+                                VerificacionRespuestaCodigo = null,
+                                ValidacionRespuestaCodigo = null,
+                                FechaModificacion = DateTime.Now,
+                                UsuarioModificacion = pSolicitudPago.UsuarioCreacion
+                            });
+                    }
+                }
+
+                if (intEstadoCodigo == (int)EnumEstadoOrdenGiro.En_Proceso_Verificacion_Financiera)
+                {
+                    ReturnOrdenGiroSolicitudPagoVerificar(pSolicitudPago);
+
+                }
+
+                if (intEstadoCodigo == (int)EnumEstadoOrdenGiro.En_Proceso_Validacion_Financiera)
+                {
+                    ReturnOrdenGiroSolicitudPagoValidar(pSolicitudPago);
+                }
 
 
                 _context.Set<SolicitudPago>()
-                                      .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
-                                                                                                      .Update(r => new SolicitudPago()
-                                                                                                      {
-                                                                                                          FechaModificacion = DateTime.Now,
-                                                                                                          UsuarioModificacion = pSolicitudPago.UsuarioCreacion,
-                                                                                                          EstadoCodigo = pSolicitudPago.EstadoCodigo
-                                                                                                      });
+                            .Where(o => o.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                                                                                            .Update(r => new SolicitudPago()
+                                                                                            {
+                                                                                                FechaModificacion = DateTime.Now,
+                                                                                                UsuarioModificacion = pSolicitudPago.UsuarioCreacion,
+                                                                                                EstadoCodigo = pSolicitudPago.EstadoCodigo
+                                                                                            });
 
                 string strEstadoSolicitudPago = _context.Dominio.Where(
                                                                           d => d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago
@@ -775,6 +804,106 @@ namespace asivamosffie.services
                     });
 
             ArchivarSolicitudPagoObservacion(pSolicitudPago);
+        }
+
+        private void ReturnOrdenGiroSolicitudPagoVerificar(SolicitudPago pSolicitudPago)
+        {
+            _context.Set<OrdenGiro>()
+                    .Where(o => o.OrdenGiroId == pSolicitudPago.OrdenGiroId)
+                    .Update(o => new OrdenGiro
+                    {
+                        Eliminado = true,
+                        FechaModificacion = DateTime.Now,
+                        UsuarioModificacion = pSolicitudPago.UsuarioCreacion
+                    });
+
+            _context.Set<SolicitudPagoObservacion>()
+                     .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                     .Update(s => new SolicitudPagoObservacion()
+                     {
+                         Archivada = true,
+                         FechaModificacion = DateTime.Now,
+                         UsuarioModificacion = pSolicitudPago.UsuarioCreacion
+                     });
+
+            _context.Set<SolicitudPago>()
+                .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                .Update(s => new SolicitudPago
+                {
+                    OrdenGiroId = null,
+                    ObservacionDevolucionOrdenGiro = pSolicitudPago.ObservacionDevolucionOrdenGiro,
+
+                    RegistroCompletoVerificacionFinanciera = false,
+                    FechaRegistroCompletoVerificacionFinanciera = null,
+
+                    RegistroCompletoValidacionFinanciera = false,
+                    FechaRegistroCompletoValidacionFinanciera = null,
+
+                    FechaModificacion = DateTime.Now,
+                    UsuarioModificacion = pSolicitudPago.UsuarioCreacion
+                });
+
+            SolicitudPagoListaChequeo spl = _context.SolicitudPagoListaChequeo.Where(r => r.SolicitudPagoId == pSolicitudPago.SolicitudPagoId).FirstOrDefault();
+            if (spl != null)
+            {
+                _context.Set<SolicitudPagoListaChequeoRespuesta>()
+                    .Where(s => s.SolicitudPagoListaChequeoId == spl.SolicitudPagoListaChequeoId)
+                    .Update(s => new SolicitudPagoListaChequeoRespuesta()
+                    {
+                        VerificacionRespuestaCodigo = null,
+                        ValidacionRespuestaCodigo = null,
+                        FechaModificacion = DateTime.Now,
+                        UsuarioModificacion = pSolicitudPago.UsuarioCreacion
+                    });
+            }
+        }
+
+        private void ReturnOrdenGiroSolicitudPagoValidar(SolicitudPago pSolicitudPago)
+        {
+            _context.Set<OrdenGiro>()
+                    .Where(o => o.OrdenGiroId == pSolicitudPago.OrdenGiroId)
+                    .Update(o => new OrdenGiro
+                    {
+                        Eliminado = true,
+                        FechaModificacion = DateTime.Now,
+                        UsuarioModificacion = pSolicitudPago.UsuarioCreacion
+                    });
+
+            _context.Set<SolicitudPagoObservacion>()
+                 .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                 .Update(s => new SolicitudPagoObservacion()
+                 {
+                     Archivada = true,
+                     FechaModificacion = DateTime.Now,
+                     UsuarioModificacion = pSolicitudPago.UsuarioCreacion
+                 });
+
+            _context.Set<SolicitudPago>()
+                .Where(s => s.SolicitudPagoId == pSolicitudPago.SolicitudPagoId)
+                .Update(s => new SolicitudPago
+                {
+                    OrdenGiroId = null,
+                    ObservacionDevolucionOrdenGiro = pSolicitudPago.ObservacionDevolucionOrdenGiro,
+
+                    RegistroCompletoValidacionFinanciera = false,
+                    FechaRegistroCompletoValidacionFinanciera = null,
+
+                    FechaModificacion = DateTime.Now,
+                    UsuarioModificacion = pSolicitudPago.UsuarioCreacion
+                });
+
+            SolicitudPagoListaChequeo spl = _context.SolicitudPagoListaChequeo.Where(r => r.SolicitudPagoId == pSolicitudPago.SolicitudPagoId).FirstOrDefault();
+            if (spl != null)
+            {
+                _context.Set<SolicitudPagoListaChequeoRespuesta>()
+                    .Where(s => s.SolicitudPagoListaChequeoId == spl.SolicitudPagoListaChequeoId)
+                    .Update(s => new SolicitudPagoListaChequeoRespuesta()
+                    {
+                        ValidacionRespuestaCodigo = null,
+                        FechaModificacion = DateTime.Now,
+                        UsuarioModificacion = pSolicitudPago.UsuarioCreacion
+                    });
+            }
         }
         ///4.3.2 Aprobar *
         private async Task<bool> SendEmailAprovedValidar(int pSolicitudPagoId)
