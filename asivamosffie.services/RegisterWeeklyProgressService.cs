@@ -548,10 +548,12 @@ namespace asivamosffie.services
 
             SqlParameter[] parameterList = new SqlParameter[]
             {
-                new SqlParameter("@SeguimientoSemanalId", seguimientoSemanal.SeguimientoSemanalId)
+                new SqlParameter("@SeguimientoSemanalId", seguimientoSemanal.SeguimientoSemanalId),
+                new SqlParameter("@ContratacionProyectoId", seguimientoSemanal.ContratacionProyectoId)
             };
 
-            List<SeguimientoSemanalFinancieroXMes> lSeguimientoSemanalFinancieroXMes = (List<SeguimientoSemanalFinancieroXMes>)await _commonService.ExcuteSqlStoredProcedure<SeguimientoSemanalFinancieroXMes>("usp_GetMonthlyFinancialMonitoring", parameterList, 1);
+            List<SeguimientoSemanalFinancieroXMes> lSeguimientoSemanalFinancieroXMes = (List<SeguimientoSemanalFinancieroXMes>)
+                  await _commonService.ExcuteSqlStoredProcedure<SeguimientoSemanalFinancieroXMes>("usp_GetMonthlyFinancialMonitoring", parameterList, 1);
 
             if (lSeguimientoSemanalFinancieroXMes.Count() > 0)
             {
