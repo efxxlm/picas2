@@ -564,7 +564,7 @@ namespace asivamosffie.services
                     lAvanceFinancieroxMes.Add(
                                                     new
                                                     {
-                                                        Num = "MES " + item.NumeroMes,
+                                                        Num = "Semana " + item.NumeroSemana,
                                                         Programado = item.Valor,
                                                         Ejecutado = item.ValorEjecutado,
                                                         ProgramadoAcumulado = pa,
