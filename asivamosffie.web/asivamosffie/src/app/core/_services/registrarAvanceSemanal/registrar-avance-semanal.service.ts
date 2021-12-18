@@ -42,11 +42,12 @@ export class RegistrarAvanceSemanalService {
         return this.http.post<Respuesta>( `${ this.urlApi }/SaveUpdateSeguimientoSemanal`, pSeguimientoSemanal );
     }
     
-    UploadFileSeguimientoSemanalAvanceFisico(pContratacionProyectoId: number, pFile: File) {
+    UploadFileSeguimientoSemanalAvanceFisico(pContratacionProyectoId: any, pFile: File) {
         const formData = new FormData();
+        formData.append('pContratacionProyectoId', pContratacionProyectoId);
         formData.append('pFile', pFile, pFile.name);
         return this.http.post<Respuesta>(
-          `${this.urlApi}/UploadFileSeguimientoSemanalAvanceFisico?pContratacionProyectoId=${pContratacionProyectoId}`,
+          `${this.urlApi}/UploadFileSeguimientoSemanalAvanceFisico`,
           formData
         );
     }
