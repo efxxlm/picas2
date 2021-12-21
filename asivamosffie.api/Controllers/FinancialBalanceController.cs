@@ -39,6 +39,7 @@ namespace asivamosffie.api.Controllers
 
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("GetEjecucionFinancieraXProyectoId")]
         public async Task<IActionResult> GetEjecucionFinancieraXProyectoId([FromQuery] int pProyectoId)
         {
