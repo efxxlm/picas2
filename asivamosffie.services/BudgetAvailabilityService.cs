@@ -1148,35 +1148,39 @@ namespace asivamosffie.services
                     Dictionary<int, List<decimal>> fuente = new Dictionary<int, List<decimal>>();
                     //var contratacionproyecto = DisponibilidadCancelar.Contratacion.ContratacionProyecto;
                     List<GestionFuenteFinanciacion> gestionfuentes =
-                        _context.GestionFuenteFinanciacion
-                        .Include(f => f.FuenteFinanciacion).ThenInclude(a => a.Aportante)
-                        .Where(x => !(bool)x.Eliminado
-                        && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId && x.EsNovedad != true).ToList();
+                                                                    _context.GestionFuenteFinanciacion
+                                                                    .Include(f => f.FuenteFinanciacion).ThenInclude(a => a.Aportante)
+                                                                    .Where(x => !(bool)x.Eliminado
+                                                                                                    && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId
+                                                                                                    && x.EsNovedad != true)
+                                                                    .ToList();
 
                     //TODO VALIDAR SI LOS PARAMETROS  
                     List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = await
-                        _requestBudgetAvailabilityService.
-                        GetDetailAvailabilityBudgetProyectNew(DisponibilidadCancelar.DisponibilidadPresupuestalId, false, 0, false);
+                        _requestBudgetAvailabilityService.GetDetailAvailabilityBudgetProyectNew(DisponibilidadCancelar.DisponibilidadPresupuestalId, false, 0, false);
 
 
                     foreach (var gestion in gestionfuentes)
                     {
                         int estadocod = (int)EnumeratorEstadoGestionFuenteFinanciacion.Apartado_en_DDP;
+
                         gestion.EstadoCodigo = estadocod.ToString();
                         gestion.FechaModificacion = DateTime.Now;
                         gestion.UsuarioModificacion = pUsuarioModificacion.ToUpper();
 
-                        var vSaldosFuenteXaportanteId = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId).FirstOrDefault();
+                        var vSaldosFuenteXaportanteId = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId)
+                                                                                          .FirstOrDefault();
+
                         decimal saldoActual = vSaldosFuenteXaportanteId.SaldoActual ?? 0;
                         decimal valorSolicitado = gestion.ValorSolicitado;
+
                         gestion.SaldoActualGenerado = saldoActual;
                         gestion.ValorSolicitadoGenerado = valorSolicitado;
                         gestion.NuevoSaldoGenerado = saldoActual - valorSolicitado;
 
                         _context.GestionFuenteFinanciacion.Update(gestion);
-                        _context.SaveChanges();//para que tome el nuevo saldo
-
-
+                        //para que tome el nuevo saldo 
+                        _context.SaveChanges();
                     }
                 }
 
