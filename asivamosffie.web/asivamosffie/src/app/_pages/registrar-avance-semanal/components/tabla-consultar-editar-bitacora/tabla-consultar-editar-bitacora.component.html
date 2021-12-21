@@ -82,6 +82,7 @@
             color="accent"
             class="btn-table"
             [routerLink]="[ 'informeSemanal', 0, element.seguimientoSemanalId ]"
+            *ngIf="element.registroCompletoMuestra === true"
             >
             Informe Semanal
            </button>
