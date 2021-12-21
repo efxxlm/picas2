@@ -61,12 +61,14 @@ export class TablaEjfinancieraGbftrecComponent implements OnInit {
 
         if (element.totalComprometido) tablaEjecucionFinanciera[concepto].totalComprometido = element.totalComprometido;
         if (element.descuento) tablaEjecucionFinanciera[concepto].descuento = element.descuento;
+        if (element.saldo) tablaEjecucionFinanciera[concepto].saldo = element.saldo;
         tablaEjecucionFinanciera[concepto].ordenadoGirarAntesImpuestos += element.ordenadoGirarAntesImpuestos;
       });
       for (let i = 0; i <= 1; i++) {
-        tablaEjecucionFinanciera[i].ordenadoGirarAntesImpuestos -= tablaEjecucionFinanciera[i].descuento;
-        tablaEjecucionFinanciera[i].saldo = tablaEjecucionFinanciera[i].totalComprometido - tablaEjecucionFinanciera[i].ordenadoGirarAntesImpuestos;
+        // tablaEjecucionFinanciera[i].ordenadoGirarAntesImpuestos -= tablaEjecucionFinanciera[i].descuento;
+        // tablaEjecucionFinanciera[i].saldo = tablaEjecucionFinanciera[i].totalComprometido - tablaEjecucionFinanciera[i].ordenadoGirarAntesImpuestos;
         tablaEjecucionFinanciera[i].porcentajeEjecucionFinanciera = (tablaEjecucionFinanciera[i].ordenadoGirarAntesImpuestos * 100) / tablaEjecucionFinanciera[i].totalComprometido;
+        tablaEjecucionFinanciera[i].porcentajeEjecucionFinanciera = tablaEjecucionFinanciera[i].porcentajeEjecucionFinanciera > 100 ? 100 : tablaEjecucionFinanciera[i].porcentajeEjecucionFinanciera;
       }
 
       this.total = {
