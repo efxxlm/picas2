@@ -279,7 +279,7 @@ namespace asivamosffie.services
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
                           .ThenInclude(r => r.SeguimientoSemanalAvanceFisicoProgramacion)
                                 .ThenInclude(r => r.Programacion)
-                           //     .ThenInclude(r => r.FlujoInversion)
+                       //     .ThenInclude(r => r.FlujoInversion)
                        //Gestion Obra
                        //Gestion Obra Ambiental
                        .Include(r => r.SeguimientoSemanalGestionObra)
@@ -381,7 +381,7 @@ namespace asivamosffie.services
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
                           .ThenInclude(r => r.SeguimientoSemanalAvanceFisicoProgramacion)
                                  .ThenInclude(r => r.Programacion)
-                                //.ThenInclude(r => r.FlujoInversion)
+                       //.ThenInclude(r => r.FlujoInversion)
                        //Gestion Obra
                        //Gestion Obra Ambiental
                        .Include(r => r.SeguimientoSemanalGestionObra)
@@ -455,7 +455,7 @@ namespace asivamosffie.services
                     }
                     seguimientoSemanal.SuportProyectRuta = cp.SuportProyectRuta;
                 }
-                
+
                 return seguimientoSemanal;
             }
             catch (Exception ex)
@@ -502,7 +502,10 @@ namespace asivamosffie.services
             int Count = 1;
             //seguimientoSemanal.SeguimientoSemanalId
 
-            List<VSeguimientoSemanalXseguimientoSemanalAvanceFisicoProgramacion> lSeguimientoSemanalProgramacion = _context.VSeguimientoSemanalXseguimientoSemanalAvanceFisicoProgramacion.Where(x => x.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && x.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).ToList();
+            List<VSeguimientoSemanalXseguimientoSemanalAvanceFisicoProgramacion> lSeguimientoSemanalProgramacion = _context.VSeguimientoSemanalXseguimientoSemanalAvanceFisicoProgramacion
+                .Where(x => x.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && x.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId)
+                .OrderBy(r=> r.Capitulo)
+                .ToList();
             if (lSeguimientoSemanalProgramacion.Count() > 0)
             {
                 foreach (var item in lSeguimientoSemanalProgramacion)
@@ -802,18 +805,34 @@ namespace asivamosffie.services
 
             List<int> ListSeguimientoSemanalId =
                 _context.SeguimientoSemanal
-                .Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId)
+                .Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId && r.SeguimientoSemanalId <= seguimientoSemanal.SeguimientoSemanalId)
                 .Select(r => r.SeguimientoSemanalId)
-                                                   .ToList();
+                .ToList();
+
+            List<SeguimientoSemanal> ListSeguimientoSemanalProgramacion = new List<SeguimientoSemanal>();
+
+            foreach (var idSeguimientoSemanal in ListSeguimientoSemanalId)
+            {
+                ListSeguimientoSemanalProgramacion.Add(_context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == idSeguimientoSemanal)
+                                                                                  .Include(r => r.SeguimientoSemanalAvanceFisico)
+                                                                                  .ThenInclude(r => r.SeguimientoSemanalAvanceFisicoProgramacion)
+                                                                                  .FirstOrDefault());
+            }
+
+
+
 
             List<Programacion> ListProgramacion = new List<Programacion>();
 
-            Parallel.ForEach(seguimientoSemanal.SeguimientoSemanalAvanceFisico.ToList(), item =>
+            foreach (var SeguimientoSemanalx in ListSeguimientoSemanalProgramacion)
             {
-                ListProgramacion.AddRange(item.SeguimientoSemanalAvanceFisicoProgramacion
-                                         .Select(s => s.Programacion)
-                                         .ToList());
-            });
+                Parallel.ForEach(SeguimientoSemanalx.SeguimientoSemanalAvanceFisico.ToList(), item =>
+                {
+                    ListProgramacion.AddRange(item.SeguimientoSemanalAvanceFisicoProgramacion
+                                             .Select(s => s.Programacion)
+                                             .ToList());
+                }); 
+            }
 
             if (ListProgramacion.Count() > 0)
             {
