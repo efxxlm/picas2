@@ -335,9 +335,7 @@ namespace asivamosffie.services
             }
 
             return saldo;
-        }
-
-
+        } 
         private bool RegitroCompletoDrpsTai(int pProyectoId)
         {
             bool esCompleto = false;
@@ -350,9 +348,7 @@ namespace asivamosffie.services
                 esCompleto = true;
             }
             return esCompleto;
-        }
-
-
+        } 
         public async Task<Respuesta> CreateEditHistoricalReleaseBalance(VUsosHistorico pUsosHistorico, string user)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Componente_uso_Historico, (int)EnumeratorTipoDominio.Acciones);
@@ -504,6 +500,7 @@ namespace asivamosffie.services
                 if (pBalanceFinancieroId != 0)
                 {
                     BalanceFinanciero balanceFinanciero = _context.BalanceFinanciero.Find(pBalanceFinancieroId);
+
                     if (balanceFinanciero != null)
                     {
                         DisponibilidadPresupuestal drp = null;
@@ -700,9 +697,9 @@ namespace asivamosffie.services
                                     List<VSaldoAliberar> usosF = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad != true && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId && r.FuenteFinanciacionId == gff.FuenteFinanciacionId).ToList();
 
 
-                                    decimal A_SaldoActual = gff.SaldoActual;
-                                    decimal A_ValorSolicitado = gff.ValorSolicitado;
-                                    decimal A_NuevoSaldo = gff.NuevoSaldo;
+                                    decimal A_SaldoActual =  gff.SaldoActualGenerado ?? gff.SaldoActual;
+                                    decimal A_ValorSolicitado = gff.ValorSolicitadoGenerado ?? gff.ValorSolicitado;
+                                    decimal A_NuevoSaldo = gff.NuevoSaldoGenerado ?? gff.NuevoSaldo;
 
                                     decimal ValorUsoXFuenteA = 0;
                                     decimal ValorUsoXFuenteN = 0;
@@ -716,6 +713,7 @@ namespace asivamosffie.services
                                         if (componenteAportante != null)
                                         {
                                             ContratacionProyectoAportante cpaa = _context.ContratacionProyectoAportante.Find(componenteAportante.ContratacionProyectoAportanteId);
+
                                             if (cpaa != null)
                                             {
                                                 N_SaldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == cpaa.CofinanciacionAportanteId).FirstOrDefault().SaldoActual ?? 0;
@@ -724,13 +722,13 @@ namespace asivamosffie.services
                                         if (cu != null)
                                         {
                                             ComponenteUsoHistorico cuh = _context.ComponenteUsoHistorico.Where(r => r.ComponenteUsoId == cu.ComponenteUsoId).FirstOrDefault();
+
                                             if (cu.FuenteFinanciacionId == gff.FuenteFinanciacionId)
                                             {
                                                 ValorUsoXFuenteA += cu.ValorUso;
                                                 ValorUsoXFuenteN += cuh.ValorUso;
                                             }
-                                        }
-
+                                        } 
                                     }
 
                                     await _context.Set<GestionFuenteFinanciacion>()
@@ -739,9 +737,9 @@ namespace asivamosffie.services
                                                     {
                                                         FechaModificacion = DateTime.Now,
                                                         UsuarioModificacion = user,
-                                                        SaldoActual = N_SaldoActual,
-                                                        ValorSolicitado = ValorUsoXFuenteN,
-                                                        NuevoSaldo = N_SaldoActual + (ValorUsoXFuenteA - ValorUsoXFuenteN),
+                                                        SaldoActualGenerado = N_SaldoActual,
+                                                        ValorSolicitadoGenerado = ValorUsoXFuenteN,
+                                                        NuevoSaldoGenerado = N_SaldoActual + (ValorUsoXFuenteA - ValorUsoXFuenteN),
                                                         ValorLiberado = ValorUsoXFuenteA - ValorUsoXFuenteN
                                                     });
 
@@ -750,6 +748,9 @@ namespace asivamosffie.services
                                         FechaCreacion = DateTime.Now,
                                         UsuarioCreacion = user,
                                         GestionFuenteFinanciacionId = gff.GestionFuenteFinanciacionId,
+                                        SaldoActualGenerado = A_SaldoActual,
+                                        ValorSolicitadoGenerado = A_ValorSolicitado,
+                                        NuevoSaldoGenerado = A_NuevoSaldo,
                                         SaldoActual = A_SaldoActual,
                                         ValorSolicitado = A_ValorSolicitado,
                                         NuevoSaldo = A_NuevoSaldo
@@ -836,9 +837,9 @@ namespace asivamosffie.services
                                         List<VSaldoAliberar> usosF = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad == true && r.NovedadContractualRegistroPresupuestalId == nrp.NovedadContractualRegistroPresupuestalId && r.FuenteFinanciacionId == gff.FuenteFinanciacionId).ToList();
 
 
-                                        decimal A_SaldoActual = gff.SaldoActual;
-                                        decimal A_ValorSolicitado = gff.ValorSolicitado;
-                                        decimal A_NuevoSaldo = gff.NuevoSaldo;
+                                        decimal A_SaldoActual = gff.SaldoActualGenerado ?? gff.SaldoActual;
+                                        decimal A_ValorSolicitado = gff.ValorSolicitadoGenerado ?? gff.ValorSolicitado;
+                                        decimal A_NuevoSaldo = gff.NuevoSaldoGenerado ?? gff.NuevoSaldo;
 
                                         decimal ValorUsoXFuenteA = 0;
                                         decimal ValorUsoXFuenteN = 0;
@@ -867,9 +868,9 @@ namespace asivamosffie.services
                                                             {
                                                                 FechaModificacion = DateTime.Now,
                                                                 UsuarioModificacion = user,
-                                                                SaldoActual = N_SaldoActual,
-                                                                ValorSolicitado = ValorUsoXFuenteN,
-                                                                NuevoSaldo = N_SaldoActual + (ValorUsoXFuenteA - ValorUsoXFuenteN),
+                                                                SaldoActualGenerado = N_SaldoActual,
+                                                                ValorSolicitadoGenerado = ValorUsoXFuenteN,
+                                                                NuevoSaldoGenerado = N_SaldoActual + (ValorUsoXFuenteA - ValorUsoXFuenteN),
                                                                 ValorLiberado = ValorUsoXFuenteA - ValorUsoXFuenteN
                                                             });
                                             GestionFuenteFinanciacionHistorico gestionFuenteFinanciacionHistorico = new GestionFuenteFinanciacionHistorico
@@ -877,13 +878,14 @@ namespace asivamosffie.services
                                                 FechaCreacion = DateTime.Now,
                                                 UsuarioCreacion = user,
                                                 GestionFuenteFinanciacionId = gff.GestionFuenteFinanciacionId,
+                                                SaldoActualGenerado = A_SaldoActual,
+                                                ValorSolicitadoGenerado = A_ValorSolicitado,
+                                                NuevoSaldoGenerado = A_NuevoSaldo,
                                                 SaldoActual = A_SaldoActual,
                                                 ValorSolicitado = A_ValorSolicitado,
                                                 NuevoSaldo = A_NuevoSaldo
-                                            };
-
-                                            _context.GestionFuenteFinanciacionHistorico.Add(gestionFuenteFinanciacionHistorico);
-
+                                            }; 
+                                            _context.GestionFuenteFinanciacionHistorico.Add(gestionFuenteFinanciacionHistorico); 
                                         }
 
                                     }
@@ -943,8 +945,7 @@ namespace asivamosffie.services
                                             ValorAporte = ValorAporteActual,
                                             NovedadContractualAportanteId = cppa.NovedadContractualAportanteId
                                         };
-                                        _context.NovedadContractualAportanteHistorico.Add(novedadContractualAportanteHistorico);
-
+                                        _context.NovedadContractualAportanteHistorico.Add(novedadContractualAportanteHistorico); 
                                     }
                                 }
                             }
@@ -979,12 +980,9 @@ namespace asivamosffie.services
                                     ValorObra = pad.ValorObraActual,
                                     ValorInterventoria = pad.ValorInterventoriaActual,
                                     ValorTotalAportante = pad.ValorObraActual + pad.ValorInterventoriaActual
-                                };
-
-                                _context.ProyectoAportanteHistorico.Add(proyectoAportanteHistorico);
-
-                            }
-
+                                }; 
+                                _context.ProyectoAportanteHistorico.Add(proyectoAportanteHistorico); 
+                            } 
                         }
                     }
                     //cambio el estado del balance
@@ -1000,14 +998,14 @@ namespace asivamosffie.services
                 _context.SaveChanges();
 
                 return
-                new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = GeneralCodes.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_balance_financiero_traslados_de_recursos, GeneralCodes.OperacionExitosa, idAccion, user, strCrearEditar)
-                };
+                        new Respuesta
+                        {
+                            IsSuccessful = true,
+                            IsException = false,
+                            IsValidation = false,
+                            Code = GeneralCodes.OperacionExitosa,
+                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_balance_financiero_traslados_de_recursos, GeneralCodes.OperacionExitosa, idAccion, user, strCrearEditar)
+                        };
             }
             catch (Exception ex)
             {
