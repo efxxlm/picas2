@@ -118,7 +118,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
+        [AllowAnonymous]
         [Route("GetComiteTecnicoByComiteTecnicoId")]
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
         {

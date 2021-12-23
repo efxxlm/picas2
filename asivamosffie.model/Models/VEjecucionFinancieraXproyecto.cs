@@ -13,8 +13,8 @@ namespace asivamosffie.model.Models
         public string Nombre { get; set; }
         public decimal? TotalComprometido { get; set; }
         public decimal? OrdenadoGirarAntesImpuestos { get; set; }
-        public decimal? Saldo { get; set; }
         public decimal? PorcentajeEjecucionFinanciera { get; set; }
+        public decimal? Saldo { get; set; }
         public int ValorTraslado { get; set; }
         public int ValorNetoOdg { get; set; }
     }

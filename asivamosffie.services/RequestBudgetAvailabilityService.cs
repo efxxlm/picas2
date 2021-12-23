@@ -2647,6 +2647,7 @@ namespace asivamosffie.services
                                                                             .ThenInclude(x => x.NovedadContractualAportante)
                                                                                 .ThenInclude(x => x.CofinanciacionAportante)
                                                                         .FirstOrDefault();
+
             NovedadContractualRegistroPresupuestalHistorico detailDPH = _context.NovedadContractualRegistroPresupuestalHistorico
                                                             .Where(x => x.NovedadContractualRegistroPresupuestalId == RegistroNovedadId)
                                                             .FirstOrDefault();

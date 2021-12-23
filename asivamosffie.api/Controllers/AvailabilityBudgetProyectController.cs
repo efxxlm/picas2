@@ -28,7 +28,7 @@ namespace asivamosffie.api.Controllers
             _converter = converter;
         }
 
-
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetDetailAvailabilityBudgetProyectNew")]
         public async Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyectNew([FromQuery] int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId, bool esGenerar)

@@ -13,7 +13,6 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditHistoricalReleaseBalance(VUsosHistorico pUsosHistorico, string user);
         Task<Respuesta> ReleaseBalance(int pBalanceFinancieroId, string user);
         Task<Respuesta> DeleteReleaseBalance(int pBalanceFinancieroId, string user);
-
-
+         
     }
 }

@@ -23,6 +23,7 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
         //        Task<OrdenGiro> SeeDetailOdg(int pOrdenGiroId);
+        [AllowAnonymous]
         [HttpGet]
         [Route("SeeDetailOdg")]
         public async Task<IActionResult> SeeDetailOdg([FromQuery]int pOrdenGiroId)

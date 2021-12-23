@@ -114,7 +114,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
+        [AllowAnonymous]
         [Route("GetSolicitudPagoBySolicitudPagoId")]
         [HttpGet]
         public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId([FromQuery] int SolicitudPagoId)

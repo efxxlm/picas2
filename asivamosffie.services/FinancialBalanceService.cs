@@ -324,6 +324,9 @@ namespace asivamosffie.services
         {
             List<VTablaOdgOtroDescuento> List = _context.VTablaOdgOtroDescuento.Where(r => r.OrdenGiroId == ordenGiroId).ToList();
 
+            if (List.Count() > 1)
+                List = List.Where(r => r.AportanteId > 0 && !string.IsNullOrEmpty(r.ConceptoPago)).ToList();
+
             var ListConceptoPago = List.GroupBy(drp => drp.ConceptoPago)
                                        .Select(d =>
                                                    d.OrderBy(p => p.ConceptoPago)
@@ -363,13 +366,20 @@ namespace asivamosffie.services
                         });
                     }
 
+                    var dyAportante = "No aplica";
+                    if (Aportante.AportanteId > 0)
+                        dyAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
+
                     ListDyAportante.Add(new
                     {
-                        Aportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId)),
+                        Aportante = dyAportante,
                         ListDyDescuento
                     });
                 }
 
+                if(string.IsNullOrEmpty(ConceptoPago.ConceptoPago))
+                    ConceptoPago.ConceptoPago = "No aplica";
+                 
                 ListTablaDescuento.Add(new
                 {
                     ConceptoPago.ConceptoPago,
@@ -384,6 +394,9 @@ namespace asivamosffie.services
         {
             List<VTablaOdgDescuento> List = _context.VTablaOdgDescuento.Where(r => r.OrdenGiroId == ordenGiroId).ToList();
 
+            if (List.Count() > 1)
+                List = List.Where(r => r.AportanteId > 0 && !string.IsNullOrEmpty(r.ConceptoPago)).ToList();
+
             var ListConceptoPago = List.GroupBy(drp => drp.ConceptoPago)
                                        .Select(d =>
                                                    d.OrderBy(p => p.ConceptoPago)
@@ -391,6 +404,7 @@ namespace asivamosffie.services
                                        .ToList();
 
             List<dynamic> ListTablaDescuento = new List<dynamic>();
+
 
             foreach (var ConceptoPago in ListConceptoPago)
             {
@@ -403,11 +417,17 @@ namespace asivamosffie.services
 
                 List<dynamic> ListDyAportante = new List<dynamic>();
 
+               
                 foreach (var Aportante in ListAportante)
                 {
+
+                    var dyAportante = "No aplica"; 
+                    if (Aportante.AportanteId > 0)
+                        dyAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
+
                     ListDyAportante.Add(new
                     {
-                        Aportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId)),
+                        Aportante = dyAportante,
                         AnsAplicado = List.Where(c => c.DescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.ANS && c.ConceptoPago == ConceptoPago.ConceptoPago && c.AportanteId == Aportante.AportanteId).Sum(c => c.ValorDescuento),
                         ReteGarantia = List.Where(c => c.DescuentoCodigo == ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia && c.ConceptoPago == ConceptoPago.ConceptoPago && c.AportanteId == Aportante.AportanteId).Sum(c => c.ValorDescuento),
                         OtrosDescuentos = List.Where(c => c.DescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.Retegarantia && c.DescuentoCodigo != ConstanCodigoTipoDescuentoOrdenGiro.ANS && c.ConceptoPago == ConceptoPago.ConceptoPago && c.AportanteId == Aportante.AportanteId).Sum(c => c.ValorDescuento),
@@ -415,6 +435,8 @@ namespace asivamosffie.services
                     });
                 }
 
+                if (string.IsNullOrEmpty(ConceptoPago.ConceptoPago))
+                    ConceptoPago.ConceptoPago = "No aplica"; 
                 ListTablaDescuento.Add(new
                 {
                     ConceptoPago.ConceptoPago,
@@ -877,7 +899,7 @@ namespace asivamosffie.services
 
                 if (contrato != null)
                 {
-                    if(!cumpleCondicionesTai)
+                    if (!cumpleCondicionesTai)
                         cumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(contrato.ContratoId, false, false, 0);
 
                     if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
@@ -1281,7 +1303,7 @@ namespace asivamosffie.services
                                     {
 
                                         if (usos.NombreUso == "Diseño - Obras Complementarias")
-                                        { 
+                                        {
                                             string String = "string".ToString();
                                         }
                                         decimal Descuento = (VPlantillaOrdenGiroUsos.Sum(r => r.ValorConcepto - r.DescuentoReteFuente - r.DescuentoOtros - r.DescuentoAns)) ?? 0;

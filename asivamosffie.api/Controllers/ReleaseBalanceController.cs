@@ -25,7 +25,7 @@ namespace asivamosffie.api.Controllers
             _releaseBalanceService = releaseBalanceService;
             _settings = settings;
         }
-
+        [AllowAnonymous]
         [Route("GetDrpByProyectoId")]
         [HttpGet]
         public async Task<List<dynamic>> GetDrpByProyectoId([FromQuery] int pProyectoId)
