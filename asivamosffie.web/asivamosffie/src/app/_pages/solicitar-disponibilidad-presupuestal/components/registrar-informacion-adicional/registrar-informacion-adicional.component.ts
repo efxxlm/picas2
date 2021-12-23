@@ -18,7 +18,6 @@ import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
   styleUrls: ['./registrar-informacion-adicional.component.scss']
 })
 export class RegistrarInformacionAdicionalComponent implements OnInit {
-
   objetoDisponibilidad: DisponibilidadPresupuestal = {};
   listaProyectos: Proyecto[] = [];
   idNovedad: number;
@@ -29,7 +28,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   addressForm = this.fb.group({
     // plazoMeses: [null, Validators.required],
     // plazoDias: [null, Validators.required],
-    objeto: [null, Validators.required],
+    objeto: [null, Validators.required]
   });
 
   editorStyle = {
@@ -41,7 +40,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       ['bold', 'italic', 'underline'],
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ indent: '-1' }, { indent: '+1' }],
-      [{ align: [] }],
+      [{ align: [] }]
     ]
   };
   observaciones: any[];
@@ -61,7 +60,6 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     private projectContractingService: ProjectContractingService,
     private projectService: ProjectService,
     private novedadContractualService: ContractualNoveltyService
-
   ) {
     this.activatedroute.params.subscribe((params: Params) => {
       console.log(params);
@@ -72,7 +70,6 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       console.log(this.objetoDisponibilidad);
       if (this.objetoDisponibilidad.disponibilidadPresupuestalId > 0) {
         this.cargarDisponibilidadPre();
-
       } else {
         this.cargarDisponibilidadNueva();
       }
@@ -81,190 +78,180 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   }
 
   cargarDisponibilidadPre() {
-
-    this.budgetAvailabilityService.getDisponibilidadPresupuestalById(this.objetoDisponibilidad.disponibilidadPresupuestalId)
+    this.budgetAvailabilityService
+      .getDisponibilidadPresupuestalById(this.objetoDisponibilidad.disponibilidadPresupuestalId)
       .subscribe(response => {
         this.objetoDisponibilidad = response;
         this.addressForm.get('objeto').setValue(this.objetoDisponibilidad.objeto);
         // this.addressForm.get('plazoMeses').setValue(this.objetoDisponibilidad.plazoMeses);
         // this.addressForm.get('plazoDias').setValue(this.objetoDisponibilidad.plazoDias);
         this.observaciones = response.disponibilidadPresupuestalObservacion;
-        this.projectContractingService.getContratacionByContratacionId(this.objetoDisponibilidad.contratacionId)
-          .subscribe(
-            contratacion => {
-              this.contratacion = contratacion;
-              this.tipoSolicitudCodigo = contratacion.tipoSolicitudCodigo;
-              contratacion.contratacionProyecto.forEach(cp => {
-                cp.proyecto.contratacionProyectoAportante = cp.contratacionProyectoAportante;
-                this.listaProyectos.push(cp.proyecto);
-              });
+        this.projectContractingService
+          .getContratacionByContratacionId(this.objetoDisponibilidad.contratacionId)
+          .subscribe(contratacion => {
+            this.contratacion = contratacion;
+            this.tipoSolicitudCodigo = contratacion.tipoSolicitudCodigo;
+            contratacion.contratacionProyecto.forEach(cp => {
+              cp.proyecto.contratacionProyectoAportante = cp.contratacionProyectoAportante;
+              this.listaProyectos.push(cp.proyecto);
             });
-      })
-
+          });
+      });
   }
 
   cargarDisponibilidadNueva() {
-
     this.objetoDisponibilidad.disponibilidadPresupuestalProyecto = [];
 
-    this.budgetAvailabilityService.getReuestCommittee()
-      .subscribe(
-        listaSolicitudes => {
-          listaSolicitudes.forEach(solicitud => {
-            if (solicitud.contratacionId == this.objetoDisponibilidad.contratacionId) {
-              this.objetoDisponibilidad.fechaSolicitud = solicitud.fechaSolicitud;
-              this.objetoDisponibilidad.numeroSolicitud = solicitud.numeroSolicitud;
-              this.objetoDisponibilidad.opcionContratarCodigo = solicitud.opcionContratar;
-              this.objetoDisponibilidad.valorSolicitud = solicitud.valorSolicitud;
-              this.objetoDisponibilidad.tipoSolicitudCodigo = solicitud.tipoSolicitudCodigo ? solicitud.tipoSolicitudCodigo : this.objetoDisponibilidad.tipoSolicitudCodigo;
-            }
+    this.budgetAvailabilityService.getReuestCommittee().subscribe(listaSolicitudes => {
+      listaSolicitudes.forEach(solicitud => {
+        if (solicitud.contratacionId == this.objetoDisponibilidad.contratacionId) {
+          this.objetoDisponibilidad.fechaSolicitud = solicitud.fechaSolicitud;
+          this.objetoDisponibilidad.numeroSolicitud = solicitud.numeroSolicitud;
+          this.objetoDisponibilidad.opcionContratarCodigo = solicitud.opcionContratar;
+          this.objetoDisponibilidad.valorSolicitud = solicitud.valorSolicitud;
+          this.objetoDisponibilidad.tipoSolicitudCodigo = solicitud.tipoSolicitudCodigo
+            ? solicitud.tipoSolicitudCodigo
+            : this.objetoDisponibilidad.tipoSolicitudCodigo;
+        }
+      });
+      this.projectContractingService
+        .getContratacionByContratacionId(this.objetoDisponibilidad.contratacionId)
+        .subscribe(
+          contratacion => {
+            console.log(contratacion);
+            this.contratacion = contratacion;
+            this.tipoSolicitudCodigo = contratacion.tipoSolicitudCodigo;
+            this.objetoDisponibilidad.fechaComiteTecnicoNotMapped = contratacion.fechaComiteTecnicoNotMapped;
+            contratacion.contratacionProyecto.forEach(cp => {
+              cp.proyecto.contratacionProyectoAportante = cp.contratacionProyectoAportante;
 
-          }),
-            err => {
-              console.log(err);
-            }
-        })
-
-    this.projectContractingService.getContratacionByContratacionId(this.objetoDisponibilidad.contratacionId)
-      .subscribe(
-        contratacion => {
-          console.log(contratacion)
-          this.contratacion = contratacion;
-          this.tipoSolicitudCodigo = contratacion.tipoSolicitudCodigo;
-          this.objetoDisponibilidad.fechaComiteTecnicoNotMapped = contratacion.fechaComiteTecnicoNotMapped;
-          contratacion.contratacionProyecto.forEach(cp => {
-            cp.proyecto.contratacionProyectoAportante = cp.contratacionProyectoAportante;
-
-            this.listaProyectos.push(cp.proyecto);
-
-            let plazoMesesObra = 0;
-              let plazoMesesInterventoria = 0;
-              let plazoDiasObra = 0;
-              let plazoDiasInterventoria = 0;
-
-            // obra
-            // if (this.tipoSolicitudCodigo === '1') {
-
-            //   contratacion.contratacionProyecto.forEach(cp => {
-            //     if (plazoDiasObra < cp.proyecto.plazoDiasObra)
-            //       plazoDiasObra = cp.proyecto.plazoDiasObra;
-
-            //     if (plazoMesesObra < cp.proyecto.plazoMesesObra)
-            //       plazoMesesObra = cp.proyecto.plazoMesesObra;
-            //   });
-
-            //   this.addressForm.get("plazoMeses").setValue(plazoMesesObra);
-            //   this.addressForm.get("plazoDias").setValue(plazoDiasObra);
-            // } else {
-
-            //   contratacion.contratacionProyecto.forEach(cp => {
-            //     if (plazoDiasInterventoria < cp.proyecto.plazoDiasInterventoria)
-            //       plazoDiasInterventoria = cp.proyecto.plazoDiasInterventoria;
-
-            //     if (plazoMesesInterventoria < cp.proyecto.plazoMesesInterventoria)
-            //       plazoMesesInterventoria = cp.proyecto.plazoMesesInterventoria;
-            //   });
-
-            //   this.addressForm.get("plazoMeses").setValue(plazoMesesInterventoria);
-            //   this.addressForm.get("plazoDias").setValue(plazoDiasInterventoria);
-            // }
-
-            if (this.objetoDisponibilidad.tipoSolicitudCodigo == '2')//modificacionContractual
-            {
-              let plazoMesesNovedad = 0;
-              let plazoDiasNovedad = 0;
+              this.listaProyectos.push(cp.proyecto);
 
               let plazoMesesObra = 0;
               let plazoMesesInterventoria = 0;
               let plazoDiasObra = 0;
               let plazoDiasInterventoria = 0;
 
-              this.budgetAvailabilityService.getNovedadContractual(this.objetoDisponibilidad.contratacionId).subscribe(
-                res => {
-                  console.log(res);
+              // obra
+              // if (this.tipoSolicitudCodigo === '1') {
 
-                  res = res.filter(x => x.novedadContractualId == this.idNovedad);
+              //   contratacion.contratacionProyecto.forEach(cp => {
+              //     if (plazoDiasObra < cp.proyecto.plazoDiasObra)
+              //       plazoDiasObra = cp.proyecto.plazoDiasObra;
 
-                  this.ddpsolicitud = res[0].contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp;
-                  this.ddpvalor = res[0].contrato.contratacion.disponibilidadPresupuestal[0].valorTotalDisponibilidad;
-                  this.ddpdetalle = res[0].novedadContractualDescripcion[0].resumenJustificacion;
-                  this.objetoDisponibilidad.novedadContractualId = res[0].novedadContractualId;
-                  this.objetoDisponibilidad.esNovedadContractual = true;
-                  this.objetoDisponibilidad.numeroSolicitud = res[0].numeroSolicitud;
-                  this.objetoDisponibilidad.tipoSolicitudCodigo = '1';//tradicional
-                  this.objetoDisponibilidad.valorSolicitud = res[0].novedadContractualDescripcion[0].presupuestoAdicionalSolicitado;
+              //     if (plazoMesesObra < cp.proyecto.plazoMesesObra)
+              //       plazoMesesObra = cp.proyecto.plazoMesesObra;
+              //   });
 
-                  res[0].novedadContractualDescripcion.forEach(novedad => {
-                    // Prorroga a la suspension - Prorroga - suspension
-                    if (novedad.tipoNovedadCodigo === '2' || novedad.tipoNovedadCodigo === '4' || novedad.tipoNovedadCodigo === '1') {
-                      if (novedad.plazoAdicionalMeses !== undefined)
-                        plazoMesesNovedad = novedad.plazoAdicionalDias;
-                      if (novedad.plazoAdicionalDias !== undefined)
-                        plazoDiasNovedad = novedad.plazoAdicionalDias;
+              //   this.addressForm.get("plazoMeses").setValue(plazoMesesObra);
+              //   this.addressForm.get("plazoDias").setValue(plazoDiasObra);
+              // } else {
+
+              //   contratacion.contratacionProyecto.forEach(cp => {
+              //     if (plazoDiasInterventoria < cp.proyecto.plazoDiasInterventoria)
+              //       plazoDiasInterventoria = cp.proyecto.plazoDiasInterventoria;
+
+              //     if (plazoMesesInterventoria < cp.proyecto.plazoMesesInterventoria)
+              //       plazoMesesInterventoria = cp.proyecto.plazoMesesInterventoria;
+              //   });
+
+              //   this.addressForm.get("plazoMeses").setValue(plazoMesesInterventoria);
+              //   this.addressForm.get("plazoDias").setValue(plazoDiasInterventoria);
+              // }
+
+              if (this.objetoDisponibilidad.tipoSolicitudCodigo == '2') {
+                //modificacionContractual
+                let plazoMesesNovedad = 0;
+                let plazoDiasNovedad = 0;
+
+                let plazoMesesObra = 0;
+                let plazoMesesInterventoria = 0;
+                let plazoDiasObra = 0;
+                let plazoDiasInterventoria = 0;
+
+                this.budgetAvailabilityService
+                  .getNovedadContractual(this.objetoDisponibilidad.contratacionId)
+                  .subscribe(
+                    res => {
+                      console.log(res);
+
+                      res = res.filter(x => x.novedadContractualId == this.idNovedad);
+
+                      this.ddpsolicitud = res[0].contrato.contratacion.disponibilidadPresupuestal[0].numeroDdp;
+                      this.ddpvalor =
+                        res[0].contrato.contratacion.disponibilidadPresupuestal[0].valorTotalDisponibilidad;
+                      this.ddpdetalle = res[0].novedadContractualDescripcion[0].resumenJustificacion;
+                      this.objetoDisponibilidad.novedadContractualId = res[0].novedadContractualId;
+                      this.objetoDisponibilidad.esNovedadContractual = true;
+                      this.objetoDisponibilidad.numeroSolicitud = res[0].numeroSolicitud;
+                      this.objetoDisponibilidad.tipoSolicitudCodigo = '1'; //tradicional
+                      this.objetoDisponibilidad.valorSolicitud =
+                        res[0].novedadContractualDescripcion[0].presupuestoAdicionalSolicitado;
+
+                      res[0].novedadContractualDescripcion.forEach(novedad => {
+                        // Prorroga a la suspension - Prorroga - suspension
+                        if (
+                          novedad.tipoNovedadCodigo === '2' ||
+                          novedad.tipoNovedadCodigo === '4' ||
+                          novedad.tipoNovedadCodigo === '1'
+                        ) {
+                          if (novedad.plazoAdicionalMeses !== undefined) plazoMesesNovedad = novedad.plazoAdicionalDias;
+                          if (novedad.plazoAdicionalDias !== undefined) plazoDiasNovedad = novedad.plazoAdicionalDias;
+                        }
+                      });
+
+                      // obra
+                      if (this.tipoSolicitudCodigo === '1') {
+                        contratacion.contratacionProyecto.forEach(cp => {
+                          if (plazoDiasObra < cp.proyecto.plazoDiasObra) plazoDiasObra = cp.proyecto.plazoDiasObra;
+
+                          if (plazoMesesObra < cp.proyecto.plazoMesesObra) plazoMesesObra = cp.proyecto.plazoMesesObra;
+                        });
+
+                        // this.addressForm.get("plazoMeses").setValue(plazoMesesNovedad !== 0 ? plazoMesesNovedad : plazoMesesObra);
+                        // this.addressForm.get("plazoDias").setValue(plazoDiasNovedad !== 0 ? plazoDiasNovedad : plazoDiasObra);
+                      } else {
+                        contratacion.contratacionProyecto.forEach(cp => {
+                          if (plazoDiasInterventoria < cp.proyecto.plazoDiasInterventoria)
+                            plazoDiasInterventoria = cp.proyecto.plazoDiasInterventoria;
+
+                          if (plazoMesesInterventoria < cp.proyecto.plazoMesesInterventoria)
+                            plazoMesesInterventoria = cp.proyecto.plazoMesesInterventoria;
+                        });
+
+                        // this.addressForm.get("plazoMeses").setValue(plazoMesesNovedad !== 0 ? plazoMesesNovedad : plazoMesesInterventoria);
+                        // this.addressForm.get("plazoDias").setValue(plazoDiasNovedad !== 0 ? plazoDiasNovedad : plazoDiasInterventoria);
+                      }
+
+                      this.addressForm
+                        .get('objeto')
+                        .setValue(res[0].novedadContractualDescripcion[0].resumenJustificacion);
+                    },
+                    err => {
+                      console.log(err);
                     }
-                  });
-
-
-
-                  // obra
-                  if (this.tipoSolicitudCodigo === '1') {
-
-                    contratacion.contratacionProyecto.forEach(cp => {
-                      if (plazoDiasObra < cp.proyecto.plazoDiasObra)
-                        plazoDiasObra = cp.proyecto.plazoDiasObra;
-
-                      if (plazoMesesObra < cp.proyecto.plazoMesesObra)
-                        plazoMesesObra = cp.proyecto.plazoMesesObra;
-                    });
-
-                    // this.addressForm.get("plazoMeses").setValue(plazoMesesNovedad !== 0 ? plazoMesesNovedad : plazoMesesObra);
-                    // this.addressForm.get("plazoDias").setValue(plazoDiasNovedad !== 0 ? plazoDiasNovedad : plazoDiasObra);
-                  } else {
-
-                    contratacion.contratacionProyecto.forEach(cp => {
-                      if (plazoDiasInterventoria < cp.proyecto.plazoDiasInterventoria)
-                        plazoDiasInterventoria = cp.proyecto.plazoDiasInterventoria;
-
-                      if (plazoMesesInterventoria < cp.proyecto.plazoMesesInterventoria)
-                        plazoMesesInterventoria = cp.proyecto.plazoMesesInterventoria;
-                    });
-
-                    // this.addressForm.get("plazoMeses").setValue(plazoMesesNovedad !== 0 ? plazoMesesNovedad : plazoMesesInterventoria);
-                    // this.addressForm.get("plazoDias").setValue(plazoDiasNovedad !== 0 ? plazoDiasNovedad : plazoDiasInterventoria);
-                  }
-
-                  this.addressForm.get("objeto").setValue(res[0].novedadContractualDescripcion[0].resumenJustificacion);
-                },
-                err => {
-                  console.log(err);
-                }
-              )
-            }
-
-          });
-          console.log(this.listaProyectos);
-        },
+                  );
+              }
+            });
+            console.log(this.listaProyectos);
+          },
+          err => {
+            console.log(err);
+          }
+        ),
         err => {
           console.log(err);
-        }
-      );
-
-
-    //})
-
+        };
+    });
   }
 
-  ngOnInit(): void {
-  }
-
-
+  ngOnInit(): void {}
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
     }
   }
-
 
   // textoLimpio(texto: string) {
   //   let saltosDeLinea = 0;
@@ -360,65 +347,58 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
 
       console.log(this.objetoDisponibilidad);
 
-      if ( this.objetoDisponibilidad.esNovedadContractual === true ){
-
+      if (this.objetoDisponibilidad.esNovedadContractual === true) {
         const registroPresupuesta = {
-        //novedadContractualRegistroPresupuestalId = this.objetoDisponibilidad.NovedadContractualRegistroPresupuestalId,
-        novedadContractualId: this.objetoDisponibilidad.novedadContractualId,
-        disponibilidadPresupuestalId: this.objetoDisponibilidad.disponibilidadPresupuestalId,
-        numeroSolicitud: this.objetoDisponibilidad.numeroSolicitud,
-        valorSolicitud: this.objetoDisponibilidad.valorSolicitud,
-        estadoSolicitudCodigo: this.objetoDisponibilidad.estadoSolicitudCodigo,
-        objeto: this.objetoDisponibilidad.objeto,
-        eliminado: this.objetoDisponibilidad.eliminado,
-        fechaDdp: this.objetoDisponibilidad.fechaDdp,
-        numeroDrp: this.objetoDisponibilidad.numeroDrp,
-        plazoMeses: this.contratacion.plazoContratacion.plazoMeses,
-        plazoDias: this.contratacion.plazoContratacion.plazoDias
+          //novedadContractualRegistroPresupuestalId = this.objetoDisponibilidad.NovedadContractualRegistroPresupuestalId,
+          novedadContractualId: this.objetoDisponibilidad.novedadContractualId,
+          disponibilidadPresupuestalId: this.objetoDisponibilidad.disponibilidadPresupuestalId,
+          numeroSolicitud: this.objetoDisponibilidad.numeroSolicitud,
+          valorSolicitud: this.objetoDisponibilidad.valorSolicitud,
+          estadoSolicitudCodigo: this.objetoDisponibilidad.estadoSolicitudCodigo,
+          objeto: this.objetoDisponibilidad.objeto,
+          eliminado: this.objetoDisponibilidad.eliminado,
+          fechaDdp: this.objetoDisponibilidad.fechaDdp,
+          numeroDrp: this.objetoDisponibilidad.numeroDrp,
+          plazoMeses: this.contratacion.plazoContratacion.plazoMeses,
+          plazoDias: this.contratacion.plazoContratacion.plazoDias
+        };
 
-        }
-
-        this.budgetAvailabilityService.createOrEditInfoAdditionalNoveltly(registroPresupuesta, this.objetoDisponibilidad.contratacionId)
-        .subscribe(respuesta => {
+        this.budgetAvailabilityService
+          .createOrEditInfoAdditionalNoveltly(registroPresupuesta, this.objetoDisponibilidad.contratacionId)
+          .subscribe(respuesta => {
+            this.openDialog('', `<b>${respuesta.message}</b>`);
+            if (respuesta.code == '200')
+              this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional']);
+          });
+      } else {
+        this.budgetAvailabilityService.createOrEditInfoAdditional(this.objetoDisponibilidad).subscribe(respuesta => {
           this.openDialog('', `<b>${respuesta.message}</b>`);
-          if (respuesta.code == "200")
+          if (respuesta.code == '200')
             this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional']);
-        })
-
-      }else{
-        this.budgetAvailabilityService.createOrEditInfoAdditional(this.objetoDisponibilidad)
-        .subscribe(respuesta => {
-          this.openDialog('', `<b>${respuesta.message}</b>`);
-          if (respuesta.code == "200")
-            this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional']);
-        })
+        });
       }
-
-
-    }
-    else {
-      this.openDialog('', '<b>Por favor ingrese todos los campos obligatorios.</b>')
+    } else {
+      this.openDialog('', '<b>Por favor ingrese todos los campos obligatorios.</b>');
     }
 
     console.log(this.objetoDisponibilidad);
   }
 
-  getNovedad(novedadContractualId){
-    if(novedadContractualId > 0){
-      this.novedadContractualService.getNovedadContractualById(novedadContractualId).subscribe(novedad=>{
+  getNovedad(novedadContractualId) {
+    if (novedadContractualId > 0) {
+      this.novedadContractualService.getNovedadContractualById(novedadContractualId).subscribe(novedad => {
         this.novedadContractual = novedad;
-        if(this.novedadContractual?.novedadContractualDescripcion.length > 0){
+        if (this.novedadContractual?.novedadContractualDescripcion.length > 0) {
           this.novedadContractual?.novedadContractualDescripcion.forEach(novedad => {
-            if(novedad.tipoNovedadCodigo == '3'){
+            if (novedad.tipoNovedadCodigo == '3') {
               this.objetoNovedad = novedad.resumenJustificacion;
             }
           });
         }
-        if(this.novedadContractual?.novedadContractualObservaciones.length > 0){
+        if (this.novedadContractual?.novedadContractualObservaciones.length > 0) {
           this.observacionesNovedad = this.novedadContractual?.novedadContractualObservaciones;
         }
       });
     }
   }
-
 }
