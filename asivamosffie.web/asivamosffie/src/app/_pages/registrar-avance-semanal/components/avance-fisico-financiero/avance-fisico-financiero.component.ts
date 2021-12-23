@@ -22,11 +22,12 @@ export class AvanceFisicoFinancieroComponent implements OnInit {
   ngOnInit(): void {
     if (this.seguimientoSemanal !== undefined) {
       if (this.seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0) {
+        console.log(this.seguimientoSemanal);
         const avanceFisico = this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0];
-        if (avanceFisico.registroCompleto === false) {
+        if (avanceFisico.registroCompletoHijo === false) {
           this.semaforoAvanceFisico = 'en-proceso';
         }
-        if (avanceFisico.registroCompleto === true) {
+        if (avanceFisico.registroCompletoHijo === true) {
           this.semaforoAvanceFisico = 'completo';
         }
       }
@@ -42,7 +43,7 @@ export class AvanceFisicoFinancieroComponent implements OnInit {
 
   descargarProject() {
     this.commonService
-      .getDocumento(this.seguimientoSemanal.infoProyecto.fechaUltimoReporte.contratacionProyecto.suportProyectRuta)
+      .getDocumento(this.seguimientoSemanal.suportProyectRuta)
       .subscribe(
         response => {
           const documento = `support project`;

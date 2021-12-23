@@ -61,6 +61,7 @@
           class="expansion-style--title"
           [class.completo]="seguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones"
           [class.sin-diligenciar]="!seguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones"
+          [class.sin-before]="seguimientoSemanal.infoProyecto.estadoObra === 'Con ejecución normal'"
         >
           Observaciones
         </mat-panel-title>
@@ -74,12 +75,10 @@
         <mat-panel-title
           class="expansion-style--title"
           [class.completo]="
-            seguimientoSemanal.infoProyecto.fechaUltimoReporte &&
-            seguimientoSemanal.infoProyecto.fechaUltimoReporte.contratacionProyecto.suportProyectRuta
+            seguimientoSemanal.suportProyectRuta
           "
           [class.sin-diligenciar]="
-            !seguimientoSemanal.infoProyecto.fechaUltimoReporte ||
-            !seguimientoSemanal.infoProyecto.fechaUltimoReporte.contratacionProyecto.suportProyectRuta
+            !seguimientoSemanal.suportProyectRuta
           "
         >
           Soporte Project

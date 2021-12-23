@@ -22,11 +22,9 @@ export class SoporteProjectComponent implements OnInit {
 
   ngOnInit(): void {
     this.declararDocumentFile();
-    if (this.seguimientoSemanal.infoProyecto.fechaUltimoReporte.contratacionProyecto.suportProyectRuta)
-      this.archivo =
-        this.seguimientoSemanal.infoProyecto.fechaUltimoReporte.contratacionProyecto.suportProyectRuta.split(
-          `SeguimientoSemanalAvanceFisico\\${this.pContratacionProyectoId}\\`
-        )[1];
+    console.log(this.seguimientoSemanal.suportProyectRuta);
+    if (this.seguimientoSemanal.suportProyectRuta)
+      this.archivo = this.seguimientoSemanal.suportProyectRuta.split(`SeguimientoSemanalAvanceFisico\\${this.pContratacionProyectoId}\\`)[1];
   }
 
   private declararDocumentFile() {

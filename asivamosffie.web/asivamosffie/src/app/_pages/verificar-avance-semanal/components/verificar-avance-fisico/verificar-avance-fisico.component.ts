@@ -30,7 +30,7 @@ export class VerificarAvanceFisicoComponent implements OnInit {
 
     descargarProject() {
       this.commonService
-        .getDocumento(this.seguimientoSemanal.infoProyecto.fechaUltimoReporte.contratacionProyecto.suportProyectRuta)
+        .getDocumento(this.seguimientoSemanal.suportProyectRuta)
         .subscribe(
           response => {
             const documento = `support project`;

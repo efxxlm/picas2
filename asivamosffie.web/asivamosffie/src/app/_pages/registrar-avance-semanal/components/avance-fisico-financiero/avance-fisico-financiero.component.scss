@@ -5,3 +5,7 @@
 .mt-2em {
     margin-top: 2em;
 }
+
+.sin-before::before {
+    content: none;
+}
