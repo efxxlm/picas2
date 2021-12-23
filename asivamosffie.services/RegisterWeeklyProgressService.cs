@@ -504,7 +504,7 @@ namespace asivamosffie.services
 
             List<VSeguimientoSemanalXseguimientoSemanalAvanceFisicoProgramacion> lSeguimientoSemanalProgramacion = _context.VSeguimientoSemanalXseguimientoSemanalAvanceFisicoProgramacion
                 .Where(x => x.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && x.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId)
-                .OrderBy(r=> r.Capitulo)
+                .OrderBy(r => r.Capitulo)
                 .ToList();
             if (lSeguimientoSemanalProgramacion.Count() > 0)
             {
@@ -831,7 +831,7 @@ namespace asivamosffie.services
                     ListProgramacion.AddRange(item.SeguimientoSemanalAvanceFisicoProgramacion
                                              .Select(s => s.Programacion)
                                              .ToList());
-                }); 
+                });
             }
 
             if (ListProgramacion.Count() > 0)
@@ -1295,13 +1295,24 @@ namespace asivamosffie.services
             }
         }
 
-        private bool ValidarRegistroCompletoAvanceFisico(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico)
+        private bool ValidarRegistroCompletoAvanceFisico(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico, string pRutaSuporProject)
         {
             bool EsCompleto = true;
+            string StrEjecucionNormal = "2"; //Tipo Dominio 111 
+             
+            if (string.IsNullOrEmpty(pRutaSuporProject))
+                return false;
+
+            if (seguimientoSemanalAvanceFisico.EstadoObraCodigo != StrEjecucionNormal)
+            {
+                if (string.IsNullOrEmpty(seguimientoSemanalAvanceFisico.Observaciones))
+                    return false;
+            }
+             
             Parallel.ForEach(seguimientoSemanalAvanceFisico.SeguimientoSemanalAvanceFisicoProgramacion, item =>
             {
                 if (item.AvanceFisicoCapitulo == null)
-                    EsCompleto = false;
+                    EsCompleto = false; 
             });
             return EsCompleto;
         }
@@ -2357,7 +2368,7 @@ namespace asivamosffie.services
 
         private void SaveUpdateAvanceFisico(SeguimientoSemanal pSeguimientoSemanal, string usuarioCreacion)
         {
-            bool RegistroCompleto = ValidarRegistroCompletoAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
+            bool RegistroCompleto = ValidarRegistroCompletoAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pSeguimientoSemanal.ContratacionProyecto.SuportProyectRuta);
 
             if (pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoId == 0)
             {
