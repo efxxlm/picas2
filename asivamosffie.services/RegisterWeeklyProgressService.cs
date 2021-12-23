@@ -1298,8 +1298,20 @@ namespace asivamosffie.services
         private bool ValidarRegistroCompletoAvanceFisico(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico, string pRutaSuporProject)
         {
             bool EsCompleto = true;
+          
+            Parallel.ForEach(seguimientoSemanalAvanceFisico.SeguimientoSemanalAvanceFisicoProgramacion, item =>
+            {
+                if (item.AvanceFisicoCapitulo == null)
+                    EsCompleto = false; 
+            });
+            return EsCompleto;
+        }
+
+        private bool ValidarRegistroCompletoAvanceFisicoHijo(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico, string pRutaSuporProject)
+        {
+            bool EsCompleto = true;
             string StrEjecucionNormal = "2"; //Tipo Dominio 111 
-             
+
             if (string.IsNullOrEmpty(pRutaSuporProject))
                 return false;
 
@@ -1308,11 +1320,11 @@ namespace asivamosffie.services
                 if (string.IsNullOrEmpty(seguimientoSemanalAvanceFisico.Observaciones))
                     return false;
             }
-             
+
             Parallel.ForEach(seguimientoSemanalAvanceFisico.SeguimientoSemanalAvanceFisicoProgramacion, item =>
             {
                 if (item.AvanceFisicoCapitulo == null)
-                    EsCompleto = false; 
+                    EsCompleto = false;
             });
             return EsCompleto;
         }
@@ -1323,6 +1335,8 @@ namespace asivamosffie.services
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Semanal, (int)EnumeratorTipoDominio.Acciones);
             bool blActualizarContratacionProyecto = false;
+
+            pSeguimientoSemanal.ContratacionProyecto = _context.ContratacionProyecto.Find(pSeguimientoSemanal.ContratacionProyectoId);
             try
             {
                 if (pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.Count() > 0)
@@ -2369,10 +2383,11 @@ namespace asivamosffie.services
         private void SaveUpdateAvanceFisico(SeguimientoSemanal pSeguimientoSemanal, string usuarioCreacion)
         {
             bool RegistroCompleto = ValidarRegistroCompletoAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pSeguimientoSemanal.ContratacionProyecto.SuportProyectRuta);
-
+            bool RegistroCompletoHijo   = ValidarRegistroCompletoAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pSeguimientoSemanal.ContratacionProyecto.SuportProyectRuta);
             if (pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoId == 0)
             {
-                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().RegistroCompleto = RegistroCompleto;
+                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().RegistroCompleto = RegistroCompleto; 
+                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().RegistroCompletoHijo = RegistroCompletoHijo;
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().UsuarioCreacion = usuarioCreacion;
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().FechaCreacion = DateTime.Now;
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().Eliminado = false;
@@ -2387,6 +2402,7 @@ namespace asivamosffie.services
                 SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Find(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoId);
 
                 seguimientoSemanalAvanceFisicoOld.RegistroCompleto = RegistroCompleto;
+                seguimientoSemanalAvanceFisicoOld.RegistroCompletoHijo = RegistroCompletoHijo;
                 seguimientoSemanalAvanceFisicoOld.UsuarioModificacion = usuarioCreacion;
                 seguimientoSemanalAvanceFisicoOld.FechaModificacion = DateTime.Now;
                 seguimientoSemanalAvanceFisicoOld.EstadoObraCodigo = ValidarEstadoDeObraBySeguimientoSemanalId(pSeguimientoSemanal.SeguimientoSemanalId);

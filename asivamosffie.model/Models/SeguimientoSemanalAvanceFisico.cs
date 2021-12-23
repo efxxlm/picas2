@@ -13,6 +13,7 @@ namespace asivamosffie.model.Models
         public int SeguimientoSemanalAvanceFisicoId { get; set; }
         public int SeguimientoSemanalId { get; set; }
         public bool RegistroCompleto { get; set; }
+        public bool RegistroCompletoHijo { get; set; }
         public bool Eliminado { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime FechaCreacion { get; set; }
