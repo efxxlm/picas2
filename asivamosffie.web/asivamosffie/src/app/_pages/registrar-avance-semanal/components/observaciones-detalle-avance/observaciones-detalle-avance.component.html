@@ -47,7 +47,7 @@
         (onContentChanged)="maxLength($event, 1000)"
         formControlName="observaciones"
         #obsAvanceFisico
-        required
+        [required]="required"
       >
       </quill-editor>
     </div>

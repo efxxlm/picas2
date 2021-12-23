@@ -55,20 +55,33 @@
 
     <mat-expansion-panel
       class="expansion-style sub-expansion"
-      *ngIf="seguimientoSemanal.infoProyecto.estadoObra !== 'Con ejecución normal'"
     >
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAvanceFisico">
+        <mat-panel-title
+          class="expansion-style--title"
+          [class.completo]="seguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones"
+          [class.sin-diligenciar]="!seguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones"
+        >
           Observaciones
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <app-observaciones-detalle-avance [seguimientoSemanal]="seguimientoSemanal"></app-observaciones-detalle-avance>
+      <app-observaciones-detalle-avance [seguimientoSemanal]="seguimientoSemanal" [required]="seguimientoSemanal.infoProyecto.estadoObra !== 'Con ejecución normal'"></app-observaciones-detalle-avance>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAvanceFisico">
+        <mat-panel-title
+          class="expansion-style--title"
+          [class.completo]="
+            seguimientoSemanal.infoProyecto.fechaUltimoReporte &&
+            seguimientoSemanal.infoProyecto.fechaUltimoReporte.contratacionProyecto.suportProyectRuta
+          "
+          [class.sin-diligenciar]="
+            !seguimientoSemanal.infoProyecto.fechaUltimoReporte ||
+            !seguimientoSemanal.infoProyecto.fechaUltimoReporte.contratacionProyecto.suportProyectRuta
+          "
+        >
           Soporte Project
         </mat-panel-title>
       </mat-expansion-panel-header>

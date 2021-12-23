@@ -13,7 +13,9 @@ import { Router } from '@angular/router';
 })
 export class ObservacionesDetalleAvanceComponent implements OnInit {
   @Input() seguimientoSemanal: any;
+  @Input() required: boolean;
 
+  
   formObservaciones: FormGroup = this.fb.group({
     // tieneObservaciones: [null, Validators.required],
     observaciones: [null, Validators.required]
@@ -46,6 +48,8 @@ export class ObservacionesDetalleAvanceComponent implements OnInit {
     this.formObservaciones
       .get('observaciones')
       .setValue(this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones);
+
+      if (!this.required) this.formObservaciones.get('observaciones').clearValidators();
   }
 
   maxLength(e: any, n: number) {
