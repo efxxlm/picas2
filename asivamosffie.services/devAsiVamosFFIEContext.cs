@@ -11523,7 +11523,9 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.ConceptoPago).HasMaxLength(250);
 
-                entity.Property(e => e.Descuento).HasMaxLength(250);
+                entity.Property(e => e.Descuento)
+                    .IsRequired()
+                    .HasMaxLength(250);
 
                 entity.Property(e => e.DescuentoCodigo)
                     .HasMaxLength(100)

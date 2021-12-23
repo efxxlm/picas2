@@ -13,7 +13,6 @@ namespace asivamosffie.model.Models
         public int SeguimientoSemanalAvanceFisicoId { get; set; }
         public int SeguimientoSemanalId { get; set; }
         public bool RegistroCompleto { get; set; }
-        public bool RegistroCompletoHijo { get; set; }
         public bool Eliminado { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime FechaCreacion { get; set; }
@@ -29,6 +28,7 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoObservacionApoyo { get; set; }
         public bool? RegistroCompletoObservacionSupervisor { get; set; }
         public string Observaciones { get; set; }
+        public bool? RegistroCompletoHijo { get; set; }
 
         public virtual SeguimientoSemanalObservacion ObservacionApoyo { get; set; }
         public virtual SeguimientoSemanalObservacion ObservacionSupervisor { get; set; }

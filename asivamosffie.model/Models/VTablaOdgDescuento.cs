@@ -9,7 +9,7 @@ namespace asivamosffie.model.Models
         public string ConceptoPago { get; set; }
         public string Descuento { get; set; }
         public string DescuentoCodigo { get; set; }
-        public int? AportanteId { get; set; }
+        public int AportanteId { get; set; }
         public decimal ValorDescuento { get; set; }
     }
 }

@@ -1298,18 +1298,6 @@ namespace asivamosffie.services
         private bool ValidarRegistroCompletoAvanceFisico(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico, string pRutaSuporProject)
         {
             bool EsCompleto = true;
-          
-            Parallel.ForEach(seguimientoSemanalAvanceFisico.SeguimientoSemanalAvanceFisicoProgramacion, item =>
-            {
-                if (item.AvanceFisicoCapitulo == null)
-                    EsCompleto = false; 
-            });
-            return EsCompleto;
-        }
-
-        private bool ValidarRegistroCompletoAvanceFisicoHijo(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico, string pRutaSuporProject)
-        {
-            bool EsCompleto = true;
             string StrEjecucionNormal = "2"; //Tipo Dominio 111 
 
             if (string.IsNullOrEmpty(pRutaSuporProject))
@@ -1320,6 +1308,20 @@ namespace asivamosffie.services
                 if (string.IsNullOrEmpty(seguimientoSemanalAvanceFisico.Observaciones))
                     return false;
             }
+
+            Parallel.ForEach(seguimientoSemanalAvanceFisico.SeguimientoSemanalAvanceFisicoProgramacion, item =>
+            {
+                if (item.AvanceFisicoCapitulo == null)
+                    EsCompleto = false;
+            });
+            return EsCompleto;
+        }
+
+        private bool ValidarRegistroCompletoAvanceFisicoHijo(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico, string pRutaSuporProject)
+        {
+          
+
+            bool EsCompleto = true;
 
             Parallel.ForEach(seguimientoSemanalAvanceFisico.SeguimientoSemanalAvanceFisicoProgramacion, item =>
             {
@@ -2383,7 +2385,7 @@ namespace asivamosffie.services
         private void SaveUpdateAvanceFisico(SeguimientoSemanal pSeguimientoSemanal, string usuarioCreacion)
         {
             bool RegistroCompleto = ValidarRegistroCompletoAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pSeguimientoSemanal.ContratacionProyecto.SuportProyectRuta);
-            bool RegistroCompletoHijo   = ValidarRegistroCompletoAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pSeguimientoSemanal.ContratacionProyecto.SuportProyectRuta);
+            bool RegistroCompletoHijo   = ValidarRegistroCompletoAvanceFisicoHijo(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pSeguimientoSemanal.ContratacionProyecto.SuportProyectRuta);
             if (pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoId == 0)
             {
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().RegistroCompleto = RegistroCompleto; 
@@ -2399,7 +2401,9 @@ namespace asivamosffie.services
             }
             else
             {
-                SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Find(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoId);
+                SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Where(s=> s.SeguimientoSemanalAvanceFisicoId == pSeguimientoSemanal.SeguimientoSemanalAvanceFisico
+                                                                                                                                    .FirstOrDefault().SeguimientoSemanalAvanceFisicoId)
+                                                                                                                          .FirstOrDefault();
 
                 seguimientoSemanalAvanceFisicoOld.RegistroCompleto = RegistroCompleto;
                 seguimientoSemanalAvanceFisicoOld.RegistroCompletoHijo = RegistroCompletoHijo;
