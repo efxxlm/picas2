@@ -814,7 +814,7 @@ namespace asivamosffie.services
                 SolicitudPago solicitudPago = await GetSolicitudPagoBySolicitudPagoId(pSolicitudPago);
                 blRegistroCompleto = ValidarRegistroCompletoOrdenGiro(solicitudPago.OrdenGiro);
 
-                if(blRegistroCompleto == true)
+                if (blRegistroCompleto == true)
                     blRegistroCompleto = ValidarCantidadProyectos(solicitudPago);
 
                 DateTime? CompleteRecordDate = null;
@@ -873,7 +873,7 @@ namespace asivamosffie.services
             return true;
         }
 
-        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion,bool tieneAmortizacion)
+        private bool ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(OrdenGiroDetalleTerceroCausacion pOrdenGiroDetalleTerceroCausacion, bool tieneAmortizacion)
         {
             if (pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionAportante.Where(r => r.Eliminado != true).Sum(r => r.ValorDescuento) != pOrdenGiroDetalleTerceroCausacion.ValorFacturadoConcepto)
                 return false;
@@ -1013,9 +1013,7 @@ namespace asivamosffie.services
                 foreach (var spf in sp.SolicitudPagoFase)
                 {
                     if (!contratacionProyectoSp.Contains(spf.ContratacionProyectoId))
-                    {
                         contratacionProyectoSp.Add(spf.ContratacionProyectoId);
-                    }
                 }
             }
 
@@ -1024,13 +1022,11 @@ namespace asivamosffie.services
                 foreach (var odgt in odg.OrdenGiroDetalleTerceroCausacion)
                 {
                     if (!contratacionProyectoOdg.Contains(odgt.ContratacionProyectoId))
-                    {
                         contratacionProyectoOdg.Add(odgt.ContratacionProyectoId);
-                    }
                 }
             }
 
-            return (contratacionProyectoSp.Count() != contratacionProyectoOdg.Count());
+            return (contratacionProyectoSp.Count() == contratacionProyectoOdg.Count());
         }
 
         private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante pOrdenGiroDetalleDescuentoTecnicaAportante)
@@ -1082,22 +1078,14 @@ namespace asivamosffie.services
                     || pOrdenGiroDetalle?.OrdenGiroSoporte.Count() == 0
                     || pOrdenGiroDetalle?.OrdenGiroDetalleEstrategiaPago.Count() == 0
                     ) return false;
-
             }
-            else
-            {
-
-
-
-            }
-
 
             if (pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion.Count() == 0)
                 return false;
 
             foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
             {
-                if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(item,false))
+                if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(item, false))
                     return false;
             }
 
@@ -1118,8 +1106,6 @@ namespace asivamosffie.services
                 if (string.IsNullOrEmpty(item.UrlSoporte))
                     return false;
             }
-
-
 
             foreach (var item in pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica)
             {
@@ -1161,13 +1147,13 @@ namespace asivamosffie.services
                     _context.SaveChanges();
 
                     await _context.Set<SolicitudPago>()
-                                    .Where(o => o.SolicitudPagoId == pOrdenGiro.SolicitudPagoId)
-                                                                                        .UpdateAsync(r => new SolicitudPago()
-                                                                                        {
-                                                                                            FechaModificacion = DateTime.Now,
-                                                                                            UsuarioModificacion = pOrdenGiro.UsuarioCreacion,
-                                                                                            OrdenGiroId = pOrdenGiro.OrdenGiroId
-                                                                                        });
+                                  .Where(o => o.SolicitudPagoId == pOrdenGiro.SolicitudPagoId)
+                                  .UpdateAsync(r => new SolicitudPago()
+                                  {
+                                      FechaModificacion = DateTime.Now,
+                                      UsuarioModificacion = pOrdenGiro.UsuarioCreacion,
+                                      OrdenGiroId = pOrdenGiro.OrdenGiroId
+                                  });
                 }
                 else
                 {
@@ -1264,7 +1250,7 @@ namespace asivamosffie.services
                 CreateEditOrdenGiroDetalleDescuentoTecnica(pOrdenGiroDetalle.OrdenGiroDetalleDescuentoTecnica.ToList(), pUsuarioCreacion);
 
             if (pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.Count() > 0)
-                CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.ToList(), pUsuarioCreacion, solicitudPagoId );
+                CreateEditOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalle?.OrdenGiroDetalleTerceroCausacion.ToList(), pUsuarioCreacion, solicitudPagoId);
 
             if (pOrdenGiroDetalle?.OrdenGiroDetalleId == 0)
             {
@@ -1319,14 +1305,17 @@ namespace asivamosffie.services
             string usoAnticipo = string.Empty;
             decimal valorAmortizacion = 0;
 
-            SolicitudPagoRegistrarSolicitudPago sp = _context.SolicitudPagoRegistrarSolicitudPago.Where(r => r.SolicitudPagoId == solicitudPagoId && r.Eliminado != true).Include(r => r.SolicitudPagoFase).FirstOrDefault();
+            SolicitudPagoRegistrarSolicitudPago sp = _context.SolicitudPagoRegistrarSolicitudPago.Where(r => r.SolicitudPagoId == solicitudPagoId && r.Eliminado != true)
+                                                                                                 .Include(r => r.SolicitudPagoFase)
+                                                                                                 .FirstOrDefault();
             if (sp != null)
             {
                 foreach (var spf in sp.SolicitudPagoFase)
                 {
                     if (!tieneAmortizacion)
                     {
-                        SolicitudPagoFaseAmortizacion spfa = _context.SolicitudPagoFaseAmortizacion.Where(r => r.SolicitudPagoFaseId == spf.SolicitudPagoFaseId && r.Eliminado != true).FirstOrDefault();
+                        SolicitudPagoFaseAmortizacion spfa = _context.SolicitudPagoFaseAmortizacion.Where(r => r.SolicitudPagoFaseId == spf.SolicitudPagoFaseId && r.Eliminado != true)
+                                                                                                   .FirstOrDefault();
                         tieneAmortizacion = spfa != null ? true : false;
                         if (tieneAmortizacion)
                         {
@@ -1335,7 +1324,7 @@ namespace asivamosffie.services
                             SolicitudPagoFaseCriterioConceptoPago spfacp = _context.SolicitudPagoFaseCriterioConceptoPago.Find(spfa.SolicitudPagoFaseCriterioConceptoPagoId);
                             if (spfacp != null)
                                 usoAnticipo = spfacp.UsoCodigo;
-                        }   
+                        }
 
                     }
                 }
@@ -1524,19 +1513,19 @@ namespace asivamosffie.services
                 else
                 {
                     _context.Set<OrdenGiroDetalleDescuentoTecnicaAportante>()
-                                 .Where(o => o.OrdenGiroDetalleDescuentoTecnicaAportanteId == pOrdenGiroDetalleDescuentoTecnicaAportante.OrdenGiroDetalleDescuentoTecnicaAportanteId)
-                                 .Update(r => new OrdenGiroDetalleDescuentoTecnicaAportante()
-                                 {
-                                     FechaModificacion = DateTime.Now,
-                                     UsuarioModificacion = pUsuarioCreacion,
-                                     RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnicaAportante),
-                                     AportanteId = pOrdenGiroDetalleDescuentoTecnicaAportante.AportanteId,
-                                     ValorDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento,
-                                     ConceptoPagoCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.ConceptoPagoCodigo,
-                                     RequiereDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.RequiereDescuento,
-                                     FuenteRecursosCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo,
-                                     FuenteFinanciacionId = pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteFinanciacionId
-                                 });
+                            .Where(o => o.OrdenGiroDetalleDescuentoTecnicaAportanteId == pOrdenGiroDetalleDescuentoTecnicaAportante.OrdenGiroDetalleDescuentoTecnicaAportanteId)
+                            .Update(r => new OrdenGiroDetalleDescuentoTecnicaAportante()
+                            {
+                                FechaModificacion = DateTime.Now,
+                                UsuarioModificacion = pUsuarioCreacion,
+                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(pOrdenGiroDetalleDescuentoTecnicaAportante),
+                                AportanteId = pOrdenGiroDetalleDescuentoTecnicaAportante.AportanteId,
+                                ValorDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.ValorDescuento,
+                                ConceptoPagoCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.ConceptoPagoCodigo,
+                                RequiereDescuento = pOrdenGiroDetalleDescuentoTecnicaAportante.RequiereDescuento,
+                                FuenteRecursosCodigo = pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteRecursosCodigo,
+                                FuenteFinanciacionId = pOrdenGiroDetalleDescuentoTecnicaAportante.FuenteFinanciacionId
+                            });
                 }
             }
 

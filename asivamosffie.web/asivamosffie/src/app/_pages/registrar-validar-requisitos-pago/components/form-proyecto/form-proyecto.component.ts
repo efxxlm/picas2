@@ -49,11 +49,11 @@ export class FormProyectoComponent implements OnInit {
     { }
 
     ngOnInit(): void {
-        console.log( 'proyecto: ', this.proyecto )
+       // console.log( 'proyecto: ', this.proyecto )
         this.getDataProyecto();
 
         if(this.contrato.solicitudPago) {
-            if(this.contrato.solicitudPago.length > 1 && this.contrato.solicitudPagoOnly.esFactura) {
+            if(this.contrato.solicitudPago.length > 1 && this.contrato.solicitudPagoOnly.esAnticipo && this.contrato.solicitudPagoOnly.esFactura) {
                 let solicitudesId = this.contrato.solicitudPago.map(e => e.solicitudPagoId)
                 solicitudesId.forEach(element => {
                     if (this.idSolicitud > element) {

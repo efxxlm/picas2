@@ -78,7 +78,9 @@ namespace asivamosffie.services
                     string nombreAportante = string.Empty;
                     decimal? valorAportate = 0;
                     decimal valorGestionado = 0;
-                    List<DisponibilidadPresupuestalProyecto> ListDPP = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == ListDP.DisponibilidadPresupuestalId).ToList();
+                    List<DisponibilidadPresupuestalProyecto> ListDPP = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == ListDP.DisponibilidadPresupuestalId)
+                                                                                                                  .ToList();
+
                     foreach (var proyectospp in ListDPP)
                     {
                         List<CofinanicacionAportanteGrilla> aportantesxProyecto = new List<CofinanicacionAportanteGrilla>();
@@ -86,16 +88,22 @@ namespace asivamosffie.services
                         if (proyectospp.ProyectoId == null) //proyecto administrativo
                         {
                             //Poner el nuevo ValorSolicitadoGenerado
-                            valorGestionado += _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == proyectospp.DisponibilidadPresupuestalId).Sum(x => (x.ValorSolicitadoGenerado != null ? x.ValorSolicitadoGenerado : x.ValorSolicitado)) ?? 0;
+                            valorGestionado += _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == proyectospp.DisponibilidadPresupuestalId)
+                                                                                 .Sum(x => (x.ValorSolicitadoGenerado != null ? x.ValorSolicitadoGenerado : x.ValorSolicitado)) ?? 0;
+
                             int intaportante = 0;
-                            var proyectoadministrativo = _context.ProyectoAdministrativo.Where(x => x.ProyectoAdministrativoId == proyectospp.ProyectoAdministrativoId).
-                                Include(x => x.ProyectoAdministrativoAportante).ThenInclude(x => x.AportanteFuenteFinanciacion).ThenInclude(x => x.FuenteFinanciacion).ToList();
+                            var proyectoadministrativo = _context.ProyectoAdministrativo.Where(x => x.ProyectoAdministrativoId == proyectospp.ProyectoAdministrativoId)
+                                                                                        .Include(x => x.ProyectoAdministrativoAportante)
+                                                                                           .ThenInclude(x => x.AportanteFuenteFinanciacion)
+                                                                                               .ThenInclude(x => x.FuenteFinanciacion)
+                                                                                        .ToList();
                             if (proyectoadministrativo.Count() > 0)
                             {
                                 foreach (var apo in proyectoadministrativo.FirstOrDefault().ProyectoAdministrativoAportante)
                                 {
                                     List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
                                     List<GrillaFuentesFinanciacion> fuentesNew = await _sourceFundingService.GetListFuentesFinanciacionByDisponibilidadPresupuestald(proyectospp.DisponibilidadPresupuestalId);
+                               
                                     foreach (var fuente in fuentesNew)
                                     {
                                         fuentes.Add(new GrillaFuentesFinanciacion
@@ -128,7 +136,6 @@ namespace asivamosffie.services
                                         }
                                     }
                                     intaportante = apo.AportanteId == null ? 0 : apo.AportanteId;
-
                                 }
                                 proyecto.Add(new ProyectoGrilla
                                 {
