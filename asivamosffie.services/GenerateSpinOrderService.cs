@@ -996,10 +996,15 @@ namespace asivamosffie.services
 
             return true;
         }
-
+        /// <summary>
+        /// JMC 
+        /// Valida si los proyectos se diligencian en solicitud de pago y en orden de giro ?
+        /// </summary>
+        /// <param name="pSolicitudPago"></param>
+        /// <returns></returns>
         private bool ValidarCantidadProyectos(SolicitudPago pSolicitudPago)
         {
-            //validar si los dos proyectos existen en tercero de causación
+            //validar si los todos proyectos existen en tercero de causación
             List<dynamic> contratacionProyectoSp = new List<dynamic>();
             List<dynamic> contratacionProyectoOdg = new List<dynamic>();
 
@@ -1025,10 +1030,7 @@ namespace asivamosffie.services
                 }
             }
 
-            if (contratacionProyectoSp != contratacionProyectoOdg)
-                return false;
-
-            return true;
+            return (contratacionProyectoSp.Count() != contratacionProyectoOdg.Count());
         }
 
         private bool ValidarRegistroCompletoOrdenGiroDetalleDescuentoTecnicaAportante(OrdenGiroDetalleDescuentoTecnicaAportante pOrdenGiroDetalleDescuentoTecnicaAportante)
