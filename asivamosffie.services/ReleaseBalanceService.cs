@@ -24,10 +24,10 @@ namespace asivamosffie.services
             _context = context;
             _requestBudgetAvailabilityService = requestBudgetAvailabilityService;
             _finalBalanceService = finalBalanceService;
-    }
+        }
 
-    //traer los DRP
-    public async Task<List<dynamic>> GetDrpByProyectoId(int pProyectoId)
+        //traer los DRP
+        public async Task<List<dynamic>> GetDrpByProyectoId(int pProyectoId)
         {
             List<dynamic> drps = new List<dynamic>();
 
@@ -41,7 +41,7 @@ namespace asivamosffie.services
                     if (drp != null)
                     {
                         DisponibilidadPresupuestalHistorico dpph = _context.DisponibilidadPresupuestalHistorico.Where(r => r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId).FirstOrDefault();
-                            
+
                         List<VSaldoAliberar> datosAportante = _context.VSaldoAliberar.Where(r => r.ProyectoId == pProyectoId && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId && r.EsNovedad != true).ToList();
                         BalanceFinanciero balanceFinanciero = _context.BalanceFinanciero.Where(r => r.ProyectoId == pProyectoId).FirstOrDefault();
                         bool liberado = false;
@@ -50,10 +50,13 @@ namespace asivamosffie.services
                             if (balanceFinanciero.EstadoBalanceCodigo == ConstanCodigoEstadoBalanceFinanciero.Con_balance_aprobado)
                                 liberado = true;
                         }
-                        datosAportante.ForEach(da =>{
+
+                        foreach (var da in datosAportante)
+                        {
+
                             decimal valorActual = 0;
                             CofinanciacionAportante ca = _context.CofinanciacionAportante.Find(da.CofinanciacionAportanteId);
-                            if(ca != null)
+                            if (ca != null)
                                 da.NombreAportante = _requestBudgetAvailabilityService.getNombreAportante(ca);
                             da.NombreFuente = _context.Dominio.Where(x => x.Codigo == da.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
 
@@ -78,7 +81,7 @@ namespace asivamosffie.services
                                 if (Total == 0)
                                     Total = da.ValorUso ?? 0;
 
-                                valorActual =  Total;
+                                valorActual = Total;
                             }
                             if (!liberado)
                             {
@@ -92,7 +95,7 @@ namespace asivamosffie.services
                                 if (cuh != null)
                                     da.SaldoPresupuestal = cuh.Saldo;
                             }
-                        });
+                        }
                         if (datosAportante.Count() > 0)
                         {
                             drps.Add(new
@@ -119,18 +122,25 @@ namespace asivamosffie.services
                             {
                                 NovedadContractualRegistroPresupuestalHistorico dpphN = _context.NovedadContractualRegistroPresupuestalHistorico.Where(r => r.NovedadContractualRegistroPresupuestalId == drpN.NovedadContractualRegistroPresupuestalId).FirstOrDefault();
 
-                                List<VSaldoAliberar> datosAportanteNovedad = _context.VSaldoAliberar.Where(r => r.ProyectoId == pProyectoId && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId && r.NovedadContractualRegistroPresupuestalId == drpN.NovedadContractualRegistroPresupuestalId).ToList();
+                                List<VSaldoAliberar> datosAportanteNovedad = _context.VSaldoAliberar.Where(r => r.ProyectoId == pProyectoId 
+                                                                                                             && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId 
+                                                                                                             && r.NovedadContractualRegistroPresupuestalId == drpN.NovedadContractualRegistroPresupuestalId)
+                                                                                                   .ToList();
                                 if (balanceFinanciero != null)
                                 {
                                     if (balanceFinanciero.EstadoBalanceCodigo == ConstanCodigoEstadoBalanceFinanciero.Con_balance_aprobado)
                                         liberado = true;
                                 }
-                                datosAportanteNovedad.ForEach(da => {
+
+                                foreach (var da in datosAportanteNovedad)
+                                {
                                     decimal valorActual = 0;
                                     CofinanciacionAportante ca = _context.CofinanciacionAportante.Find(da.CofinanciacionAportanteId);
                                     if (ca != null)
                                         da.NombreAportante = _requestBudgetAvailabilityService.getNombreAportante(ca);
-                                    da.NombreFuente = _context.Dominio.Where(x => x.Codigo == da.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+
+                                    da.NombreFuente = _context.Dominio.Where(x => x.Codigo == da.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion)
+                                                                      .FirstOrDefault().Nombre;
 
                                     List<VPlantillaOrdenGiroUsos> VPlantillaOrdenGiroUsos = _context.VPlantillaOrdenGiroUsos
                                                                                              .Where(r => r.ContratoId == da.ContratoId
@@ -147,7 +157,6 @@ namespace asivamosffie.services
 
                                         decimal ValorConcepto = VPlantillaOrdenGiroUsos.Sum(r => r.ValorConcepto) ?? 0;
 
-
                                         Decimal Total = Math.Abs(da.ValorUso ?? 0 - Descuento);
 
                                         if (Total == 0)
@@ -158,7 +167,7 @@ namespace asivamosffie.services
                                     if (!liberado)
                                     {
                                         da.SaldoPresupuestal = valorActual;
-                                        da.SaldoTesoral = GetSaldoByDrp(cp.ContratacionId, drp.NumeroDrp, cp.ProyectoId, da.CodigoUso);
+                                        da.SaldoTesoral = GetSaldoByDrp(cp.ContratacionId, drpN.NumeroDrp , cp.ProyectoId, da.CodigoUso);
                                     }
                                     else
                                     {
@@ -166,7 +175,7 @@ namespace asivamosffie.services
                                         if (cuhn != null)
                                             da.SaldoPresupuestal = cuhn.Saldo;
                                     }
-                                });
+                                }
                                 if (datosAportanteNovedad.Count() > 0)
                                 {
                                     drps.Add(new
@@ -194,7 +203,7 @@ namespace asivamosffie.services
             return drps;
         }
 
-        public decimal GetSaldoByDrp(int pContratacionId, string numeroDrp, int proyectoId )
+        public decimal GetSaldoByDrp(int pContratacionId, string numeroDrp, int proyectoId)
         {
             decimal saldo = 0;
 
@@ -387,7 +396,7 @@ namespace asivamosffie.services
                     List<dynamic> ListDyUsos = new List<dynamic>();
 
                     foreach (var TipoUso in ListTipoUso)
-                    { 
+                    {
                         if (pUsoCodigo.Equals(TipoUso.TipoUsoCodigo))
                         {
 
@@ -455,11 +464,11 @@ namespace asivamosffie.services
                                     ValorUso = String.Format("{0:n0}", ValorUso),
                                     Saldo = ValorUso
                                 });
-                            } 
-                        } 
-                    } 
-                } 
-            } 
+                            }
+                        }
+                    }
+                }
+            }
             return (decimal)saldo;
         }
         private bool RegitroCompletoDrpsTai(int pProyectoId)
@@ -474,7 +483,7 @@ namespace asivamosffie.services
                 esCompleto = true;
             }
             return esCompleto;
-        } 
+        }
         public async Task<Respuesta> CreateEditHistoricalReleaseBalance(VUsosHistorico pUsosHistorico, string user)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Componente_uso_Historico, (int)EnumeratorTipoDominio.Acciones);
@@ -823,7 +832,7 @@ namespace asivamosffie.services
                                     List<VSaldoAliberar> usosF = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad != true && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId && r.FuenteFinanciacionId == gff.FuenteFinanciacionId).ToList();
 
 
-                                    decimal A_SaldoActual =  gff.SaldoActualGenerado ?? gff.SaldoActual;
+                                    decimal A_SaldoActual = gff.SaldoActualGenerado ?? gff.SaldoActual;
                                     decimal A_ValorSolicitado = gff.ValorSolicitadoGenerado ?? gff.ValorSolicitado;
                                     decimal A_NuevoSaldo = gff.NuevoSaldoGenerado ?? gff.NuevoSaldo;
 
@@ -854,7 +863,7 @@ namespace asivamosffie.services
                                                 ValorUsoXFuenteA += cu.ValorUso;
                                                 ValorUsoXFuenteN += cuh.ValorUso;
                                             }
-                                        } 
+                                        }
                                     }
 
                                     await _context.Set<GestionFuenteFinanciacion>()
@@ -910,7 +919,7 @@ namespace asivamosffie.services
                             foreach (var nrp in nrps)
                             {
                                 List<VSaldoAliberar> usosN = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad == true && r.NovedadContractualRegistroPresupuestalId == nrp.NovedadContractualRegistroPresupuestalId).ToList();
-                                
+
                                 if (nrp != null)
                                 {
                                     decimal valorDrpNuevoN = 0;
@@ -956,7 +965,7 @@ namespace asivamosffie.services
                                     //crear el registro histórico de gestion fuente financiación, con el valor actual del gff
                                     List<GestionFuenteFinanciacion> gffList = new List<GestionFuenteFinanciacion>();
                                     if (nrp != null)
-                                        gffList = _context.GestionFuenteFinanciacion.Where(r => r.NovedadContractualRegistroPresupuestalId == nrp.NovedadContractualRegistroPresupuestalId && r.EsNovedad == true && r.Eliminado != true ).ToList();
+                                        gffList = _context.GestionFuenteFinanciacion.Where(r => r.NovedadContractualRegistroPresupuestalId == nrp.NovedadContractualRegistroPresupuestalId && r.EsNovedad == true && r.Eliminado != true).ToList();
 
                                     foreach (var gff in gffList)
                                     {
@@ -1010,14 +1019,14 @@ namespace asivamosffie.services
                                                 SaldoActual = A_SaldoActual,
                                                 ValorSolicitado = A_ValorSolicitado,
                                                 NuevoSaldo = A_NuevoSaldo
-                                            }; 
-                                            _context.GestionFuenteFinanciacionHistorico.Add(gestionFuenteFinanciacionHistorico); 
+                                            };
+                                            _context.GestionFuenteFinanciacionHistorico.Add(gestionFuenteFinanciacionHistorico);
                                         }
 
                                     }
                                     NovedadContractualRegistroPresupuestalHistorico novedadContractualRegistroPresupuestalHistorico = null;
                                     novedadContractualRegistroPresupuestalHistorico = _context.NovedadContractualRegistroPresupuestalHistorico.Where(r => r.NovedadContractualRegistroPresupuestalId == nrp.NovedadContractualRegistroPresupuestalId).FirstOrDefault();
-                                    
+
                                     if (novedadContractualRegistroPresupuestalHistorico == null)
                                     {
                                         //crear el registro histórico del ddp, con el valor actual del drp
@@ -1071,7 +1080,7 @@ namespace asivamosffie.services
                                             ValorAporte = ValorAporteActual,
                                             NovedadContractualAportanteId = cppa.NovedadContractualAportanteId
                                         };
-                                        _context.NovedadContractualAportanteHistorico.Add(novedadContractualAportanteHistorico); 
+                                        _context.NovedadContractualAportanteHistorico.Add(novedadContractualAportanteHistorico);
                                     }
                                 }
                             }
@@ -1106,9 +1115,9 @@ namespace asivamosffie.services
                                     ValorObra = pad.ValorObraActual,
                                     ValorInterventoria = pad.ValorInterventoriaActual,
                                     ValorTotalAportante = pad.ValorObraActual + pad.ValorInterventoriaActual
-                                }; 
-                                _context.ProyectoAportanteHistorico.Add(proyectoAportanteHistorico); 
-                            } 
+                                };
+                                _context.ProyectoAportanteHistorico.Add(proyectoAportanteHistorico);
+                            }
                         }
                     }
                     //cambio el estado del balance
@@ -1167,7 +1176,7 @@ namespace asivamosffie.services
                         foreach (var cp in contratacionProyectos)
                         {
                             List<VTablasHistoricoLiberacion> usos = _context.VTablasHistoricoLiberacion.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId).ToList();
-                            
+
                             if (usos.FirstOrDefault()?.DisponibilidadPresupuestalId > 0)
                             {
                                 drp = _context.DisponibilidadPresupuestal.Find(usos.FirstOrDefault().DisponibilidadPresupuestalId);
@@ -1224,7 +1233,8 @@ namespace asivamosffie.services
                                 }
                             }
 
-                            if (drp != null) {
+                            if (drp != null)
+                            {
 
                                 //actualizo el drp con el nuevo valor de los usos
 
@@ -1298,7 +1308,7 @@ namespace asivamosffie.services
                                     }
 
                                     NovedadContractualRegistroPresupuestalHistorico nrph = _context.NovedadContractualRegistroPresupuestalHistorico.Where(r => r.NovedadContractualRegistroPresupuestalId == nrp.NovedadContractualRegistroPresupuestalId).FirstOrDefault();
-                                        
+
                                     if (nrph != null)
                                     {
                                         await _context.Set<NovedadContractualRegistroPresupuestal>()
@@ -1322,7 +1332,7 @@ namespace asivamosffie.services
                                     foreach (var cppa in ncaList)
                                     {
                                         VTablasHistoricoLiberacion aporte = _context.VTablasHistoricoLiberacion.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad == true && r.NovedadContractualRegistroPresupuestalId == nrp.NovedadContractualRegistroPresupuestalId).FirstOrDefault();
-                                        
+
                                         if (aporte != null)
                                         {
                                             NovedadContractualAportanteHistorico npah = _context.NovedadContractualAportanteHistorico.Find(aporte.NovedadContractualAportanteHistoricoId);
@@ -1427,7 +1437,7 @@ namespace asivamosffie.services
                                 }
                             }
                         }
-                        
+
                     }
                     //cambio el estado del balance
                     _context.Set<BalanceFinanciero>()
