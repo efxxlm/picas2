@@ -109,9 +109,7 @@ export class ControlDeRecursosComponent implements OnInit {
         if (this.tipoAportante.ET.includes(this.tipoAportanteId.toString())) {
           let valorDepartamento = this.listaDepartamentos.find(de => de.localizacionId.toString() ==
             this.fuente.aportante.departamentoId.toString())
-          if (valorDepartamento) {
-            // console.log("tiene departamento ");
-            // console.log(valorDepartamento);
+          if (valorDepartamento) { 
             this.commonService.listaMunicipiosByIdDepartamento(this.fuente.aportante.departamentoId.toString()).subscribe(mun => {
               if (mun) {
                 let valorMunicipio = mun.find(m => m.localizacionId == this.fuente.aportante.municipioId.toString())
@@ -125,11 +123,7 @@ export class ControlDeRecursosComponent implements OnInit {
         }
         let valorNombre = this.listaNombres.find(nom => nom.dominioId == this.fuente.aportante.nombreAportanteId);
         let valorFuente = this.listaFuentes.find(fue => fue.codigo == this.fuente.fuenteRecursosCodigo);
-        let valorMunicipio: string = '';
-
-
-
-        //this.nombreAportante = valorNombre.nombre;
+        let valorMunicipio: string = ''; 
         this.nombreFuente = valorFuente.nombre;
         this.valorFuente = this.fuente.valorFuente;
         this.fuenteFinaciacionId = this.fuente.fuenteFinanciacionId;
@@ -247,7 +241,7 @@ export class ControlDeRecursosComponent implements OnInit {
       data: { modalTitle, modalText }
     });
     dialogRef.afterClosed().subscribe(result => {
- 
+
       this.routes.navigateByUrl('/', { skipLocationChange: true }).then(
         () => this.routes.navigate(
           [
@@ -274,9 +268,7 @@ export class ControlDeRecursosComponent implements OnInit {
     this.addressForm.markAllAsTouched();
     if (this.addressForm.valid) {
 
-      let rp = this.addressForm.get('rp').value;
-      // console.log(this.addressForm.get('vigencia').value);
-      // console.log(this.addressForm);
+      let rp = this.addressForm.get('rp').value; 
       let control: any = {
         controlRecursoId: this.addressForm.get('controlRecursoId').value,
         cuentaBancariaId: this.addressForm.get('nombreCuenta').value.cuentaBancariaId,
@@ -320,8 +312,8 @@ export class ControlDeRecursosComponent implements OnInit {
     const valorVigencia = !this.vigenciaValorField.value ? 0 : Number(this.vigenciaValorField.value);
     const vigencia = this.vigenciaField.value;
     const newTotal = this.countResources.find(x => x.vigenciaAporteId === vigencia.vigenciaAporteId)
-  
-    
+
+
     if (controlRecursoId && newTotal.controlRecursoId == controlRecursoId) {
       newTotal.value = 0;
     }
@@ -342,43 +334,33 @@ export class ControlDeRecursosComponent implements OnInit {
 
     const controlRecursoId = this.addressForm.get('controlRecursoId').value
     const numeroRp = this.addressForm.get("rp").value.numeroRp;
-    const valorRp = !this.addressForm.get("valorRp").value ? 0 : Number(this.addressForm.get("valorRp").value); 
+    const valorRp = !this.addressForm.get("valorRp").value ? 0 : Number(this.addressForm.get("valorRp").value);
     const newTotal = this.countResources.find(x => x.numeroRp === numeroRp);
-     
-    if (controlRecursoId && newTotal.controlRecursoId == controlRecursoId) {
+
+    if (controlRecursoId && newTotal.controlRecursoId == controlRecursoId)
       newTotal.value = 0;
-    }    
 
-    var SumaValorConsignacionXrp;
-    
-    console.log("_____________________");
-    console.log(this.countResources);
 
+    var SumaValorConsignacionXrp = 0;
     this.listcontrolRecursosArray.forEach(element => {
-
-      if(element.numeroRp ===  numeroRp)
-      { 
-        SumaValorConsignacionXrp += element.valorConsignacion; 
-        console.log('valor =>', element);
-        console.log("ENTRO")
-      } 
-      else{
-        console.log("NO ENTRO") 
-      } 
+      if (element.numeroRp === numeroRp)
+        SumaValorConsignacionXrp += element.valorConsignacion;
     });
 
     console.log('SumaValorConsignacionXrp =>', SumaValorConsignacionXrp);
+    console.log('SumaValorConsignacionXrp + lo otro=>', SumaValorConsignacionXrp + (Number(this.addressForm.get("valorConsignacion").value)));
+    console.log('valor rp =>', valorRp);
+
+    if ((Number(this.addressForm.get("valorConsignacion").value) + SumaValorConsignacionXrp) > valorRp) {
+      this.openDialogError('', `El <b> valor de la consignación no puede superar el valor del aporte a la fuente de recursos, </b> verifique por favor. `);
+      this.addressForm.get("valorConsignacion").setValue(null, { emitEvent: false });
+    }
 
     if ((Number(this.addressForm.get("valorConsignacion").value) + SumaValorConsignacionXrp) > this.valorFuente) {
       this.openDialogError('', `El <b> valor de la consignación no puede superar el valor del aporte a la fuente de recursos, </b> verifique por favor. `);
       this.addressForm.get("valorConsignacion").setValue(null, { emitEvent: false });
     }
-
-    if (Number(this.addressForm.get("valorConsignacion").value) > this.valorFuente) {
-      this.openDialogError('', `El <b> valor de la consignación no puede superar el valor del aporte a la fuente de recursos, </b> verifique por favor. `);
-      this.addressForm.get("valorConsignacion").setValue(null, { emitEvent: false });
-    }
-
+ 
     const total = (newTotal ? newTotal.value : 0) + Number(this.addressForm.get("valorConsignacion").value);
 
     if ((!this.countResources || this.countResources.length == 0) && total > valorRp) {
