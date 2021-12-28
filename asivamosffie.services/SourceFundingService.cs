@@ -96,7 +96,7 @@ namespace asivamosffie.services
 
             retorno.AsociadoASolicitud = asociadoASolicitudes > 0 ? true : false;
             retorno.ComprometidoEnDdp = vSaldosFuenteXaportanteId != null ? vSaldosFuenteXaportanteId.ComprometidoEnDdp : 0;
-            retorno.SaldoActual = vSaldosFuenteXaportanteId != null ?  (decimal)(vSaldosFuenteXaportanteId.SaldoActual ?? 0)  : 0;
+            retorno.SaldoActual = vSaldosFuenteXaportanteId != null ? (decimal)(vSaldosFuenteXaportanteId.SaldoActual ?? 0) : 0;
 
             return retorno;
         }
@@ -160,15 +160,15 @@ namespace asivamosffie.services
                 await _context.SaveChangesAsync();
 
 
-             return
-               new Respuesta
-               {
-                   IsSuccessful = true,
-                   IsException = false,
-                   IsValidation = false,
-                   Code = ConstantMessagesFuentesFinanciacion.OperacionExitosa,
-                   Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.OperacionExitosa, idAccionCrearFuentesFinanciacion, fuentefinanciacion.UsuarioCreacion == null ? fuentefinanciacion.UsuarioModificacion.ToUpper() : fuentefinanciacion.UsuarioCreacion.ToUpper(), "CREAR FUENTES DE FINANCIACIÓN")
-               };
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = true,
+                      IsException = false,
+                      IsValidation = false,
+                      Code = ConstantMessagesFuentesFinanciacion.OperacionExitosa,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.OperacionExitosa, idAccionCrearFuentesFinanciacion, fuentefinanciacion.UsuarioCreacion == null ? fuentefinanciacion.UsuarioModificacion.ToUpper() : fuentefinanciacion.UsuarioCreacion.ToUpper(), "CREAR FUENTES DE FINANCIACIÓN")
+                  };
             }
             catch (Exception ex)
             {
@@ -520,21 +520,22 @@ namespace asivamosffie.services
 
         public async Task<List<FuenteFinanciacion>> GetFuentesFinanciacionByAportanteId(int AportanteId)
         {
-            var res = await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado)
+            List<FuenteFinanciacion> ListFuenteFinanciacion = await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado)
                         .Where(r => r.AportanteId == AportanteId)
-                        //.Include(r => r.ControlRecurso)
+                         //.Include(r => r.ControlRecurso)
                         .Include(r => r.CofinanciacionDocumento)
                         .Include(r => r.Aportante)
                         .ThenInclude(r => r.RegistroPresupuestal)
                         .IncludeFilter(r => r.CuentaBancaria.Where(r => !(bool)r.Eliminado))
                         .IncludeFilter(r => r.VigenciaAporte.Where(r => !(bool)r.Eliminado))
                         .ToListAsync();
-            foreach (var item in res)
+
+            foreach (var FuenteFinanciacion in ListFuenteFinanciacion)
             {
-                List<ControlRecurso> cr = _context.ControlRecurso.Where(r => r.Eliminado != true && r.FuenteFinanciacionId == item.FuenteFinanciacionId).ToList();
-                item.ControlRecurso = cr;
+                List<ControlRecurso> cr = _context.ControlRecurso.Where(r => r.Eliminado != true && r.FuenteFinanciacionId == FuenteFinanciacion.FuenteFinanciacionId).ToList();
+                FuenteFinanciacion.ControlRecurso = cr;
             }
-            return res;
+            return ListFuenteFinanciacion;
         }
 
         public async Task<List<FuenteFinanciacion>> GetListFuentesFinanciacion()
@@ -778,8 +779,8 @@ namespace asivamosffie.services
 
                 decimal valorDisponible = 0;
                 VSaldosFuenteXaportanteIdValidar saldo = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
-                
-                valorDisponible = saldo != null ? (decimal)saldo.SaldoActual : 0 ;
+
+                valorDisponible = saldo != null ? (decimal)saldo.SaldoActual : 0;
 
                 decimal valorsolicitado = 0;
 
@@ -880,7 +881,7 @@ namespace asivamosffie.services
                 decimal valorDisponible = 0;
 
                 VSaldosFuenteXaportanteId saldo = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
-                
+
                 valorDisponible = saldo != null ? (decimal)saldo.SaldoActual : 0;
 
                 decimal valorsolicitado = 0;
@@ -903,7 +904,7 @@ namespace asivamosffie.services
                     Valor_solicitado_de_la_fuente = valorsolicitado,
                     GestionFuenteFinanciacionID = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId
                      && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Select(x => x.GestionFuenteFinanciacionId).FirstOrDefault(),
-                    Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldo  : 0,
+                    Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldo : 0,
                     Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActual < 0 ? 0 : gestionAlGuardar.SaldoActual : 0,
 
                 });
@@ -953,7 +954,7 @@ namespace asivamosffie.services
             {
                 decimal valorDisponible = 0;
                 VSaldosFuenteXaportanteIdValidar saldo = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
-                valorDisponible = saldo != null ? (decimal) saldo.SaldoActual : 0;
+                valorDisponible = saldo != null ? (decimal)saldo.SaldoActual : 0;
 
                 decimal valorsolicitado = _context.GestionFuenteFinanciacion
                                                     .Where(x => !(bool)x.Eliminado &&
@@ -967,7 +968,8 @@ namespace asivamosffie.services
                                                                 .Select(x => x.GestionFuenteFinanciacionId)
                                                                 .FirstOrDefault();
 
-                if(gff > 0) {
+                if (gff > 0)
+                {
                     valorDisponible = valorDisponible + valorsolicitado; //no debe tomar la actual
                 }
 
@@ -1158,7 +1160,7 @@ namespace asivamosffie.services
                     Nuevo_saldo_de_la_fuente = saldoFuente.Value - valor - valorSolicitado,
                     Saldo_actual_de_la_fuente = saldoFuente.Value - valor,
                     Valor_solicitado_de_la_fuente = valorSolicitado,
-                    Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldo  : 0,
+                    Nuevo_saldo_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.NuevoSaldo : 0,
                     Saldo_actual_de_la_fuente_al_guardar = gestionAlGuardar != null ? gestionAlGuardar.SaldoActual : 0,
                 });
             }

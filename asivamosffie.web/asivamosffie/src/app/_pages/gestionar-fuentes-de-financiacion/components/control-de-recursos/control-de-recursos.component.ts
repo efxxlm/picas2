@@ -35,21 +35,20 @@ export class ControlDeRecursosComponent implements OnInit {
   fuenteFinaciacionId: number = 0;
   tipoAportanteId: string = '';
   valorAporteEnCuenta: number = 0;
-  NombresDeLaCuenta: CuentaBancaria[] = [] ;
+  NombresDeLaCuenta: CuentaBancaria[] = [];
   countResources: any = [];
   rpArray: RegistroPresupuestal[] = [];
   estaEditando = false;
   esVerDetalle = false;
   esVerDetalleRegistro = false;
   constructor(
-              private fb: FormBuilder,
-              private activatedRoute: ActivatedRoute,
-              private fuenteFinanciacionServices: FuenteFinanciacionService,
-              private commonService: CommonService,
-              private dialog: MatDialog,
-              private routes: Router,
-             )
-  {
+    private fb: FormBuilder,
+    private activatedRoute: ActivatedRoute,
+    private fuenteFinanciacionServices: FuenteFinanciacionService,
+    private commonService: CommonService,
+    private dialog: MatDialog,
+    private routes: Router,
+  ) {
 
   }
 
@@ -69,62 +68,61 @@ export class ControlDeRecursosComponent implements OnInit {
     });
 
     this.addressForm.get('valorConsignacion').valueChanges
-    .pipe(debounceTime(400))
-    .subscribe(value=>{
-      this.validar()
-    })
+      .pipe(debounceTime(400))
+      .subscribe(value => {
+        this.validar()
+      })
 
-    this.activatedRoute.params.subscribe( param => {
+    this.activatedRoute.params.subscribe(param => {
       this.idFuente = param['idFuente'];
       this.idControl = param['idControl'];
       this.countResources = [];
       forkJoin([
-        this.fuenteFinanciacionServices.getFuenteFinanciacion( this.idFuente ),
+        this.fuenteFinanciacionServices.getFuenteFinanciacion(this.idFuente),
         this.commonService.listaNombreAportante(),
         this.commonService.listaFuenteTipoFinanciacion(),
         this.commonService.listaDepartamentos()
 
-      ]).subscribe( respuesta => {
+      ]).subscribe(respuesta => {
 
         this.fuente = respuesta[0];
         this.listaNombres = respuesta[1];
         this.listaFuentes = respuesta[2];
         this.listaDepartamentos = respuesta[3];
         this.tipoAportanteId = this.fuente.aportante.tipoAportanteId;
-        if(this.fuente != null){
+        if (this.fuente != null) {
           this.fuente.controlRecurso.forEach(element => {
-            if(this.isETOrThirdParty()){
+            if (this.isETOrThirdParty()) {
               this.calculateSumAccountByRp(element);
-            }else{
+            } else {
               this.calculateSumAccountByVigency(element);
             }
           });
-          if(this.fuente.asociadoASolicitud == true){
+          if (this.fuente.asociadoASolicitud == true) {
             this.esVerDetalle = true;
-          }else{
+          } else {
             this.esVerDetalle = false;
           }
         }
-        if(this.tipoAportante.ET.includes(this.tipoAportanteId.toString()))
-        {
-          let valorDepartamento = this.listaDepartamentos.find( de => de.localizacionId.toString() ==
-          this.fuente.aportante.departamentoId.toString() )
-          if (valorDepartamento){
+        if (this.tipoAportante.ET.includes(this.tipoAportanteId.toString())) {
+          let valorDepartamento = this.listaDepartamentos.find(de => de.localizacionId.toString() ==
+            this.fuente.aportante.departamentoId.toString())
+          if (valorDepartamento) {
             // console.log("tiene departamento ");
             // console.log(valorDepartamento);
-            this.commonService.listaMunicipiosByIdDepartamento( this.fuente.aportante.departamentoId.toString() ).subscribe( mun => {
-              if (mun){
-                let valorMunicipio = mun.find( m => m.localizacionId == this.fuente.aportante.municipioId.toString() )
-                this.municipio = valorMunicipio?valorMunicipio.descripcion.toUpperCase():"";
+            this.commonService.listaMunicipiosByIdDepartamento(this.fuente.aportante.departamentoId.toString()).subscribe(mun => {
+              if (mun) {
+                let valorMunicipio = mun.find(m => m.localizacionId == this.fuente.aportante.municipioId.toString())
+                this.municipio = valorMunicipio ? valorMunicipio.descripcion.toUpperCase() : "";
               }
             })
-            this.departamento = valorDepartamento?valorDepartamento.descripcion.toUpperCase():"";
+            this.departamento = valorDepartamento ? valorDepartamento.descripcion.toUpperCase() : "";
           }
 
 
         }
-        let valorNombre = this.listaNombres.find( nom => nom.dominioId == this.fuente.aportante.nombreAportanteId );
-        let valorFuente = this.listaFuentes.find( fue => fue.codigo == this.fuente.fuenteRecursosCodigo );
+        let valorNombre = this.listaNombres.find(nom => nom.dominioId == this.fuente.aportante.nombreAportanteId);
+        let valorFuente = this.listaFuentes.find(fue => fue.codigo == this.fuente.fuenteRecursosCodigo);
         let valorMunicipio: string = '';
 
 
@@ -138,22 +136,22 @@ export class ControlDeRecursosComponent implements OnInit {
         this.rpArray = this.fuente.aportante.registroPresupuestal;
         //la lista de vigencias son los documentos registrados en acuerdos de cofinanciacion
 
-        if(this.isETOrThirdParty()){
+        if (this.isETOrThirdParty()) {
           this.fuente.aportante.cofinanciacionDocumento.forEach(element => {
-            if(element.vigenciaAporte != null && element.vigenciaAporte != undefined){
+            if (element.vigenciaAporte != null && element.vigenciaAporte != undefined) {
               this.listaVigencias.push({
-                tipoVigenciaCodigo:element?.vigenciaAporte.toString(),
-                fuenteFinanciacionId:null,
+                tipoVigenciaCodigo: element?.vigenciaAporte.toString(),
+                fuenteFinanciacionId: null,
                 valorAporte: element?.valorDocumento,
-                vigenciaAporteId:element?.cofinanciacionDocumentoId
+                vigenciaAporteId: element?.cofinanciacionDocumentoId
               });
             }
           });
-        }else{
+        } else {
           this.listaVigencias = this.fuente.vigenciaAporte;
         }
 
-        if (this.idControl > 0 ) {
+        if (this.idControl > 0) {
           this.estaEditando = true;
           this.addressForm.markAllAsTouched();
           this.editMode();
@@ -161,10 +159,10 @@ export class ControlDeRecursosComponent implements OnInit {
 
       })
     });
-    this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
-      if ( urlSegment.path === 'verDetalleControlRecursos' ) {
-          this.esVerDetalleRegistro = true;
-          return;
+    this.activatedRoute.snapshot.url.forEach((urlSegment: UrlSegment) => {
+      if (urlSegment.path === 'verDetalleControlRecursos') {
+        this.esVerDetalleRegistro = true;
+        return;
       }
     });
 
@@ -175,9 +173,9 @@ export class ControlDeRecursosComponent implements OnInit {
     if (this.countResources.length > 0 && element.registroPresupuestal) {
       vigency = this.countResources.find(x => x.numeroRp === element.registroPresupuestal.numeroRp);
       if (vigency)
-        vigency.value = (vigency? vigency.value: 0) + Number(element.valorConsignacion);
+        vigency.value = (vigency ? vigency.value : 0) + Number(element.valorConsignacion);
     }
-    if(!vigency && element.registroPresupuestal){
+    if (!vigency && element.registroPresupuestal) {
       this.countResources.push({ value: element.valorConsignacion, numeroRp: element.registroPresupuestal.numeroRp, controlRecursoId: element.controlRecursoId });
     }
   }
@@ -186,83 +184,81 @@ export class ControlDeRecursosComponent implements OnInit {
     let vigency: { value: number, vigenciaAporteId: number };
     if (this.countResources.length > 0) {
       vigency = this.countResources.find(x => x.vigenciaAporteId === element.vigenciaAporteId);
-      if(vigency)
-        vigency.value = (vigency? vigency.value : 0) + Number(element.valorConsignacion);
+      if (vigency)
+        vigency.value = (vigency ? vigency.value : 0) + Number(element.valorConsignacion);
     }
-    if(!vigency){
+    if (!vigency) {
       this.countResources.push({ value: element.valorConsignacion, vigenciaAporteId: element.vigenciaAporteId, controlRecursoId: element.controlRecursoId });
     }
   }
 
-  editMode(){
-    this.fuenteFinanciacionServices.getResourceControlById( this.idControl ).subscribe( cr => {
-      let cuentaSeleccionada = this.NombresDeLaCuenta.find( c => c.cuentaBancariaId == cr.cuentaBancariaId )
-      let rpSeleccionado = this.rpArray.find( rp => rp.registroPresupuestalId == cr.registroPresupuestalId )
-      let vigenciaSeleccionada = this.listaVigencias.find( vi => vi.vigenciaAporteId == cr.vigenciaAporteId )
+  editMode() {
+    this.fuenteFinanciacionServices.getResourceControlById(this.idControl).subscribe(cr => {
+      let cuentaSeleccionada = this.NombresDeLaCuenta.find(c => c.cuentaBancariaId == cr.cuentaBancariaId)
+      let rpSeleccionado = this.rpArray.find(rp => rp.registroPresupuestalId == cr.registroPresupuestalId)
+      let vigenciaSeleccionada = this.listaVigencias.find(vi => vi.vigenciaAporteId == cr.vigenciaAporteId)
       this.addressForm.get('nombreCuenta').setValue(cuentaSeleccionada);
       this.addressForm.get('rp').setValue(rpSeleccionado);
-      if(rpSeleccionado){
+      if (rpSeleccionado) {
         this.addressForm.get('valorRp').setValue(rpSeleccionado.valorRp);
       }
       this.addressForm.get('controlRecursoId').setValue(cr.controlRecursoId);
       this.addressForm.get('vigencia').setValue(vigenciaSeleccionada);
-      if(vigenciaSeleccionada){
+      if (vigenciaSeleccionada) {
         this.addressForm.get('vigenciaValor').setValue(vigenciaSeleccionada.valorAporte)
       }
       this.addressForm.get('fechaConsignacion').setValue(cr.fechaConsignacion);
-      this.addressForm.get('valorConsignacion').setValue(cr.valorConsignacion, {emitEvent:false} );
+      this.addressForm.get('valorConsignacion').setValue(cr.valorConsignacion, { emitEvent: false });
       this.changeNombreCuenta();
     })
   }
 
-  changeNombreCuenta(){
+  changeNombreCuenta() {
     let cuentaSeleccionada = this.addressForm.get('nombreCuenta').value;
     this.addressForm.get('numeroCuenta').setValue(cuentaSeleccionada.numeroCuentaBanco);
   }
 
-  changeRp(){
+  changeRp() {
     const rpSelected = this.addressForm.get('rp').value;
     this.addressForm.get('valorRp').setValue(rpSelected.valorRp);
   }
 
-  changeVigencia(){
+  changeVigencia() {
     const vigenciaSelected = this.addressForm.get('vigencia').value;
     this.addressForm.get('vigenciaValor').setValue(vigenciaSelected.valorAporte);
   }
 
-  get vigenciaField(){
+  get vigenciaField() {
     return this.addressForm.get('vigencia');
   }
 
-  get rpField(){
+  get rpField() {
     return this.addressForm.get('rp');
   }
-  get vigenciaValorField(){
+  get vigenciaValorField() {
     return this.addressForm.get('vigenciaValor');
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
     dialogRef.afterClosed().subscribe(result => {
-
-        //location.reload();
-
-        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-          () =>   this.routes.navigate(
-                      [
-                          '/gestionarFuentes/controlRecursos', this.idFuente, 0
-                      ]
-                  )
-        );
+ 
+      this.routes.navigateByUrl('/', { skipLocationChange: true }).then(
+        () => this.routes.navigate(
+          [
+            '/gestionarFuentes/controlRecursos', this.idFuente, 0
+          ]
+        )
+      );
 
     });
   }
 
   openDialogError(modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
@@ -271,10 +267,10 @@ export class ControlDeRecursosComponent implements OnInit {
     });
   }
 
-  onSubmit(){
+  onSubmit() {
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
-    if (this.addressForm.valid){
+    if (this.addressForm.valid) {
 
       let rp = this.addressForm.get('rp').value;
       // console.log(this.addressForm.get('vigencia').value);
@@ -284,79 +280,113 @@ export class ControlDeRecursosComponent implements OnInit {
         cuentaBancariaId: this.addressForm.get('nombreCuenta').value.cuentaBancariaId,
         fechaConsignacion: this.addressForm.get('fechaConsignacion').value,
         fuenteFinanciacionId: this.fuenteFinaciacionId,
-        registroPresupuestalId: rp? rp.registroPresupuestalId:null,
+        registroPresupuestalId: rp ? rp.registroPresupuestalId : null,
         valorConsignacion: this.addressForm.get('valorConsignacion').value,
         vigenciaAporteId: this.addressForm.get('vigencia').value?.vigenciaAporteId
       }
 
       if (control.controlRecursoId > 0)
-        this.fuenteFinanciacionServices.updateControlRecurso( control ).subscribe( respuesta => {
-          this.openDialog( '', `<b>${respuesta.message}</b>` );
+        this.fuenteFinanciacionServices.updateControlRecurso(control).subscribe(respuesta => {
+          this.openDialog('', `<b>${respuesta.message}</b>`);
         })
       else
-        this.fuenteFinanciacionServices.registrarControlRecurso( control ).subscribe( respuesta => {
-          this.openDialog( '', `<b>${respuesta.message}</b>` );
+        this.fuenteFinanciacionServices.registrarControlRecurso(control).subscribe(respuesta => {
+          this.openDialog('', `<b>${respuesta.message}</b>`);
         })
 
     }
   }
 
-  validar(){
+  validar() {
     let total = this.valorAporteEnCuenta + this.addressForm.get("valorConsignacion").value;
-    let fuenteModificando : ControlRecurso;
+    let fuenteModificando: ControlRecurso;
 
-    if(!this.isETOrThirdParty()){
+    if (!this.isETOrThirdParty()) {
       this.validateVigency(fuenteModificando)
       return;
-    } else if(this.isETOrThirdParty()){
+    } else if (this.isETOrThirdParty()) {
       this.validateRPValue(fuenteModificando);
     }
   }
 
-  isETOrThirdParty = function() {
+  isETOrThirdParty = function () {
     return !this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString());
   }
 
-  validateVigency(editingResource: ControlRecurso){
+  validateVigency(editingResource: ControlRecurso) {
     const controlRecursoId = this.addressForm.get('controlRecursoId').value
     const valorVigencia = !this.vigenciaValorField.value ? 0 : Number(this.vigenciaValorField.value);
     const vigencia = this.vigenciaField.value;
     const newTotal = this.countResources.find(x => x.vigenciaAporteId === vigencia.vigenciaAporteId)
-
-    if(controlRecursoId && newTotal.controlRecursoId == controlRecursoId){
+  
+    
+    if (controlRecursoId && newTotal.controlRecursoId == controlRecursoId) {
       newTotal.value = 0;
     }
-    const total = ( newTotal ? newTotal.value : 0 )+ Number(this.addressForm.get("valorConsignacion").value);
+    const total = (newTotal ? newTotal.value : 0) + Number(this.addressForm.get("valorConsignacion").value);
 
     if ((!this.countResources || this.countResources == 0)
       && total > valorVigencia) {
       this.openDialogError('', `El <b> valor de la consignación </b> no debe superar el <b> valor del aporte
       de la vigencia asociado a la fuente. </b>, verifique por favor.`);
-      this.addressForm.get("valorConsignacion").setValue(null, {emitEvent:false});
+      this.addressForm.get("valorConsignacion").setValue(null, { emitEvent: false });
     } else if (total > valorVigencia) {
       this.openDialogError('', `El <b> valor de la consignación </b> supera el monto establecido en la vigencia ${this.vigenciaField.value.tipoVigenciaCodigo} </b>, verifique por favor.`);
-      this.addressForm.get("valorConsignacion").setValue(editingResource?.valorConsignacion, {emitEvent:false});
+      this.addressForm.get("valorConsignacion").setValue(editingResource?.valorConsignacion, { emitEvent: false });
     }
   }
 
-  validateRPValue( editingResource: ControlRecurso) {
+  validateRPValue(editingResource: ControlRecurso) {
+
     const controlRecursoId = this.addressForm.get('controlRecursoId').value
     const numeroRp = this.addressForm.get("rp").value.numeroRp;
-    const valorRp = !this.addressForm.get("valorRp").value ? 0 : Number(this.addressForm.get("valorRp").value);
-    const newTotal = this.countResources.find(x => x.numeroRp === numeroRp)
-    if(controlRecursoId && newTotal.controlRecursoId == controlRecursoId){
+    const valorRp = !this.addressForm.get("valorRp").value ? 0 : Number(this.addressForm.get("valorRp").value); 
+    const newTotal = this.countResources.filter(x => x.numeroRp ===  this.addressForm.get("rp").value.numeroRp);
+     
+    if (controlRecursoId && newTotal.controlRecursoId == controlRecursoId) {
       newTotal.value = 0;
+    }    
+
+    var SumaValorConsignacionXrp;
+    
+console.log("_____________________");
+console.log(this.countResources);
+
+    this.countResources.forEach(element => {
+
+      if(element.numeroRp ===  numeroRp)
+      { 
+        SumaValorConsignacionXrp += element.valorConsignacion; 
+        console.log("ENTRO")
+      } 
+      else{
+        console.log("NO ENTRO") 
+      } 
+    });
+
+ 
+
+
+    if ((Number(this.addressForm.get("valorConsignacion").value) + newTotal) > this.valorFuente) {
+      this.openDialogError('', `El <b> valor de la consignación no puede superar el valor del aporte a la fuente de recursos, </b> verifique por favor. `);
+      this.addressForm.get("valorConsignacion").setValue(null, { emitEvent: false });
     }
 
-    const total = ( newTotal ? newTotal.value : 0 )+ Number(this.addressForm.get("valorConsignacion").value);
-    if ((!this.countResources || this.countResources.length == 0)
-      && total > valorRp) {
-      this.openDialogError('', `El <b> valor de la consignación </b> no debe superar el <b> valor RP asociado a la fuente. </b>, verifique por favor.`);
-      this.addressForm.get("valorConsignacion").setValue(null, {emitEvent:false});
-    } else if (total > valorRp) {
-      this.openDialogError('', `El <b> valor de la consignación </b> no debe superar el <b> monto establecido en el RP ${numeroRp} </b>, verifique por favor.`);
-      this.addressForm.get("valorConsignacion").setValue(editingResource?.valorConsignacion, {emitEvent:false});
+    if (Number(this.addressForm.get("valorConsignacion").value) > this.valorFuente) {
+      this.openDialogError('', `El <b> valor de la consignación no puede superar el valor del aporte a la fuente de recursos, </b> verifique por favor. `);
+      this.addressForm.get("valorConsignacion").setValue(null, { emitEvent: false });
     }
+
+    const total = (newTotal ? newTotal.value : 0) + Number(this.addressForm.get("valorConsignacion").value);
+
+    if ((!this.countResources || this.countResources.length == 0) && total > valorRp) {
+      this.openDialogError('', `El <b> valor de la consignación </b> no debe superar el <b> valor RP asociado a la fuente, </b> verifique por favor.`);
+      this.addressForm.get("valorConsignacion").setValue(null, { emitEvent: false });
+    } else
+      if (total > valorRp) {
+        this.openDialogError('', `El <b> valor de la consignación </b> no debe superar el <b> monto establecido en el RP, ${numeroRp} </b> verifique por favor.`);
+        this.addressForm.get("valorConsignacion").setValue(editingResource?.valorConsignacion, { emitEvent: false });
+      }
   }
 
   agregar() {

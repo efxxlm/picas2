@@ -31,28 +31,47 @@ namespace asivamosffie.services
         public async Task<ControlRecurso> GetResourceControlById(int id)
         {
             return await _context.ControlRecurso.FindAsync(id);
+
+
+
+
         }
          
         public async Task<List<ControlRecurso>> GetResourceControlGridBySourceFunding(int id)
         {
-     
             try
             {
-                
-                List<ControlRecurso> ControlGrid = await _context.ControlRecurso
-                .Where( cr => cr.FuenteFinanciacionId == id && !(bool)cr.Eliminado)
-                    .Include(RC => RC.FuenteFinanciacion)
-                    .ThenInclude(FF => FF.Aportante)
-                    .ThenInclude(APO => APO.Cofinanciacion)
-                    .Include(RC => RC.CuentaBancaria)
-                    .Include(RC => RC.RegistroPresupuestal)
-                    //.Include(RC => RC.VigenciaAporte)                   
-                    .ToListAsync();
+                int AportanteId = _context.FuenteFinanciacion.Where(r => r.FuenteFinanciacionId == id).FirstOrDefault().AportanteId;
 
-                ControlGrid.ForEach(r =>{
+                List<ControlRecurso> ControlGrid = (from cr in _context.ControlRecurso
+                                                    join ff in _context.FuenteFinanciacion on cr.FuenteFinanciacionId equals ff.FuenteFinanciacionId
+                                                    join a  in _context.CofinanciacionAportante on ff.AportanteId equals a.CofinanciacionAportanteId
+                                                    join c  in _context.Cofinanciacion on a.CofinanciacionId equals c.CofinanciacionId
+                                                    join cb in _context.CuentaBancaria on cr.CuentaBancariaId equals cb.CuentaBancariaId
+                                                    //join rp in _context.RegistroPresupuestal on cr.RegistroPresupuestalId equals rp.RegistroPresupuestalId
+                                                    //join cd in _context.CofinanciacionDocumento.DefaultIfEmpty() on cr.VigenciaAporteId equals cd.VigenciaAporte
+                                                    //join va in _context.VigenciaAporte.DefaultIfEmpty() on cr.VigenciaAporteId equals va.VigenciaAporteId
+                                                    where a.CofinanciacionAportanteId == AportanteId && cr.Eliminado != true
+                                                    select cr).ToList();
+
+                //List<ControlRecurso> ControlGrid = await _context.ControlRecurso
+                //    .Include(RC => RC.FuenteFinanciacion)
+                //    .ThenInclude(FF => FF.Aportante)
+                //    .ThenInclude(APO => APO.Cofinanciacion)
+                //    .Include(RC => RC.CuentaBancaria)
+                //    .Include(RC => RC.RegistroPresupuestal)
+                //     .Where(cr => cr.FuenteFinanciacion.AportanteId == AportanteId)
+                //    .Include(RC => RC.VigenciaAporte)
+                //    .ToListAsync();
+
+                foreach (var r in ControlGrid)
+                {
+                    r.RegistroPresupuestal = _context.ControlRecurso.Where(ff => ff.ControlRecursoId == r.ControlRecursoId).Include(f => f.RegistroPresupuestal).Select(cc => cc.RegistroPresupuestal).FirstOrDefault();
+                    r.CuentaBancaria = _context.ControlRecurso.Where(ff => ff.ControlRecursoId == r.ControlRecursoId).Include(f => f.CuentaBancaria).Select(cc=> cc.CuentaBancaria).FirstOrDefault();
+                    r.FuenteFinanciacion = _context.ControlRecurso.Where(ff => ff.ControlRecursoId == r.ControlRecursoId).Include(f => f.FuenteFinanciacion).ThenInclude(a => a.Aportante).Select(r => r.FuenteFinanciacion).FirstOrDefault();
                     r.CofinanciacionDocumento = _context.CofinanciacionDocumento.Find(r.VigenciaAporteId);
                     r.VigenciaAporte = _context.VigenciaAporte.Find(r.VigenciaAporteId);
-                });
+                };
 
                 return ControlGrid.OrderBy(r => r.RegistroPresupuestal?.NumeroRp).ThenByDescending(r => r.RegistroPresupuestalId).ToList();
 

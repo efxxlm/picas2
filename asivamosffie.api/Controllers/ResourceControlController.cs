@@ -36,7 +36,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetResourceFundingBySourceFunding/{id}")]
         public async Task<List<ControlRecurso>> GetSourceFundingBySourceFunding(int id)
