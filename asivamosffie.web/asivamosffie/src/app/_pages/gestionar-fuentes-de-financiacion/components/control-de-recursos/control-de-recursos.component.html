@@ -6,15 +6,9 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1">
-      <span *ngIf="!estaEditando && !esVerDetalle">
-        Control
-      </span>
-      <span *ngIf="estaEditando && !esVerDetalle">
-        Ver detalle/ editar control
-      </span>
-      <span *ngIf="esVerDetalle">
-        Ver detalle control
-      </span>
+      <span *ngIf="!estaEditando && !esVerDetalle"> Control </span>
+      <span *ngIf="estaEditando && !esVerDetalle"> Ver detalle/ editar control </span>
+      <span *ngIf="esVerDetalle"> Ver detalle control </span>
       de recursos
     </h1>
   </div>
@@ -57,7 +51,7 @@
               Nombre de la cuenta
             </label>
           </div>
-          <div class="col" >
+          <div class="col">
             <mat-form-field class="select-width">
               <mat-select formControlName="nombreCuenta" (selectionChange)="changeNombreCuenta()" required>
                 <mat-option *ngFor="let Nombre of NombresDeLaCuenta" [value]="Nombre">
@@ -131,10 +125,7 @@
               <label
                 class="label-left"
                 for="rp"
-                [class.color-secondaryColor]="
-                  (rpField.invalid && rpField.touched) ||
-                  (rpField.invalid && estaEditando)
-                "
+                [class.color-secondaryColor]="(rpField.invalid && rpField.touched) || (rpField.invalid && estaEditando)"
               >
                 RP
               </label>
@@ -156,10 +147,7 @@
                 [matTooltipPosition]="'above'"
                 matTooltip="Debe ingresar la información en el campo para continuar"
                 matTooltipClass="info-tooltip"
-                *ngIf="
-                  (rpField.invalid && rpField.touched) ||
-                  (rpField.invalid && estaEditando)
-                "
+                *ngIf="(rpField.invalid && rpField.touched) || (rpField.invalid && estaEditando)"
               />
             </span>
           </div>
@@ -171,29 +159,34 @@
               <label
                 class="label-left"
                 for="rp"
-                [class.color-secondaryColor]="
-                  (rpField.invalid && rpField.touched) ||
-                  (rpField.invalid && estaEditando)
-                "
+                [class.color-secondaryColor]="(rpField.invalid && rpField.touched) || (rpField.invalid && estaEditando)"
               >
                 Valor RP
               </label>
             </div>
             <div class="col d-flex no-validation">
               <mat-form-field class="full-width maincolor">
-                <input matInput #valorAporte currencyMask formControlName="valorRp"
-                  readonly [options]="{
+                <input
+                  matInput
+                  #valorAporte
+                  currencyMask
+                  formControlName="valorRp"
+                  readonly
+                  [options]="{
                     prefix: '$ ',
                     thousands: '.',
                     precision: '0',
                     align: 'center',
                     allowNegative: false
-                  }" />
+                  }"
+                />
               </mat-form-field>
             </div>
           </div>
           <div class="row" *ngIf="esVerDetalleRegistro">
-            <p><strong>Valor RP: </strong>{{ addressForm.get('valorRp').value | currency: 'COP':'symbol-narrow':'.0-0'}}</p>
+            <p>
+              <strong>Valor RP: </strong>{{ addressForm.get('valorRp').value | currency: 'COP':'symbol-narrow':'.0-0' }}
+            </p>
           </div>
         </div>
         <div class="row" *ngIf="!esVerDetalleRegistro">
@@ -211,7 +204,7 @@
           </div>
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select formControlName="vigencia" required  (selectionChange)="changeVigencia()">
+              <mat-select formControlName="vigencia" required (selectionChange)="changeVigencia()">
                 <mat-option *ngFor="let vigencia of listaVigencias" [value]="vigencia">
                   {{ vigencia.tipoVigenciaCodigo }}
                 </mat-option>
@@ -226,24 +219,20 @@
               [matTooltipPosition]="'above'"
               matTooltip="Debe ingresar la información en el campo para continuar"
               matTooltipClass="info-tooltip"
-              *ngIf="
-                (vigenciaField.invalid && vigenciaField.touched) ||
-                (vigenciaField.invalid && estaEditando)
-              "
+              *ngIf="(vigenciaField.invalid && vigenciaField.touched) || (vigenciaField.invalid && estaEditando)"
             />
           </span>
         </div>
         <div class="row" *ngIf="esVerDetalleRegistro">
           <p><strong>Vigencia: </strong>{{ addressForm.get('vigencia').value?.tipoVigenciaCodigo }}</p>
         </div>
-        <div class="row"  *ngIf="!isETOrThirdParty() && !esVerDetalleRegistro">
+        <div class="row" *ngIf="!isETOrThirdParty() && !esVerDetalleRegistro">
           <div class="pr-1">
             <label
               class="label-left"
               for="rp"
               [class.color-secondaryColor]="
-                (vigenciaField.invalid && vigenciaField.touched) ||
-                (vigenciaField.invalid && estaEditando)
+                (vigenciaField.invalid && vigenciaField.touched) || (vigenciaField.invalid && estaEditando)
               "
             >
               Valor Vigencia
@@ -251,19 +240,28 @@
           </div>
           <div class="col d-flex no-validation">
             <mat-form-field class="full-width maincolor">
-              <input matInput #vigenciaValor currencyMask formControlName="vigenciaValor"
-                readonly [options]="{
+              <input
+                matInput
+                #vigenciaValor
+                currencyMask
+                formControlName="vigenciaValor"
+                readonly
+                [options]="{
                   prefix: '$ ',
                   thousands: '.',
                   precision: '0',
                   align: 'center',
                   allowNegative: false
-                }" />
+                }"
+              />
             </mat-form-field>
           </div>
         </div>
         <div class="row" *ngIf="!isETOrThirdParty() && esVerDetalleRegistro">
-          <p><strong>Valor Vigencia:</strong>{{ addressForm.get('vigenciaValor').value | currency: 'COP':'symbol-narrow':'.0-0'  }}</p>
+          <p>
+            <strong>Valor Vigencia:</strong
+            >{{ addressForm.get('vigenciaValor').value | currency: 'COP':'symbol-narrow':'.0-0' }}
+          </p>
         </div>
         <div class="row" *ngIf="!esVerDetalleRegistro">
           <div class="pr-1">
@@ -295,7 +293,7 @@
             <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
               <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
             </button>
-            <span class="icon-incompleto" >
+            <span class="icon-incompleto">
               <img
                 class="icon-incompleto--img"
                 src="assets/img/icon/incompleto.svg"
@@ -312,7 +310,10 @@
           </div>
         </div>
         <div class="row" *ngIf="esVerDetalleRegistro">
-          <p><strong>Fecha de consignación: </strong>{{ addressForm.get('fechaConsignacion').value | date: 'dd/MM/yyyy'  }}</p>
+          <p>
+            <strong>Fecha de consignación: </strong
+            >{{ addressForm.get('fechaConsignacion').value | date: 'dd/MM/yyyy' }}
+          </p>
         </div>
         <div class="row" *ngIf="!esVerDetalleRegistro">
           <div class="pr-1">
@@ -329,7 +330,8 @@
           </div>
           <div class="col d-flex">
             <mat-form-field class="full-width">
-              <input autocomplete="off"
+              <input
+                autocomplete="off"
                 matInput
                 #valorConsignacion
                 currencyMask
@@ -366,7 +368,10 @@
           </div>
         </div>
         <div class="row" *ngIf="esVerDetalleRegistro">
-          <p><strong>Valor de consignación: </strong>{{ addressForm.get('valorConsignacion').value | currency: 'COP':'symbol-narrow':'.0-0'  }}</p>
+          <p>
+            <strong>Valor de consignación: </strong
+            >{{ addressForm.get('valorConsignacion').value | currency: 'COP':'symbol-narrow':'.0-0' }}
+          </p>
         </div>
       </mat-card-content>
     </mat-card>
@@ -388,4 +393,9 @@
     <!-- {{addressForm.value | json}}  -->
   </pre>
 
-<app-table-control-recursos [esVerDetalle]='esVerDetalle' [valorComprometidoDDP]='this.fuente?.comprometidoEnDdp' [saldoActual]='this.fuente?.saldoActual'></app-table-control-recursos>
+<app-table-control-recursos
+  [esVerDetalle]="esVerDetalle"
+  [valorComprometidoDDP]="this.fuente?.comprometidoEnDdp"
+  [saldoActual]="this.fuente?.saldoActual"
+  (listcontrolRecursos)="listcontrolRecursos($event)"
+></app-table-control-recursos>

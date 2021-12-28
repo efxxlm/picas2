@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ɵConsole, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ɵConsole, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -19,6 +19,8 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
   @Input() esVerDetalle: boolean;
   @Input() valorComprometidoDDP: number ;
   @Input() saldoActual: number ;
+  @Output() public listcontrolRecursos = new EventEmitter<any>();
+
 
   tipoAportante = TiposAportante;
   dataTable = [];
@@ -104,6 +106,8 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
         this.dataSource = new MatTableDataSource(this.dataTable);
         this.ngAfterViewInit()
       })
+
+      this.listcontrolRecursos.emit( this.dataTable );
     });
 
 

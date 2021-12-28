@@ -41,6 +41,8 @@ export class ControlDeRecursosComponent implements OnInit {
   estaEditando = false;
   esVerDetalle = false;
   esVerDetalleRegistro = false;
+  listcontrolRecursosArray = [];
+
   constructor(
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
@@ -341,7 +343,7 @@ export class ControlDeRecursosComponent implements OnInit {
     const controlRecursoId = this.addressForm.get('controlRecursoId').value
     const numeroRp = this.addressForm.get("rp").value.numeroRp;
     const valorRp = !this.addressForm.get("valorRp").value ? 0 : Number(this.addressForm.get("valorRp").value); 
-    const newTotal = this.countResources.filter(x => x.numeroRp ===  this.addressForm.get("rp").value.numeroRp);
+    const newTotal = this.countResources.find(x => x.numeroRp === numeroRp);
      
     if (controlRecursoId && newTotal.controlRecursoId == controlRecursoId) {
       newTotal.value = 0;
@@ -349,14 +351,15 @@ export class ControlDeRecursosComponent implements OnInit {
 
     var SumaValorConsignacionXrp;
     
-console.log("_____________________");
-console.log(this.countResources);
+    console.log("_____________________");
+    console.log(this.countResources);
 
-    this.countResources.forEach(element => {
+    this.listcontrolRecursosArray.forEach(element => {
 
       if(element.numeroRp ===  numeroRp)
       { 
         SumaValorConsignacionXrp += element.valorConsignacion; 
+        console.log('valor =>', element);
         console.log("ENTRO")
       } 
       else{
@@ -364,10 +367,9 @@ console.log(this.countResources);
       } 
     });
 
- 
+    console.log('SumaValorConsignacionXrp =>', SumaValorConsignacionXrp);
 
-
-    if ((Number(this.addressForm.get("valorConsignacion").value) + newTotal) > this.valorFuente) {
+    if ((Number(this.addressForm.get("valorConsignacion").value) + SumaValorConsignacionXrp) > this.valorFuente) {
       this.openDialogError('', `El <b> valor de la consignación no puede superar el valor del aporte a la fuente de recursos, </b> verifique por favor. `);
       this.addressForm.get("valorConsignacion").setValue(null, { emitEvent: false });
     }
@@ -391,6 +393,10 @@ console.log(this.countResources);
 
   agregar() {
     this.routes.navigate(['/gestionarFuentes/controlRecursos', this.idFuente, 0])
+  }
+
+  listcontrolRecursos(event) {
+    this.listcontrolRecursosArray = event;
   }
 
 }
