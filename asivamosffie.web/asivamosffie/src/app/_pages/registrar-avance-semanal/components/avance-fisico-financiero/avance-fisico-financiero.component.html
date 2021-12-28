@@ -59,8 +59,15 @@
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title
           class="expansion-style--title"
-          [class.completo]="seguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones"
-          [class.sin-diligenciar]="!seguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones"
+          [class.completo]="
+            seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0 &&
+            seguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones
+          "
+          [class.sin-diligenciar]="
+            seguimientoSemanal.seguimientoSemanalAvanceFisico.length === 0 ||
+            seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0 &&
+            !seguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones
+          "
           [class.sin-before]="seguimientoSemanal.infoProyecto.estadoObra === 'Con ejecución normal'"
         >
           Observaciones
@@ -157,7 +164,7 @@
             <mat-card-title class="header-card--text"> Observaciones al avance físico </mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <section class="text-left">
+            <section class="text-left" *ngIf="seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0">
               <div [innerHTML]="seguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones"></div>
             </section>
           </mat-card-content>
