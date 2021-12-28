@@ -21,6 +21,7 @@ namespace asivamosffie.api.Controllers
             _updatePoliciesGuaranteesService = updatePoliciesGuaranteesService;
         }
 
+        [AllowAnonymous]
         [Route("GetContratoPoliza")]
         [HttpGet]
         public async Task<dynamic> GetContratoPoliza([FromQuery] int pContratoPolizaId, bool? pEsNueva = false)

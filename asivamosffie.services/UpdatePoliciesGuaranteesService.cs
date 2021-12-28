@@ -548,14 +548,13 @@ namespace asivamosffie.services
         }
 
         public async Task<ContratoPoliza> GetContratoPoliza(int pContratoPolizaId, bool? pEsNueva)
-        {
-
+        { 
             ContratoPoliza contratoPoliza = new ContratoPoliza();
             List<ContratoPolizaActualizacion> contratoPolizaActualizacion = new List<ContratoPolizaActualizacion>();
             if (pEsNueva != true)
             {
                 contratoPolizaActualizacion = await _context.ContratoPolizaActualizacion
-                                                                              .Where(r => r.ContratoPolizaId == pContratoPolizaId)
+                                                                              .Where(r => r.ContratoPolizaActualizacionId == pContratoPolizaId)
                                                                               .Include(c => c.ContratoPolizaActualizacionSeguro)
                                                                               .Include(c => c.ContratoPolizaActualizacionListaChequeo)
                                                                               .Include(c => c.ContratoPolizaActualizacionRevisionAprobacionObservacion)
@@ -563,7 +562,7 @@ namespace asivamosffie.services
                                                                               .ToListAsync();
 
                 contratoPoliza = await _context.ContratoPoliza
-                               .Where(c => c.ContratoPolizaId == pContratoPolizaId)
+                               .Where(c => c.ContratoPolizaId == contratoPolizaActualizacion.FirstOrDefault().ContratoPolizaId)
                                .Include(c => c.Contrato).ThenInclude(c => c.Contratacion).ThenInclude(c => c.Contratista)
                                .Include(c => c.PolizaGarantia)
                                .Include(c => c.PolizaListaChequeo)
