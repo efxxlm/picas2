@@ -535,15 +535,18 @@ namespace asivamosffie.services
                     {
                         labels = lAvanceFisicoxActividad.Select(y => y.Capitulo).Cast<string>().ToList(),
                         datasets = new List<Dataset> { new Dataset { label = "Programación", fill = false, backgroundColor = "rgb(255, 99, 132)", data = lAvanceFisicoxActividad.Select(y => y.Programacion).Cast<decimal>().ToList() },
-                                                        new Dataset { label = "Ejecutado", fill = false, backgroundColor = "rgb(54, 162, 235)", data = lAvanceFisicoxActividad.Select(y => y.Ejectutado).Cast<decimal>().ToList() },
-                                                        new Dataset { label = "Desviación", fill = false, backgroundColor = "rgb(75, 192, 192)", data = lAvanceFisicoxActividad.Select(y => y.Desviacion).Cast<decimal>().ToList() } }
+                                                        new Dataset { label = "Ejecutado", fill = false, backgroundColor = "rgb(54, 162, 235)", data = lAvanceFisicoxActividad.Select(y => y.Ejectutado).Cast<decimal>().ToList() }
+                                                      //  , new Dataset { label = "Desviación", fill = false, backgroundColor = "rgb(75, 192, 192)", data = lAvanceFisicoxActividad.Select(y => y.Desviacion).Cast<decimal>().ToList() } 
+                        
+                        }
                     }
                 };
-                rutaGrafico += $"SeguimientoSemanalAvanceFisico-{seguimientoSemanal.SeguimientoSemanalId}-{seguimientoSemanal.ContratacionProyectoId}.png";
+
+               // rutaGrafico += $"SeguimientoSemanalAvanceFisico-{seguimientoSemanal.SeguimientoSemanalId}-{seguimientoSemanal.ContratacionProyectoId}.png";
             }
 
             seguimientoSemanal.AvanceFisico = lAvanceFisicoxActividad;
-            seguimientoSemanal.AvanceFisicoGrafica = oChartConfig != null ? (string)await _generarGraficoService.CreateChartasFile(rutaGrafico, oChartConfig) : "";
+            seguimientoSemanal.AvanceFisicoGrafica = oChartConfig != null ? (string)await _generarGraficoService.CreateChartasFile(rutaGrafico, rutaGrafico += $"SeguimientoSemanalAvanceFisico-{seguimientoSemanal.SeguimientoSemanalId}-{seguimientoSemanal.ContratacionProyectoId}.png", oChartConfig) : "";
         }
 
         private async Task GetSeguimientoFinanciero(SeguimientoSemanal seguimientoSemanal, string rutaGrafico)
@@ -590,18 +593,19 @@ namespace asivamosffie.services
                     data = new Data
                     {
                         labels = lAvanceFinancieroxMes.Select(y => y.Num).Cast<string>().ToList(),
-                        datasets = new List<Dataset> { new Dataset { label = "Programado", fill = false, backgroundColor = "rgb(255, 99, 132)", borderColor = "rgb(255, 99, 132)", data = lAvanceFinancieroxMes.Select(y => y.Programado).Cast<decimal>().ToList() },
-                                                        new Dataset { label = "Ejecutado", fill = false, backgroundColor = "rgb(54, 162, 235)", borderColor = "rgb(54, 162, 235)", data = lAvanceFinancieroxMes.Select(y => y.Ejecutado).Cast<decimal>().ToList() },
+                        datasets = new List<Dataset> { 
+                                                        /*new Dataset { label = "Programado", fill = false, backgroundColor = "rgb(255, 99, 132)", borderColor = "rgb(255, 99, 132)", data = lAvanceFinancieroxMes.Select(y => y.Programado).Cast<decimal>().ToList() },
+                                                        new Dataset { label = "Ejecutado", fill = false, backgroundColor = "rgb(54, 162, 235)", borderColor = "rgb(54, 162, 235)", data = lAvanceFinancieroxMes.Select(y => y.Ejecutado).Cast<decimal>().ToList() },*/
                                                         new Dataset { label = "Programado Acumulado", fill = false, backgroundColor = "rgb(75, 192, 192)", borderColor = "rgb(75, 192, 192)", data = lAvanceFinancieroxMes.Select(y => y.ProgramadoAcumulado).Cast<decimal>().ToList() },
                                                         new Dataset { label = "Ejecutado Acumulado", fill = false, backgroundColor = "rgb(255, 205, 86)", borderColor = "rgb(255, 205, 86)", data = lAvanceFinancieroxMes.Select(y => y.EjecutadoAcumulado).Cast<decimal>().ToList() }
                                                      }
                     }
                 };
-                rutaGrafico += $"SeguimientoSemanalSeguimientoFinanciero-{seguimientoSemanal.SeguimientoSemanalId}-{seguimientoSemanal.ContratacionProyectoId}.png";
+               // rutaGrafico += $"SeguimientoSemanalSeguimientoFinanciero-{seguimientoSemanal.SeguimientoSemanalId}-{seguimientoSemanal.ContratacionProyectoId}.png";
             }
 
             seguimientoSemanal.SeguimientoFinanciero = lAvanceFinancieroxMes;
-            seguimientoSemanal.SeguimientoFinancieroGrafica = oChartConfig != null ? (string)await _generarGraficoService.CreateChartasFile(rutaGrafico, oChartConfig) : "";
+            seguimientoSemanal.SeguimientoFinancieroGrafica = oChartConfig != null ? (string)await _generarGraficoService.CreateChartasFile(rutaGrafico, rutaGrafico += $"SeguimientoSemanalSeguimientoFinanciero-{seguimientoSemanal.SeguimientoSemanalId}-{seguimientoSemanal.ContratacionProyectoId}.png", oChartConfig) : "";
         }
 
         private async Task GetRegistroAnticipo(SeguimientoSemanal seguimientoSemanal)

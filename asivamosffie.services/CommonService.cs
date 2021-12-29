@@ -75,24 +75,20 @@ namespace asivamosffie.services
         //Solicitudes de comite tecnico
         public async Task<dynamic> GetRequestSP(string pNameSP)
         {
-            using (SqlConnection sql = new SqlConnection(_connectionString))
-            {
-                using (SqlCommand cmd = new SqlCommand(pNameSP, sql))
-                {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    var response = new List<dynamic>();
-                    await sql.OpenAsync();
+            using SqlConnection sql = new SqlConnection(_connectionString);
+            using SqlCommand cmd = new SqlCommand(pNameSP, sql);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            var response = new List<dynamic>();
+            await sql.OpenAsync();
 
-                    using (var reader = await cmd.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            response.Add(MapToValue(reader));
-                        }
-                    }
-                    return response;
+            using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    response.Add(MapToValue(reader));
                 }
             }
+            return response;
         }
 
         public dynamic MapToValue(SqlDataReader reader)

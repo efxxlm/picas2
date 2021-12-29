@@ -213,6 +213,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid")]
         public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(int disponibilidadPresupuestalProyectoid, int aportanteID)

@@ -30,7 +30,7 @@ namespace asivamosffie.services
         public GenerarGraficoService()
         { }
 
-        public async Task<object> CreateChartasFile(string path, ChartConfig config)
+        public async Task<object> CreateChartasFile(string path, string rutaNombre,  ChartConfig config)
         {
             try 
             {
@@ -43,11 +43,14 @@ namespace asivamosffie.services
                 };
                 var ByteArray = await ToByteArray(qc);
 
-                File.WriteAllBytes(path, ByteArray);
+                if (!Directory.Exists(path)) 
+                    Directory.CreateDirectory(path);
+          
+                File.WriteAllBytes(rutaNombre, ByteArray);
 
                 var save = File.Exists(path);
-                return save ? path : "";
-            } catch { return ""; }
+                return rutaNombre;
+            } catch { return string.Empty; }
         }
 
         public async Task<object> CreateChartasFile(string path)

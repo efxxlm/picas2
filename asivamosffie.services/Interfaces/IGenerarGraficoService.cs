@@ -10,7 +10,7 @@ namespace asivamosffie.services.Interfaces
     public interface IGenerarGraficoService
     {
         Task<object> CreateChartasFile(string path);
-        Task<object> CreateChartasFile(string path, ChartConfig config);
+        Task<object> CreateChartasFile(string path,string rutaNombre, ChartConfig config);
         Task<object> CreateChartasURL();
     }
 }

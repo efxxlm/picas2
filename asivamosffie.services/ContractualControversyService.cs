@@ -1107,7 +1107,14 @@ namespace asivamosffie.services
             try
             {
                 ControversiaActuacion actuacionSeguimientoOld;
+                _context.Set<ControversiaActuacion>()
+                                    .Where(u => u.ControversiaActuacionId == pActuacionSeguimientoId)
+                                    .Update(u => new ControversiaActuacion
+                                    {
+                                        EstadoCodigo = pEstadoReclamacionCodigo
+                                    });
 
+             
                 actuacionSeguimientoOld = _context.ControversiaActuacion.Find(pActuacionSeguimientoId);
                 actuacionSeguimientoOld.UsuarioModificacion = pUsuarioModifica;
                 actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
@@ -1127,12 +1134,26 @@ namespace asivamosffie.services
                             if (actuacionSeguimientoOld?.ControversiaContractualId > 0)
                             {
                                 List<ContratacionProyecto> contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contrato.ContratacionId).Include(r => r.Proyecto).Include(r => r.Contratacion).ToList();
-                                contratacionProyecto.ForEach(r => {
+                                contratacionProyecto.ForEach(r =>
+                                {
                                     if (r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
-                                        r.Proyecto.EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.Liberado_por_comunicacion_decision_TAI_al_contratista;
-
+                                    {
+                                        _context.Set<Proyecto>()
+                                                            .Where(u => u.ProyectoId == r.ProyectoId)
+                                                            .Update(u => new Proyecto
+                                                            {
+                                                                EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.Disponible
+                                                            }); 
+                                    } 
                                     if (r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
-                                        r.Proyecto.EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.Liberado_por_comunicacion_decision_TAI_al_contratista;
+                                    {
+                                        _context.Set<Proyecto>()
+                                                     .Where(u => u.ProyectoId == r.ProyectoId)
+                                                     .Update(u => new Proyecto
+                                                     {
+                                                         EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.Disponible
+                                                     }); 
+                                    } 
                                 });
                             }
                         }
@@ -1965,7 +1986,7 @@ namespace asivamosffie.services
 
             //Alerta Contratista / Interventor / Supervisor / Fiduciaria
             perfilId = (int)EnumeratorPerfil.Supervisor; //  
-            //correo = getCorreos(perfilId);
+                                                         //correo = getCorreos(perfilId);
 
             try
             {
