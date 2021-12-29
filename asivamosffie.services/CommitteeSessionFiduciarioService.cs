@@ -439,39 +439,35 @@ namespace asivamosffie.services
 
                     foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
                     {
+                        if (SolicitudesExistentes.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId).Count() > 0)
                         {
-                            if (SolicitudesExistentes.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId).Count() > 0)
-                            {
-                                SesionComiteSolicitud SesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(SesionComiteSolicitud.SesionComiteSolicitudId);
-                                //Auditoria 
-                                SesionComiteSolicitudOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
-                                SesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
+                            SesionComiteSolicitud SesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(SesionComiteSolicitud.SesionComiteSolicitudId);
+                            //Auditoria 
+                            SesionComiteSolicitudOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
+                            SesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
 
-                                //Registros
-                                SesionComiteSolicitudOld.DesarrolloSolicitudFiduciario = SesionComiteSolicitud.DesarrolloSolicitudFiduciario;
-                                SesionComiteSolicitudOld.EstadoActaCodigoFiduciario = SesionComiteSolicitud.EstadoActaCodigoFiduciario;
-                                SesionComiteSolicitudOld.ComiteTecnicoFiduciarioId = pComiteTecnico.ComiteTecnicoId;
-                                SesionComiteSolicitudOld.ObservacionesFiduciario = SesionComiteSolicitud.ObservacionesFiduciario;
-                                SesionComiteSolicitudOld.RutaSoporteVotacionFiduciario = SesionComiteSolicitud.RutaSoporteVotacionFiduciario;
-                                SesionComiteSolicitudOld.GeneraCompromisoFiduciario = SesionComiteSolicitud.GeneraCompromisoFiduciario;
-                                SesionComiteSolicitudOld.CantCompromisosFiduciario = SesionComiteSolicitud.CantCompromisosFiduciario;
-                                SesionComiteSolicitudOld.RequiereVotacionFiduciario = SesionComiteSolicitud.RequiereVotacionFiduciario;
-                                SesionComiteSolicitudOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitudOld);
+                            //Registros
+                            SesionComiteSolicitudOld.DesarrolloSolicitudFiduciario = SesionComiteSolicitud.DesarrolloSolicitudFiduciario;
+                            SesionComiteSolicitudOld.EstadoActaCodigoFiduciario = SesionComiteSolicitud.EstadoActaCodigoFiduciario;
+                            SesionComiteSolicitudOld.ComiteTecnicoFiduciarioId = pComiteTecnico.ComiteTecnicoId;
+                            SesionComiteSolicitudOld.ObservacionesFiduciario = SesionComiteSolicitud.ObservacionesFiduciario;
+                            SesionComiteSolicitudOld.RutaSoporteVotacionFiduciario = SesionComiteSolicitud.RutaSoporteVotacionFiduciario;
+                            SesionComiteSolicitudOld.GeneraCompromisoFiduciario = SesionComiteSolicitud.GeneraCompromisoFiduciario;
+                            SesionComiteSolicitudOld.CantCompromisosFiduciario = SesionComiteSolicitud.CantCompromisosFiduciario;
+                            SesionComiteSolicitudOld.RequiereVotacionFiduciario = SesionComiteSolicitud.RequiereVotacionFiduciario;
+                            SesionComiteSolicitudOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitudOld);
 
-                            }
-                            else
-                            {
-                                SesionComiteSolicitud SesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(SesionComiteSolicitud.SesionComiteSolicitudId);
+                        }
+                        else
+                        {
+                            SesionComiteSolicitud SesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(SesionComiteSolicitud.SesionComiteSolicitudId);
 
-                                SesionComiteSolicitudOld.UsuarioComiteFiduciario = pComiteTecnico.UsuarioCreacion;
-                                SesionComiteSolicitudOld.FechaComiteFiduciario = DateTime.Now;
+                            SesionComiteSolicitudOld.UsuarioComiteFiduciario = pComiteTecnico.UsuarioCreacion;
+                            SesionComiteSolicitudOld.FechaComiteFiduciario = DateTime.Now;
 
-                                //Registros
-                                SesionComiteSolicitudOld.ComiteTecnicoFiduciarioId = pComiteTecnico.ComiteTecnicoId;
-                                SesionComiteSolicitudOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitudOld);
-                            }
-
-
+                            //Registros
+                            SesionComiteSolicitudOld.ComiteTecnicoFiduciarioId = pComiteTecnico.ComiteTecnicoId;
+                            SesionComiteSolicitudOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitudOld);
                         }
                     }
                 }
@@ -2354,7 +2350,6 @@ namespace asivamosffie.services
 
         }
 
-
         public async Task<List<SesionParticipante>> GetSesionParticipantesByIdComite(int pComiteId)
         {
             List<SesionParticipante> ListaParticipantes = new List<SesionParticipante>();
@@ -3097,7 +3092,7 @@ namespace asivamosffie.services
                                     //if (ct.Proyecto.EstadoProyectoObraCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario)
                                     //    proy.EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.Disponible;
                                     //else
-                                        proy.EstadoProyectoObraCodigo = ct.Proyecto.EstadoProyectoObraCodigo;
+                                    proy.EstadoProyectoObraCodigo = ct.Proyecto.EstadoProyectoObraCodigo;
                                 else
                                 {
                                     sesionComiteSolicitudOld.RegistroCompletoFiduciaria = false;
@@ -3109,7 +3104,7 @@ namespace asivamosffie.services
                                     //if (ct.Proyecto.EstadoProyectoInterventoriaCodigo == ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario)
                                     //    proy.EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.Disponible;
                                     //else
-                                        proy.EstadoProyectoInterventoriaCodigo = ct.Proyecto.EstadoProyectoInterventoriaCodigo;
+                                    proy.EstadoProyectoInterventoriaCodigo = ct.Proyecto.EstadoProyectoInterventoriaCodigo;
                                 else
                                 {
                                     sesionComiteSolicitudOld.RegistroCompletoFiduciaria = false;
@@ -3436,7 +3431,7 @@ namespace asivamosffie.services
                sesionComiteSolicitud.EstadoCodigo == null ||
                string.IsNullOrEmpty(sesionComiteSolicitud.ObservacionesFiduciario) ||
                string.IsNullOrEmpty(sesionComiteSolicitud.DesarrolloSolicitudFiduciario) ||
-               (sesionComiteSolicitud.GeneraCompromisoFiduciario == true && sesionComiteSolicitud.CantCompromisosFiduciario == null )
+               (sesionComiteSolicitud.GeneraCompromisoFiduciario == true && sesionComiteSolicitud.CantCompromisosFiduciario == null)
                 )
             {
                 esCompleto = false;
@@ -3482,8 +3477,8 @@ namespace asivamosffie.services
 
                 contratacion.ContratacionProyecto.ToList().ForEach(cp =>
                {
-                   if ( contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() )
-                    if ( !estadosValidos.Contains(cp.Proyecto.EstadoProyectoObraCodigo))
+                   if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                       if (!estadosValidos.Contains(cp.Proyecto.EstadoProyectoObraCodigo))
                        {
                            esCompleto = false;
                        }
@@ -3548,7 +3543,7 @@ namespace asivamosffie.services
                 || sesionComiteTemaOld.GeneraCompromiso == null
                 || string.IsNullOrEmpty(sesionComiteTemaOld.ObservacionesDecision)
                 || sesionComiteTemaOld.EstadoTemaCodigo == null
-                || (sesionComiteTemaOld.GeneraCompromiso == true && sesionComiteTemaOld.CantCompromisos == null )
+                || (sesionComiteTemaOld.GeneraCompromiso == true && sesionComiteTemaOld.CantCompromisos == null)
 
                 )
             {
@@ -4125,7 +4120,7 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_ES_DELEGADO:
                                 RegistrosResponsables = RegistrosResponsables
-                                    .Replace(placeholderDominio.Nombre, responsable.EsDelegado != true ? "No" : "Sí" );
+                                    .Replace(placeholderDominio.Nombre, responsable.EsDelegado != true ? "No" : "Sí");
                                 break;
                         }
                     }
@@ -5389,7 +5384,7 @@ namespace asivamosffie.services
                                 RegistrosNuevosTemas = RegistrosNuevosTemas
                                 .Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
                                 break;
-                        
+
                             case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
                                 RegistrosNuevosTemas = RegistrosNuevosTemas
                                    .Replace(placeholderDominio.Nombre, Tema.Observaciones);
@@ -5427,7 +5422,7 @@ namespace asivamosffie.services
                                     }
                                 }
                                 RegistrosNuevosTemas = RegistrosNuevosTemas
-                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud) ;
+                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                 break;
                         }
                     }
