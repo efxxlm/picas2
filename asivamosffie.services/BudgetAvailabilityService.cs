@@ -1743,9 +1743,9 @@ namespace asivamosffie.services
                             gfa.SaldoActual = gffh.SaldoActual;
                             gfa.ValorSolicitado = gffh.ValorSolicitado;
                             gfa.NuevoSaldo = gffh.NuevoSaldo;
-                            gfa.SaldoActualGenerado = gffh.SaldoActual;
-                            gfa.ValorSolicitadoGenerado = gffh.ValorSolicitado;
-                            gfa.NuevoSaldoGenerado = gffh.NuevoSaldo;
+                            gfa.SaldoActualGenerado = gffh.SaldoActualGenerado;
+                            gfa.ValorSolicitadoGenerado = gffh.ValorSolicitadoGenerado;
+                            gfa.NuevoSaldoGenerado = gffh.NuevoSaldoGenerado;
                         }
                     }
                 }
@@ -1798,9 +1798,9 @@ namespace asivamosffie.services
                                     gestionfuentes[positionGestion].SaldoActual = gestionfuentes[positionGestion].SaldoActual + (esLiberacion && gffh != null ? gffh.SaldoActual : gfa.SaldoActual);
                                     gestionfuentes[positionGestion].ValorSolicitado = gestionfuentes[positionGestion].ValorSolicitado + (esLiberacion && gffh != null ? gffh.ValorSolicitado : gfa.ValorSolicitado);
                                     gestionfuentes[positionGestion].NuevoSaldo = gestionfuentes[positionGestion].NuevoSaldo + (esLiberacion && gffh != null ? gffh.NuevoSaldo : gfa.NuevoSaldo);
-                                    gestionfuentes[positionGestion].SaldoActualGenerado = gestionfuentes[positionGestion].SaldoActualGenerado + (esLiberacion && gffh != null ? gffh.SaldoActual : gfa.SaldoActualGenerado);
-                                    gestionfuentes[positionGestion].ValorSolicitadoGenerado = gestionfuentes[positionGestion].ValorSolicitadoGenerado + (esLiberacion && gffh != null ? gffh.ValorSolicitado : gfa.ValorSolicitadoGenerado);
-                                    gestionfuentes[positionGestion].NuevoSaldoGenerado = gestionfuentes[positionGestion].NuevoSaldoGenerado + (esLiberacion && gffh != null ? gffh.NuevoSaldo : gfa.NuevoSaldoGenerado);
+                                    gestionfuentes[positionGestion].SaldoActualGenerado = gestionfuentes[positionGestion].SaldoActualGenerado + (esLiberacion && gffh != null ? gffh.SaldoActualGenerado : gfa.SaldoActualGenerado);
+                                    gestionfuentes[positionGestion].ValorSolicitadoGenerado = gestionfuentes[positionGestion].ValorSolicitadoGenerado + (esLiberacion && gffh != null ? gffh.ValorSolicitadoGenerado : gfa.ValorSolicitadoGenerado);
+                                    gestionfuentes[positionGestion].NuevoSaldoGenerado = gestionfuentes[positionGestion].NuevoSaldoGenerado + (esLiberacion && gffh != null ? gffh.NuevoSaldoGenerado : gfa.NuevoSaldoGenerado);
                                 }
                                 else
                                 {
@@ -1813,9 +1813,9 @@ namespace asivamosffie.services
                                         gfa.SaldoActual = gffh.SaldoActual;
                                         gfa.ValorSolicitado = gffh.ValorSolicitado;
                                         gfa.NuevoSaldo = gffh.NuevoSaldo;
-                                        gfa.SaldoActualGenerado = gffh.SaldoActual;
-                                        gfa.ValorSolicitadoGenerado = gffh.ValorSolicitado;
-                                        gfa.NuevoSaldoGenerado = gffh.NuevoSaldo;
+                                        gfa.SaldoActualGenerado = gffh.SaldoActualGenerado;
+                                        gfa.ValorSolicitadoGenerado = gffh.ValorSolicitadoGenerado;
+                                        gfa.NuevoSaldoGenerado = gffh.NuevoSaldoGenerado;
                                     }
                                     gestionfuentes.Add(gfa);
                                 }
@@ -1851,16 +1851,16 @@ namespace asivamosffie.services
                         .Replace("[DDP_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
                         .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x => x.ValorDocumento)).ToString())
                         .Replace("[DDP_FUENTE]", fuenteNombre)
-                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar && !cumpleDdp ? (gestion.SaldoActualGenerado ?? 0) : gestion.SaldoActual).ToString())
-                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", tieneHistorico && !esLiberacion ? gestion.ValorLiberado != null ? -gestion.ValorLiberado : gestion.ValorSolicitado : !esValidar && !cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gestion.ValorSolicitado).ToString())
-                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar && !cumpleDdp ? (gestion.NuevoSaldoGenerado ?? 0) : gestion.NuevoSaldo).ToString());
+                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar || cumpleDdp ? (gestion.SaldoActualGenerado ?? 0) : gestion.SaldoActual).ToString())
+                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", tieneHistorico && !esLiberacion ? gestion.ValorLiberado != null ? -gestion.ValorLiberado : gestion.ValorSolicitado : !esValidar || cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gestion.ValorSolicitado).ToString())
+                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", !esValidar || cumpleDdp ? (gestion.NuevoSaldoGenerado ?? 0) : gestion.NuevoSaldo).ToString());
 
                     //.Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", saldototal).ToString())
                     //.Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
                     //.Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", (saldototal - gestion.ValorSolicitado)).ToString());
                     tablaproyecto += tr;
 
-                    decimal valorSolicitadoApo = !esValidar && !cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gestion.ValorSolicitado;
+                    decimal valorSolicitadoApo = !esValidar || cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gestion.ValorSolicitado;
                     var tr2 = plantilla_fuentes
                         .Replace("[NOMBRE_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
                         .Replace("[FUENTE_APORTANTE]", fuenteNombre)
@@ -2219,24 +2219,23 @@ namespace asivamosffie.services
                         .Replace("[DDP_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
                         .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x => x.ValorDocumento)).ToString())
                         .Replace("[DDP_FUENTE]", fuenteNombre)
-                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", !cumpleDdp ? (gestion.SaldoActualGenerado ?? 0) : gffh != null ? gffh.SaldoActual : gestion.SaldoActual).ToString())
-                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", tieneHistorico && !esLiberacion ? gestion.ValorLiberado != null ? -gestion.ValorLiberado : gestion.ValorSolicitado : !cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gffh != null ? gffh.ValorSolicitado : gestion.ValorSolicitado).ToString())
-                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", !cumpleDdp ? (gestion.NuevoSaldoGenerado ?? 0) : gffh != null ? gffh.NuevoSaldo : gestion.NuevoSaldo).ToString());
-
+                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ " + String.Format("{0:n0}", esLiberacion == true && gffh != null ? gffh.SaldoActualGenerado : cumpleDdp ? (gestion.SaldoActualGenerado ?? 0) : gestion.SaldoActual).ToString())
+                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ " + String.Format("{0:n0}", tieneHistorico && !esLiberacion ? gestion.ValorLiberado != null ? -gestion.ValorLiberado : gestion.ValorSolicitado : esLiberacion == true && gffh != null ? gffh.ValorSolicitadoGenerado : cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gffh != null ? gffh.ValorSolicitado : gestion.ValorSolicitado).ToString())
+                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", esLiberacion == true && gffh != null ? gffh.NuevoSaldoGenerado : cumpleDdp ? (gestion.NuevoSaldoGenerado ?? 0) : gestion.NuevoSaldo).ToString())
                     ;
                     tablaproyecto += tr;
 
                     var tr2 = plantilla_fuentes
                     .Replace("[NOMBRE_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
                     .Replace("[FUENTE_APORTANTE]", fuenteNombre)
-                    .Replace("[VALOR_NUMERO]", "$ " + String.Format("{0:n0}", esLiberacion == true && gffh != null ? gffh.ValorSolicitado : gestion.ValorSolicitado).ToString())
+                    .Replace("[VALOR_NUMERO]", "$ " + String.Format("{0:n0}", esLiberacion == true && gffh != null ? gffh.ValorSolicitado : cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gestion.ValorSolicitado).ToString())
                     .Replace("[VALOR_LETRAS]",
                     CultureInfo.CurrentCulture.TextInfo
                                                     .ToTitleCase(Conversores
-                                                    .NumeroALetras(esLiberacion == true && gffh != null ? gffh.ValorSolicitado : gestion.ValorSolicitado)
+                                                    .NumeroALetras(esLiberacion == true && gffh != null ? gffh.ValorSolicitado : cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gestion.ValorSolicitado)
                                                     .ToLower()));
                     tablafuentes += tr2;
-                    total += esLiberacion == true && gffh != null ? gffh.ValorSolicitado : gestion.ValorSolicitado;
+                    total += esLiberacion == true && gffh != null ? gffh.ValorSolicitado : cumpleDdp ? (gestion.ValorSolicitadoGenerado ?? 0) : gestion.ValorSolicitado;
                 }
 
                 if (pDisponibilidad.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Tradicional)
