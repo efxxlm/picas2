@@ -263,10 +263,23 @@ namespace asivamosffie.services
                       .ThenInclude(r => r.InfraestructuraIntervenirProyecto)
                 .Include(r => r.ContratacionProyecto)
                     .ThenInclude(r => r.ContratacionProyectoAportante)
-                      .ThenInclude(r => r.ComponenteAportante.Where(r => r.Eliminado != true))
-                           .ThenInclude(r => r.ComponenteUso.Where(r=> r.Eliminado != true))
+                      .ThenInclude(r => r.ComponenteAportante)
+                           .ThenInclude(r => r.ComponenteUso)
                  .Include(p => p.PlazoContratacion)
                            .FirstOrDefaultAsync();
+
+
+            foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
+            {
+                foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
+                {
+                    foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
+                    {
+                        if (ComponenteAportante.ComponenteUso.Count > 0)
+                            ComponenteAportante.ComponenteUso = ComponenteAportante.ComponenteUso.Where(c => c.Eliminado != true).ToList();
+                    }
+                }
+            }
 
             contratacion.ContratacionProyecto = contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).ToList();
 
@@ -785,6 +798,7 @@ namespace asivamosffie.services
                     Pcontratacion.RegistroCompleto = false;
                     Pcontratacion.NumeroSolicitud = await _commonService.EnumeradorContratacion();
                     Pcontratacion.RegistroCompleto = false;
+                    _context.Contratacion.Add(Pcontratacion); 
                 }
                 else
                 {
@@ -1219,10 +1233,12 @@ namespace asivamosffie.services
 
         public bool ValidarEstado(Contratacion contratacion)
         {
+            if (contratacion is null)
+                return false;
             if (string.IsNullOrEmpty(contratacion.TipoSolicitudCodigo)
              || string.IsNullOrEmpty(contratacion.NumeroSolicitud)
              || string.IsNullOrEmpty(contratacion.EstadoSolicitudCodigo)
-             || string.IsNullOrEmpty(contratacion.ContratacionId.ToString())
+             || contratacion.ContratacionId == 0
              || !contratacion.EsObligacionEspecial.HasValue
              || contratacion.ContratistaId == null)
                 return false;
