@@ -380,7 +380,7 @@
 
     <div class="botones" *ngIf="esCancelada != true">
         <button mat-raised-button color="accent" (click)="generarddp()">Descargar DDP</button>
-        <button mat-raised-button color="accent" [disabled]="(detailavailabilityBudget?.tieneNovedad == true && esNovedad == false) || (detailavailabilityBudget?.estadoStr == 'Con registro presupuestal')" (click)="openDialogCancelarDDP()">Cancelar solicitud DDP</button>
+        <button mat-raised-button color="accent" [disabled]="(detailavailabilityBudget?.tieneNovedad == true && esNovedad == false) || (detailavailabilityBudget?.tieneSolicitudPago == true)" (click)="openDialogCancelarDDP()">Cancelar solicitud DDP</button>
     </div>
 
 </section>

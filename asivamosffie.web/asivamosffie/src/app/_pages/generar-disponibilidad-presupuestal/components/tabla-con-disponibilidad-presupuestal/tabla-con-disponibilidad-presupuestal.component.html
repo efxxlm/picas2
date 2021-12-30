@@ -30,7 +30,7 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
                 <button mat-raised-button color="accent" class="btn-table"
-                (click)="verDetalle(element.id, element.esNovedad, element.novedadId)">Ver detalle</button>
+                (click)="verDetalle(element.id, element.esNovedad, element.novedadId, element.tieneHistorico)">Ver detalle</button>
             </td>
         </ng-container>
 

@@ -377,9 +377,9 @@ namespace asivamosffie.services
                 {
                     bool tieneHistorico = false;
                     VDisponibilidadPresupuestal DisponibilidadPresupuestal = ddp;
-                    if ((pCodigoEstadoSolicitud == "5" || pCodigoEstadoSolicitud == "8") && DisponibilidadPresupuestal.TieneHistorico == true)
+                    if ((pCodigoEstadoSolicitud == "8" || pCodigoEstadoSolicitud == "5") && DisponibilidadPresupuestal.TieneHistorico == true)
                     {
-                        VDisponibilidadPresupuestal ddpchange = _context.VDisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && r.EstadoSolicitudCodigo == "10").FirstOrDefault();
+                        VDisponibilidadPresupuestal ddpchange = _context.VDisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && r.EstadoSolicitudCodigo == "10" && r.EsNovedad == ddp.EsNovedad).FirstOrDefault();
                         if (ddpchange != null)
                         {
                             DisponibilidadPresupuestal = ddpchange;
@@ -389,7 +389,7 @@ namespace asivamosffie.services
 
                     if (pCodigoEstadoSolicitud == "10" && DisponibilidadPresupuestal.TieneHistorico == true)
                     {
-                        VDisponibilidadPresupuestal ddpchange = _context.VDisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && (r.EstadoSolicitudCodigo == "5" || r.EstadoSolicitudCodigo == "8")).FirstOrDefault();
+                        VDisponibilidadPresupuestal ddpchange = _context.VDisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && (r.EstadoSolicitudCodigo == "5" || r.EstadoSolicitudCodigo == "8") && r.EsNovedad == ddp.EsNovedad).FirstOrDefault();
                         if (ddpchange != null)
                             DisponibilidadPresupuestal = ddpchange;
 

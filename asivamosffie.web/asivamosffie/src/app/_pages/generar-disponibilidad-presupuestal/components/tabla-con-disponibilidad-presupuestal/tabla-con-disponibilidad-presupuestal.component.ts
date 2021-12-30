@@ -11,6 +11,7 @@ export interface OrdenDelDia {
   tipo: string;
   esNovedad: boolean;
   novedadId: number;
+  tieneHistorico: boolean;
 }
 
 @Component({
@@ -39,10 +40,15 @@ export class TablaConDisponibilidadPresupuestalComponent implements OnInit {
     let elements:OrdenDelDia[]=[];
     this.disponibilidadPresupuestal.disponibilidadPresupuestal.forEach(element => {
       if(element.rechazadaFiduciaria !== true){
-        elements.push({id:element.disponibilidadPresupuestalId,
-          fecha:element.fechaSolicitud,numero:element.numeroSolicitud,
-          tipo:element.tipoSolicitud, esNovedad: element.esNovedad,
-          novedadId: element.novedadContractualRegistroPresupuestalId})
+        elements.push({
+          id:element.disponibilidadPresupuestalId,
+          fecha:element.fechaSolicitud,
+          numero:element.numeroSolicitud,
+          tipo:element.tipoSolicitud,
+          esNovedad: element.esNovedad,
+          novedadId: element.novedadContractualRegistroPresupuestalId,
+          tieneHistorico: element.tieneHistorico ?? false
+        })
       }
     });
     this.dataSource = new MatTableDataSource(elements);
@@ -63,8 +69,9 @@ export class TablaConDisponibilidadPresupuestalComponent implements OnInit {
     };
   }
 
-  verDetalle(id: number, esNovedad, novedadId) {
-    if(this.esLiberacion == true){
+  verDetalle(id: number, esNovedad, novedadId, tieneHistorico: boolean) {
+    console.log(tieneHistorico);
+    if(tieneHistorico == true){
       this.router.navigate(['generarDisponibilidadPresupuestal/conLiberacionSaldo', id, esNovedad, novedadId ? novedadId : 0]);
     }
     else{
