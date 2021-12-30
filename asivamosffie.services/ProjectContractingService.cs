@@ -619,10 +619,12 @@ namespace asivamosffie.services
 
                     if (cumpleCondicionTai)
                     {
-                        if (proyecto?.ContratacionProyecto?.FirstOrDefault()?.Contratacion?.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria) {
+                        if (proyecto?.ContratacionProyecto?.FirstOrDefault()?.Contratacion?.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
+                        {
                             proyectoGrilla.TieneInterventoria = false;
                         }
-                        else {
+                        else
+                        {
                             proyectoGrilla.TieneObra = false;
                         }
                     }
@@ -1188,16 +1190,24 @@ namespace asivamosffie.services
 
         }
 
-        public static bool ValidarEstado(Contratacion contratacion)
+        public  bool ValidarEstado(Contratacion contratacion)
         {
             if (string.IsNullOrEmpty(contratacion.TipoSolicitudCodigo)
              || string.IsNullOrEmpty(contratacion.NumeroSolicitud)
              || string.IsNullOrEmpty(contratacion.EstadoSolicitudCodigo)
              || string.IsNullOrEmpty(contratacion.ContratacionId.ToString())
              || !contratacion.EsObligacionEspecial.HasValue
-             || contratacion.ContratistaId == null
-             || (contratacion.PlazoContratacion == null || (contratacion.PlazoContratacion.PlazoDias == 0 && contratacion.PlazoContratacion.PlazoMeses == 0))
-             )
+             || contratacion.ContratistaId == null)
+                return false;
+
+            // (contratacion.PlazoContratacion == null || (contratacion.PlazoContratacion.PlazoDias == 0 && contratacion.PlazoContratacion.PlazoMeses == 0)
+
+            PlazoContratacion plazoContratacion = _context.PlazoContratacion.Where(r => r.PlazoContratacionId == contratacion.PlazoContratacionId).FirstOrDefault();
+
+            if(plazoContratacion is null)
+                return false;
+
+            if(plazoContratacion.PlazoDias + plazoContratacion.PlazoMeses == 0)
                 return false;
 
             foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
@@ -1419,7 +1429,7 @@ namespace asivamosffie.services
                 }
             }
 
-            
+
             return cumpleCondicionesTai;
         }
 
