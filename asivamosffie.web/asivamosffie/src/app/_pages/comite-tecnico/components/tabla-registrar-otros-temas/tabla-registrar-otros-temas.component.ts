@@ -140,15 +140,17 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
   }
 
   validarResgistros( listaSesionComiteTema: SesionComiteTema[] ){
-    listaSesionComiteTema.forEach( ct => {
-      ct.completo = true;
+    listaSesionComiteTema.forEach( ct => {      
 
       if ( ct.requiereVotacion == true && ct.sesionTemaVoto.length == 0 ) { ct.completo = false }
+      else ct.completo = true;
 
       ct.sesionTemaVoto.forEach( tv => {
         if ( tv.esAprobado != true && tv.esAprobado != false ){
           ct.completo = false;
-        }
+          return
+        } 
+        else ct.completo = true;
       })
     })
   }

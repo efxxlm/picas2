@@ -280,16 +280,18 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
   validarRegistros() {
     if (this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico) {
       this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(sc => {
-        sc.completo = true;
 
         if (sc.requiereVotacion == true && sc.sesionSolicitudVoto.length == 0) {
           sc.completo = false;
         }
+        else sc.completo = true;
 
         sc.sesionSolicitudVoto.forEach(ss => {
           if (ss.esAprobado != true && ss.esAprobado != false) {
             sc.completo = false;
+            return
           }
+          else sc.completo = true;
         });
       });
     }
