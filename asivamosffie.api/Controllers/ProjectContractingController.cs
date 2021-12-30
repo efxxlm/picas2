@@ -27,6 +27,24 @@ namespace asivamosffie.api.Controllers
             _documentService = documentService;
         }
 
+
+        [Route("DeleteComponenteUso")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteComponenteUso([FromBody] int pComponenteUsoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _projectContractingService.DeleteComponenteUso(pComponenteUsoId, HttpContext.User.FindFirst("User").Value.ToUpper());
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         [Route("DeleteComponenteAportante")]
         [HttpPost]
         public async Task<IActionResult> DeleteComponenteAportante([FromBody] int pComponenteAportanteId)

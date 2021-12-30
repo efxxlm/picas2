@@ -36,7 +36,7 @@ namespace asivamosffie.api.Controllers
             return appSettingsService;
         }
 
-
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetActaByIdPerfil")]
         public async Task<FileResult> GetActaByIdPerfil([FromQuery] int pContratoId, bool pEsContruccion)

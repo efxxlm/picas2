@@ -10,6 +10,7 @@ using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
 using Z.EntityFramework.Plus;
 using asivamosffie.services.Helpers.Constants;
+using System.Net;
 
 namespace asivamosffie.services
 {
@@ -25,6 +26,28 @@ namespace asivamosffie.services
             _commonService = commonService;
             _projectService = projectService;
             _context = context;
+        }
+        public async Task<Respuesta> DeleteComponenteUso(int DeleteComponenteUso, string pUsuarioMod)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                await _context.Set<ComponenteUso>().Where(c => c.ComponenteUsoId == DeleteComponenteUso)
+                                                   .UpdateAsync(c => new ComponenteUso
+                                                   {
+                                                       Eliminado = true,
+                                                       UsuarioModificacion = pUsuarioMod
+                                                   });
+
+                respuesta.IsSuccessful = true;
+                respuesta.Code = HttpStatusCode.OK.ToString();
+            }
+            catch (Exception)
+            {
+                respuesta.Code = HttpStatusCode.InternalServerError.ToString();
+            }
+
+            return new Respuesta();
         }
 
         public async Task<Respuesta> DeleteComponenteAportante(int pComponenteAportanteId, string pUsuarioMod)
@@ -1190,7 +1213,7 @@ namespace asivamosffie.services
 
         }
 
-        public  bool ValidarEstado(Contratacion contratacion)
+        public bool ValidarEstado(Contratacion contratacion)
         {
             if (string.IsNullOrEmpty(contratacion.TipoSolicitudCodigo)
              || string.IsNullOrEmpty(contratacion.NumeroSolicitud)
@@ -1204,10 +1227,10 @@ namespace asivamosffie.services
 
             PlazoContratacion plazoContratacion = _context.PlazoContratacion.Where(r => r.PlazoContratacionId == contratacion.PlazoContratacionId).FirstOrDefault();
 
-            if(plazoContratacion is null)
+            if (plazoContratacion is null)
                 return false;
 
-            if(plazoContratacion.PlazoDias + plazoContratacion.PlazoMeses == 0)
+            if (plazoContratacion.PlazoDias + plazoContratacion.PlazoMeses == 0)
                 return false;
 
             foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)

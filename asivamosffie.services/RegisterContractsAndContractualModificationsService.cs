@@ -61,14 +61,14 @@ namespace asivamosffie.services
 
                             if (contratacion.Contrato.Count() > 0)
                             {
-                                if (!string.IsNullOrEmpty(contratacion.Contrato.FirstOrDefault().NumeroContrato)) 
-                                    sesionComiteSolicitud.EstaTramitado = true; 
-                                else 
-                                    sesionComiteSolicitud.EstaTramitado = false; 
+                                if (!string.IsNullOrEmpty(contratacion.Contrato.FirstOrDefault().NumeroContrato))
+                                    sesionComiteSolicitud.EstaTramitado = true;
+                                else
+                                    sesionComiteSolicitud.EstaTramitado = false;
                             }
-                            else 
+                            else
                                 sesionComiteSolicitud.EstaTramitado = false;
-                            
+
 
                             sesionComiteSolicitud.Contratacion = contratacion;
 
@@ -95,7 +95,7 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoTipoSolicitud.Novedad_Contractual:
-                            
+
                             NovedadContractual novedadContractual =
                                 _context.NovedadContractual
                                 .Include(r => r.Contrato)
@@ -141,7 +141,7 @@ namespace asivamosffie.services
                             sesionComiteSolicitud.EstadoCodigo = novedadContractual.EstadoCodigo;
 
                             break;
-                             
+
                         default:
                             break;
                     }
@@ -297,15 +297,6 @@ namespace asivamosffie.services
 
                 if (!string.IsNullOrEmpty(pContrato.Observaciones))
                     contratoOld.Observaciones = pContrato.Observaciones;
-
-                //Enviar Notificaciones
-                contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
-
-                //Cambio pedido por yuly que se envia cuando se envia a registrados
-                if (pEstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados)
-                    await EnviarNotificaciones(contratoOld, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-
-
                 //Save Files  
                 if (pContrato.PFile != null && pContrato.PFile.Length > 0)
                 {
@@ -314,10 +305,24 @@ namespace asivamosffie.services
                     {
                         contratoOld.RutaDocumento = Path.Combine(pFilePath, pContrato.PFile.FileName);
                         contratoOld.FechaTramite = DateTime.Now;
-
-
                     }
-                } 
+                }
+
+                contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
+                //Enviar Notificaciones
+                _context.Set<Contrato>().Where(c => c.ContratoId == contratoOld.ContratoId)
+                                        .Update(c => new Contrato
+                                        {
+                                            Estado = contratoOld.Estado 
+                                        });
+
+
+                //Cambio pedido por yuly que se envia cuando se envia a registrados
+                if (pEstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados)
+                    await EnviarNotificaciones(contratoOld, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+
+
+             
             }
             //Contrato Nuevo
             else
