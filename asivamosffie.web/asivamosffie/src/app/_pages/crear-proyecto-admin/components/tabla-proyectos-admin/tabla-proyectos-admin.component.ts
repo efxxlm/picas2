@@ -46,7 +46,7 @@ export class TablaProyectosAdminComponent {
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
-      width: '38em',
+      width: '28em',
       data: { modalTitle, modalText }
     });
   }
