@@ -12,7 +12,7 @@
             </div>
             <div class="col d-flex">
                 <mat-form-field class="full-width">
-                    <input matInput #plazoMeses type="number" min="0" max="999" maxlength="3"
+                    <input matInput #plazoMeses type="number" min="0" max="999" maxlength="3" required
                         formControlName="plazoMeses" name="plazoMeses" (keypress)="validateNumberKeypress($event)"
                         onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                         oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -43,7 +43,7 @@
             </div>
             <div class="col d-flex">
                 <mat-form-field class="full-width">
-                    <input matInput #plazoDias type="number" formControlName="plazoDias" min="0"
+                    <input matInput #plazoDias type="number" formControlName="plazoDias" min="0" required
                         max="29"
                         maxlength="2"
                         name="plazoDias" (change)="validatenomore30()" (keypress)="validateNumberKeypress($event)"

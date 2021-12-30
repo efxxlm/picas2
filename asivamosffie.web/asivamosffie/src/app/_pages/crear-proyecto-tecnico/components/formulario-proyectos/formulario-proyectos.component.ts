@@ -50,6 +50,7 @@ export class FormularioProyectosComponent implements OnInit {
     // console.log("destroy"+this.proyecto.llaveMen);
 
     if (
+      (this.proyecto.proyectoId && this.bitPuedoEditar) &&
       this.noGuardado == true &&
       (this.proyecto.fechaSesionJunta != null ||
         this.proyecto.numeroActaJunta != null ||
