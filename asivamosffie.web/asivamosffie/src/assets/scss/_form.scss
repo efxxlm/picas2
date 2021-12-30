@@ -94,6 +94,10 @@ mat-form-field {
   padding-right: 1em;
 }
 
+.mat-select-disabled .mat-select-value {
+  color: $mainColor;
+}
+
 .mat-select-trigger {
   width: calc(100% + 2.5em);
 }

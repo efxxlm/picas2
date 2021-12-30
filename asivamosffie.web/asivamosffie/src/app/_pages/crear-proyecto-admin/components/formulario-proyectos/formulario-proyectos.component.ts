@@ -21,6 +21,7 @@ export class FormularioProyectosComponent implements OnInit {
   listadoAportantes: Dominio[];
   listadoFuentes: Dominio[];
   estaEditando = false;
+  lockFormFields: boolean;
 
   addFont(index: number) {
     console.log("push");
@@ -99,6 +100,7 @@ export class FormularioProyectosComponent implements OnInit {
         }
         console.log(this.proyectoAdmin);
         this.estaEditando = true;
+        this.lockFormFields = true;
       }
       else{
         let idcontador = 0;
@@ -109,6 +111,8 @@ export class FormularioProyectosComponent implements OnInit {
           
           aportanteFuenteFinanciacion: [{ valorFuente: null, fuenteRecursosCodigo: null,fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null,aportanteFuenteFinanciacionId:null }]
         }] };
+
+        this.lockFormFields = false;
       }
       
     },

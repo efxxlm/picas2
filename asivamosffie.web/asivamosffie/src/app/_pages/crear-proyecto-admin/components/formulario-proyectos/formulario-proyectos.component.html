@@ -28,7 +28,7 @@
                     class="select-width"
                     [class.mat-form-field-invalid]="!aportantes.aportanteId && estaEditando"
                   >
-                    <mat-select required [(ngModel)]="aportantes.aportanteId" (selectionChange)="onchangeFont(a)">
+                    <mat-select required [(ngModel)]="aportantes.aportanteId" (selectionChange)="onchangeFont(a)" [disabled]="lockFormFields">
                       <mat-option *ngFor="let listado of listadoAportantes" [value]="listado.dominioId">
                         {{ listado.nombre }}
                       </mat-option>
@@ -73,7 +73,7 @@
                         class="select-width"
                         [class.mat-form-field-invalid]="!fuente.fuenteFinanciacionId && estaEditando"
                       >
-                        <mat-select required [(ngModel)]="fuente.fuenteFinanciacionId">
+                        <mat-select required [(ngModel)]="fuente.fuenteFinanciacionId" [disabled]="lockFormFields">
                           <mat-option *ngFor="let listado of listadoFuentes" [value]="listado.fuenteFinanciacionId">
                             Número de acuerdo: <b>{{ listado.aportante?.cofinanciacionId }}</b> Tipo:
                             <b>{{ listado.fuenteRecursosString }}</b>
@@ -119,6 +119,7 @@
                           (keypress)="blockNumber($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
                           oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                          [disabled]="lockFormFields"
                         />
                       </mat-form-field>
                       <span
