@@ -263,8 +263,8 @@ namespace asivamosffie.services
                       .ThenInclude(r => r.InfraestructuraIntervenirProyecto)
                 .Include(r => r.ContratacionProyecto)
                     .ThenInclude(r => r.ContratacionProyectoAportante)
-                      .ThenInclude(r => r.ComponenteAportante)
-                           .ThenInclude(r => r.ComponenteUso)
+                      .ThenInclude(r => r.ComponenteAportante.Where(r => r.Eliminado != true))
+                           .ThenInclude(r => r.ComponenteUso.Where(r=> r.Eliminado != true))
                  .Include(p => p.PlazoContratacion)
                            .FirstOrDefaultAsync();
 
@@ -634,17 +634,21 @@ namespace asivamosffie.services
                     cumpleCondicionTai = ValidarCumpleTaiContratistaxProyectoId(proyecto.ProyectoId);
 
 
-                    if (proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.Disponible)
+                    if (proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.Disponible )
                         proyectoGrilla.TieneObra = true;
 
                     if (proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.Disponible)
                         proyectoGrilla.TieneInterventoria = true;
 
+
                     if (cumpleCondicionTai)
                     {
+                        proyectoGrilla.NumeroSolicitud = "No asignado";
+                        proyectoGrilla.ContratacionId = null;
                         if (proyecto?.ContratacionProyecto?.FirstOrDefault()?.Contratacion?.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
-                        {
+                        { 
                             proyectoGrilla.TieneInterventoria = false;
+
                         }
                         else
                         {
