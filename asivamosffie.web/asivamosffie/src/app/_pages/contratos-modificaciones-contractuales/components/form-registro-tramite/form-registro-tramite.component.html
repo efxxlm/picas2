@@ -367,39 +367,39 @@
             required
           >
           </quill-editor>
-          <span
-            class="contador miles"
-            *ngIf="dataFormulario.get('observaciones').value !== null"
-            style="margin-top: 1.8em"
-          >
-            {{
-              2000 -
-                (textoLimpio(dataFormulario.get('observaciones').value) > 2000
-                  ? 2000
-                  : textoLimpio(dataFormulario.get('observaciones').value))
-            }}
-          </span>
-          <span
-            class="contador miles"
-            *ngIf="dataFormulario.get('observaciones').value === null"
-            style="margin-top: 1.8em"
-          >
-            2000
-          </span>
-          <span class="icon-incompleto" style="margin-top: 1.9em">
-            <img
-              class="icon-incompleto--img"
-              src="assets/img/icon/incompleto.svg"
-              alt="este campo es requerido"
-              [matTooltipPosition]="'above'"
-              matTooltip="Debe ingresar la información en el campo para continuar"
-              matTooltipClass="info-tooltip"
-              *ngIf="
-                (dataFormulario.get('observaciones').invalid && dataFormulario.get('observaciones').touched) ||
-                (dataFormulario.get('observaciones').invalid && estaEditando)
-              "
-            />
-          </span>
+          <div class="d-flex align-items-center mt-3em">
+            <span
+              class="contador miles"
+              *ngIf="dataFormulario.get('observaciones').value !== null"
+            >
+              {{
+                2000 -
+                  (textoLimpio(dataFormulario.get('observaciones').value) > 2000
+                    ? 2000
+                    : textoLimpio(dataFormulario.get('observaciones').value))
+              }}
+            </span>
+            <span
+              class="contador miles"
+              *ngIf="dataFormulario.get('observaciones').value === null"
+            >
+              2000
+            </span>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                [matTooltipPosition]="'above'"
+                matTooltip="Debe ingresar la información en el campo para continuar"
+                matTooltipClass="info-tooltip"
+                *ngIf="
+                  (dataFormulario.get('observaciones').invalid && dataFormulario.get('observaciones').touched) ||
+                  (dataFormulario.get('observaciones').invalid && estaEditando)
+                "
+              />
+            </span>
+          </div>
         </div>
       </div>
     </div>

@@ -80,3 +80,7 @@
   margin-right: 7em;
   color: #757575;
 }
+
+.quill-editor-style[required]::after {
+  right: 1px;
+}
