@@ -189,7 +189,7 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
       const fechaFirmaContrato = new Date( this.dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value );
       const fechaFirmaContratos = fechaFirmaContrato.toISOString();
       pContrato.append( 'fechaFirmaContrato', `${ fechaFirmaContratos }` );
-      this.estadoCodigo = this.estadoCodigos.firmado;
+      this.estadoCodigo = this.estadoCodigos.enRevision;
     } else {
       pContrato.append( 'fechaFirmaContrato', null );
     }
@@ -202,6 +202,7 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
       pContrato.append( 'rutaDocumento', this.dataFormulario.get( 'rutaDocumento' ).value );
     }
 
+    if (this.dataFormulario.valid) this.estadoCodigo = this.estadoCodigos.firmado;
     this.contratosContractualesSvc.postRegistroTramiteContrato( pContrato, this.estadoCodigo )
       .subscribe(
         ( resp: any ) => {
