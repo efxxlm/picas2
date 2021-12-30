@@ -593,7 +593,7 @@ namespace asivamosffie.services
 
         public async Task<List<VActualizacionPolizaYgarantias>> GetListVActualizacionPolizaYGarantias()
         {
-            return await _context.VActualizacionPolizaYgarantias.ToListAsync();
+            return await _context.VActualizacionPolizaYgarantias.OrderByDescending(v=> v.ContratoPolizaActualizacionId).ToListAsync();
         }
 
         private void GetRemoveDeleteItems(ContratoPoliza contratoPoliza)
