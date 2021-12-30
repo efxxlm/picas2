@@ -52,9 +52,9 @@ export class FormContratacionComponent implements OnInit {
       fechaEnvioParaFirmaFiduciaria : [ null, Validators.required ],
       fechaFirmaPorParteFiduciaria  : [ null, Validators.required ],
       observaciones                 : [ null, Validators.required ],
-      documento                     : [ null, Validators.required ],
+      documento                     : [ null ],
       rutaDocumento                 : [ null, Validators.required ],
-      documentoFile                 : [ null, Validators.required ]
+      documentoFile                 : [ null ]
     });
   };
 
