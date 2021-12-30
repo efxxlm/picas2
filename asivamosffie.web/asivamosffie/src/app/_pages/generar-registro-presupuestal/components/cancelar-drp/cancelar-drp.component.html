@@ -25,6 +25,7 @@
         [modules]="config"
         (onContentChanged)="maxLength($event, 2000)"
         formControlName="objeto"
+        required
       ></quill-editor>
     </div>
     <span class="contador miles" *ngIf="addressForm.get('objeto').value">
