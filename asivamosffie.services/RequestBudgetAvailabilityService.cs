@@ -2179,6 +2179,12 @@ namespace asivamosffie.services
                 return new List<Proyecto>();
         }
 
+        //LCT- traer todas las llave men
+        public async Task<List<Proyecto>> GetListLlaveMen()
+        {
+            return await _context.Proyecto.Where(r => r.Eliminado != true).ToListAsync();
+        }
+
         //plantlla - rubro por financiar es infraestructura y el tipo de solicitud es contratación
         public async Task<HTMLContent> GetHTMLString(DetailValidarDisponibilidadPresupuesal obj)
         {

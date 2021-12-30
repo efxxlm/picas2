@@ -10,7 +10,7 @@ import { DisponibilidadPresupuestalService } from '../disponibilidadPresupuestal
   providedIn: 'root'
 })
 export class BudgetAvailabilityService {
-  
+
 
   constructor(
     private http: HttpClient
@@ -22,7 +22,7 @@ export class BudgetAvailabilityService {
   //   return this.http.get<any>(`${environment.apiUrl}/BudgetAvailability/GetGridBudgetAvailability`);
   // }
 
-  getDisponibilidadPresupuestalById( id: number ){    
+  getDisponibilidadPresupuestalById( id: number ){
     return this.http.get<DisponibilidadPresupuestal>(`${environment.apiUrl}/BudgetAvailability/${ id }`);
   }
 
@@ -41,17 +41,17 @@ export class BudgetAvailabilityService {
   sendRequest( DisponibilidadId: number, RegistroPId: number, esNovedad: boolean ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/sendRequest?disponibilidadPresupuestalId=${ DisponibilidadId }&RegistroPId=${RegistroPId}&esNovedad=${esNovedad}`, null);
   }
-  
+
   deleteRequest( id: number ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/EliminarDisponibilidad?disponibilidadPresupuestalId=${ id }`, null);
   }
 
   searchLlaveMEN( texto: string ){
-    return this.http.get<Proyecto[]>(`${environment.apiUrl}/RequestBudgetAvailability/searchLlaveMEN?LlaveMEN=${ texto }`);    
+    return this.http.get<Proyecto[]>(`${environment.apiUrl}/RequestBudgetAvailability/searchLlaveMEN?LlaveMEN=${ texto }`);
   }
 
   getAportantesByProyectoId( id: number ){
-    return this.http.get<ListAportantes[]>(`${environment.apiUrl}/RequestBudgetAvailability/getAportantesByProyectoId?proyectoId=${ id }`);    
+    return this.http.get<ListAportantes[]>(`${environment.apiUrl}/RequestBudgetAvailability/getAportantesByProyectoId?proyectoId=${ id }`);
   }
 
   createOrEditDDPRequest( disponibilidadPresupuestal: DisponibilidadPresupuestal ){
@@ -59,11 +59,11 @@ export class BudgetAvailabilityService {
   }
 
   getDDPEspecial(){
-    return this.http.get<ListAportantes[]>(`${environment.apiUrl}/RequestBudgetAvailability/getDDPEspecial`);    
+    return this.http.get<ListAportantes[]>(`${environment.apiUrl}/RequestBudgetAvailability/getDDPEspecial`);
   }
 
   getDetailInfoAdditionalById( id: number ){
-    return this.http.get<DisponibilidadPresupuestal>(`${environment.apiUrl}/RequestBudgetAvailability/getDetailInfoAdditionalById?disponibilidadPresupuestalId=${ id }`);    
+    return this.http.get<DisponibilidadPresupuestal>(`${environment.apiUrl}/RequestBudgetAvailability/getDetailInfoAdditionalById?disponibilidadPresupuestalId=${ id }`);
   }
 
   getListCocecutivoProyecto(){
@@ -71,7 +71,7 @@ export class BudgetAvailabilityService {
   }
 
   getAportantesByProyectoAdminId( id: number ){
-    return this.http.get<ListAdminProyect[]>(`${environment.apiUrl}/RequestBudgetAvailability/GetAportantesByProyectoAdministrativoId?proyectoId=${ id }`);    
+    return this.http.get<ListAdminProyect[]>(`${environment.apiUrl}/RequestBudgetAvailability/GetAportantesByProyectoAdministrativoId?proyectoId=${ id }`);
   }
 
   createOrEditProyectoAdministrtivo( disponibilidad: DisponibilidadPresupuestal ){
@@ -79,11 +79,11 @@ export class BudgetAvailabilityService {
   }
 
   getDDPAdministrativa(){
-    return this.http.get<DisponibilidadPresupuestal[]>(`${environment.apiUrl}/RequestBudgetAvailability/getDDPAdministrativa`);    
+    return this.http.get<DisponibilidadPresupuestal[]>(`${environment.apiUrl}/RequestBudgetAvailability/getDDPAdministrativa`);
   }
 
   eliminarDisponibilidad( id: number ){
-    return this.http.delete<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/eliminarDisponibilidad?disponibilidadPresupuestalId=${ id }`);    
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/eliminarDisponibilidad?disponibilidadPresupuestalId=${ id }`);
   }
 
   getNumeroContrato ( numeroContrato: string ) {
@@ -108,11 +108,15 @@ export class BudgetAvailabilityService {
 
   getNovedadContractual(contratacionId: number) {
     return this.http.get<any>( `${ environment.apiUrl }/RequestBudgetAvailability/getNovedadContractualByContratacionId?contratacionId=${contratacionId}`);
-  }  
-  
+  }
+
   createOrEditInfoAdditionalNoveltly( registroPresupuesta, pContratacionId ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/RequestBudgetAvailability/CreateOrEditInfoAdditionalNoveltly?pContratacionId=${pContratacionId}`, registroPresupuesta);
   }
+
+  getListLlaveMen ( ) {
+    return this.http.get<any>( `${ environment.apiUrl }/RequestBudgetAvailability/GetListLlaveMen` );
+  };
 
 };
 interface TipoDDP{

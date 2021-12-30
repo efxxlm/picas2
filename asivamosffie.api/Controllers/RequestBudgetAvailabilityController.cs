@@ -384,5 +384,11 @@ namespace asivamosffie.api.Controllers
             return await _managementCommitteeReportService.getNovedadContractualByContratacionId(contratacionId);
         }
 
+        [Route("GetListLlaveMen")]
+        [HttpGet]
+        public async Task<dynamic> GetListLlaveMen()
+        {
+            return await _managementCommitteeReportService.GetListLlaveMen();
+        }
     }
 }

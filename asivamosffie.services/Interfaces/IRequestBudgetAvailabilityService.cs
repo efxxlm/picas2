@@ -41,6 +41,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateOrEditInfoAdditionalNoveltly(NovedadContractualRegistroPresupuestal pRegistro, int pContratacionId, string user);
         string getNombreAportante(CofinanciacionAportante confinanciacion);
         Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyectHistorical(int disponibilidadPresupuestalId, bool esNovedad, int RegistroNovedadId, bool esGenerar);
+        Task<List<Proyecto>> GetListLlaveMen();
 
     }
 

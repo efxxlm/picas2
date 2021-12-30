@@ -41,8 +41,11 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
   tipoAportantes: any[] = [];
   nombreAportantes: any[] = [];
   myFilter = new FormControl();
+  myFilterLlaveMen = new FormControl();
   listaContrato: any[] = [];
+  listLlaveMen: any[] = [];
   filteredContrato: Observable<string[]>;
+  filteredOptions: Observable<string[]>;
 
   addressForm = this.fb.group({
     disponibilidadPresupuestalId: [  ],
@@ -102,10 +105,18 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
         this.budgetAvailabilityService.getContratosList().subscribe(
           result=>{this.listaContrato=result;}
         );
+        this.budgetAvailabilityService.getListLlaveMen().subscribe(r=>{
+            this.listLlaveMen=r;
+          }
+        );
 
         this.filteredContrato = this.myFilter.valueChanges.pipe(
           startWith(''),
           map(value => this._filter(value))
+        );
+        this.filteredOptions = this.myFilterLlaveMen.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filterLlaveMen(value))
         );
         if ( this.activatedRoute.snapshot.params.id !== '0' ) {
           this.getRegistro( this.activatedRoute.snapshot.params.id );
@@ -212,6 +223,8 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
 
             this.addressForm.get( 'disponibilidadPresupuestalProyectoId' ).setValue(disponibilidad.disponibilidadPresupuestalProyecto[0].disponibilidadPresupuestalProyectoId);
             this.addressForm.get( 'llaveMEN' ).setValue(disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto.llaveMen);
+            this.myFilterLlaveMen.setValue( disponibilidad.disponibilidadPresupuestalProyecto[0].proyecto.llaveMen );
+
             //
 
             let nombreAportante= this.nombreAportantes.filter(x=>x.aportanteId==disponibilidad.aportanteId);
@@ -248,6 +261,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                 this.estaEditando = true;
                 this.addressForm.markAllAsTouched();
                 this.myFilter.markAllAsTouched();
+                this.myFilterLlaveMen.markAllAsTouched();
               },
               //err => this.openDialog( '', '<b>Este número de contrato no existe por favor verifique los datos registrados.</b>' )
             );
@@ -340,7 +354,9 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     return alphanumeric.test(inputChar) ? true : false;
   };
 
+
   changeDepartamento() {
+    this.addressForm.get('llaveMEN').setValue(null);
     let departamento = this.addressForm.get('departemento').value;
     if (departamento) {
       this.commonService.listaMunicipiosByIdDepartamento(departamento.localizacionId)
@@ -382,6 +398,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
       this.estaEditando = true;
       this.addressForm.markAllAsTouched();
       this.myFilter.markAllAsTouched();
+      this.myFilterLlaveMen.markAllAsTouched();
       let tipoDDP: Dominio = this.addressForm.get('tipo').value;
 
 
@@ -471,6 +488,17 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     }
 
   }
+
+  private _filterLlaveMen(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    this.addressForm.get('llaveMEN').setValue(value);
+    return this.listLlaveMen.filter(option => option.llaveMen.toLowerCase().indexOf(filterValue) === 0 && option.localizacionIdMunicipio == this.addressForm.get('municipio')?.value?.localizacionId);
+  }
+
+  public seleccionAutocompleteLlaveMen(option) {
+    this.addressForm.get('llaveMEN').setValue(option);
+  }
+
   seleccionAutocomplete(nombre: string) {
     let lista: any[] = [];
     this.listaContrato.forEach(element => {
