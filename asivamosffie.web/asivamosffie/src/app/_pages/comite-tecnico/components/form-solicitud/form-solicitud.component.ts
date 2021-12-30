@@ -403,6 +403,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
         grupoCompromiso.get('sesionComiteSolicitudId').setValue(this.sesionComiteSolicitud.sesionComiteSolicitudId);
 
         this.compromisos.push(grupoCompromiso);
+        this.estaEditando = true;
         this.addressForm.markAllAsTouched();
       });
     });
@@ -419,8 +420,6 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       this.justificacion = this.sesionComiteSolicitud.procesoSeleccion.justificacion;
     }
 
-    this.estaEditando = true;
-    this.addressForm.markAllAsTouched();
   }
 
   Observaciones(elemento: SesionComiteSolicitud) {
