@@ -58,11 +58,11 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetVSaldosFuenteXaportanteId")]
         [HttpGet]
-        public async Task<List<VSaldosFuenteXaportanteId>> GetVSaldosFuenteXaportanteId([FromQuery] int pAportanteId)
+        public async Task<List<VSaldosFuenteXaportanteId>> GetVSaldosFuenteXaportanteId([FromQuery] int pAportanteId, int pFuenteFinanciacionId)
         {
             try
             {
-                return await _sourceFunding.GetVSaldosFuenteXaportanteId(pAportanteId);
+                return await _sourceFunding.GetVSaldosFuenteXaportanteId(pAportanteId, pFuenteFinanciacionId);
 
             }
             catch (Exception ex)

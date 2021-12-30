@@ -85,7 +85,7 @@ export class TablaFuentesComponent implements OnInit {
       });
 
       console.log(this.listaFF);
-      
+
       this.listaFF.forEach(element => {
         this.datosTabla.push({
           fechaCreacion: (element.fechaCreacion = element.fechaCreacion.split('T')[0].split('-').reverse().join('/')),
@@ -124,8 +124,8 @@ export class TablaFuentesComponent implements OnInit {
     this.router.navigate(['/gestionarFuentes/controlRecursos', e, 0]);
   }
 
-  verSaldosyRendimientos(e: number) {
-    this.router.navigate(['/gestionarFuentes/verSaldosyRendimientos', e]);
+  verSaldosyRendimientos(e: number, idFuente: number) {
+    this.router.navigate(['/gestionarFuentes/verSaldosyRendimientos', e, idFuente]);
   }
 
   openDialogSiNo(modalTitle: string, modalText: string, e: number) {

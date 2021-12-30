@@ -232,7 +232,7 @@ namespace asivamosffie.services
                                     }
                                     else
                                     {
-                                        var saldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == ppapor.Aportante.CofinanciacionAportanteId).FirstOrDefault();
+                                        var saldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == ppapor.Aportante.CofinanciacionAportanteId && r.FuenteFinanciacionId == ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteFinanciacionId).FirstOrDefault();
                                         decimal valor = saldoActual != null ? (decimal)saldoActual.SaldoActual : 0;
                                         fuentes.Add(new GrillaFuentesFinanciacion
                                         {
@@ -535,7 +535,8 @@ namespace asivamosffie.services
                     if (contratacionDP != null)
                     {
                         plazoContratacion = _context.PlazoContratacion.Find(contratacionDP.PlazoContratacionId);
-                        tieneSolicitudPago = _context.SolicitudPago.Where(r => r.ContratoId == contratacionDP.Contrato.FirstOrDefault().ContratoId && r.Eliminado != true).Count() > 0 ? true : false;
+                        if(contratacionDP.Contrato.Count() > 0)
+                            tieneSolicitudPago = _context.SolicitudPago.Where(r => r.ContratoId == contratacionDP.Contrato.FirstOrDefault().ContratoId && r.Eliminado != true).Count() > 0 ? true : false;
                     }
                     int existeNovedad = _context.NovedadContractualRegistroPresupuestal.Where(r => r.Eliminado != true && r.DisponibilidadPresupuestalId == ListDP.DisponibilidadPresupuestalId).Count();
                     if (ListDP.EstadoSolicitudCodigo == "5" || ListDP.EstadoSolicitudCodigo == "8")
@@ -2765,7 +2766,7 @@ namespace asivamosffie.services
                         {
                             FuenteFinanciacion fuente = _context.FuenteFinanciacion.Find(font.FuenteFinanciacionId);
                             font.ComponenteUsoNovedad = font.ComponenteUsoNovedad.Where(x => x.Eliminado != true && x.ComponenteFuenteNovedadId == font.ComponenteFuenteNovedadId).ToList();
-                            var fuenteSaldo = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == componente.CofinanciacionAportanteId).FirstOrDefault();
+                            var fuenteSaldo = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == componente.CofinanciacionAportanteId && r.FuenteFinanciacionId == font.FuenteFinanciacionId).FirstOrDefault();
                             //el saldo de la fuente realmente es lo que tengo en control de recursos
                             //var saldo = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x=>x.ValorConsignacion);
                             decimal saldo = Convert.ToDecimal(_context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x => x.ValorFuente));
@@ -2831,7 +2832,7 @@ namespace asivamosffie.services
                             }
                             else
                             {
-                                var saldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == componente.CofinanciacionAportanteId).FirstOrDefault();
+                                var saldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == componente.CofinanciacionAportanteId && r.FuenteFinanciacionId == font.FuenteFinanciacionId).FirstOrDefault();
                                 decimal valor = saldoActual != null ? (decimal)saldoActual.SaldoActual : 0;
                                 fuentes.Add(new GrillaFuentesFinanciacion
                                 {

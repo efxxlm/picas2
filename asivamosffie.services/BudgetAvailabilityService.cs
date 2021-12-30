@@ -1110,7 +1110,7 @@ namespace asivamosffie.services
                         //gestion.SaldoActualGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Saldo_actual_de_la_fuente;
                         //gestion.NuevoSaldoGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Nuevo_saldo_de_la_fuente_al_guardar;
                         //gestion.SaldoActualGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Saldo_actual_de_la_fuente_al_guardar;
-                        var vSaldosFuenteXaportanteId = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId).FirstOrDefault();
+                        var vSaldosFuenteXaportanteId = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId && r.FuenteFinanciacionId == gestion.FuenteFinanciacionId).FirstOrDefault();
                         decimal saldoActual = vSaldosFuenteXaportanteId.SaldoActual ?? 0;
                         decimal valorSolicitado = gestion.ValorSolicitado;
                         gestion.SaldoActualGenerado = saldoActual;
@@ -1169,7 +1169,7 @@ namespace asivamosffie.services
                         gestion.FechaModificacion = DateTime.Now;
                         gestion.UsuarioModificacion = pUsuarioModificacion.ToUpper();
 
-                        var vSaldosFuenteXaportanteId = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId)
+                        var vSaldosFuenteXaportanteId = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId && r.FuenteFinanciacionId == gestion.FuenteFinanciacionId)
                                                                                           .FirstOrDefault();
 
                         decimal saldoActual = vSaldosFuenteXaportanteId.SaldoActual ?? 0;
@@ -2201,7 +2201,7 @@ namespace asivamosffie.services
                         gffh = _context.GestionFuenteFinanciacionHistorico.Where(r => r.GestionFuenteFinanciacionId == gestion.GestionFuenteFinanciacionId).FirstOrDefault();
                     }
 
-                    var fuente = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.Aportante.CofinanciacionAportanteId).FirstOrDefault();
+                    var fuente = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.Aportante.CofinanciacionAportanteId && r.FuenteFinanciacionId == gestion.FuenteFinanciacionId).FirstOrDefault();
                     var consignadoemnfuente = _context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorFuente);
                     var saldofuente = _context.GestionFuenteFinanciacion.Where(
                         x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId &&
@@ -2782,7 +2782,7 @@ namespace asivamosffie.services
                     }
 
                     var fuente = _context.FuenteFinanciacion.Find(pDisponibilidadPresObservacion.FuenteFinanciacionId);
-                    VSaldosFuenteXaportanteIdValidar fuenteNew = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == pDisponibilidadPresObservacion.CofinanciacionAportanteId).FirstOrDefault();
+                    VSaldosFuenteXaportanteIdValidar fuenteNew = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == pDisponibilidadPresObservacion.CofinanciacionAportanteId && r.FuenteFinanciacionId == gsertion.FuenteFinanciacionId).FirstOrDefault();
 
                     pDisponibilidadPresObservacion.SaldoActual = (fuenteNew != null ? fuenteNew.SaldoActual ?? 0 : (decimal)fuente.ValorFuente) + pDisponibilidadPresObservacion.ValorSolicitado;
                     pDisponibilidadPresObservacion.NuevoSaldo = pDisponibilidadPresObservacion.SaldoActual - pDisponibilidadPresObservacion.ValorSolicitado;
@@ -2801,7 +2801,7 @@ namespace asivamosffie.services
                 {
                     var valoresSolicitados = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == pDisponibilidadPresObservacion.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);
                     var fuente = _context.FuenteFinanciacion.Find(pDisponibilidadPresObservacion.FuenteFinanciacionId);
-                    VSaldosFuenteXaportanteIdValidar fuenteNew = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == pDisponibilidadPresObservacion.CofinanciacionAportanteId).FirstOrDefault();
+                    VSaldosFuenteXaportanteIdValidar fuenteNew = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == pDisponibilidadPresObservacion.CofinanciacionAportanteId && r.FuenteFinanciacionId == pDisponibilidadPresObservacion.FuenteFinanciacionId).FirstOrDefault();
 
                     pDisponibilidadPresObservacion.SaldoActual = (fuenteNew != null ? fuenteNew.SaldoActual ?? 0 : (decimal)fuente.ValorFuente);
 

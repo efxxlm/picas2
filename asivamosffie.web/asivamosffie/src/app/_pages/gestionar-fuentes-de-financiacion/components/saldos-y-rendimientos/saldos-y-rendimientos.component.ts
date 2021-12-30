@@ -12,8 +12,9 @@ import { FuenteFinanciacionService } from 'src/app/core/_services/fuenteFinancia
   styleUrls: ['./saldos-y-rendimientos.component.scss']
 })
 export class SaldosYRendimientosComponent implements OnInit, AfterViewInit {
-  
+
   aportanteId: number = 0;
+  idFuente: number = 0;
   displayedColumns: string[] = ['saldoActual', 'comprometidoEnDdp', 'rendimientosIncorporados'];
   ELEMENT_DATA: any[] = [];
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
@@ -27,13 +28,13 @@ export class SaldosYRendimientosComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
       this.aportanteId = param['aportanteId'];
-
+      this.idFuente = param['idFuente'];
       this.getVSaldosFuenteXaportanteId();
     });
   }
 
   getVSaldosFuenteXaportanteId() {
-    forkJoin([this.fuenteFinanciacionService.getVSaldosFuenteXaportanteId(this.aportanteId)]).subscribe(res => {
+    forkJoin([this.fuenteFinanciacionService.getVSaldosFuenteXaportanteId(this.aportanteId, this.idFuente)]).subscribe(res => {
       if (res[0].length > 0) {
         res.forEach(element => {
           this.datosTabla.push({

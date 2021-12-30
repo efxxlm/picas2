@@ -24,9 +24,9 @@ namespace asivamosffie.services
             _commonService = commonService;
         }
 
-        public async Task<List<VSaldosFuenteXaportanteId>> GetVSaldosFuenteXaportanteId(int pAportanteId)
+        public async Task<List<VSaldosFuenteXaportanteId>> GetVSaldosFuenteXaportanteId(int pAportanteId, int pFuenteFinanciacionId)
         {
-            return await _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == pAportanteId).ToListAsync();
+            return await _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == pAportanteId && r.FuenteFinanciacionId == pFuenteFinanciacionId).ToListAsync();
         }
 
         public async Task<List<FuenteFinanciacion>> GetISourceFunding()
@@ -59,7 +59,7 @@ namespace asivamosffie.services
                 {
                     if (retorno.Aportante.CofinanciacionAportanteId > 0)
                     {
-                        vSaldosFuenteXaportanteId = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == retorno.Aportante.CofinanciacionAportanteId).FirstOrDefault();
+                        vSaldosFuenteXaportanteId = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == retorno.Aportante.CofinanciacionAportanteId && r.FuenteFinanciacionId == retorno.FuenteFinanciacionId).FirstOrDefault();
                         asociadoASolicitudes += _context.ProyectoAportante.Where(r => r.Eliminado != true && r.AportanteId == retorno.Aportante.CofinanciacionAportanteId).Count();
                         asociadoASolicitudes += _context.ContratacionProyectoAportante.Where(r => r.Eliminado != true && r.CofinanciacionAportanteId == retorno.Aportante.CofinanciacionAportanteId).Count();
                         asociadoASolicitudes += _context.NovedadContractualAportante.Where(r => r.Eliminado != true && r.CofinanciacionAportanteId == retorno.Aportante.CofinanciacionAportanteId).Count();
@@ -778,7 +778,7 @@ namespace asivamosffie.services
                     .FirstOrDefault();
 
                 decimal valorDisponible = 0;
-                VSaldosFuenteXaportanteIdValidar saldo = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
+                VSaldosFuenteXaportanteIdValidar saldo = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == aportanteID && r.FuenteFinanciacionId == financiacion.FuenteFinanciacionId).FirstOrDefault();
 
                 valorDisponible = saldo != null ? (decimal)saldo.SaldoActual : 0;
 
@@ -880,7 +880,7 @@ namespace asivamosffie.services
 
                 decimal valorDisponible = 0;
 
-                VSaldosFuenteXaportanteId saldo = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
+                VSaldosFuenteXaportanteId saldo = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == aportanteID && r.FuenteFinanciacionId == financiacion.FuenteFinanciacionId).FirstOrDefault();
 
                 valorDisponible = saldo != null ? (decimal)saldo.SaldoActual : 0;
 
@@ -953,7 +953,7 @@ namespace asivamosffie.services
             foreach (var financiacion in financiaciones)
             {
                 decimal valorDisponible = 0;
-                VSaldosFuenteXaportanteIdValidar saldo = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == aportanteID).FirstOrDefault();
+                VSaldosFuenteXaportanteIdValidar saldo = _context.VSaldosFuenteXaportanteIdValidar.Where(r => r.CofinanciacionAportanteId == aportanteID && r.FuenteFinanciacionId == financiacion.FuenteFinanciacionId).FirstOrDefault();
                 valorDisponible = saldo != null ? (decimal)saldo.SaldoActual : 0;
 
                 decimal valorsolicitado = _context.GestionFuenteFinanciacion

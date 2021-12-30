@@ -9,7 +9,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ISourceFundingService
     {
-        Task<List<VSaldosFuenteXaportanteId>> GetVSaldosFuenteXaportanteId(int pAportanteId);
+        Task<List<VSaldosFuenteXaportanteId>> GetVSaldosFuenteXaportanteId(int pAportanteId, int pFuenteFinanciacionId);
 
         Task<List<FuenteFinanciacion>> GetISourceFunding();
         Task<FuenteFinanciacion> GetISourceFundingById(int id);
