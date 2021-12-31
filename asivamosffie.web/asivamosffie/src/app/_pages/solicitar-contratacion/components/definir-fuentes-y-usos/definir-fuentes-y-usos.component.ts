@@ -386,6 +386,16 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   }
 
   deleteUso(borrarForm: any, i: number) {
+    // console.log('borrarForm =>', borrarForm, i);
+    // console.log('componenteUsoId =>', borrarForm.value[i].componenteUsoId);
+    const componenteUsoId = borrarForm.value[i].componenteUsoId;
+    this.projectContractingService.deleteComponenteUso(componenteUsoId)
+      .subscribe(
+        respuesta => {
+          console.log(respuesta);
+        },
+        err => this.openDialog('', `<b>${err.message}</b>`)
+      );
     borrarForm.removeAt(i);
   }
 

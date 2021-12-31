@@ -53,7 +53,10 @@ export class ProjectContractingService {
 
   createEditContratacionProyectoAportanteByContratacionproyecto( contratacionProyecto: ContratacionProyecto  ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ProjectContracting/createEditContratacionProyectoAportanteByContratacionproyecto`, contratacionProyecto );
+  }
 
+  deleteComponenteUso(pComponenteUsoId: any) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ProjectContracting/deleteComponenteUso`, pComponenteUsoId );
   }
 
   eliminarContratacion( id: number )
