@@ -122,6 +122,8 @@ export class ControlDeRecursosComponent implements OnInit {
 
         }
         let valorNombre = this.listaNombres.find(nom => nom.dominioId == this.fuente.aportante.nombreAportanteId);
+        console.log(this.fuente);
+        
         let valorFuente = this.listaFuentes.find(fue => fue.codigo == this.fuente.fuenteRecursosCodigo);
         let valorMunicipio: string = ''; 
         this.nombreFuente = valorFuente.nombre;
@@ -356,7 +358,7 @@ export class ControlDeRecursosComponent implements OnInit {
       this.addressForm.get("valorConsignacion").setValue(null, { emitEvent: false });
     }
 
-    if ((Number(this.addressForm.get("valorConsignacion").value) + SumaValorConsignacionXrp) > this.valorFuente) {
+    if ((Number(this.addressForm.get("valorConsignacion").value)) > this.valorFuente) {
       this.openDialogError('', `El <b> valor de la consignación no puede superar el valor del aporte a la fuente de recursos, </b> verifique por favor. `);
       this.addressForm.get("valorConsignacion").setValue(null, { emitEvent: false });
     }
