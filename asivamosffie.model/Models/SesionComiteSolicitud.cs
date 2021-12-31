@@ -20,7 +20,7 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
-        public int ComiteTecnicoId { get; set; }
+        public int? ComiteTecnicoId { get; set; }
         public string EstadoCodigo { get; set; }
         public string Observaciones { get; set; }
         public string RutaSoporteVotacion { get; set; }

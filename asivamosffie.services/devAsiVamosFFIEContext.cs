@@ -7062,7 +7062,6 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.ComiteTecnico)
                     .WithMany(p => p.SesionComiteSolicitudComiteTecnico)
                     .HasForeignKey(d => d.ComiteTecnicoId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SesionComiteSolicitud_ComiteTecnico");
             });
 

@@ -189,7 +189,7 @@
 
       <div *ngIf="solicitudes.sesionSolicitudCompromiso.length > 0 && esComiteFiduciario === false" class="margin-compromisos">
         <div *ngFor="let sesionCompromiso of solicitudes.sesionSolicitudCompromiso;let j = index" style="margin-top: 2em;">
-          <section>
+          <section *ngIf="sesionCompromiso.esFiduciario != true">
             <h3><b>Compromiso {{ j+1 }} </b></h3>
             <p><b>Tarea</b>: <span class="color-blue">{{ sesionCompromiso.tarea }}</span> </p>
             <p><b>Responsable</b>:

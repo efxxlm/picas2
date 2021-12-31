@@ -25,9 +25,9 @@ export class FormSolicitudComponent implements OnInit {
     compromisos       : this.fb.array([])
   });
   estadosArray = [
-    { 
-      name: 'Devuelto por comité', 
-      value: 'devueltoComite' 
+    {
+      name: 'Devuelto por comité',
+      value: 'devueltoComite'
     }
   ];
   tipoSolicitud: any[] = [];
@@ -50,7 +50,7 @@ export class FormSolicitudComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private commonSvc: CommonService ) 
+    private commonSvc: CommonService )
   {
     this.commonSvc.listaTipoSolicitud()
       .subscribe( listaTipoSolicitud => this.listaTipoSolicitud = listaTipoSolicitud );
@@ -60,6 +60,8 @@ export class FormSolicitudComponent implements OnInit {
 
   ngOnInit(): void {
     this.resultadosVotaciones( this.solicitudes );
+    if(!this.esComiteFiduciario)
+      this.solicitudes.sesionSolicitudCompromiso = this.solicitudes?.sesionSolicitudCompromiso?.filter(r => r.esFiduciario != true);
   };
 
   getSolicitudCodigo( tipoSolicitudCodigo: string ) {

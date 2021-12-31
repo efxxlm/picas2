@@ -860,6 +860,7 @@ namespace asivamosffie.services
                         SesionComiteTema.FechaCreacion = DateTime.Now;
                         SesionComiteTema.UsuarioCreacion = ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion;
                         SesionComiteTema.Eliminado = false;
+                        SesionComiteTema.RegistroCompleto = ValidarRegistroCompletoSesionComiteTema(SesionComiteTema);
                         _context.SesionComiteTema.Add(SesionComiteTema);
                     }
                     else
@@ -877,6 +878,7 @@ namespace asivamosffie.services
                         sesionComiteTemaOld.EsAprobado = SesionComiteTema.EsAprobado;
                         sesionComiteTemaOld.ObservacionesDecision = SesionComiteTema.ObservacionesDecision;
                         sesionComiteTemaOld.ComiteTecnicoId = SesionComiteTema.ComiteTecnicoId;
+                        sesionComiteTemaOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteTema(sesionComiteTemaOld);
                         //sesionComiteTemaOld.EsProposicionesVarios = SesionComiteTema.EsProposicionesVarios;
                     }
                     _context.SaveChanges();
@@ -3038,7 +3040,7 @@ namespace asivamosffie.services
                 return
                    new Respuesta
                    {
-                       Data = validarcompletosActa(pSesionComiteSolicitud.ComiteTecnicoId),
+                       Data = validarcompletosActa(pSesionComiteSolicitud.ComiteTecnicoId ?? 0),
                        IsSuccessful = true,
                        IsException = false,
                        IsValidation = false,
@@ -4884,6 +4886,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
+                    pComiteTecnico.SesionComiteSolicitudComiteTecnico = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.Eliminado != true).ToList();
                     foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
                     {
                         RegistrosSolicitudesContractuales += PlantillaRegistrosSolicitudesContractuales;

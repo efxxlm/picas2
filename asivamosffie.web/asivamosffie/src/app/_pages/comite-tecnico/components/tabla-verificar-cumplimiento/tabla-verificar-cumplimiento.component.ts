@@ -201,15 +201,17 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
       };
       if ( compromiso.temaCompromisoId !== undefined ) {
         compromiso.esCumplido = compromiso.compromisoSeleccionado == 'Cumplido' ? true : false;
-        compromiso.fechaCreacion = new Date();
-        compromiso.fechaCumplimiento = new Date();
-        compromiso.fechaModificacion = new Date();
+        //compromiso.fechaCreacion = new Date();
+        //compromiso.fechaCumplimiento = new Date();
+        //compromiso.fechaModificacion = new Date();
+        let fechaCumplimiento =  compromiso.fechaCumplimiento;
+        fechaCumplimiento = new Date();
         let temaCompromiso: TemaCompromiso = {
           temaCompromisoId: compromiso?.temaCompromisoId,
           sesionTemaId: compromiso?.sesionTemaId,
           tarea: compromiso?.tarea,
           responsable: compromiso?.responsable,
-          fechaCumplimiento: compromiso?.fechaCumplimiento,
+          fechaCumplimiento: fechaCumplimiento,
           estadoCodigo: compromiso?.estadoCodigo,
           esCumplido: compromiso?.esCumplido
         };

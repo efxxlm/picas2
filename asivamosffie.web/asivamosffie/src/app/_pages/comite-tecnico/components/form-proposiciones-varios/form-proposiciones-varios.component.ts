@@ -84,14 +84,10 @@ export class FormProposicionesVariosComponent implements OnInit {
     this.semaforo.emit('sin-diligenciar');
     return this.fb.group({
       sesionTemaId: [],
-      tema: [null, Validators.compose([
-        Validators.required, Validators.minLength(1), Validators.maxLength(1000)])
-      ],
+      tema: [null, [Validators.required, Validators.minLength(1), Validators.maxLength(1000)]],
       responsable: [null, Validators.required],
-      tiempoIntervencion: [null, Validators.compose([
-        Validators.required, Validators.minLength(1), Validators.maxLength(3)])
-      ],
-      url: [null, [Validators.required]],
+      tiempoIntervencion: [null, [Validators.required, Validators.minLength(1), Validators.maxLength(3)]],
+      url: [null,Validators.required],
     });
 
     //if (lista.length == 1 && cantidadIncompletos == 3) {
@@ -114,37 +110,30 @@ export class FormProposicionesVariosComponent implements OnInit {
 
     let temas: SesionComiteTema[] = []
 
-    if (this.addressForm.valid) {
-      this.tema.controls.forEach(control => {
-        let sesionComiteTema: SesionComiteTema = {
-          tema: control.get('tema').value,
-          responsableCodigo: control.get('responsable').value.codigo,
-          tiempoIntervencion: control.get('tiempoIntervencion').value,
-          rutaSoporte: control.get('url').value,
-          sesionTemaId: control.get('sesionTemaId').value,
-          comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
-          esProposicionesVarios: true,
+    this.tema.controls.forEach(control => {
+      let sesionComiteTema: SesionComiteTema = {
+        tema: control.get('tema').value,
+        responsableCodigo: control.get('responsable').value.codigo,
+        tiempoIntervencion: control.get('tiempoIntervencion').value,
+        rutaSoporte: control.get('url').value,
+        sesionTemaId: control.get('sesionTemaId').value,
+        comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
+        esProposicionesVarios: true,
+      }
 
-        }
+      temas.push(sesionComiteTema);
+    });
+    this.technicalCommitteSessionService.createEditSesionComiteTema(temas)
+      .subscribe(respuesta => {
+        console.log(respuesta);
+        this.openDialog('', `<b>${respuesta.message}</b>`)
+        /*if (respuesta.code == "200") {
+          //this.validarCompletos(respuesta.data);
+          this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.objetoComiteTecnico.comiteTecnicoId])
+        }*/
 
-        temas.push(sesionComiteTema);
-      });
-
-      this.technicalCommitteSessionService.createEditSesionComiteTema(temas)
-        .subscribe(respuesta => {
-          console.log(respuesta);
-          this.openDialog('', `<b>${respuesta.message}</b>`)
-          /*if (respuesta.code == "200") {
-            //this.validarCompletos(respuesta.data);
-            this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.objetoComiteTecnico.comiteTecnicoId])
-          }*/
-
-          //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.objetoComiteTecnico.comiteTecnicoId])
-        })
-
-    } else {
-      this.openDialog('', '<b>Falta registrar información</b>')
-    }
+        //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.objetoComiteTecnico.comiteTecnicoId])
+      })
   }
 
   validarCompletos(comite: ComiteTecnico) {
@@ -154,7 +143,6 @@ export class FormProposicionesVariosComponent implements OnInit {
     let lista = comite.sesionComiteTema.filter(t => t.esProposicionesVarios);
 
     lista.forEach(tema => {
-
       if (tema.tema == undefined || tema.tema.length == 0) {
         completo = false;
         cantidadIncompletos++;

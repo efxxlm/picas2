@@ -2154,22 +2154,27 @@ namespace asivamosffie.services
                     else
                     {
                         CreateEdit = "EDITAR SESIÓN COMITE TEMA";
-                        SesionComiteTema sesionComiteTemaOld = _context.SesionComiteTema.Find(SesionComiteTema.SesionTemaId);
-                        sesionComiteTemaOld.UsuarioModificacion = ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion;
-                        sesionComiteTemaOld.FechaModificacion = DateTime.Now;
 
-                        sesionComiteTemaOld.Tema = SesionComiteTema.Tema;
-                        sesionComiteTemaOld.ResponsableCodigo = SesionComiteTema.ResponsableCodigo;
-                        sesionComiteTemaOld.TiempoIntervencion = SesionComiteTema.TiempoIntervencion;
-                        sesionComiteTemaOld.RutaSoporte = SesionComiteTema.RutaSoporte;
-                        sesionComiteTemaOld.Observaciones = SesionComiteTema.Observaciones;
-                        sesionComiteTemaOld.EsAprobado = SesionComiteTema.EsAprobado;
-                        sesionComiteTemaOld.ObservacionesDecision = SesionComiteTema.ObservacionesDecision;
-                        sesionComiteTemaOld.ComiteTecnicoId = SesionComiteTema.ComiteTecnicoId;
-                        //sesionComiteTemaOld.EsProposicionesVarios = SesionComiteTema.EsProposicionesVarios;
+                        await _context.Set<SesionComiteTema>().Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId)
+                                               .UpdateAsync(r => new SesionComiteTema()
+                                               {
+                                                    UsuarioModificacion = ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion,
+                                                    FechaModificacion = DateTime.Now,
+                                                    Tema = SesionComiteTema.Tema,
+                                                    ResponsableCodigo = SesionComiteTema.ResponsableCodigo,
+                                                    TiempoIntervencion = SesionComiteTema.TiempoIntervencion,
+                                                    RutaSoporte = SesionComiteTema.RutaSoporte,
+                                                    Observaciones = SesionComiteTema.Observaciones,
+                                                    EsAprobado = SesionComiteTema.EsAprobado,
+                                                    ObservacionesDecision = SesionComiteTema.ObservacionesDecision,
+                                                    ComiteTecnicoId = SesionComiteTema.ComiteTecnicoId,
+                        });
+
                     }
                 }
+
                 _context.SaveChanges();
+
 
                 return
                 new Respuesta
@@ -3860,6 +3865,8 @@ namespace asivamosffie.services
                 }
                 else
                 {
+                    pComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario = pComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Where(r => r.Eliminado != true).ToList();
+
                     foreach (var SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
                     {
                         RegistrosSolicitudesContractuales += PlantillaRegistrosSolicitudesContractuales;
