@@ -65,7 +65,7 @@ export class TablaDecisionesActaComponent implements OnInit {
             this.dataSource.sort = this.sort;
           } )
         }
-        
+
       } )
 
     }
@@ -89,8 +89,8 @@ export class TablaDecisionesActaComponent implements OnInit {
   };
 
   openDialogObservacion ( elemento: any ) {
-    if ( elemento.sesionSolicitudObservacionProyecto.length === 0 ) {
-      this.openDialog( `El proyecto en estado ${ elemento.contratacion.estadoProyecto }`, 'No contiene observaciones' )
+    if ( elemento?.sesionSolicitudObservacionProyecto?.length === 0 || elemento?.sesionSolicitudObservacionProyecto == undefined ) {
+      this.openDialog( `El proyecto en estado ${ elemento.tipoSolicitudCodigo === this.listaTipoSolicitudCodigo.obra ? elemento.contratacion.estadoProyectoObra : elemento.contratacion.estadoProyectoInterventoria }`, 'No contiene observaciones' )
       return;
     } else {
       this.dialog.open( ObservacionDialogComponent, {

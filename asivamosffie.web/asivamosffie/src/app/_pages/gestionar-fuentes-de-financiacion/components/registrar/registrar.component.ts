@@ -642,8 +642,8 @@ export class RegistrarComponent implements OnInit {
   }
 
   agregaFuente() {
-    if (this.addressForm.value.fuenteRecursosArray.length == 2) {
-      this.openDialog('', '<b>Ya cuenta con los dos tipos de fuente de financiación disponibles.</b>');
+    if (this.addressForm.value.fuenteRecursosArray.length == this.fuentesDeRecursosLista.length) {
+      this.openDialog('', '<b>Ya cuenta con los tipos de fuente de financiación disponibles.</b>');
       return;
     }
     this.addressForm.value.fuenteRecursosArray.forEach(element => {
@@ -1078,7 +1078,7 @@ export class RegistrarComponent implements OnInit {
     this.valorRPTmp = this.registrosPresupuestales.controls[i].get('valorRP').value;
 
     this.registrosPresupuestales.controls.forEach(element => {
-      
+
       if (element.value.numerodocumentoRP.numeroAcuerdo === event.value.numeroAcuerdo) {
         valorTotalRP += element.value.valorRP;;
 
@@ -1093,7 +1093,7 @@ export class RegistrarComponent implements OnInit {
         }
 
       }
-      
+
     });
 
     if(this.valorRPTmp > this.valorDocumentoTmp){

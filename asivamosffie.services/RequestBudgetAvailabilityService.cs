@@ -373,7 +373,7 @@ namespace asivamosffie.services
                                 ValorGestionado = valorgestionado,
                                 ComponenteGrilla = grilla,
                                 Aportantes = aportantesxProyecto,
-                                ValorProyectoxComponente = contratacionDP.TipoSolicitudCodigo == "2" ? proyectopp.ValorInterventoria : proyectopp.ValorObra
+                                ValorProyectoxComponente = contratacionDP != null ? contratacionDP.TipoSolicitudCodigo == "2" ? proyectopp.ValorInterventoria : proyectopp.ValorObra : 0
                         });
                         }
 

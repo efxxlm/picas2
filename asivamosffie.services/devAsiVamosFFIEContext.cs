@@ -5710,8 +5710,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ProcesosContractualesObservacion>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.Property(e => e.Archivado).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.FechaCreacion)
@@ -5719,8 +5717,6 @@ namespace asivamosffie.model.Models
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.ProcesosContractualesObservacionId).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.TipoObservacionCodigo)
                     .HasMaxLength(2)
