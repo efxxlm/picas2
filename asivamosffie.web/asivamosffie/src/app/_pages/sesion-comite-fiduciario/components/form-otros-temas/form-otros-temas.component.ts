@@ -93,8 +93,8 @@ export class FormOtrosTemasComponent implements OnInit {
 
           this.responsable = this.listaResponsables.find(r => r.codigo == this.sesionComiteTema.responsableCodigo)
 
-          this.estaEditando = true;
-          this.addressForm.markAllAsTouched();
+          // this.estaEditando = true;
+          // this.addressForm.markAllAsTouched();
           
           resolve();
 
@@ -332,6 +332,9 @@ export class FormOtrosTemasComponent implements OnInit {
           this.addressForm.get('observacionesDecision').setValue(this.sesionComiteTema.observacionesDecision),
           this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteTema.generaCompromiso),
           this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteTema.cantCompromisos),
+
+          this.estaEditando = true;
+          this.addressForm.markAllAsTouched();
 
           this.commonService.listaUsuarios().then((respuesta) => {
 
