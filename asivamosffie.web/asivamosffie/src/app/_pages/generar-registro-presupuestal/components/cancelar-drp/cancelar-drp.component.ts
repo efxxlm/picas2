@@ -76,6 +76,7 @@ export class CancelarDrpComponent implements OnInit {
     let DisponibilidadPresupuestalObservacion={DisponibilidadPresupuestalId:this.id,Observacion:this.addressForm.value.objeto};
     this.disponibilidadServices.SetCancelDDR(DisponibilidadPresupuestalObservacion).subscribe(listas => {
       console.log(listas);
+      this.dialog.closeAll();
       this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>',true);
     });
   }

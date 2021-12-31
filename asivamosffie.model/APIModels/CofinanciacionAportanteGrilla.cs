@@ -27,5 +27,7 @@ namespace asivamosffie.model.APIModels
         public decimal ValorGestionado { get; set; }
         public bool? TieneFuentes { get; set; }
         public decimal? NumeroAcuerdo { get; set; }
+        public int? TipoAportanteId { get; set; }
+
     }
 }

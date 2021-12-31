@@ -112,7 +112,7 @@
             -->
         </mat-card-content>
     </mat-card>
-    <mat-accordion>
+    <mat-accordion *ngIf="detailavailabilityBudget?.estadoSolicitudCodigo != '7'">
         <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of detailavailabilityBudget?.proyectos;index as i;">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
@@ -191,13 +191,14 @@
         </mat-expansion-panel>
     </mat-accordion>
     <div class="botones">
-        <button mat-raised-button color="accent" (click)="this.descargarDDPBoton()">Descargar DDP</button>
+        <button mat-raised-button color="accent" (click)="this.descargarDDPBoton()" *ngIf="detailavailabilityBudget?.estadoSolicitudCodigo != '7'">Descargar DDP</button>
         <button mat-raised-button color="accent" (click)="this.generardrp()" *ngIf="!detailavailabilityBudget?.numeroDRP">Generar DRP</button>
         <button mat-raised-button color="accent" (click)="this.generardrpPDF()"
-        *ngIf="detailavailabilityBudget?.numeroDRP && detailavailabilityBudget?.estadoStr!='Sin registro presupuestal'">Descargar DRP</button>
-        <button mat-raised-button color="accent" (click)="this.cancelarDRPBoton()"
-        *ngIf="detailavailabilityBudget?.estadoStr!='Sin registro presupuestal' &&
-        detailavailabilityBudget?.estadoStr!='Con registro presupuestal'"
-        >Cancelar DRP</button>
+        *ngIf="detailavailabilityBudget?.numeroDRP && detailavailabilityBudget?.estadoStr!='Sin registro presupuestal' && detailavailabilityBudget?.estadoSolicitudCodigo != '7'">Descargar DRP</button>
+        <button mat-raised-button color="accent"
+        (click)="this.cancelarDRPBoton()"
+        *ngIf="!((detailavailabilityBudget?.tieneNovedad == true && esNovedad == false) || (detailavailabilityBudget?.tieneSolicitudPago == true) || (detailavailabilityBudget?.tieneHistorico == true) || detailavailabilityBudget?.estadoSolicitudCodigo == '7')"
+        >Cancelar DRP
+      </button>
     </div>
 </section>

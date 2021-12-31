@@ -546,13 +546,14 @@ namespace asivamosffie.services
         {
             int codigocondvalidacionpre = (int)EnumeratorEstadoSolicitudPresupuestal.Con_registro_presupuestal;
             int codigocancelada = (int)EnumeratorEstadoSolicitudPresupuestal.Sin_registro_presupuestal;
+            int codigocanceladaDdp = (int)EnumeratorEstadoSolicitudPresupuestal.Con_disponibilidad_cancelada;
 
             List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal = await _context.DisponibilidadPresupuestal
                                                                                                 .Where(r => !(bool)r.Eliminado
                                                                                                         && (r.EstadoSolicitudCodigo.Equals(pCodigoEstadoSolicitud) || r.EstadoSolicitudCodigo.Equals(codigocondvalidacionpre.ToString())
-                                                                                                        || r.EstadoSolicitudCodigo.Equals(codigocancelada.ToString()))
+                                                                                                        || r.EstadoSolicitudCodigo.Equals(codigocancelada.ToString()) || (r.EstadoSolicitudCodigo.Equals(codigocanceladaDdp.ToString()) && !string.IsNullOrEmpty(r.NumeroDrp)))
                                                                                                         && r.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Tradicional
-                                                                                                        && r.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados)
+                                                                                                        && (r.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados || r.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Cancelado_por_generacion_presupuestal))
                                                                                                 .Include(x => x.DisponibilidadPresupuestalProyecto).Include(x => x.Contratacion).ThenInclude(x => x.Contrato)
                                                                                                 .ToListAsync();
 
@@ -577,6 +578,10 @@ namespace asivamosffie.services
 
             foreach (var DisponibilidadPresupuestal in ListDisponibilidadPresupuestal)
             {
+                if (DisponibilidadPresupuestal.EstadoSolicitudCodigo == "7")
+                {
+                    string aja = "";
+                }
                 VDisponibilidadPresupuestal vdpp = _context.VDisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && r.EstadoSolicitudCodigo == "10" && r.TieneHistorico == true).FirstOrDefault();
                 string strEstadoRegistro = string.Empty;
                 string strTipoSolicitud = string.Empty;

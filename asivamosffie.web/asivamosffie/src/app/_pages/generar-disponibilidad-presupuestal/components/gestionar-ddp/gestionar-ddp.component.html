@@ -367,7 +367,7 @@
         <!-- <button mat-raised-button color="accent">Actualizar DDP</button> -->
         <button mat-raised-button color="accent" (click)="openDialogDevolver()">Devolver a <br> validación
             financiera</button>
-        <button [disabled]="(detailavailabilityBudget?.tieneNovedad == true && esNovedad == false) || (detailavailabilityBudget?.estadoStr == 'Con registro presupuestal')" mat-raised-button color="accent" (click)="openDialogCancelarDDP()">Cancelar solicitud DDP</button>
+        <button [disabled]="(detailavailabilityBudget?.tieneNovedad == true && esNovedad == false) || (detailavailabilityBudget?.tieneSolicitudPago == true) || (detailavailabilityBudget?.tieneHistorico == true) || detailavailabilityBudget?.estadoSolicitudCodigo == '8'" (click)="openDialogCancelarDDP()" mat-raised-button color="accent" (click)="openDialogCancelarDDP()">Cancelar solicitud DDP</button>
     </div>
 
 </section>

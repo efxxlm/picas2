@@ -1166,7 +1166,8 @@ namespace asivamosffie.services
                             FechaCreacion = ProyectoAportante.Aportante.FechaCreacion,
                             MunicipioId = ProyectoAportante.Aportante.MunicipioId,
                             DepartamentoId = ProyectoAportante.Aportante.DepartamentoId,
-                            RegistroCompleto = ProyectoAportante.Aportante.Cofinanciacion.RegistroCompleto
+                            RegistroCompleto = ProyectoAportante.Aportante.Cofinanciacion.RegistroCompleto,
+                            TipoAportanteId = ProyectoAportante.Aportante.TipoAportanteId
                         };
                         if (Contrato.ListAportantes.Where(x => x.CofinanciacionAportanteId == ProyectoAportante.Aportante.CofinanciacionAportanteId).Count() == 0)
                         {
