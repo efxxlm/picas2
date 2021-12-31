@@ -402,7 +402,6 @@ namespace asivamosffie.services
                          .ThenInclude(r => r.Aportante)
                              .ThenInclude(r => r.NombreAportante)
 
-
                 .Include(r => r.ContratacionProyectoAportante)
                     .ThenInclude(r => r.ComponenteAportante)
                         .ThenInclude(r => r.ComponenteUso)
@@ -432,11 +431,11 @@ namespace asivamosffie.services
                 }
                 foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
                 {
+                    ComponenteAportante.ComponenteUso = ComponenteAportante.ComponenteUso.Where(c => c.Eliminado != true).ToList();
                     ValorGastado = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
                 }
 
-                ContratacionProyectoAportante.SaldoDisponible = ValorDisponible - ValorGastado;
-
+                ContratacionProyectoAportante.SaldoDisponible = ValorDisponible - ValorGastado; 
             }
 
             return contratacionProyecto;
