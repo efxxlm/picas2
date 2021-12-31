@@ -181,17 +181,18 @@ namespace asivamosffie.services
                                 List<GestionFuenteFinanciacion>  fuentesNew = new List<GestionFuenteFinanciacion>();
 
                                 int Id = proyectospp.DisponibilidadPresupuestalProyectoId;
+                                List<int> fuentesxAportante = ppapor.Aportante.FuenteFinanciacion.Select(x => (int)x.FuenteFinanciacionId).ToList();
 
                                 if (ListDP.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)
                                 {
                                     //fuentesNew =  _sourceFundingService.GetListFuentesFinanciacionByDisponibilidadPresupuestald(proyectospp.DisponibilidadPresupuestalId, false, 0);
-                                    fuentesNew = _context.GestionFuenteFinanciacion.Where(r => r.Eliminado != true && r.EsNovedad != true && r.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && r.FuenteFinanciacionId == ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteFinanciacionId).ToList();
+                                    fuentesNew = _context.GestionFuenteFinanciacion.Where(r => r.Eliminado != true && r.EsNovedad != true && r.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && fuentesxAportante.Contains((int)r.FuenteFinanciacionId)).ToList();
 
                                 }
                                 else
                                 {
                                     //fuentesNew =  _sourceFundingService.GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(Id, ppapor.AportanteId, false, 0);
-                                     fuentesNew = _context.GestionFuenteFinanciacion.Where(r => r.Eliminado != true && r.EsNovedad != true && r.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && r.FuenteFinanciacionId == ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteFinanciacionId).ToList();
+                                     fuentesNew = _context.GestionFuenteFinanciacion.Where(r => r.Eliminado != true && r.EsNovedad != true && r.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && fuentesxAportante.Contains((int)r.FuenteFinanciacionId)).ToList();
                                 }
 
                                 foreach (var fuente in fuentesNew)
@@ -523,6 +524,12 @@ namespace asivamosffie.services
 
                         if (ListDP.EsNovedad != true)
                         {
+                           decimal totalSolicitado = _context.GestionFuenteFinanciacion
+                                .Where(x => x.DisponibilidadPresupuestalProyectoId != null &&
+                                       ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId) && x.Eliminado != true && x.EsNovedad != true).Sum(r => r.ValorSolicitado);
+                            if (totalSolicitado == ListDP.ValorSolicitud)
+                                blnEstado = true;
+
                             if (_context.GestionFuenteFinanciacion
                                 .Where(x => x.DisponibilidadPresupuestalProyectoId != null &&
                                        ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId) && x.Eliminado != true && x.EsNovedad != true)
