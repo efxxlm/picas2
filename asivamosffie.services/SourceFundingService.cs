@@ -761,7 +761,7 @@ namespace asivamosffie.services
 
             var financiaciones = _context.FuenteFinanciacion.Where(x => gestion.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
 
-            financiaciones = financiaciones.Where(x => listaFuentesProyecto.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
+            //financiaciones = financiaciones.Where(x => listaFuentesProyecto.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
 
 
             foreach (var financiacion in financiaciones)
@@ -856,7 +856,7 @@ namespace asivamosffie.services
 
             var financiaciones = _context.FuenteFinanciacion.Where(x => gestion.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
 
-            financiaciones = financiaciones.Where(x => listaFuentesProyecto.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
+            //financiaciones = financiaciones.Where(x => listaFuentesProyecto.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
 
 
             foreach (var financiacion in financiaciones)

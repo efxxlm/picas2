@@ -122,6 +122,8 @@ export class FormGestionarFuentesComponent implements OnInit {
   }
 
   fuenteCambio(fuente: any) {
+    fuente.get("valorSolicitado").setValue(null);
+    fuente.get("nuevoSaldo").setValue(null);
     let fuenteSeleccionada = this.fuentesbase.filter(x => x.fuenteFinanciacionID == fuente.controls.fuentecampo.value);
     //valido que no se haya seleccionado previamente
     let cont = 0;
