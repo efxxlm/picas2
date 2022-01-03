@@ -156,7 +156,10 @@ export class FormProposicionesVariosComponent implements OnInit {
         completo = false;
         cantidadIncompletos++;
       }
-
+      if (tema.rutaSoporte == undefined || tema.rutaSoporte.length == 0) {
+          completo = false;
+          cantidadIncompletos++;
+      }
     })
 
     if (lista.length == 1 && cantidadIncompletos == 3) {

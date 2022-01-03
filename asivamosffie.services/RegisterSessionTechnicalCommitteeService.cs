@@ -264,10 +264,11 @@ namespace asivamosffie.services
         {
             bool esCompleto = true;
 
-            if (string.IsNullOrEmpty(sesionComiteTemaOld.Tema)
+            if (
+                   string.IsNullOrEmpty(sesionComiteTemaOld.Tema)
                 || string.IsNullOrEmpty(sesionComiteTemaOld.ResponsableCodigo)
                 || string.IsNullOrEmpty(sesionComiteTemaOld.TiempoIntervencion.ToString())
-                //|| !string.IsNullOrEmpty(sesionComiteTemaOld.RutaSoporte)
+                || string.IsNullOrEmpty(sesionComiteTemaOld.RutaSoporte)
                 || string.IsNullOrEmpty(sesionComiteTemaOld.Observaciones)
                 || (sesionComiteTemaOld.RequiereVotacion == true && sesionComiteTemaOld.EsAprobado == null)
                 || sesionComiteTemaOld.RequiereVotacion == null
@@ -276,12 +277,9 @@ namespace asivamosffie.services
                 || string.IsNullOrEmpty(sesionComiteTemaOld.ObservacionesDecision)
                 || sesionComiteTemaOld.EstadoTemaCodigo == null
                 || (sesionComiteTemaOld.GeneraCompromiso == true && sesionComiteTemaOld.CantCompromisos == null)
-
                 )
-            {
-
                 esCompleto = false;
-            }
+
 
             sesionComiteTemaOld.TemaCompromiso.Where(x => x.Eliminado != true).ToList().ForEach(compromiso =>
           {
@@ -850,6 +848,8 @@ namespace asivamosffie.services
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Sesion_Comite_Tema, (int)EnumeratorTipoDominio.Acciones);
             string CreateEdit = "";
+
+
             try
             {
                 foreach (var SesionComiteTema in ListSesionComiteTemas)
@@ -862,32 +862,37 @@ namespace asivamosffie.services
                         SesionComiteTema.Eliminado = false;
                         SesionComiteTema.RegistroCompleto = ValidarRegistroCompletoSesionComiteTema(SesionComiteTema);
                         _context.SesionComiteTema.Add(SesionComiteTema);
+                        _context.SaveChanges();
                     }
                     else
                     {
                         CreateEdit = "EDITAR SESIÓN COMITE TEMA";
-                        SesionComiteTema sesionComiteTemaOld = _context.SesionComiteTema.Find(SesionComiteTema.SesionTemaId);
-                        sesionComiteTemaOld.UsuarioModificacion = ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion;
-                        sesionComiteTemaOld.FechaModificacion = DateTime.Now;
+                    
+                        bool RegistroCompletoComiteTema = ValidarRegistroCompletoSesionComiteTema(SesionComiteTema);
 
-                        sesionComiteTemaOld.Tema = SesionComiteTema.Tema;
-                        sesionComiteTemaOld.ResponsableCodigo = SesionComiteTema.ResponsableCodigo;
-                        sesionComiteTemaOld.TiempoIntervencion = SesionComiteTema.TiempoIntervencion;
-                        sesionComiteTemaOld.RutaSoporte = SesionComiteTema.RutaSoporte;
-                        sesionComiteTemaOld.Observaciones = SesionComiteTema.Observaciones;
-                        sesionComiteTemaOld.EsAprobado = SesionComiteTema.EsAprobado;
-                        sesionComiteTemaOld.ObservacionesDecision = SesionComiteTema.ObservacionesDecision;
-                        sesionComiteTemaOld.ComiteTecnicoId = SesionComiteTema.ComiteTecnicoId;
-                        sesionComiteTemaOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteTema(sesionComiteTemaOld);
-                        //sesionComiteTemaOld.EsProposicionesVarios = SesionComiteTema.EsProposicionesVarios;
+                        _context.Set<SesionComiteTema>()
+                                .Where(s => s.SesionTemaId == SesionComiteTema.SesionTemaId)
+                                .Update(s => new SesionComiteTema
+                                {
+                                    UsuarioModificacion = ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion,
+                                    FechaModificacion = DateTime.Now,
+                                    Tema = SesionComiteTema.Tema,
+                                    ResponsableCodigo = SesionComiteTema.ResponsableCodigo,
+                                    TiempoIntervencion = SesionComiteTema.TiempoIntervencion,
+                                    RutaSoporte = SesionComiteTema.RutaSoporte,
+                                    Observaciones = SesionComiteTema.Observaciones,
+                                    EsAprobado = SesionComiteTema.EsAprobado,
+                                    ObservacionesDecision = SesionComiteTema.ObservacionesDecision,
+                                    //ComiteTecnicoId = SesionComiteTema.ComiteTecnicoId 
+                                });
                     }
-                    _context.SaveChanges();
+
                 }
 
                 return
                 new Respuesta
                 {
-                    Data = await GetComiteTecnicoByComiteTecnicoId((int)ListSesionComiteTemas.FirstOrDefault().ComiteTecnicoId),
+                    //Data = await GetComiteTecnicoByComiteTecnicoId((int)ListSesionComiteTemas.FirstOrDefault().ComiteTecnicoId),
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
@@ -1797,7 +1802,7 @@ namespace asivamosffie.services
                    participante.Usuario = new Usuario();
 
                    VSesionParticipante vSesionParticipante = listaParticipantes.Where(r => r.SesionParticipanteId == ssc.ResponsableSesionParticipanteId).FirstOrDefault();
-                   
+
                    if (vSesionParticipante != null)
                    {
                        participante.SesionParticipanteId = vSesionParticipante.SesionParticipanteId;
@@ -3894,7 +3899,7 @@ namespace asivamosffie.services
                                 nombreTrAportante = string.Empty;
                                 valorTrAportante = string.Empty;
                             }
-                            
+
                             foreach (Dominio placeholderDominio in placeholders)
                             {
                                 switch (placeholderDominio.Codigo)
@@ -6100,7 +6105,7 @@ namespace asivamosffie.services
                             ControversiaActuacion actuacion = await _IContractualControversy.GetControversiaActuacionById(SesionComiteSolicitud.SolicitudId);
 
                             ControversiaContractual controversiaContractual = _context.ControversiaContractual.Where(r => r.ControversiaContractualId == actuacion.ControversiaContractualId).Include(r => r.Contrato).FirstOrDefault();
-                            
+
                             Contrato contratoAct = controversiaContractual != null ? controversiaContractual?.Contrato : null;
 
                             Contratacion contratacionAct = null;
