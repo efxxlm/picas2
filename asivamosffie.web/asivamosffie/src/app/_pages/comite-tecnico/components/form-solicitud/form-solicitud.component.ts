@@ -384,6 +384,9 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteSolicitud.cantCompromisos);
     this.addressForm.get('desarrolloSolicitud').setValue(this.sesionComiteSolicitud.desarrolloSolicitud);
 
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
+
     this.commonService.listaUsuarios().then(respuesta => {
       this.listaMiembros.forEach(m => {
         let usuario: Usuario = respuesta.find(u => u.usuarioId == m.usuarioId);
@@ -403,8 +406,6 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
         grupoCompromiso.get('sesionComiteSolicitudId').setValue(this.sesionComiteSolicitud.sesionComiteSolicitudId);
 
         this.compromisos.push(grupoCompromiso);
-        this.estaEditando = true;
-        this.addressForm.markAllAsTouched();
       });
     });
 

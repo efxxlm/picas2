@@ -356,6 +356,8 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteSolicitud.cantCompromisosFiduciario)
     this.addressForm.get('desarrolloSolicitud').setValue(this.sesionComiteSolicitud.desarrolloSolicitudFiduciario)
 
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
 
     this.commonService.listaUsuarios().then((respuesta) => {
 
