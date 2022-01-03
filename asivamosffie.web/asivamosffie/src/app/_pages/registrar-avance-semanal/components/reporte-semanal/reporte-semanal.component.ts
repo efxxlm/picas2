@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -11,7 +11,7 @@ import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarA
   styleUrls: ['./reporte-semanal.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class ReporteSemanalComponent implements OnInit, AfterViewInit {
+export class ReporteSemanalComponent implements OnInit, AfterViewInit, OnDestroy {
   contratacionProyectoId: string;
   seguimientoSemanalId: string;
   dataReporteSemanal: any;
@@ -58,6 +58,10 @@ export class ReporteSemanalComponent implements OnInit, AfterViewInit {
       );
 
     });
+  }
+
+  ngOnDestroy() {
+    location.reload();
   }
 
   ngAfterViewInit() {
