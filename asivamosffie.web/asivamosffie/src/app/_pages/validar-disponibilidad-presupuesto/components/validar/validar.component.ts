@@ -32,10 +32,13 @@ export class ValidarComponent implements OnInit {
       if (d.estadoRegistro !== true )
       disponibilidad['class'] = 0; // sin diligenciar
     });
+    const hayCompletos = disponibilidad.disponibilidadPresupuestal.some(
+      (d: { estadoRegistro: boolean }) => d.estadoRegistro === true
+    );
     const hayIncompletos = disponibilidad.disponibilidadPresupuestal.some(
       (d: { estadoRegistro: boolean }) => d.estadoRegistro === false
     );
-    if (disponibilidad.class === 0 && hayIncompletos) {
+    if (hayCompletos && hayIncompletos) {
       disponibilidad['class'] = 1; // incompleto
       this.incompretos = true;
     };
