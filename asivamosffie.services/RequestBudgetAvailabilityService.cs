@@ -3690,7 +3690,7 @@ namespace asivamosffie.services
                     pDisponibilidadPresupuestal.Eliminado = false;
                     pDisponibilidadPresupuestal.FechaSolicitud = DateTime.Now;
                     pDisponibilidadPresupuestal.RegistroCompleto = ValidarDisponibilidadPresupuestal(pDisponibilidadPresupuestal);
-                    pDisponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar;
+                    //pDisponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar;
                     if (contrato != null)
                     {
                         pDisponibilidadPresupuestal.OpcionContratarCodigo = contrato.TipoContratoCodigo;

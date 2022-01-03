@@ -369,7 +369,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -2940,7 +2939,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.LimitacionEspecial).HasMaxLength(4000);
 
                 entity.Property(e => e.NumeroContrato)
-                    .HasMaxLength(10)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroDdp)
@@ -9510,7 +9509,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.PorcentajeEjecucionFinanciera).HasColumnType("decimal(38, 15)");
 
-                entity.Property(e => e.Saldo).HasColumnType("decimal(19, 0)");
+                entity.Property(e => e.Saldo).HasColumnType("decimal(20, 0)");
 
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()

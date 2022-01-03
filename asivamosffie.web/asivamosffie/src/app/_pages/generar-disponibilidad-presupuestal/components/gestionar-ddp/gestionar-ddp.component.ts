@@ -45,7 +45,7 @@ export class GestionarDdpComponent implements OnInit {
           console.log(listas);
           if (listas.length > 0) {
             this.detailavailabilityBudget = listas[0];
-            this.validarBotonGenerarDDp(this.detailavailabilityBudget?.proyectos);
+            this.validarBotonGenerarDDp(this.detailavailabilityBudget?.proyectos, this.detailavailabilityBudget?.tipoSolicitudCodigo);
           }
           else {
             this.openDialog('', 'Error al intentar recuperar los datos de la solicitud, por favor intenta nuevamente.');
@@ -55,8 +55,12 @@ export class GestionarDdpComponent implements OnInit {
     }
   }
 
-  validarBotonGenerarDDp(proyectos: any[]){
+  validarBotonGenerarDDp(proyectos: any[], tipoSolicitudCodigo: any){
     let cumpleCondiciones = true;
+    //especial
+    if(tipoSolicitudCodigo == "2"){
+      return cumpleCondiciones;
+    }
     if(proyectos != null){
       if(proyectos.length > 0){
         proyectos.forEach(proyecto => {

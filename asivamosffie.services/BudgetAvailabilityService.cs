@@ -1472,10 +1472,8 @@ namespace asivamosffie.services
             {
                 return Array.Empty<byte>();
             }
-            DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
-                .Where(r => r.DisponibilidadPresupuestalId == id)
-                .Include(r => r.Contratacion).FirstOrDefaultAsync();
-
+            //DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == id).Include(r => r.Contratacion).FirstOrDefaultAsync();
+            DisponibilidadPresupuestal disponibilidad = await _requestBudgetAvailabilityService.GetDetailInfoAdditionalById(id);
             if (disponibilidad == null)
             {
                 return Array.Empty<byte>();
@@ -1941,6 +1939,70 @@ namespace asivamosffie.services
                 }
                 //ddp especial
                 else
+                if (pDisponibilidad.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)
+                {
+                    decimal totales = 0;
+
+                    if (pDisponibilidad.Aportante != null)
+                    {
+                        Proyecto proyectoTemp = null;
+                        if (pDisponibilidad.DisponibilidadPresupuestalProyecto.Count() > 0)
+                        {
+                            if (pDisponibilidad.DisponibilidadPresupuestalProyecto.FirstOrDefault().Proyecto != null)
+                                proyectoTemp = pDisponibilidad.DisponibilidadPresupuestalProyecto.FirstOrDefault().Proyecto;
+                        }
+                        if (proyectoTemp != null)
+                        {
+                            string institucion = _context.InstitucionEducativaSede.Where(x => x.InstitucionEducativaSedeId == proyectoTemp.Sede.PadreId).FirstOrDefault().Nombre;
+                            var tr = plantilla_proycto.Replace("[DDP_LLAVE_MEN]", proyectoTemp.LlaveMen)
+                                .Replace("[DDP_INSTITUCION_EDUCATIVA]", institucion)
+                                .Replace("[DDP_SEDE]", proyectoTemp.Sede.Nombre)
+                                .Replace("[DDP_APORTANTE]", this.getNombreAportante(pDisponibilidad.Aportante))
+                                .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", pDisponibilidad.ValorSolicitud).ToString())
+                                .Replace("[DDP_FUENTE]", " No aplica ")
+
+                                .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "No aplica")
+                                .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "No aplica")
+                                .Replace("[DDP_NUEVO_SALDO_FUENTE]", "No aplica");
+                            tablaproyecto += tr;
+                        }
+
+                        var tr2 = plantilla_fuentes
+                                    .Replace("[NOMBRE_APORTANTE]", this.getNombreAportante(pDisponibilidad.Aportante))
+                                    .Replace("[FUENTE_APORTANTE]", " No aplica ")
+                                    .Replace("[VALOR_NUMERO]", "$ " + String.Format("{0:n0}", pDisponibilidad.ValorSolicitud).ToString())
+                                    .Replace("[VALOR_LETRAS]", CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Helpers.Conversores.NumeroALetras(pDisponibilidad.ValorSolicitud).ToLower()));
+                        tablafuentes += tr2;
+                        totales += pDisponibilidad.ValorSolicitud;
+
+                        proyecto = string.Empty;
+                        proyecto = tablaproyecto;
+                        if (!string.IsNullOrEmpty(proyecto))
+                        {
+                            pStrCabeceraProyectos = _context.Plantilla.Where(x => x.Codigo == codcabeceraproycto.ToString()).FirstOrDefault().Contenido;
+                        }
+                        limitacionEspecial = string.Empty;
+                        tablaaportantes = plantilla_fuentecabecera.Replace("[TABLAAPORTANTES]", tablafuentes).
+                           Replace("[TOTAL_DE_RECURSOS]", "$ " + String.Format("{0:n0}", totales).ToString()).
+                           Replace("[TOTAL_DE_RECURSOSLETRAS]", CultureInfo.CurrentCulture.TextInfo
+                                           .ToTitleCase(Helpers.Conversores
+                                           .NumeroALetras(totales).ToLower()));
+
+                        proyecto = string.Empty;
+                        proyecto = tablaproyecto;
+                        if (!string.IsNullOrEmpty(proyecto))
+                        {
+                            pStrCabeceraProyectos = _context.Plantilla.Where(x => x.Codigo == codcabeceraproycto.ToString()).FirstOrDefault().Contenido;
+                        }
+                        limitacionEspecial = string.Empty;
+                        tablaaportantes = plantilla_fuentecabecera.Replace("[TABLAAPORTANTES]", tablafuentes).
+                           Replace("[TOTAL_DE_RECURSOS]", "$ " + String.Format("{0:n0}", totales).ToString()).
+                           Replace("[TOTAL_DE_RECURSOSLETRAS]", CultureInfo.CurrentCulture.TextInfo
+                                           .ToTitleCase(Helpers.Conversores
+                                           .NumeroALetras(totales).ToLower()));
+                    }
+                }
+                else
                 {
                     //empiezo con fuentes
                     var gestionfuentesEspecial = _context.GestionFuenteFinanciacion.Where(x => x.DisponibilidadPresupuestalId == pDisponibilidad.DisponibilidadPresupuestalId && x.EsNovedad == esNovedad).
@@ -2028,7 +2090,11 @@ namespace asivamosffie.services
             string numeroComiteTecnico = string.Empty;
             //contratos
             Contrato contrato = new Contrato();
-            if (pDisponibilidad.ContratacionId > 0)
+            if (pDisponibilidad.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)
+            {
+                numeroComiteTecnico = "No aplica";
+            }
+            else if (pDisponibilidad.ContratacionId > 0)
             {
                 contrato = _context.Contrato.Where(x => x.ContratacionId == pDisponibilidad.ContratacionId).FirstOrDefault();
                 //LCT - ajuste data plantilla DDP
