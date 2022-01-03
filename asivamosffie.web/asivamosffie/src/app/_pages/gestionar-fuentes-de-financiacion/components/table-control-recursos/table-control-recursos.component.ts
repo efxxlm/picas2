@@ -173,8 +173,8 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
   }
 
 
-  verDetalle(e: number) {
-    this.router.navigate(['/gestionarFuentes/verDetalleControlRecursos', this.idFuente, e])
+  verDetalle(e: number, fuenteFinanciacionId: number) {
+    this.router.navigate(['/gestionarFuentes/verDetalleControlRecursos', fuenteFinanciacionId, e])
     // console.log(e);
   }
 

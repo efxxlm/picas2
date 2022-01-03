@@ -333,7 +333,6 @@ export class ControlDeRecursosComponent implements OnInit {
   }
 
   validateRPValue(editingResource: ControlRecurso) {
-
     const controlRecursoId = this.addressForm.get('controlRecursoId').value
     const numeroRp = this.addressForm.get("rp").value.numeroRp;
     const valorRp = !this.addressForm.get("valorRp").value ? 0 : Number(this.addressForm.get("valorRp").value);
@@ -344,26 +343,28 @@ export class ControlDeRecursosComponent implements OnInit {
 
 
     var SumaValorConsignacionXrp = 0;
-    var SumaValorConsignacion = 0;
-
+    var SumaValorConsignacionXFuente = 0;
     this.listcontrolRecursosArray.forEach(element => {
-      SumaValorConsignacion += element.valorConsignacion ?? 0;
+      if(this.idControl != element.controlRecursoId){//no tome el que esta editando
+        if (element.fuenteFinanciacionId == this.idFuente)
+          SumaValorConsignacionXFuente += element.valorConsignacion ?? 0;
 
-      if (element.numeroRp === numeroRp && element.fuenteFinanciacionId === this.idFuente)
-        SumaValorConsignacionXrp += element.valorConsignacion;
+        if (element.numeroRp === numeroRp)
+          SumaValorConsignacionXrp += element.valorConsignacion;
+      }
     });
 
     console.log('SumaValorConsignacionXrp =>', SumaValorConsignacionXrp);
     console.log('SumaValorConsignacionXrp + lo otro=>', SumaValorConsignacionXrp + (Number(this.addressForm.get("valorConsignacion").value)));
     console.log('valor rp =>', valorRp);
-    console.log('Suma total rps =>', SumaValorConsignacion);
+    console.log('Suma total rps x fuente =>', SumaValorConsignacionXFuente + (Number(this.addressForm.get("valorConsignacion").value)));
 
     if ((Number(this.addressForm.get("valorConsignacion").value) + SumaValorConsignacionXrp) > valorRp) {
       this.openDialogError('', `El <b> valor de la consignación no puede superar el valor del aporte a la fuente de recursos, </b> verifique por favor. `);
       this.addressForm.get("valorConsignacion").setValue(null, { emitEvent: false });
     }
 
-    if (SumaValorConsignacion + (Number(this.addressForm.get("valorConsignacion").value)) > this.valorFuente) {
+    if (SumaValorConsignacionXFuente + (Number(this.addressForm.get("valorConsignacion").value)) > this.valorFuente) {
       this.openDialogError('', `El <b> valor de las consignaciones no puede superar el valor del aporte a la fuente de recursos, </b> verifique por favor. `);
       this.addressForm.get("valorConsignacion").setValue(null, { emitEvent: false });
     }
