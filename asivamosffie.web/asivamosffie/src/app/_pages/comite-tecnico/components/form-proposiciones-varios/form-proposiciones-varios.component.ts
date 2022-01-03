@@ -229,6 +229,8 @@ export class FormProposicionesVariosComponent implements OnInit {
 
       this.tema.push(grupoTema)
     })
+    this.estaEditando = true;
+    this.addressForm.markAllAsTouched();
     this.validarCompletos(this.objetoComiteTecnico);
 
   }
