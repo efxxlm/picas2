@@ -54,7 +54,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     objeto: [ null, Validators.required ],
     numeroRadicado: [ null, Validators.compose( [ Validators.minLength(1), Validators.maxLength(15) ] ) ],
     cartaAutorizacionET: ['', Validators.required],
-    numeroContrato: [ null, Validators.compose( [ Validators.minLength(3), Validators.maxLength(10) ] ) ],
+    numeroContrato: [ null, Validators.compose( [ Validators.minLength(3), Validators.maxLength(100) ] ) ],
     departemento: [ null, Validators.required ],
     municipio: [ null, Validators.required ],
     llaveMEN: [ null, Validators.required ],
