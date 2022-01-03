@@ -10,6 +10,7 @@ import { DisponibilidadPresupuestalService } from 'src/app/core/_services/dispon
 export class ValidarComponent implements OnInit {
 
   verAyuda = false;
+  incompretos: boolean = false;
   listaDisponibilidades: any;
   listaestado=['En validación presupuestal','Devuelta por coordinación financiera',
     'Devuelta por validación presupuestal','Con validación presupuestal',
@@ -29,9 +30,15 @@ export class ValidarComponent implements OnInit {
 
     disponibilidad.disponibilidadPresupuestal.forEach(d => {
       if (d.estadoRegistro !== true )
-        //disponibilidad['class'] = 1;// incompleto
-        disponibilidad['class'] = 0; // sin diligenciar
+      disponibilidad['class'] = 0; // sin diligenciar
     });
+    const hayIncompletos = disponibilidad.disponibilidadPresupuestal.some(
+      (d: { estadoRegistro: boolean }) => d.estadoRegistro === false
+    );
+    if (disponibilidad.class === 0 && hayIncompletos) {
+      disponibilidad['class'] = 1; // incompleto
+      this.incompretos = true;
+    };
   }
 
   pintarSemaforos(){

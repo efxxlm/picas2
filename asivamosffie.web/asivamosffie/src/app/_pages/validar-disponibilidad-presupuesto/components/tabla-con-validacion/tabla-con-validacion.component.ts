@@ -26,6 +26,7 @@ export class TablaConValidacionComponent implements OnInit {
   @Input()disponibilidadPresupuestal: any;
   @Input()esGenerar: boolean;
   @Input()esLiberacion: boolean;
+  @Input()incompretos: boolean;
 
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'estadoRegistro', 'id'];
   dataSource = new MatTableDataSource();
