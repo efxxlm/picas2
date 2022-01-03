@@ -1967,20 +1967,25 @@ namespace asivamosffie.services
 
         public async Task<List<FuenteFinanciacion>> GetFontsByAportantId(int pAportanteId)
         {
-            var resultado = await _context.FuenteFinanciacion.
+            List<FuenteFinanciacion> ListFuenteFinanciacion = await _context.FuenteFinanciacion.
                 Where(x => x.Aportante.TipoAportanteId == pAportanteId && !(bool)x.Eliminado).
                 Include(x => x.CofinanciacionDocumento).
                 ThenInclude(x => x.CofinanciacionAportante).
                 OrderByDescending(r => r.FuenteFinanciacionId).ToListAsync();
-            foreach (var res in resultado)
+
+            List<Dominio> ListTipoFuenteFinanciacion = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion)
+                                                                       .ToList();
+
+            foreach (var FuenteFinanciacion in ListFuenteFinanciacion)
             {
-                if (res.FuenteRecursosCodigo != null)
+                if (FuenteFinanciacion.FuenteRecursosCodigo != null)
                 {
-                    res.FuenteRecursosString = _context.Dominio.Where(x => x.Codigo == res.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                    FuenteFinanciacion.FuenteRecursosString = ListTipoFuenteFinanciacion.Where(x => x.Codigo == FuenteFinanciacion.FuenteRecursosCodigo)
+                                                                                        .FirstOrDefault().Nombre;
                 }
 
             }
-            return resultado;
+            return ListFuenteFinanciacion;
         }
 
         public async Task<bool> deleteFontByID(int pAportanteProyectoId, string pUsuarioModifico)
