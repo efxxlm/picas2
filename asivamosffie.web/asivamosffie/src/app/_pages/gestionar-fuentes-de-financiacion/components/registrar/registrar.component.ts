@@ -64,6 +64,8 @@ export class RegistrarComponent implements OnInit {
   listaBase: CofinanciacionDocumento[];
   documentoFFIEID = 0;
   constrolRecursos: ControlRecurso[] = [];
+  fuentesSeleccionadas: any[]  = [];
+
   constructor(
     private fb: FormBuilder,
     private commonService: CommonService,
@@ -1106,6 +1108,24 @@ export class RegistrarComponent implements OnInit {
         '<b>Los valores RP son mayores que el valor del documento de apropiación</b>'
       );
       return;
+    }
+  }
+
+  selectChangeFuenteRecursos (event, index) {
+    const codigo = event.value.codigo;
+    const fuentesRecursos = [...this.fuentesDeRecursosLista];
+    this.fuentesSeleccionadas[index] = codigo;
+
+    for (let i = 0; i < this.fuentesSeleccionadas.length; i++) {
+      const element = this.fuentesSeleccionadas[i];
+      for (let j = 0; j < this.fuentesDeRecursosLista.length; j++) {
+        const element2 = this.fuentesDeRecursosLista[j];
+        if (element2.codigo === element) fuentesRecursos.splice( j, 1 );
+      }
+    }
+
+    for (let i = 0; i < this.fuentesDeRecursosListaArr.length; i++) {
+      if (i != index) this.fuentesDeRecursosListaArr[i] = fuentesRecursos;
     }
   }
 }
