@@ -71,6 +71,7 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
             vigencia = element.vigenciaAporte?.tipoVigenciaCodigo;
           }
           this.dataTable.push({
+            fuenteFinanciacionId: element.fuenteFinanciacionId,
             fechaCreacion: element.fechaCreacion,
             nombreCuentaBanco: element.cuentaBancaria.nombreCuentaBanco,
             numeroCuentaBanco: element.cuentaBancaria.numeroCuentaBanco,

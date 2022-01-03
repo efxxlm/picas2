@@ -345,10 +345,11 @@ export class ControlDeRecursosComponent implements OnInit {
 
     var SumaValorConsignacionXrp = 0;
     var SumaValorConsignacion = 0;
+
     this.listcontrolRecursosArray.forEach(element => {
       SumaValorConsignacion += element.valorConsignacion ?? 0;
 
-      if (element.numeroRp === numeroRp)
+      if (element.numeroRp === numeroRp && element.fuenteFinanciacionId === this.idFuente)
         SumaValorConsignacionXrp += element.valorConsignacion;
     });
 
