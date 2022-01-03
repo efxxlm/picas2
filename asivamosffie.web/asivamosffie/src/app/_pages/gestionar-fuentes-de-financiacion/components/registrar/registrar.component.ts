@@ -407,6 +407,8 @@ export class RegistrarComponent implements OnInit {
       this.listaRpEliminados.push(rp.registroPresupuestalId)
       }
       this.registrosPresupuestales.removeAt(indexRp);
+      const cuantosRP = this.addressForm.get('cuantosRP');
+      cuantosRP.setValue(Number(cuantosRP.value) - 1);
     }
   }
 
