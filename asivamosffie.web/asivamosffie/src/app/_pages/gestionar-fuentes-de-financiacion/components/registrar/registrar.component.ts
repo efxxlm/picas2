@@ -1124,7 +1124,7 @@ export class RegistrarComponent implements OnInit {
       }
     }
 
-    for (let i = 0; i < this.fuentesDeRecursosListaArr.length; i++) {
+    for (let i = index; i < this.fuentesDeRecursosListaArr.length; i++) {
       if (i != index) this.fuentesDeRecursosListaArr[i] = fuentesRecursos;
     }
   }
