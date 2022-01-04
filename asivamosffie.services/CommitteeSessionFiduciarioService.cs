@@ -874,6 +874,7 @@ namespace asivamosffie.services
                      .ThenInclude(r => r.SesionTemaVoto)
                   .Include(r => r.SesionComiteTema)
                      .ThenInclude(r => r.TemaCompromiso)
+                 .AsNoTracking()
                  .FirstOrDefaultAsync();
 
             //    comiteTecnico.SesionParticipante = sesionParticipantes;
@@ -1606,70 +1607,7 @@ namespace asivamosffie.services
             pPlantilla = pPlantilla.Replace("[PREGUNTA_5]", strPregunta_5);
             pPlantilla = pPlantilla.Replace("[PREGUNTA_6]", strPregunta_6);
             return pPlantilla;
-        }
-
-        public byte[] ConvertirPDF(Plantilla pPlantilla)
-        {
-            string strEncabezado = "";
-            if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
-            {
-                strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
-            }
-
-            var globalSettings = new GlobalSettings
-            {
-                ImageQuality = 1080,
-                PageOffset = 0,
-                ColorMode = ColorMode.Color,
-                Orientation = Orientation.Portrait,
-                PaperSize = PaperKind.A4,
-                Margins = new MarginSettings
-                {
-                    Top = pPlantilla.MargenArriba,
-                    Left = pPlantilla.MargenIzquierda,
-                    Right = pPlantilla.MargenDerecha,
-                    Bottom = pPlantilla.MargenAbajo
-                },
-                DocumentTitle = DateTime.Now.ToString(),
-            };
-
-            var objectSettings = new ObjectSettings
-            {
-                PagesCount = true,
-                HtmlContent = pPlantilla.Contenido,
-                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css") },
-                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18 },
-                FooterSettings = { FontName = "Ariel", FontSize = 10, Center = "[page]" },
-            };
-
-            var pdf = new HtmlToPdfDocument()
-            {
-                GlobalSettings = globalSettings,
-                Objects = { objectSettings },
-            };
-
-            return _converter.Convert(pdf);
-        }
-
-        private async Task<byte[]> ReplacePlantillaFichaContratacion(int pContratacionId)
-        {
-            Contratacion contratacion = await _IProjectContractingService.GetAllContratacionByContratacionId(pContratacionId);
-
-            if (contratacion == null)
-            {
-                return Array.Empty<byte>();
-            }
-
-            string TipoPlantilla = ((int)ConstanCodigoPlantillas.Ficha_De_Contratacion).ToString();
-
-            Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-            Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion);
-
-            //return ConvertirPDF(Plantilla);
-            return PDF.Convertir(Plantilla);
-
-        }
-
+        } 
         private string ReemplazarDatosPlantillaProcesosSeleccion(string pPlantilla, ProcesoSeleccion pProcesoSeleccion)
         {
             pProcesoSeleccion.ProcesoSeleccionProponente = _context.ProcesoSeleccionProponente.Where(r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
@@ -3618,44 +3556,7 @@ namespace asivamosffie.services
                .Include(r => r.ProcesoSeleccionProponente)
                .FirstOrDefaultAsync();
 
-        }
-
-        public async Task<byte[]> GetPlantillaActaIdComite(int ComiteId)
-        {
-            if (ComiteId == 0)
-            {
-                return Array.Empty<byte>();
-            }
-            ComiteTecnico comiteTecnico = await _context.ComiteTecnico
-                .Where(r => r.ComiteTecnicoId == ComiteId)
-                    .Include(r => r.SesionComiteTema)
-                              .ThenInclude(r => r.TemaCompromiso)
-                               .ThenInclude(r => r.ResponsableNavigation)
-                                 .ThenInclude(r => r.Usuario)
-                    .Include(r => r.SesionComiteTema)
-                        .ThenInclude(r => r.SesionTemaVoto)
-                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                       .ThenInclude(r => r.SesionSolicitudCompromiso)
-                           .ThenInclude(r => r.ResponsableSesionParticipante)
-                              .ThenInclude(r => r.Usuario)
-                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                        .ThenInclude(r => r.SesionSolicitudVoto)
-                    .FirstOrDefaultAsync();
-
-            if (comiteTecnico == null)
-            {
-                return Array.Empty<byte>();
-            }
-
-
-            string TipoPlantilla = ((int)ConstanCodigoPlantillas.Descargar_Acta_Comite_Fiduciario).ToString();
-
-            Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-            Plantilla.Contenido = await ReemplazarDatosPlantillaActa(Plantilla.Contenido, comiteTecnico);
-
-            //return ConvertirPDF(plantilla);
-            return PDF.Convertir(Plantilla);
-        }
+        } 
 
         private async Task<string> ReemplazarDatosPlantillaActa(string strContenido, ComiteTecnico pComiteTecnico)
         {
@@ -5907,5 +5808,103 @@ namespace asivamosffie.services
             }
         }
 
+        public byte[] ConvertirPDF(Plantilla pPlantilla)
+        {
+            string strEncabezado = "";
+            if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
+            {
+                strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
+            }
+
+            var globalSettings = new GlobalSettings
+            {
+                ImageQuality = 1080,
+                PageOffset = 0,
+                ColorMode = ColorMode.Color,
+                Orientation = Orientation.Portrait,
+                PaperSize = PaperKind.A4,
+                Margins = new MarginSettings
+                {
+                    Top = pPlantilla.MargenArriba,
+                    Left = pPlantilla.MargenIzquierda,
+                    Right = pPlantilla.MargenDerecha,
+                    Bottom = pPlantilla.MargenAbajo
+                },
+                DocumentTitle = DateTime.Now.ToString(),
+            };
+
+            var objectSettings = new ObjectSettings
+            {
+                PagesCount = true,
+                HtmlContent = pPlantilla.Contenido,
+                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css") },
+                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18 },
+                FooterSettings = { FontName = "Ariel", FontSize = 10, Center = "[page]" },
+            };
+
+            var pdf = new HtmlToPdfDocument()
+            {
+                GlobalSettings = globalSettings,
+                Objects = { objectSettings },
+            };
+
+            return _converter.Convert(pdf);
+        }
+
+        private async Task<byte[]> ReplacePlantillaFichaContratacion(int pContratacionId)
+        {
+            Contratacion contratacion = await _IProjectContractingService.GetAllContratacionByContratacionId(pContratacionId);
+
+            if (contratacion == null)
+            {
+                return Array.Empty<byte>();
+            }
+
+            string TipoPlantilla = ((int)ConstanCodigoPlantillas.Ficha_De_Contratacion).ToString();
+
+            Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+            Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion);
+
+            //return ConvertirPDF(Plantilla);
+            return PDF.Convertir(Plantilla);
+
+        }
+
+        public async Task<byte[]> GetPlantillaActaIdComite(int ComiteId)
+        {
+            if (ComiteId == 0)
+            {
+                return Array.Empty<byte>();
+            }
+            ComiteTecnico comiteTecnico = await _context.ComiteTecnico
+                .Where(r => r.ComiteTecnicoId == ComiteId)
+                    .Include(r => r.SesionComiteTema)
+                              .ThenInclude(r => r.TemaCompromiso)
+                               .ThenInclude(r => r.ResponsableNavigation)
+                                 .ThenInclude(r => r.Usuario)
+                    .Include(r => r.SesionComiteTema)
+                        .ThenInclude(r => r.SesionTemaVoto)
+                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                       .ThenInclude(r => r.SesionSolicitudCompromiso)
+                           .ThenInclude(r => r.ResponsableSesionParticipante)
+                              .ThenInclude(r => r.Usuario)
+                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                        .ThenInclude(r => r.SesionSolicitudVoto)
+                    .FirstOrDefaultAsync();
+
+            if (comiteTecnico == null)
+            {
+                return Array.Empty<byte>();
+            }
+
+
+            string TipoPlantilla = ((int)ConstanCodigoPlantillas.Descargar_Acta_Comite_Fiduciario).ToString();
+
+            Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+            Plantilla.Contenido = await ReemplazarDatosPlantillaActa(Plantilla.Contenido, comiteTecnico);
+
+            //return ConvertirPDF(plantilla);
+            return PDF.Convertir(Plantilla);
+        }
     }
 }
