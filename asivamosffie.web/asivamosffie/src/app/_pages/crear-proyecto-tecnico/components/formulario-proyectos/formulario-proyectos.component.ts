@@ -243,6 +243,8 @@ export class FormularioProyectosComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
+    const estado = this.route.snapshot.paramMap.get('estado');
+    if (estado) this.bitPuedoEditar = false;
     // console.log(id);
 
     if (id) {

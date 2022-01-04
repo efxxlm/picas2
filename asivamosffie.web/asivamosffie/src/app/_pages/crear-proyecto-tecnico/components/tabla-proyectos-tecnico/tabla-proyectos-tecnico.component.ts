@@ -159,10 +159,10 @@ export class TablaProyectosTecnicoComponent {
     this.inicializar();
   }
 
-  ver(gestion:any)
+  ver(gestion:any, estado: boolean = false)
   {
     console.log(gestion);    
-    this.router.navigate(['/crearProyecto/crearProyecto', { id: gestion}]);
+    this.router.navigate(['/crearProyecto/crearProyecto', { id: gestion, estado: estado}]);
   }
 
   eliminar(gestion:any)
