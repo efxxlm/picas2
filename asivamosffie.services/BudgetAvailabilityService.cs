@@ -375,6 +375,10 @@ namespace asivamosffie.services
             {
                 foreach (var ddp in ListDisponibilidadPresupuestal)
                 {
+                    if (ddp.DisponibilidadPresupuestalId == 166)
+                    {
+                        string aja = "aja";
+                    }
                     bool tieneHistorico = false;
                     VDisponibilidadPresupuestal DisponibilidadPresupuestal = ddp;
                     if ((pCodigoEstadoSolicitud == "8" || pCodigoEstadoSolicitud == "5") && DisponibilidadPresupuestal.TieneHistorico == true)
@@ -462,13 +466,24 @@ namespace asivamosffie.services
                             List<int> ddpproyectosId = disponibilidadPresupuestalProyecto.Select(x => (int)x.DisponibilidadPresupuestalProyectoId).ToList();
                             var aportantes = ListProyectoAportante.Where(x => proyectosId.Contains(x.ProyectoId)).ToList();
                             //var fuentes = _context.FuenteFinanciacion.Where(x => aportantes.Contains(x.AportanteId)).Count();
-
                             if (DisponibilidadPresupuestal.EsNovedad != true)
                             {
-                                if (ListGestionFuenteFinanciacion
-                                    .Where(x => x.DisponibilidadPresupuestalProyectoId != null && x.EsNovedad != true &&
-                                           ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId) && x.Eliminado != true)
-                                    .Count() == aportantes.Count() && aportantes.Count() > 0)
+                                DisponibilidadPresupuestal ddpTmp = _context.DisponibilidadPresupuestal.Find(DisponibilidadPresupuestal.DisponibilidadPresupuestalId);
+                                decimal totalSolicitado = 0;
+                                if (DisponibilidadPresupuestal.TieneHistorico == true || DisponibilidadPresupuestal.EstadoSolicitudCodigo == "8")
+                                {
+                                    totalSolicitado = _context.GestionFuenteFinanciacion
+                                     .Where(x => x.DisponibilidadPresupuestalProyectoId != null &&
+                                            ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId) && x.Eliminado != true && x.EsNovedad != true).Sum(r => r.ValorSolicitadoGenerado ?? 0);
+                                }
+                                else
+                                {
+                                    totalSolicitado = _context.GestionFuenteFinanciacion
+                                     .Where(x => x.DisponibilidadPresupuestalProyectoId != null &&
+                                            ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId) && x.Eliminado != true && x.EsNovedad != true).Sum(r => r.ValorSolicitado);
+
+                                }
+                                if (totalSolicitado == ddpTmp.ValorSolicitud)
                                     blnEstado = true;
                             }
                             else
@@ -1636,7 +1651,7 @@ namespace asivamosffie.services
                                     .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", aportante.ValorAportanteAlProyecto != null ? aportante.ValorAportanteAlProyecto : 0))
                                     .Replace("[FUENTE]", fuente.Fuente)
                                     .Replace("[SALDO_FUENTE]", "$ " + String.Format("{0:n0}", fuente.Saldo_actual_de_la_fuente > 0 ? fuente.Saldo_actual_de_la_fuente : 0))
-                                    .Replace("[VALOR_FUENTE]", "$ " + String.Format("{0:n0}", aportante.ValorAportanteAlProyecto != null ? aportante.ValorAportanteAlProyecto : 0))
+                                    .Replace("[VALOR_FUENTE]", "$ " + String.Format("{0:n0}", fuente.Valor_solicitado_de_la_fuente ))
                                     .Replace("[NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", fuente.Nuevo_saldo_de_la_fuente > 0 ? fuente.Nuevo_saldo_de_la_fuente : 0));
                                 tablafuentes += tr;
                             }

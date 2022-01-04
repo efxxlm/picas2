@@ -197,8 +197,14 @@ namespace asivamosffie.services
 
                                 foreach (var fuente in fuentesNew)
                                 {
-                                    string fuenteNombre = _context.Dominio.Where(x => x.Codigo == ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteRecursosCodigo
-                                                    && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                                    FuenteFinanciacion temp = ppapor.Aportante.FuenteFinanciacion.Where(r => r.FuenteFinanciacionId == fuente.FuenteFinanciacionId).FirstOrDefault();
+                                    string fuenteNombre = string.Empty;
+                                    if (temp != null)
+                                    {
+                                        fuenteNombre = _context.Dominio.Where(x => x.Codigo == temp.FuenteRecursosCodigo
+                                                                    && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                                    }
+
 
                                     if (!esGenerar && ListDP.EstadoSolicitudCodigo != "5" && ListDP.EstadoSolicitudCodigo != "8")
                                     {
@@ -524,17 +530,22 @@ namespace asivamosffie.services
 
                         if (ListDP.EsNovedad != true)
                         {
-                           decimal totalSolicitado = _context.GestionFuenteFinanciacion
-                                .Where(x => x.DisponibilidadPresupuestalProyectoId != null &&
-                                       ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId) && x.Eliminado != true && x.EsNovedad != true).Sum(r => r.ValorSolicitado);
-                            if (totalSolicitado == ListDP.ValorSolicitud)
-                                blnEstado = true;
+                            decimal totalSolicitado = 0;
 
-                            if (_context.GestionFuenteFinanciacion
-                                .Where(x => x.DisponibilidadPresupuestalProyectoId != null &&
-                                       ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId) && x.Eliminado != true && x.EsNovedad != true)
-                                .Count() == aportantesEstado.Count())
-                                blnEstado = true;
+                            if (vdpp != null || ListDP.EstadoSolicitudCodigo == "8")
+                            {
+                                totalSolicitado = _context.GestionFuenteFinanciacion.Where(x => x.DisponibilidadPresupuestalProyectoId != null &&
+                                               ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId) && x.Eliminado != true && x.EsNovedad != true).Sum(r => r.ValorSolicitadoGenerado ?? 0);
+                                if (totalSolicitado == ListDP.ValorSolicitud)
+                                    blnEstado = true;
+                            }
+                            else
+                            {
+                                totalSolicitado = _context.GestionFuenteFinanciacion.Where(x => x.DisponibilidadPresupuestalProyectoId != null &&
+                                       ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId) && x.Eliminado != true && x.EsNovedad != true).Sum(r => r.ValorSolicitado);
+                                if (totalSolicitado == ListDP.ValorSolicitud)
+                                    blnEstado = true;
+                            }
                         }
                     }
                     var plazoContratacion = new PlazoContratacion();
