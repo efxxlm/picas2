@@ -90,7 +90,7 @@ export class GestionarDdpComponent implements OnInit {
         console.log(listas);
         //this.detailavailabilityBudget=listas;
         this.openDialog("", listas.message, true);
-        if (listas.code == "200") {
+        if (listas.data != null) {
           this.download(listas.data);
         }
       });
