@@ -104,10 +104,9 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
             }
         });
         console.log(this.dataTable);
-        this.dataSource = new MatTableDataSource(this.dataTable);
+        this.dataSource = new MatTableDataSource(this.dataTable.filter(r => r.fuenteFinanciacionId == this.idFuente));
         this.ngAfterViewInit()
       })
-
       this.listcontrolRecursos.emit( this.dataTable );
     });
 
