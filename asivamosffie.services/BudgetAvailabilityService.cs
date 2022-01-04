@@ -1234,7 +1234,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = ConstantMessagesGenerateBudget.OperacionExitosa,
-                        Data = DisponibilidadCancelar,
+                       // Data = DisponibilidadCancelar,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.OperacionExitosa, idAccion, pUsuarioModificacion, "GENERAR DDP DISPONIBILIDAD PRESUPUESTAL")
                     };
                 }
@@ -1246,7 +1246,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = ConstantMessagesGenerateBudget.OperacionExitosa,
-                        Data = DisponibilidadCancelar,
+                       // Data = DisponibilidadCancelar,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.OperacionExitosa, idAccion, pUsuarioModificacion, "ERROR ENVIO MAIL GENERAR DDP DISPONIBILIDAD PRESUPUESTAL")
                     };
                 }
