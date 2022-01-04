@@ -2006,7 +2006,7 @@ namespace asivamosffie.services
                                 ValorSolicitud = dp.ValorSolicitud,
                                 EstadoSolicitudCodigo = dp.EstadoSolicitudCodigo,
                                 RegistroCompleto = dp.RegistroCompleto,
-                                EstadoSolicitudNombre = _context.Dominio.Where(r => (bool)r.Activo &&
+                                EstadoSolicitudNombre = (dp.EstadoSolicitudCodigo == null || dp.EstadoSolicitudCodigo == "0" )  && string.IsNullOrEmpty(dp.TipoSolicitudCodigo) ? "Sin Registro" : (dp.EstadoSolicitudCodigo == null || dp.EstadoSolicitudCodigo == "0") && !string.IsNullOrEmpty(dp.TipoSolicitudCodigo) ? "En proceso de registro" : _context.Dominio.Where(r => (bool)r.Activo &&
                                                                              r.Codigo.Equals(dp.EstadoSolicitudCodigo) &&
                                                                              r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Disponibilidad_Presupuestal)
                                                                        .Select(r => r.Nombre).FirstOrDefault(),

@@ -335,9 +335,15 @@ namespace asivamosffie.services
 
                 var comite = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == contratacion.ContratacionId && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).
                     Include(x => x.ComiteTecnico).ToList();
+
+                comite = comite.Where(r => r.Eliminado != true).ToList();
                 if (comite.Count() > 0)
                 {
-                    fechaComitetecnico = Convert.ToDateTime(comite.FirstOrDefault().ComiteTecnico.FechaOrdenDia);
+                    ComiteTecnico ct = comite.FirstOrDefault().ComiteTecnico;
+                    if (ct != null)
+                    {
+                        fechaComitetecnico = Convert.ToDateTime(ct.FechaOrdenDia ?? DateTime.Now);
+                    }
                 }
 
                 contratacion.FechaComiteTecnicoNotMapped = fechaComitetecnico;

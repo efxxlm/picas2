@@ -44,24 +44,24 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
 
-                <button mat-raised-button color="accent" class="btn-table" 
-                *ngIf="(element.estadoSolicitudCodigo==2||element.estadoSolicitudCodigo==8) && element.registroCompleto"
+                <button mat-raised-button color="accent" class="btn-table"
+                *ngIf="(element.estadoSolicitudCodigo==2||element.estadoSolicitudCodigo==8 || element.estadoSolicitudCodigo == '0') && element.registroCompleto"
                     (click)="enviarSolicitud(element.disponibilidadPresupuestalId)">
                     Enviar solicitud
                 </button>
 
                 <button mat-raised-button color="accent" class="btn-table" *ngIf="
-                    element.estadoSolicitudCodigo==8 || element.estadoSolicitudCodigo==2"
+                    element.estadoSolicitudCodigo==8 || element.estadoSolicitudCodigo==2 || element.estadoSolicitudCodigo == '0'"
                     (click)="editar(element.disponibilidadPresupuestalId)">
                     Ver detalle /Editar
                 </button>
 
-                <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoSolicitudCodigo==8"
+                <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoSolicitudCodigo==8 || element.estadoSolicitudCodigo == '0'"
                     (click)="eliminar(element.disponibilidadPresupuestalId)">
                     Eliminar
                 </button>
 
-                <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoSolicitudCodigo!=8 && element.estadoSolicitudCodigo!=2"
+                <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoSolicitudCodigo!=8 && element.estadoSolicitudCodigo!=2 && element.estadoSolicitudCodigo != '0'"
                     (click)="verDetalle(element.disponibilidadPresupuestalId)">
                     Ver detalle
                 </button>

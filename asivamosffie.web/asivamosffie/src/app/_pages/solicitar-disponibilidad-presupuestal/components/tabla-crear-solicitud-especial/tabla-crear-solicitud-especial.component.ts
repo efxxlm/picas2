@@ -45,9 +45,10 @@ export class TablaCrearSolicitudEspecialComponent implements OnInit {
 
     this.budgetAvailabilityService.getDDPEspecial()
       .subscribe( listaDDP => {
-        // console.log( listaDDP );
+        console.log( listaDDP );
         listaDDP.forEach(element => {
           element.fechaSolicitud = element.fechaSolicitud.split('T')[0].split('-').reverse().join('/');
+          element.estadoSolicitudCodigo = element.estadoSolicitudCodigo == undefined || element.estadoSolicitudCodigo == null ? "0" : element.estadoSolicitudCodigo;
         });
         this.dataSource = new MatTableDataSource(listaDDP);
         this.dataSource.sort = this.sort;
@@ -65,7 +66,7 @@ export class TablaCrearSolicitudEspecialComponent implements OnInit {
       })
   }
 
-  
+
   openDialog(modalTitle: string, modalText: string,reload:boolean=false) {
     const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
@@ -78,7 +79,7 @@ export class TablaCrearSolicitudEspecialComponent implements OnInit {
   }
 
   enviarSolicitud(e: number) {
-    
+
     this.budgetAvailabilityService.sendRequest( e, 0, false )
       .subscribe( respuesta => {
         this.openDialog( '', `<b>${respuesta.message}</b>` );
