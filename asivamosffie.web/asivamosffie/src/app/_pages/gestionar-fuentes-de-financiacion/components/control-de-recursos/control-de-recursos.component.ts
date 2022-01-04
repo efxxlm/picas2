@@ -268,6 +268,12 @@ export class ControlDeRecursosComponent implements OnInit {
   onSubmit() {
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
+    let fuenteModificando: ControlRecurso;
+    if (this.isETOrThirdParty()) {
+      this.validateRPValue(fuenteModificando);
+    } else {
+      this.validateVigency(fuenteModificando);
+    }
     if (this.addressForm.valid) {
 
       let rp = this.addressForm.get('rp').value;
@@ -334,7 +340,7 @@ export class ControlDeRecursosComponent implements OnInit {
 
   validateRPValue(editingResource: ControlRecurso) {
     const controlRecursoId = this.addressForm.get('controlRecursoId').value
-    const numeroRp = this.addressForm.get("rp").value.numeroRp;
+    const numeroRp = this.addressForm.get("rp").value?.numeroRp;
     const valorRp = !this.addressForm.get("valorRp").value ? 0 : Number(this.addressForm.get("valorRp").value);
     const newTotal = this.countResources.find(x => x.numeroRp === numeroRp);
 
