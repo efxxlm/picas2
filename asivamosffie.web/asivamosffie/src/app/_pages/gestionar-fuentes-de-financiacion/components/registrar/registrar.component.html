@@ -512,7 +512,9 @@
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select formControlName="fuenteRecursos" required (selectionChange)="selectChangeFuenteRecursos($event, j)">
+                    <mat-select formControlName="fuenteRecursos" required (selectionChange)="selectChangeFuenteRecursos($event.value.codigo, j)"
+                    >
+                    <!-- [disabled]="fuente.get('fuenteRecursos').value !== null" -->
                       <mat-option *ngFor="let fuenteDeRecursos1 of fuentesDeRecursosListaArr[j]"
                         [value]="fuenteDeRecursos1">
                         {{ fuenteDeRecursos1.nombre }}

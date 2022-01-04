@@ -183,7 +183,7 @@ export class RegistrarComponent implements OnInit {
     this.fuenteFinanciacionService.listaFuenteFinanciacionByAportante(this.idAportante).subscribe(lista => {
       let i = 0;
       lista.forEach(ff => {
-        this.fuentesDeRecursosListaArr.push(this.fuentesDeRecursosLista);
+        // this.fuentesDeRecursosListaArr.push([...this.fuentesDeRecursosLista]);
         //if (this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString())) {
         //  const tipo = this.tipoDocumentoap.filter(x => x.dominioId == ff.cofinanciacionDocumento.tipoDocumentoId);
         //  this.addressForm.get('tipoDocumento').setValue(tipo[0].dominioId);
@@ -217,6 +217,8 @@ export class RegistrarComponent implements OnInit {
         grupo.get('cuantasVigencias').setValue(ff.cantVigencias);
         grupo.get('fuenteRecursos').setValue(fuenteRecursosSeleccionada);
         grupo.get('fuenteFinanciacionId').setValue(ff.fuenteFinanciacionId);
+
+        this.selectChangeFuenteRecursos(fuenteRecursosSeleccionada, i);
 
         // Vigencias
         let cantidadVigencias = 0;
@@ -333,7 +335,7 @@ export class RegistrarComponent implements OnInit {
         } else {
           this.edicion = false;
           this.nombresAportantes = this.nombresAportantes.filter(x => x.fuenteFinanciacion.length == 0);
-          this.fuentesDeRecursosListaArr.push(res[1]);
+          this.fuentesDeRecursosListaArr.push([...res[1]]);
         }
         const nombresAportantesTemp: Dominio[] = res[0];
 
@@ -344,6 +346,9 @@ export class RegistrarComponent implements OnInit {
         });
 
         this.fuentesDeRecursosLista = res[1];
+        for (let i = 0; i < 50; i++) {
+          this.fuentesDeRecursosListaArr.push([...this.fuentesDeRecursosLista]);
+        }
 
         this.bancos = res[2];
         this.departamentos = res[3].sort((a, b) => {
@@ -1121,11 +1126,16 @@ export class RegistrarComponent implements OnInit {
   }
 
   selectChangeFuenteRecursos(event, index) {
-    const codigo = event.value.codigo;
+    const codigo = event;
     this.fuentesSeleccionadas[index] = codigo;
-    let fuentesRecursos;
+    let fuentesRecursos = [];
     if (index > 0) fuentesRecursos = [...this.fuentesDeRecursosListaArr[index - 1]];
-    else fuentesRecursos = [...this.fuentesDeRecursosLista];
+    else {
+      fuentesRecursos = [...this.fuentesDeRecursosLista];
+      for (let i = 0; i < 50; i++) {
+        this.fuentesDeRecursosListaArr[i] = [...this.fuentesDeRecursosLista];
+      }
+    }
 
     for (let i = 0; i < this.fuentesSeleccionadas.length; i++) {
       const element = this.fuentesSeleccionadas[i];
