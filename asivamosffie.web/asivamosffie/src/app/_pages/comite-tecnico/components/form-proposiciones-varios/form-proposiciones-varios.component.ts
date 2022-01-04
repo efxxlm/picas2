@@ -88,26 +88,14 @@ export class FormProposicionesVariosComponent implements OnInit {
       responsable: [null, Validators.required],
       tiempoIntervencion: [null, [Validators.required, Validators.minLength(1), Validators.maxLength(3)]],
       url: [null,Validators.required],
-    });
-
-    //if (lista.length == 1 && cantidadIncompletos == 3) {
-      this.semaforo.emit('sin-diligenciar');
-    // }
-    // else if (!completo) {
-    //   this.semaforo.emit('en-proceso');
-    // }
-    // else if (completo) {
-    //   this.semaforo.emit('completo');
-    // }
-
+    }); 
   }
 
   onSubmit() {
 
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
-    // console.log(this.addressForm)
-
+ 
     let temas: SesionComiteTema[] = []
 
     this.tema.controls.forEach(control => {
@@ -126,13 +114,7 @@ export class FormProposicionesVariosComponent implements OnInit {
     this.technicalCommitteSessionService.createEditSesionComiteTema(temas)
       .subscribe(respuesta => {
         console.log(respuesta);
-        this.openDialog('', `<b>${respuesta.message}</b>`)
-        /*if (respuesta.code == "200") {
-          //this.validarCompletos(respuesta.data);
-          this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.objetoComiteTecnico.comiteTecnicoId])
-        }*/
-
-        //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.objetoComiteTecnico.comiteTecnicoId])
+        this.openDialog('', `<b>${respuesta.message}</b>`) 
       })
   }
 
