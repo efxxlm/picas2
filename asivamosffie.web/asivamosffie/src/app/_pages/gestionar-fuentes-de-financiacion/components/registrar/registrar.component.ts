@@ -184,28 +184,28 @@ export class RegistrarComponent implements OnInit {
       let i = 0;
       lista.forEach(ff => {
         this.fuentesDeRecursosListaArr.push(this.fuentesDeRecursosLista);
-        if (this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString())) {
-          const tipo = this.tipoDocumentoap.filter(x => x.dominioId == ff.cofinanciacionDocumento.tipoDocumentoId);
-          this.addressForm.get('tipoDocumento').setValue(tipo[0].dominioId);
-          const numerodoc = this.listaDocumentosApropiacion.filter(
-            x => x.cofinanciacionDocumentoId == ff.cofinanciacionDocumentoId
-          );
-          this.listaDocumentos = this.listaDocumentosApropiacion.filter(
-            x => x.tipoDocumentoId == ff.cofinanciacionDocumento.tipoDocumentoId
-          );
-          /*this.listaDocumentos = this.listaDocumentosApropiacion.filter(
-            x => x.cofinanciacionDocumentoId == ff.cofinanciacionDocumentoId
-          );*/
-          //this.listaDocumentos.forEach(element => {
-          //this.valorTotal = numerodoc[0].valorDocumento;
-          //});
-          this.valorTotal = 0;
-          this.listaDocumentos.forEach(element => {
-            this.valorTotal += element.valorDocumento;
-          });
-          this.documentoFFIEID = ff.cofinanciacionDocumentoId;
-          this.addressForm.get('numerodocumento').setValue(numerodoc[0]);
-        }
+        //if (this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString())) {
+        //  const tipo = this.tipoDocumentoap.filter(x => x.dominioId == ff.cofinanciacionDocumento.tipoDocumentoId);
+        //  this.addressForm.get('tipoDocumento').setValue(tipo[0].dominioId);
+        //  const numerodoc = this.listaDocumentosApropiacion.filter(
+        //    x => x.cofinanciacionDocumentoId == ff.cofinanciacionDocumentoId
+        //  );
+        //  this.listaDocumentos = this.listaDocumentosApropiacion.filter(
+        //    x => x.tipoDocumentoId == ff.cofinanciacionDocumento.tipoDocumentoId
+        //  );
+        //  /*this.listaDocumentos = this.listaDocumentosApropiacion.filter(
+        //    x => x.cofinanciacionDocumentoId == ff.cofinanciacionDocumentoId
+        //  );*/
+        //  //this.listaDocumentos.forEach(element => {
+        //  //this.valorTotal = numerodoc[0].valorDocumento;
+        //  //});
+        //  this.valorTotal = 0;
+        //  this.listaDocumentos.forEach(element => {
+        //    this.valorTotal += element.valorDocumento;
+        //  });
+        //  this.documentoFFIEID = ff.cofinanciacionDocumentoId;
+        //  this.addressForm.get('numerodocumento').setValue(numerodoc[0]);
+        //}
         const grupo: FormGroup = this.crearFuenteEdit(ff.valorFuente);
         const fuenteRecursosSeleccionada = this.fuentesDeRecursosListaArr[i].find(
           f => f.codigo === ff.fuenteRecursosCodigo
@@ -539,7 +539,10 @@ export class RegistrarComponent implements OnInit {
 
       // FFIE
       if (this.tipoAportante.FFIE.includes(this.tipoAportanteId.toString())) {
-        this.cofinanciacionService.getDocumentoApropiacionByAportante(this.idAportante).subscribe(listDoc => {
+        const vigencia = this.addressForm.get('nombreAportanteFFIE').value;
+        this.idAportante = vigencia.cofinanciacionAportanteId;
+        this.cargarDocumentos();
+        /*this.cofinanciacionService.getDocumentoApropiacionByAportante(this.idAportante).subscribe(listDoc => {
           if (listDoc.length > 0) {
             //this.addressForm.get('numerodocumento').setValue(listDoc[0].numeroActa);
             //this.addressForm.get('documentoApropiacion').setValue(listDoc[0].tipoDocumento.nombre);
@@ -558,7 +561,7 @@ export class RegistrarComponent implements OnInit {
           } else {
             this.openDialog('Validacion', 'No tiene documentos de apropiacion');
           }
-        });
+        });*/
       }
     }
   }
@@ -821,6 +824,12 @@ export class RegistrarComponent implements OnInit {
         this.valorTotal += element.valorDocumento;
       });
     }
+  }
+
+  changeVigenciaFfie() {
+    const vigencia = this.addressForm.get('nombreAportanteFFIE').value;
+    this.idAportante = vigencia.cofinanciacionAportanteId;
+    this.cargarDocumentos();
   }
 
   onSubmit() {
