@@ -21,7 +21,7 @@ export interface PeriodicElement {
   valorGestionado:number;
   ver:boolean;
   esNovedad?:boolean;
-  novedadContractualRegistroPresupuestalId?: number 
+  novedadContractualRegistroPresupuestalId?: number
 }
 
 
@@ -58,16 +58,21 @@ export class TablaGestionarValidacionComponent implements OnInit {
   @Input()codigo: any;
   @Input()ver: any;
   @Input()detalle:any;
-  
+
   ngOnInit(): void {
     console.log(this.detalle);
     let elements:PeriodicElement[]=[];
+    let valorFuenteTmp = 0;
     this.proyectos.forEach(element => {
       element.aportantes.forEach(element2 => {
+        valorFuenteTmp = 0;
+        element2.fuentesFinanciacion?.forEach(e => {
+          valorFuenteTmp += e.valor_solicitado_de_la_fuente ?? 0;
+        });
         elements.push({
           llaveMen:element.llaveMen,
           departamento:element.departamento,
-          estado:element2.valorGestionado>0,//
+          estado: element2.valorAportanteAlProyecto == valorFuenteTmp ? true : false,//
           id:element2.cofinanciacionAportanteId,//el aprotante id
           institucion:element.institucionEducativa,
           municipio:element.municipio,
@@ -81,7 +86,7 @@ export class TablaGestionarValidacionComponent implements OnInit {
           esNovedad: this.detalle.esNovedad,
           novedadContractualRegistroPresupuestalId: this.detalle.novedadContractualRegistroPresupuestalId,
 
-        });  
+        });
       });
     });
     console.log(elements);
