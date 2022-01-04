@@ -1120,21 +1120,23 @@ export class RegistrarComponent implements OnInit {
     }
   }
 
-  selectChangeFuenteRecursos (event, index) {
+  selectChangeFuenteRecursos(event, index) {
     const codigo = event.value.codigo;
-    const fuentesRecursos = [...this.fuentesDeRecursosLista];
     this.fuentesSeleccionadas[index] = codigo;
+    let fuentesRecursos;
+    if (index > 0) fuentesRecursos = [...this.fuentesDeRecursosListaArr[index - 1]];
+    else fuentesRecursos = [...this.fuentesDeRecursosLista];
 
     for (let i = 0; i < this.fuentesSeleccionadas.length; i++) {
       const element = this.fuentesSeleccionadas[i];
-      for (let j = 0; j < this.fuentesDeRecursosLista.length; j++) {
-        const element2 = this.fuentesDeRecursosLista[j];
-        if (element2.codigo === element) fuentesRecursos.splice( j, 1 );
+      for (let j = 0; j < fuentesRecursos.length; j++) {
+        const element2 = fuentesRecursos[j];
+        if (element2.codigo === element) fuentesRecursos.splice(j, 1);
       }
     }
 
-    for (let i = index; i < this.fuentesDeRecursosListaArr.length; i++) {
-      if (i != index) this.fuentesDeRecursosListaArr[i] = fuentesRecursos;
+    for (let i = 0; i < this.fuentesDeRecursosListaArr.length; i++) {
+      if (i > index) this.fuentesDeRecursosListaArr[i] = fuentesRecursos;
     }
   }
 }
