@@ -28,7 +28,7 @@ export class ConsideracionesEspecialesComponent implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    this.cargarEdicion();
+    // this.cargarEdicion();
   }
 
   private cargarEdicion() {
@@ -71,5 +71,10 @@ export class ConsideracionesEspecialesComponent implements OnInit {
       .setValue(
         this.contratacion.consideracionDescripcion !== undefined ? this.contratacion.consideracionDescripcion : null
       );
+
+    if (this.contratacion.esObligacionEspecial || this.contratacion.consideracionDescripcion) {
+     this.estaEditando = true;
+     this.addressForm.markAllAsTouched();
+    }
   }
 }
