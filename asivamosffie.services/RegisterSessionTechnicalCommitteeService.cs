@@ -50,11 +50,21 @@ namespace asivamosffie.services
             string CreateEdit = string.Empty;
             try
             {
-                SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(pSesionComiteSolicitud.SesionComiteSolicitudId);
-                //sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
-                sesionComiteSolicitudOld.RequiereVotacion = true;
-                sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
-                sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
+
+                _context.Set<SesionComiteSolicitud>()
+                        .Where(s => s.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
+                        .Update(s => new SesionComiteSolicitud
+                        {
+                            RequiereVotacion = true,
+                            UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion,
+                            FechaModificacion = DateTime.Now,
+                        });
+
+                //SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(pSesionComiteSolicitud.SesionComiteSolicitudId);
+                ////sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
+                //RequiereVotacion = true;
+                //UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
+                //FechaModificacion = DateTime.Now;
 
                 foreach (var sesionSolicitudVoto in pSesionComiteSolicitud.SesionSolicitudVoto)
                 {
@@ -65,22 +75,28 @@ namespace asivamosffie.services
                         sesionSolicitudVoto.Eliminado = false;
                         sesionSolicitudVoto.FechaCreacion = DateTime.Now;
                         _context.SesionSolicitudVoto.Add(sesionSolicitudVoto);
-                        //sesionComiteSolicitudOld.SesionSolicitudVoto.Add(sesionSolicitudVoto);
+
                     }
                     else
                     {
                         CreateEdit = "EDITAR SOLICITUD VOTO";
-                        SesionSolicitudVoto sesionSolicitudVotoOld = _context.SesionSolicitudVoto.Find(sesionSolicitudVoto.SesionSolicitudVotoId);
+                        //SesionSolicitudVoto sesionSolicitudVotoOld = _context.SesionSolicitudVoto.Find(sesionSolicitudVoto.SesionSolicitudVotoId); 
+                        //sesionSolicitudVotoOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
+                        //sesionSolicitudVotoOld.FechaModificacion = DateTime.Now; 
+                        //sesionSolicitudVotoOld.EsAprobado = sesionSolicitudVoto.EsAprobado;
+                        //sesionSolicitudVotoOld.Observacion = sesionSolicitudVoto.Observacion;
 
-                        sesionSolicitudVotoOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
-                        sesionSolicitudVotoOld.FechaModificacion = DateTime.Now;
-
-                        sesionSolicitudVotoOld.EsAprobado = sesionSolicitudVoto.EsAprobado;
-                        sesionSolicitudVotoOld.Observacion = sesionSolicitudVoto.Observacion;
+                        _context.Set<SesionSolicitudVoto>()
+                                .Where(s => s.SesionSolicitudVotoId == sesionSolicitudVoto.SesionSolicitudVotoId)
+                                .Update(s => new SesionSolicitudVoto
+                                {
+                                    UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion,
+                                    FechaModificacion = DateTime.Now,
+                                    EsAprobado = sesionSolicitudVoto.EsAprobado,
+                                    Observacion = sesionSolicitudVoto.Observacion
+                                }); 
                     }
-                }
-
-                //
+                } 
                 foreach (var SesionSolicitudObservacionProyecto in pSesionComiteSolicitud.SesionSolicitudObservacionProyecto)
                 {
                     if (SesionSolicitudObservacionProyecto.SesionSolicitudObservacionProyectoId == 0)
@@ -93,10 +109,19 @@ namespace asivamosffie.services
                     }
                     else
                     {
-                        SesionSolicitudObservacionProyecto SesionSolicitudObservacionProyectoOld = _context.SesionSolicitudObservacionProyecto.Find(SesionSolicitudObservacionProyecto.SesionSolicitudObservacionProyectoId);
-                        SesionSolicitudObservacionProyectoOld.Observacion = SesionSolicitudObservacionProyecto.Observacion;
-                        SesionSolicitudObservacionProyectoOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
-                        SesionSolicitudObservacionProyectoOld.FechaModificacion = DateTime.Now;
+                        //SesionSolicitudObservacionProyecto SesionSolicitudObservacionProyectoOld = _context.SesionSolicitudObservacionProyecto.Find(SesionSolicitudObservacionProyecto.SesionSolicitudObservacionProyectoId);
+                        //SesionSolicitudObservacionProyectoOld.Observacion = SesionSolicitudObservacionProyecto.Observacion;
+                        //SesionSolicitudObservacionProyectoOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
+                        //SesionSolicitudObservacionProyectoOld.FechaModificacion = DateTime.Now;
+ 
+                        _context.Set<SesionSolicitudObservacionProyecto>()
+                                .Where(s => s.SesionSolicitudObservacionProyectoId == SesionSolicitudObservacionProyecto.SesionSolicitudObservacionProyectoId)
+                                .Update(s => new SesionSolicitudObservacionProyecto
+                                {
+                                    Observacion = SesionSolicitudObservacionProyecto.Observacion,
+                                    UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion,
+                                    FechaModificacion = DateTime.Now
+                                });
                     }
                 }
 
@@ -112,18 +137,26 @@ namespace asivamosffie.services
                     }
                     else
                     {
-                        SesionSolicitudObservacionActualizacionCronograma observacionActualizacionCronogramaOld = _context.SesionSolicitudObservacionActualizacionCronograma.Find(observacionActualizacionCronograma.SesionSolicitudObservacionActualizacionCronogramaId);
-                        observacionActualizacionCronogramaOld.Observacion = observacionActualizacionCronograma.Observacion;
-                        observacionActualizacionCronogramaOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
-                        observacionActualizacionCronogramaOld.FechaModificacion = DateTime.Now;
+                        //SesionSolicitudObservacionActualizacionCronograma observacionActualizacionCronogramaOld = _context.SesionSolicitudObservacionActualizacionCronograma.Find(observacionActualizacionCronograma.SesionSolicitudObservacionActualizacionCronogramaId);
+                        //observacionActualizacionCronogramaOld.Observacion = observacionActualizacionCronograma.Observacion;
+                        //observacionActualizacionCronogramaOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
+                        //observacionActualizacionCronogramaOld.FechaModificacion = DateTime.Now;
+
+                        _context.Set<SesionSolicitudObservacionActualizacionCronograma>()
+                                .Where(s => s.SesionSolicitudObservacionActualizacionCronogramaId == observacionActualizacionCronograma.SesionSolicitudObservacionActualizacionCronogramaId)
+                                .Update(s => new SesionSolicitudObservacionActualizacionCronograma 
+                                {
+                                    Observacion = observacionActualizacionCronograma.Observacion,
+                                    UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion,
+                                    FechaModificacion = DateTime.Now
+                                });
                     }
                 }
 
-                _context.SaveChanges();
                 return
                 new Respuesta
                 {
-                    Data = await GetComiteTecnicoByComiteTecnicoId((int)pSesionComiteSolicitud.ComiteTecnicoId),
+                 //   Data = await GetComiteTecnicoByComiteTecnicoId((int)pSesionComiteSolicitud.ComiteTecnicoId),
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
@@ -867,7 +900,7 @@ namespace asivamosffie.services
                     else
                     {
                         CreateEdit = "EDITAR SESIÓN COMITE TEMA";
-                    
+
                         bool RegistroCompletoComiteTema = ValidarRegistroCompletoSesionComiteTema(SesionComiteTema);
 
                         _context.Set<SesionComiteTema>()
