@@ -41,8 +41,11 @@ export class FormularioProyectosComponent implements OnInit {
       if (result === true) {
         const index = this.proyectoAdmin.proyectoAdministrativoAportante.indexOf(aportante, 0);
         const index2 = this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.indexOf(key, 0);
-        const fuenteRecursosString = this.listadoFuentesArr.find(e => e.fuenteFinanciacionId == fuenteFinanciacionId);
-        this.listadoFuentes.push(fuenteRecursosString);
+
+        if (fuenteFinanciacionId) {
+          const fuenteRecursosString = this.listadoFuentesArr.find(e => e.fuenteFinanciacionId == fuenteFinanciacionId);
+          this.listadoFuentes.push(fuenteRecursosString);
+        }
 
         if (index2 > -1) 
         {
