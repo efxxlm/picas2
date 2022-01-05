@@ -19,17 +19,18 @@ export class FormularioProyectosComponent implements OnInit {
   bitPuedoEditar = true;
   proyectoAdmin: ProyectoAdministrativo;
   listadoAportantes: Dominio[];
-  listadoFuentes: Dominio[];
+  listadoFuentes: any[];
+  listadoFuentesArr: any[];
   estaEditando = false;
   lockFormFields: boolean;
 
   addFont(index: number) {
-    console.log("push");
-    console.log(index);
+    // console.log("push");
+    // console.log(index);
     this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.push({ valorFuente: null, fuenteRecursosCodigo: null, fuenteFinanciacionId: null, proyectoAdministrativoAportanteId: null });
   }
 
-  openDialogSiNo(modalTitle: string, modalText: string, key: AportanteFuenteFinanciacion, aportante: Aportante) {
+  openDialogSiNo(modalTitle: string, modalText: string, key: AportanteFuenteFinanciacion, aportante: Aportante, fuenteFinanciacionId) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText, siNoBoton: true }
@@ -40,6 +41,8 @@ export class FormularioProyectosComponent implements OnInit {
       if (result === true) {
         const index = this.proyectoAdmin.proyectoAdministrativoAportante.indexOf(aportante, 0);
         const index2 = this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.indexOf(key, 0);
+        const fuenteRecursosString = this.listadoFuentesArr.find(e => e.fuenteFinanciacionId == fuenteFinanciacionId);
+        this.listadoFuentes.push(fuenteRecursosString);
 
         if (index2 > -1) 
         {
@@ -51,16 +54,17 @@ export class FormularioProyectosComponent implements OnInit {
       }
     });
   }
-  deleteFont(key: AportanteFuenteFinanciacion, aportante: Aportante) {
+  deleteFont(key: AportanteFuenteFinanciacion, aportante: Aportante, fuenteFinanciacionId) {
 
-    this.openDialogSiNo("", "¿Está seguro de eliminar este  registro?", key, aportante);
+    this.openDialogSiNo("", "¿Está seguro de eliminar este  registro?", key, aportante, fuenteFinanciacionId);
   }
 
   onchangeFont(i: number) {
-    console.log(this.proyectoAdmin);
-    console.log(i);
+    // console.log(this.proyectoAdmin);
+    // console.log(i);
     this.projectServices.listaFuentes(this.proyectoAdmin.proyectoAdministrativoAportante[i].aportanteId).subscribe(respuesta => {
-      this.listadoFuentes = respuesta;
+      this.listadoFuentesArr = respuesta;
+      this.listadoFuentes = [...this.listadoFuentesArr];
     },
       err => {
         let mensaje: string;
@@ -239,5 +243,24 @@ export class FormularioProyectosComponent implements OnInit {
 
       });
     }
+  }
+
+  onchangeFuentes(event, index) {
+    const fuenteFinanciacionId = event.value;
+
+    for (let i = 0; i < this.listadoFuentes.length; i++) {
+      const element = this.listadoFuentes[i];
+      if (element.fuenteFinanciacionId === fuenteFinanciacionId) this.listadoFuentes.splice(i, 1);
+    }
+  }
+
+  nombreFuente(fuenteFinanciacionId) {
+    const fuenteRecursosString = this.listadoFuentesArr.find(e => e.fuenteFinanciacionId == fuenteFinanciacionId);
+    return fuenteRecursosString.fuenteRecursosString;
+  }
+
+  cofinanciacionIdFuente(fuenteFinanciacionId) {
+    const cofinanciacionId = this.listadoFuentesArr.find(e => e.fuenteFinanciacionId == fuenteFinanciacionId);
+    return cofinanciacionId.aportante ? cofinanciacionId.aportante?.cofinanciacionId : '';
   }
 }

@@ -65,7 +65,7 @@
                         class="label-left"
                         [class.color-secondaryColor]="!fuente.fuenteFinanciacionId && estaEditando"
                       >
-                        Fuentes
+                        Fuentes {{fuente.fuenteFinanciacionId}}
                       </label>
                     </div>
                     <div class="col">
@@ -73,11 +73,20 @@
                         class="select-width"
                         [class.mat-form-field-invalid]="!fuente.fuenteFinanciacionId && estaEditando"
                       >
-                        <mat-select required [(ngModel)]="fuente.fuenteFinanciacionId" [disabled]="lockFormFields">
-                          <mat-option *ngFor="let listado of listadoFuentes" [value]="listado.fuenteFinanciacionId">
-                            Número de acuerdo: <b>{{ listado.aportante?.cofinanciacionId }}</b> Tipo:
-                            <b>{{ listado.fuenteRecursosString }}</b>
+                        <mat-select required [(ngModel)]="fuente.fuenteFinanciacionId" [disabled]="lockFormFields"
+                          (selectionChange)="onchangeFuentes($event, i)"
+                        >
+                          <mat-option *ngIf="fuente.fuenteFinanciacionId" [value]="fuente.fuenteFinanciacionId">
+                            Número de acuerdo: <b>{{ cofinanciacionIdFuente(fuente.fuenteFinanciacionId) }}</b> Tipo:
+                            <b>{{ nombreFuente(fuente.fuenteFinanciacionId) }}</b>
                           </mat-option>
+                          <ng-container *ngIf="!fuente.fuenteFinanciacionId">
+                            <mat-option *ngFor="let listado of listadoFuentes" [value]="listado.fuenteFinanciacionId">
+                              Número de acuerdo: <b>{{ listado.aportante?.cofinanciacionId }}</b> Tipo:
+                              <b>{{ listado.fuenteRecursosString }}</b>
+                            </mat-option>
+                          </ng-container>
+                          
                         </mat-select>
                       </mat-form-field>
                     </div>
@@ -153,7 +162,7 @@
                     type="button"
                     *ngIf="aportantes.aportanteFuenteFinanciacion.length > 1 && bitPuedoEditar"
                     class="btn-eliminar"
-                    (click)="deleteFont(fuente, aportantes)"
+                    (click)="deleteFont(fuente, aportantes, fuente.fuenteFinanciacionId)"
                   >
                     <img src="assets/img/icon/menos.svg" alt="Eliminar otra fuente" />
                     Eliminar fuente
