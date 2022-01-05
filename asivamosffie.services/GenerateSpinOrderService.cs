@@ -304,6 +304,7 @@ namespace asivamosffie.services
                     SaldoAfectado -= Descuento;
                 List.Add(new
                 {
+                    FuenteFinanciacionId = item.FuenteFinanciacionId,
                     CofinanciacionAportanteId = item.CofinanciacionAportanteId,
                     TipoAportanteId = cofinanciacionAportante.TipoAportanteId,
                     FuenteRecursos = FuenteRecursos.Where(r => r.Codigo == item.FuenteRecursosCodigo).FirstOrDefault().Nombre,
@@ -460,8 +461,7 @@ namespace asivamosffie.services
                                         Aportante.ValorUso = new List<ValorUso>();
 
                                     Aportante.ValorUso.Add(new ValorUso
-                                    {
-                                        FuenteFinanciacionId = (int)Aportante.FuenteFinanciacionId,
+                                    { 
                                         AportanteId = Aportante.AportanteId,
                                         Valor = String.Format("{0:n0}", ValorUso),
                                         ValorActual = String.Format("{0:n0}", (ValorUso - Descuento))
