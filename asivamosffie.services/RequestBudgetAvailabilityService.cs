@@ -340,6 +340,7 @@ namespace asivamosffie.services
                                         {
                                             strFase = _context.Dominio.Where(r => r.Codigo == compAp.FaseCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Fases).FirstOrDefault().Nombre;
                                         }
+                                        compAp.ComponenteUso = compAp.ComponenteUso.Where(r => r.Eliminado != true).ToList();
 
                                         foreach (var comp in compAp.ComponenteUso)
                                         {
