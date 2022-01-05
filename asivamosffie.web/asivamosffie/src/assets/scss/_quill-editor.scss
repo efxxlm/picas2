@@ -153,6 +153,10 @@
   .ql-editor::before {
     content: none;
   }
+
+  p {
+    overflow-wrap: anywhere;
+  }
 }
 
 .quill-editor-style.card.invalid .ql-container.ql-snow {
