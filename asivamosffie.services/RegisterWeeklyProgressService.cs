@@ -26,6 +26,66 @@ namespace asivamosffie.services
 {
     public class RegisterWeeklyProgressService : IRegisterWeeklyProgressService
     {
+        public async Task<Respuesta> UploadFileSeguimientoSemanalAvanceFisico(IFormFile pFile, int pContratacionProyectoId, string pDirectorioBase, string pDirectorioEspecifico)
+        {
+            try
+            {
+                string strFilePatch = string.Empty;
+                bool crearFile = false;
+
+                if (pFile != null && pFile.Length > 0)
+                {
+                    strFilePatch = Path.Combine(pDirectorioBase, pDirectorioEspecifico, pContratacionProyectoId.ToString());
+                    crearFile = await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
+                }
+                else
+                {
+                    return new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = false,
+                        IsValidation = true,
+                        Code = GeneralCodes.EntradaInvalida,
+                        Message = "No se encontró el archivo"
+                    };
+                }
+
+                _context.Set<ContratacionProyecto>()
+                        .Where(c => c.ContratacionProyectoId == pContratacionProyectoId)
+                        .Update(c => new ContratacionProyecto
+                        {
+                            SuportProyectRuta = Path.Combine(strFilePatch, pFile.FileName)
+                        });
+
+
+                //int idUltimoSeguimientoSemanalIncompleto = _context.SeguimientoSemanal.Where(c=> c.ContratacionProyectoId == pContratacionProyectoId 
+                //                                                                              && c.RegistroCompleto != true 
+                //                                                                              && c.Eliminado != true)
+                //                                                                      .OrderByDescending(c=> c.SeguimientoSemanalId)
+
+                //ValidarRegistroCompletoSeguimientoSemanal();
+                  
+                return new Respuesta
+                {
+
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.Error,
+                    Message = ex.InnerException.ToString()
+                };
+            }
+        }
 
         #region Terminacion Anticipada
 
@@ -3792,58 +3852,6 @@ namespace asivamosffie.services
 
         #endregion
 
-        public async Task<Respuesta> UploadFileSeguimientoSemanalAvanceFisico(IFormFile pFile, int pContratacionProyectoId, string pDirectorioBase, string pDirectorioEspecifico)
-        {
-            try
-            {
-                string strFilePatch = string.Empty;
-                bool crearFile = false;
-
-                if (pFile != null && pFile.Length > 0)
-                {
-                    strFilePatch = Path.Combine(pDirectorioBase, pDirectorioEspecifico, pContratacionProyectoId.ToString());
-                    crearFile = await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
-                }
-                else
-                {
-                    return new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = false,
-                        IsValidation = true,
-                        Code = GeneralCodes.EntradaInvalida,
-                        Message = "No se encontró el archivo"
-                    };
-                }
-
-                ContratacionProyecto ContratacionProyecto = _context.ContratacionProyecto.Find(pContratacionProyectoId);
-
-                ContratacionProyecto.SuportProyectRuta = Path.Combine(strFilePatch, pFile.FileName);
-
-                _context.Update(ContratacionProyecto);
-                await _context.SaveChangesAsync();
-
-                return new Respuesta
-                {
-
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa
-                };
-            }
-            catch (Exception ex)
-            {
-                return new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Code = ConstanMessagesRegisterWeeklyProgress.Error,
-                    Message = ex.InnerException.ToString()
-                };
-            }
-        }
-
+      
     }
 }

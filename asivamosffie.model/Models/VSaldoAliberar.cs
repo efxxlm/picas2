@@ -5,6 +5,7 @@ namespace asivamosffie.model.Models
 {
     public partial class VSaldoAliberar
     {
+        public int? AportanteId { get; set; }
         public string NumeroDrp { get; set; }
         public int? ComponenteUsoId { get; set; }
         public int? ComponenteUsoNovedadId { get; set; }

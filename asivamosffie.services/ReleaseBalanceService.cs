@@ -86,7 +86,7 @@ namespace asivamosffie.services
                             if (!liberado)
                             {
                                 da.SaldoPresupuestal = valorActual;
-                                da.SaldoTesoral = GetSaldoByDrp(cp.ContratacionId, drp.NumeroDrp, cp.ProyectoId, da.CodigoUso);
+                                da.SaldoTesoral = GetSaldoByDrp(cp.ContratacionId, drp.NumeroDrp, cp.ProyectoId, da.CodigoUso, (int)da.FuenteFinanciacionId, (int)da.AportanteId);
 
                             }
                             else
@@ -122,8 +122,8 @@ namespace asivamosffie.services
                             {
                                 NovedadContractualRegistroPresupuestalHistorico dpphN = _context.NovedadContractualRegistroPresupuestalHistorico.Where(r => r.NovedadContractualRegistroPresupuestalId == drpN.NovedadContractualRegistroPresupuestalId).FirstOrDefault();
 
-                                List<VSaldoAliberar> datosAportanteNovedad = _context.VSaldoAliberar.Where(r => r.ProyectoId == pProyectoId 
-                                                                                                             && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId 
+                                List<VSaldoAliberar> datosAportanteNovedad = _context.VSaldoAliberar.Where(r => r.ProyectoId == pProyectoId
+                                                                                                             && r.DisponibilidadPresupuestalId == drp.DisponibilidadPresupuestalId
                                                                                                              && r.NovedadContractualRegistroPresupuestalId == drpN.NovedadContractualRegistroPresupuestalId)
                                                                                                    .ToList();
                                 if (balanceFinanciero != null)
@@ -167,7 +167,7 @@ namespace asivamosffie.services
                                     if (!liberado)
                                     {
                                         da.SaldoPresupuestal = valorActual;
-                                        da.SaldoTesoral = GetSaldoByDrp(cp.ContratacionId, drpN.NumeroDrp , cp.ProyectoId, da.CodigoUso);
+                                        da.SaldoTesoral = GetSaldoByDrp(cp.ContratacionId, drpN.NumeroDrp, cp.ProyectoId, da.CodigoUso , (int)da.FuenteFinanciacionId , (int)da.AportanteId);
                                     }
                                     else
                                     {
@@ -346,13 +346,21 @@ namespace asivamosffie.services
             return saldo;
         }
 
-        public decimal GetSaldoByDrp(int pContratacionId, string numeroDrp, int proyectoId, string pUsoCodigo)
+        public decimal GetSaldoByDrp(int pContratacionId, string numeroDrp, int proyectoId, string pUsoCodigo, int pFuenteFinanciacionId, int pAportanteId)
         {
             decimal? saldo = 0;
 
             bool OrdenGiroAprobada = _context.OrdenGiro.Where(r => r.SolicitudPago.FirstOrDefault().Contrato.ContratacionId == pContratacionId).FirstOrDefault()?.RegistroCompletoAprobar ?? false;
 
-            List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId).OrderBy(r => r.FechaCreacion).ToList();
+            List<VDrpXproyectoXusos> List = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == pContratacionId
+                                                                                && r.TipoUsoCodigo == pUsoCodigo
+                                                                                && r.NumeroDrp == numeroDrp
+                                                                                && r.ProyectoId == proyectoId
+                                                                                && r.FuenteFinanciacionId == pFuenteFinanciacionId
+                                                                                && r.AportanteId == pAportanteId
+                                                                             )
+                                                                       .OrderBy(r => r.FechaCreacion)
+                                                                       .ToList();
 
             var ListDrp = List.Where(r => r.NumeroDrp == numeroDrp).GroupBy(drp => drp.NumeroDrp)
                               .Select(d =>
@@ -397,74 +405,72 @@ namespace asivamosffie.services
 
                     foreach (var TipoUso in ListTipoUso)
                     {
-                        if (pUsoCodigo.Equals(TipoUso.TipoUsoCodigo))
+
+
+                        VDrpXproyectoXusos Uso =
+                                                                       List
+                                                                       .Where(r => r.NumeroDrp == Drp.NumeroDrp
+                                                                                && r.ProyectoId == ProyectoId.ProyectoId
+                                                                                && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                                                       .FirstOrDefault();
+
+                        decimal? ValorUso = List
+                                                .Where(r => r.NumeroDrp == Drp.NumeroDrp
+                                                         && r.ProyectoId == ProyectoId.ProyectoId
+                                                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
+                                                .Sum(v => v.ValorUso) ?? 0;
+
+                        decimal? Saldo = ListPagos
+                                                .Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
+                                                          && r.Pagado == false
+                                                         )
+                                                .Sum(r => r.SaldoUso) ?? 0;
+
+
+                        decimal Descuentos = 0;
+
+                        decimal ValorUsoResta = ValorUso ?? 0 - Descuentos;
+
+                        if (Saldo != 0)
                         {
-
-                            VDrpXproyectoXusos Uso =
-                                                                           List
-                                                                           .Where(r => r.NumeroDrp == Drp.NumeroDrp
-                                                                                    && r.ProyectoId == ProyectoId.ProyectoId
-                                                                                    && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
-                                                                           .FirstOrDefault();
-
-                            decimal? ValorUso = List
-                                                    .Where(r => r.NumeroDrp == Drp.NumeroDrp
-                                                             && r.ProyectoId == ProyectoId.ProyectoId
-                                                             && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
-                                                    .Sum(v => v.ValorUso) ?? 0;
-
-                            decimal? Saldo = ListPagos
-                                                    .Where(r => r.ProyectoId == ProyectoId.ProyectoId
-                                                             && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
-                                                              && r.Pagado == false
-                                                             )
-                                                    .Sum(r => r.SaldoUso) ?? 0;
-
-
-                            decimal Descuentos = 0;
-
-                            decimal ValorUsoResta = ValorUso ?? 0 - Descuentos;
-
-                            if (Saldo != 0)
+                            foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                            && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
                             {
-                                foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
-                                                                && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
+                                if (true)
                                 {
-                                    if (true)
+                                    if (ValorUsoResta > item.SaldoUso)
                                     {
-                                        if (ValorUsoResta > item.SaldoUso)
-                                        {
-                                            ValorUsoResta -= (decimal)item.SaldoUso;
-                                            item.SaldoUso = ValorUsoResta;
-                                            item.Pagado = true;
-                                        }
-                                        else
-                                        {
-                                            item.SaldoUso -= ValorUsoResta;
-                                            break;
-                                        }
+                                        ValorUsoResta -= (decimal)item.SaldoUso;
+                                        item.SaldoUso = ValorUsoResta;
+                                        item.Pagado = true;
+                                    }
+                                    else
+                                    {
+                                        item.SaldoUso -= ValorUsoResta;
+                                        break;
                                     }
                                 }
-
-                                saldo = Saldo > 0 ? (ValorUso - Saldo) < 0 ? 0 : ValorUso - Saldo : ValorUso;
-
-                                ListDyUsos.Add(new
-                                {
-                                    Uso.Nombre,
-                                    ValorUso = String.Format("{0:n0}", ValorUso),
-                                    Saldo = Saldo > 0 ? (ValorUso - Saldo) < 0 ? 0 : ValorUso - Saldo : ValorUso
-                                });
                             }
-                            else
+
+                            saldo = Saldo > 0 ? (ValorUso - Saldo) < 0 ? 0 : ValorUso - Saldo : ValorUso;
+
+                            ListDyUsos.Add(new
                             {
-                                saldo = ValorUso;
-                                ListDyUsos.Add(new
-                                {
-                                    Uso.Nombre,
-                                    ValorUso = String.Format("{0:n0}", ValorUso),
-                                    Saldo = ValorUso
-                                });
-                            }
+                                Uso.Nombre,
+                                ValorUso = String.Format("{0:n0}", ValorUso),
+                                Saldo = Saldo > 0 ? (ValorUso - Saldo) < 0 ? 0 : ValorUso - Saldo : ValorUso
+                            });
+                        }
+                        else
+                        {
+                            saldo = ValorUso;
+                            ListDyUsos.Add(new
+                            {
+                                Uso.Nombre,
+                                ValorUso = String.Format("{0:n0}", ValorUso),
+                                Saldo = ValorUso
+                            });
                         }
                     }
                 }
