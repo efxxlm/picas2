@@ -205,9 +205,7 @@ namespace asivamosffie.services
                                                                     && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
                                     }
 
-
-                                    if (!esGenerar || (ListDP.EstadoSolicitudCodigo != "5" && ListDP.EstadoSolicitudCodigo != "8"))
-                                    {
+                                    if (!esGenerar && ListDP.EstadoSolicitudCodigo != "5" && ListDP.EstadoSolicitudCodigo != "8") { 
                                         fuentes.Add(new GrillaFuentesFinanciacion
                                         {
                                             Fuente = fuenteNombre,
