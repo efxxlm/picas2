@@ -685,7 +685,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                 }
             } )
             if (
-                value > this.getValorAportante(this.getConceptos( index ).controls[ jIndex ].get('conceptoPagoCriterio').value, this.getAportantes( index, jIndex ).controls[ kIndex ].get('nombreAportante').value.cofinanciacionAportanteId)
+                value > this.getValorAportante(this.getConceptos( index ).controls[ jIndex ].get('conceptoPagoCriterio').value, this.getAportantes( index, jIndex ).controls[ kIndex ].get('nombreAportante').value.cofinanciacionAportanteId, this.getAportantes( index, jIndex ).controls[ kIndex ].get('fuenteRecursos').value?.fuenteFinanciacionId)
             ) {
                 this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
                 this.openDialog( '', `<b>El valor facturado por el concepto para el aportante no puede ser mayor al valor aportante para el concepto.</b>` )
@@ -746,14 +746,14 @@ export class TerceroCausacionGogComponent implements OnInit {
             }
         }
     }
-    validateMaxSaldoActualAportante( value: number, index: number, jIndex: number, kIndex: number, aportante: any ) {
+    validateMaxSaldoActualAportante( value: number, index: number, jIndex: number, kIndex: number, aportante: any , fuenteFinanciacionId: any) {
         if ( value !== null ) {
         console.log(this.solicitudPago.tablaInformacionFuenteRecursos)
         // console.log(aportante.cofinanciacionAportanteId)
 
         if (this.solicitudPago.tablaInformacionFuenteRecursos) {
           const saldoAport = this.solicitudPago.tablaInformacionFuenteRecursos.find( obs => {
-              if (obs.cofinanciacionAportanteId === aportante.cofinanciacionAportanteId) {
+              if (obs.cofinanciacionAportanteId === aportante.cofinanciacionAportanteId && obs.fuenteFinanciacionId == fuenteFinanciacionId) {
                   return obs.saldoActual
               }
           })
@@ -1474,13 +1474,13 @@ export class TerceroCausacionGogComponent implements OnInit {
 
 
     // TODO: filtrar por proyecto y fase
-    getValorAportante(codigo: string, aportanteId: any) {
-      if(aportanteId > 0 && codigo != null){
+    getValorAportante(codigo: string, aportanteId: any, fuenteFinanciacionId: any) {
+      if(aportanteId > 0 && codigo != null && fuenteFinanciacionId > 0){
         if (this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.length > 0) {
           const conceptoCodigo = this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.filter((conceptoCodigo: { conceptoCodigo: string; solicitudPagoId: number; contratacionProyectoId: number; }) =>
               conceptoCodigo.conceptoCodigo == codigo && conceptoCodigo.solicitudPagoId == this.solicitudPago?.solicitudPagoId && conceptoCodigo.contratacionProyectoId == this.contratacionProyectoId
           );
-          const valorAportante = conceptoCodigo.filter((cc: { aportanteId: any; }) => cc.aportanteId == aportanteId);
+          const valorAportante = conceptoCodigo.filter((cc: { aportanteId: any, fuenteFinanciacion: any}) => cc.aportanteId == aportanteId && cc.fuenteFinanciacion == fuenteFinanciacionId);
           let valorConceptoAportante = 0;
           valorAportante.forEach((element1: { conceptoCodigo: any; saldo: any; }) => {
               this.solicitudPago.vConceptosUsosXsolicitudPagoId.forEach((element2: { conceptoCodigo: any; }) => {

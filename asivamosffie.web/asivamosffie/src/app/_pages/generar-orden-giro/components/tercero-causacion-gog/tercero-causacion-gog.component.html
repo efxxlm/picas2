@@ -35,9 +35,9 @@
                                 </p>
                                 <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j ).controls; index as k">
                                     <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ k + 1 }} </mat-card-title>
-                                    <p>
+                                    <p *ngIf="aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId != null && aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId != undefined">
                                         <strong>Saldo aportante para el concepto:</strong>
-                                        {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('nombreAportante').value.cofinanciacionAportanteId) | currency: '' :'symbol-narrow':'.0-0' }}
+                                        {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('nombreAportante').value.cofinanciacionAportanteId, aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId) | currency: '' :'symbol-narrow':'.0-0' }}
                                     </p>
                                     <p>
                                         <b>
@@ -138,9 +138,9 @@
                                             <div class="row animatedDown" *ngIf="aportante.get('nombreAportante').value">
                                                 <div class="col-md-11">
                                                     <div class="row">
-                                                        <p>
-                                                            <strong>Saldo aportante para el concepto:</strong>
-                                                            {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('nombreAportante').value.cofinanciacionAportanteId) | currency: '' :'symbol-narrow':'.0-0' }}
+                                                      <p *ngIf="aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId != null && aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId != undefined">
+                                                        <strong>Saldo aportante para el concepto:</strong>
+                                                            {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('nombreAportante').value.cofinanciacionAportanteId, aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId) | currency: '' :'symbol-narrow':'.0-0' }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -271,7 +271,7 @@
                                                                         required
                                                                         currencyMask
                                                                         [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
-                                                                        (ngModelChange)="validateDiscountAportanteValue( $event, i, j, k ); validateMaxSaldoActualAportante($event, i, j, k , aportante.get('nombreAportante').value);"
+                                                                        (ngModelChange)="validateDiscountAportanteValue( $event, i, j, k ); validateMaxSaldoActualAportante($event, i, j, k , aportante.get('nombreAportante').value, aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId);"
                                                                         formControlName="valorDescuento"
                                                                         onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''">
                                                             </mat-form-field>
