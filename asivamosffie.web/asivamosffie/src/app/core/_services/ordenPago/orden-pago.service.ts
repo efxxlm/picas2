@@ -200,14 +200,16 @@ export class OrdenPagoService {
           // Get lista de aportantes
           for ( const aportante of tablaInformacionFuenteRecursos ) {
             aportantes.push( aportante );
+            if(!listaNombreAportante.find(r => r.cofinanciacionAportanteId == aportante.cofinanciacionAportanteId)){
+              listaNombreAportante.push(
+                {
+                    tipoAportanteId: aportante.tipoAportanteId,
+                    cofinanciacionAportanteId: aportante.cofinanciacionAportanteId,
+                    nombreAportante: aportante.nombreAportante
+                }
+              );
+            }
 
-            listaNombreAportante.push(
-              {
-                  tipoAportanteId: aportante.tipoAportanteId,
-                  cofinanciacionAportanteId: aportante.cofinanciacionAportanteId,
-                  nombreAportante: aportante.nombreAportante
-              }
-            );
             listaTipoAportante.push(listaTipoAportanteTmp.find(r => r.dominioId == aportante.tipoAportanteId));
           }
 
