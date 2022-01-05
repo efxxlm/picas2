@@ -50,7 +50,7 @@ export class SoporteProjectComponent implements OnInit {
 
     this.avanceSemanalSvc.UploadFileSeguimientoSemanalAvanceFisico(this.pContratacionProyectoId, this.file).subscribe(
       async response => {
-        this.openDialog('', `<b>${response.message}</b>`);
+        this.openDialog('', `<b>La información se ha guardado correctamente.</b>`);
       },
       err => this.openDialog('', `<b>${err.message}</b>`)
     );
