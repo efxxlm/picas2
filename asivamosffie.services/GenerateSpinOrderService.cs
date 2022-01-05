@@ -461,6 +461,7 @@ namespace asivamosffie.services
 
                                     Aportante.ValorUso.Add(new ValorUso
                                     {
+                                        FuenteFinanciacionId = (int)Aportante.FuenteFinanciacionId,
                                         AportanteId = Aportante.AportanteId,
                                         Valor = String.Format("{0:n0}", ValorUso),
                                         ValorActual = String.Format("{0:n0}", (ValorUso - Descuento))

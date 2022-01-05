@@ -37,6 +37,7 @@ namespace asivamosffie.model.Models
 
     public partial class ValorUso
     {
+        public int FuenteFinanciacionId { get; set; }
         public int? AportanteId { get; set; }
         public string Valor { get; set; }
         public string ValorActual { get; set; }
