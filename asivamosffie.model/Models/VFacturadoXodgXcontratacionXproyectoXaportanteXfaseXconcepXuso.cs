@@ -5,6 +5,7 @@ namespace asivamosffie.model.Models
 {
     public partial class VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso
     {
+        public int? FuenteFinanciacionId { get; set; }
         public int OrdenGiroDetalleTerceroCausacionDescuentoId { get; set; }
         public int OrdenGiroDetalleTerceroCausacionAportanteId { get; set; }
         public int? OrdenGiroId { get; set; }
