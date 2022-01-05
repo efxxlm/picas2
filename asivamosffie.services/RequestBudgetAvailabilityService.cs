@@ -203,56 +203,60 @@ namespace asivamosffie.services
                                     {
                                         fuenteNombre = _context.Dominio.Where(x => x.Codigo == temp.FuenteRecursosCodigo
                                                                     && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+
+                                        if (!esGenerar && ListDP.EstadoSolicitudCodigo != "5" && ListDP.EstadoSolicitudCodigo != "8")
+                                        {
+                                            fuentes.Add(new GrillaFuentesFinanciacion
+                                            {
+                                                Fuente = fuenteNombre,
+                                                Estado_de_las_fuentes = string.Empty,
+                                                FuenteFinanciacionID = temp.FuenteFinanciacionId,
+                                                //Saldo_actual_de_la_fuente = SaldoActualFuente,
+                                                Saldo_actual_de_la_fuente = fuente.SaldoActual,
+                                                Valor_solicitado_de_la_fuente = fuente.ValorSolicitado,
+                                                //Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
+                                                Nuevo_saldo_de_la_fuente = fuente.NuevoSaldo,
+                                                Nuevo_saldo_de_la_fuente_al_guardar = fuente.NuevoSaldo,
+                                                Saldo_actual_de_la_fuente_al_guardar = fuente.SaldoActual,
+                                            });
+                                        }
+                                        else if (ListDP.EstadoSolicitudCodigo == "5" && ListDP.EstadoSolicitudCodigo == "8")
+                                        {
+                                            fuentes.Add(new GrillaFuentesFinanciacion
+                                            {
+                                                Fuente = fuenteNombre,
+                                                Estado_de_las_fuentes = string.Empty,
+                                                FuenteFinanciacionID = temp.FuenteFinanciacionId,
+                                                //Saldo_actual_de_la_fuente = SaldoActualFuente,
+                                                Saldo_actual_de_la_fuente = fuente.SaldoActualGenerado ?? fuente.SaldoActual,
+                                                Valor_solicitado_de_la_fuente = fuente.ValorSolicitadoGenerado ?? fuente.ValorSolicitado,
+                                                //Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
+                                                Nuevo_saldo_de_la_fuente = fuente.NuevoSaldoGenerado ?? fuente.NuevoSaldo,
+                                                Nuevo_saldo_de_la_fuente_al_guardar = fuente.NuevoSaldoGenerado ?? fuente.NuevoSaldo,
+                                                Saldo_actual_de_la_fuente_al_guardar = fuente.SaldoActualGenerado ?? fuente.SaldoActual,
+                                            });
+                                        }
+                                        else
+                                        {
+                                            var saldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == ppapor.Aportante.CofinanciacionAportanteId && r.FuenteFinanciacionId == temp.FuenteFinanciacionId).FirstOrDefault();
+                                            decimal valor = saldoActual != null ? (decimal)saldoActual.SaldoActual : 0;
+                                            fuentes.Add(new GrillaFuentesFinanciacion
+                                            {
+                                                Fuente = fuenteNombre,
+                                                Estado_de_las_fuentes = string.Empty,
+                                                FuenteFinanciacionID = temp.FuenteFinanciacionId,
+                                                //Saldo_actual_de_la_fuente = SaldoActualFuente,
+                                                Saldo_actual_de_la_fuente = fuente.SaldoActualGenerado ?? valor,
+                                                Valor_solicitado_de_la_fuente = fuente.ValorSolicitadoGenerado ?? fuente.ValorSolicitado,
+                                                //Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
+                                                Nuevo_saldo_de_la_fuente = fuente.NuevoSaldoGenerado ?? valor - fuente.ValorSolicitado,
+                                                Nuevo_saldo_de_la_fuente_al_guardar = fuente.NuevoSaldo,
+                                                Saldo_actual_de_la_fuente_al_guardar = fuente.SaldoActual,
+                                            });
+                                        }
                                     }
 
-                                    if (!esGenerar && ListDP.EstadoSolicitudCodigo != "5" && ListDP.EstadoSolicitudCodigo != "8") { 
-                                        fuentes.Add(new GrillaFuentesFinanciacion
-                                        {
-                                            Fuente = fuenteNombre,
-                                            Estado_de_las_fuentes = string.Empty,
-                                            FuenteFinanciacionID = ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteFinanciacionId,
-                                            //Saldo_actual_de_la_fuente = SaldoActualFuente,
-                                            Saldo_actual_de_la_fuente = fuente.SaldoActual,
-                                            Valor_solicitado_de_la_fuente = fuente.ValorSolicitado,
-                                            //Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
-                                            Nuevo_saldo_de_la_fuente = fuente.NuevoSaldo,
-                                            Nuevo_saldo_de_la_fuente_al_guardar = fuente.NuevoSaldo,
-                                            Saldo_actual_de_la_fuente_al_guardar = fuente.SaldoActual,
-                                        });
-                                    }else if (ListDP.EstadoSolicitudCodigo == "5" && ListDP.EstadoSolicitudCodigo == "8")
-                                    {
-                                        fuentes.Add(new GrillaFuentesFinanciacion
-                                        {
-                                            Fuente = fuenteNombre,
-                                            Estado_de_las_fuentes = string.Empty,
-                                            FuenteFinanciacionID = ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteFinanciacionId,
-                                            //Saldo_actual_de_la_fuente = SaldoActualFuente,
-                                            Saldo_actual_de_la_fuente = fuente.SaldoActualGenerado ?? fuente.SaldoActual,
-                                            Valor_solicitado_de_la_fuente = fuente.ValorSolicitadoGenerado ?? fuente.ValorSolicitado,
-                                            //Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
-                                            Nuevo_saldo_de_la_fuente = fuente.NuevoSaldoGenerado ??  fuente.NuevoSaldo,
-                                            Nuevo_saldo_de_la_fuente_al_guardar = fuente.NuevoSaldoGenerado ?? fuente.NuevoSaldo,
-                                            Saldo_actual_de_la_fuente_al_guardar = fuente.SaldoActualGenerado ?? fuente.SaldoActual,
-                                        });
-                                    }
-                                    else
-                                    {
-                                        var saldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == ppapor.Aportante.CofinanciacionAportanteId && r.FuenteFinanciacionId == ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteFinanciacionId).FirstOrDefault();
-                                        decimal valor = saldoActual != null ? (decimal)saldoActual.SaldoActual : 0;
-                                        fuentes.Add(new GrillaFuentesFinanciacion
-                                        {
-                                            Fuente = fuenteNombre,
-                                            Estado_de_las_fuentes = string.Empty,
-                                            FuenteFinanciacionID = ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteFinanciacionId,
-                                            //Saldo_actual_de_la_fuente = SaldoActualFuente,
-                                            Saldo_actual_de_la_fuente = fuente.SaldoActualGenerado ?? valor,
-                                            Valor_solicitado_de_la_fuente = fuente.ValorSolicitadoGenerado ?? fuente.ValorSolicitado,
-                                            //Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
-                                            Nuevo_saldo_de_la_fuente = fuente.NuevoSaldoGenerado ?? valor - fuente.ValorSolicitado,
-                                            Nuevo_saldo_de_la_fuente_al_guardar = fuente.NuevoSaldo,
-                                            Saldo_actual_de_la_fuente_al_guardar = fuente.SaldoActual,
-                                        });
-                                    }
+                                    
                                 }
                                 if (ListDP.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Tradicional)
                                 {
