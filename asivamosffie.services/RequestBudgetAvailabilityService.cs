@@ -206,7 +206,7 @@ namespace asivamosffie.services
                                     }
 
 
-                                    if (!esGenerar && ListDP.EstadoSolicitudCodigo != "5" && ListDP.EstadoSolicitudCodigo != "8")
+                                    if (ListDP.EstadoSolicitudCodigo != "5" && ListDP.EstadoSolicitudCodigo != "8")
                                     {
                                         fuentes.Add(new GrillaFuentesFinanciacion
                                         {
