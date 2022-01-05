@@ -5,6 +5,7 @@ namespace asivamosffie.model.Models
 {
     public partial class VDrpXcontratacionXproyectoXaportanteXfaseXcriterioXconceptoXusos
     {
+        public int? FuenteFinanciacionId { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public int ContratacionId { get; set; }
         public string LlaveMen { get; set; }
