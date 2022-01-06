@@ -77,10 +77,18 @@ export class ObservacionesDetalleAvanceComponent implements OnInit {
     console.log(this.formObservaciones.value);
     this.estaEditando = true;
 
-    const pSeguimientoSemanal = this.seguimientoSemanal;
+    let pSeguimientoSemanal = this.seguimientoSemanal;
 
-    pSeguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones =
-      this.formObservaciones.get('observaciones').value;
+    console.log(pSeguimientoSemanal.seguimientoSemanalAvanceFisico);
+
+    if (pSeguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0) {
+      pSeguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones =
+        this.formObservaciones.get('observaciones').value;
+    } else {
+      pSeguimientoSemanal.seguimientoSemanalAvanceFisico.push({
+        observaciones: this.formObservaciones.get('observaciones').value
+      });
+    }
 
     this.avanceSemanalSvc.saveUpdateSeguimientoSemanal(pSeguimientoSemanal).subscribe(
       async response => {
