@@ -74,7 +74,10 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <app-observaciones-detalle-avance [seguimientoSemanal]="seguimientoSemanal" [required]="seguimientoSemanal.infoProyecto.estadoObra !== 'Con ejecución normal'"></app-observaciones-detalle-avance>
+      <app-observaciones-detalle-avance
+        [seguimientoSemanal]="seguimientoSemanal"
+        [isRequired]="seguimientoSemanal.infoProyecto.estadoObra !== 'Con ejecución normal'"
+      ></app-observaciones-detalle-avance>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
