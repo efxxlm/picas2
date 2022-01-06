@@ -15,7 +15,7 @@ export class ObservacionesDetalleAvanceComponent implements OnInit {
   @Input() seguimientoSemanal: any;
   @Input() isRequired: boolean;
 
-  
+
   formObservaciones: FormGroup = this.fb.group({
     // tieneObservaciones: [null, Validators.required],
     observaciones: [null, Validators.required]
@@ -33,6 +33,7 @@ export class ObservacionesDetalleAvanceComponent implements OnInit {
     ]
   };
   estaEditando = false;
+  seguimientoSemanalId: number;
 
   constructor(
     private dialog: MatDialog,
@@ -45,11 +46,13 @@ export class ObservacionesDetalleAvanceComponent implements OnInit {
 
   ngOnInit(): void {
     // console.log('seguimientoSemanal: ', this.seguimientoSemanal);
+    this.seguimientoSemanalId = this.seguimientoSemanal.seguimientoSemanalId;
+
     this.formObservaciones
       .get('observaciones')
       .setValue(this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones);
 
-      if (!this.isRequired) this.formObservaciones.get('observaciones').clearValidators();
+    if (!this.isRequired) this.formObservaciones.get('observaciones').clearValidators();
   }
 
   maxLength(e: any, n: number) {
@@ -86,6 +89,7 @@ export class ObservacionesDetalleAvanceComponent implements OnInit {
         this.formObservaciones.get('observaciones').value;
     } else {
       pSeguimientoSemanal.seguimientoSemanalAvanceFisico.push({
+        seguimientoSemanalId: this.seguimientoSemanalId,
         observaciones: this.formObservaciones.get('observaciones').value
       });
     }
