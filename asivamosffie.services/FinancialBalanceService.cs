@@ -488,6 +488,7 @@ namespace asivamosffie.services
 
                         foreach (var Aportante in ListAportante)
                         {
+                            Aportante.ValorFacturado = List.Where(r => r.Uso == Uso.Uso && r.TipoPago == TipoPago.TipoPago && r.ConceptoPagoCodigo == ConceptoPago.ConceptoPagoCodigo && r.AportanteId == Aportante.AportanteId).Sum(r => r.ValorFacturado) ?? 0;
                             ListDyAportante.Add(new
                             {
                                 ValorFacturado = Aportante.ValorFacturado,
