@@ -64,7 +64,7 @@ namespace asivamosffie.services
                 //                                                                      .OrderByDescending(c=> c.SeguimientoSemanalId)
 
                 //ValidarRegistroCompletoSeguimientoSemanal();
-                  
+
                 return new Respuesta
                 {
 
@@ -602,7 +602,7 @@ namespace asivamosffie.services
                     }
                 };
 
-               // rutaGrafico += $"SeguimientoSemanalAvanceFisico-{seguimientoSemanal.SeguimientoSemanalId}-{seguimientoSemanal.ContratacionProyectoId}.png";
+                // rutaGrafico += $"SeguimientoSemanalAvanceFisico-{seguimientoSemanal.SeguimientoSemanalId}-{seguimientoSemanal.ContratacionProyectoId}.png";
             }
 
             seguimientoSemanal.AvanceFisico = lAvanceFisicoxActividad;
@@ -661,7 +661,7 @@ namespace asivamosffie.services
                                                      }
                     }
                 };
-               // rutaGrafico += $"SeguimientoSemanalSeguimientoFinanciero-{seguimientoSemanal.SeguimientoSemanalId}-{seguimientoSemanal.ContratacionProyectoId}.png";
+                // rutaGrafico += $"SeguimientoSemanalSeguimientoFinanciero-{seguimientoSemanal.SeguimientoSemanalId}-{seguimientoSemanal.ContratacionProyectoId}.png";
             }
 
             seguimientoSemanal.SeguimientoFinanciero = lAvanceFinancieroxMes;
@@ -1367,7 +1367,7 @@ namespace asivamosffie.services
             if (string.IsNullOrEmpty(pRutaSuporProject))
                 return false;
 
-            if (seguimientoSemanalAvanceFisico.EstadoObraCodigo != StrEjecucionNormal)
+            if (seguimientoSemanalAvanceFisico.EstadoObraCodigo != null && seguimientoSemanalAvanceFisico.EstadoObraCodigo != StrEjecucionNormal)
             {
                 if (string.IsNullOrEmpty(seguimientoSemanalAvanceFisico.Observaciones))
                     return false;
@@ -1383,7 +1383,7 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoAvanceFisicoHijo(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico, string pRutaSuporProject)
         {
-          
+
 
             bool EsCompleto = true;
 
@@ -2449,10 +2449,10 @@ namespace asivamosffie.services
         private void SaveUpdateAvanceFisico(SeguimientoSemanal pSeguimientoSemanal, string usuarioCreacion)
         {
             bool RegistroCompleto = ValidarRegistroCompletoAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pSeguimientoSemanal.ContratacionProyecto.SuportProyectRuta);
-            bool RegistroCompletoHijo   = ValidarRegistroCompletoAvanceFisicoHijo(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pSeguimientoSemanal.ContratacionProyecto.SuportProyectRuta);
+            bool RegistroCompletoHijo = ValidarRegistroCompletoAvanceFisicoHijo(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pSeguimientoSemanal.ContratacionProyecto.SuportProyectRuta);
             if (pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoId == 0)
             {
-                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().RegistroCompleto = RegistroCompleto; 
+                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().RegistroCompleto = RegistroCompleto;
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().RegistroCompletoHijo = RegistroCompletoHijo;
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().UsuarioCreacion = usuarioCreacion;
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().FechaCreacion = DateTime.Now;
@@ -2465,7 +2465,7 @@ namespace asivamosffie.services
             }
             else
             {
-                SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Where(s=> s.SeguimientoSemanalAvanceFisicoId == pSeguimientoSemanal.SeguimientoSemanalAvanceFisico
+                SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Where(s => s.SeguimientoSemanalAvanceFisicoId == pSeguimientoSemanal.SeguimientoSemanalAvanceFisico
                                                                                                                                     .FirstOrDefault().SeguimientoSemanalAvanceFisicoId)
                                                                                                                           .FirstOrDefault();
 
@@ -3852,6 +3852,6 @@ namespace asivamosffie.services
 
         #endregion
 
-      
+
     }
 }
