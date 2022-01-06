@@ -1306,16 +1306,12 @@ namespace asivamosffie.services
                                         {
                                             string String = "string".ToString();
                                         }
-                                        decimal Descuento = (VPlantillaOrdenGiroUsos.Sum(r => r.ValorConcepto - r.DescuentoReteFuente - r.DescuentoOtros - r.DescuentoAns)) ?? 0;
+                                        decimal Descuento = (VPlantillaOrdenGiroUsos.Sum(r => r.DescuentoReteFuente - r.DescuentoOtros - r.DescuentoAns)) ?? 0;
 
                                         decimal ValorConcepto = VPlantillaOrdenGiroUsos.Sum(r => r.ValorConcepto) ?? 0;
-                                        if (ValorConcepto == 0)
-                                            ValorConcepto = ValorUso;
 
-                                        Decimal Total = Math.Abs(ValorUso - Descuento);
+                                        Decimal Total = Math.Abs(ValorUso - Descuento - ValorConcepto);
 
-                                        if (Total == 0)
-                                            Total = ValorUso;
                                         Aportante.ValorUso.Add(new ValorUso
                                         {
                                             AportanteId = Aportante.AportanteId,
