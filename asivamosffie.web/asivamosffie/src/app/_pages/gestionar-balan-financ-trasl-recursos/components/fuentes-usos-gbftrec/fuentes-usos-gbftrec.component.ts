@@ -17,7 +17,7 @@ export class FuentesUsosGbftrecComponent implements OnInit {
   displayedColumns: string[] = ['uso', 'fuente', 'aportante', 'valorUso', 'saldoActualUso'];
   dataTable: any[] = [];
   data = [];
-  
+
   constructor(
     private financialBalanceService: FinancialBalanceService
   ) { }
@@ -25,7 +25,7 @@ export class FuentesUsosGbftrecComponent implements OnInit {
   ngOnInit(): void {
     this.getTablaUsoFuenteAportanteXContratoIdXProyectoId();
   }
-  
+
   getTablaUsoFuenteAportanteXContratoIdXProyectoId() {
     this.financialBalanceService.getTablaUsoFuenteAportanteXContratoIdXProyectoId(this.contratoId, this.pProyectoId).subscribe(data => {
       this.data = data.usos;
@@ -34,13 +34,15 @@ export class FuentesUsosGbftrecComponent implements OnInit {
           const aportantes = []
           const valorUso = [];
           const saldoActualUso = [];
-  
+
           registro.fuentes.forEach( fuente => {
-              aportantes.push( fuente.aportante[ 0 ] )
-              valorUso.push( fuente.aportante[ 0 ].valorUso[ 0 ].valor )
-              saldoActualUso.push( fuente.aportante[ 0 ].valorUso[ 0 ].valorActual );
+              if(fuente.aportante != undefined){
+                aportantes.push( fuente?.aportante[ 0 ] )
+                valorUso.push( fuente?.aportante[ 0 ]?.valorUso[ 0 ]?.valor )
+                saldoActualUso.push( fuente?.aportante[ 0 ]?.valorUso[ 0 ]?.valorActual );
+              }
           } )
-  
+
           const registroObj = {
               nombreUso: registro.nombreUso,
               fuentes: registro.fuentes,
@@ -48,13 +50,13 @@ export class FuentesUsosGbftrecComponent implements OnInit {
               valorUso,
               saldoActualUso
           }
-  
+
           this.dataTable.push( registroObj );
         })
       }
-      
+
       this.loadDataSource();
-      
+
     })
   }
   loadDataSource() {
