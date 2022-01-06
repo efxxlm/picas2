@@ -1480,13 +1480,16 @@ export class TerceroCausacionGogComponent implements OnInit {
           const conceptoCodigo = this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.filter((conceptoCodigo: { conceptoCodigo: string; solicitudPagoId: number; contratacionProyectoId: number; }) =>
               conceptoCodigo.conceptoCodigo == codigo && conceptoCodigo.solicitudPagoId == this.solicitudPago?.solicitudPagoId && conceptoCodigo.contratacionProyectoId == this.contratacionProyectoId
           );
+          console.log(this.contratacionProyectoId);
+          console.log(conceptoCodigo);
+          console.log(codigo);
           const valorAportante = conceptoCodigo.filter((cc: { aportanteId: any, fuenteFinanciacion: any}) => cc.aportanteId == aportanteId && cc.fuenteFinanciacion == fuenteFinanciacionId);
+          console.log(valorAportante);
           let valorConceptoAportante = 0;
-          valorAportante.forEach((element1: { conceptoCodigo: any; saldo: any; }) => {
-              this.solicitudPago.vConceptosUsosXsolicitudPagoId.forEach((element2: { conceptoCodigo: any; }) => {
+          valorAportante.forEach((element1: { conceptoCodigo: any; saldo: any; tipoUsoCodigo: any; }) => {
+              this.solicitudPago.vConceptosUsosXsolicitudPagoId.filter(r=> r.conceptoCodigo == codigo).forEach((element2: { conceptoCodigo: any; usoCodigo: any; }) => {
                   if (
-                    element1.conceptoCodigo == element2.conceptoCodigo
-                    // && element1.tipoUsoCodigo == element2.usoCodigo
+                    element1.conceptoCodigo == element2.conceptoCodigo && element1.tipoUsoCodigo == element2.usoCodigo
                     ) {
                     valorConceptoAportante += element1.saldo ?? 0;
                   }
