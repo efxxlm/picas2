@@ -113,7 +113,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
 
             //Get Observacion Apoyo
             this.seguimientoSemanalAvanceFisico = this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0];
-            if ( this.seguimientoSemanalAvanceFisico.observacionApoyoId !== undefined ) {
+            if ( this.seguimientoSemanalAvanceFisico && this.seguimientoSemanalAvanceFisico.observacionApoyoId ) {
                 this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalAvanceFisicoId, this.avanceFisicoObs )
                     .subscribe(
                         response => {

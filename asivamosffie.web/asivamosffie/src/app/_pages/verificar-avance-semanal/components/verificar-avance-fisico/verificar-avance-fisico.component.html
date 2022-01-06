@@ -48,7 +48,11 @@
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style sub-expansion"
-            *ngIf="seguimientoSemanal.infoProyecto.estadoObra !== 'Con ejecución normal'"
+            *ngIf="
+                seguimientoSemanal.infoProyecto.estadoObra !== 'Con ejecución normal' ||
+                (seguimientoSemanal.seguimientoSemanalAvanceFisico &&
+                seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0)
+            "
         >
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
