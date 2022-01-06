@@ -210,6 +210,7 @@ export class RegistrarComponent implements OnInit {
         const fuenteRecursosSeleccionada = this.fuentesDeRecursosListaArr[i].find(
           f => f.codigo === ff.fuenteRecursosCodigo
         );
+        this.selectChangeFuenteRecursos(fuenteRecursosSeleccionada.codigo, i);
         i++;
         const listaVigencias = grupo.get('vigencias') as FormArray;
         const listaCuentas = grupo.get('cuentasBancaria') as FormArray;
@@ -217,8 +218,6 @@ export class RegistrarComponent implements OnInit {
         grupo.get('cuantasVigencias').setValue(ff.cantVigencias);
         grupo.get('fuenteRecursos').setValue(fuenteRecursosSeleccionada);
         grupo.get('fuenteFinanciacionId').setValue(ff.fuenteFinanciacionId);
-
-        this.selectChangeFuenteRecursos(fuenteRecursosSeleccionada, i);
 
         // Vigencias
         let cantidadVigencias = 0;
