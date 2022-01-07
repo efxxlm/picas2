@@ -85,10 +85,10 @@
         <mat-panel-title
           class="expansion-style--title"
           [class.completo]="
-            seguimientoSemanal.suportProyectRuta
+            seguimientoSemanal.suportProyectRuta || colorSemaforoSuportProyectRuta
           "
           [class.sin-diligenciar]="
-            !seguimientoSemanal.suportProyectRuta
+            !seguimientoSemanal.suportProyectRuta && !colorSemaforoSuportProyectRuta
           "
         >
           Soporte Project
@@ -98,6 +98,7 @@
       <app-soporte-project
         [pContratacionProyectoId]="pContratacionProyectoId"
         [seguimientoSemanal]="seguimientoSemanal"
+        (actualizarSemaforoSuportProyectRuta)="actualizarSemaforoSuportProyectRuta($event)"
       ></app-soporte-project>
     </mat-expansion-panel>
   </mat-accordion>

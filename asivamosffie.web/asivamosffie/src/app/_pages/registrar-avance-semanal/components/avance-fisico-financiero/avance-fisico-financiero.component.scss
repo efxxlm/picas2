@@ -6,6 +6,7 @@
     margin-top: 2em;
 }
 
-.sin-before::before {
+.sin-before::before,
+.sin-before::after {
     content: none;
 }

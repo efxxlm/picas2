@@ -16,6 +16,7 @@ export class AvanceFisicoFinancieroComponent implements OnInit {
   @Output() estadoSemaforoAvanceFisico = new EventEmitter<string>();
   semaforoAvanceFisico = 'sin-diligenciar';
   sinRegistros = false;
+  colorSemaforoSuportProyectRuta = false;
 
   constructor(private commonService: CommonService, private dialog: MatDialog) {}
 
@@ -61,5 +62,9 @@ export class AvanceFisicoFinancieroComponent implements OnInit {
         },
         () => this.openDialog('', `<b>Archivo no encontrado.</b>`)
       );
+  }
+
+  actualizarSemaforoSuportProyectRuta(correctResult) {
+    if (correctResult) this.colorSemaforoSuportProyectRuta = true;
   }
 }

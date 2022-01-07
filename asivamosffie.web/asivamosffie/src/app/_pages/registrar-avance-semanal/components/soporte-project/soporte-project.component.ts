@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class SoporteProjectComponent implements OnInit {
   @Input() pContratacionProyectoId: any;
   @Input() seguimientoSemanal: any;
+  @Output() actualizarSemaforoSuportProyectRuta = new EventEmitter<boolean>();
 
   archivo: string;
 
@@ -51,6 +52,7 @@ export class SoporteProjectComponent implements OnInit {
     this.avanceSemanalSvc.UploadFileSeguimientoSemanalAvanceFisico(this.pContratacionProyectoId, this.file).subscribe(
       async response => {
         this.openDialog('', `<b>La información se ha guardado correctamente.</b>`);
+        this.actualizarSemaforoSuportProyectRuta.emit(true);
       },
       err => this.openDialog('', `<b>${err.message}</b>`)
     );
