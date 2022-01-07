@@ -1288,12 +1288,13 @@ namespace asivamosffie.services
                                                                             .FirstOrDefault() ?? 0;
 
 
-                                    List<VPlantillaOrdenGiroUsos> VPlantillaOrdenGiroUsos = _context.VPlantillaOrdenGiroUsos
+                                    List<VGetConceptoOrdenGiroUso> VPlantillaOrdenGiroUsos = _context.VGetConceptoOrdenGiroUso
                                                                                              .Where(r => r.ContratoId == pContratoId
                                                                                                       && r.AportanteId == Aportante.AportanteId
                                                                                                       && r.LlaveMen == proyecto.LlaveMen
                                                                                                       && r.UsoCodigo == usos.TipoUsoCodigo
                                                                                                       && r.EstaAprobada == true
+                                                                                                      && r.FuenteFinanciacionId == Aportante.FuenteFinanciacionId
                                                                                               ).ToList();
 
                                     Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
@@ -1307,9 +1308,9 @@ namespace asivamosffie.services
                                         {
                                             string String = "string".ToString();
                                         }
-                                        decimal Descuento = (VPlantillaOrdenGiroUsos.Sum(r => r.DescuentoReteFuente - r.DescuentoOtros - r.DescuentoAns)) ?? 0;
+                                        decimal Descuento = (VPlantillaOrdenGiroUsos.Sum(r => r.Descuentos)) ?? 0;
 
-                                        decimal ValorConcepto = VPlantillaOrdenGiroUsos.Sum(r => r.ValorConcepto) ?? 0;
+                                        decimal ValorConcepto = VPlantillaOrdenGiroUsos.Sum(r => r.ValorFacturado) ?? 0;
 
                                         Decimal Total = Math.Abs(ValorUso - Descuento - ValorConcepto);
 

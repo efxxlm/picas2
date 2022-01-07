@@ -292,6 +292,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VFuentesUsoXcontratoId> VFuentesUsoXcontratoId { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoIdXproyecto> VFuentesUsoXcontratoIdXproyecto { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
+        public virtual DbSet<VGetConceptoOrdenGiroUso> VGetConceptoOrdenGiroUso { get; set; }
         public virtual DbSet<VListCompromisosComiteTecnico> VListCompromisosComiteTecnico { get; set; }
         public virtual DbSet<VListCompromisosTemas> VListCompromisosTemas { get; set; }
         public virtual DbSet<VListaContratacionModificacionContractual> VListaContratacionModificacionContractual { get; set; }
@@ -9261,7 +9262,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroContrato)
-                    .HasMaxLength(10)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroDdp)
@@ -9687,6 +9688,38 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoSolicitudContratacion).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<VGetConceptoOrdenGiroUso>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_GetConceptoOrdenGiroUso");
+
+                entity.Property(e => e.ConceptoPago).HasMaxLength(250);
+
+                entity.Property(e => e.ConceptoPagoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Descuentos).HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoPago).HasMaxLength(250);
+
+                entity.Property(e => e.Uso)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.UsoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<VListCompromisosComiteTecnico>(entity =>
