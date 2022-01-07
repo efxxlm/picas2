@@ -14,5 +14,6 @@ namespace asivamosffie.model.Models
         public string NombreBanco { get; set; }
         public int OrdenGiroDetalleTerceroCausacionAportanteId { get; set; }
         public string ConceptoCodigo { get; set; }
+        public int? FuenteFinanciacionId { get; set; }
     }
 }
