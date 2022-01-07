@@ -86,7 +86,7 @@
                                                     <div formArrayName="aportantes" *ngFor="let aportante of getAportantes( i, j, k ).controls; index as l">
                                                         <div *ngIf="aportante.get( 'tipoAportante' ).value !== null">
                                                             <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ l + 1 }} </mat-card-title>
-                                                            <p><b>Tipo de aportante: </b> {{ aportante.get( 'tipoAportante' ).value.nombre }} </p>
+                                                            <p><b>Tipo de aportante: </b> {{ aportante.get( 'tipoAportante' ).value ? aportante.get( 'tipoAportante' ).value.nombre : '' }} </p>
                                                             <p><b>Nombre del aportante: </b> {{ aportante.get( 'nombreAportante' ).value ? aportante.get( 'nombreAportante' ).value.nombreAportante : '' }} </p>
                                                             <p><b>Fuente de los recursos: </b> {{ firstLetterUpperCase( getValueFuente( aportante.get('fuenteRecursos').value, aportante.get( 'fuenteDeRecursos' ).value ) ) }} </p>
                                                             <p><b>Valor del descuento: </b> {{ aportante.get( 'valorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }} </p>
