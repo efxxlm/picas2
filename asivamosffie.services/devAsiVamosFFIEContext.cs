@@ -9702,6 +9702,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.ContratacionId).HasColumnName("contratacionId");
+
                 entity.Property(e => e.Descuentos).HasColumnType("decimal(18, 0)");
 
                 entity.Property(e => e.LlaveMen)

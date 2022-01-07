@@ -6,7 +6,8 @@ namespace asivamosffie.model.Models
     public partial class VGetConceptoOrdenGiroUso
     {
         public bool? EstaAprobada { get; set; }
-        public int? ContratoId { get; set; }
+        public int ContratoId { get; set; }
+        public int? ContratacionId { get; set; }
         public int? ProyectoId { get; set; }
         public string LlaveMen { get; set; }
         public int? OrdenGiroDetalleTerceroCausacionAportanteId { get; set; }
