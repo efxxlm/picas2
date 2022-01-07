@@ -51,16 +51,18 @@ export class FormProyectoComponent implements OnInit {
     ngOnInit(): void {
        // console.log( 'proyecto: ', this.proyecto )
         this.getDataProyecto();
-
         if(this.contrato.solicitudPago) {
-            if(this.contrato.solicitudPago.length > 1 && this.contrato.solicitudPagoOnly.esAnticipo && this.contrato.solicitudPagoOnly.esFactura) {
-                let solicitudesId = this.contrato.solicitudPago.map(e => e.solicitudPagoId)
-                solicitudesId.forEach(element => {
-                    if (this.idSolicitud > element) {
-                        this.mostrarAmortizacion = true;
+            if(this.contrato.solicitudPago.length > 1 && this.contrato.solicitudPagoOnly.esFactura && !this.contrato.solicitudPagoOnly.esAnticipio) {
+                this.contrato.solicitudPago.forEach(sp => {
+                  sp.solicitudPagoRegistrarSolicitudPago?.forEach(spr => {
+                    if(spr.solicitudPagoFase.length > 0){
+                     if(spr.solicitudPagoFase.find(r => r.contratacionProyectoId === this.proyecto.value.contratacionProyectoId && r.esAnticipio === true)){
+                      this.mostrarAmortizacion = true;
+                     }
                     }
-                });
 
+                  });
+               });
             }
         }
     }
