@@ -73,26 +73,27 @@ export class FormOrigenComponent implements OnInit {
                             let totalEnProceso = 0;
                             let totalCompleto = 0;
                             let totalInCompleto = 0;
-
                             this.ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
                                 if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
                                     terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.forEach( aportante => {
-                                        aportante.registroCompleto = aportante.cuentaBancariaId > 0 ? true : false;
-                                        const aportanteFind = this.listaAportantes.find( value => value.aportanteId === aportante.aportanteId )
-                                        if ( aportanteFind === undefined ) {
-                                            this.listaAportantes.push( aportante );
+                                      var registroComplto = false;
+                                      if(aportante.cuentaBancariaId > 0){
+                                        if(aportante.cuentaBancaria != undefined && aportante.cuentaBancaria != null){
+                                          if(aportante.cuentaBancaria?.cuentaBancariaId == aportante.cuentaBancariaId && aportante.cuentaBancaria?.fuenteFinanciacionId == aportante.fuenteFinanciacionId){
+                                            registroComplto = true;
+                                          }
                                         }
+                                      }
+                                      aportante.registroCompleto = registroComplto;
+                                      this.listaAportantes.push( aportante );
                                     } );
                                 }
                             } );
-
                             for ( const aportante of this.listaAportantes ) {
                                 const nombreAportante = dataAportantes.listaNombreAportante.find( nombreAportante => nombreAportante.cofinanciacionAportanteId === aportante.aportanteId );
                                 const tipoAportante = dataAportantes.listaTipoAportante.find( tipoAportante => tipoAportante.dominioId === nombreAportante.tipoAportanteId );
                                 const fuente = await this.ordenGiroSvc.getFuentesDeRecursosPorAportanteId( nombreAportante.cofinanciacionAportanteId ).toPromise();
                                 const fuenteRecurso = fuente.find( fuenteValue => fuenteValue.codigo === aportante.fuenteRecursoCodigo );
-                                console.log(this.listaAportantes)
-                                console.log(aportante.cuentaBancaria)
                                 const cuentaBancaria = ( ) => {
                                     // if ( aportante.fuenteFinanciacion.cuentaBancaria.length > 1 ) {
                                         if ( aportante.cuentaBancariaId !== undefined ) {
@@ -204,7 +205,7 @@ export class FormOrigenComponent implements OnInit {
         this.aportantes.controls.forEach( control => {
             this.ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
                 terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.forEach( aportante => {
-                    if ( control.get( 'nombreAportante' ).value.cofinanciacionAportanteId === aportante.aportanteId ) {
+                    if ( control.get( 'nombreAportante' ).value.cofinanciacionAportanteId === aportante.aportanteId && control.get( 'fuente' ).value.fuenteFinanciacionId === aportante.fuenteFinanciacionId) {
                       aportante.cuentaBancariaId = control.get( 'cuentaBancariaId' )?.value?.cuentaBancariaId;
                     }
                 } )

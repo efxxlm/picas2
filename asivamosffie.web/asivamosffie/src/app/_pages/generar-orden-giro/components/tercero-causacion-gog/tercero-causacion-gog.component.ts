@@ -179,7 +179,6 @@ export class TerceroCausacionGogComponent implements OnInit {
 
                     //const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
                     let dataAportantes = await this.ordenGiroSvc.getAportantesNew( this.solicitudPago );
-                    console.log(dataAportantes);
                     for (let i = 0; i < dataAportantes.listaTipoAportante.length; i++) {
                         const element = dataAportantes.listaTipoAportante[i];
                         const element2 = this.solicitudPago.tablaInformacionFuenteRecursos[i];
@@ -203,11 +202,15 @@ export class TerceroCausacionGogComponent implements OnInit {
                         dataAportantes.listaNombreAportante.forEach((r: any, index: number) => {
                           let position = aportantesxContratacionProyecto.indexOf(r.cofinanciacionAportanteId);
                           if(position !== -1) {
-                              listaNombreAportante.push(dataAportantes.listaNombreAportante[index]);
-                              const lta = dataAportantes.listaTipoAportante[index];
+                            listaNombreAportante.push(r);
+
+                            const lta = dataAportantes.listaTipoAportante.find(la => la.aportanteId == r.cofinanciacionAportanteId);
+                            if(lta != undefined){
                               if(listaTipoAportante.findIndex(r => r.dominioId == lta.dominioId && r.tipoDominioId == lta.tipoDominioId && r.codigo == lta.codigo) === -1){
                                 listaTipoAportante.push(lta);
                               }
+                            }
+
                           }
                         });
                       }
@@ -217,7 +220,6 @@ export class TerceroCausacionGogComponent implements OnInit {
                           listaTipoAportante: listaTipoAportante
                         };
                       }
-
                     }
 
                     if ( this.solicitudPago.tablaUsoFuenteAportante !== undefined ) {
@@ -412,7 +414,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                             if ( usoByConcepto.length > 0 ) {
                                 usoByConcepto.forEach( uso => valorTotalUso += uso.valorUso );
                             }
-
+                            console.log(dataAportantes);
+                            console.log(dataAportantes.listaTipoAportante);
                             conceptosDePago.push( this.fb.group(
                               {
                                   ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
@@ -442,7 +445,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                               if ( usoByConcepto.length > 0 ) {
                                   usoByConcepto.forEach( uso => valorTotalUso += uso.valorUso );
                               }
-
+                              console.log(dataAportantes.listaTipoAportante);
                               conceptosDePago.push( this.fb.group(
                                 {
                                     ordenGiroDetalleTerceroCausacionId: [ 0 ],
