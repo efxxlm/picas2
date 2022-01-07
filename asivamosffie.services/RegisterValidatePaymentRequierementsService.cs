@@ -819,14 +819,13 @@ namespace asivamosffie.services
                                                                                     Observacion = SolicitudPagoListaChequeoRespuesta.Observacion,
                                                                                 });
                 }
-                _context.Set<SolicitudPagoListaChequeo>()
-                                                   .Where(r => r.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
-                                                                                            .Update(s => new SolicitudPagoListaChequeo
-                                                                                            {
-                                                                                                RegistroCompleto = blRegistroCompletoListaChequeo,
-                                                                                                FechaModificacion = DateTime.Now,
-                                                                                                UsuarioModificacion = usuarioCreacion
-                                                                                            });
+                _context.Set<SolicitudPagoListaChequeo>().Where(r => r.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
+                                                         .Update(s => new SolicitudPagoListaChequeo
+                                                         {
+                                                            RegistroCompleto = blRegistroCompletoListaChequeo,
+                                                            FechaModificacion = DateTime.Now,
+                                                            UsuarioModificacion = usuarioCreacion
+                                                         });
             }
         }
 
@@ -1744,6 +1743,9 @@ namespace asivamosffie.services
                     .AsNoTracking()
                     .FirstOrDefaultAsync();
 
+
+
+
             if (contrato.SolicitudPago.Count() > 0)
                 contrato.SolicitudPago = contrato.SolicitudPago
                     .Where(s => s.Eliminado != true).ToList();
@@ -2263,6 +2265,7 @@ namespace asivamosffie.services
         {
             if (solicitudPago == null)
                 return new SolicitudPago();
+
             switch (solicitudPago.TipoSolicitudCodigo)
             {
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria:
