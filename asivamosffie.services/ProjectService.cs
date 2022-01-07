@@ -607,7 +607,7 @@ namespace asivamosffie.services
                             };
                             valorobra += proyectoAportante.ValorObra != null ? Convert.ToDecimal(proyectoAportante.ValorObra) : 0;
                             valorinterventoria += proyectoAportante.ValorInterventoria != null ? Convert.ToDecimal(proyectoAportante.ValorInterventoria) : 0;
-                            valortotal += valorobra + valorinterventoria;
+                            valortotal = valorobra + valorinterventoria;
                             _context.ProyectoAportante.Add(proyectoAportante1);
 
                             //por cada aportante relaciono las fuentes del aportante al proyecto
