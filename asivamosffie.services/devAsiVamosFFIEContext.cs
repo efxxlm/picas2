@@ -304,6 +304,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VOrdenGiroPagosXusoAportante> VOrdenGiroPagosXusoAportante { get; set; }
         public virtual DbSet<VOrdenGiroPagosXusoAportanteXproyecto> VOrdenGiroPagosXusoAportanteXproyecto { get; set; }
         public virtual DbSet<VOrdenGiroXproyecto> VOrdenGiroXproyecto { get; set; }
+        public virtual DbSet<VPagosOdgXsinAmortizacion> VPagosOdgXsinAmortizacion { get; set; }
         public virtual DbSet<VPagosSolicitudXcontratacionXproyectoXuso> VPagosSolicitudXcontratacionXproyectoXuso { get; set; }
         public virtual DbSet<VPagosSolicitudXcontratacionXproyectoXusoXamortizacion> VPagosSolicitudXcontratacionXproyectoXusoXamortizacion { get; set; }
         public virtual DbSet<VPagosSolicitudXodgXcontratacionXproyectoXuso> VPagosSolicitudXodgXcontratacionXproyectoXuso { get; set; }
@@ -10114,6 +10115,34 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(2)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VPagosOdgXsinAmortizacion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_PagosOdgXSinAmortizacion");
+
+                entity.Property(e => e.ConceptoPagoCriterio)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstaAprobadaOdg).HasColumnName("EstaAprobadaODG");
+
+                entity.Property(e => e.NumeroDrp)
+                    .IsRequired()
+                    .HasColumnName("NumeroDRP")
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SaldoUso).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.TipoUsoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Uso).HasMaxLength(250);
             });
 
             modelBuilder.Entity<VPagosSolicitudXcontratacionXproyectoXuso>(entity =>
