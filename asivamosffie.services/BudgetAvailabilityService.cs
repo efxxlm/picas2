@@ -1087,20 +1087,21 @@ namespace asivamosffie.services
                                                                 .ThenInclude(x => x.ContratacionProyectoAportante)
                                                                     .ThenInclude(x => x.CofinanciacionAportante)
                                                                         .ThenInclude(x => x.FuenteFinanciacion)
+                                                                        .AsNoTracking()
                                                          .FirstOrDefault(x => x.DisponibilidadPresupuestalId == pId);
 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
             int consecutivo = _context.DisponibilidadPresupuestal.Where(x => !string.IsNullOrEmpty(x.NumeroDdp)).Count() + 1;
             /*busco usuario Juridico*/
-            var usuarioJuridico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Juridica).Include(y => y.Usuario).ToList();
+            var usuarioJuridico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Juridica).Include(y => y.Usuario).AsNoTracking().ToList();
             int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Con_disponibilidad_presupuestal;
 
             try
             {
+                string NumeroSolicitud = string.Empty;
                 if (esNovedad)
                 {
-                    NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal
-                                                                                                                .Find(RegistroPresupuestalId);
+                    NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal.Where(r => r.NovedadContractualRegistroPresupuestalId == RegistroPresupuestalId && r.Eliminado != true).AsNoTracking().FirstOrDefault();
 
                     List<GestionFuenteFinanciacion> listaGestion = _context.GestionFuenteFinanciacion
                                                                     .Where(x => x.NovedadContractualRegistroPresupuestalId == RegistroPresupuestalId &&
@@ -1108,11 +1109,18 @@ namespace asivamosffie.services
                                                                            x.EsNovedad == true
                                                                            )
                                                                     .Include(r => r.FuenteFinanciacion)
+                                                                    .AsNoTracking()
                                                                     .ToList();
+                    NumeroSolicitud = novedadContractualRegistroPresupuestal.NumeroSolicitud;
 
-                    novedadContractualRegistroPresupuestal.EstadoSolicitudCodigo = estado.ToString();
-
-
+                    _context.Set<NovedadContractualRegistroPresupuestal>()
+                              .Where(r => r.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestal.NovedadContractualRegistroPresupuestalId)
+                                                  .Update(r => new NovedadContractualRegistroPresupuestal()
+                                                  {
+                                                      FechaModificacion = DateTime.Now,
+                                                      UsuarioModificacion = pUsuarioModificacion.ToUpper(),
+                                                      EstadoSolicitudCodigo = estado.ToString()
+                                                  });
                     //TODO VALIDAR SI LOS PARAMETROS  
                     //List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = await
                     //    _requestBudgetAvailabilityService.
@@ -1122,30 +1130,26 @@ namespace asivamosffie.services
                     foreach (GestionFuenteFinanciacion gestion in listaGestion)
                     {
                         int estadocod = (int)EnumeratorEstadoGestionFuenteFinanciacion.Apartado_en_DDP;
-                        gestion.EstadoCodigo = estadocod.ToString();
-                        gestion.FechaModificacion = DateTime.Now;
-                        gestion.UsuarioModificacion = pUsuarioModificacion.ToUpper();
-
-                        //llamar GetDetailAvailabilityBudgetProyect y buscar los saldos calculados 
-                        //gestion.SaldoActualGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Saldo_actual_de_la_fuente;
-                        //gestion.NuevoSaldoGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Nuevo_saldo_de_la_fuente_al_guardar;
-                        //gestion.SaldoActualGenerado = ListDetailValidarDisponibilidadPresupuesal?.FirstOrDefault()?.Aportantes?.FirstOrDefault()?.FuentesFinanciacion?.FirstOrDefault()?.Saldo_actual_de_la_fuente_al_guardar;
                         var vSaldosFuenteXaportanteId = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId && r.FuenteFinanciacionId == gestion.FuenteFinanciacionId).FirstOrDefault();
                         decimal saldoActual = vSaldosFuenteXaportanteId.SaldoActual ?? 0;
                         decimal valorSolicitado = gestion.ValorSolicitado;
-                        gestion.SaldoActualGenerado = saldoActual;
-                        gestion.ValorSolicitadoGenerado = valorSolicitado;
-                        gestion.NuevoSaldoGenerado = saldoActual - valorSolicitado;
 
-                        _context.GestionFuenteFinanciacion.Update(gestion);
-                        _context.SaveChanges();//para que tome el nuevo saldo
+                        _context.Set<GestionFuenteFinanciacion>()
+                                                      .Where(r => r.GestionFuenteFinanciacionId == gestion.GestionFuenteFinanciacionId)
+                                                                          .Update(r => new GestionFuenteFinanciacion()
+                                                                          {
+                                                                              FechaModificacion = DateTime.Now,
+                                                                              UsuarioModificacion = pUsuarioModificacion.ToUpper(),
+                                                                              EstadoCodigo = estadocod.ToString(),
+                                                                              SaldoActualGenerado = saldoActual,
+                                                                              ValorSolicitadoGenerado = valorSolicitado,
+                                                                              NuevoSaldoGenerado = saldoActual - valorSolicitado
+                                                                          });
+
                     }
                 }
                 else
                 {
-                    DisponibilidadCancelar.FechaModificacion = DateTime.Now;
-                    DisponibilidadCancelar.UsuarioModificacion = pUsuarioModificacion.ToUpper();
-                    DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
                     string tipo = "";
                     if (DisponibilidadCancelar.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Tradicional)
                     {
@@ -1160,7 +1164,18 @@ namespace asivamosffie.services
                         tipo = "ESP";
                     }
 
-                    DisponibilidadCancelar.NumeroDdp = "DDP_" + tipo + "_" + consecutivo.ToString();
+                    NumeroSolicitud = "DDP_" + tipo + "_" + consecutivo.ToString();
+
+                    _context.Set<DisponibilidadPresupuestal>()
+                              .Where(r => r.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId)
+                                                  .Update(r => new DisponibilidadPresupuestal()
+                                                  {
+                                                      FechaModificacion = DateTime.Now,
+                                                      UsuarioModificacion = pUsuarioModificacion.ToUpper(),
+                                                      EstadoSolicitudCodigo = estado.ToString(),
+                                                      NumeroDdp = NumeroSolicitud
+                                                  });
+
 
                     //
                     //guardar el tema de platas
@@ -1174,47 +1189,38 @@ namespace asivamosffie.services
                                                                     .Where(x => !(bool)x.Eliminado
                                                                                                     && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId
                                                                                                     && x.EsNovedad != true)
+                                                                    .AsNoTracking()
                                                                     .ToList();
-
-                    //TODO VALIDAR SI LOS PARAMETROS  
-                    List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = await
-                        _requestBudgetAvailabilityService.GetDetailAvailabilityBudgetProyectNew(DisponibilidadCancelar.DisponibilidadPresupuestalId, false, 0, false);
-
 
                     foreach (var gestion in gestionfuentes)
                     {
                         int estadocod = (int)EnumeratorEstadoGestionFuenteFinanciacion.Apartado_en_DDP;
-
-                        gestion.EstadoCodigo = estadocod.ToString();
-                        gestion.FechaModificacion = DateTime.Now;
-                        gestion.UsuarioModificacion = pUsuarioModificacion.ToUpper();
-
                         var vSaldosFuenteXaportanteId = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == gestion.FuenteFinanciacion.AportanteId && r.FuenteFinanciacionId == gestion.FuenteFinanciacionId)
-                                                                                          .FirstOrDefault();
+                                                                  .AsNoTracking().FirstOrDefault();
 
                         decimal saldoActual = vSaldosFuenteXaportanteId.SaldoActual ?? 0;
                         decimal valorSolicitado = gestion.ValorSolicitado;
 
-                        gestion.SaldoActualGenerado = saldoActual;
-                        gestion.ValorSolicitadoGenerado = valorSolicitado;
-                        gestion.NuevoSaldoGenerado = saldoActual - valorSolicitado;
-
-                        _context.GestionFuenteFinanciacion.Update(gestion);
-                        //para que tome el nuevo saldo 
-                        _context.SaveChanges();
+                        _context.Set<GestionFuenteFinanciacion>()
+                                  .Where(r => r.GestionFuenteFinanciacionId == gestion.GestionFuenteFinanciacionId)
+                                                      .Update(r => new GestionFuenteFinanciacion()
+                                                      {
+                                                          FechaModificacion = DateTime.Now,
+                                                          UsuarioModificacion = pUsuarioModificacion.ToUpper(),
+                                                          EstadoCodigo = estadocod.ToString(),
+                                                          SaldoActualGenerado = saldoActual,
+                                                          ValorSolicitadoGenerado = valorSolicitado,
+                                                          NuevoSaldoGenerado = saldoActual - valorSolicitado
+                                                      });
                     }
                 }
 
-
-
-
-                _context.SaveChanges();
                 //envio correo a juridica
                 Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DisponibilidadPresupuestalGenerada);
                 string template = TemplateRecoveryPassword.Contenido;
 
                 //template = template.Replace("_LinkF_", urlDestino);
-                template = template.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroSolicitud);
+                template = template.Replace("[NUMERODISPONIBILIDAD]", NumeroSolicitud);
 
                 List<string> usuarios = new List<string>();
 
@@ -1234,8 +1240,8 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = ConstantMessagesGenerateBudget.OperacionExitosa,
-                        Data = DisponibilidadCancelar.NumeroSolicitud,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.OperacionExitosa, idAccion, pUsuarioModificacion, "GENERAR DDP DISPONIBILIDAD PRESUPUESTAL")
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.OperacionExitosa, idAccion, pUsuarioModificacion, "GENERAR DDP DISPONIBILIDAD PRESUPUESTAL"),
+                        Data = NumeroSolicitud
                     };
                 }
                 else
@@ -1246,8 +1252,8 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = false,
                         Code = ConstantMessagesGenerateBudget.OperacionExitosa,
-                        Data = DisponibilidadCancelar.NumeroSolicitud,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.OperacionExitosa, idAccion, pUsuarioModificacion, "ERROR ENVIO MAIL GENERAR DDP DISPONIBILIDAD PRESUPUESTAL")
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.OperacionExitosa, idAccion, pUsuarioModificacion, "ERROR ENVIO MAIL GENERAR DDP DISPONIBILIDAD PRESUPUESTAL"),
+                        Data = NumeroSolicitud
                     };
                 }
             }
@@ -3054,6 +3060,7 @@ namespace asivamosffie.services
                                                             .ThenInclude(x => x.ContratacionProyectoAportante)
                                                                 .ThenInclude(x => x.CofinanciacionAportante).
                                                                     ThenInclude(x => x.FuenteFinanciacion)
+                                                    .AsNoTracking()
                                                     .FirstOrDefault(x => x.DisponibilidadPresupuestalId == pId);
 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
@@ -3067,55 +3074,74 @@ namespace asivamosffie.services
                     consecutivo = _context.NovedadContractualRegistroPresupuestal.Where(x => x.NumeroDrp != null).Count() + 1;
 
 
-                    NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal
-                                                                                                                .Find(RegistroPresupuestalId);
+                    NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal.Where(r => r.NovedadContractualRegistroPresupuestalId == RegistroPresupuestalId).AsNoTracking().FirstOrDefault();
 
                     List<GestionFuenteFinanciacion> listaGestion = _context.GestionFuenteFinanciacion
                                                                     .Where(x => x.NovedadContractualRegistroPresupuestalId == RegistroPresupuestalId &&
                                                                            x.Eliminado != true &&
                                                                            x.EsNovedad == true
                                                                            )
+                                                                    .AsNoTracking()
                                                                     .ToList();
 
-                    novedadContractualRegistroPresupuestal.EstadoSolicitudCodigo = estado.ToString();
-                    novedadContractualRegistroPresupuestal.NumeroDrp = "DRP_NOV_" + consecutivo.ToString();
-                    novedadContractualRegistroPresupuestal.FechaDrp = DateTime.Now;
+                    _context.Set<NovedadContractualRegistroPresupuestal>()
+                              .Where(r => r.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestal.NovedadContractualRegistroPresupuestalId)
+                                                  .Update(r => new NovedadContractualRegistroPresupuestal()
+                                                  {
+                                                      FechaModificacion = DateTime.Now,
+                                                      UsuarioModificacion = pUsuarioModificacion.ToUpper(),
+                                                      EstadoSolicitudCodigo = estado.ToString(),
+                                                      NumeroDrp = "DRP_NOV_" + consecutivo.ToString(),
+                                                      FechaDrp = DateTime.Now
+                                                  });
 
                     foreach (GestionFuenteFinanciacion gestion in listaGestion)
                     {
                         int estadocod = (int)EnumeratorEstadoGestionFuenteFinanciacion.Apartado_en_DDP;
-                        gestion.EstadoCodigo = estadocod.ToString();
-                        gestion.FechaModificacion = DateTime.Now;
-                        gestion.UsuarioModificacion = pUsuarioModificacion.ToUpper();
-                        _context.GestionFuenteFinanciacion.Update(gestion);
+                        _context.Set<GestionFuenteFinanciacion>()
+                                  .Where(r => r.GestionFuenteFinanciacionId == gestion.GestionFuenteFinanciacionId)
+                                                      .Update(r => new GestionFuenteFinanciacion()
+                                                      {
+                                                          FechaModificacion = DateTime.Now,
+                                                          UsuarioModificacion = pUsuarioModificacion.ToUpper(),
+                                                          EstadoCodigo = estadocod.ToString()
+                                                      });
                     }
 
 
                 }
                 else
                 {
-                    DisponibilidadCancelar.FechaModificacion = DateTime.Now;
-                    DisponibilidadCancelar.UsuarioModificacion = pUsuarioModificacion.ToUpper();
-                    DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
-                    DisponibilidadCancelar.NumeroDrp = "DRP_PI_" + consecutivo.ToString();
-                    DisponibilidadCancelar.FechaDrp = DateTime.Now;
+                    _context.Set<DisponibilidadPresupuestal>()
+                            .Where(r => r.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId)
+                                                .Update(r => new DisponibilidadPresupuestal()
+                                                {
+                                                    FechaModificacion = DateTime.Now,
+                                                    UsuarioModificacion = pUsuarioModificacion.ToUpper(),
+                                                    EstadoSolicitudCodigo = estado.ToString(),
+                                                    NumeroDrp = "DRP_PI_" + consecutivo.ToString(),
+                                                    FechaDrp = DateTime.Now
+                                                });
                     //
                     //guardar el tema de platas
                     //
-                    var gestionfuentes = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId);
+                    List<GestionFuenteFinanciacion> gestionfuentes = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId).AsNoTracking().ToList();
                     foreach (var gestion in gestionfuentes)
                     {
                         int estadocod = (int)EnumeratorEstadoGestionFuenteFinanciacion.Apartado_en_DDP;
-                        gestion.EstadoCodigo = estadocod.ToString();
-                        gestion.FechaModificacion = DateTime.Now;
-                        gestion.UsuarioModificacion = pUsuarioModificacion.ToUpper();
-                        _context.GestionFuenteFinanciacion.Update(gestion);
+                        _context.Set<GestionFuenteFinanciacion>()
+                                  .Where(r => r.GestionFuenteFinanciacionId == gestion.GestionFuenteFinanciacionId)
+                                                      .Update(r => new GestionFuenteFinanciacion()
+                                                      {
+                                                          FechaModificacion = DateTime.Now,
+                                                          UsuarioModificacion = pUsuarioModificacion.ToUpper(),
+                                                          EstadoCodigo = estadocod.ToString()
+                                                      });
                     }
                 }
 
                 //Enviar Correo
                 await EnviarCorreoJuridica(DisponibilidadCancelar);
-                _context.SaveChanges();
 
                 return new Respuesta
                 {
