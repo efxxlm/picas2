@@ -13,5 +13,6 @@ namespace asivamosffie.model.Models
         public int? ContratoId { get; set; }
         public decimal? ValorDescuento { get; set; }
         public int SolicitudPagoId { get; set; }
+        public int? FuenteFinanciacionId { get; set; }
     }
 }

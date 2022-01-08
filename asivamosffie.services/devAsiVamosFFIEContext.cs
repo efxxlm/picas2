@@ -10267,7 +10267,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ConsecutivoFfie)
                     .IsRequired()
                     .HasColumnName("ConsecutivoFFIE")
-                    .HasMaxLength(17)
+                    .HasMaxLength(29)
                     .IsUnicode(false);
 
                 entity.Property(e => e.DescuentoAns).HasColumnType("decimal(38, 0)");

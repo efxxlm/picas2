@@ -295,7 +295,7 @@ namespace asivamosffie.services
             List<Dominio> FuenteRecursos = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).ToList();
             foreach (var item in vAportanteFuenteUsos)
             {
-                decimal Descuento = ListDescuentos.Where(r => r.AportanteId == item.CofinanciacionAportanteId).Sum(r => r.ValorDescuento) ?? 0;
+                decimal Descuento = ListDescuentos.Where(r => r.AportanteId == item.CofinanciacionAportanteId && r.FuenteFinanciacionId == item.FuenteFinanciacionId).Sum(r => r.ValorDescuento) ?? 0;
                 CofinanciacionAportante cofinanciacionAportante = _context.CofinanciacionAportante.Find(item.CofinanciacionAportanteId);
                 string NombreAportante = _budgetAvailabilityService.getNombreAportante(cofinanciacionAportante);
 
