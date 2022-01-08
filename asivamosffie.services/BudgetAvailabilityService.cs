@@ -3067,6 +3067,7 @@ namespace asivamosffie.services
             int consecutivo = _context.DisponibilidadPresupuestal.Where(x => x.NumeroDrp != null).Count() + 1;
             try
             {
+                string numeroDrp = string.Empty;
                 int estado = (int)EnumeratorEstadoSolicitudPresupuestal.Con_registro_presupuestal;
 
                 if (esNovedad)
@@ -3083,7 +3084,7 @@ namespace asivamosffie.services
                                                                            )
                                                                     .AsNoTracking()
                                                                     .ToList();
-
+                    numeroDrp = "DRP_NOV_" + consecutivo.ToString();
                     _context.Set<NovedadContractualRegistroPresupuestal>()
                               .Where(r => r.NovedadContractualRegistroPresupuestalId == novedadContractualRegistroPresupuestal.NovedadContractualRegistroPresupuestalId)
                                                   .Update(r => new NovedadContractualRegistroPresupuestal()
@@ -3112,6 +3113,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
+                    numeroDrp = "DRP_PI_" + consecutivo.ToString();
                     _context.Set<DisponibilidadPresupuestal>()
                             .Where(r => r.DisponibilidadPresupuestalId == DisponibilidadCancelar.DisponibilidadPresupuestalId)
                                                 .Update(r => new DisponibilidadPresupuestal()
@@ -3149,7 +3151,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = ConstantMessagesGenerateBudget.OperacionExitosa,
-                    Data = DisponibilidadCancelar.NumeroDrp,
+                    Data = numeroDrp,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Registro_Presupuestal, ConstantMessagesGenerateBudget.OperacionExitosa, idAccion, pUsuarioModificacion, "GENERAR DRP REGISTRO PRESUPUESTAL")
                 };
 
