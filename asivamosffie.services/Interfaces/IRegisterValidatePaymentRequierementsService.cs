@@ -64,5 +64,8 @@ namespace asivamosffie.services.Interfaces
         SolicitudPago GetSolicitudPagoComplete(SolicitudPago solicitudPago);
 
         List<TablaDRP> GetDrpContrato(Contrato contrato);
+
+        dynamic GetDrpContratoGeneral(int pContratacionId);
+
     }
 }
