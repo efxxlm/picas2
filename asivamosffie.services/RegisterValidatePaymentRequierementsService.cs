@@ -2344,11 +2344,11 @@ namespace asivamosffie.services
                               .ToList();
 
             List<dynamic> ListTablaDrp = new List<dynamic>();
-
             List<VPagosSolicitudXsinAmortizacion> ListPagos =
-                    _context.VPagosSolicitudXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId)
-                                                            .ToList();
-
+                           _context.VPagosSolicitudXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId
+                                                                         && v.EsFactura
+                                                                          )
+                                                                   .ToList();
 
             List<VPagosOdgXsinAmortizacion> ListPagosOdg =
                     _context.VPagosOdgXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId)
