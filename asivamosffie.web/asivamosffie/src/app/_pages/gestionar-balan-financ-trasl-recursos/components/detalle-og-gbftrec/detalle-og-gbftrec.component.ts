@@ -31,7 +31,7 @@ export class DetalleOgGbftrecComponent implements OnInit {
     });
 
     if(this.solicitudPagoId != null){
-        this.ordenGiroSvc.getSolicitudPagoBySolicitudPagoId( this.solicitudPagoId)
+        this.ordenGiroSvc.getSolicitudPagoBySolicitudPagoId( this.solicitudPagoId, false)
         .subscribe(
             response => {
               this.solicitudPago = response;
@@ -41,7 +41,7 @@ export class DetalleOgGbftrecComponent implements OnInit {
             }
         );
     }
-    
+
   }
 
   seeDetailOdg(pOrdenGiroId) {

@@ -52,7 +52,7 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
         this.commonSvc.modalidadesContrato()
         .subscribe( response => {
             this.modalidadContratoArray = response;
-            this.ordenPagoSvc.getSolicitudPagoBySolicitudPagoId( this.activatedRoute.snapshot.params.id )
+            this.ordenPagoSvc.getSolicitudPagoBySolicitudPagoId( this.activatedRoute.snapshot.params.id , false)
                 .subscribe(
                     async response => {
                         this.solicitudPago = response;

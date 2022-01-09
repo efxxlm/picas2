@@ -92,7 +92,7 @@ export class VerDetalleAprobarSolicitudComponent implements OnInit {
     }
 
     getContrato() {
-        this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago )
+        this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago , true)
             .subscribe(
                 response => {
                     this.commonSvc.tiposDeSolicitudes()

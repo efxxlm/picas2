@@ -99,7 +99,7 @@ export class VerDetalleAutorizarSolicitudComponent implements OnInit {
     }
 
     getContrato() {
-        this.registrarPagosSvc.getContratoByContratoId(this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago)
+        this.registrarPagosSvc.getContratoByContratoId(this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago, true)
             .subscribe(
                 response => {
                     this.commonSvc.tiposDeSolicitudes()
@@ -219,7 +219,7 @@ export class VerDetalleAutorizarSolicitudComponent implements OnInit {
     getModalidadContrato(modalidadCodigo: string) {
         if (this.modalidadContratoArray.length > 0) {
             const modalidad = this.modalidadContratoArray.find(modalidad => modalidad.codigo === modalidadCodigo);
-            
+
             if ( modalidad !== undefined ) {
                 return modalidad.nombre;
             }

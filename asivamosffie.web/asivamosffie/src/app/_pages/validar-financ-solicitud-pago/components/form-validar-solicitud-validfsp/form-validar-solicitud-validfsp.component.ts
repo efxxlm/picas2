@@ -62,7 +62,7 @@ export class FormValidarSolicitudValidfspComponent implements OnInit {
     }
 
     getContrato() {
-        this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago )
+        this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago , false)
             .subscribe(
                 response => {
                     this.commonSvc.tiposDeSolicitudes()
@@ -105,7 +105,7 @@ export class FormValidarSolicitudValidfspComponent implements OnInit {
                                             }
                                         } );
                                 } else {
-                                    
+
                                     if ( this.contrato.solicitudPago.length > 1 ) {
                                         this.solicitudPagoCargarFormaPago = this.contrato.solicitudPago[0].solicitudPagoCargarFormaPago[0];
                                     } else {

@@ -56,7 +56,7 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
     solicitudPagoFase: any;
     manejoAnticipoRequiere: boolean;
     idSolicitud: any;
-    
+
 
     get criterios() {
         return this.addressForm.get( 'criterios' ) as FormArray;
@@ -99,7 +99,7 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
     }
 
     getContrato() {
-        this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitud )
+        this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitud , true)
             .subscribe(
                 response => {
                     this.commonSvc.tiposDeSolicitudes()
@@ -140,14 +140,14 @@ export class VerdetalleSolicitudPagoComponent implements OnInit {
                                             if ( solicitudPagoFase.esPreconstruccion === true ) {
                                                 this.tienePreconstruccion = true;
                                             }
-    
+
                                             if ( solicitudPagoFase.esPreconstruccion === false ) {
                                                 this.tieneConstruccion = true;
                                             }
                                         }
                                     }
                                 }
-    
+
                                 this.dataSource = new MatTableDataSource( this.contrato.tablaDRP );
                                 this.dataSourceRegistrarSolicitud = new MatTableDataSource( this.contrato.vContratoPagosRealizados );
                             }

@@ -76,7 +76,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
     }
 
     getContrato() {
-        this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitud )
+        this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitud, true )
             .subscribe(
                 response => {
                     this.commonSvc.tiposDeSolicitudes()
@@ -150,7 +150,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                                 }
 
                                 // Get semaforo forma de pago y registro completo
-                                
+
 
                                 if ( this.contrato.solicitudPagoOnly ) {
                                     this.semaforoFormaDePago = 'completo';
@@ -160,7 +160,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                                     const solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
 
                                     if ( solicitudPagoCargarFormaPago !== undefined ) {
-    
+
                                         // Get semaforo
                                         if ( solicitudPagoCargarFormaPago.registroCompleto === false ) {
                                             this.semaforoFormaDePago = 'en-proceso';
@@ -189,7 +189,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
     getModalidadContrato( modalidadCodigo: string ) {
         if ( this.modalidadContratoArray.length > 0 ) {
             const modalidad = this.modalidadContratoArray.find( modalidad => modalidad.codigo === modalidadCodigo );
-            
+
             if ( modalidad !== undefined ) {
                 return modalidad.nombre;
             }
@@ -261,7 +261,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
             return 'en-alerta';
         }
         if ( nombreAcordeon === 'listaChequeo' && tieneRegistroAnterior === true ) {
-            
+
             const solicitudPagoListaChequeo: any[] = this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo;
             let semaforoListaChequeo = 'sin-diligenciar';
             let completo = 0;
@@ -269,7 +269,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
             let sinDiligenciar = 0;
 
             if ( solicitudPagoListaChequeo.length > 0 ) {
-    
+
                 if ( solicitudPagoListaChequeo.length > 0 ) {
                     solicitudPagoListaChequeo.forEach( listaChequeo => {
                         let total = 0;
@@ -308,7 +308,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                             semaforoListaChequeo = 'completo';
                             this.registroCompletoAcordeones.registroCompletoListaChequeo = true;
                         }
-                        
+
                     }
                 }
             }

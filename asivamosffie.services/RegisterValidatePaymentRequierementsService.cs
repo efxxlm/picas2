@@ -1724,7 +1724,7 @@ namespace asivamosffie.services
             return grind;
         }
 
-        public async Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago)
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago, bool esSolicitudPago)
         {
             Contrato contrato = await _context.Contrato
                     .Where(c => c.ContratoId == pContratoId)
@@ -1776,8 +1776,8 @@ namespace asivamosffie.services
             }
             contrato.VAmortizacionXproyecto = _context.VAmortizacionXproyecto.Where(v => v.ContratoId == pContratoId).ToList();
             contrato.VContratoPagosRealizados = vContratoPagosRealizados;
-            contrato.TablaDRP = GetDrpContratoGeneral(contrato.ContratacionId, true);
-            contrato.TablaDRPODG = GetDrpContratoGeneral(contrato.ContratacionId, true);
+            contrato.TablaDRP = GetDrpContratoGeneral(contrato.ContratacionId, esSolicitudPago);
+            contrato.TablaDRPODG = GetDrpContratoGeneral(contrato.ContratacionId, esSolicitudPago);
             contrato.ListProyectos = GetListProyectos(contrato.ContratacionId);
             contrato.VConceptosXcontratoXfaseXproyecto = _context.VConceptosXcontratoXfaseXproyecto.Where(r => r.ContratoId == contrato.ContratoId).ToList();
             return contrato;

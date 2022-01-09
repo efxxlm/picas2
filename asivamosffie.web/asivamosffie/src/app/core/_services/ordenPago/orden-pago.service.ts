@@ -22,8 +22,8 @@ export class OrdenPagoService {
         return this.http.get<any[]>( `${ this.urlApi }/GetListOrdenGiro?pMenuId=${ pMenuId }` );
     }
 
-    getSolicitudPagoBySolicitudPagoId( SolicitudPagoId: number ) {
-        return this.http.get( `${ this.urlApi }/GetSolicitudPagoBySolicitudPagoId?SolicitudPagoId=${ SolicitudPagoId }` );
+    getSolicitudPagoBySolicitudPagoId( SolicitudPagoId: number , esSolicitudPago: boolean) {
+        return this.http.get( `${ this.urlApi }/GetSolicitudPagoBySolicitudPagoId?SolicitudPagoId=${ SolicitudPagoId }&esSolicitudPago=${ esSolicitudPago }` );
     }
 
     getInfoPlantilla( pOrdenGiroId: number ) {

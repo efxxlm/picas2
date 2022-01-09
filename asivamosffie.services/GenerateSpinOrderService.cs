@@ -175,14 +175,14 @@ namespace asivamosffie.services
                 pSolicitudPago.PrimerOrdenGiroTerceroTransferenciaElectronica.OrdenGiroTerceroTransferenciaElectronicaId = 0;
         }
 
-        public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int SolicitudPagoId)
+        public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int SolicitudPagoId, bool esSolicitudPago)
         {
             SolicitudPago SolicitudPago = await _registerValidatePayment.GetSolicitudPago(SolicitudPagoId);
 
             if (SolicitudPago.ContratoId > 0)
             {
                 SolicitudPago.VConceptosUsosXsolicitudPagoId = _context.VConceptosUsosXsolicitudPagoId.Where(r => r.SolicitudPagoId == SolicitudPagoId).ToList();
-                SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, SolicitudPagoId);
+                SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, SolicitudPagoId, esSolicitudPago);
                 SolicitudPago.ContratoSon.ListProyectos = await _registerValidatePayment.GetProyectosByIdContrato((int)SolicitudPago.ContratoId);
                 SolicitudPago.ValorXProyectoXFaseXAportanteXConcepto = GetInfoValorValorXProyectoXFaseXAportanteXConcepto(SolicitudPago.ContratoSon.ContratacionId);
                 SolicitudPago.VAmortizacionXproyecto = _context.VAmortizacionXproyecto.Where(r => r.SolicitudPagoId == SolicitudPagoId).ToList();
@@ -239,10 +239,10 @@ namespace asivamosffie.services
             }
             try
             {
-                SolicitudPago.TablaDrpUso = _registerValidatePayment.GetDrpContratoGeneral(SolicitudPago.ContratoSon.ContratacionId, false);
+                SolicitudPago.TablaDrpUso = _registerValidatePayment.GetDrpContratoGeneral(SolicitudPago.ContratoSon.ContratacionId, esSolicitudPago);
 
                 //SolicitudPago.TablaDRP = GetDrpContrato(SolicitudPago);
-                SolicitudPago.TablaDRPODG = _registerValidatePayment.GetDrpContratoGeneral(SolicitudPago.ContratoSon.ContratacionId, false);
+                SolicitudPago.TablaDRPODG = _registerValidatePayment.GetDrpContratoGeneral(SolicitudPago.ContratoSon.ContratacionId, esSolicitudPago);
 
                 SolicitudPago.TablaUsoFuenteAportante = GetTablaUsoFuenteAportante(SolicitudPago);
 
@@ -851,7 +851,7 @@ namespace asivamosffie.services
             bool blRegistroCompleto = false;
             try
             {
-                SolicitudPago solicitudPago = await GetSolicitudPagoBySolicitudPagoId(pSolicitudPago);
+                SolicitudPago solicitudPago = await GetSolicitudPagoBySolicitudPagoId(pSolicitudPago,false);
                 blRegistroCompleto = ValidarRegistroCompletoOrdenGiro(solicitudPago.OrdenGiro);
 
                 if (blRegistroCompleto == true)

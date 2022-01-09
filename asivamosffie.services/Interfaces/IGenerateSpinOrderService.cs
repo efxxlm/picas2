@@ -29,7 +29,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<dynamic> GetValorConceptoByAportanteId(int pAportanteId, int pSolicitudPagoId, string pConceptoPago);
 
-        Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int pOrdenGiroId);
+        Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int pOrdenGiroId, bool esSolicitudPago);
 
         Task<dynamic> GetListOrdenGiro(int pMenuId);
 

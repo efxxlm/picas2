@@ -83,7 +83,7 @@ export class PlantillaComponent implements OnInit {
   async getOrdenGiro() {
     let solicitudPago;
     solicitudPago = await this.ordenGiroSvc
-      .getSolicitudPagoBySolicitudPagoId(this.activatedRoute.snapshot.params.id)
+      .getSolicitudPagoBySolicitudPagoId(this.activatedRoute.snapshot.params.id, false)
       .toPromise();
     // console.log(solicitudPago);
     // solicitudPago.contratoSon.solicitudPagoOnly.forEach(

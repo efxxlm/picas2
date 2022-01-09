@@ -52,12 +52,12 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
     this.listaMedioPago = await this.commonSvc.listaMediosPago().toPromise();
     this.listaBancos = await this.commonSvc.listaBancos().toPromise();
     if (this.solicitudPagoId) {
-      this.solicitudPago = await this.ordenPagoSvc.getSolicitudPagoBySolicitudPagoId(this.solicitudPagoId).toPromise();
+      this.solicitudPago = await this.ordenPagoSvc.getSolicitudPagoBySolicitudPagoId(this.solicitudPagoId, false).toPromise();
 
       this.getListaDetalleGiro(this.solicitudPago)
     } else {
       this.solicitudPago = await this.ordenPagoSvc
-        .getSolicitudPagoBySolicitudPagoId(this.ordenGiro.get('solicitudPagoId').value)
+        .getSolicitudPagoBySolicitudPagoId(this.ordenGiro.get('solicitudPagoId').value, false)
         .toPromise();
 
       this.getListaDetalleGiro(this.solicitudPago)

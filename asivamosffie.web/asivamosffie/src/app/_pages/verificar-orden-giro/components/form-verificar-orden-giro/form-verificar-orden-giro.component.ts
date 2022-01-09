@@ -88,7 +88,7 @@ export class FormVerificarOrdenGiroComponent implements OnInit {
         this.commonSvc.modalidadesContrato()
             .subscribe( modalidadesContrato => this.listaModalidadContrato = modalidadesContrato );
         // Get solicitud de pago y orden de giro
-        this.ordenGiroSvc.getSolicitudPagoBySolicitudPagoId( this.activatedRoute.snapshot.params.id )
+        this.ordenGiroSvc.getSolicitudPagoBySolicitudPagoId( this.activatedRoute.snapshot.params.id , false)
             .subscribe(
                 async response => {
                     this.solicitudPago = response;
@@ -164,7 +164,7 @@ export class FormVerificarOrdenGiroComponent implements OnInit {
         if ( listaObservacionTramitar.length > 0 ) {
             listaObservacionTramitar.forEach( obs => obs.menuId = this.listaMenu.tramitarOrdenGiro )
         }
-        // Get lista de observacion y observacion actual    
+        // Get lista de observacion y observacion actual
         const observacion = listaObservacionVerificar.find( obs => obs.archivada === false )
 
         if ( observacion !== undefined ) {
@@ -213,7 +213,7 @@ export class FormVerificarOrdenGiroComponent implements OnInit {
     getModalidadContrato( modalidadCodigo: string ) {
         if ( this.listaModalidadContrato.length > 0 ) {
             const modalidad = this.listaModalidadContrato.find( modalidad => modalidad.codigo === modalidadCodigo );
-            
+
             if ( modalidad !== undefined ) {
                 return modalidad.nombre;
             }

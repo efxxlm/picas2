@@ -56,7 +56,7 @@ export class FormExpensasOtrosCostosComponent implements OnInit {
                 return;
             }
         } );
-        this.ordenPagoSvc.getSolicitudPagoBySolicitudPagoId( this.activatedRoute.snapshot.params.id )
+        this.ordenPagoSvc.getSolicitudPagoBySolicitudPagoId( this.activatedRoute.snapshot.params.id , false)
             .subscribe(
                 response => {
                     this.solicitudPago = response;

@@ -228,9 +228,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetContratoByContratoId")]
-        public async Task<IActionResult> GetContratoByContratoId([FromQuery] int pContratoId, int pSolicitudPago)
+        public async Task<IActionResult> GetContratoByContratoId([FromQuery] int pContratoId, int pSolicitudPago, bool esSolicitudPago)
         {
-            return Ok(await _registerValidatePaymentRequierementsService.GetContratoByContratoId(pContratoId, pSolicitudPago));
+            return Ok(await _registerValidatePaymentRequierementsService.GetContratoByContratoId(pContratoId, pSolicitudPago, esSolicitudPago));
         }
     }
 }

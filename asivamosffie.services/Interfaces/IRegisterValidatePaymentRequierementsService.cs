@@ -25,7 +25,7 @@ namespace asivamosffie.services.Interfaces
 
         Task GetValidateSolicitudPagoId(int SolicitudPagoId);
 
-        Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago);
+        Task<Contrato> GetContratoByContratoId(int pContratoId, int pSolicitudPago, bool esSolicitudPago);
 
         Task<SolicitudPago> GetSolicitudPago(int pSolicitudPagoId);
 

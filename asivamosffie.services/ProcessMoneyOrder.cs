@@ -824,7 +824,7 @@ namespace asivamosffie.services
             {
                 if (SolicitudPago.ContratoId > 0)
                 {
-                    SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, SolicitudPagoId);
+                    SolicitudPago.ContratoSon = await _registerValidatePayment.GetContratoByContratoId((int)SolicitudPago.ContratoId, SolicitudPagoId, false);
                     SolicitudPago.ContratoSon.ListProyectos = await _registerValidatePayment.GetProyectosByIdContrato((int)SolicitudPago.ContratoId);
                 }
                 if (SolicitudPago.OrdenGiroId != null)

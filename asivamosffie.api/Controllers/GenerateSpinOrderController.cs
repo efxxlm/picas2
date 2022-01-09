@@ -117,11 +117,11 @@ namespace asivamosffie.api.Controllers
         [AllowAnonymous]
         [Route("GetSolicitudPagoBySolicitudPagoId")]
         [HttpGet]
-        public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId([FromQuery] int SolicitudPagoId)
+        public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId([FromQuery] int SolicitudPagoId, bool esSolicitudPago)
         {
             try
             {
-                return await _generateSpinOrderService.GetSolicitudPagoBySolicitudPagoId(SolicitudPagoId);
+                return await _generateSpinOrderService.GetSolicitudPagoBySolicitudPagoId(SolicitudPagoId, esSolicitudPago);
             }
             catch (Exception ex)
             {

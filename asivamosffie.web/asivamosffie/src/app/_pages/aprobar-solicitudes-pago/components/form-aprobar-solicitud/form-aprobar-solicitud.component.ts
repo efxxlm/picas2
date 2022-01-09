@@ -84,7 +84,7 @@ export class FormAprobarSolicitudComponent implements OnInit {
         const pathFind = this.activatedRoute.snapshot.url.find( ( urlSegment: UrlSegment ) => urlSegment.path === 'verDetalleAprobarSolicitud' )
 
         if ( pathFind !== undefined ) this.esVerDetalle = true;
-        
+
         this.obsMultipleSvc.listaMenu()
             .subscribe( response => this.menusIdPath = response );
         this.obsMultipleSvc.listaTipoObservacionSolicitudes()
@@ -102,7 +102,7 @@ export class FormAprobarSolicitudComponent implements OnInit {
     }
 
     getContrato() {
-        this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago )
+        this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.idContrato, this.activatedRoute.snapshot.params.idSolicitudPago , true)
             .subscribe(
                 response => {
                     this.commonSvc.tiposDeSolicitudes()
@@ -225,7 +225,7 @@ export class FormAprobarSolicitudComponent implements OnInit {
     getModalidadContrato( modalidadCodigo: string ) {
         if ( this.modalidadContratoArray.length > 0 ) {
             const modalidad = this.modalidadContratoArray.find( modalidad => modalidad.codigo === modalidadCodigo );
-            
+
             if ( modalidad !== undefined ) {
                 return modalidad.nombre;
             }

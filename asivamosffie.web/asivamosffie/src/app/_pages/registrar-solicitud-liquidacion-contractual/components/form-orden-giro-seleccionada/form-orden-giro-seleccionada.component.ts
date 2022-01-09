@@ -43,7 +43,7 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
         this.listaModalidad = await this.commonSvc.modalidadesContrato().toPromise()
         this.listaMedioPago = await this.commonSvc.listaMediosPago().toPromise()
         this.listaBancos = await this.commonSvc.listaBancos().toPromise()
-        this.solicitudPago = await this.ordenPagoSvc.getSolicitudPagoBySolicitudPagoId( this.ordenGiro.get( 'solicitudPagoId' ).value ).toPromise()
+        this.solicitudPago = await this.ordenPagoSvc.getSolicitudPagoBySolicitudPagoId( this.ordenGiro.get( 'solicitudPagoId' ).value , false).toPromise()
 
         console.log( this.solicitudPago )
         this.getDataTerceroGiro();
@@ -81,7 +81,7 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
 
                     if ( this.solicitudPago.ordenGiro !== undefined ) {
                         this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
-            
+
                         if ( this.solicitudPago.ordenGiro.ordenGiroTercero !== undefined ) {
                             if ( this.solicitudPago.ordenGiro.ordenGiroTercero.length > 0 ) {
                                 this.ordenGiroTercero = this.solicitudPago.ordenGiro.ordenGiroTercero[0];
@@ -114,7 +114,7 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
                                 if ( this.ordenGiroTercero.ordenGiroTerceroChequeGerencia !== undefined ) {
                                     if ( this.ordenGiroTercero.ordenGiroTerceroChequeGerencia.length > 0 ) {
                                         const ordenGiroTerceroChequeGerencia = this.ordenGiroTercero.ordenGiroTerceroChequeGerencia[0];
-                                        
+
                                         this.addressForm.get( 'chequeGerencia' ).setValue(
                                             {
                                                 ordenGiroTerceroId: this.ordenGiroTerceroId,
@@ -135,7 +135,7 @@ export class FormOrdenGiroSeleccionadaComponent implements OnInit {
     getModalidadContrato( modalidadCodigo: string ) {
         if ( this.listaModalidad.length > 0 ) {
             const modalidad = this.listaModalidad.find( modalidad => modalidad.codigo === modalidadCodigo )
-            
+
             if ( modalidad !== undefined ) {
                 return modalidad.nombre
             }
