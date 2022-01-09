@@ -2405,15 +2405,13 @@ namespace asivamosffie.services
                                                 ListPagosOdg
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
-                                                         && r.FuenteFinanciacionId == Drp.FuenteFinanciacionId
                                                           && r.Pagado == false
                                                          )
                                                 .Sum(r => r.SaldoUso) ?? 0 : 
                                                 ListPagosOdg
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
-                                                         && (r.FuenteFinanciacionId == Drp.FuenteFinanciacionId || r.FuenteFinanciacionId == null)
-                                                          && r.Pagado == false
+                                                         && r.Pagado == false
                                                          )
                                                 .Sum(r => r.SaldoUso) ?? 0 : 
                                                 ListPagos
@@ -2481,31 +2479,7 @@ namespace asivamosffie.services
                             {
                                 if (!esSolicitudPago)
                                 {
-                                    if (item.FuenteFinanciacionId == Drp.FuenteFinanciacionId)
-                                    {
-                                        if (item.EstaAprobadaOdg)
-                                        {
-                                            if (ValorUsoResta > item.SaldoUso)
-                                            {
-                                                ValorUsoResta -= (decimal)item.SaldoUso;
-                                                item.SaldoUso = ValorUsoResta;
-                                                item.Pagado = true;
-                                            }
-                                            else
-                                            {
-                                                item.SaldoUso -= ValorUsoResta;
-                                                break;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            item.SaldoUso = ValorUsoResta;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if (item.FuenteFinanciacionId == Drp.FuenteFinanciacionId || item.FuenteFinanciacionId == null)
+                                    if (item.EstaAprobadaOdg)
                                     {
                                         if (ValorUsoResta > item.SaldoUso)
                                         {
@@ -2518,6 +2492,24 @@ namespace asivamosffie.services
                                             item.SaldoUso -= ValorUsoResta;
                                             break;
                                         }
+                                    }
+                                    else
+                                    {
+                                        item.SaldoUso = ValorUsoResta;
+                                    }
+                                }
+                                else
+                                {
+                                    if (ValorUsoResta > item.SaldoUso)
+                                    {
+                                        ValorUsoResta -= (decimal)item.SaldoUso;
+                                        item.SaldoUso = ValorUsoResta;
+                                        item.Pagado = true;
+                                    }
+                                    else
+                                    {
+                                        item.SaldoUso -= ValorUsoResta;
+                                        break;
                                     }
                                 }
                             }
