@@ -8804,6 +8804,8 @@ namespace asivamosffie.model.Models
                 entity.ToView("V_AportantesXAnticipoXContrato");
 
                 entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
+
+                entity.Property(e => e.ValorOriginal).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<VAportantesXcriterio>(entity =>

@@ -6,8 +6,9 @@ namespace asivamosffie.model.Models
     public partial class VAportantesXanticipoXcontrato
     {
         public int? ContratoId { get; set; }
-        public decimal? ValorDescuento { get; set; }
+        public decimal? ValorOriginal { get; set; }
         public int? ContratacionProyectoId { get; set; }
         public int? AportanteId { get; set; }
+        public decimal ValorDescuento { get; set; }
     }
 }
