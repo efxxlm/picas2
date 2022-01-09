@@ -1776,8 +1776,8 @@ namespace asivamosffie.services
             }
             contrato.VAmortizacionXproyecto = _context.VAmortizacionXproyecto.Where(v => v.ContratoId == pContratoId).ToList();
             contrato.VContratoPagosRealizados = vContratoPagosRealizados;
-            contrato.TablaDRP = GetDrpContratoGeneral(contrato.ContratacionId);
-            contrato.TablaDRPODG = GetDrpContratoGeneral(contrato.ContratacionId);
+            contrato.TablaDRP = GetDrpContratoGeneral(contrato.ContratacionId, true);
+            contrato.TablaDRPODG = GetDrpContratoGeneral(contrato.ContratacionId, true);
             contrato.ListProyectos = GetListProyectos(contrato.ContratacionId);
             contrato.VConceptosXcontratoXfaseXproyecto = _context.VConceptosXcontratoXfaseXproyecto.Where(r => r.ContratoId == contrato.ContratoId).ToList();
             return contrato;
@@ -2330,7 +2330,7 @@ namespace asivamosffie.services
             }
         }
 
-        public dynamic GetDrpContratoGeneral(int pContratacionId)
+        public dynamic GetDrpContratoGeneral(int pContratacionId, bool esSolicitudPago)
         {
             bool OrdenGiroAprobada = _context.OrdenGiro.Where(r => r.SolicitudPago.FirstOrDefault().Contrato.ContratacionId == pContratacionId)
                                                        .FirstOrDefault()?.RegistroCompletoAprobar ?? false;
@@ -2346,15 +2346,19 @@ namespace asivamosffie.services
             List<dynamic> ListTablaDrp = new List<dynamic>();
 
             List<VPagosSolicitudXsinAmortizacion> ListPagos =
-                    _context.VPagosSolicitudXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId
-                                                                     && v.EstaAprobadaOdg)
+                    _context.VPagosSolicitudXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId)
                                                             .ToList();
 
 
             List<VPagosOdgXsinAmortizacion> ListPagosOdg =
-                    _context.VPagosOdgXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId
-                                                                     && v.EstaAprobadaOdg)
+                    _context.VPagosOdgXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId)
                                                             .ToList();
+
+            if (!esSolicitudPago)
+            {
+                ListPagos = ListPagos.Where(r => r.EstaAprobadaOdg == true).ToList();
+                ListPagosOdg = ListPagosOdg.Where(r => r.EstaAprobadaOdg == true).ToList();
+            }
 
             List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
 
@@ -2397,13 +2401,22 @@ namespace asivamosffie.services
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
                                                 .Sum(v => v.ValorUso) ?? 0;
 
-                        decimal? Saldo = OrdenGiroAprobada ? ListPagosOdg
+                        decimal? Saldo = OrdenGiroAprobada ? !esSolicitudPago ? 
+                                                ListPagosOdg
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
                                                          && r.FuenteFinanciacionId == Drp.FuenteFinanciacionId
                                                           && r.Pagado == false
                                                          )
-                                                .Sum(r => r.SaldoUso) ?? 0 : ListPagos
+                                                .Sum(r => r.SaldoUso) ?? 0 : 
+                                                ListPagosOdg
+                                                .Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
+                                                         && (r.FuenteFinanciacionId == Drp.FuenteFinanciacionId || r.FuenteFinanciacionId == null)
+                                                          && r.Pagado == false
+                                                         )
+                                                .Sum(r => r.SaldoUso) ?? 0 : 
+                                                ListPagos
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
                                                           && r.Pagado == false
@@ -2424,7 +2437,28 @@ namespace asivamosffie.services
                             foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                        && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
                             {
-                                if (item.EstaAprobadaOdg)
+                                if (!esSolicitudPago)
+                                {
+                                    if (item.EstaAprobadaOdg)
+                                    {
+                                        if (ValorUsoResta > item.SaldoUso)
+                                        {
+                                            ValorUsoResta -= (decimal)item.SaldoUso;
+                                            item.SaldoUso = ValorUsoResta;
+                                            item.Pagado = true;
+                                        }
+                                        else
+                                        {
+                                            item.SaldoUso -= ValorUsoResta;
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        item.SaldoUso = ValorUsoResta;
+                                    }
+                                }
+                                else
                                 {
                                     if (ValorUsoResta > item.SaldoUso)
                                     {
@@ -2438,34 +2472,53 @@ namespace asivamosffie.services
                                         break;
                                     }
                                 }
-                                else
-                                {
-                                    item.SaldoUso = ValorUsoResta;
-                                }
+
                             }
                         }
                         else
                         {
-                            foreach (var item in ListPagosOdg.Where(r => r.ProyectoId == ProyectoId.ProyectoId
-                                       && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo && r.FuenteFinanciacionId == Drp.FuenteFinanciacionId).ToList())
+                            foreach (var item in ListPagosOdg.Where(r => r.ProyectoId == ProyectoId.ProyectoId && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
                             {
-                                if (item.EstaAprobadaOdg)
+                                if (!esSolicitudPago)
                                 {
-                                    if (ValorUsoResta > item.SaldoUso)
+                                    if (item.FuenteFinanciacionId == Drp.FuenteFinanciacionId)
                                     {
-                                        ValorUsoResta -= (decimal)item.SaldoUso;
-                                        item.SaldoUso = ValorUsoResta;
-                                        item.Pagado = true;
-                                    }
-                                    else
-                                    {
-                                        item.SaldoUso -= ValorUsoResta;
-                                        break;
+                                        if (item.EstaAprobadaOdg)
+                                        {
+                                            if (ValorUsoResta > item.SaldoUso)
+                                            {
+                                                ValorUsoResta -= (decimal)item.SaldoUso;
+                                                item.SaldoUso = ValorUsoResta;
+                                                item.Pagado = true;
+                                            }
+                                            else
+                                            {
+                                                item.SaldoUso -= ValorUsoResta;
+                                                break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            item.SaldoUso = ValorUsoResta;
+                                        }
                                     }
                                 }
                                 else
                                 {
-                                    item.SaldoUso = ValorUsoResta;
+                                    if (item.FuenteFinanciacionId == Drp.FuenteFinanciacionId || item.FuenteFinanciacionId == null)
+                                    {
+                                        if (ValorUsoResta > item.SaldoUso)
+                                        {
+                                            ValorUsoResta -= (decimal)item.SaldoUso;
+                                            item.SaldoUso = ValorUsoResta;
+                                            item.Pagado = true;
+                                        }
+                                        else
+                                        {
+                                            item.SaldoUso -= ValorUsoResta;
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         }

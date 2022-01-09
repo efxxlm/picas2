@@ -239,10 +239,10 @@ namespace asivamosffie.services
             }
             try
             {
-                SolicitudPago.TablaDrpUso = _registerValidatePayment.GetDrpContratoGeneral(SolicitudPago.ContratoSon.ContratacionId);
+                SolicitudPago.TablaDrpUso = _registerValidatePayment.GetDrpContratoGeneral(SolicitudPago.ContratoSon.ContratacionId, false);
 
                 //SolicitudPago.TablaDRP = GetDrpContrato(SolicitudPago);
-                SolicitudPago.TablaDRPODG = _registerValidatePayment.GetDrpContratoGeneral(SolicitudPago.ContratoSon.ContratacionId);
+                SolicitudPago.TablaDRPODG = _registerValidatePayment.GetDrpContratoGeneral(SolicitudPago.ContratoSon.ContratacionId, false);
 
                 SolicitudPago.TablaUsoFuenteAportante = GetTablaUsoFuenteAportante(SolicitudPago);
 
