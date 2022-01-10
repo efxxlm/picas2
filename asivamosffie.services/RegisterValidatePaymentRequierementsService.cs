@@ -2348,7 +2348,7 @@ namespace asivamosffie.services
 
             List<VPagosSolicitudXsinAmortizacion> ListPagos =
                            _context.VPagosSolicitudXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId
-                                                                            && v.EsFactura
+                                                                            && !v.EsFactura
                                                                           )
                                                                    .ToList();
 
