@@ -288,6 +288,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportante> VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportante { get; set; }
         public virtual DbSet<VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportanteXuso> VFacturadoOdgXcontratacionXproyectoXfaseXconceptoXaportanteXuso { get; set; }
         public virtual DbSet<VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso> VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso { get; set; }
+        public virtual DbSet<VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXusoOld> VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXusoOld { get; set; }
         public virtual DbSet<VFechasValidacionAjusteProgramacion> VFechasValidacionAjusteProgramacion { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoId> VFuentesUsoXcontratoId { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoIdXproyecto> VFuentesUsoXcontratoIdXproyecto { get; set; }
@@ -9380,7 +9381,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorUso).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VDrpXcontratacionXproyectoXfaseXconceptoXusos>(entity =>
@@ -9590,6 +9591,29 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.SaldoUso).HasColumnType("numeric(38, 2)");
+
+                entity.Property(e => e.UsoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsoNombre).HasMaxLength(250);
+
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(38, 2)");
+            });
+
+            modelBuilder.Entity<VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXusoOld>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FacturadoXOdgXContratacionXProyectoXAportanteXFaseXConcepXUsoOld");
+
+                entity.Property(e => e.ConceptoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.SaldoUso).HasColumnType("numeric(38, 0)");
 
                 entity.Property(e => e.UsoCodigo)
@@ -9600,7 +9624,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
 
-                entity.Property(e => e.ValorUso).HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VFechasValidacionAjusteProgramacion>(entity =>

@@ -19,7 +19,7 @@ namespace asivamosffie.model.Models
         public string ConceptoNombre { get; set; }
         public string ConceptoCodigo { get; set; }
         public int ComponenteUsoId { get; set; }
-        public decimal? ValorUso { get; set; }
+        public decimal ValorUso { get; set; }
         public bool? EsPreConstruccion { get; set; }
         public decimal? Saldo { get; set; }
         public decimal Facturado { get; set; }
