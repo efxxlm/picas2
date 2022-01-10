@@ -2343,10 +2343,12 @@ namespace asivamosffie.services
                                            .FirstOrDefault())
                               .ToList();
 
+
             List<dynamic> ListTablaDrp = new List<dynamic>();
+
             List<VPagosSolicitudXsinAmortizacion> ListPagos =
                            _context.VPagosSolicitudXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId
-                                                                         && v.EsFactura
+                                                                           && !v.EsFactura
                                                                           )
                                                                    .ToList();
 
