@@ -1312,7 +1312,7 @@ namespace asivamosffie.services
 
                                         decimal ValorConcepto = VPlantillaOrdenGiroUsos.Sum(r => r.ValorFacturado) ?? 0;
 
-                                        Decimal Total = Math.Abs(ValorUso - Descuento - ValorConcepto);
+                                        Decimal Total = Math.Abs((ValorUso - ValorConcepto) + Descuento);
 
                                         Aportante.ValorUso.Add(new ValorUso
                                         {

@@ -9731,7 +9731,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.ContratacionId).HasColumnName("contratacionId");
 
-                entity.Property(e => e.Descuentos).HasColumnType("decimal(18, 0)");
+                entity.Property(e => e.Descuentos).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.LlaveMen)
                     .HasColumnName("LlaveMEN")
