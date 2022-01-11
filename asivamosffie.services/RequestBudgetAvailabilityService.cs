@@ -2819,6 +2819,7 @@ namespace asivamosffie.services
                         componente.ComponenteFuenteNovedad = componente.ComponenteFuenteNovedad.Where(x => x.Eliminado != true && x.ComponenteAportanteNovedadId == componente.ComponenteAportanteNovedadId).ToList();
 
                         List<string> uso = new List<string>();
+                        List<string> fuenteUso = new List<string>();
                         List<decimal> usovalor = new List<decimal>();
                         decimal total = 0;
 
@@ -2910,8 +2911,16 @@ namespace asivamosffie.services
                             foreach (var componenteUso in font.ComponenteUsoNovedad)
                             {
                                 var usos = _context.Dominio.Where(x => x.Codigo == componenteUso.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
+                                FuenteFinanciacion temp = _context.FuenteFinanciacion.Where(r => r.FuenteFinanciacionId == font.FuenteFinanciacionId).FirstOrDefault();
+                                string fuenteNombre = string.Empty;
+                                if (temp != null)
+                                    fuenteNombre = _context.Dominio.Where(x => x.Codigo == temp.FuenteRecursosCodigo
+                                               && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+
 
                                 uso.Add(usos.Count() > 0 ? usos.FirstOrDefault().Nombre : "");
+                                fuenteUso.Add(fuenteNombre);
+
                                 if (!esLiberacion)
                                 {
                                     usovalor.Add(componenteUso.ValorUso);
@@ -2946,6 +2955,7 @@ namespace asivamosffie.services
                                     Uso = uso,
                                     ValorTotal = total,
                                     ValorUso = usovalor,
+                                    FuenteUso = fuenteUso,
                                     cofinanciacionAportanteId = ppapor.CofinanciacionAportanteId.Value,
                                     Aportante = getNombreAportante(ppapor.CofinanciacionAportante)
                                 });
