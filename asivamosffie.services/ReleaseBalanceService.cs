@@ -312,10 +312,15 @@ namespace asivamosffie.services
                                                          )
                                                 .Sum(r => r.SaldoUso) ?? 0;
 
+                        decimal Descuentos = OrdenGiroAprobada ? ListPagosOdg
+                                        .Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                 && r.UsoCodigo == TipoUso.TipoUsoCodigo
+                                                 )
+                                        .Sum(r => r.Descuentos) ?? 0 : 0;
 
-                        decimal Descuentos = 0;
+                        //decimal Descuentos = 0;
 
-                        decimal ValorUsoResta = ValorUso ?? 0 - Descuentos;
+                        decimal ValorUsoResta = (ValorUso ?? 0) + Descuentos ;
 
                         if (Saldo != 0)
                         {
@@ -364,13 +369,13 @@ namespace asivamosffie.services
                             }
 
 
-                            saldo = Saldo > 0 ? (ValorUso - Saldo) < 0 ? 0 : ValorUso - Saldo : ValorUso;
+                            saldo = Saldo > 0 ? ((ValorUso - Saldo) + Descuentos) < 0 ? 0 : (ValorUso - Saldo) + Descuentos: ValorUso;
 
                             ListDyUsos.Add(new
                             {
                                 Uso.Nombre,
                                 ValorUso = String.Format("{0:n0}", ValorUso),
-                                Saldo = Saldo > 0 ? (ValorUso - Saldo) < 0 ? 0 : ValorUso - Saldo : ValorUso
+                                Saldo = Saldo > 0 ? ((ValorUso - Saldo) + Descuentos) < 0 ? 0 : (ValorUso - Saldo) + Descuentos : ValorUso
                             });
                         }
                         else
