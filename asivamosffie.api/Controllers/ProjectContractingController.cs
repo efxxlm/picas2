@@ -98,7 +98,7 @@ namespace asivamosffie.api.Controllers
                 return respuesta;
             }
         }
-
+        [AllowAnonymous]
         [Route("GetContratacionByContratacionId")]
         [HttpGet]
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
