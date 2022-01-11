@@ -32,7 +32,8 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
         estadoRevision: [ null, Validators.required],
         fechaAprob: [ null, Validators.required],
         responsableAprob: [ null, Validators.required ],
-        observacionesGenerales: [ null ]
+        observacionesGenerales: [ null ],
+        polizaObservacionId: [ null ]
     });
     listaPerfilCodigo = PerfilCodigo;
     estadosRevision = EstadosRevision;
@@ -93,7 +94,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
             .subscribe(
                 async response => {
                     this.contrato = response;
-                    console.log( this.contrato )
+                    // console.log('contrato => ', this.contrato )
                     this.listaUsuarios = await this.commonSvc.getUsuariosByPerfil( this.listaPerfilCodigo.fiduciaria ).toPromise();
                     this.polizasYSegurosArray = await this.commonSvc.listaGarantiasPolizas().toPromise();
                     this.listaTipoDocumento = await this.commonSvc.listaTipodocumento().toPromise();
@@ -103,6 +104,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
                     if ( this.contrato.contratoPoliza !== undefined ) {
                         if ( this.contrato.contratoPoliza.length > 0 ) {
                             this.contratoPoliza = this.contrato.contratoPoliza[ 0 ];
+                            // console.log('contratoPoliza => ', this.contratoPoliza);
 
                             this.addressForm.get( 'nombre' ).setValue( this.contratoPoliza.nombreAseguradora !== undefined ? this.contratoPoliza.nombreAseguradora : null );
                             this.addressForm.get( 'numeroPoliza' ).setValue( this.contratoPoliza.numeroPoliza !== undefined ? this.contratoPoliza.numeroPoliza : null );
@@ -169,11 +171,12 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
                                             this.contadorRevision--;
 
                                             this.polizaObservacionId = ultimaRevision.polizaObservacionId;
-                                            this.addressForm.get( 'fechaRevision' ).setValue( ultimaRevision.fechaRevision !== undefined ? new Date( ultimaRevision.fechaRevision ) : null );
-                                            this.addressForm.get( 'estadoRevision' ).setValue( ultimaRevision.estadoRevisionCodigo !== undefined ? ultimaRevision.estadoRevisionCodigo : null );
-                                            this.addressForm.get( 'fechaAprob' ).setValue( ultimaRevision.fechaAprobacion !== undefined ? new Date( ultimaRevision.fechaAprobacion ) : null );
-                                            this.addressForm.get( 'responsableAprob' ).setValue( ultimaRevision.responsableAprobacionId !== undefined ? ultimaRevision.responsableAprobacionId : null );
-                                            this.addressForm.get( 'observacionesGenerales' ).setValue( ultimaRevision.observacion !== undefined ? ultimaRevision.observacion : null );
+                                            this.addressForm.get( 'fechaRevision' ).setValue( ultimaRevision.fechaRevision ? new Date( ultimaRevision.fechaRevision ) : null );
+                                            this.addressForm.get( 'estadoRevision' ).setValue( ultimaRevision.estadoRevisionCodigo ? ultimaRevision.estadoRevisionCodigo : null );
+                                            this.addressForm.get( 'fechaAprob' ).setValue( ultimaRevision.fechaAprobacion ? new Date( ultimaRevision.fechaAprobacion ) : null );
+                                            this.addressForm.get( 'responsableAprob' ).setValue( ultimaRevision.responsableAprobacionId ? ultimaRevision.responsableAprobacionId : null );
+                                            this.addressForm.get( 'observacionesGenerales' ).setValue( ultimaRevision.observacion ? ultimaRevision.observacion : null );
+                                            this.addressForm.get( 'polizaObservacionId' ).setValue( ultimaRevision.polizaObservacionId ? ultimaRevision.polizaObservacionId : null );
                                         }
                                     }
                                 }
@@ -384,7 +387,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
 
             return [
                 {
-                   // polizaObservacionId: this.polizaObservacionId,
+                    polizaObservacionId: this.polizaObservacionId,
                     contratoPolizaId: this.contratoPoliza.contratoPolizaId,
                     fechaRevision: this.addressForm.get( 'fechaRevision' ).value !== null ? new Date( this.addressForm.get( 'fechaRevision' ).value ).toISOString() : new Date().toISOString(),
                     estadoRevisionCodigo: this.addressForm.get( 'estadoRevision' ).value !== null ? this.addressForm.get( 'estadoRevision' ).value : this.estadosPoliza.enRevision,
