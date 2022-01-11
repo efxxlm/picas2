@@ -22,13 +22,13 @@ export class VerDetalleContratacionComponent implements OnInit {
     { titulo: 'Institución Educativa', name: 'institucionEducativa' },
     { titulo: 'Sede', name: 'sede' }
   ];
-  displayedColumns: string[] = [     
+  displayedColumns: string[] = [
     'tipoIntervencionCodigo',
     'llaveMen',
     'usuarioModificacion',
     'localizacionIdMunicipio',
     'institucionEducativa',
-    'sede' 
+    'sede'
   ];
   fasesSelect: Dominio[] = [];
   componentesSelect: Dominio[] = [];
@@ -54,12 +54,18 @@ export class VerDetalleContratacionComponent implements OnInit {
     this.projectContractingSvc.getContratacionByContratacionId( id )
       .subscribe( async resp => {
         this.contratacion = resp;
-        console.log( this.contratacion );
         for ( let contratacionProyecto of this.contratacion.contratacionProyecto ) {
           const contratacion = await this.projectContractingSvc.getContratacionProyectoById( contratacionProyecto.contratacionProyectoId ).toPromise();
 
           contratacionProyecto.contratacionProyectoAportante = contratacion.contratacionProyectoAportante;
+
           contratacionProyecto.dataAportantes = this.getDataAportantes( contratacionProyecto.contratacionProyectoAportante );
+
+          if(contratacionProyecto?.contratacionProyectoAportante != null && contratacionProyecto?.contratacionProyectoAportante != undefined){
+            contratacionProyecto.contratacionProyectoAportante.forEach(cpa =>{
+              cpa.nombreAportante = contratacionProyecto.proyecto.proyectoAportante.find(r=> r.aportanteId == cpa.cofinanciacionAportanteId)?.aportante?.nombreAportanteString;
+            });
+          }
 
           this.dataTable.push(
             {
@@ -95,14 +101,14 @@ export class VerDetalleContratacionComponent implements OnInit {
 
           for ( let uso of componente.componenteUso ) {
             let usoSeleccionado = this.usosSelect.filter( value => value.codigo === uso.tipoUsoCodigo );
-            let apor = { 
+            let apor = {
               componente: componenteSeleccionado[0].nombre,
               fase: faseSeleccionado[0].nombre,
               tipoUso: [],
               fuente: [],
               valorUso: [],
               contratacionProyectoAportanteId: cont.contratacionProyectoAportanteId,
-              
+
             }
             apor.tipoUso.push( usoSeleccionado[0].nombre );
             apor.fuente.push( uso.fuenteFinanciacionId )

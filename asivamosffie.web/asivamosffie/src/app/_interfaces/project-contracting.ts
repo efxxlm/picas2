@@ -1,5 +1,5 @@
 export interface Contratacion {
-    
+
     contratacionId?: number,
     tipoSolicitudCodigo?: string,
     fechaSolicitud?: Date,
@@ -16,7 +16,7 @@ export interface Contratacion {
     contratacionProyecto?: ContratacionProyecto[],
     plazoContratacion?: PlazoContratacion,
     /*not mapped*/
-    fechaComiteTecnicoNotMapped?: any,   
+    fechaComiteTecnicoNotMapped?: any,
 }
 
 export interface PlazoContratacion{
@@ -25,7 +25,7 @@ export interface PlazoContratacion{
 }
 
 export interface ContratacionProyecto{
-    
+
     contratacionProyectoId?: number,
     contratacionId?: number,
     proyectoId?: number,
@@ -41,11 +41,11 @@ export interface ContratacionProyecto{
     numeroLicencia?: string,
     fechaVigencia?: Date,
     tieneMonitoreoWeb?: boolean,
-    contratacionProyectoAportante?: ContratacionProyectoAportante[],    
-    proyecto?: any, 
+    contratacionProyectoAportante?: ContratacionProyectoAportante[],
+    proyecto?: any,
     tipoIntervencionCodigo?: string,
     tipoSolicitudCodigo?: string,
-    
+
     proyectoGrilla?: ProyectoGrilla,
     contratacion?: Contratacion,
 
@@ -82,6 +82,7 @@ export interface ProyectoGrilla{
 }
 
 export interface ContratacionProyectoAportante{
+    nombreAportante?: any
     contratacionProyectoAportanteId?: number,
     contratacionProyectoId?: number,
     proyectoAportanteId?: number,
@@ -92,6 +93,7 @@ export interface ContratacionProyectoAportante{
     fechaModificacion?: Date,
     eliminado?: number,
     componenteAportante?: ComponenteAportante[],
+    cofinanciacionAportanteId?: number
 
 }
 
@@ -130,9 +132,9 @@ interface EstadoSolicitud{
     DevueltaPorComiteFiduciario: string,
     EnTramite: string,
     NoAplica: string
-    
+
   }
-  
+
   export const EstadosSolicitud: EstadoSolicitud = {
     AprobadaPorComiteTecnico: '1',
     AprobadaPorComiteFiduciario: '2',
@@ -155,9 +157,9 @@ interface EstadoSolicitud{
     contratacionProyectoid?: number,
 
     contratacionProyecto?: ContratacionProyecto,
-    
+
   }
-  
+
   interface EstadoProyecto{
     Disponible?: string,
     AsignadoSolicitudContratacion?: string,
@@ -168,7 +170,7 @@ interface EstadoSolicitud{
     DevueltoComiteTecnico?: string,
     DevueltoComiteFiduciario?: string,
   }
-  
+
   export const EstadosProyecto: EstadoProyecto = {
     Disponible : "1",
     AsignadoSolicitudContratacion : "2",

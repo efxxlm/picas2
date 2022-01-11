@@ -179,7 +179,7 @@
           <mat-expansion-panel class="expansion-style sub-expansion-black">
             <mat-expansion-panel-header class="expansion-style--header">
               <mat-panel-title class="expansion-style--title">
-                {{ contratacionProyecto.proyecto.proyectoAportante[j].aportante.nombreAportanteString }}
+                {{ contratacionProyectoAportante?.nombreAportante }}
               </mat-panel-title>
             </mat-expansion-panel-header>
             <app-tabla-detalle-fuentes-uso  [contratacionProyecto]="contratacionProyecto"
@@ -195,22 +195,22 @@
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title">
           Plazo de ejecución
-        </mat-panel-title>        
-      </mat-expansion-panel-header>   
+        </mat-panel-title>
+      </mat-expansion-panel-header>
       <mat-card class="border" style="margin-top: 3em;">
         <mat-card-content class="mt-1em">
         <div class="d-flex justify-content-center">
           <p>
               <strong>Plazo meses: </strong>
-              {{contratacion.plazoContratacion? contratacion.plazoContratacion.plazoMeses : 0}} 
+              {{contratacion.plazoContratacion? contratacion.plazoContratacion.plazoMeses : 0}}
           </p>
           <p>
               <strong>&nbsp;&nbsp;Plazo días:</strong>
               {{contratacion?.plazoContratacion? contratacion.plazoContratacion.plazoDias: 0}}
           </p>
-        </div> 
+        </div>
         </mat-card-content>
       </mat-card>
-    </mat-expansion-panel>  
+    </mat-expansion-panel>
   </mat-accordion>
 </div>
