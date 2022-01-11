@@ -92,6 +92,7 @@ export class GestionarDrpComponent implements OnInit {
                   componente: element2.componente,
                   fase: element2?.fase,
                   uso: [{ nombre: element2.uso }],
+                  fuenteUso: [{ nombre: element2.fuenteUso }],
                   valorUso: [{ valor: element2.valorUso.map(y => { let convert = y.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"); return "$" + convert; }) }],
                   valorTotal: element2.valorTotal,
                   fuenteFinanciacion: aportante.fuentesFinanciacion[0].fuente
@@ -123,6 +124,7 @@ export class GestionarDrpComponent implements OnInit {
                   componente: element2.componente,
                   fase: element2?.fase,
                   uso: [{ nombre: element2.uso }],
+                  fuenteUso: [{ nombre: element2.fuenteUso }],
                   valorUso: [{ valor: element2.valorUso.map(y => { let convert = y.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"); return "$" + convert; }) }],
                   valorTotal: element2.valorTotal,
                   fuenteFinanciacion: aportante.fuentesFinanciacion[0].fuente

@@ -330,6 +330,7 @@ namespace asivamosffie.services
                                     foreach (var compAp in componenteAp)
                                     {
                                         List<string> uso = new List<string>();
+                                        List<string> fuenteUso = new List<string>();
                                         List<decimal> usovalor = new List<decimal>();
                                         decimal total = 0;
 
@@ -344,9 +345,16 @@ namespace asivamosffie.services
 
                                         foreach (var comp in compAp.ComponenteUso)
                                         {
+                                            FuenteFinanciacion temp = ppapor.Aportante.FuenteFinanciacion.Where(r => r.FuenteFinanciacionId == comp.FuenteFinanciacionId).FirstOrDefault();
+                                            string fuenteNombre = string.Empty;
+                                            if (temp != null)
+                                                fuenteNombre = _context.Dominio.Where(x => x.Codigo == temp.FuenteRecursosCodigo
+                                                           && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+
                                             var usos = _context.Dominio.Where(x => x.Codigo == comp.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
                                             uso.Add(usos.Count() > 0 ? usos.FirstOrDefault().Nombre : string.Empty);
                                             usovalor.Add(comp.ValorUso);
+                                            fuenteUso.Add(fuenteNombre);
                                             total += comp.ValorUso;
                                         }
                                         var dom = _context.Dominio.Where(x => x.Codigo == compAp.TipoComponenteCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).ToList();
@@ -359,6 +367,7 @@ namespace asivamosffie.services
                                                 Uso = uso,
                                                 ValorTotal = total,
                                                 ValorUso = usovalor,
+                                                FuenteUso = fuenteUso,
                                                 cofinanciacionAportanteId = ppapor.Aportante.CofinanciacionAportanteId,
                                                 Fase = strFase
                                             });
@@ -771,6 +780,7 @@ namespace asivamosffie.services
                                         foreach (var compAp in componenteAp)
                                         {
                                             List<string> uso = new List<string>();
+                                            List<string> fuenteUso = new List<string>();
                                             List<decimal> usovalor = new List<decimal>();
                                             decimal total = 0;
 
@@ -785,8 +795,17 @@ namespace asivamosffie.services
                                             foreach (var comp in compAp.ComponenteUso)
                                             {
                                                 ComponenteUsoHistorico cuh = _context.ComponenteUsoHistorico.Where(r => r.ComponenteUsoId == comp.ComponenteUsoId && r.Liberado == true).FirstOrDefault();
+
+                                                FuenteFinanciacion temp = ppapor.Aportante.FuenteFinanciacion.Where(r => r.FuenteFinanciacionId == comp.FuenteFinanciacionId).FirstOrDefault();
+                                                string fuenteNombre = string.Empty;
+                                                if (temp != null)
+                                                    fuenteNombre = _context.Dominio.Where(x => x.Codigo == temp.FuenteRecursosCodigo
+                                                               && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+
+
                                                 var usos = _context.Dominio.Where(x => x.Codigo == comp.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
                                                 uso.Add(usos.Count() > 0 ? usos.FirstOrDefault().Nombre : string.Empty);
+                                                fuenteUso.Add(fuenteNombre);
                                                 usovalor.Add(cuh != null ? cuh.ValorUso : comp.ValorUso);
                                                 total += cuh != null ? cuh.ValorUso : comp.ValorUso;
                                             }
@@ -800,6 +819,7 @@ namespace asivamosffie.services
                                                     Uso = uso,
                                                     ValorTotal = total,
                                                     ValorUso = usovalor,
+                                                    FuenteUso = fuenteUso,
                                                     cofinanciacionAportanteId = ppapor.Aportante.CofinanciacionAportanteId,
                                                     Fase = strFase
                                                 });

@@ -12,6 +12,7 @@ namespace asivamosffie.model.APIModels
         public string Componente { get; set; }
         public List<string> Uso { get; set; }
         public List<decimal> ValorUso{ get; set; }
+        public List<string> FuenteUso { get; set; }
         public decimal ValorTotal { get; set; }
         public int cofinanciacionAportanteId { get; set; }
         public int? FuenteFinanciacionId { get; set; }
