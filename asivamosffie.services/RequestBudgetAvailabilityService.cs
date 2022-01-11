@@ -683,36 +683,45 @@ namespace asivamosffie.services
                                     List<GestionFuenteFinanciacion> fuentesNew = new List<GestionFuenteFinanciacion>();
 
                                     int Id = proyectospp.DisponibilidadPresupuestalProyectoId;
+                                    List<int> fuentesxAportante = ppapor.Aportante.FuenteFinanciacion.Select(x => (int)x.FuenteFinanciacionId).ToList();
 
                                     if (ListDP.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)
                                     {
-                                        fuentesNew = _context.GestionFuenteFinanciacion.Where(r => r.Eliminado != true && r.EsNovedad != true && r.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && r.FuenteFinanciacionId == ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteFinanciacionId).ToList();
+                                        //fuentesNew =  _sourceFundingService.GetListFuentesFinanciacionByDisponibilidadPresupuestald(proyectospp.DisponibilidadPresupuestalId, false, 0);
+                                        fuentesNew = _context.GestionFuenteFinanciacion.Where(r => r.Eliminado != true && r.EsNovedad != true && r.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && fuentesxAportante.Contains((int)r.FuenteFinanciacionId)).ToList();
 
                                     }
                                     else
                                     {
-                                        fuentesNew = _context.GestionFuenteFinanciacion.Where(r => r.Eliminado != true && r.EsNovedad != true && r.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && r.FuenteFinanciacionId == ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteFinanciacionId).ToList();
+                                        //fuentesNew =  _sourceFundingService.GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(Id, ppapor.AportanteId, false, 0);
+                                        fuentesNew = _context.GestionFuenteFinanciacion.Where(r => r.Eliminado != true && r.EsNovedad != true && r.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && fuentesxAportante.Contains((int)r.FuenteFinanciacionId)).ToList();
                                     }
 
                                     foreach (var fuente in fuentesNew)
                                     {
                                         GestionFuenteFinanciacionHistorico gffh = _context.GestionFuenteFinanciacionHistorico.Where(r => r.GestionFuenteFinanciacionId == fuente.GestionFuenteFinanciacionId).FirstOrDefault();
-                                            string fuenteNombre = _context.Dominio.Where(x => x.Codigo == ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteRecursosCodigo
-                                                        && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
 
-                                        fuentes.Add(new GrillaFuentesFinanciacion
+                                        FuenteFinanciacion temp = ppapor.Aportante.FuenteFinanciacion.Where(r => r.FuenteFinanciacionId == fuente.FuenteFinanciacionId).FirstOrDefault();
+                                        string fuenteNombre = string.Empty;
+                                        if (temp != null)
                                         {
-                                            Fuente = fuenteNombre,
-                                            Estado_de_las_fuentes = string.Empty,
-                                            FuenteFinanciacionID = ppapor.Aportante.FuenteFinanciacion.FirstOrDefault().FuenteFinanciacionId,
-                                            //Saldo_actual_de_la_fuente = SaldoActualFuente,
-                                            Saldo_actual_de_la_fuente = gffh != null ? gffh.SaldoActual : fuente.SaldoActual,
-                                            Valor_solicitado_de_la_fuente = gffh != null ?  gffh.ValorSolicitado : fuente.ValorSolicitado,
-                                            //Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
-                                            Nuevo_saldo_de_la_fuente = gffh != null ?  gffh.NuevoSaldo : fuente.NuevoSaldo,
-                                            Nuevo_saldo_de_la_fuente_al_guardar = gffh != null ?  gffh.NuevoSaldo : fuente.NuevoSaldo,
-                                            Saldo_actual_de_la_fuente_al_guardar = gffh != null ?  gffh.SaldoActual : fuente.SaldoActual,
-                                        });
+                                            fuenteNombre = _context.Dominio.Where(x => x.Codigo == temp.FuenteRecursosCodigo
+                                            && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+
+                                            fuentes.Add(new GrillaFuentesFinanciacion
+                                            {
+                                                Fuente = fuenteNombre,
+                                                Estado_de_las_fuentes = string.Empty,
+                                                FuenteFinanciacionID = temp.FuenteFinanciacionId,
+                                                //Saldo_actual_de_la_fuente = SaldoActualFuente,
+                                                Saldo_actual_de_la_fuente = gffh != null ? gffh.SaldoActual : fuente.SaldoActual,
+                                                Valor_solicitado_de_la_fuente = gffh != null ? gffh.ValorSolicitado : fuente.ValorSolicitado,
+                                                //Nuevo_saldo_de_la_fuente = NuevoSaldoFuente,
+                                                Nuevo_saldo_de_la_fuente = gffh != null ? gffh.NuevoSaldo : fuente.NuevoSaldo,
+                                                Nuevo_saldo_de_la_fuente_al_guardar = gffh != null ? gffh.NuevoSaldo : fuente.NuevoSaldo,
+                                                Saldo_actual_de_la_fuente_al_guardar = gffh != null ? gffh.SaldoActual : fuente.SaldoActual,
+                                            });
+                                        }
                                     }
                                     if (ListDP.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Tradicional)
                                     {
