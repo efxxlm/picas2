@@ -773,7 +773,7 @@ namespace asivamosffie.services
 
                                             if (cpaa != null)
                                             {
-                                                N_SaldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == cpaa.CofinanciacionAportanteId).FirstOrDefault().SaldoActual ?? 0;
+                                                N_SaldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == cpaa.CofinanciacionAportanteId && r.FuenteFinanciacionId == gff.FuenteFinanciacionId).FirstOrDefault().SaldoActual ?? 0;
                                             }
                                         }
                                         if (cu != null)
@@ -904,7 +904,7 @@ namespace asivamosffie.services
 
                                         foreach (var uso in usosF)
                                         {
-                                            N_SaldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == uso.CofinanciacionAportanteId).FirstOrDefault().SaldoActual ?? 0;
+                                            N_SaldoActual = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == uso.CofinanciacionAportanteId && r.FuenteFinanciacionId == gff.FuenteFinanciacionId).FirstOrDefault().SaldoActual ?? 0;
                                             ComponenteUsoNovedad cu = _context.ComponenteUsoNovedad.Find(uso.ComponenteUsoNovedadId);
                                             if (cu != null)
                                             {
