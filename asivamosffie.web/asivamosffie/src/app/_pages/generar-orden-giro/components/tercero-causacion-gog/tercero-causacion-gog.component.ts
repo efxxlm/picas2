@@ -1258,7 +1258,9 @@ export class TerceroCausacionGogComponent implements OnInit {
           console.log(listXAportante);
 
           listXAportante.forEach(a => {
-              valorTotalXConceptoAnticipo += a.valueTotalDescuento;
+              if(a.valueTotalDescuento != undefined && a.valueTotalDescuento != null){
+                valorTotalXConceptoAnticipo += a.valueTotalDescuento;
+              }
               if(a.valueTotalDescuento > a.valorDescuento){
                 if(alert2){
                   this.openDialog( '', 'El descuento de amortización para el aportante <b>'+a.nombreAportante +'</b> supera el valor del aportante en el anticipo.' );
@@ -1266,7 +1268,8 @@ export class TerceroCausacionGogComponent implements OnInit {
                 }
               }
           });
-
+          console.log(valorTotalXConceptoAnticipo);
+          console.log(valorAmortizacion);
           if (valorTotalXConceptoAnticipo != valorAmortizacion) {
             alert =  false;
           }
@@ -1483,11 +1486,7 @@ export class TerceroCausacionGogComponent implements OnInit {
           const conceptoCodigo = this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.filter((conceptoCodigo: { conceptoCodigo: string; solicitudPagoId: number; contratacionProyectoId: number; }) =>
               conceptoCodigo.conceptoCodigo == codigo && conceptoCodigo.solicitudPagoId == this.solicitudPago?.solicitudPagoId && conceptoCodigo.contratacionProyectoId == this.contratacionProyectoId
           );
-          console.log(this.contratacionProyectoId);
-          console.log(conceptoCodigo);
-          console.log(codigo);
           const valorAportante = conceptoCodigo.filter((cc: { aportanteId: any, fuenteFinanciacion: any}) => cc.aportanteId == aportanteId && cc.fuenteFinanciacion == fuenteFinanciacionId);
-          console.log(valorAportante);
           let valorConceptoAportante = 0;
           valorAportante.forEach((element1: { conceptoCodigo: any; saldo: any; tipoUsoCodigo: any; }) => {
               this.solicitudPago.vConceptosUsosXsolicitudPagoId.filter(r=> r.conceptoCodigo == codigo).forEach((element2: { conceptoCodigo: any; usoCodigo: any; }) => {
