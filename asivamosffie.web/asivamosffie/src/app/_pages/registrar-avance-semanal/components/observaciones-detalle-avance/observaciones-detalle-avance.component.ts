@@ -50,7 +50,7 @@ export class ObservacionesDetalleAvanceComponent implements OnInit {
 
     this.formObservaciones
       .get('observaciones')
-      .setValue(this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones);
+      .setValue(this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0] ? this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].observaciones: null);
 
     if (!this.isRequired) this.formObservaciones.get('observaciones').clearValidators();
   }

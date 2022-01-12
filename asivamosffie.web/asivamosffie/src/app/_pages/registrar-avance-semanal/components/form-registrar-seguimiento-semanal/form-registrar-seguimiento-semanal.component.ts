@@ -13,7 +13,7 @@ export class FormRegistrarSeguimientoSemanalComponent implements OnInit, OnDestr
 
   seguimientoSemanal: any;
   tipoObservaciones: any;
-  semaforoGestionObra: string;
+  semaforoGestionObra: string = '';
   semaforoReporteActividad: string;
   semaforoAvanceFisico = 'sin-diligenciar';
   semaforoRegistroFotografico = 'sin-diligenciar';
@@ -91,10 +91,10 @@ export class FormRegistrarSeguimientoSemanalComponent implements OnInit, OnDestr
 
   valuePendingSemaforo( value: string, tipoSemaforo: string ) {
     if ( tipoSemaforo === 'reporteActividad' ) {
-      this.semaforoReporteActividad = value;
+      this.semaforoReporteActividad = value ? value : '';
     }
     if ( tipoSemaforo === 'gestionObra' ) {
-      this.semaforoGestionObra = value;
+      this.semaforoGestionObra = value ? value : '';
     }
   }
 

@@ -53,6 +53,7 @@ export class SoporteProjectComponent implements OnInit {
       async response => {
         this.openDialog('', `<b>La información se ha guardado correctamente.</b>`);
         this.actualizarSemaforoSuportProyectRuta.emit(true);
+        setTimeout(() => {location.reload();}, 2000);
       },
       err => this.openDialog('', `<b>${err.message}</b>`)
     );

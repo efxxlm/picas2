@@ -176,14 +176,16 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
                         } );
                     }
 
+                    console.log('seguimientoSemanal =>', this.seguimientoSemanal);
+                    
                     if ( this.verifyInteger( ( duracionItem / (cantidadTotalDiasActividades == 0 ? 1 : (cantidadTotalDiasActividades + 1)) ) * 100, false ) > 0 ) {
                         if (this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0]) {
                             avancePorCapitulo.push(
                                 {
-                                    programacionId: this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[i].programacion.programacionId,
-                                    capitulo: this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[i].programacion.actividad,
-                                    programacionCapitulo: this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[i] ? this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[i].programacionCapitulo : null,
-                                    avanceFisicoCapitulo: this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[i].programacion.avanceFisicoCapitulo !== null ? String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) ) : null
+                                    programacionId: this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[i] ? this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[i].programacion.programacionId : null,
+                                    capitulo: this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[i] ? this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoProgramacion[i].programacion.actividad : null,
+                                    programacionCapitulo: this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].programacionSemanal,
+                                    avanceFisicoCapitulo: this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0].avanceFisicoSemanal
                                 }
                             );
                         }
@@ -221,7 +223,7 @@ export class TablaAvanceFisicoComponent implements OnInit, OnDestroy {
                         }
                     ];
                 }
-                console.log(this.avanceFisico);
+                console.log('avanceFisico =>', this.avanceFisico);
             }
         }
         if ( this.avanceFisico !== undefined ) {
