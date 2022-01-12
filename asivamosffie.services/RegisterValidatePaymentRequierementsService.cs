@@ -2421,7 +2421,7 @@ namespace asivamosffie.services
 
                         if (esSolicitudPago)
                         {
-                            
+
                         }
                         else
                         {
@@ -2445,11 +2445,10 @@ namespace asivamosffie.services
                                                          )
                                                 .Sum(r => r.SaldoUso) ?? 0 : 0;
                         }
-
-
-                        decimal ValorUsoResta = (decimal)(ValorUso + Descuentos);
-
-
+                        decimal ValorUsoResta = (decimal)ValorUso;
+                        if (!esSolicitudPago)
+                            ValorUsoResta = (decimal)(ValorUso + Descuentos);
+                         
                         if (esSolicitudPago)
                         {
                             foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
@@ -2538,11 +2537,15 @@ namespace asivamosffie.services
 
                         if (true)
                         {
+                            decimal OtroSaldo = (decimal)ValorUso;
+                            if (!esSolicitudPago)  
+                                 OtroSaldo = (decimal)(ValorUso + Descuentos);
+                             
                             ListDyUsos.Add(new
                             {
                                 Uso.Nombre,
                                 ValorUso = String.Format("{0:n0}", ValorUso),
-                                Saldo = String.Format("{0:n0}", Saldo > 0 ? ((decimal)(ValorUso + Descuentos) - Saldo) < 0 ? 0 : (decimal)(ValorUso + Descuentos) - Saldo : (decimal)(ValorUso + Descuentos))
+                                Saldo = String.Format("{0:n0}", Saldo > 0 ? (OtroSaldo - Saldo) < 0 ? 0 : OtroSaldo - Saldo : OtroSaldo)
                             });
                         }
                         else
