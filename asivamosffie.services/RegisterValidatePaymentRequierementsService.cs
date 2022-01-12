@@ -2447,8 +2447,7 @@ namespace asivamosffie.services
                         }
 
 
-                        ValorUso = ValorUso + Descuentos;
-                        decimal ValorUsoResta = ValorUso ?? 0;
+                        decimal ValorUsoResta = (decimal)(ValorUso + Descuentos);
 
 
                         if (esSolicitudPago)
@@ -2543,7 +2542,7 @@ namespace asivamosffie.services
                             {
                                 Uso.Nombre,
                                 ValorUso = String.Format("{0:n0}", ValorUso),
-                                Saldo = String.Format("{0:n0}", Saldo > 0 ? (ValorUso - Saldo) < 0 ? 0 : ValorUso - Saldo : ValorUso)
+                                Saldo = String.Format("{0:n0}", Saldo > 0 ? ((decimal)(ValorUso + Descuentos) - Saldo) < 0 ? 0 : (decimal)(ValorUso + Descuentos) - Saldo : (decimal)(ValorUso + Descuentos))
                             });
                         }
                         else
