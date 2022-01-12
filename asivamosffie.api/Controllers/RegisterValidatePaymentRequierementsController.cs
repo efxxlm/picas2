@@ -225,7 +225,7 @@ namespace asivamosffie.api.Controllers
         {
             return await _registerValidatePaymentRequierementsService.GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(pTipoSolicitud, pModalidadContrato, pNumeroContrato);
         }
-
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetContratoByContratoId")]
         public async Task<IActionResult> GetContratoByContratoId([FromQuery] int pContratoId, int pSolicitudPago, bool esSolicitudPago)

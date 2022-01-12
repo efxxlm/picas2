@@ -257,7 +257,7 @@ namespace asivamosffie.services
                 else
                 {
                     CompleteRecord = false;
-                    if(EstadoSolicitudPago == ((int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion).ToString())
+                    if (EstadoSolicitudPago == ((int)EnumEstadoSolicitudPago.Con_solicitud_revisada_por_equipo_facturacion).ToString())
                         EstadoSolicitudPago = ((int)EnumEstadoSolicitudPago.En_proceso_de_registro).ToString();
 
                 }
@@ -431,10 +431,10 @@ namespace asivamosffie.services
                                                         .Where(r => r.SolicitudPagoFaseCriterioId == solicitudPagoFaseCriterioOld.SolicitudPagoFaseCriterioId)
                                                                                                                                                     .UpdateAsync(r => new SolicitudPagoFaseCriterio
                                                                                                                                                     {
-                                                                                                                                                            FechaModificacion = DateTime.Now,
-                                                                                                                                                            UsuarioModificacion = pUsuarioModificacion,
-                                                                                                                                                            ValorFacturado = solicitudPagoFaseCriterioOld.ValorFacturado,
-                                                                                                                                                            Eliminado = pEsConcepto == true ? false : true
+                                                                                                                                                        FechaModificacion = DateTime.Now,
+                                                                                                                                                        UsuarioModificacion = pUsuarioModificacion,
+                                                                                                                                                        ValorFacturado = solicitudPagoFaseCriterioOld.ValorFacturado,
+                                                                                                                                                        Eliminado = pEsConcepto == true ? false : true
                                                                                                                                                     });
                 //le quito el que estoy eliminando 
                 if (!pEsConcepto)
@@ -823,9 +823,9 @@ namespace asivamosffie.services
                 _context.Set<SolicitudPagoListaChequeo>().Where(r => r.SolicitudPagoListaChequeoId == SolicitudPagoListaChequeo.SolicitudPagoListaChequeoId)
                                                          .Update(s => new SolicitudPagoListaChequeo
                                                          {
-                                                            RegistroCompleto = blRegistroCompletoListaChequeo,
-                                                            FechaModificacion = DateTime.Now,
-                                                            UsuarioModificacion = usuarioCreacion
+                                                             RegistroCompleto = blRegistroCompletoListaChequeo,
+                                                             FechaModificacion = DateTime.Now,
+                                                             UsuarioModificacion = usuarioCreacion
                                                          });
             }
         }
@@ -921,7 +921,7 @@ namespace asivamosffie.services
                 {
                     SolicitudPagoFaseAmortizacion solicitudPagoAmortizacionOld = _context.SolicitudPagoFaseAmortizacion.Find(SolicitudPagoAmortizacion.SolicitudPagoFaseAmortizacionId);
                     solicitudPagoAmortizacionOld.UsuarioModificacion = pUsuarioCreacion;
-                    solicitudPagoAmortizacionOld.FechaModificacion = DateTime.Now; 
+                    solicitudPagoAmortizacionOld.FechaModificacion = DateTime.Now;
                     solicitudPagoAmortizacionOld.SolicitudPagoFaseCriterioConceptoPagoId = SolicitudPagoFaseCriterioConceptoPagoId;
                     solicitudPagoAmortizacionOld.PorcentajeAmortizacion = SolicitudPagoAmortizacion.PorcentajeAmortizacion;
                     solicitudPagoAmortizacionOld.ValorAmortizacion = SolicitudPagoAmortizacion.ValorAmortizacion;
@@ -2352,8 +2352,16 @@ namespace asivamosffie.services
                                                                           )
                                                                    .ToList();
 
+
+            List<VPagosSolicitudXsinAmortizacion> ListPagosTodo =
+               _context.VPagosSolicitudXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId
+                                                              )
+                                                       .ToList();
+
             List<VPagosOdgXsinAmortizacion> ListPagosOdg =
-                    _context.VPagosOdgXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId)
+                    _context.VPagosOdgXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId
+                                                               && v.EsFactura
+                                                            )
                                                             .ToList();
 
             if (!esSolicitudPago)
@@ -2362,7 +2370,7 @@ namespace asivamosffie.services
                 ListPagosOdg = ListPagosOdg.Where(r => r.EstaAprobadaOdg == true).ToList();
             }
 
-            List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
+            List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId && r.TipoDescuentoCodigo != "5").ToList();
 
             foreach (var Drp in ListDrp)
             {
@@ -2402,37 +2410,50 @@ namespace asivamosffie.services
                                                          && r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo)
                                                 .Sum(v => v.ValorUso) ?? 0;
+                        decimal Saldo = 0;
+                        decimal Descuentos = 0;
 
-                        decimal? Saldo = OrdenGiroAprobada ? !esSolicitudPago ? 
+                        Saldo += ListPagos
+                                             .Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                      && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
+                                                       && r.Pagado == false
+                                                      )
+                                             .Sum(r => r.SaldoUso) ?? 0;
+
+                        if (esSolicitudPago)
+                        {
+                            
+                        }
+                        else
+                        {
+                            Descuentos = DescuentosOrdenGiro
+                                                          .Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                           && r.UsoCodigo == TipoUso.TipoUsoCodigo
+                                                           && r.FuenteFinanciacionId == Drp.FuenteFinanciacionId
+                                                           )
+                                              .Sum(r => r.ValorDescuento);
+
+                            Saldo = OrdenGiroAprobada ? !esSolicitudPago ?
                                                 ListPagosOdg
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
                                                           && r.Pagado == false
                                                          )
-                                                .Sum(r => r.SaldoUso) ?? 0 : 
+                                                .Sum(r => r.SaldoUso) ?? 0 :
                                                 ListPagosOdg
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
                                                          && r.Pagado == false
                                                          )
-                                                .Sum(r => r.SaldoUso) ?? 0 : 
-                                                ListPagos
-                                                .Where(r => r.ProyectoId == ProyectoId.ProyectoId
-                                                         && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
-                                                          && r.Pagado == false
-                                                         )
-                                                .Sum(r => r.SaldoUso) ?? 0;
+                                                .Sum(r => r.SaldoUso) ?? 0 : 0;
+                        }
 
 
-                        decimal? Descuentos = DescuentosOrdenGiro
-                                                            .Where(r => r.ProyectoId == ProyectoId.ProyectoId
-                                                             && r.UsoCodigo == TipoUso.TipoUsoCodigo
-                                                             && r.FuenteFinanciacionId == Drp.FuenteFinanciacionId
-                                                             )
-                                                .Sum(r => r.ValorDescuento);
 
                         decimal ValorUsoResta = (decimal)(ValorUso ?? 0 - Descuentos);
-                        if (!OrdenGiroAprobada)
+
+
+                        if (esSolicitudPago)
                         {
                             foreach (var item in ListPagos.Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                        && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo).ToList())
@@ -2774,8 +2795,8 @@ namespace asivamosffie.services
 
         private bool ValidateCompleteRecordSolicitudPagoFaseCriterio2(ICollection<SolicitudPagoFaseCriterio> ListsolicitudPagoFaseCriterio)
         {
-            if(ListsolicitudPagoFaseCriterio.Count == 0)
-               return false;
+            if (ListsolicitudPagoFaseCriterio.Count == 0)
+                return false;
 
             foreach (var solicitudPagoFaseCriterio in ListsolicitudPagoFaseCriterio)
             {
