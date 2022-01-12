@@ -2354,13 +2354,12 @@ namespace asivamosffie.services
 
 
             List<VPagosSolicitudXsinAmortizacion> ListPagosTodo =
-               _context.VPagosSolicitudXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId
+               _context.VPagosSolicitudXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId && v.EsFactura
                                                               )
                                                        .ToList();
 
             List<VPagosOdgXsinAmortizacion> ListPagosOdg =
                     _context.VPagosOdgXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId
-                                                               && v.EsFactura
                                                             )
                                                             .ToList();
 
@@ -2370,7 +2369,7 @@ namespace asivamosffie.services
                 ListPagosOdg = ListPagosOdg.Where(r => r.EstaAprobadaOdg == true).ToList();
             }
 
-            List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId && r.TipoDescuentoCodigo != "5").ToList();
+            List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
 
             foreach (var Drp in ListDrp)
             {
@@ -2429,7 +2428,6 @@ namespace asivamosffie.services
                             Descuentos = DescuentosOrdenGiro
                                                           .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                            && r.UsoCodigo == TipoUso.TipoUsoCodigo
-                                                           && r.FuenteFinanciacionId == Drp.FuenteFinanciacionId
                                                            )
                                               .Sum(r => r.ValorDescuento);
 
@@ -2449,8 +2447,8 @@ namespace asivamosffie.services
                         }
 
 
-
-                        decimal ValorUsoResta = (decimal)(ValorUso ?? 0 - Descuentos);
+                        ValorUso = ValorUso + Descuentos;
+                        decimal ValorUsoResta = ValorUso ?? 0;
 
 
                         if (esSolicitudPago)
