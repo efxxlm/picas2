@@ -43,7 +43,7 @@ namespace asivamosffie.services
 
         public async Task<List<VPlantillaOrdenGiro>> GetInfoPlantilla(int pOrdenGiroId)
         {
-            return await _context.VPlantillaOrdenGiro.Where(r => r.OrdenGiroId == pOrdenGiroId).OrderBy(r => r.LlaveMen).ToListAsync();
+            return await _context.VPlantillaOrdenGiro.Where(r => r.OrdenGiroId == pOrdenGiroId).OrderBy(r => r.LlaveMen).OrderBy(r=> r.ConsecutivoFfie).ToListAsync();
         }
 
         public async Task<dynamic> GetValorConceptoByAportanteId(int pAportanteId, int pSolicitudPagoId, string pConceptoPago)
