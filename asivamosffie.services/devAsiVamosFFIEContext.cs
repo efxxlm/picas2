@@ -374,6 +374,15 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=db-asivamos-cert;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -9039,13 +9048,17 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(16)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PorcentajeFacturado).HasColumnType("decimal(38, 16)");
+                entity.Property(e => e.PorcentajeFacturado).HasColumnType("numeric(38, 6)");
 
-                entity.Property(e => e.PorcentajePorPagar).HasColumnType("decimal(38, 16)");
+                entity.Property(e => e.PorcentajePorPagar).HasColumnType("numeric(38, 6)");
 
-                entity.Property(e => e.SaldoPorPagar).HasColumnType("decimal(19, 0)");
+                entity.Property(e => e.SaldoPorPagar).HasColumnType("numeric(38, 2)");
 
-                entity.Property(e => e.ValorSolicitud).HasColumnType("decimal(18, 0)");
+                entity.Property(e => e.ValorDdpxFase)
+                    .HasColumnName("ValorDDPxFase")
+                    .HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.ValorFacturado).HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<VContratosXcontratacionProyecto>(entity =>
@@ -9111,7 +9124,8 @@ namespace asivamosffie.model.Models
                 entity.ToView("V_DescuentosOdgXFuenteFinanciacionXAportanteXConceptoXProyecto");
 
                 entity.Property(e => e.ConceptoCodigo)
-                    .HasMaxLength(2)
+                    .IsRequired()
+                    .HasMaxLength(1)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Nombre).HasMaxLength(250);

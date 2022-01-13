@@ -1760,15 +1760,10 @@ namespace asivamosffie.services
 
             try
             {
-                if (_context.VContratoPagosRealizados
-                  .Any(v => v.ContratoId == pContratoId && v.SolicitudPagoId == pSolicitudPago))
-                {
-
-                    vContratoPagosRealizados = GetValidarContratoPagosRealizados(pContratoId, pSolicitudPago);
-
-                    vContratoPagosRealizados = vContratoPagosRealizados
-                      .Where(v => v.ContratoId == pContratoId && v.SolicitudPagoId == pSolicitudPago)
-                      .ToList();
+                if (_context.VContratoPagosRealizados.Any(v => v.ContratoId == pContratoId)
+                    )
+                { 
+                    vContratoPagosRealizados = _context.VContratoPagosRealizados.Where(v => v.ContratoId == pContratoId).ToList();
                 }
             }
             catch (Exception e)
@@ -1796,30 +1791,30 @@ namespace asivamosffie.services
                                                 }).ToList();
         }
 
-        private List<VContratoPagosRealizados> GetValidarContratoPagosRealizados(int pContratoId, int pSolicitudPago)
-        {
-            List<VContratoPagosRealizados> vContratoPagosRealizados = _context.VContratoPagosRealizados
-                        .Where(v => v.ContratoId == pContratoId).ToList();
+        //private List<VContratoPagosRealizados> GetValidarContratoPagosRealizados(int pContratoId, int pSolicitudPago)
+        //{
+        //    List<VContratoPagosRealizados> vContratoPagosRealizados = _context.VContratoPagosRealizados
+        //                .Where(v => v.ContratoId == pContratoId).ToList();
 
 
-            decimal ValorAnterior = 0;
-            decimal Drp = 0;
-            int Count = 1;
-            decimal dcDecimalValorFacturado = 0;
-            foreach (var item in vContratoPagosRealizados)
-            {
-                dcDecimalValorFacturado += item.ValorFacturado;
-                //item.SaldoPorPagar = item.ValorSolicitud - dcDecimalValorFacturado;
-                ValorAnterior = item.SaldoPorPagar ?? 0;
-                Drp = item.ValorSolicitud ?? 1;
-                //item.SaldoPorPagar = item.ValorSolicitud - dcDecimalValorFacturado;
-                item.PorcentajeFacturado = item.PorcentajeFacturado;
-                item.PorcentajePorPagar = item.PorcentajePorPagar;
-            }
-            Count++;
+        //    decimal ValorAnterior = 0;
+        //    decimal Drp = 0;
+        //    int Count = 1;
+        //    decimal dcDecimalValorFacturado = 0;
+        //    foreach (var item in vContratoPagosRealizados)
+        //    {
+        //        dcDecimalValorFacturado += item.ValorFacturado;
+        //        //item.SaldoPorPagar = item.ValorSolicitud - dcDecimalValorFacturado;
+        //        ValorAnterior = item.SaldoPorPagar ?? 0;
+        //        Drp = item.ValorSolicitud ?? 1;
+        //        //item.SaldoPorPagar = item.ValorSolicitud - dcDecimalValorFacturado;
+        //        item.PorcentajeFacturado = item.PorcentajeFacturado;
+        //        item.PorcentajePorPagar = item.PorcentajePorPagar;
+        //    }
+        //    Count++;
 
-            return vContratoPagosRealizados;
-        }
+        //    return vContratoPagosRealizados;
+        //}
 
         public dynamic GetDrpContrato(int pContratacionId)
         {
