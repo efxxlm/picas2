@@ -1304,13 +1304,15 @@ namespace asivamosffie.services
 
             if (listaChequeo != null)
             {
-                int? SolicitudPagoId = _context.SolicitudPagoFase
-                                        .Where(r => r.SolicitudPagoFaseId == pSolicitudPagoId)
-                                            .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
-                                                    .ThenInclude(r => r.SolicitudPago)
-                                        .Select(s => s.SolicitudPagoRegistrarSolicitudPago.SolicitudPago.SolicitudPagoId).FirstOrDefault();
+                int SolicitudPagoId = 0;
+                //_context.SolicitudPagoFase
+                //                    .Where(r => r.SolicitudPagoFaseId == pSolicitudPagoId)
+                //                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                //                                .ThenInclude(r => r.SolicitudPago)
+                //                    .Select(s => s.SolicitudPagoRegistrarSolicitudPago.SolicitudPago.SolicitudPagoId).FirstOrDefault();
 
 
+                SolicitudPagoId = pSolicitudPagoId;
                 int? SolicitudPagoListaChequeoId = _context.SolicitudPagoListaChequeo.Where(s => s.SolicitudPagoId == SolicitudPagoId
                                                                                     && s.Eliminado != true)
                                                                                 .Select(r => r.SolicitudPagoId).FirstOrDefault();
