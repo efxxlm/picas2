@@ -77,15 +77,18 @@ export class FormOrigenComponent implements OnInit {
                                 if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
                                     terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.forEach( aportante => {
                                       var registroComplto = false;
-                                      if(aportante.cuentaBancariaId > 0){
-                                        if(aportante.cuentaBancaria != undefined && aportante.cuentaBancaria != null){
-                                          if(aportante.cuentaBancaria?.cuentaBancariaId == aportante.cuentaBancariaId && aportante.cuentaBancaria?.fuenteFinanciacionId == aportante.fuenteFinanciacionId){
-                                            registroComplto = true;
+                                      const aportanteFind = this.listaAportantes.find( value => value.aportanteId === aportante.aportanteId && value.fuenteFinanciacionId == aportante.fuenteFinanciacionId)
+                                      if ( aportanteFind === undefined ) {
+                                        if(aportante.cuentaBancariaId > 0){
+                                          if(aportante.cuentaBancaria != undefined && aportante.cuentaBancaria != null){
+                                            if(aportante.cuentaBancaria?.cuentaBancariaId == aportante.cuentaBancariaId && aportante.cuentaBancaria?.fuenteFinanciacionId == aportante.fuenteFinanciacionId){
+                                              registroComplto = true;
+                                            }
                                           }
                                         }
+                                        aportante.registroCompleto = registroComplto;
+                                        this.listaAportantes.push( aportante );
                                       }
-                                      aportante.registroCompleto = registroComplto;
-                                      this.listaAportantes.push( aportante );
                                     } );
                                 }
                             } );

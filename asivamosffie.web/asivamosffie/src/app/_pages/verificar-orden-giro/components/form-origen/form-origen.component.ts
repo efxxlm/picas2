@@ -69,7 +69,10 @@ export class FormOrigenComponent implements OnInit {
                                 this.ordenGiroDetalleTerceroCausacion.forEach( terceroCausacion => {
                                     if ( terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.length > 0 ) {
                                         terceroCausacion.ordenGiroDetalleTerceroCausacionAportante.forEach( aportante => {
-                                            this.listaAportantes.push( aportante );
+                                            const aportanteFind = this.listaAportantes.find( value => value.aportanteId === aportante.aportanteId && value.fuenteFinanciacionId == aportante.fuenteFinanciacionId);
+                                            if ( aportanteFind === undefined ) {
+                                                this.listaAportantes.push( aportante );
+                                            }
                                         } );
                                     }
                                 } );
