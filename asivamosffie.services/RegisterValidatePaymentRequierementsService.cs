@@ -2612,6 +2612,16 @@ namespace asivamosffie.services
             {
                 if (pSolicitudPago.SolicitudPagoExpensas.Count() == 0)
                     return false;
+
+
+                if (pSolicitudPago.SolicitudPagoSoporteSolicitud.Count == 0)
+                    return false;
+
+                foreach (var SolicitudPagoSoporteSolicitud in pSolicitudPago.SolicitudPagoSoporteSolicitud)
+                {
+                    if (string.IsNullOrEmpty(SolicitudPagoSoporteSolicitud.UrlSoporte))
+                        return false;
+                }
                 foreach (var SolicitudPagoExpensas in pSolicitudPago.SolicitudPagoExpensas)
                 {
                     if (
