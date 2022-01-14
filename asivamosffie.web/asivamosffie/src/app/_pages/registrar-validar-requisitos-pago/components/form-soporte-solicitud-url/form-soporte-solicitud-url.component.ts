@@ -133,13 +133,18 @@ export class FormSoporteSolicitudUrlComponent implements OnInit {
                             );
                     }
                     if ( this.esExpensas === true ) {
-                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                            () => this.routes.navigate(
-                                [
-                                    '/registrarValidarRequisitosPago/verDetalleEditarExpensas', this.solicitudPagoId
-                                ]
-                            )
-                        );
+                        this.registrarPagosSvc.getValidateSolicitudPagoId( this.solicitudPagoId)
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () => this.routes.navigate(
+                                        [
+                                            '/registrarValidarRequisitosPago/verDetalleEditarExpensas', this.solicitudPagoId
+                                        ]
+                                    )
+                                );
+                            }
+                        ); 
                     }
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
