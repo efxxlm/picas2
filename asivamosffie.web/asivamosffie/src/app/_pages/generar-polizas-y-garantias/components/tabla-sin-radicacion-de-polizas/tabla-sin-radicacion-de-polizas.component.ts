@@ -23,7 +23,7 @@ export class TablaSinRadicacionDePolizasComponent implements OnInit {
     dataTable: any[] = [];
 
     constructor( private polizaSvc: PolizaGarantiaService ) {
-        this.polizaSvc.getListGrillaContratoGarantiaPoliza( this.estadoPolizaCodigo.sinRadicacion )
+        this.polizaSvc.getListGrillaContratoGarantiaPoliza( this.estadoPolizaCodigo.sinRadicacion , false)
         .subscribe(
             getListGrillaContratoGarantiaPoliza => {
                 if ( getListGrillaContratoGarantiaPoliza.length === 0 ) {

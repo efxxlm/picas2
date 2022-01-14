@@ -20,7 +20,8 @@ export class FormContratacionRegistradosComponent implements OnInit {
   estadoCodigos = {
     enRevision: '2',
     enFirmaFiduciaria: '5',
-    firmado: '6'
+    firmado: '6',
+    cancelado: '23'
   }
   contratacion: any;
   fechaTramite: Date = new Date();

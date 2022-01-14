@@ -11,7 +11,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CreateEditContratoPoliza(Contrato pContrato); 
 
-        Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz(string pEstadoCodigo);
+        Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz(string pEstadoCodigo, bool pEsCancelada);
 
         Task<Respuesta> ChangeStatusEstadoPoliza(ContratoPoliza pContratoPoliza);
 

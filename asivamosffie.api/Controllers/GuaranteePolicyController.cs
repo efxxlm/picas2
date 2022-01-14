@@ -282,11 +282,11 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetListGrillaContratoGarantiaPoliza")]
-        public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz([FromQuery] string pEstadoCodigo)
+        public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz([FromQuery] string pEstadoCodigo, bool pEsCancelada)
         {
             try
             {
-                return await _guaranteePolicy.ListGrillaContratoGarantiaPolizaOptz(pEstadoCodigo);
+                return await _guaranteePolicy.ListGrillaContratoGarantiaPolizaOptz(pEstadoCodigo, pEsCancelada);
             }
             catch (Exception ex)
             {

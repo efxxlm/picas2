@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, ViewChild, EventEmitter, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -13,6 +13,7 @@ import { ContratosModificacionesContractualesService } from 'src/app/core/_servi
 })
 export class TablaRegistradosComponent implements OnInit {
 
+  @Input() esRegistrado: boolean;
   dataSource                = new MatTableDataSource();
   @Output() sinData = new EventEmitter<boolean>();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
@@ -21,7 +22,8 @@ export class TablaRegistradosComponent implements OnInit {
   dataTable: any[] = [];
   estadoCodigos = {
     registrado: '6',
-    registradoNovedad: '26'
+    registradoNovedad: '26',
+    cancelado: '23'
   };
 
   constructor ( private routes: Router,
@@ -35,12 +37,17 @@ export class TablaRegistradosComponent implements OnInit {
   getGrilla () {
     this.contratosContractualesSvc.getGrilla()
       .subscribe( ( resp: any ) => {
-        
-        
+
         for ( let contrataciones of resp ) {
-          if ( contrataciones.estadoCodigo === this.estadoCodigos.registrado || contrataciones.estadoCodigo === this.estadoCodigos.registradoNovedad ) {
-            this.dataTable.push( contrataciones );
-          };
+          if(!this.esRegistrado){
+            if ( contrataciones.estadoCodigo === this.estadoCodigos.cancelado ) {
+              this.dataTable.push( contrataciones );
+            };
+          }else{
+            if ( contrataciones.estadoCodigo === this.estadoCodigos.registrado || contrataciones.estadoCodigo === this.estadoCodigos.registradoNovedad ) {
+              this.dataTable.push( contrataciones );
+            };
+          }
         };
 
         if ( this.dataTable.length === 0 ) {
@@ -62,7 +69,6 @@ export class TablaRegistradosComponent implements OnInit {
   };
 
   gestionar ( tipoSolicitud: string, id: number, estadoCodigo: string ) {
-
     switch ( tipoSolicitud ) {
 
       case "Contratación":

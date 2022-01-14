@@ -69,6 +69,18 @@ namespace asivamosffie.services
                             else
                                 sesionComiteSolicitud.EstaTramitado = false;
 
+                            if (contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Cancelado_por_generacion_presupuestal)
+                            {
+                                if (contratacion.DisponibilidadPresupuestal.Count() > 0)
+                                    if (contratacion.DisponibilidadPresupuestal.Where(r => r.Eliminado != true).FirstOrDefault() != null)
+                                    {
+                                        if (string.IsNullOrEmpty(contratacion.DisponibilidadPresupuestal.Where(r => r.Eliminado != true).FirstOrDefault().NumeroDrp))
+                                        {
+                                            sesionComiteSolicitud.Eliminado = true;
+                                            break;
+                                        }
+                                    }
+                            }
 
                             sesionComiteSolicitud.Contratacion = contratacion;
 
@@ -153,7 +165,7 @@ namespace asivamosffie.services
                 }
 
             }
-            return ListSesionComiteSolicitud.OrderByDescending(r => r.SesionComiteSolicitudId).Distinct().ToList();
+            return ListSesionComiteSolicitud.Where(r => r.Eliminado != true).OrderByDescending(r => r.SesionComiteSolicitudId).Distinct().ToList();
 
         }
 
@@ -313,7 +325,7 @@ namespace asivamosffie.services
                 _context.Set<Contrato>().Where(c => c.ContratoId == contratoOld.ContratoId)
                                         .Update(c => new Contrato
                                         {
-                                            Estado = contratoOld.Estado 
+                                            Estado = contratoOld.Estado
                                         });
 
 
@@ -322,7 +334,7 @@ namespace asivamosffie.services
                     await EnviarNotificaciones(contratoOld, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
 
-             
+
             }
             //Contrato Nuevo
             else

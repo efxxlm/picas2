@@ -3,18 +3,16 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import moment from 'moment';
-import { Subscription } from 'rxjs';
 import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
 import { EstadoPolizaCodigo } from 'src/app/_interfaces/gestionar-polizas-garantias.interface';
 
 @Component({
-  selector: 'app-tabla-con-aprobacion-de-polizas',
-  templateUrl: './tabla-con-aprobacion-de-polizas.component.html',
-  styleUrls: ['./tabla-con-aprobacion-de-polizas.component.scss']
+  selector: 'app-tabla-drp-cancelado',
+  templateUrl: './tabla-drp-cancelado.component.html',
+  styleUrls: ['./tabla-drp-cancelado.component.scss']
 })
-export class TablaConAprobacionDePolizasComponent implements OnInit {
+export class TablaDrpCanceladoComponent implements OnInit {
 
-    @Output() estadoSemaforo3 = new EventEmitter<string>();
     estadoPolizaCodigo = EstadoPolizaCodigo;
     displayedColumns: string[] = ['fechaFirma', 'numeroContrato', 'tipoSolicitud', 'estadoPoliza', 'contratoId'];
     dataSource = new MatTableDataSource();
@@ -23,10 +21,9 @@ export class TablaConAprobacionDePolizasComponent implements OnInit {
     dataTable: any[] = [];
 
     constructor( private polizaSvc: PolizaGarantiaService) {
-        this.polizaSvc.getListGrillaContratoGarantiaPoliza( this.estadoPolizaCodigo.conAprobacion , false)
+        this.polizaSvc.getListGrillaContratoGarantiaPoliza( '0' , true)
             .subscribe(
                 getListGrillaContratoGarantiaPoliza => {
-                    this.estadoSemaforo3.emit( 'completo' );
 
                     getListGrillaContratoGarantiaPoliza.forEach( registro => registro.fechaFirma = registro.fechaFirma !== undefined ? ( moment( registro.fechaFirma ).format( 'DD/MM/YYYY' ) ) : '' );
 

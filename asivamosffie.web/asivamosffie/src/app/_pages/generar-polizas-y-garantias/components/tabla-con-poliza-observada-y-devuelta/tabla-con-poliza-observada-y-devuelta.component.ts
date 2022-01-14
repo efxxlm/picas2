@@ -24,7 +24,7 @@ export class TablaConPolizaObservadaYDevueltaComponent implements OnInit {
     dataTable: any[] = [];
 
     constructor( private polizaSvc: PolizaGarantiaService ) {
-        this.polizaSvc.getListGrillaContratoGarantiaPoliza( this.estadoPolizaCodigo.polizaDevuelta )
+        this.polizaSvc.getListGrillaContratoGarantiaPoliza( this.estadoPolizaCodigo.polizaDevuelta , false)
             .subscribe(
                 getListGrillaContratoGarantiaPoliza => {
                     let totalIncompleto = 0;

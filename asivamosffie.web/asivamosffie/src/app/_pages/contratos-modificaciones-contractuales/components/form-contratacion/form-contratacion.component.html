@@ -22,7 +22,7 @@
           <p><b>Fecha de comité técnico</b>: {{ contratacion?.sesionComiteSolicitud[0].comiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }} </p>
         </div>
         <div >
-          <p><b>Número de comité fiduciario</b>: {{ contratacion?.sesionComiteSolicitud[0]?.comiteTecnicoFiduciario?.numeroComite }} </p> 
+          <p><b>Número de comité fiduciario</b>: {{ contratacion?.sesionComiteSolicitud[0]?.comiteTecnicoFiduciario?.numeroComite }} </p>
           <p><b>Fecha de comité fiduciario</b>: {{ contratacion?.sesionComiteSolicitud[0]?.comiteTecnicoFiduciario?.fechaOrdenDia | date: 'dd/MM/yyyy' }} </p>
         </div>
       </mat-card-content>
@@ -80,7 +80,7 @@
               <section>
                 <b>Observaciones</b>
                 <div [innerHTML]="innerObservacion( form.get( 'observaciones' ).value )">
-                  
+
                 </div>
               </section>
               <p><b>URL con soporte</b>: {{ form.get( 'rutaDocumento' ).value }} </p>
@@ -88,7 +88,7 @@
           </mat-card>
         </div>
 
-        <div class="text-center w-15">
+        <div class="text-center w-15" *ngIf="estadoCodigo !== estadoCodigos.cancelado">
           <button mat-raised-button color="accent" class="btn-table"
             (click)="getDdp( contratacion?.disponibilidadPresupuestal[0].disponibilidadPresupuestalId, contratacion?.disponibilidadPresupuestal[0].numeroDdp )">
             Descargar DDP
@@ -114,7 +114,7 @@
     </mat-accordion>
   </div>
 
-  <div class="mt-2em" align="left" *ngIf="estadoCodigo !== estadoCodigos.firmado">
+  <div class="mt-2em" align="left" *ngIf="estadoCodigo !== estadoCodigos.firmado && estadoCodigo !== estadoCodigos.cancelado">
     <mat-card>
       <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text">

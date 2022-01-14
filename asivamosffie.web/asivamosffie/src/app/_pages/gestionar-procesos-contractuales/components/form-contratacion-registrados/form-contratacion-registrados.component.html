@@ -69,7 +69,7 @@
           </mat-card>
         </div>
 
-        <div align="left">
+        <div align="left" *ngIf="estadoCodigo !== estadoCodigos.cancelado">
           <mat-card class="border">
             <mat-card-content>
               <p><b>Fecha del trámite</b>: {{ contratacion?.fechaTramite | date: 'dd/MM/yyyy' }} </p>
@@ -90,7 +90,7 @@
           </mat-card>
         </div>
 
-        <div class="text-center w-15">
+        <div class="text-center w-15" *ngIf="estadoCodigo !== estadoCodigos.cancelado">
           <button mat-raised-button color="accent" class="btn-table"
             (click)="getDdp( contratacion?.disponibilidadPresupuestal[0].disponibilidadPresupuestalId, contratacion?.disponibilidadPresupuestal[0].numeroDdp )">
             Descargar DDP

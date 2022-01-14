@@ -16,6 +16,7 @@ export class TablaRegistradosComponent implements OnInit {
 
   dataSource                = new MatTableDataSource();
   @Input() $data: Observable<GrillaProcesosContractuales[]>;
+  @Input() esRegistrado: boolean;
   @Output() sinData = new EventEmitter<string>();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
@@ -24,7 +25,8 @@ export class TablaRegistradosComponent implements OnInit {
   estadoCodigos = {
     registrado: '6',
     registradoNovedad: '26',
-    Liquidado: '20'
+    Liquidado: '20',
+    cancelado: '23'
   };
 
   constructor (
@@ -41,9 +43,15 @@ export class TablaRegistradosComponent implements OnInit {
     this.$data.subscribe( ( resp: any ) => {
 
         for ( let contrataciones of resp ) {
-          if ( contrataciones.estadoCodigo === this.estadoCodigos.registrado || contrataciones.estadoCodigo === this.estadoCodigos.registradoNovedad || (contrataciones.estadoCodigo === this.estadoCodigos.Liquidado && contrataciones.tipoSolicitud === "Liquidación Contractual")) {
-            this.dataTable.push( contrataciones );
-          };
+          if(!this.esRegistrado){
+            if ( contrataciones.estadoCodigo === this.estadoCodigos.cancelado) {
+              this.dataTable.push( contrataciones );
+            };
+          }else{
+            if ( contrataciones.estadoCodigo === this.estadoCodigos.registrado || contrataciones.estadoCodigo === this.estadoCodigos.registradoNovedad || (contrataciones.estadoCodigo === this.estadoCodigos.Liquidado && contrataciones.tipoSolicitud === "Liquidación Contractual")) {
+              this.dataTable.push( contrataciones );
+            };
+          }
         };
 
         if ( this.dataTable.length > 0 ) {

@@ -61,7 +61,20 @@
         </mat-expansion-panel-header>
 
         <div *ngIf="sinDataRegistrados">
-          <app-tabla-registrados (sinData)="sinDataRegistrados = $event"></app-tabla-registrados>
+          <app-tabla-registrados (sinData)="sinDataRegistrados = $event" [esRegistrado]="true"></app-tabla-registrados>
+        </div>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-40">
+          <mat-panel-title class="expansion-style--title completo">
+            Cancelado por generar
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div *ngIf="sinDataDevueltos">
+          <app-tabla-registrados (sinData)="sinDataDevueltos = $event" [esRegistrado]="false"></app-tabla-registrados>
         </div>
 
       </mat-expansion-panel>

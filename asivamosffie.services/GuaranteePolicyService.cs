@@ -43,28 +43,35 @@ namespace asivamosffie.services
             return contrato;
         }
 
-        public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz(string pEstadoCodigo)
+        public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz(string pEstadoCodigo, bool pEsCancelada)
         {
             if (string.IsNullOrEmpty(pEstadoCodigo))
                 return await _context.VGestionarGarantiasPolizas.OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
             else
             {
-                if (pEstadoCodigo == ConstanCodigoEstadoActualizacionPoliza.En_revision_de_actualizacion_de_poliza)
+                if (pEsCancelada == true)
                 {
-                    List<ContratoPoliza> contratoPolizas = _context.ContratoPoliza.ToList();
-
-                    List<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas = await _context.VGestionarGarantiasPolizas.Where(v => v.EstadoPolizaCodigo == pEstadoCodigo).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
-                    List<VGestionarGarantiasPolizas> Return = new List<VGestionarGarantiasPolizas>();
-
-                    foreach (var item in VGestionarGarantiasPolizas)
-                    {
-                        if (!contratoPolizas.Any(c => c.ContratoId == item.ContratoId))
-                            Return.Add(item);
-                    }
-
-                    return Return;
+                    return await _context.VGestionarGarantiasPolizas.Where(v => v.TipoSolicitudCodigoContratacion == ConstanCodigoEstadoSolicitudContratacion.Cancelado_por_generacion_presupuestal).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
                 }
-                return await _context.VGestionarGarantiasPolizas.Where(v => v.EstadoPolizaCodigo == pEstadoCodigo).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
+                else
+                {
+                    if (pEstadoCodigo == ConstanCodigoEstadoActualizacionPoliza.En_revision_de_actualizacion_de_poliza)
+                    {
+                        List<ContratoPoliza> contratoPolizas = _context.ContratoPoliza.ToList();
+
+                        List<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas = await _context.VGestionarGarantiasPolizas.Where(v => v.EstadoPolizaCodigo == pEstadoCodigo && v.TipoSolicitudCodigoContratacion != ConstanCodigoEstadoSolicitudContratacion.Cancelado_por_generacion_presupuestal).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
+                        List<VGestionarGarantiasPolizas> Return = new List<VGestionarGarantiasPolizas>();
+
+                        foreach (var item in VGestionarGarantiasPolizas)
+                        {
+                            if (!contratoPolizas.Any(c => c.ContratoId == item.ContratoId))
+                                Return.Add(item);
+                        }
+
+                        return Return;
+                    }
+                    return await _context.VGestionarGarantiasPolizas.Where(v => v.EstadoPolizaCodigo == pEstadoCodigo && v.TipoSolicitudCodigoContratacion == ConstanCodigoEstadoSolicitudContratacion.Cancelado_por_generacion_presupuestal).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
+                }
             }
         }
 

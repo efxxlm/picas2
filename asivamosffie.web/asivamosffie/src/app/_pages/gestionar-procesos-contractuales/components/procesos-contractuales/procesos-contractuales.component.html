@@ -52,7 +52,7 @@
             Registradas por la fiduciaria
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-tabla-registrados (sinData)="estadoAcordeonRegistrados = $event" [$data]="$data"></app-tabla-registrados>
+        <app-tabla-registrados (sinData)="estadoAcordeonRegistrados = $event" [$data]="$data" [esRegistrado]="true"></app-tabla-registrados>
       </mat-expansion-panel>
 
       <mat-expansion-panel class="expansion-style">
@@ -63,6 +63,16 @@
         </mat-expansion-panel-header>
         <app-tabla-solicitudes-devueltas [$data]="$data" (estadoSemaforo)="estadoAcordeonDevueltas = $event"></app-tabla-solicitudes-devueltas>
       </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeonCancelados">
+            Cancelado por generar
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-tabla-registrados (sinData)="estadoAcordeonCancelados = $event" [$data]="$data" [esRegistrado]="false"></app-tabla-registrados>
+      </mat-expansion-panel>
+
     </mat-accordion>
   </section>
 

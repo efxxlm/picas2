@@ -201,7 +201,7 @@
         *ngIf="detailavailabilityBudget?.numeroDRP && detailavailabilityBudget?.estadoStr!='Sin registro presupuestal' && detailavailabilityBudget?.estadoSolicitudCodigo != '7'">Descargar DRP</button>
         <button mat-raised-button color="accent"
         (click)="this.cancelarDRPBoton()"
-        *ngIf="!((detailavailabilityBudget?.tieneNovedad == true && esNovedad == false) || (detailavailabilityBudget?.tieneSolicitudPago == true) || (detailavailabilityBudget?.tieneHistorico == true) || detailavailabilityBudget?.estadoSolicitudCodigo == '7')"
+        *ngIf="!((detailavailabilityBudget?.tieneNovedad == true && esNovedad == false) || (detailavailabilityBudget?.tieneSolicitudPago == true) || (detailavailabilityBudget?.tieneHistorico == true) || detailavailabilityBudget?.estadoSolicitudCodigo == '7' || esLiberacion) "
         >Cancelar DRP
       </button>
     </div>

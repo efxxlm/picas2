@@ -31,7 +31,7 @@ export class TablaEnRevisionDePolizasComponent implements OnInit {
         private routes: Router,
         private dialog: MatDialog )
     {
-        this.polizaSvc.getListGrillaContratoGarantiaPoliza( this.estadoPolizaCodigo.enRevision )
+        this.polizaSvc.getListGrillaContratoGarantiaPoliza( this.estadoPolizaCodigo.enRevision , false)
             .subscribe(
                 getListGrillaContratoGarantiaPoliza => {
                     let totalIncompleto = 0;

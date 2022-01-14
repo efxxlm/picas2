@@ -33,8 +33,8 @@ export class PolizaGarantiaService {
     return this.http.post<Respuesta>( `${ this.apiUrl }/ChangeStatusEstadoPoliza`, pContratoPoliza );
   }
 
-  getListGrillaContratoGarantiaPoliza( pEstadoCodigo: string ) {
-    return this.http.get<any[]>( `${ this.apiUrl }/GetListGrillaContratoGarantiaPoliza?pEstadoCodigo=${ pEstadoCodigo }` );
+  getListGrillaContratoGarantiaPoliza( pEstadoCodigo: string , pEsCancelada: boolean) {
+    return this.http.get<any[]>( `${ this.apiUrl }/GetListGrillaContratoGarantiaPoliza?pEstadoCodigo=${ pEstadoCodigo }&pEsCancelada=${ pEsCancelada }` );
   }
 
   /*
