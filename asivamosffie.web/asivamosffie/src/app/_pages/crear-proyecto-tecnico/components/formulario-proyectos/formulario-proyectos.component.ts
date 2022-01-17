@@ -14,7 +14,7 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./formulario-proyectos.component.scss']
 })
 export class FormularioProyectosComponent implements OnInit {
-  /*con este bit controlo los botones, esto lo hago ya sea por el estado del proyecto o en un futuro por el 
+  /*con este bit controlo los botones, esto lo hago ya sea por el estado del proyecto o en un futuro por el
   permiso que tenga el usuario
   */
 
@@ -162,12 +162,12 @@ export class FormularioProyectosComponent implements OnInit {
         this.proyecto.predioPrincipal.ubicacionLatitud.length - 1
       ) !== '°'
         ? this.proyecto.predioPrincipal.ubicacionLatitud + '°' // + this.proyecto.predioPrincipal.ubicacionLatitud2;
-        : this.proyecto.predioPrincipal.ubicacionLatitud; 
+        : this.proyecto.predioPrincipal.ubicacionLatitud;
     this.proyecto.predioPrincipal.ubicacionLongitud = this.proyecto.predioPrincipal.ubicacionLongitud.charAt(
       this.proyecto.predioPrincipal.ubicacionLongitud.length -1
     ) !== '°'
     ? this.proyecto.predioPrincipal.ubicacionLongitud + '°' // + this.proyecto.predioPrincipal.ubicacionLongitud2;
-    : this.proyecto.predioPrincipal.ubicacionLongitud; 
+    : this.proyecto.predioPrincipal.ubicacionLongitud;
     //this.proyecto.institucionEducativaId = this.proyecto.institucionEducativaId;
     //this.proyecto.sedeId = this.proyecto.sede.institucionEducativaSedeId?this.proyecto.sede.institucionEducativaSedeId:this.proyecto.sedeId;
     //voy a revisar algunos datos minimos
@@ -244,8 +244,11 @@ export class FormularioProyectosComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     const estado = this.route.snapshot.paramMap.get('estado');
-    if (estado) this.bitPuedoEditar = false;
-    // console.log(id);
+    if(estado == "true"){
+      this.bitPuedoEditar = true;
+    }else{
+      this.bitPuedoEditar = false;
+    }
 
     if (id) {
       this.estaEditando = true;
@@ -367,7 +370,7 @@ export class FormularioProyectosComponent implements OnInit {
             respuesta.proyectoAportante.forEach(element => {
               // console.log("reviso por tipo");
               // console.log(element);
-              this.getAportanteById(element.aportante.tipoAportanteId, i);             
+              this.getAportanteById(element.aportante.tipoAportanteId, i);
               i++;
             });
           },
@@ -1002,10 +1005,10 @@ export class FormularioProyectosComponent implements OnInit {
             this.listaNombreAportantes[i] = [];
             respuestaok.forEach(element => {
               if (!this.listaNombreAportantes[i].includes(element.nombre)) {
-                this.listaNombreAportantes[i].push(element.nombre);                
+                this.listaNombreAportantes[i].push(element.nombre);
               }
             });
-            this.getVigencia(null, i);            
+            this.getVigencia(null, i);
           }
         }
       },
@@ -1060,7 +1063,7 @@ export class FormularioProyectosComponent implements OnInit {
 
   getVigenciaById(id: number, i: number) {
     this.commonServices.listaDocumentoByAportanteId(id).subscribe(
-      respuesta => {        
+      respuesta => {
         this.listaVigencias[i] = respuesta;
       },
       err => {
