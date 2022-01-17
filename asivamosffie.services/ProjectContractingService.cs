@@ -821,6 +821,11 @@ namespace asivamosffie.services
 
                 Contratacion contratacionValidarRegistro = _context.Contratacion.Where(r => r.ContratacionId == Pcontratacion.ContratacionId).Include(r => r.ContratacionProyecto).FirstOrDefault();
                 contratacionValidarRegistro.RegistroCompleto = ValidarEstado(contratacionValidarRegistro);
+                
+                if((bool)contratacionValidarRegistro.RegistroCompleto && contratacionValidarRegistro.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.DevueltaProcesoContractual) 
+                    contratacionValidarRegistro.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.Sin_Registro;
+
+
 
                 _context.SaveChanges();
                 return new Respuesta
