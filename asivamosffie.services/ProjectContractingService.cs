@@ -441,7 +441,7 @@ namespace asivamosffie.services
                     ValorGastado = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
                 }
 
-                ContratacionProyectoAportante.SaldoDisponible = ValorDisponible - ValorGastado; 
+                ContratacionProyectoAportante.SaldoDisponible = ValorDisponible - ValorGastado;
             }
 
             return contratacionProyecto;
@@ -652,7 +652,7 @@ namespace asivamosffie.services
                     cumpleCondicionTai = ValidarCumpleTaiContratistaxProyectoId(proyecto.ProyectoId);
 
 
-                    if (proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.Disponible )
+                    if (proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.Disponible)
                         proyectoGrilla.TieneObra = true;
 
                     if (proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.Disponible)
@@ -664,7 +664,7 @@ namespace asivamosffie.services
                         proyectoGrilla.NumeroSolicitud = "No asignado";
                         proyectoGrilla.ContratacionId = null;
                         if (proyecto?.ContratacionProyecto?.FirstOrDefault()?.Contratacion?.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
-                        { 
+                        {
                             proyectoGrilla.TieneInterventoria = false;
 
                         }
@@ -803,7 +803,7 @@ namespace asivamosffie.services
                     Pcontratacion.RegistroCompleto = false;
                     Pcontratacion.NumeroSolicitud = await _commonService.EnumeradorContratacion();
                     Pcontratacion.RegistroCompleto = false;
-                    _context.Contratacion.Add(Pcontratacion); 
+                    _context.Contratacion.Add(Pcontratacion);
                 }
                 else
                 {
@@ -821,8 +821,12 @@ namespace asivamosffie.services
 
                 Contratacion contratacionValidarRegistro = _context.Contratacion.Where(r => r.ContratacionId == Pcontratacion.ContratacionId).Include(r => r.ContratacionProyecto).FirstOrDefault();
                 contratacionValidarRegistro.RegistroCompleto = ValidarEstado(contratacionValidarRegistro);
-                
-                if((bool)contratacionValidarRegistro.RegistroCompleto && contratacionValidarRegistro.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.DevueltaProcesoContractual) 
+
+                if ((bool)contratacionValidarRegistro.RegistroCompleto
+                 && (   contratacionValidarRegistro.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.DevueltaProcesoContractual
+                     || contratacionValidarRegistro.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.DevueltoComiteFiduciario
+                     || contratacionValidarRegistro.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.DevueltoComiteTecnico
+                     ))
                     contratacionValidarRegistro.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.Sin_Registro;
 
 

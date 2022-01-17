@@ -97,6 +97,7 @@
           <button mat-raised-button color="accent" class="btn-table"
                   (click)="observacionesDialog( element.numeroSolicitud, element.contratacionId )"
                   *ngIf=" (element.estadoSolicitudCodigo === estadosContratacion.DevueltoComiteTecnico && element.registroCompleto)
+                          || (element.estadoSolicitudCodigo === estadosContratacion.DevueltoComiteFiduciario && element.registroCompleto)
                           || (element.estadoSolicitudCodigo === estadosContratacion.RechazadoComiteTecnico && element.registroCompleto)
                           || (element.estadoSolicitudCodigo === estadosContratacion.RechazadoComiteFiduciario && element.registroCompleto)">
                   Observaciones
