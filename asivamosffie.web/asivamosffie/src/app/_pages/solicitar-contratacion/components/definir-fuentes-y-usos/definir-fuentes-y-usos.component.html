@@ -5,6 +5,16 @@
       mat-button
       color="primary"
       class="btn-regresar"
+      *ngIf="esRegistroNuevo == true"
+    >
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+    </a>
+    <a
+      [routerLink]="['/solicitarContratacion/verDetalleEditarSolicitud/', idSolicitud]"
+      mat-button
+      color="primary"
+      class="btn-regresar"
+      *ngIf="!esRegistroNuevo"
     >
       <img src="assets/img/icon/regresar.svg" alt="Regresar" />
     </a>
@@ -329,7 +339,7 @@
                                 </div>
                                 <div class="col">
                                   <mat-form-field class="select-width">
-                                    <mat-select required formControlName="fuenteFinanciacionId"  
+                                    <mat-select required formControlName="fuenteFinanciacionId"
                                     (selectionChange)="changeFoundingSource2( $event, j, uso)">
                                       <mat-option *ngFor="let fuente of aportante.get( 'listaFuenteFinanciacion' ).value" [value]="fuente.fuenteFinanciacionId">
                                         {{ fuente.nombreFuente }}

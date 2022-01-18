@@ -17,6 +17,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
 
   @Input() contratacion: Contratacion;
+  @Input() esRegistroNuevo: boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter();
   contratista: ContratistaGrilla;
   seDiligencioCampo = false;
@@ -48,17 +49,17 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
     this.declararUnionTemporal();
   }
   ngOnChanges(changes: SimpleChanges): void {
-    
+
     if ( changes.contratacion ){
       if (this.contratacion[ 'contratista' ] !== undefined)
         this.nombreContratista.setValue( this.contratacion[ 'contratista'].nombre );
 
       if (this.contratacion[ 'contratista' ] !== undefined)
          this.unionTemporal.setValue( this.contratacion[ 'contratista'].tipoProponenteCodigo === '4' ? true : false );
-      
+
       if (this.contratacion[ 'contratista' ] !== undefined)
          this.numeroDocumento.setValue( this.contratacion[ 'contratista'].numeroIdentificacion );
-      
+
       if ( this.contratacion[ 'contratista' ] !== undefined || this.contratacion[ 'contratista' ] !== undefined || this.contratacion[ 'contratista' ] !== undefined ) {
         this.buscar();
       }
@@ -73,6 +74,12 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+
+    if (!this.esRegistroNuevo) {
+      this.numeroDocumento.markAllAsTouched();
+      this.unionTemporal.markAllAsTouched();
+      this.nombreContratista.markAllAsTouched();
+    }
 
     setTimeout(() => {
       if ( this.contratacion[ 'contratista' ] !== undefined ) {
@@ -107,7 +114,7 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
 
     if (this.contratista)
       this.contratista.idContratista = 0;
-    
+
     if (this.contratacion[ 'contratista' ] !== undefined)
       this.contratacion[ 'contratista' ].numeroIdentificacion = '';
 

@@ -62,7 +62,7 @@
             Eliminar
           </button>
           <a mat-raised-button color="accent" class="btn-table"
-            [routerLink]="['/solicitarContratacion/solicitud', element.contratacionId]"
+            [routerLink]="['/solicitarContratacion/verDetalleEditarSolicitud', element.contratacionId]"
             *ngIf=" (element.estadoSolicitudCodigo == estadosContratacion.Sin_Registro && element.usuarioModificacion !== undefined)
                     || (element.estadoSolicitudCodigo === estadosContratacion.DevueltoComiteTecnico)
                     || (element.estadoSolicitudCodigo === estadosContratacion.DevueltoComiteFiduciario)

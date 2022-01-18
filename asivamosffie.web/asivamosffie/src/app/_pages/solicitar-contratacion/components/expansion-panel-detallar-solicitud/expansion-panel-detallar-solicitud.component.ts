@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, UrlSegment } from '@angular/router';
 import { ContratacionProyecto, Contratacion, PlazoContratacion } from 'src/app/_interfaces/project-contracting';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,6 +18,7 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
     completo: 'completo'
   };
   public plazoProyecto: number = 0;
+  esRegistroNuevo: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,6 +26,16 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router
   ) {
+    this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if ( urlSegment.path === 'solicitud' ) {
+          this.esRegistroNuevo = true;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleEditarSolicitud' ) {
+          this.esRegistroNuevo = false;
+          return;
+      }
+    });
     this.getContratacion();
   }
 
@@ -227,7 +238,7 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
           if (aportanteCompleto === contratacionProyecto.contratacionProyectoAportante.length) {
             contratacionProyectoAportanteCompleto++;
           }
-        
+
         }
 
         if ( esRegistroValido === false ) {

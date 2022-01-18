@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 export class TableCaracteristicasEspecialesComponent implements OnInit {
 
   @Input() contratacion: Contratacion
+  @Input() esRegistroNuevo: boolean
 
   displayedColumns: string[] = [
     'tipoInterventor',
@@ -39,7 +40,7 @@ export class TableCaracteristicasEspecialesComponent implements OnInit {
   }
 
   definirCaracteristicas(id: number, municipio: any) {
-    this.routes.navigate(['/solicitarContratacion/definir-caracteristicas', id], { state: { municipio: municipio } })
+    this.routes.navigate(['/solicitarContratacion/definir-caracteristicas', id], { state: { municipio: municipio, esRegistroNuevo: this.esRegistroNuevo } })
   }
 
   getSemaforo(elemento: any, contratacionProyecto: any) {
@@ -52,17 +53,17 @@ export class TableCaracteristicasEspecialesComponent implements OnInit {
         contratacionProyecto['tieneMonitoreoWeb'] !== undefined ||
         contratacionProyecto['esReasignacion'] !== undefined ||
         contratacionProyecto['esAvanceobra'] !== undefined ||
-        contratacionProyecto['porcentajeAvanceObra'] !== undefined || 
+        contratacionProyecto['porcentajeAvanceObra'] !== undefined ||
         contratacionProyecto['requiereLicencia'] !== undefined ||
         contratacionProyecto['numeroLicencia'] !== undefined ||
-        contratacionProyecto['licenciaVigente'] != undefined || 
+        contratacionProyecto['licenciaVigente'] != undefined ||
         contratacionProyecto['fechaVigencia'] !== undefined
-        
-      ) 
+
+      )
       {
         caracteristicasconalgo = true;
       }
-  
+
       if (
         contratacionProyecto['tieneMonitoreoWeb'] === undefined ||
         contratacionProyecto['esReasignacion'] === undefined ||
@@ -72,15 +73,15 @@ export class TableCaracteristicasEspecialesComponent implements OnInit {
         (contratacionProyecto['requiereLicencia'] === true && contratacionProyecto['licenciaVigente'] === undefined) ||
         (contratacionProyecto['licenciaVigente'] === true && contratacionProyecto['numeroLicencia'] === undefined) ||
         (contratacionProyecto['licenciaVigente'] === true && contratacionProyecto['fechaVigencia'] === undefined) ||
-  
+
         (contratacionProyecto['esReasignacion'] === false && contratacionProyecto['requiereLicencia'] === undefined) ||
         (contratacionProyecto['esAvanceobra'] === false && contratacionProyecto['requiereLicencia'] === undefined)
-      ) 
+      )
       {
         registroCompleto = false;
       }
     }
-    
+
 
     let respuesta: string = '';
 

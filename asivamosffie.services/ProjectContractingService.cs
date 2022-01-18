@@ -733,6 +733,8 @@ namespace asivamosffie.services
 
                 Contratacion contratacionValidarRegistro = _context.Contratacion.Where(r => r.ContratacionId == contratacion.ContratacionId).Include(r => r.ContratacionProyecto).FirstOrDefault();
                 contratacionValidarRegistro.RegistroCompleto = ValidarEstado(contratacionValidarRegistro);
+                contratacionValidarRegistro.UsuarioModificacion = termLimit.Usuario;
+                contratacionValidarRegistro.FechaModificacion = DateTime.Now;
 
                 _context.SaveChanges();
 
@@ -1027,8 +1029,10 @@ namespace asivamosffie.services
                     .FirstOrDefault();
 
                 contratacion.RegistroCompleto = ValidarEstado(contratacion);
-
+                contratacion.FechaModificacion = DateTime.Now;
+                contratacion.UsuarioModificacion = pContratacionProyecto.UsuarioCreacion;
                 _context.SaveChanges();
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -1154,7 +1158,10 @@ namespace asivamosffie.services
                                 .ThenInclude(r => r.ComponenteUso).FirstOrDefault();
 
                 contratacion.RegistroCompleto = ValidarEstado(contratacion);
+                contratacion.UsuarioModificacion = pContratacionProyecto.UsuarioCreacion;
+                contratacion.FechaModificacion = DateTime.Now;
                 _context.SaveChanges();
+
                 return new Respuesta
                 {
                     IsSuccessful = true,

@@ -21,6 +21,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   idSolicitud: number;
   contratacionProyecto: ContratacionProyecto;
   municipio: string;
+  esRegistroNuevo: boolean;
   tipoIntervencion: string;
   addressForm = this.fb.group([]);
   fasesSelect: Dominio[] = [];
@@ -256,7 +257,10 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
               grupoAportante.get( 'fasesSelect' ).setValue( listaFase );
               this.aportantes.push(grupoAportante);
             });
-
+            if(!this.esRegistroNuevo){
+              this.estaEditando = true;
+              this.addressForm.markAllAsTouched();
+            }
           }, 1300);
         });
 
@@ -293,7 +297,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       const hasDeposits = source.controlRecurso && source.controlRecurso.length > 0;
 
       let sumResources = 0;
-      if(hasDeposits){        
+      if(hasDeposits){
         source.controlRecurso.forEach(element => {
           sumResources = sumResources + Number(element.valorAporte);
         });
@@ -371,6 +375,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       return;
     };
     this.municipio = this.router.getCurrentNavigation().extras.state.municipio;
+    this.esRegistroNuevo = this.router.getCurrentNavigation().extras.state.esRegistroNuevo;
   };
 
   addUso(j: number, i: number) {

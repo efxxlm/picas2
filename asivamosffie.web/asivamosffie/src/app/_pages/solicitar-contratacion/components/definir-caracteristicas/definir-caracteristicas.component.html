@@ -5,6 +5,16 @@
       mat-button
       color="primary"
       class="btn-regresar"
+      *ngIf="esRegistroNuevo == true"
+    >
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+    </a>
+    <a
+      [routerLink]="['/solicitarContratacion/verDetalleEditarSolicitud/', idSolicitud]"
+      mat-button
+      color="primary"
+      class="btn-regresar"
+      *ngIf="!esRegistroNuevo"
     >
       <img src="assets/img/icon/regresar.svg" alt="Regresar" />
     </a>

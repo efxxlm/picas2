@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 export class TableFuentesYUsosComponent implements OnInit {
 
   @Input() contratacion: Contratacion
+  @Input() esRegistroNuevo: boolean
 
   displayedColumns: string[] = [
     'tipoInterventor',
@@ -37,7 +38,7 @@ export class TableFuentesYUsosComponent implements OnInit {
   };
 
   definirFuentes ( id: number, municipio: any ) {
-    this.routes.navigate( [ '/solicitarContratacion/definir-fuentes', id ], { state: {municipio: municipio} } )
+    this.routes.navigate( [ '/solicitarContratacion/definir-fuentes', id ], { state: {municipio: municipio, esRegistroNuevo: this.esRegistroNuevo} } )
   };
 
   getSemaforo ( elemento: any[] ) {

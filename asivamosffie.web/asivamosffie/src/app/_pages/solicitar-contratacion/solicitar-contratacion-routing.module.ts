@@ -22,6 +22,10 @@ const routes: Routes = [
     component: ExpansionPanelDetallarSolicitudComponent
   },
   {
+    path: 'verDetalleEditarSolicitud/:id',
+    component: ExpansionPanelDetallarSolicitudComponent
+  },
+  {
     path: 'definir-caracteristicas/:id',
     component: DefinirCaracteristicasComponent
   },

@@ -18,6 +18,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
   contratacionProyecto: ContratacionProyecto;
   tipoIntervencion: string;
   municipio: string;
+  esRegistroNuevo: boolean;
 
   addressForm: FormGroup = this.fb.group({
     completada: [ null, Validators.required ],
@@ -32,7 +33,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
 
   idSolicitud: number;
   estaEditando = false;
-  
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -76,9 +77,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
 
           this.idSolicitud = this.contratacionProyecto.contratacionId;
 
-          console.log(this.contratacionProyecto);
-
-          if ( this.contratacionProyecto.tieneMonitoreoWeb !== undefined || this.contratacionProyecto.esReasignacion !== undefined ) {
+          if ( this.contratacionProyecto.tieneMonitoreoWeb !== undefined || this.contratacionProyecto.esReasignacion !== undefined || !this.esRegistroNuevo) {
             this.estaEditando = true;
             this.addressForm.markAllAsTouched();
           }
@@ -97,7 +96,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
     }
 
     this.municipio = this.router.getCurrentNavigation().extras.state.municipio;
-
+    this.esRegistroNuevo = this.router.getCurrentNavigation().extras.state.esRegistroNuevo;
   }
 
   openDialog(modalTitle: string, modalText: string) {

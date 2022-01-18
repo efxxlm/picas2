@@ -23,10 +23,10 @@
                     Proyectos de la solicitud
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <button 
-                type="button" 
-                (click)="tablaProyectos.cargarRegistros()" 
-                id="btnTablaProyectos" 
+            <button
+                type="button"
+                (click)="tablaProyectos.cargarRegistros()"
+                id="btnTablaProyectos"
                 style="display: none;"
                 ></button>
             <app-table-proyectos-de-la-solicitud
@@ -40,16 +40,17 @@
                     Datos del contratista
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <button 
-                type="button" 
-                (click)="tablaContratistas.cargarRegistros()" 
-                id="btnTablaContratistas" 
+            <button
+                type="button"
+                (click)="tablaContratistas.cargarRegistros()"
+                id="btnTablaContratistas"
                 style="display: none;"
                 >
             </button>
             <app-tabla-resultados-contratistas
-                #tablaContratistas 
+                #tablaContratistas
                 [contratacion]="contratacion"
+                [esRegistroNuevo]="esRegistroNuevo"
                 (guardar)="onSubmit()"
                 >
             </app-tabla-resultados-contratistas>
@@ -60,16 +61,18 @@
                     Características técnicas y jurídicas especiales
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <button 
-                type="button" 
-                (click)="tablacaracteristicas.cargarRegistros()" 
-                id="btnTablacaracteristicas" 
+            <button
+                type="button"
+                (click)="tablacaracteristicas.cargarRegistros()"
+                id="btnTablacaracteristicas"
                 style="display: none;"
                 >
             </button>
             <app-table-caracteristicas-especiales
-                #tablacaracteristicas 
-                [contratacion]="contratacion">
+                #tablacaracteristicas
+                [contratacion]="contratacion"
+                [esRegistroNuevo]="esRegistroNuevo"
+                >
             </app-table-caracteristicas-especiales>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
@@ -78,17 +81,18 @@
                     Consideraciones especiales
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <button 
-                type="button" 
-                (click)="consideraciones.cargarRegistros()" 
-                id="btnconsideraciones" 
+            <button
+                type="button"
+                (click)="consideraciones.cargarRegistros()"
+                id="btnconsideraciones"
                 style="display: none;"
                 >
             </button>
             <app-consideraciones-especiales
-                #consideraciones 
+                #consideraciones
                 [contratacion]="contratacion"
                 (guardar)="onSubmit()"
+                [esRegistroNuevo]="esRegistroNuevo"
             >
             </app-consideraciones-especiales>
         </mat-expansion-panel>
@@ -98,16 +102,17 @@
                     Fuentes y usos
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <button 
-                type="button" 
-                (click)="fuentesUsos.cargarRegistros()" 
-                id="btnFuentesUsos" 
+            <button
+                type="button"
+                (click)="fuentesUsos.cargarRegistros()"
+                id="btnFuentesUsos"
                 style="display: none;"
                 >
             </button>
             <app-table-fuentes-y-usos
-                #fuentesUsos 
+                #fuentesUsos
                 [contratacion]="contratacion"
+                [esRegistroNuevo]="esRegistroNuevo"
                 >
             </app-table-fuentes-y-usos>
         </mat-expansion-panel>
@@ -115,14 +120,14 @@
             <mat-expansion-panel-header class="expansion-style--header">
               <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAcordeon( 'plazoEjecucion' ) || 'sin-diligenciar'">
                 Plazo de ejecución
-              </mat-panel-title>        
-            </mat-expansion-panel-header>   
+              </mat-panel-title>
+            </mat-expansion-panel-header>
             <mat-card class="border" style="margin-top: 3em;">
                 <mat-card-content class="mt-1em">
-                    <app-plazo-ejecucion  (guardar)="onSubmitTerm($event)"             
-                    [tipoSolicitudCodigo]="contratacion.tipoSolicitudCodigo" [plazoProyecto]="plazoProyecto" [plazoContratacion]="contratacion.plazoContratacion"></app-plazo-ejecucion>   
+                    <app-plazo-ejecucion  (guardar)="onSubmitTerm($event)"
+                    [tipoSolicitudCodigo]="contratacion.tipoSolicitudCodigo" [plazoProyecto]="plazoProyecto" [plazoContratacion]="contratacion.plazoContratacion"></app-plazo-ejecucion>
                 </mat-card-content>
-            </mat-card>          
-            </mat-expansion-panel>  
+            </mat-card>
+            </mat-expansion-panel>
     </mat-accordion>
 </div>
