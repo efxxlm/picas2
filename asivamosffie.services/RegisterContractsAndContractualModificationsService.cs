@@ -150,6 +150,16 @@ namespace asivamosffie.services
                                 sesionComiteSolicitud.EstadoRegistro = true;
                                 sesionComiteSolicitud.EstadoDelRegistro = "Completo";
                             }
+                            if (novedadContractual.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Novedad_Cancelada)
+                            {
+                                NovedadContractualRegistroPresupuestal nvr = _context.NovedadContractualRegistroPresupuestal.Where(r => r.NovedadContractualId == novedadContractual.NovedadContractualId && r.Eliminado != true && r.EstadoSolicitudCodigo == "7").FirstOrDefault();
+                                if (nvr != null)
+                                    if (string.IsNullOrEmpty(nvr.NumeroDrp))
+                                    {
+                                        sesionComiteSolicitud.Eliminado = true;
+                                        break;
+                                    }
+                            }
                             sesionComiteSolicitud.EstadoCodigo = novedadContractual.EstadoCodigo;
 
                             break;

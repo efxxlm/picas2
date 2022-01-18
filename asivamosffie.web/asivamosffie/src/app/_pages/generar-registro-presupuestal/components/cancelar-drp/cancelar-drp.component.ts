@@ -20,6 +20,9 @@ export class CancelarDrpComponent implements OnInit {
   tipo: any;
   fecha:any;
   nSolicitud: any;
+  esNovedad: any;
+  novedadContractualRegistroPresupuestalId: any;
+
   estaEditando = false;
   constructor(public dialog: MatDialog,private fb: FormBuilder,private router: Router,
      private disponibilidadServices:DisponibilidadPresupuestalService) { }
@@ -73,7 +76,12 @@ export class CancelarDrpComponent implements OnInit {
   onSubmit() {
     this.estaEditando = true;
     this.addressForm.markAllAsTouched();
-    let DisponibilidadPresupuestalObservacion={DisponibilidadPresupuestalId:this.id,Observacion:this.addressForm.value.objeto};
+    let DisponibilidadPresupuestalObservacion={
+      DisponibilidadPresupuestalId:this.id,
+      Observacion:this.addressForm.value.objeto,
+      EsNovedad: this.esNovedad,
+      NovedadContractualRegistroPresupuestalId: this.novedadContractualRegistroPresupuestalId
+    };
     this.disponibilidadServices.SetCancelDDR(DisponibilidadPresupuestalObservacion).subscribe(listas => {
       console.log(listas);
       this.dialog.closeAll();

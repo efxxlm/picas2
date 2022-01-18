@@ -41,8 +41,8 @@ export class GestionarDrpComponent implements OnInit {
   dataSource = [];
   detailavailabilityBudget: any;
   listaComponentesUsoAportante:any[] = [];
-  esNovedad;
-  novedadId;
+  esNovedad: any;
+  novedadId: any;
   esLiberacion: boolean = false;
 
   constructor(public dialog: MatDialog, private disponibilidadServices: DisponibilidadPresupuestalService,
@@ -156,6 +156,9 @@ export class GestionarDrpComponent implements OnInit {
     dialogRef.componentInstance.tipo = this.detailavailabilityBudget.tipoSolicitudEspecial;
     dialogRef.componentInstance.nSolicitud = this.detailavailabilityBudget.numeroSolicitud;
     dialogRef.componentInstance.fecha = this.detailavailabilityBudget.fechaSolicitud;
+    dialogRef.componentInstance.esNovedad = this.esNovedad;
+    dialogRef.componentInstance.novedadContractualRegistroPresupuestalId = this.novedadId;
+
     dialogRef.afterClosed().subscribe(result => {
       this.router.navigate(["/generarRegistroPresupuestal"], {});
     });

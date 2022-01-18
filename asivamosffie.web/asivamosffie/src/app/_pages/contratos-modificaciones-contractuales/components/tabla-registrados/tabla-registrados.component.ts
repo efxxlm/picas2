@@ -23,7 +23,12 @@ export class TablaRegistradosComponent implements OnInit {
   estadoCodigos = {
     registrado: '6',
     registradoNovedad: '26',
-    cancelado: '23'
+    cancelado: '23',
+    canceladoNovedad: '14'
+  };
+  estadoCodigosTipoSolicitud = {
+    contratacion: '2',
+    novedadContractual: '11'
   };
 
   constructor ( private routes: Router,
@@ -40,7 +45,7 @@ export class TablaRegistradosComponent implements OnInit {
 
         for ( let contrataciones of resp ) {
           if(!this.esRegistrado){
-            if ( contrataciones.estadoCodigo === this.estadoCodigos.cancelado ) {
+            if ( (contrataciones.estadoCodigo === this.estadoCodigos.cancelado && contrataciones.tipoSolicitudCodigo === this.estadoCodigosTipoSolicitud.contratacion) || (contrataciones.estadoCodigo === this.estadoCodigos.canceladoNovedad && contrataciones.tipoSolicitudCodigo === this.estadoCodigosTipoSolicitud.novedadContractual) ) {
               this.dataTable.push( contrataciones );
             };
           }else{
