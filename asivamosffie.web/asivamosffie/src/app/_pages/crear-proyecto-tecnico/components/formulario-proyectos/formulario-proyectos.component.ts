@@ -297,9 +297,11 @@ export class FormularioProyectosComponent implements OnInit {
           respuesta => {
             this.proyecto = respuesta;
             if (
-              this.proyecto.estadoProyectoObraCodigo != '1' ||
-              this.proyecto.estadoProyectoInterventoriaCodigo != '1'
+              (this.proyecto.estadoProyectoObraCodigo === '1' || this.proyecto.estadoProyectoObraCodigo === '9') &&
+              (this.proyecto.estadoProyectoInterventoriaCodigo === '1' || this.proyecto.estadoProyectoInterventoriaCodigo === '9')
             ) {
+              this.bitPuedoEditar = true;
+            }else{
               this.bitPuedoEditar = false;
             }
 

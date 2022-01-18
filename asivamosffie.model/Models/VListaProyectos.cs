@@ -16,5 +16,7 @@ namespace asivamosffie.model.Models
         public string EstadoProyectoInterventoria { get; set; }
         public DateTime? Fecha { get; set; }
         public string EstadoRegistro { get; set; }
+        public string CodigoEstadoProyectoObra { get; set; }
+        public string CodigoEstadoProyectoInterventoria { get; set; }
     }
 }

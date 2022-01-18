@@ -21,6 +21,7 @@ export interface RegistrosCargados {
     estadoj:string,
     estadop:string,
     gestion:any,
+    proyectoDisponible: boolean
 }
 
 @Component({
@@ -32,7 +33,7 @@ export class TablaProyectosTecnicoComponent {
   //no se va a usar estado juridico
   //displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadoj','estadop','gestion'];
 
-  displayedColumns: string[] = 
+  displayedColumns: string[] =
   [
     'fecha',
     'departamento',
@@ -69,7 +70,7 @@ export class TablaProyectosTecnicoComponent {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText,siNoBoton:true }
-    });   
+    });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
       if(result === true)
@@ -99,8 +100,8 @@ export class TablaProyectosTecnicoComponent {
           },
           () => {
             // console.log('terminó');
-          });    
-      }           
+          });
+      }
     });
   }
 
@@ -113,14 +114,26 @@ export class TablaProyectosTecnicoComponent {
       let datos:RegistrosCargados[]=[];
       console.log(respuesta);
       respuesta.forEach(element => {
-        datos.push({fecha:element.fecha
-          ,id:element.proyectoId,departamento:element.departamento,municipio:element.municipio,
-          estado:element.estadoRegistro,estadoj:element.estadoJuridicoPredios,estadop:element.estadoProyecto,
-          institucion:element.institucionEducativa,sede:element.sede,
-          gestion:{id:element.proyectoId,estadoProyectoObra:element.estadoProyectoObra,
-            estadoProyectoInterventoria:element.estadoProyectoInterventoria},
+        datos.push({
+          fecha:element.fecha,
+          id:element.proyectoId,
+          departamento:element.departamento,
+          municipio:element.municipio,
+          estado:element.estadoRegistro,
+          estadoj:element.estadoJuridicoPredios,
+          estadop:element.estadoProyecto,
+          institucion:element.institucionEducativa,
+          sede:element.sede,
+          gestion:
+          {
+            id:element.proyectoId,
+            estadoProyectoObra:element.estadoProyectoObra,
+            estadoProyectoInterventoria:element.estadoProyectoInterventoria
+          },
+          proyectoDisponible: (element.codigoEstadoProyectoInterventoria === "9" || element.codigoEstadoProyectoInterventoria === "1") && (element.codigoEstadoProyectoObra === "9" || element.codigoEstadoProyectoObra === "1") ? true : false
         });
       });
+
       this.dataSource=new MatTableDataSource<RegistrosCargados>(datos);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -139,7 +152,7 @@ export class TablaProyectosTecnicoComponent {
         return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
       };
       this.paginator._intl.previousPageLabel = 'Anterior';
-    }, 
+    },
     err => {
       let mensaje: string;
       console.log(err);
@@ -161,18 +174,18 @@ export class TablaProyectosTecnicoComponent {
 
   ver(gestion:any, estado: boolean = false)
   {
-    console.log(gestion);    
+    console.log(gestion);
     this.router.navigate(['/crearProyecto/crearProyecto', { id: gestion, estado: estado}]);
   }
 
   eliminar(gestion:any)
   {
-    console.log(gestion);  
+    console.log(gestion);
     this.proyectoid=gestion;
-    this.openDialogSiNo('', "<b>¿Está seguro de eliminar este registro?</b>",);  
-    
+    this.openDialogSiNo('', "<b>¿Está seguro de eliminar este registro?</b>",);
+
   }
-  
+
   enviar(gestion:any)
   {
     console.log(gestion);
