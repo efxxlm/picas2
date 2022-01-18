@@ -1058,6 +1058,12 @@ namespace asivamosffie.services
 
                 pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
                 pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
+                if(pDisponibilidadPresObservacion.EsNovedad != true)
+                {
+                    pDisponibilidadPresObservacion.NovedadContractualRegistroPresupuestalId = null;
+                    pDisponibilidadPresObservacion.EsNovedad = false;
+                }
+
                 _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
                 _context.SaveChanges();
 
