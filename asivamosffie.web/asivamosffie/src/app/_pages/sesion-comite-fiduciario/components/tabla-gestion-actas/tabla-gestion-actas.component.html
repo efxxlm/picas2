@@ -30,10 +30,10 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
             <td mat-cell *matCellDef="let element">
                 <div class="info-text completo" *ngIf="element.registroCompletoNombre === 'Completo'">
-                    {{element.registroCompletoNombre}}    
+                    {{element.registroCompletoNombre}}
                 </div>
                 <div class="info-text sin-diligenciar" *ngIf="element.registroCompletoNombre === 'Incompleto'">
-                    {{element.registroCompletoNombre}}    
+                    {{element.registroCompletoNombre}}
                 </div>
             </td>
         </ng-container>
@@ -46,14 +46,14 @@
                     Crear acta</a>
 
                 <a *ngIf="element.registroCompleto && element.estadoActa == 'En proceso de aprobación'"
-                    [routerLink]="['crearActa', element.id]" mat-raised-button color="accent" class="btn-table">
+                    [routerLink]="['verDetalleActa', element.id]" mat-raised-button color="accent" class="btn-table">
                     Ver detalle</a>
 
-                <a *ngIf="!element.registroCompleto && element.estadoActa == 'Devuelta'" [routerLink]="['crearActa', element.id]" mat-raised-button
+                <a *ngIf="!element.registroCompleto && element.estadoActa == 'Devuelta'" [routerLink]="['verDetalleEditarActa', element.id]" mat-raised-button
                     color="accent" class="btn-table">
                     Ver detalle/Editar</a>
 
-                <a [routerLink]="['crearActa', element.id]" mat-raised-button
+                <a [routerLink]="['verDetalleEditarActa', element.id]" mat-raised-button
                     *ngIf="!element.registroCompleto && (element.estadoActa == 'Sin Acta') && element.estadoActaCodigo === '0'" color="accent"
                     class="btn-table">
                     Ver detalle/editar</a>
@@ -65,7 +65,7 @@
                     Enviar para aprobación
                 </button>
 
-                <a [routerLink]="['crearActa', element.id]" mat-raised-button
+                <a [routerLink]="['verDetalleEditarActa', element.id]" mat-raised-button
                     *ngIf="element.registroCompleto && (element.estadoActa == 'Sin Acta' || element.estadoActa == 'Devuelta')"
                     color="accent"
                     class="btn-table">

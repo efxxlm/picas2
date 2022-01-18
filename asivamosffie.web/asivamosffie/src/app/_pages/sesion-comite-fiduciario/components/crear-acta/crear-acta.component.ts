@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
@@ -25,6 +25,8 @@ export class CrearActaComponent implements OnInit {
   proposicionesCompletos: boolean = false;
   solicitudesCompletas: boolean = false;
   listaComentarios: SesionComentario[] = []
+  esRegistroNuevo: boolean;
+  esVerDetalle: boolean;
 
   constructor(
     public dialog: MatDialog,
@@ -33,9 +35,23 @@ export class CrearActaComponent implements OnInit {
     private commonService: CommonService,
     private router: Router,
     private technicalCommitteeSessionService: TechnicalCommitteSessionService,
-
   ) {
-
+    this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+      if ( urlSegment.path === 'crearActa' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = true;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleEditarActa' ) {
+          this.esVerDetalle = false;
+          this.esRegistroNuevo = false;
+          return;
+      }
+      if ( urlSegment.path === 'verDetalleActa' ) {
+          this.esVerDetalle = true;
+          return;
+      }
+    });
   }
 
   callChildren(elements: NodeListOf<HTMLElement>) {
@@ -116,7 +132,7 @@ export class CrearActaComponent implements OnInit {
     let cantidadVacios = 0;
 
      if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario && this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length > 0) {
-      
+
       this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.forEach(cs => {
 
         if (cs.registroCompletoActa === undefined){
@@ -129,7 +145,7 @@ export class CrearActaComponent implements OnInit {
 
       if ( this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length === cantidadCompletos ){
         this.solicitudesCompletas = true;
-      }else 
+      }else
       if ( this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length === cantidadVacios ){
         this.solicitudesCompletas = null;
       }else{
@@ -147,7 +163,7 @@ export class CrearActaComponent implements OnInit {
         if (t.registroCompletoActa === true)
           this.temasCompletos = true;
        });
-  
+
        this.listaTemas.forEach(t => {
         if (t.registroCompletoActa === false)
           this.temasCompletos = false;
@@ -155,14 +171,14 @@ export class CrearActaComponent implements OnInit {
     }else{
       this.temasCompletos = true;
     }
-    
+
 
     if (this.listaProposiciones && this.listaProposiciones.length > 0){
       this.listaProposiciones.forEach(p => {
         if (p.registroCompletoActa === true)
           this.proposicionesCompletos = true;
       })
-  
+
       this.listaProposiciones.forEach(p => {
         if (p.registroCompletoActa === false)
           this.proposicionesCompletos = false;
@@ -170,7 +186,7 @@ export class CrearActaComponent implements OnInit {
     }else{
       this.proposicionesCompletos = true;
     }
-    
+
 
   }
 

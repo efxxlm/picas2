@@ -23,7 +23,7 @@ export class FormOtrosTemasComponent implements OnInit {
   @Input() sesionComiteTema: SesionComiteTema;
   @Input() listaMiembros: SesionParticipante[];
   @Input() fechaComite: Date;
-
+  @Input() esRegistroNuevo: boolean;
   @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
   listaResponsables: Dominio[] = [];
@@ -95,13 +95,11 @@ export class FormOtrosTemasComponent implements OnInit {
 
           // this.estaEditando = true;
           // this.addressForm.markAllAsTouched();
-          
           resolve();
 
         })
 
     });
-
 
   }
 
@@ -309,7 +307,7 @@ export class FormOtrosTemasComponent implements OnInit {
             else
               this.cantidadNoAprobado++;
           })
-      
+
           if (this.cantidadNoAprobado == 0){
             this.resultadoVotacion = 'Aprobó'
             this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteFiduciario)
@@ -327,14 +325,19 @@ export class FormOtrosTemasComponent implements OnInit {
 
         let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteTema.estadoTemaCodigo)
 
-        this.addressForm.get('observaciones').setValue(this.sesionComiteTema.observaciones),
-          this.addressForm.get('estadoSolicitud').setValue(estadoSeleccionado),
-          this.addressForm.get('observacionesDecision').setValue(this.sesionComiteTema.observacionesDecision),
-          this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteTema.generaCompromiso),
-          this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteTema.cantCompromisos),
+          this.addressForm.get('observaciones').setValue(this.sesionComiteTema.observaciones);
+          this.addressForm.get('estadoSolicitud').setValue(estadoSeleccionado);
+          this.addressForm.get('observacionesDecision').setValue(this.sesionComiteTema.observacionesDecision);
+          this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteTema.generaCompromiso);
+          this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteTema.cantCompromisos);
 
-          this.estaEditando = true;
-          this.addressForm.markAllAsTouched();
+          if(!this.esRegistroNuevo){
+            this.estaEditando = true;
+            this.addressForm.markAllAsTouched();
+          }
+
+          //this.estaEditando = true;
+          //this.addressForm.markAllAsTouched();
 
           this.commonService.listaUsuarios().then((respuesta) => {
 

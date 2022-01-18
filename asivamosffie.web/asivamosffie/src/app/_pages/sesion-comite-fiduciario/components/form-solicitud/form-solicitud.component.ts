@@ -23,6 +23,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   @Input() fechaMaxima: any;
   @Input() fechaComite: Date;
   @Input() EstadosolicitudActa: any;
+  @Input() esRegistroNuevo: boolean;
 
   @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
@@ -356,8 +357,10 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteSolicitud.cantCompromisosFiduciario)
     this.addressForm.get('desarrolloSolicitud').setValue(this.sesionComiteSolicitud.desarrolloSolicitudFiduciario)
 
-    this.estaEditando = true;
-    this.addressForm.markAllAsTouched();
+    if(!this.esRegistroNuevo){
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
+    }
 
     this.commonService.listaUsuarios().then((respuesta) => {
 
@@ -386,8 +389,11 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     if (this.sesionComiteSolicitud.tipoSolicitudCodigo == TiposSolicitud.AperturaDeProcesoDeSeleccion) {
       this.justificacion = this.sesionComiteSolicitud.procesoSeleccion.justificacion
     }
-    this.estaEditando = true;
-    this.addressForm.markAllAsTouched();
+
+    if(!this.esRegistroNuevo){
+      this.estaEditando = true;
+      this.addressForm.markAllAsTouched();
+    }
   }
 
   Observaciones(elemento: SesionComiteSolicitud) {

@@ -30,6 +30,14 @@ const routes: Routes = [
     component: CrearActaComponent
   },
   {
+    path: 'verDetalleEditarActa/:id',
+    component: CrearActaComponent
+  },
+  {
+    path: 'verDetalleActa/:id',
+    component: CrearActaComponent
+  },
+  {
     path: 'verificarCumplimiento/:id',
     component: TablaVerificarCumplimientosComponent
   },

@@ -5,7 +5,14 @@
     </a>
   </div>
   <div class="text-center">
-    <h1 class="title-menu--h1">Crear acta {{ objetoComiteTecnico.numeroComite }}</h1>
+    <h1 class="title-menu--h1">
+      <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+          Ver detalle acta {{ objetoComiteTecnico.numeroComite }}
+      </ng-container>
+      <ng-template #noEsVerDetalle>
+          {{ esRegistroNuevo === true ? 'Crear' : 'Ver detalle/Editar' }} acta {{ objetoComiteTecnico.numeroComite }}
+      </ng-template>
+    </h1>
   </div>
   <p>
     <b class="sub-text flex-date">{{ objetoComiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }}</b>
@@ -71,6 +78,7 @@
             [style.pointer-events]="getStyle()"
             [fechaComite]="objetoComiteTecnico.fechaOrdenDia"
             [EstadosolicitudActa]="objetoComiteTecnico.estadoActaCodigo"
+            [esRegistroNuevo]="esRegistroNuevo"
           >
           </app-form-solicitud>
         </mat-expansion-panel>
@@ -109,6 +117,7 @@
             (validar)="habilitar($event)"
             [style.pointer-events]="getStyle()"
             [fechaComite]="objetoComiteTecnico.fechaOrdenDia"
+            [esRegistroNuevo]="esRegistroNuevo"
           >
           </app-form-otros-temas>
         </mat-expansion-panel>
@@ -153,6 +162,7 @@
             (validar)="habilitar($event)"
             [style.pointer-events]="getStyle()"
             [fechaComite]="objetoComiteTecnico.fechaOrdenDia"
+            [esRegistroNuevo]="esRegistroNuevo"
           >
           </app-form-otros-temas>
         </mat-expansion-panel>
