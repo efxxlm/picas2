@@ -971,7 +971,7 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> SetCancelRegistroPresupuestal(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion
+        public async Task<Respuesta> SetCancelRegistroPresupuestal(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion, bool esDrp
             , string urlDestino, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
             var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId);
@@ -1016,6 +1016,16 @@ namespace asivamosffie.services
                     DisponibilidadCancelar.FechaModificacion = DateTime.Now;
                     DisponibilidadCancelar.UsuarioModificacion = pDisponibilidadPresObservacion.UsuarioCreacion;
                     DisponibilidadCancelar.EstadoSolicitudCodigo = estado.ToString();
+                    if (esDrp)
+                    {
+                        DisponibilidadCancelar.NumeroDrp = string.IsNullOrEmpty(DisponibilidadCancelar.NumeroDrp) ? "-" : DisponibilidadCancelar.NumeroDrp;
+                    }
+                    else
+                    {
+                        DisponibilidadCancelar.NumeroDrp = null;
+                        DisponibilidadCancelar.FechaDrp = null;
+                    }
+
                     numeroSolicitud = DisponibilidadCancelar.NumeroSolicitud;
                 }
                 //es novedad

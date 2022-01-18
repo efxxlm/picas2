@@ -33,7 +33,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateFinancialFundingGestion(GestionFuenteFinanciacion pDisponibilidadPresObservacion);
         Task<Respuesta> DeleteFinancialFundingGestion(int pIdDisponibilidadPresObservacion, string usuarioModificacion);
         Task<Respuesta> GetFinancialFundingGestionByDDPP(int pIdDisponibilidadPresupuestalProyecto, string usuarioModificacion);
-        Task<Respuesta> SetCancelRegistroPresupuestal(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion
+        Task<Respuesta> SetCancelRegistroPresupuestal(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion, bool esDrp
             , string urlDestino, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
         Task<Respuesta> CreateDRP(int id, string usuarioModificacion, bool esNovedad, int RegistroPresupuestalId, string urlDestino, string mailServer, int mailPort, bool enableSSL, string password, string sender);
         Task<EstadosDisponibilidad> GetListGenerarRegistroPresupuestal();
