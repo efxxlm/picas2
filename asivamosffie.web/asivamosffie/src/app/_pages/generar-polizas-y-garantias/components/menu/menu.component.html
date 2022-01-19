@@ -59,7 +59,7 @@
                     Con aprobación de pólizas
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-tabla-con-aprobacion-de-polizas (estadoSemaforo3)="estadoAcordeon3 = $event"></app-tabla-con-aprobacion-de-polizas>
+            <app-tabla-con-aprobacion-de-polizas (estadoSemaforo3)="estadoAcordeon3 = $event" [esCancelada]="false"></app-tabla-con-aprobacion-de-polizas>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
           <mat-expansion-panel-header class="expansion-style--header">
@@ -67,7 +67,7 @@
                   Cancelado por generar
               </mat-panel-title>
           </mat-expansion-panel-header>
-          <app-tabla-con-aprobacion-de-polizas (estadoSemaforo3)="estadoAcordeon3 = $event"></app-tabla-con-aprobacion-de-polizas>
+          <app-tabla-con-aprobacion-de-polizas (estadoSemaforo3)="estadoAcordeon3 = $event" [esCancelada]= "true"></app-tabla-con-aprobacion-de-polizas>
       </mat-expansion-panel>
     </mat-accordion>
 </section>

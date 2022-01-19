@@ -70,7 +70,7 @@ namespace asivamosffie.services
 
                         return Return;
                     }
-                    return await _context.VGestionarGarantiasPolizas.Where(v => v.EstadoPolizaCodigo == pEstadoCodigo && v.TipoSolicitudCodigoContratacion == ConstanCodigoEstadoSolicitudContratacion.Cancelado_por_generacion_presupuestal).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
+                    return await _context.VGestionarGarantiasPolizas.Where(v => v.EstadoPolizaCodigo == pEstadoCodigo && v.TipoSolicitudCodigoContratacion != ConstanCodigoEstadoSolicitudContratacion.Cancelado_por_generacion_presupuestal).OrderByDescending(r => r.ContratoPolizaId).ToListAsync();
                 }
             }
         }

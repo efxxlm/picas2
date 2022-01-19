@@ -15,6 +15,7 @@ import { EstadoPolizaCodigo } from 'src/app/_interfaces/gestionar-polizas-garant
 export class TablaConAprobacionDePolizasComponent implements OnInit {
 
     @Output() estadoSemaforo3 = new EventEmitter<string>();
+    @Input() esCancelada: boolean;
     estadoPolizaCodigo = EstadoPolizaCodigo;
     displayedColumns: string[] = ['fechaFirma', 'numeroContrato', 'tipoSolicitud', 'estadoPoliza', 'contratoId'];
     dataSource = new MatTableDataSource();
@@ -23,22 +24,23 @@ export class TablaConAprobacionDePolizasComponent implements OnInit {
     dataTable: any[] = [];
 
     constructor( private polizaSvc: PolizaGarantiaService) {
-        this.polizaSvc.getListGrillaContratoGarantiaPoliza( this.estadoPolizaCodigo.conAprobacion , false)
-            .subscribe(
-                getListGrillaContratoGarantiaPoliza => {
-                    this.estadoSemaforo3.emit( 'completo' );
 
-                    getListGrillaContratoGarantiaPoliza.forEach( registro => registro.fechaFirma = registro.fechaFirma !== undefined ? ( moment( registro.fechaFirma ).format( 'DD/MM/YYYY' ) ) : '' );
-
-                    this.dataSource = new MatTableDataSource( getListGrillaContratoGarantiaPoliza );
-                    this.dataSource.sort = this.sort;
-                    this.dataSource.paginator = this.paginator;
-                    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-                }
-            );
     }
 
     ngOnInit(): void {
+      this.polizaSvc.getListGrillaContratoGarantiaPoliza( this.estadoPolizaCodigo.conAprobacion , this.esCancelada)
+      .subscribe(
+          getListGrillaContratoGarantiaPoliza => {
+              this.estadoSemaforo3.emit( 'completo' );
+
+              getListGrillaContratoGarantiaPoliza.forEach( registro => registro.fechaFirma = registro.fechaFirma !== undefined ? ( moment( registro.fechaFirma ).format( 'DD/MM/YYYY' ) ) : '' );
+
+              this.dataSource = new MatTableDataSource( getListGrillaContratoGarantiaPoliza );
+              this.dataSource.sort = this.sort;
+              this.dataSource.paginator = this.paginator;
+              this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+          }
+      );
     }
 
     applyFilter ( event: Event ) {
