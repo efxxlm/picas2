@@ -100,7 +100,7 @@ export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
                             }
                             this.contrato = response;
 
-                            if (this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo[0].solicitudPagoListaChequeoRespuesta.length > 0) {
+                            if (this.contrato.solicitudPagoOnly.solicitudPagoListaChequeo[0]?.solicitudPagoListaChequeoRespuesta.length > 0) {
                                 this.registroCompletoAcordeones.registroCompletoDetalleFactura = true;
                             }
 
