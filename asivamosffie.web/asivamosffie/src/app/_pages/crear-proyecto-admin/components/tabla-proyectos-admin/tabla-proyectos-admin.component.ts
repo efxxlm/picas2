@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 export interface RegistrosCargados {
-  id: number;    
+  id: number;
   consecutivo: number;
   estado:string;
   enviado:boolean;
@@ -55,7 +55,7 @@ export class TablaProyectosAdminComponent {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText,siNoBoton:true }
-    });   
+    });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
       if(result === true)
@@ -85,8 +85,8 @@ export class TablaProyectosAdminComponent {
           },
           () => {
             // console.log('terminó');
-          });    
-      }           
+          });
+      }
     });
   }
   inicializar() {
@@ -102,7 +102,7 @@ export class TablaProyectosAdminComponent {
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
       this.paginator._intl.nextPageLabel = 'Siguiente';
       this.paginator._intl.previousPageLabel = 'Anterior';
-    }, 
+    },
     err => {
       let mensaje: string;
       console.log(err);
@@ -118,23 +118,27 @@ export class TablaProyectosAdminComponent {
     //console.log('terminó');
    });
   }
-  
+
   ngOnInit(): void {
     this.inicializar();
   }
 
-  ver(gestion:any)
+  ver(gestion:any, esVerDetalle: boolean)
   {
-    console.log(gestion); 
-    this.router.navigate(['/crearProyectoAdministrativo/crearProyecto', { id: gestion.id}]);   
+    console.log(gestion);
+    if(!esVerDetalle){
+      this.router.navigate(['/crearProyectoAdministrativo/crearProyecto', { id: gestion.id}]);
+    }else{
+      this.router.navigate(['/crearProyectoAdministrativo/verDetalleProyecto', { id: gestion.id}]);
+    }
   }
 
   eliminar(gestion:any)
   {
     this.proyectoid=gestion.id;
-    this.openDialogSiNo('', "<b>¿Está seguro de eliminar este registro?</b>",);   
+    this.openDialogSiNo('', "<b>¿Está seguro de eliminar este registro?</b>",);
   }
-  
+
   enviar(gestion:any)
   {
     this.proyectoid=gestion.id;
@@ -143,10 +147,10 @@ export class TablaProyectosAdminComponent {
       {
         this.inicializar();
         this.openDialog('Su solicitud del proyecto '+gestion.id, "Ha sido enviada para que inicie el tramite <br><b>“Solicitud de documento de disponibilidad presupuestal”.</b>",);
-        
+
       }
     });
-    
+
   }
 
 }

@@ -3,7 +3,7 @@ import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { FuenteFinanciacion, Aportante, ProyectoAdministrativo, Listados, ProjectService, AportanteFuenteFinanciacion } from 'src/app/core/_services/project/project.service';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -13,7 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormularioProyectosComponent implements OnInit {
 
-  /*con este bit controlo los botones, esto lo hago ya sea por el estado del proyecto o en un futuro por el 
+  /*con este bit controlo los botones, esto lo hago ya sea por el estado del proyecto o en un futuro por el
     permiso que tenga el usuario
     */
   bitPuedoEditar = true;
@@ -22,7 +22,8 @@ export class FormularioProyectosComponent implements OnInit {
   listadoFuentes: any[];
   listadoFuentesArr: any[];
   estaEditando = false;
-  lockFormFields: boolean;
+  lockFormFields: boolean = true;
+  esVerDetalle: boolean;
 
   addFont(index: number) {
     // console.log("push");
@@ -37,7 +38,7 @@ export class FormularioProyectosComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      
+
       if (result === true) {
         const index = this.proyectoAdmin.proyectoAdministrativoAportante.indexOf(aportante, 0);
         const index2 = this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.indexOf(key, 0);
@@ -47,7 +48,7 @@ export class FormularioProyectosComponent implements OnInit {
           this.listadoFuentes.push(fuenteRecursosString);
         }
 
-        if (index2 > -1) 
+        if (index2 > -1)
         {
           if (this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion[index2].aportanteFuenteFinanciacionId > 0) {
             this.projectServices.deleteProyectoFont(this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion[index2].aportanteFuenteFinanciacionId).subscribe();
@@ -87,7 +88,6 @@ export class FormularioProyectosComponent implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    console.log(id);
     this.projectServices.ListAdministrativeProject().subscribe(respuesta => {
       if (id != null && id != "") {
         let proyectoadmin1 = respuesta.filter(x => x.proyectoAdminitracionId == id);
@@ -103,9 +103,6 @@ export class FormularioProyectosComponent implements OnInit {
         if (this.proyectoAdmin.enviado) {
           this.bitPuedoEditar = false;
         }
-        console.log(this.proyectoAdmin);
-        this.estaEditando = true;
-        this.lockFormFields = true;
       }
       else {
         let idcontador = 0;
@@ -118,7 +115,9 @@ export class FormularioProyectosComponent implements OnInit {
             aportanteFuenteFinanciacion: [{ valorFuente: null, fuenteRecursosCodigo: null, fuenteFinanciacionId: null, proyectoAdministrativoAportanteId: null, aportanteFuenteFinanciacionId: null }]
           }]
         };
-
+      }
+      if(!this.esVerDetalle){
+        this.estaEditando = true;
         this.lockFormFields = false;
       }
 
@@ -201,7 +200,18 @@ export class FormularioProyectosComponent implements OnInit {
     public dialog: MatDialog,
     public projectServices: ProjectService,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router) {
+      this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
+        if ( urlSegment.path === 'crearProyecto' ) {
+            this.esVerDetalle = false;
+            return;
+        }
+        if ( urlSegment.path === 'verDetalleProyecto' ) {
+            this.esVerDetalle = true;
+            return;
+        }
+      });
+    }
 
   onSubmit() {
     this.estaEditando = true;
@@ -258,12 +268,20 @@ export class FormularioProyectosComponent implements OnInit {
   }
 
   nombreFuente(fuenteFinanciacionId) {
-    const fuenteRecursosString = this.listadoFuentesArr.find(e => e.fuenteFinanciacionId == fuenteFinanciacionId);
-    return fuenteRecursosString.fuenteRecursosString;
+    if(this.listadoFuentesArr != undefined && this.listadoFuentesArr != null){
+      const fuenteRecursosString = this.listadoFuentesArr.find(e => e.fuenteFinanciacionId == fuenteFinanciacionId);
+      return fuenteRecursosString.fuenteRecursosString;
+    }else{
+      return '';
+    }
   }
 
   cofinanciacionIdFuente(fuenteFinanciacionId) {
-    const cofinanciacionId = this.listadoFuentesArr.find(e => e.fuenteFinanciacionId == fuenteFinanciacionId);
-    return cofinanciacionId.aportante ? cofinanciacionId.aportante?.cofinanciacionId : '';
+    if(this.listadoFuentesArr != undefined && this.listadoFuentesArr != null){
+      const cofinanciacionId = this.listadoFuentesArr.find(e => e.fuenteFinanciacionId == fuenteFinanciacionId);
+      return cofinanciacionId.aportante ? cofinanciacionId.aportante?.cofinanciacionId : '';
+    }else{
+      return '';
+    }
   }
 }

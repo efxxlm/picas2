@@ -4,7 +4,7 @@ import { FormularioProyectosComponent } from './components/formulario-proyectos/
 import { CrearProyectoAdminModule } from './crear-proyecto-admin.module';
 import { CrearProyectoAdminComponent } from './components/crear-proyecto-admin/crear-proyecto-admin.component';
 import { CurrencyMaskInputMode, NgxCurrencyModule } from "ngx-currency";
- 
+
 export const customCurrencyMaskConfig = {
     align: "right",
     allowNegative: true,
@@ -21,8 +21,13 @@ export const customCurrencyMaskConfig = {
 };
 
 
-const routes: Routes = [{
+const routes: Routes = [
+{
   path: 'crearProyecto',
+  component: FormularioProyectosComponent
+},
+{
+  path: 'verDetalleProyecto',
   component: FormularioProyectosComponent
 },
 {
