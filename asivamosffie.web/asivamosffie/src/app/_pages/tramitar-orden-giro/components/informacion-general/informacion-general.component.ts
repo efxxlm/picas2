@@ -88,7 +88,15 @@ export class InformacionGeneralComponent implements OnInit {
             //this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( criterio => this.valorTotalFactura += criterio.valorFacturado );
         }
 
-        this.valorTotalFactura = this.solicitudPago?.valorFacturado;
+        if ( this.solicitudPago.tipoSolicitudCodigo === this.listaTipoSolicitud.expensas) {
+          this.valorTotalFactura = this.solicitudPago?.solicitudPagoExpensas[0]?.valorFacturado;
+        }
+        else if (this.solicitudPago.tipoSolicitudCodigo === this.listaTipoSolicitud.otrosCostos ) {
+          this.valorTotalFactura = this.solicitudPago?.solicitudPagoOtrosCostosServicios[0]?.valorFacturado;
+        }
+        else{
+          this.valorTotalFactura = this.solicitudPago?.valorFacturado;
+        }
 
         this.getDataTerceroGiro();
         this.sumarValorDelDDP();
