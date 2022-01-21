@@ -4,6 +4,8 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
+import { environment } from 'src/environments/environment';
+
 
 @Component({
   selector: 'app-reporte-semanal',
@@ -180,10 +182,10 @@ export class ReporteSemanalComponent implements OnInit, AfterViewInit, OnDestroy
           }
 
           this.avanceFisicoGrafica = this.dataReporteSemanal.avanceFisicoGrafica
-            ? this.dataReporteSemanal.avanceFisicoGrafica.split('wwwfrontend/')[1]
+            ? this.dataReporteSemanal.avanceFisicoGrafica.split(environment.ruta)[1]
             : '';
           this.seguimientoFinancieroGrafica = this.dataReporteSemanal.seguimientoFinancieroGrafica
-            ? this.dataReporteSemanal.seguimientoFinancieroGrafica.split('wwwfrontend/')[1]
+            ? this.dataReporteSemanal.seguimientoFinancieroGrafica.split(environment.ruta)[1]
             : '';
         }
 
@@ -306,10 +308,10 @@ export class ReporteSemanalComponent implements OnInit, AfterViewInit, OnDestroy
           }
 
           this.avanceFisicoGrafica = this.dataReporteSemanal.actividadesARealizar
-            ? this.dataReporteSemanal.actividadesARealizar.split('wwwfrontend/')[1]
+            ? this.dataReporteSemanal.actividadesARealizar.split(environment.ruta)[1]
             : '';
           this.seguimientoFinancieroGrafica = this.dataReporteSemanal.seguimientoFinancieroGrafica
-            ? this.dataReporteSemanal.seguimientoFinancieroGrafica.split('wwwfrontend/')[1]
+            ? this.dataReporteSemanal.seguimientoFinancieroGrafica.split(environment.ruta)[1]
             : '';
         }
       });
