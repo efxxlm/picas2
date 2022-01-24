@@ -23,15 +23,33 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<dynamic> GetProyectoIdByLlaveMen(string pLlaveMen)
+        public async Task<dynamic> GetFlujoProyectoByContratacionProyectoId(int pContratacionProyectoId)
         {
-            List<VFichaProyectoBusquedaProyecto> ListVFichaProyectoBusquedaProyecto = await _context.VFichaProyectoBusquedaProyecto.Where(f => f.LlaveMen.ToUpper().Contains(pLlaveMen.ToUpper()))
-                                                                .ToListAsync();
 
-            return ListVFichaProyectoBusquedaProyecto.OrderByDescending(p => p.ProyectoId).ToList();
+            return new
+            {
+                TieneResumen = _context.VFichaProyectoTieneResumen.Any(cp=> cp.ContratacionProyectoId == pContratacionProyectoId),
+                TieneContratacion = _context.VFichaProyectoTieneContratacion.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
+                TienePreparacion = _context.VFichaProyectoTienePreparacion.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
+                TieneSeguimientoTecnico = _context.VFichaProyectoTieneSeguimientoTecnico.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
+                TieneSeguimientoFinanciero = _context.VFichaProyectoTieneSeguimientoFinanciero.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
+                TieneEntrega= _context.VFichaProyectoTieneEntrega.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
+            };
+
+
         }
 
-
+        public async Task<dynamic> GetVigencias()
+        {
+            return await _context.Cofinanciacion.Select(c => c.VigenciaCofinanciacionId)
+                                                .OrderByDescending(c => c.Value)
+                                                .ToListAsync();
+        }
+        public async Task<dynamic> GetProyectoIdByLlaveMen(string pLlaveMen)
+        {
+            return await _context.VFichaProyectoBusquedaProyecto.Where(f => f.LlaveMen.ToUpper().Contains(pLlaveMen.ToUpper()))
+                                                                .OrderByDescending(p => p.ProyectoId).ToListAsync();
+        }
         public async Task<dynamic> GetTablaProyectosByProyectoIdTipoContratacionVigencia(int pProyectoId, string pTipoContrato, int pVigencia)
         {
 
@@ -39,7 +57,7 @@ namespace asivamosffie.services
 
             if (!string.IsNullOrEmpty(pTipoContrato))
                 ListProyectos = ListProyectos.Where(p => p.CodigoTipoContrato == pTipoContrato).ToList();
-             
+
             if (pVigencia > 0)
                 ListProyectos = ListProyectos.Where(p => p.Vigencia == pVigencia).ToList();
 

@@ -27,7 +27,26 @@ namespace asivamosffie.api.Controllers
         {
             _fichaProyectoService = fichaProyectoService;
         }
+    
+        [HttpGet]
+        [Route("GetFlujoProyectoByContratacionProyectoId")]
+        public async Task<ActionResult<dynamic>> GetFlujoProyectoByContratacionProyectoId(int pContratacionProyectoId)
+        {
+            return await _fichaProyectoService.GetFlujoProyectoByContratacionProyectoId(pContratacionProyectoId);
+        }
+        [HttpGet]
+        [Route("GetVigencias")]
+        public async Task<ActionResult<dynamic>> GetVigencias()
+        {
+            return await _fichaProyectoService.GetVigencias();
+        }
 
+        [HttpGet]
+        [Route("GetTablaProyectosByProyectoIdTipoContratacionVigencia")]
+        public async Task<ActionResult<dynamic>> GetTablaProyectosByProyectoIdTipoContratacionVigencia(int pProyectoId, string pTipoContrato, int pVigencia)
+        {
+            return await _fichaProyectoService.GetTablaProyectosByProyectoIdTipoContratacionVigencia(pProyectoId, pTipoContrato, pVigencia);
+        }
 
         [HttpGet]
         [Route("GetProyectoIdByLlaveMen")]
@@ -37,12 +56,6 @@ namespace asivamosffie.api.Controllers
         }
          
  
-        [HttpGet]
-        [Route("GetTablaProyectosByProyectoIdTipoContratacionVigencia")]
-        public async Task<ActionResult<dynamic>> GetTablaProyectosByProyectoIdTipoContratacionVigencia(int pProyectoId, string pTipoContrato, int pVigencia)
-        { 
-            return await _fichaProyectoService.GetTablaProyectosByProyectoIdTipoContratacionVigencia(pProyectoId, pTipoContrato , pVigencia); 
-        } 
 
     }
 }

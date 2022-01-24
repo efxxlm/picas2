@@ -295,6 +295,12 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VFichaContratoBusquedaContrato> VFichaContratoBusquedaContrato { get; set; }
         public virtual DbSet<VFichaProyectoBusquedaProyecto> VFichaProyectoBusquedaProyecto { get; set; }
         public virtual DbSet<VFichaProyectoBusquedaProyectoTabla> VFichaProyectoBusquedaProyectoTabla { get; set; }
+        public virtual DbSet<VFichaProyectoTieneContratacion> VFichaProyectoTieneContratacion { get; set; }
+        public virtual DbSet<VFichaProyectoTieneEntrega> VFichaProyectoTieneEntrega { get; set; }
+        public virtual DbSet<VFichaProyectoTienePreparacion> VFichaProyectoTienePreparacion { get; set; }
+        public virtual DbSet<VFichaProyectoTieneResumen> VFichaProyectoTieneResumen { get; set; }
+        public virtual DbSet<VFichaProyectoTieneSeguimientoFinanciero> VFichaProyectoTieneSeguimientoFinanciero { get; set; }
+        public virtual DbSet<VFichaProyectoTieneSeguimientoTecnico> VFichaProyectoTieneSeguimientoTecnico { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoId> VFuentesUsoXcontratoId { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoIdXproyecto> VFuentesUsoXcontratoIdXproyecto { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
@@ -9759,6 +9765,48 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.NombreTipoContrato)
                     .IsRequired()
                     .HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<VFichaProyectoTieneContratacion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_TieneContratacion");
+            });
+
+            modelBuilder.Entity<VFichaProyectoTieneEntrega>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_TieneEntrega");
+            });
+
+            modelBuilder.Entity<VFichaProyectoTienePreparacion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_TienePreparacion");
+            });
+
+            modelBuilder.Entity<VFichaProyectoTieneResumen>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_TieneResumen");
+            });
+
+            modelBuilder.Entity<VFichaProyectoTieneSeguimientoFinanciero>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_TieneSeguimientoFinanciero");
+            });
+
+            modelBuilder.Entity<VFichaProyectoTieneSeguimientoTecnico>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_TieneSeguimientoTecnico");
             });
 
             modelBuilder.Entity<VFuentesUsoXcontratoId>(entity =>
