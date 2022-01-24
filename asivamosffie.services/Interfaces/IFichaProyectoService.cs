@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace asivamosffie.services.Interfaces
 {
     public interface IFichaProyectoService
-    { 
-         
+    {
+        Task<dynamic> GetProyectoIdByLlaveMen(string pLlaveMen);
     } 
 }

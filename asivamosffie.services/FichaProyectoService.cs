@@ -14,6 +14,21 @@ namespace asivamosffie.services
 {
     public class FichaProyectoService : IFichaProyectoService
     {
-      
+        private readonly devAsiVamosFFIEContext _context;
+
+
+        public FichaProyectoService(devAsiVamosFFIEContext context)
+        { 
+            _context = context;  
+        }
+
+
+        public async Task<dynamic> GetProyectoIdByLlaveMen(string pLlaveMen)
+        {
+            var  asd = await _context.VFichaProyectoBusquedaProyecto.Where(f => f.LlaveMen.Contains(pLlaveMen))
+                                                                                          .ToListAsync();
+
+            return asd;
+        }
     }
 }

@@ -291,6 +291,9 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso> VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso { get; set; }
         public virtual DbSet<VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXusoOld> VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXusoOld { get; set; }
         public virtual DbSet<VFechasValidacionAjusteProgramacion> VFechasValidacionAjusteProgramacion { get; set; }
+        public virtual DbSet<VFichaContratoBusquedaContratista> VFichaContratoBusquedaContratista { get; set; }
+        public virtual DbSet<VFichaContratoBusquedaContrato> VFichaContratoBusquedaContrato { get; set; }
+        public virtual DbSet<VFichaProyectoBusquedaProyecto> VFichaProyectoBusquedaProyecto { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoId> VFuentesUsoXcontratoId { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoIdXproyecto> VFuentesUsoXcontratoIdXproyecto { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
@@ -373,6 +376,15 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -5793,8 +5805,7 @@ namespace asivamosffie.model.Models
             modelBuilder.Entity<Proyecto>(entity =>
             {
                 entity.HasIndex(e => e.LlaveMen)
-                    .HasName("uk_llavemen")
-                    .IsUnique();
+                    .HasName("inxLLaveMen");
 
                 entity.Property(e => e.CoordinacionResponsableCodigo)
                     .HasMaxLength(100)
@@ -9661,6 +9672,47 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaFin).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaInicio).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<VFichaContratoBusquedaContratista>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaContrato_BusquedaContratista");
+
+                entity.Property(e => e.ContratistaId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VFichaContratoBusquedaContrato>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaContrato_BusquedaContrato");
+
+                entity.Property(e => e.ContratoId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VFichaProyectoBusquedaProyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_BusquedaProyecto");
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ProyectoId).ValueGeneratedOnAdd();
             });
 
             modelBuilder.Entity<VFuentesUsoXcontratoId>(entity =>
