@@ -22,21 +22,56 @@ namespace asivamosffie.services
             _context = context;
         }
 
-        public async Task<dynamic> GetInfoPreparacion(int pContratoProyectoId)
+
+        #region Preparacion
+        public async Task<dynamic> GetInfoPreparacionByContratacionProyectoId(int pContratacionProyecto)
         {
 
             return new
             {
 
-                Informacion = _context.VFichaProyectoInfoContratacionProyecto.Where(r => r.ContratacionProyectoId == pContratoProyectoId).Select(r => new { r.LlaveMen, r.InstitucionEducativa, r.Sede, r.Departamento, r.Municipio })
+                Informacion = _context.VFichaProyectoInfoContratacionProyecto.Where(r => r.ContratacionProyectoId == pContratacionProyecto)
+                                                                             .Select(r => new
+                                                                             {
+                                                                                 r.LlaveMen,
+                                                                                 r.InstitucionEducativa,
+                                                                                 r.Sede,
+                                                                                 r.Departamento,
+                                                                                 r.Municipio,
+                                                                                 r.TipoIntervencion
+                                                                             }
+                                                                                    )
+                                                                            .FirstOrDefault(),
+
+                Preconstruccion = GetGetInfoPreparacionPreConstruccionByContratacionProyectoId(pContratacionProyecto)
 
             };
 
 
         }
 
+        public async Task<dynamic> GetGetInfoPreparacionPreConstruccionByContratacionProyectoId(int pContratacionProyecto)
+        {
+
+            ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pContratacionProyecto)
+                                                                                     .Include(c => c.Contratacion).ThenInclude(c => c.Contrato)
+                                                                                     .FirstOrDefault();
 
 
+            return new
+            {
+                ActaSuscrita = contratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault()?.RutaActaSuscrita, 
+                TablaPreconstruccion = _context.VFichaProyectoPreparacionPreconstruccion.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId
+                                                                                                && r.ContratacionId == contratacionProyecto.ContratacionId)
+                                                                                        .ToList() 
+            };
+        }
+
+
+        #endregion
+
+
+        #region Busqueda
         public async Task<dynamic> GetFlujoProyectoByContratacionProyectoId(int pContratacionProyectoId)
         {
             return new
@@ -71,14 +106,16 @@ namespace asivamosffie.services
 
             if (!string.IsNullOrEmpty(pTipoIntervencion))
                 ListProyectos = ListProyectos.Where(p => p.CodigoTipoIntervencion == pTipoIntervencion).ToList();
-             
+
             if (!string.IsNullOrEmpty(pTipoContrato))
                 ListProyectos = ListProyectos.Where(p => p.CodigoTipoContrato == pTipoContrato).ToList();
 
             if (pVigencia > 0)
                 ListProyectos = ListProyectos.Where(p => p.Vigencia == pVigencia).ToList();
-             
+
             return ListProyectos;
         }
+
+        #endregion
     }
 }

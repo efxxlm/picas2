@@ -296,6 +296,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VFichaProyectoBusquedaProyecto> VFichaProyectoBusquedaProyecto { get; set; }
         public virtual DbSet<VFichaProyectoBusquedaProyectoTabla> VFichaProyectoBusquedaProyectoTabla { get; set; }
         public virtual DbSet<VFichaProyectoInfoContratacionProyecto> VFichaProyectoInfoContratacionProyecto { get; set; }
+        public virtual DbSet<VFichaProyectoPreparacionPreconstruccion> VFichaProyectoPreparacionPreconstruccion { get; set; }
         public virtual DbSet<VFichaProyectoTieneContratacion> VFichaProyectoTieneContratacion { get; set; }
         public virtual DbSet<VFichaProyectoTieneEntrega> VFichaProyectoTieneEntrega { get; set; }
         public virtual DbSet<VFichaProyectoTienePreparacion> VFichaProyectoTienePreparacion { get; set; }
@@ -9822,6 +9823,23 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoIntervencion)
                     .IsRequired()
                     .HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<VFichaProyectoPreparacionPreconstruccion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_PreparacionPreconstruccion");
+
+                entity.Property(e => e.CodigoPerfil)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NombrePerfil)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.RutaSoporte).HasMaxLength(400);
             });
 
             modelBuilder.Entity<VFichaProyectoTieneContratacion>(entity =>

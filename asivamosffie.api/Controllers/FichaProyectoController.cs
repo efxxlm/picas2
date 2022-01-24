@@ -27,7 +27,13 @@ namespace asivamosffie.api.Controllers
         {
             _fichaProyectoService = fichaProyectoService;
         }
-    
+
+        [HttpGet]
+        [Route("GetInfoPreparacionByContratacionProyectoId")]
+        public async Task<ActionResult<dynamic>> GetInfoPreparacionByContratacionProyectoId(int pContratacionProyectoId)
+        {
+            return await _fichaProyectoService.GetInfoPreparacionByContratacionProyectoId(pContratacionProyectoId);
+        }
         [HttpGet]
         [Route("GetFlujoProyectoByContratacionProyectoId")]
         public async Task<ActionResult<dynamic>> GetFlujoProyectoByContratacionProyectoId(int pContratacionProyectoId)
@@ -51,11 +57,11 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         [Route("GetProyectoIdByLlaveMen")]
         public async Task<ActionResult<dynamic>> GetProyectoIdByLlaveMen(string pLlaveMen)
-        { 
-            return await _fichaProyectoService.GetProyectoIdByLlaveMen(pLlaveMen); 
+        {
+            return await _fichaProyectoService.GetProyectoIdByLlaveMen(pLlaveMen);
         }
-         
- 
+
+
 
     }
 }
