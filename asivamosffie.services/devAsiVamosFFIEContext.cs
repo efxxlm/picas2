@@ -9707,12 +9707,28 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_FichaProyecto_BusquedaProyecto");
 
+                entity.Property(e => e.Departamento)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.InstitucionEducativa)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.LlaveMen)
                     .HasColumnName("LlaveMEN")
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ProyectoId).ValueGeneratedOnAdd();
+                entity.Property(e => e.Municipio)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Sede)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VFuentesUsoXcontratoId>(entity =>

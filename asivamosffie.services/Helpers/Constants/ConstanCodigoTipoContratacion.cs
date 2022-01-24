@@ -7,6 +7,12 @@
         public const int Obra_Interventoria = 3;
     }
 
+    public static class ConstanCodigoTipoContratacionString
+    {
+        public const string Obra = "1";
+        public const string Interventoria ="2"; 
+    }
+
     public static class ConstanCodigoTipoContratacionSTRING
     {
         public const string Obra = "obra";
