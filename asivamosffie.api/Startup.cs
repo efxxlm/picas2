@@ -124,6 +124,7 @@ namespace asivamosffie.api
             services.AddDbContext<model.Models.devAsiVamosFFIEContext>(options
               => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
             //Agregar Interfaces y clases
+            services.AddTransient<IFichaProyectoService, FichaProyectoService>();
             services.AddTransient<IFichaContratoService, FichaContratoService>();
             services.AddTransient<IReprogrammingService, ReprogrammingService>();
             services.AddTransient<IReleaseBalanceService, ReleaseBalanceService>();
