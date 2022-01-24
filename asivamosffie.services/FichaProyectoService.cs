@@ -24,10 +24,10 @@ namespace asivamosffie.services
 
 
         public async Task<dynamic> GetFlujoProyectoByContratacionProyectoId(int pContratacionProyectoId)
-        {
-
+        { 
             return new
             {
+                Informacion = _context.VFichaProyectoInfoContratacionProyecto.Where(x => x.ContratacionProyectoId == pContratacionProyectoId).FirstOrDefault(),
                 TieneResumen = _context.VFichaProyectoTieneResumen.Any(cp=> cp.ContratacionProyectoId == pContratacionProyectoId),
                 TieneContratacion = _context.VFichaProyectoTieneContratacion.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
                 TienePreparacion = _context.VFichaProyectoTienePreparacion.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
