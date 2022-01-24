@@ -1,8 +1,9 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
-import { forkJoin } from 'rxjs';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { FichaProyectoService } from 'src/app/core/_services/fichaProyecto/ficha-proyecto.service';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-ficha-proyecto',
@@ -15,13 +16,15 @@ export class FichaProyectoComponent implements OnInit {
   mostrarFicha = false;
 
   addressForm: FormGroup = this.fb.group({
-    llaveMen: [null],
+    proyectoId: [null, Validators.required],
+    llaveMen: [null, Validators.required],
     departamento: [null],
     municipio: [null],
     institucionEducativa: [null],
     dede: [null],
     tipoContrato: [null],
-    vigenciaContratación: [null]
+    tipoIntervencion: [null],
+    vigenciaContratacion: [null]
   });
 
   listaTipoFicha = [
@@ -35,12 +38,29 @@ export class FichaProyectoComponent implements OnInit {
     }
   ]
 
+  proyectosArray = [];
+  listDepartamento = [];
+  listMunicipio = [];
+  listInstEducativa = [];
+  listSede = [];
+  listTipoContrato = [];
+  listTipoIntervencion = [];
+  listVigencias = [];
+  resultados = [];
+
+  indicadores = null;
+
   constructor(
     private fb: FormBuilder,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private fichaProyectoService: FichaProyectoService,
+    private commonSvc: CommonService
   ) { }
 
   ngOnInit(): void {
+    this.fichaProyectoService.getVigencias().subscribe(response => this.listVigencias = response );
+    this.commonSvc.listaTipoSolicitudContrato().subscribe( response => this.listTipoContrato = response);
+    this.commonSvc.listaTipoIntervencion().subscribe( response => this.listTipoIntervencion = response);
   }
 
   reiniciarFiltro() {
@@ -51,22 +71,104 @@ export class FichaProyectoComponent implements OnInit {
       institucionEducativa: null,
       dede: null,
       tipoContrato: null,
-      vigenciaContratación: null
+      tipoIntervencion: null,
+      vigenciaContratacion: null,
+      proyectoId: null
+    });
+    this.limpiarListas();
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
     });
   }
 
   buscar() {
-    this.verResultados = true;
+    this.fichaProyectoService.getTablaProyectosByProyectoIdTipoContratacionVigencia(
+      this.addressForm.get('proyectoId').value,
+      this.addressForm.get('tipoContrato').value ?? '',
+      this.addressForm.get('tipoIntervencion').value ?? '',
+      this.addressForm.get('vigenciaContratacion').value ?? 0
+    ).subscribe(response => {
+      this.resultados = response;
+      this.verResultados = true;
+    });
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
-    this.buscar();
+    this.resultados = [];
+    this.indicadores = null;
+    this.addressForm.markAllAsTouched();
+    if ( this.addressForm.get( 'proyectoId' ).value !== null) {
+      this.buscar();
+    }else if(this.addressForm.get( 'proyectoId' ).value === null && this.addressForm.get( 'llaveMen' ).value !== null && this.addressForm.get( 'llaveMen' ).value !== ''){
+      this.openDialog( '', '<b>Debe seleccionar una llave Men válida</b>' );
+      return;
+    }
   }
 
-  verFicha(ficha: boolean) {
-    console.log(ficha);
-    this.mostrarFicha = ficha;
+  verFicha(event: any) {
+    this.indicadores = null;
+    if(event != null){
+      if(event?.contratacionProyectoId > 0){
+        this.fichaProyectoService.getFlujoProyectoByContratacionProyectoId(event?.contratacionProyectoId)
+        .subscribe(response => {
+          this.indicadores = response;
+          this.mostrarFicha = event?.ficha;
+        });
+      }
+    }
+  }
+
+  getProyectos(trigger: string) {
+    if(trigger != null && trigger != undefined){
+      if(trigger.length >= 3){
+        this.limpiarListas();
+        this.fichaProyectoService.getProyectoIdByLlaveMen(trigger)
+        .subscribe(response => {
+          this.proyectosArray = response;
+          if ( response.length === 0 ) {
+            this.openDialog( '', '<b>No se encontró una Llave Men relacionada en la búsqueda.</b>' );
+          }
+        });
+      }
+    }
+  }
+
+  seleccionAutocomplete(proyecto: any) {
+    this.limpiarListas();
+    if(proyecto != null){
+      this.addressForm.get('proyectoId').setValue(proyecto?.proyectoId);
+      this.listDepartamento.push({
+        value: proyecto?.departamento,
+        name: proyecto?.departamento
+      });
+      this.listInstEducativa.push({
+        value: proyecto?.institucionEducativa,
+        name: proyecto?.institucionEducativa,
+      });
+      this.listMunicipio.push({
+        value: proyecto?.municipio,
+        name: proyecto?.municipio,
+      });
+      this.listSede.push({
+        value: proyecto?.sede,
+        name: proyecto?.sede,
+      });
+    }
+  }
+
+  limpiarListas(){
+    this.listDepartamento = [];
+    this.listMunicipio = [];
+    this.listInstEducativa = [];
+    this.listSede = [];
+    this.addressForm.get('proyectoId').setValue(null);
+    this.addressForm.get('vigenciaContratacion').setValue(null);
+    this.addressForm.get('tipoContrato').setValue(null);
+    this.addressForm.get('tipoIntervencion').setValue(null);
   }
 
 }

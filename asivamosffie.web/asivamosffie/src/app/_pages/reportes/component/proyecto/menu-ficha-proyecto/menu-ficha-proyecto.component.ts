@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-menu-ficha-proyecto',
@@ -7,9 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MenuFichaProyectoComponent implements OnInit {
 
+  @Input() indicadores: any;
+
   constructor() { }
 
   ngOnInit(): void {
+    console.log(this.indicadores);
   }
 
 }
