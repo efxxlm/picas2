@@ -22,18 +22,32 @@ namespace asivamosffie.services
             _context = context;
         }
 
+//        public async Task<dynamic> GetPreConstruccionByContratoProyectoId(int pContratoProyectoId)
+//        {
+
+//            return new
+//            {
+
+//Informacion = _context.VFichaProyectoInfoContratacionProyecto.Where(r=> r.ContratacionProyectoId == pContratoProyectoId).Select(r => new { r.ins}
+
+//            };
+
+
+//        }
+
+
 
         public async Task<dynamic> GetFlujoProyectoByContratacionProyectoId(int pContratacionProyectoId)
-        { 
+        {
             return new
             {
                 Informacion = _context.VFichaProyectoInfoContratacionProyecto.Where(x => x.ContratacionProyectoId == pContratacionProyectoId).FirstOrDefault(),
-                TieneResumen = _context.VFichaProyectoTieneResumen.Any(cp=> cp.ContratacionProyectoId == pContratacionProyectoId),
+                TieneResumen = _context.VFichaProyectoTieneResumen.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
                 TieneContratacion = _context.VFichaProyectoTieneContratacion.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
                 TienePreparacion = _context.VFichaProyectoTienePreparacion.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
                 TieneSeguimientoTecnico = _context.VFichaProyectoTieneSeguimientoTecnico.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
                 TieneSeguimientoFinanciero = _context.VFichaProyectoTieneSeguimientoFinanciero.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
-                TieneEntrega= _context.VFichaProyectoTieneEntrega.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
+                TieneEntrega = _context.VFichaProyectoTieneEntrega.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
             };
 
 

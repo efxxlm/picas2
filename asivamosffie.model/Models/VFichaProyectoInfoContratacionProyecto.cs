@@ -11,5 +11,8 @@ namespace asivamosffie.model.Models
         public string NumeroContratacion { get; set; }
         public string Contratista { get; set; }
         public string NumeroContrato { get; set; }
+        public string InstitucionEducativa { get; set; }
+        public string Sede { get; set; }
+        public string TipoIntervencion { get; set; }
     }
 }
