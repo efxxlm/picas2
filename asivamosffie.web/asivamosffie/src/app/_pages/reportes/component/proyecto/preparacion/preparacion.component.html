@@ -1,4 +1,4 @@
-<section class="container">
+<section class="container" *ngIf="this.dataPreparacion != null">
   <div class="container text-center">
     <div class="text-right">
       <a routerLink="../.." mat-button color="primary" class="btn-regresar">
@@ -6,7 +6,7 @@
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Preparación N801801
+      Preparación {{ this.dataPreparacion?.informacion?.llaveMen }}
     </h1>
   </div>
 
@@ -16,25 +16,25 @@
           <strong>
             Institución Educativa:
           </strong>
-          I.E Señora Del Carmén
+          {{ this.dataPreparacion?.informacion?.institucionEducativa }}
         </p>
         <p>
           <strong>
             Sede:
           </strong>
-          Única sede
+          {{ this.dataPreparacion?.informacion?.sede }}
         </p>
         <p>
           <strong>
             Departamento:
           </strong>
-          Boyacá
+          {{ this.dataPreparacion?.informacion?.departamento }}
         </p>
         <p>
           <strong>
             Municipio:
           </strong>
-          Susacón
+          {{ this.dataPreparacion?.informacion?.municipio }}
         </p>
     </mat-card-content>
   </mat-card>
@@ -51,7 +51,7 @@
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
-                  Contrato de obra N801801
+                  Contrato de obra {{ this.dataPreparacion?.preconstruccion?.result?.numeroContrato }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
@@ -67,7 +67,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let element of listaPerfil">
+                  <tr *ngFor="let element of this.dataPreparacion?.preconstruccion?.result?.tablaPreconstruccion">
                     <td class="mat-cell cdk-cell ng-star-inserted">
                       <b> {{ element.perfil }} </b>
                     </td>
@@ -97,15 +97,15 @@
               <mat-card-content>
                   <p>
                     <strong>
-                      htttp:one.drive.h.vpreconstruccion.com
+                      {{ this.dataPreparacion?.preconstruccion?.result?.actaSuscrita }}
                     </strong>
                   </p>
               </mat-card-content>
             </mat-card>
-            
+
         </mat-expansion-panel>
     </mat-accordion>
-      
+
 
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style">
@@ -166,25 +166,25 @@
                           b. A (administración):
                         </strong>
                         $5.000.000
-                      </p>                      
+                      </p>
                       <p>
                         <strong>
                           c. I (Imprevistos):
                         </strong>
                         $10.000.000
-                      </p>                      
+                      </p>
                       <p>
                         <strong>
                           d. U (Utilidad):
                         </strong>
                         $17.000.000
-                      </p>                      
+                      </p>
                       <p>
                         <strong>
                           Valor total de la fase 2 - Construcción:
                         </strong>
                         $49.000.000
-                      </p>                      
+                      </p>
                     </mat-card-content>
                   </mat-card>
 
@@ -205,7 +205,7 @@
                       </p>
                     </mat-card-content>
                   </mat-card>
-                  
+
               </mat-expansion-panel>
               <mat-expansion-panel class="expansion-style sub-expansion-black">
                   <mat-expansion-panel-header class="expansion-style--header">
@@ -253,7 +253,7 @@
                     </strong>
                     https://drive.google.com/drive/PlanesyProgramas123
                   </p>
-                  
+
               </mat-expansion-panel>
               <mat-expansion-panel class="expansion-style sub-expansion-black">
                   <mat-expansion-panel-header class="expansion-style--header">
@@ -266,7 +266,7 @@
                     <mat-card-content>
                       <p>
                         <strong>
-                          ¿El contrato requiere anticipo?: 
+                          ¿El contrato requiere anticipo?:
                         </strong>
                         Sí
                       </p>
@@ -284,14 +284,14 @@
                       </p>
                     </mat-card-content>
                   </mat-card>
-                  
+
                   <p>
                     <strong>
                       URL con soporte:
                     </strong>
                     https://drive.google.com/drive/informeinterventoria1
                   </p>
-                  
+
               </mat-expansion-panel>
               <mat-expansion-panel class="expansion-style sub-expansion-black">
                   <mat-expansion-panel-header class="expansion-style--header">
@@ -365,7 +365,7 @@
                       </p>
                     </mat-card-content>
                   </mat-card>
-                  
+
               </mat-expansion-panel>
               <mat-expansion-panel class="expansion-style sub-expansion-black">
                   <mat-expansion-panel-header class="expansion-style--header">
@@ -379,7 +379,7 @@
                       Descargar archivo
                     </button>
                   </div>
-                  
+
               </mat-expansion-panel>
               <mat-expansion-panel class="expansion-style sub-expansion-black">
                   <mat-expansion-panel-header class="expansion-style--header">
@@ -393,7 +393,7 @@
                       Descargar archivo
                     </button>
                   </div>
-                  
+
               </mat-expansion-panel>
               <mat-expansion-panel class="expansion-style sub-expansion-black">
                   <mat-expansion-panel-header class="expansion-style--header">
@@ -416,10 +416,10 @@
                       </p>
                     </mat-card-content>
                   </mat-card>
-                  
+
               </mat-expansion-panel>
           </mat-accordion>
-            
+
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -460,7 +460,7 @@
                 </tbody>
               </table>
             </div>
-            
+
             <mat-card class="shipping-card var-main-gris">
               <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text">
@@ -475,11 +475,11 @@
                   </p>
               </mat-card-content>
             </mat-card>
-            
+
         </mat-expansion-panel>
     </mat-accordion>
 
     </mat-expansion-panel>
   </mat-accordion>
-  
+
 </section>

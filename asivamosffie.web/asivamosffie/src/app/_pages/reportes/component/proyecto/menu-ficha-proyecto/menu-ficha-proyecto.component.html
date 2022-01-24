@@ -20,27 +20,39 @@
       {{ indicadores?.informacion?.tipoIntervencion }}
     </p>
     <div class="navegacion">
-      <a class="navegacion--button" routerLink="fichaProyecto/resumen" *ngIf="indicadores.tieneResumen == true">
+      <a class="navegacion--button"
+        [routerLink]="[ 'fichaProyecto/resumen', indicadores.informacion.contratacionProyectoId ]"
+        *ngIf="indicadores.tieneResumen == true">
         <img src="assets/img/icon/Menu-proyectos/1-Resumen.svg" alt="Resumen" />
         Resumen
       </a>
-      <a class="navegacion--button" routerLink="fichaProyecto/contratacion" *ngIf="indicadores.tieneContratacion == true">
+      <a class="navegacion--button"
+        [routerLink]="[ 'fichaProyecto/contratacion', indicadores.informacion.contratacionProyectoId ]"
+        *ngIf="indicadores.tieneContratacion == true">
         <img src="assets/img/icon/Menu-proyectos/2-Contratacion.svg" alt="Contratación" />
         Contratación
       </a>
-      <a class="navegacion--button" routerLink="fichaProyecto/preparacion" *ngIf="indicadores.tienePreparacion == true">
+      <a class="navegacion--button"
+        [routerLink]="[ 'fichaProyecto/preparacion', indicadores.informacion.contratacionProyectoId ]"
+        *ngIf="indicadores.tienePreparacion == true">
         <img src="assets/img/icon/Menu-proyectos/3-Preparacion.svg" alt="Preparación" />
         Preparación
       </a>
-      <a class="navegacion--button" routerLink="fichaProyecto/seguimientoTecnico" *ngIf="indicadores.tieneSeguimientoTecnico == true">
+      <a class="navegacion--button"
+        [routerLink]="[ 'fichaProyecto/seguimientoTecnico', indicadores.informacion.contratacionProyectoId ]"
+        *ngIf="indicadores.tieneSeguimientoTecnico == true">
         <img src="assets/img/icon/Menu-proyectos/4-Seguimiento-tecnico.svg" alt="Seguimiento técnico" />
         Seguimiento técnico
       </a>
-      <a class="navegacion--button" routerLink="fichaProyecto/seguimientoFinanciero" *ngIf="indicadores.tieneSeguimientoFinanciero == true">
+      <a class="navegacion--button"
+        [routerLink]="[ 'fichaProyecto/seguimientoFinanciero', indicadores.informacion.contratacionProyectoId ]"
+        *ngIf="indicadores.tieneSeguimientoFinanciero == true">
         <img src="assets/img/icon/Menu-proyectos/5-Seguimiento-financiero.svg" alt="Seguimiento financiero" />
         Seguimiento financiero
       </a>
-      <a class="navegacion--button" routerLink="fichaProyecto/entrega" *ngIf="indicadores.tieneEntrega == true">
+      <a class="navegacion--button"
+        [routerLink]="[ 'fichaProyecto/entrega', indicadores.informacion.contratacionProyectoId ]"
+        *ngIf="indicadores.tieneEntrega == true">
         <img src="assets/img/icon/Menu-proyectos/6-Entrega.svg" alt="Entrega" />
         Entrega
       </a>

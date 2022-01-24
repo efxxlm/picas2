@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { FichaProyectoService } from 'src/app/core/_services/fichaProyecto/ficha-proyecto.service';
 
 @Component({
   selector: 'app-preparacion',
@@ -7,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PreparacionComponent implements OnInit {
 
+  contratacionProyectoId: number;
+  dataPreparacion: any = null;
   listaPerfil = [
     {
       perfil: 'Ingeniero de obra',
@@ -37,9 +41,20 @@ export class PreparacionComponent implements OnInit {
     }
   ];
 
-  constructor() { }
+  constructor(
+    private fichaProyectoService: FichaProyectoService,
+    private route: ActivatedRoute
+  ) {
+    this.route.params.subscribe((params: Params) => {
+      this.contratacionProyectoId = params.id;
+    });
+   }
 
   ngOnInit(): void {
+    this.fichaProyectoService.getInfoPreparacionByContratacionProyectoId(this.contratacionProyectoId)
+    .subscribe(response => {
+      this.dataPreparacion = response;
+    });
   }
 
 }

@@ -21,12 +21,18 @@ export class FichaProyectoService {
       return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetTablaProyectosByProyectoIdTipoContratacionVigencia?pProyectoId=${ pProyectoId }&pTipoContrato=${ pTipoContrato }&pTipoIntervencion=${ pTipoIntervencion }&pVigencia=${ pVigencia }`);
     }
 
-    getFlujoProyectoByContratacionProyectoId( pContratacionProyectoId: string ){
+    getFlujoProyectoByContratacionProyectoId( pContratacionProyectoId: number ){
       return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetFlujoProyectoByContratacionProyectoId?pContratacionProyectoId=${ pContratacionProyectoId }`);
     }
 
     getVigencias(){
       return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetVigencias`);
+    }
+
+    /*PREPARACIÓN*/
+
+    getInfoPreparacionByContratacionProyectoId(pContratacionProyectoId: number){
+      return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetInfoPreparacionByContratacionProyectoId?pContratacionProyectoId=${ pContratacionProyectoId }`);
     }
 
 }
