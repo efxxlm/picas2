@@ -9787,6 +9787,10 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Departamento)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.InstitucionEducativa)
                     .IsRequired()
                     .HasMaxLength(300)
@@ -9795,6 +9799,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.LlaveMen)
                     .HasColumnName("LlaveMEN")
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Municipio)
+                    .HasMaxLength(300)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroContratacion)

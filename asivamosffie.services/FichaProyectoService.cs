@@ -22,13 +22,13 @@ namespace asivamosffie.services
             _context = context;
         }
 
-        public async Task<dynamic> GetPreConstruccionByContratoProyectoId(int pContratoProyectoId)
+        public async Task<dynamic> GetInfoPreparacion(int pContratoProyectoId)
         {
 
             return new
             {
 
-                //  Informacion = _context.VFichaProyectoInfoContratacionProyecto.Where(r => r.ContratacionProyectoId == pContratoProyectoId).Select(r => new { r.LlaveMen , r.InstitucionEducativa,r.Sede, r.TipoIntervencion, }
+                Informacion = _context.VFichaProyectoInfoContratacionProyecto.Where(r => r.ContratacionProyectoId == pContratoProyectoId).Select(r => new { r.LlaveMen, r.InstitucionEducativa, r.Sede, r.Departamento, r.Municipio })
 
             };
 
@@ -77,8 +77,7 @@ namespace asivamosffie.services
 
             if (pVigencia > 0)
                 ListProyectos = ListProyectos.Where(p => p.Vigencia == pVigencia).ToList();
-
-
+             
             return ListProyectos;
         }
     }

@@ -14,5 +14,7 @@ namespace asivamosffie.model.Models
         public string InstitucionEducativa { get; set; }
         public string Sede { get; set; }
         public string TipoIntervencion { get; set; }
+        public string Municipio { get; set; }
+        public string Departamento { get; set; }
     }
 }
