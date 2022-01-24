@@ -9749,6 +9749,10 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.CodigoTipoIntervencion)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.DepartamentoMunicipio)
                     .HasMaxLength(603)
                     .IsUnicode(false);

@@ -43,9 +43,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetTablaProyectosByProyectoIdTipoContratacionVigencia")]
-        public async Task<ActionResult<dynamic>> GetTablaProyectosByProyectoIdTipoContratacionVigencia(int pProyectoId, string pTipoContrato, int pVigencia)
+        public async Task<ActionResult<dynamic>> GetTablaProyectosByProyectoIdTipoContratacionVigencia(int pProyectoId, string pTipoContrato, string pTipoIntervencion, int pVigencia)
         {
-            return await _fichaProyectoService.GetTablaProyectosByProyectoIdTipoContratacionVigencia(pProyectoId, pTipoContrato, pVigencia);
+            return await _fichaProyectoService.GetTablaProyectosByProyectoIdTipoContratacionVigencia(pProyectoId, pTipoContrato, pTipoIntervencion, pVigencia);
         }
 
         [HttpGet]

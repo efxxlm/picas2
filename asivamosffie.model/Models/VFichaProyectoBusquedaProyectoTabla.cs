@@ -13,6 +13,7 @@ namespace asivamosffie.model.Models
         public string CodigoTipoContrato { get; set; }
         public string NombreTipoContrato { get; set; }
         public string TipoIntervencion { get; set; }
+        public string CodigoTipoIntervencion { get; set; }
         public int? Vigencia { get; set; }
     }
 }

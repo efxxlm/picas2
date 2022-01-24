@@ -12,9 +12,9 @@ namespace asivamosffie.services.Interfaces
     public interface IFichaProyectoService
     {
         Task<dynamic> GetFlujoProyectoByContratacionProyectoId(int pContratacionProyectoId);
-        Task<dynamic> GetVigencias(); 
-        Task<dynamic> GetTablaProyectosByProyectoIdTipoContratacionVigencia(int pProyectoId, string pTipoContrato, int pVigencia);
+        Task<dynamic> GetVigencias();
+        Task<dynamic> GetTablaProyectosByProyectoIdTipoContratacionVigencia(int pProyectoId, string pTipoContrato, string pTipoIntervencion, int pVigencia);
         Task<dynamic> GetProyectoIdByLlaveMen(string pLlaveMen);
 
-    } 
+    }
 }
