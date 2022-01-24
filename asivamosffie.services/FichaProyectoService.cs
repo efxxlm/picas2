@@ -27,8 +27,24 @@ namespace asivamosffie.services
         {
             List<VFichaProyectoBusquedaProyecto> ListVFichaProyectoBusquedaProyecto = await _context.VFichaProyectoBusquedaProyecto.Where(f => f.LlaveMen.ToUpper().Contains(pLlaveMen.ToUpper()))
                                                                 .ToListAsync();
-             
+
             return ListVFichaProyectoBusquedaProyecto.OrderByDescending(p => p.ProyectoId).ToList();
+        }
+
+
+        public async Task<dynamic> GetTablaProyectosByProyectoIdTipoContratacionVigencia(int pProyectoId, string pTipoContrato, int pVigencia)
+        {
+
+            List<VFichaProyectoBusquedaProyectoTabla> ListProyectos = await _context.VFichaProyectoBusquedaProyectoTabla.Where(p => p.ProyectoId == pProyectoId).ToListAsync();
+
+            if (!string.IsNullOrEmpty(pTipoContrato))
+                ListProyectos = ListProyectos.Where(p => p.CodigoTipoContrato == pTipoContrato).ToList();
+             
+            if (pVigencia > 0)
+                ListProyectos = ListProyectos.Where(p => p.Vigencia == pVigencia).ToList();
+
+
+            return ListProyectos;
         }
     }
 }

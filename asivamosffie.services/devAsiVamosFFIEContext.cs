@@ -294,6 +294,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VFichaContratoBusquedaContratista> VFichaContratoBusquedaContratista { get; set; }
         public virtual DbSet<VFichaContratoBusquedaContrato> VFichaContratoBusquedaContrato { get; set; }
         public virtual DbSet<VFichaProyectoBusquedaProyecto> VFichaProyectoBusquedaProyecto { get; set; }
+        public virtual DbSet<VFichaProyectoBusquedaProyectoTabla> VFichaProyectoBusquedaProyectoTabla { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoId> VFuentesUsoXcontratoId { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoIdXproyecto> VFuentesUsoXcontratoIdXproyecto { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
@@ -9729,6 +9730,35 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(300)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VFichaProyectoBusquedaProyectoTabla>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_BusquedaProyectoTabla");
+
+                entity.Property(e => e.CodigoTipoContrato)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DepartamentoMunicipio)
+                    .HasMaxLength(603)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.InstitucionEducativaSede)
+                    .IsRequired()
+                    .HasMaxLength(603)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NombreTipoContrato)
+                    .IsRequired()
+                    .HasMaxLength(250);
             });
 
             modelBuilder.Entity<VFuentesUsoXcontratoId>(entity =>
