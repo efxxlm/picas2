@@ -61,8 +61,9 @@ namespace asivamosffie.services
             return new
             {
                 ActaSuscrita = contratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault()?.RutaActaSuscrita, 
+                NumeroContrato = contratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault()?.NumeroContrato,
                 TablaPreconstruccion = _context.VFichaProyectoPreparacionPreconstruccion.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId
-                                                                                                && r.ContratacionId == contratacionProyecto.ContratacionId)
+                                                                                                 && r.ContratacionId == contratacionProyecto.ContratacionId)
                                                                                         .ToList() 
             };
         }
