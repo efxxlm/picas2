@@ -56,7 +56,9 @@ namespace asivamosffie.services
 
             foreach (var Contrato in ListContratosXProyecto)
             {
-                ContratoConstruccion ContratoConstruccion = _context.ContratoConstruccion.Where(v => v.ContratoId == Contrato.ContratoId && v.ProyectoId == pProyectoId).FirstOrDefault();
+                ContratoConstruccion ContratoConstruccion = _context.ContratoConstruccion.Where(v => v.ContratoId == Contrato.ContratoId && v.ProyectoId == pProyectoId)
+                                                                                         .Include(c=> c.Contrato)
+                                                                                         .FirstOrDefault();
 
                 if (ContratoConstruccion != null)
                 {
@@ -71,7 +73,7 @@ namespace asivamosffie.services
                         HojasDeVida = GetHojasDeVida(ContratoConstruccion),
                         ProgramacionObra = GetProgramacionObra(ContratoConstruccion),
                         FlujoInversion = GetFlujoInversion(ContratoConstruccion),
-                        ActaSuscrita = ContratoConstruccion.PlanRutaSoporte
+                        ActaSuscrita = ContratoConstruccion.Contrato.RutaActaSuscrita
                     });
                 }
             }
@@ -133,7 +135,7 @@ namespace asivamosffie.services
         {
             return new
             {
-                UrlConSoporte = pContratoConstruccion.RutaInforme,
+                UrlConSoporte = pContratoConstruccion.PlanRutaSoporte,
 
                 PlanLicenciaVigente = new
                 {
