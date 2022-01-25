@@ -54,7 +54,6 @@ namespace asivamosffie.services
 
             List<dynamic> Info = new List<dynamic>();
 
-
             foreach (var Contrato in ListContratosXProyecto)
             {
                 ContratoConstruccion ContratoConstruccion = _context.ContratoConstruccion.Where(v => v.ContratoId == Contrato.ContratoId && v.ProyectoId == pProyectoId).FirstOrDefault();
@@ -66,11 +65,38 @@ namespace asivamosffie.services
                         CodigoTipoContrato = Contrato.TipoContratoCodigo,
                         NombreTipoContrato = Contrato.NombreTipoContrato,
                         Diagnostico = GetDiagnosticoByContratoConstruccion(ContratoConstruccion),
-                        PlanesYProgramas = GetPlantesYProgramasByContratoConstruccion(ContratoConstruccion)
+                        PlanesYProgramas = GetPlantesYProgramasByContratoConstruccion(ContratoConstruccion),
+                        ManejoAnticipo = GetManejoAnticipo(ContratoConstruccion),
+                        HojasDeVida = GetHojasDeVida(ContratoConstruccion)
                     });
                 }
             }
             return Info;
+        }
+
+        private object GetHojasDeVida(ContratoConstruccion pContratoConstruccion)
+        {
+            List<VFichaProyectoPreparacionConstruccion> ListFichaProyectoPreparacionConstruccion = _context.VFichaProyectoPreparacionConstruccion.Where(c => c.ContratoConstruccionId == pContratoConstruccion.ContratoConstruccionId).ToList();
+
+            foreach (var item in ListFichaProyectoPreparacionConstruccion)
+            {
+                item.ListRadicados = _context.ConstruccionPerfilNumeroRadicado.Where(r => r.ConstruccionPerfilId == item.ConstruccionPerfilId)
+                                                                              .Select(c => new { c.NumeroRadicado })
+                                                                              .ToList();
+            }
+
+            return ListFichaProyectoPreparacionConstruccion;
+        }
+
+        private object GetManejoAnticipo(ContratoConstruccion pContratoConstruccion)
+        {
+            return new
+            {
+                RequiereAnticipo = pContratoConstruccion.ManejoAnticipoRequiere,
+                TienePlanInversionAprobado = pContratoConstruccion.ManejoAnticipoPlanInversion,
+                TieneCronogramaAmortizacion = pContratoConstruccion.ManejoAnticipoCronogramaAmortizacion,
+                UrlSoporte = pContratoConstruccion.ManejoAnticipoRutaSoporte
+            };
         }
 
         private object GetPlantesYProgramasByContratoConstruccion(ContratoConstruccion pContratoConstruccion)
