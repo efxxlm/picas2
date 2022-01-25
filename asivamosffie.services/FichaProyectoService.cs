@@ -69,20 +69,39 @@ namespace asivamosffie.services
                         PlanesYProgramas = GetPlantesYProgramasByContratoConstruccion(ContratoConstruccion),
                         ManejoAnticipo = GetManejoAnticipo(ContratoConstruccion),
                         HojasDeVida = GetHojasDeVida(ContratoConstruccion),
-                        ProgramacionObra = GetProgramacionObra(ContratoConstruccion)
+                        ProgramacionObra = GetProgramacionObra(ContratoConstruccion),
+                        FlujoInversion = GetFlujoInversion(ContratoConstruccion),
+                        ActaSuscrita = ContratoConstruccion.PlanRutaSoporte
                     });
                 }
             }
             return Info;
         }
 
-        private object GetProgramacionObra(ContratoConstruccion contratoConstruccion)
+        private object GetFlujoInversion(ContratoConstruccion pContratoConstruccion)
         {
-            return new
+            if (pContratoConstruccion.ArchivoCargueIdFlujoInversion > 0)
             {
-                RutaArchivo = _context.ArchivoCargue
+                return new
+                {
+                    RutaArchivo = _context.ArchivoCargue.Where(a => a.ArchivoCargueId == pContratoConstruccion.ArchivoCargueIdFlujoInversion)
+                                                        .Select(a => a.Ruta).FirstOrDefault()
+                };
+            }
+            return null;
+        }
 
-            };
+        private object GetProgramacionObra(ContratoConstruccion pContratoConstruccion)
+        {
+            if (pContratoConstruccion.ArchivoCargueIdProgramacionObra > 0)
+            {
+                return new
+                {
+                    RutaArchivo = _context.ArchivoCargue.Where(a => a.ArchivoCargueId == pContratoConstruccion.ArchivoCargueIdProgramacionObra)
+                                                        .Select(a => a.Ruta).FirstOrDefault()
+                };
+            }
+            return null;
         }
 
         private object GetHojasDeVida(ContratoConstruccion pContratoConstruccion)
@@ -114,6 +133,8 @@ namespace asivamosffie.services
         {
             return new
             {
+                UrlConSoporte = pContratoConstruccion.RutaInforme,
+
                 PlanLicenciaVigente = new
                 {
                     Nombre = "Licencia vigente",
@@ -169,7 +190,7 @@ namespace asivamosffie.services
                     FechaRadicado = pContratoConstruccion.AseguramientoCalidadFechaRadicado,
                     FechaAprobacion = pContratoConstruccion.AseguramientoCalidadFechaAprobacion,
                     TieneObservaciones = pContratoConstruccion.AseguramientoCalidadConObservaciones
-                }, 
+                },
                 PlanProgramaSeguridad = new
                 {
                     Nombre = "¿Cuenta con programa de Seguridad industrial aprobado?",
@@ -229,7 +250,7 @@ namespace asivamosffie.services
             };
         }
 
-        public async Task<dynamic> GetGetInfoPreparacionPreConstruccionByProyectoId(int pProyectoId)
+        public object GetGetInfoPreparacionPreConstruccionByProyectoId(int pProyectoId)
         {
 
             List<VProyectosXcontrato> ListContratosXProyecto = _context.VProyectosXcontrato.Where(v => v.ProyectoId == pProyectoId).ToList();
