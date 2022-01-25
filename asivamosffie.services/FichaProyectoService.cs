@@ -62,6 +62,7 @@ namespace asivamosffie.services
                 {
                     Info.Add(new
                     {
+                        NumeroContrato = Contrato.NumeroContrato,
                         CodigoTipoContrato = Contrato.TipoContratoCodigo,
                         NombreTipoContrato = Contrato.NombreTipoContrato,
                         Diagnostico = GetDiagnosticoByContratoConstruccion(ContratoConstruccion),
