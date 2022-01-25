@@ -68,11 +68,21 @@ namespace asivamosffie.services
                         Diagnostico = GetDiagnosticoByContratoConstruccion(ContratoConstruccion),
                         PlanesYProgramas = GetPlantesYProgramasByContratoConstruccion(ContratoConstruccion),
                         ManejoAnticipo = GetManejoAnticipo(ContratoConstruccion),
-                        HojasDeVida = GetHojasDeVida(ContratoConstruccion)
+                        HojasDeVida = GetHojasDeVida(ContratoConstruccion),
+                        ProgramacionObra = GetProgramacionObra(ContratoConstruccion)
                     });
                 }
             }
             return Info;
+        }
+
+        private object GetProgramacionObra(ContratoConstruccion contratoConstruccion)
+        {
+            return new
+            {
+                RutaArchivo = _context.ArchivoCargue
+
+            };
         }
 
         private object GetHojasDeVida(ContratoConstruccion pContratoConstruccion)
@@ -106,6 +116,7 @@ namespace asivamosffie.services
             {
                 PlanLicenciaVigente = new
                 {
+                    Nombre = "Licencia vigente",
                     RecibioRequisito = pContratoConstruccion.PlanLicenciaVigente,
                     FechaRadicado = pContratoConstruccion.LicenciaFechaRadicado,
                     FechaAprobacion = pContratoConstruccion.LicenciaFechaAprobacion,
@@ -113,6 +124,7 @@ namespace asivamosffie.services
                 },
                 PlanCambioConstructorLicencia = new
                 {
+                    Nombre = "Cambio constructor responsable de la licencia",
                     RecibioRequisito = pContratoConstruccion.PlanCambioConstructorLicencia,
                     FechaRadicado = pContratoConstruccion.CambioFechaRadicado,
                     FechaAprobacion = pContratoConstruccion.CambioFechaAprobacion,
@@ -120,6 +132,7 @@ namespace asivamosffie.services
                 },
                 PlanActaApropiacion = new
                 {
+                    Nombre = "Acta aceptación y apropiación diseños",
                     RecibioRequisito = pContratoConstruccion.PlanActaApropiacion,
                     FechaRadicado = pContratoConstruccion.ActaApropiacionFechaRadicado,
                     FechaAprobacion = pContratoConstruccion.ActaApropiacionFechaAprobacion,
@@ -127,6 +140,7 @@ namespace asivamosffie.services
                 },
                 PlanResiduosDemolicion = new
                 {
+                    Nombre = "¿Cuenta con plan de residuos de construcción y demolición (RCD) aprobado?",
                     RecibioRequisito = pContratoConstruccion.PlanResiduosDemolicion,
                     FechaRadicado = pContratoConstruccion.ResiduosDemolicionFechaRadicado,
                     FechaAprobacion = pContratoConstruccion.ResiduosDemolicionFechaAprobacion,
@@ -134,6 +148,7 @@ namespace asivamosffie.services
                 },
                 PlanManejoTransito = new
                 {
+                    Nombre = "¿Cuenta con plan de manejo de tránsito (PMT) aprobado?",
                     RecibioRequisito = pContratoConstruccion.PlanManejoTransito,
                     FechaRadicado = pContratoConstruccion.ManejoTransitoFechaRadicado,
                     FechaAprobacion = pContratoConstruccion.ManejoTransitoFechaAprobacion,
@@ -141,13 +156,23 @@ namespace asivamosffie.services
                 },
                 PlanManejoAmbiental = new
                 {
+                    Nombre = "¿Cuenta con plan de manejo ambiental aprobado?",
                     RecibioRequisito = pContratoConstruccion.PlanManejoAmbiental,
                     FechaRadicado = pContratoConstruccion.ManejoAmbientalFechaRadicado,
                     FechaAprobacion = pContratoConstruccion.ManejoAmbientalFechaAprobacion,
                     TieneObservaciones = pContratoConstruccion.ManejoAmbientalConObservaciones
                 },
+                PlanMansejoAmbiental = new
+                {
+                    Nombre = "¿Cuenta con plan de aseguramiento de la calidad de obra aprobado?",
+                    RecibioRequisito = pContratoConstruccion.PlanAseguramientoCalidad,
+                    FechaRadicado = pContratoConstruccion.AseguramientoCalidadFechaRadicado,
+                    FechaAprobacion = pContratoConstruccion.AseguramientoCalidadFechaAprobacion,
+                    TieneObservaciones = pContratoConstruccion.AseguramientoCalidadConObservaciones
+                }, 
                 PlanProgramaSeguridad = new
                 {
+                    Nombre = "¿Cuenta con programa de Seguridad industrial aprobado?",
                     RecibioRequisito = pContratoConstruccion.PlanProgramaSeguridad,
                     FechaRadicado = pContratoConstruccion.ProgramaSeguridadFechaRadicado,
                     FechaAprobacion = pContratoConstruccion.ProgramaSeguridadFechaAprobacion,
@@ -155,6 +180,7 @@ namespace asivamosffie.services
                 },
                 PlanProgramaSalud = new
                 {
+                    Nombre = "¿Cuenta con programa de salud ocupacional aprobado?",
                     RecibioRequisito = pContratoConstruccion.PlanProgramaSalud,
                     FechaRadicado = pContratoConstruccion.ProgramaSaludFechaRadicado,
                     FechaAprobacion = pContratoConstruccion.ProgramaSaludFechaAprobacion,
@@ -162,6 +188,7 @@ namespace asivamosffie.services
                 },
                 PlanInventarioArboreo = new
                 {
+                    Nombre = "¿Cuenta con un plan inventario arbóreo (talas) aprobado?",
                     RecibioRequisito = pContratoConstruccion.PlanInventarioArboreo,
                     FechaRadicado = pContratoConstruccion.InventarioArboreoFechaRadicado,
                     FechaAprobacion = pContratoConstruccion.InventarioArboreoFechaAprobacion,
@@ -169,6 +196,7 @@ namespace asivamosffie.services
                 },
                 PlanAprovechamientoForestal = new
                 {
+                    Nombre = "¿Cuenta con plan de aprovechamiento forestal aprobado?",
                     RecibioRequisito = pContratoConstruccion.PlanAprovechamientoForestal,
                     FechaRadicado = pContratoConstruccion.AprovechamientoForestalApropiacionFechaRadicado,
                     FechaAprobacion = pContratoConstruccion.AprovechamientoForestalFechaAprobacion,
@@ -176,6 +204,7 @@ namespace asivamosffie.services
                 },
                 PlanManejoAguasLluvias = new
                 {
+                    Nombre = "¿Cuenta con plan de manejo de aguas lluvias aprobado?",
                     RecibioRequisito = pContratoConstruccion.PlanManejoAguasLluvias,
                     FechaRadicado = pContratoConstruccion.ManejoAguasLluviasFechaRadicado,
                     FechaAprobacion = pContratoConstruccion.ManejoAguasLluviasFechaAprobacion,
@@ -198,7 +227,6 @@ namespace asivamosffie.services
                 TieneModificacionContractual = pContratoConstruccion.RequiereModificacionContractual,
                 NumeroModificacion = pContratoConstruccion.NumeroSolicitudModificacion
             };
-
         }
 
         public async Task<dynamic> GetGetInfoPreparacionPreConstruccionByProyectoId(int pProyectoId)
