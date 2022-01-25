@@ -24,48 +24,49 @@ namespace asivamosffie.services
 
 
         #region Preparacion
-        public async Task<dynamic> GetInfoPreparacionByContratacionProyectoId(int pContratacionProyecto)
-        {
-
+        public async Task<dynamic> GetInfoPreparacionByProyectoId(int pProyectoId)
+        { 
             return new
             {
 
-                Informacion = _context.VFichaProyectoInfoContratacionProyecto.Where(r => r.ContratacionProyectoId == pContratacionProyecto)
-                                                                             .Select(r => new
-                                                                             {
-                                                                                 r.LlaveMen,
-                                                                                 r.InstitucionEducativa,
-                                                                                 r.Sede,
-                                                                                 r.Departamento,
-                                                                                 r.Municipio,
-                                                                                 r.TipoIntervencion
-                                                                             }
-                                                                                    )
-                                                                            .FirstOrDefault(),
+                Informacion =await _context.VFichaProyectoInfoContratacionProyecto.Where(r => r.ProyectoId == pProyectoId)
+                                                                                  .Select(r => new
+                                                                                             {
+                                                                                                 r.LlaveMen,
+                                                                                                 r.InstitucionEducativa,
+                                                                                                 r.Sede,
+                                                                                                 r.Departamento,
+                                                                                                 r.Municipio,
+                                                                                                 r.TipoIntervencion
+                                                                                             }
+                                                                                         )
+                                                                                .FirstOrDefaultAsync(),
 
-                Preconstruccion = GetGetInfoPreparacionPreConstruccionByContratacionProyectoId(pContratacionProyecto)
-
-            };
-
-
+                Preconstruccion = GetGetInfoPreparacionPreConstruccionByProyectoId(pProyectoId) 
+            }; 
         }
 
-        public async Task<dynamic> GetGetInfoPreparacionPreConstruccionByContratacionProyectoId(int pContratacionProyecto)
+        public async Task<dynamic> GetGetInfoPreparacionPreConstruccionByProyectoId(int pProyectoId)
         {
 
-            ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pContratacionProyecto)
-                                                                                     .Include(c => c.Contratacion).ThenInclude(c => c.Contrato)
-                                                                                     .FirstOrDefault();
+            List<VProyectosXcontrato> ListContratosXProyecto = _context.VProyectosXcontrato.Where(v => v.ProyectoId == pProyectoId).ToList();
 
+            List<dynamic> Info = new List<dynamic>();
 
-            return new
+            foreach (var Contrato in ListContratosXProyecto)
             {
-                ActaSuscrita = contratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault()?.RutaActaSuscrita, 
-                NumeroContrato = contratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault()?.NumeroContrato,
-                TablaPreconstruccion = _context.VFichaProyectoPreparacionPreconstruccion.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId
-                                                                                                 && r.ContratacionId == contratacionProyecto.ContratacionId)
-                                                                                        .ToList() 
-            };
+                Info.Add(new
+                {
+                    NombreTipoContrato = Contrato.NombreTipoContrato,
+                    TipoContratoCodigo = Contrato.TipoContratoCodigo,
+                    ActaSuscrita = Contrato.ActaSuscrita,
+                    NumeroContrato = Contrato.NumeroContrato,
+                    TablaPreconstruccion = _context.VFichaProyectoPreparacionPreconstruccion.Where(r => r.ProyectoId == pProyectoId
+                                                                                                     && r.ContratacionId == Contrato.ContratacionId)
+                                                                                            .ToList()
+                });
+            }
+            return Info;
         }
 
 

@@ -29,10 +29,10 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetInfoPreparacionByContratacionProyectoId")]
-        public async Task<ActionResult<dynamic>> GetInfoPreparacionByContratacionProyectoId(int pContratacionProyectoId)
+        [Route("GetInfoPreparacionByProyectoId")]
+        public async Task<ActionResult<dynamic>> GetInfoPreparacionByProyectoId(int pProyectoId)
         {
-            return await _fichaProyectoService.GetInfoPreparacionByContratacionProyectoId(pContratacionProyectoId);
+            return await _fichaProyectoService.GetInfoPreparacionByProyectoId(pProyectoId);
         }
         [HttpGet]
         [Route("GetFlujoProyectoByContratacionProyectoId")]

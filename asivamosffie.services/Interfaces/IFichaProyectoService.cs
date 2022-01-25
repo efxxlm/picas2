@@ -11,7 +11,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IFichaProyectoService
     {
-        Task<dynamic> GetInfoPreparacionByContratacionProyectoId(int pContratoProyectoId);
+        Task<dynamic> GetInfoPreparacionByProyectoId(int pProyectoId);
         Task<dynamic> GetFlujoProyectoByContratacionProyectoId(int pContratacionProyectoId);
         Task<dynamic> GetVigencias();
         Task<dynamic> GetTablaProyectosByProyectoIdTipoContratacionVigencia(int pProyectoId, string pTipoContrato, string pTipoIntervencion, int pVigencia);

@@ -5,6 +5,9 @@ namespace asivamosffie.model.Models
 {
     public partial class VProyectosXcontrato
     {
+        public string ActaSuscrita { get; set; }
+        public string TipoContratoCodigo { get; set; }
+        public string NombreTipoContrato { get; set; }
         public string LlaveMen { get; set; }
         public DateTime? FechaRegistroProyecto { get; set; }
         public string NumeroContrato { get; set; }

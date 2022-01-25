@@ -11023,6 +11023,10 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_ProyectosXContrato");
 
+                entity.Property(e => e.ActaSuscrita)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Departamento)
                     .HasColumnName("departamento")
                     .HasMaxLength(300)
@@ -11059,6 +11063,10 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.NombreTipoContrato)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -11067,6 +11075,10 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasColumnName("sede")
                     .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoContratoCodigo)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoIntervencion)
