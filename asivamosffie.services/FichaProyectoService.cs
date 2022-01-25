@@ -75,10 +75,85 @@ namespace asivamosffie.services
 
         private object GetPlantesYProgramasByContratoConstruccion(ContratoConstruccion pContratoConstruccion)
         {
-            return new 
+            return new
             {
-                LicenciaVigente = pContratoConstruccion.PlanLicenciaVigente ?? false,
-
+                PlanLicenciaVigente = new
+                {
+                    RecibioRequisito = pContratoConstruccion.PlanLicenciaVigente,
+                    FechaRadicado = pContratoConstruccion.LicenciaFechaRadicado,
+                    FechaAprobacion = pContratoConstruccion.LicenciaFechaAprobacion,
+                    TieneObservaciones = pContratoConstruccion.LicenciaConObservaciones
+                },
+                PlanCambioConstructorLicencia = new
+                {
+                    RecibioRequisito = pContratoConstruccion.PlanCambioConstructorLicencia,
+                    FechaRadicado = pContratoConstruccion.CambioFechaRadicado,
+                    FechaAprobacion = pContratoConstruccion.CambioFechaAprobacion,
+                    TieneObservaciones = pContratoConstruccion.CambioConObservaciones
+                },
+                PlanActaApropiacion = new
+                {
+                    RecibioRequisito = pContratoConstruccion.PlanActaApropiacion,
+                    FechaRadicado = pContratoConstruccion.ActaApropiacionFechaRadicado,
+                    FechaAprobacion = pContratoConstruccion.ActaApropiacionFechaAprobacion,
+                    TieneObservaciones = pContratoConstruccion.ActaApropiacionConObservaciones
+                },
+                PlanResiduosDemolicion = new
+                {
+                    RecibioRequisito = pContratoConstruccion.PlanResiduosDemolicion,
+                    FechaRadicado = pContratoConstruccion.ResiduosDemolicionFechaRadicado,
+                    FechaAprobacion = pContratoConstruccion.ResiduosDemolicionFechaAprobacion,
+                    TieneObservaciones = pContratoConstruccion.ResiduosDemolicionConObservaciones
+                },
+                PlanManejoTransito = new
+                {
+                    RecibioRequisito = pContratoConstruccion.PlanManejoTransito,
+                    FechaRadicado = pContratoConstruccion.ManejoTransitoFechaRadicado,
+                    FechaAprobacion = pContratoConstruccion.ManejoTransitoFechaAprobacion,
+                    TieneObservaciones = pContratoConstruccion.ManejoTransitoConObservaciones1
+                },
+                PlanManejoAmbiental = new
+                {
+                    RecibioRequisito = pContratoConstruccion.PlanManejoAmbiental,
+                    FechaRadicado = pContratoConstruccion.ManejoAmbientalFechaRadicado,
+                    FechaAprobacion = pContratoConstruccion.ManejoAmbientalFechaAprobacion,
+                    TieneObservaciones = pContratoConstruccion.ManejoAmbientalConObservaciones
+                },
+                PlanProgramaSeguridad = new
+                {
+                    RecibioRequisito = pContratoConstruccion.PlanProgramaSeguridad,
+                    FechaRadicado = pContratoConstruccion.ProgramaSeguridadFechaRadicado,
+                    FechaAprobacion = pContratoConstruccion.ProgramaSeguridadFechaAprobacion,
+                    TieneObservaciones = pContratoConstruccion.ProgramaSeguridadConObservaciones
+                },
+                PlanProgramaSalud = new
+                {
+                    RecibioRequisito = pContratoConstruccion.PlanProgramaSalud,
+                    FechaRadicado = pContratoConstruccion.ProgramaSaludFechaRadicado,
+                    FechaAprobacion = pContratoConstruccion.ProgramaSaludFechaAprobacion,
+                    TieneObservaciones = pContratoConstruccion.ProgramaSaludConObservaciones
+                },
+                PlanInventarioArboreo = new
+                {
+                    RecibioRequisito = pContratoConstruccion.PlanInventarioArboreo,
+                    FechaRadicado = pContratoConstruccion.InventarioArboreoFechaRadicado,
+                    FechaAprobacion = pContratoConstruccion.InventarioArboreoFechaAprobacion,
+                    TieneObservaciones = pContratoConstruccion.InventarioArboreoConObservaciones
+                },
+                PlanAprovechamientoForestal = new
+                {
+                    RecibioRequisito = pContratoConstruccion.PlanAprovechamientoForestal,
+                    FechaRadicado = pContratoConstruccion.AprovechamientoForestalApropiacionFechaRadicado,
+                    FechaAprobacion = pContratoConstruccion.AprovechamientoForestalFechaAprobacion,
+                    TieneObservaciones = pContratoConstruccion.AprovechamientoForestalConObservaciones
+                },
+                PlanManejoAguasLluvias = new
+                {
+                    RecibioRequisito = pContratoConstruccion.PlanManejoAguasLluvias,
+                    FechaRadicado = pContratoConstruccion.ManejoAguasLluviasFechaRadicado,
+                    FechaAprobacion = pContratoConstruccion.ManejoAguasLluviasFechaAprobacion,
+                    TieneObservaciones = pContratoConstruccion.ManejoAguasLluviasConObservaciones
+                }
             };
         }
 
@@ -138,8 +213,6 @@ namespace asivamosffie.services
                 TieneSeguimientoFinanciero = _context.VFichaProyectoTieneSeguimientoFinanciero.Any(cp => cp.ProyectoId == pProyectoId),
                 TieneEntrega = _context.VFichaProyectoTieneEntrega.Any(cp => cp.ProyectoId == pProyectoId),
             };
-
-
         }
 
         public async Task<dynamic> GetVigencias()
@@ -160,7 +233,7 @@ namespace asivamosffie.services
 
             if (!string.IsNullOrEmpty(pTipoIntervencion))
                 ListProyectos = ListProyectos.Where(p => p.CodigoTipoIntervencion == pTipoIntervencion).ToList();
-              
+
             if (pVigencia > 0)
                 ListProyectos = ListProyectos.Where(p => p.Vigencia == pVigencia).ToList();
 
