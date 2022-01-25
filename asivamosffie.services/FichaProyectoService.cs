@@ -126,17 +126,17 @@ namespace asivamosffie.services
         #endregion
 
         #region Busqueda
-        public async Task<dynamic> GetFlujoProyectoByContratacionProyectoId(int pContratacionProyectoId)
+        public async Task<dynamic> GetFlujoProyectoByProyectoId(int pProyectoId)
         {
             return new
             {
-                Informacion = _context.VFichaProyectoInfoContratacionProyecto.Where(x => x.ContratacionProyectoId == pContratacionProyectoId).FirstOrDefault(),
-                TieneResumen = _context.VFichaProyectoTieneResumen.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
-                TieneContratacion = _context.VFichaProyectoTieneContratacion.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
-                TienePreparacion = _context.VFichaProyectoTienePreparacion.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
-                TieneSeguimientoTecnico = _context.VFichaProyectoTieneSeguimientoTecnico.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
-                TieneSeguimientoFinanciero = _context.VFichaProyectoTieneSeguimientoFinanciero.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
-                TieneEntrega = _context.VFichaProyectoTieneEntrega.Any(cp => cp.ContratacionProyectoId == pContratacionProyectoId),
+                Informacion = _context.VFichaProyectoInfoContratacionProyecto.Where(x => x.ProyectoId == pProyectoId).FirstOrDefault(),
+                TieneResumen = _context.VFichaProyectoTieneResumen.Any(cp => cp.ProyectoId == pProyectoId),
+                TieneContratacion = _context.VFichaProyectoTieneContratacion.Any(cp => cp.ProyectoId == pProyectoId),
+                TienePreparacion = _context.VFichaProyectoTienePreparacion.Any(cp => cp.ProyectoId == pProyectoId),
+                TieneSeguimientoTecnico = _context.VFichaProyectoTieneSeguimientoTecnico.Any(cp => cp.ProyectoId == pProyectoId),
+                TieneSeguimientoFinanciero = _context.VFichaProyectoTieneSeguimientoFinanciero.Any(cp => cp.ProyectoId == pProyectoId),
+                TieneEntrega = _context.VFichaProyectoTieneEntrega.Any(cp => cp.ProyectoId == pProyectoId),
             };
 
 

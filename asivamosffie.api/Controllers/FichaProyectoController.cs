@@ -35,10 +35,10 @@ namespace asivamosffie.api.Controllers
             return await _fichaProyectoService.GetInfoPreparacionByProyectoId(pProyectoId);
         }
         [HttpGet]
-        [Route("GetFlujoProyectoByContratacionProyectoId")]
-        public async Task<ActionResult<dynamic>> GetFlujoProyectoByContratacionProyectoId(int pContratacionProyectoId)
+        [Route("GetFlujoProyectoByProyectoId")]
+        public async Task<ActionResult<dynamic>> GetFlujoProyectoByProyectoId(int pProyectoId)
         {
-            return await _fichaProyectoService.GetFlujoProyectoByContratacionProyectoId(pContratacionProyectoId);
+            return await _fichaProyectoService.GetFlujoProyectoByProyectoId(pProyectoId);
         }
         [HttpGet]
         [Route("GetVigencias")]
