@@ -11,37 +11,11 @@ export class PreparacionComponent implements OnInit {
 
   proyectoId: number;
   dataPreparacion: any = null;
-  listaPerfil = [
-    {
-      perfil: 'Ingeniero de obra',
-      hvRequeridas: '1',
-      hvRecibidas: '10',
-      hvAprobadas: '3',
-      urlSoporte: 'http//H.VIngeniero.onedrive'
-    }
-  ];
   dataPreConstruccionObra: any = null;
   dataPreConstruccionInterventoria: any = null;
-
-  listaPlanes = [
-    {
-      planesProgramas: 'Licencia vigente',
-      recibioRequisito: 'Sí',
-      fechaRadicado: '20/07/2020',
-      fechaAprobacion: '19/07/2020',
-      observacionesRequisito: 'No'
-    }
-  ];
-
-  listacontratoInterventoria = [
-    {
-      perfil: 'Ingeniero de obra',
-      hvRequeridas: '1',
-      hvRecibidas: '10',
-      hvAprobadas: '3',
-      urlSoporte: 'http//H.VIngeniero.onedrive'
-    }
-  ];
+  dataConstruccionObra: any = null;
+  dataConstruccionInterventoria: any = null;
+  listaPlanes = [];
 
   constructor(
     private fichaProyectoService: FichaProyectoService,
@@ -53,16 +27,33 @@ export class PreparacionComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.listaPlanes = [];
     this.fichaProyectoService.getInfoPreparacionByProyectoId(this.proyectoId)
     .subscribe(response => {
       this.dataPreparacion = response;
       if(this.dataPreparacion != null){
-        if(this.dataPreparacion?.preconstruccion?.result != null){
-           this.dataPreConstruccionObra =  this.dataPreparacion?.preconstruccion?.result.find(r => r.tipoContratoCodigo == '1');
-           this.dataPreConstruccionInterventoria =  this.dataPreparacion?.preconstruccion?.result.find(r => r.tipoContratoCodigo == '2');
+        if(this.dataPreparacion?.preconstruccion != null){
+           this.dataPreConstruccionObra =  this.dataPreparacion?.preconstruccion?.find(r => r.tipoContratoCodigo == '1');
+           this.dataPreConstruccionInterventoria =  this.dataPreparacion?.preconstruccion?.find(r => r.tipoContratoCodigo == '2');
         }
-        console.log(this.dataPreConstruccionObra);
-        console.log(this.dataPreConstruccionInterventoria);
+        if(this.dataPreparacion?.construccion != null){
+          this.dataConstruccionObra =  this.dataPreparacion?.construccion?.find(r => r.codigoTipoContrato == '1');
+          this.dataConstruccionInterventoria =  this.dataPreparacion?.construccion?.find(r => r.codigoTipoContrato == '2');
+        }
+        if(this.dataConstruccionObra?.planesYProgramas != null){
+          this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planLicenciaVigente);
+          this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planCambioConstructorLicencia);
+          this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planActaApropiacion);
+          this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planResiduosDemolicion);
+          this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planManejoTransito);
+          this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planManejoAmbiental);
+          this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planMansejoAmbiental);
+          this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planProgramaSeguridad);
+          this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planProgramaSalud);
+          this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planInventarioArboreo);
+          this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planAprovechamientoForestal);
+          this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planManejoAguasLluvias);
+        }
       }
     });
   }
