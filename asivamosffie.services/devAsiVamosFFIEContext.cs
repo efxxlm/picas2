@@ -9746,10 +9746,6 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_FichaProyecto_BusquedaProyectoTabla");
 
-                entity.Property(e => e.CodigoTipoContrato)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.CodigoTipoIntervencion)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -9767,10 +9763,6 @@ namespace asivamosffie.model.Models
                     .HasColumnName("LlaveMEN")
                     .HasMaxLength(100)
                     .IsUnicode(false);
-
-                entity.Property(e => e.NombreTipoContrato)
-                    .IsRequired()
-                    .HasMaxLength(250);
 
                 entity.Property(e => e.TipoIntervencion)
                     .IsRequired()

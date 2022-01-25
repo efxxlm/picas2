@@ -14,7 +14,7 @@ namespace asivamosffie.services.Interfaces
         Task<dynamic> GetInfoPreparacionByProyectoId(int pProyectoId);
         Task<dynamic> GetFlujoProyectoByContratacionProyectoId(int pContratacionProyectoId);
         Task<dynamic> GetVigencias();
-        Task<dynamic> GetTablaProyectosByProyectoIdTipoContratacionVigencia(int pProyectoId, string pTipoContrato, string pTipoIntervencion, int pVigencia);
+        Task<dynamic> GetTablaProyectosByProyectoIdTipoContratacionVigencia(int pProyectoId,string pTipoIntervencion, int pVigencia);
         Task<dynamic> GetProyectoIdByLlaveMen(string pLlaveMen);
 
     }

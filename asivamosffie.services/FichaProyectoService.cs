@@ -22,28 +22,81 @@ namespace asivamosffie.services
             _context = context;
         }
 
-
         #region Preparacion
         public async Task<dynamic> GetInfoPreparacionByProyectoId(int pProyectoId)
-        { 
+        {
             return new
             {
 
-                Informacion =await _context.VFichaProyectoInfoContratacionProyecto.Where(r => r.ProyectoId == pProyectoId)
+                Informacion = await _context.VFichaProyectoInfoContratacionProyecto.Where(r => r.ProyectoId == pProyectoId)
                                                                                   .Select(r => new
-                                                                                             {
-                                                                                                 r.LlaveMen,
-                                                                                                 r.InstitucionEducativa,
-                                                                                                 r.Sede,
-                                                                                                 r.Departamento,
-                                                                                                 r.Municipio,
-                                                                                                 r.TipoIntervencion
-                                                                                             }
+                                                                                  {
+                                                                                      r.LlaveMen,
+                                                                                      r.InstitucionEducativa,
+                                                                                      r.Sede,
+                                                                                      r.Departamento,
+                                                                                      r.Municipio,
+                                                                                      r.TipoIntervencion
+                                                                                  }
                                                                                          )
                                                                                 .FirstOrDefaultAsync(),
 
-                Preconstruccion = GetGetInfoPreparacionPreConstruccionByProyectoId(pProyectoId) 
-            }; 
+                Preconstruccion = GetGetInfoPreparacionPreConstruccionByProyectoId(pProyectoId),
+
+                Construccion = GetGetInfoPreparacionConstruccionByProyectoId(pProyectoId)
+            };
+        }
+
+        public async Task<dynamic> GetGetInfoPreparacionConstruccionByProyectoId(int pProyectoId)
+        {
+
+            List<VProyectosXcontrato> ListContratosXProyecto = _context.VProyectosXcontrato.Where(v => v.ProyectoId == pProyectoId).ToList();
+
+            List<dynamic> Info = new List<dynamic>();
+
+
+            foreach (var Contrato in ListContratosXProyecto)
+            {
+                ContratoConstruccion ContratoConstruccion = _context.ContratoConstruccion.Where(v => v.ContratoId == Contrato.ContratoId && v.ProyectoId == pProyectoId).FirstOrDefault();
+
+                if (ContratoConstruccion != null)
+                {
+                    Info.Add(new
+                    {
+                        CodigoTipoContrato = Contrato.TipoContratoCodigo,
+                        NombreTipoContrato = Contrato.NombreTipoContrato,
+                        Diagnostico = GetDiagnosticoByContratoConstruccion(ContratoConstruccion),
+                        PlanesYProgramas = GetPlantesYProgramasByContratoConstruccion(ContratoConstruccion)
+                    });
+                }
+            }
+            return Info;
+        }
+
+        private object GetPlantesYProgramasByContratoConstruccion(ContratoConstruccion pContratoConstruccion)
+        {
+            return new 
+            {
+                LicenciaVigente = pContratoConstruccion.PlanLicenciaVigente ?? false,
+
+            };
+        }
+
+        private object GetDiagnosticoByContratoConstruccion(ContratoConstruccion pContratoConstruccion)
+        {
+            return new
+            {
+                CuentaConInformeDiagnosticoAprobado = pContratoConstruccion.EsInformeDiagnostico,
+                UrlSoporte = pContratoConstruccion.RutaInforme,
+                CostoDirecto = pContratoConstruccion.CostoDirecto,
+                Administracion = pContratoConstruccion.Administracion,
+                Imprevistos = pContratoConstruccion.Imprevistos,
+                Utilidad = pContratoConstruccion.Utilidad,
+                ValorTotalConstruccion = pContratoConstruccion.ValorTotalFaseConstruccion,
+                TieneModificacionContractual = pContratoConstruccion.RequiereModificacionContractual,
+                NumeroModificacion = pContratoConstruccion.NumeroSolicitudModificacion
+            };
+
         }
 
         public async Task<dynamic> GetGetInfoPreparacionPreConstruccionByProyectoId(int pProyectoId)
@@ -71,7 +124,6 @@ namespace asivamosffie.services
 
 
         #endregion
-
 
         #region Busqueda
         public async Task<dynamic> GetFlujoProyectoByContratacionProyectoId(int pContratacionProyectoId)
@@ -101,17 +153,14 @@ namespace asivamosffie.services
             return await _context.VFichaProyectoBusquedaProyecto.Where(f => f.LlaveMen.ToUpper().Contains(pLlaveMen.ToUpper()))
                                                                 .OrderByDescending(p => p.ProyectoId).ToListAsync();
         }
-        public async Task<dynamic> GetTablaProyectosByProyectoIdTipoContratacionVigencia(int pProyectoId, string pTipoContrato, string pTipoIntervencion, int pVigencia)
+        public async Task<dynamic> GetTablaProyectosByProyectoIdTipoContratacionVigencia(int pProyectoId, string pTipoIntervencion, int pVigencia)
         {
 
             List<VFichaProyectoBusquedaProyectoTabla> ListProyectos = await _context.VFichaProyectoBusquedaProyectoTabla.Where(p => p.ProyectoId == pProyectoId).ToListAsync();
 
             if (!string.IsNullOrEmpty(pTipoIntervencion))
                 ListProyectos = ListProyectos.Where(p => p.CodigoTipoIntervencion == pTipoIntervencion).ToList();
-
-            if (!string.IsNullOrEmpty(pTipoContrato))
-                ListProyectos = ListProyectos.Where(p => p.CodigoTipoContrato == pTipoContrato).ToList();
-
+              
             if (pVigencia > 0)
                 ListProyectos = ListProyectos.Where(p => p.Vigencia == pVigencia).ToList();
 
