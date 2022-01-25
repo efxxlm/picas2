@@ -47,7 +47,7 @@ namespace asivamosffie.services
             };
         }
 
-        public async Task<dynamic> GetGetInfoPreparacionConstruccionByProyectoId(int pProyectoId)
+        public object GetGetInfoPreparacionConstruccionByProyectoId(int pProyectoId)
         {
 
             List<VProyectosXcontrato> ListContratosXProyecto = _context.VProyectosXcontrato.Where(v => v.ProyectoId == pProyectoId).ToList();
