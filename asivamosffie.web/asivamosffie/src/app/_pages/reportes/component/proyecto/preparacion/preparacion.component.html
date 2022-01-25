@@ -1,7 +1,7 @@
 <section class="container" *ngIf="this.dataPreparacion != null">
   <div class="container text-center">
     <div class="text-right">
-      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+      <a routerLink="../../../" mat-button color="primary" class="btn-regresar">
         <img src="assets/img/icon/regresar.svg" alt="Regresar">
       </a>
     </div>
@@ -435,7 +435,7 @@
                   </mat-expansion-panel-header>
 
                   <div class="text-centes">
-                    <button mat-raised-button color="accent" class="btn-table">
+                    <button mat-raised-button color="accent" class="btn-table" (click)="descargar(false, dataConstruccionObra?.programacionObra?.rutaArchivo)">
                       Descargar archivo
                     </button>
                   </div>
@@ -449,7 +449,7 @@
                   </mat-expansion-panel-header>
 
                   <div class="text-centes">
-                    <button mat-raised-button color="accent" class="btn-table">
+                    <button mat-raised-button color="accent" class="btn-table" (click)="descargar(true, dataConstruccionObra?.flujoInversion?.rutaArchivo)">
                       Descargar archivo
                     </button>
                   </div>
@@ -471,7 +471,7 @@
                     <mat-card-content>
                       <p>
                         <strong>
-                          htttp:one.drive.h.vconstruccion.com
+                          {{ dataConstruccionObra?.actaSuscrita }}
                         </strong>
                       </p>
                     </mat-card-content>
@@ -484,7 +484,7 @@
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
-                  Contrato de interventoría {{ this.dataConstruccionInterventoria?.numeroContrato }}
+                  Contrato de interventoría {{ dataConstruccionInterventoria?.numeroContrato }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
@@ -500,21 +500,21 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let element of listacontratoInterventoria">
+                  <tr *ngFor="let element of dataConstruccionInterventoria?.hojasDeVida">
                     <td class="mat-cell cdk-cell ng-star-inserted">
                       <b> {{ element.perfil }} </b>
                     </td>
                     <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.hvRequeridas }}
+                      {{ element.cantidadHvRequeridas }}
                     </td>
                     <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.hvRecibidas }}
+                      {{ element.cantidadHvRecibidas }}
                     </td>
                     <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.hvAprobadas }}
+                      {{ element.cantidadHvAprobadas }}
                     </td>
                     <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.urlSoporte }}
+                      {{ element.rutaSoporte }}
                     </td>
                   </tr>
                 </tbody>
@@ -530,7 +530,7 @@
               <mat-card-content>
                   <p>
                     <strong>
-                      htttp:one.drive.h.vpreconstruccion.com
+                      {{ dataConstruccionInterventoria?.actaSuscrita }}
                     </strong>
                   </p>
               </mat-card-content>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 import { FichaProyectoService } from 'src/app/core/_services/fichaProyecto/ficha-proyecto.service';
 
 @Component({
@@ -19,7 +20,8 @@ export class PreparacionComponent implements OnInit {
 
   constructor(
     private fichaProyectoService: FichaProyectoService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private commonSvc: CommonService
   ) {
     this.route.params.subscribe((params: Params) => {
       this.proyectoId = params.id;
@@ -57,5 +59,19 @@ export class PreparacionComponent implements OnInit {
       }
     });
   }
+
+  descargar(esFlujoInversion: boolean, id: number) {
+    this.commonSvc.getFileById(id)
+      .subscribe(respuesta => {
+        const documento = esFlujoInversion ? 'FlujoInversion.xlsx' : 'ProgramacionObra.xlsx';
+        const  blob = new Blob([respuesta], { type: 'application/octet-stream' });
+        const  anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/octet-stream', anchor.download, anchor.href].join(':');
+        anchor.click();
+      });
+  }
+
 
 }
