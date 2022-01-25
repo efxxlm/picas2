@@ -332,19 +332,22 @@
                         <strong>
                           ¿El contrato requiere anticipo?:
                         </strong>
-                        Sí
+                        <span *ngIf="dataConstruccionObra?.manejoAnticipo?.requiereAnticipo == true">Sí</span>
+                        <span *ngIf="dataConstruccionObra?.manejoAnticipo?.requiereAnticipo != true">No</span>
                       </p>
                       <p>
                         <strong>
                           ¿Cuenta con plan de inversión aprobado para el anticipo?:
                         </strong>
-                        Sí
+                        <span *ngIf="dataConstruccionObra?.manejoAnticipo?.tienePlanInversionAprobado == true">Sí</span>
+                        <span *ngIf="dataConstruccionObra?.manejoAnticipo?.tienePlanInversionAprobado != true">No</span>
                       </p>
                       <p>
                         <strong>
                           ¿Cuenta con cronograma de amortización aprobado?:
                         </strong>
-                        Sí
+                        <span *ngIf="dataConstruccionObra?.manejoAnticipo?.tieneCronogramaAmortizacion == true">Sí</span>
+                        <span *ngIf="dataConstruccionObra?.manejoAnticipo?.tieneCronogramaAmortizacion != true">No</span>
                       </p>
                     </mat-card-content>
                   </mat-card>
@@ -353,7 +356,7 @@
                     <strong>
                       URL con soporte:
                     </strong>
-                    https://drive.google.com/drive/informeinterventoria1
+                    {{ dataConstruccionObra?.manejoAnticipo?.urlSoporte }}
                   </p>
 
               </mat-expansion-panel>
@@ -364,10 +367,10 @@
                       </mat-panel-title>
                   </mat-expansion-panel-header>
 
-                  <mat-card class="shipping-card var-main-gris">
+                  <mat-card class="shipping-card var-main-gris" *ngFor="let hv of dataConstruccionObra?.hojasDeVida; index as i;">
                     <mat-card-header class="header-card header-card--margin">
                       <mat-card-title class="header-card--text">
-                        Perfil 1
+                        Perfil {{ i + 1 }}
                       </mat-card-title>
                     </mat-card-header>
                     <mat-card-content>
@@ -375,57 +378,50 @@
                         <strong>
                           Perfil:
                         </strong>
-                        Ingeniero de obra
+                        {{ hv.perfil }}
                       </p>
                       <p>
                         <strong>
                           Cantidad de hojas de vida requeridas para el perfil:
                         </strong>
-                        2
+                        {{ hv.cantidadHvRequeridas }}
                       </p>
                       <p>
                         <strong>
                           Cantidad de hojas de vida recibidas para el perfil:
                         </strong>
-                        10
+                        {{ hv.cantidadHvRecibidas }}
                       </p>
                       <p>
                         <strong>
                           Cantidad de hojas de vida aprobadas para el perfil:
                         </strong>
-                        3
+                        {{ hv.cantidadHvAprobadas }}
                       </p>
                       <p>
                         <strong>
                           Fecha de aprobación de la totalidad de las hojas de vida:
                         </strong>
-                        07/08/2020
+                        {{ hv.fechaAprobacion }}
                       </p>
                       <p>
                         <strong>
                           Observaciones:
                         </strong>
-                        <span class="d-block">
-                          ---
+                        <span class="d-block"  [innerHTML]="hv.observaciones">
                         </span>
                       </p>
-                      <p>
+                      <p *ngFor="let item of hv.listRadicados; index as j;">
                         <strong>
-                          Número de radicado en FFIE de aprobación de hojas de vida 1:
+                          Número de radicado en FFIE de aprobación de hojas de vida {{ j + 1 }}:
                         </strong>
-                        FFFLL098764-00
-                      </p>
-                      <p>
-                        <strong>
-                          Número de radicado en FFIE de aprobación de hojas de vida 2:
-                        </strong>
-                        DDDNN5678-00
+                        {{ item.numeroRadicado }}
                       </p>
                       <p>
                         <strong>
                           URL con soporte:
                         </strong>
-                        https://drive.google.com/drive/perfil/Ingenierodeobra/hojasdevida
+                        {{ hv.rutaSoporte }}
                       </p>
                     </mat-card-content>
                   </mat-card>
