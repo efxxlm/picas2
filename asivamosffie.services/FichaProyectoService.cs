@@ -16,7 +16,6 @@ namespace asivamosffie.services
     {
         private readonly devAsiVamosFFIEContext _context;
 
-
         public FichaProyectoService(devAsiVamosFFIEContext context)
         {
             _context = context;
@@ -57,7 +56,7 @@ namespace asivamosffie.services
             foreach (var Contrato in ListContratosXProyecto)
             {
                 ContratoConstruccion ContratoConstruccion = _context.ContratoConstruccion.Where(v => v.ContratoId == Contrato.ContratoId && v.ProyectoId == pProyectoId)
-                                                                                         .Include(c=> c.Contrato)
+                                                                                         .Include(c => c.Contrato)
                                                                                          .FirstOrDefault();
 
                 if (ContratoConstruccion != null)
@@ -82,28 +81,18 @@ namespace asivamosffie.services
 
         private object GetFlujoInversion(ContratoConstruccion pContratoConstruccion)
         {
-            if (pContratoConstruccion.ArchivoCargueIdFlujoInversion > 0)
+            return new
             {
-                return new
-                {
-                    RutaArchivo = _context.ArchivoCargue.Where(a => a.ArchivoCargueId == pContratoConstruccion.ArchivoCargueIdFlujoInversion)
-                                                        .Select(a => a.Ruta).FirstOrDefault()
-                };
-            }
-            return null;
+                RutaArchivo = pContratoConstruccion.ArchivoCargueIdFlujoInversion
+            };
         }
 
         private object GetProgramacionObra(ContratoConstruccion pContratoConstruccion)
-        {
-            if (pContratoConstruccion.ArchivoCargueIdProgramacionObra > 0)
+        { 
+            return new
             {
-                return new
-                {
-                    RutaArchivo = _context.ArchivoCargue.Where(a => a.ArchivoCargueId == pContratoConstruccion.ArchivoCargueIdProgramacionObra)
-                                                        .Select(a => a.Ruta).FirstOrDefault()
-                };
-            }
-            return null;
+                RutaArchivo = pContratoConstruccion.ArchivoCargueIdProgramacionObra
+            }; 
         }
 
         private object GetHojasDeVida(ContratoConstruccion pContratoConstruccion)
