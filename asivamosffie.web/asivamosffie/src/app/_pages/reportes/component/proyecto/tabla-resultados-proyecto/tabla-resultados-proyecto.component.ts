@@ -11,7 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TablaResultadosProyectoComponent implements OnInit {
 
-  @Output() morstrarFicha = new EventEmitter<{ficha: boolean, contratacionProyectoId: number}>();
+  @Output() morstrarFicha = new EventEmitter<{ficha: boolean, proyectoId: number}>();
   @Input() resultados: any[];
 
   ELEMENT_DATA: any[] = [];
@@ -19,10 +19,9 @@ export class TablaResultadosProyectoComponent implements OnInit {
     'llaveMen',
     'departamentoMunicipio',
     'institucionEducativaSede',
-    'nombreTipoContrato',
     'tipoIntervencion',
     'vigencia',
-    'contratacionProyectoId'
+    'proyectoId'
   ];
 
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
@@ -34,8 +33,8 @@ export class TablaResultadosProyectoComponent implements OnInit {
     this.dataSource.data = this.resultados;
   }
 
-  verFicha(contratacionProyectoId: number) {
-    this.morstrarFicha.emit({ficha: true, contratacionProyectoId: contratacionProyectoId});
+  verFicha(proyectoId: number) {
+    this.morstrarFicha.emit({ficha: true, proyectoId: proyectoId});
   }
 
   descargarFicha() {

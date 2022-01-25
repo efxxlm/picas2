@@ -17,12 +17,12 @@ export class FichaProyectoService {
       return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetProyectoIdByLlaveMen?pLlaveMen=${ pLlaveMen }`);
     }
 
-    getTablaProyectosByProyectoIdTipoContratacionVigencia( pProyectoId: number, pTipoContrato: string,pTipoIntervencion: string, pVigencia: number ){
-      return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetTablaProyectosByProyectoIdTipoContratacionVigencia?pProyectoId=${ pProyectoId }&pTipoContrato=${ pTipoContrato }&pTipoIntervencion=${ pTipoIntervencion }&pVigencia=${ pVigencia }`);
+    getTablaProyectosByProyectoIdTipoContratacionVigencia( pProyectoId: number,pTipoIntervencion: string, pVigencia: number ){
+      return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetTablaProyectosByProyectoIdTipoContratacionVigencia?pProyectoId=${ pProyectoId }&pTipoIntervencion=${ pTipoIntervencion }&pVigencia=${ pVigencia }`);
     }
 
-    getFlujoProyectoByContratacionProyectoId( pContratacionProyectoId: number ){
-      return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetFlujoProyectoByContratacionProyectoId?pContratacionProyectoId=${ pContratacionProyectoId }`);
+    getFlujoProyectoByProyectoId( pProyectoId: number ){
+      return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/getFlujoProyectoByProyectoId?pProyectoId=${ pProyectoId }`);
     }
 
     getVigencias(){
@@ -31,8 +31,8 @@ export class FichaProyectoService {
 
     /*PREPARACIÓN*/
 
-    getInfoPreparacionByContratacionProyectoId(pContratacionProyectoId: number){
-      return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetInfoPreparacionByContratacionProyectoId?pContratacionProyectoId=${ pContratacionProyectoId }`);
+    getInfoPreparacionByProyectoId(pProyectoId: number){
+      return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetInfoPreparacionByProyectoId?pProyectoId=${ pProyectoId }`);
     }
 
 }

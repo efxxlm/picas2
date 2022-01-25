@@ -26,16 +26,6 @@
       <td mat-cell *matCellDef="let element">{{ element.institucionEducativaSede }}</td>
     </ng-container>
 
-    <!-- tipoContrato Column -->
-    <ng-container matColumnDef="nombreTipoContrato">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        Tipo de contrato
-      </th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.nombreTipoContrato }}
-      </td>
-    </ng-container>
-
     <!-- tipoIntervencion Column -->
     <ng-container matColumnDef="tipoIntervencion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -57,7 +47,7 @@
     </ng-container>
 
     <!-- id Column -->
-    <ng-container matColumnDef="contratacionProyectoId">
+    <ng-container matColumnDef="proyectoId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Gestión
       </th>
@@ -67,7 +57,7 @@
           mat-raised-button
           color="accent"
           class="btn-table"
-          (click)="verFicha(element.contratacionProyectoId)"
+          (click)="verFicha(element.proyectoId)"
         >
           Ver ficha
         </button>

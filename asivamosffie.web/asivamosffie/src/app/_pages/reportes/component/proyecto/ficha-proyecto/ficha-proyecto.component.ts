@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -22,7 +22,6 @@ export class FichaProyectoComponent implements OnInit {
     municipio: [null],
     institucionEducativa: [null],
     dede: [null],
-    tipoContrato: [null],
     tipoIntervencion: [null],
     vigenciaContratacion: [null]
   });
@@ -43,7 +42,6 @@ export class FichaProyectoComponent implements OnInit {
   listMunicipio = [];
   listInstEducativa = [];
   listSede = [];
-  listTipoContrato = [];
   listTipoIntervencion = [];
   listVigencias = [];
   resultados = [];
@@ -59,7 +57,6 @@ export class FichaProyectoComponent implements OnInit {
 
   ngOnInit(): void {
     this.fichaProyectoService.getVigencias().subscribe(response => this.listVigencias = response );
-    this.commonSvc.listaTipoSolicitudContrato().subscribe( response => this.listTipoContrato = response);
     this.commonSvc.listaTipoIntervencion().subscribe( response => this.listTipoIntervencion = response);
   }
 
@@ -70,7 +67,6 @@ export class FichaProyectoComponent implements OnInit {
       municipio: null,
       institucionEducativa: null,
       dede: null,
-      tipoContrato: null,
       tipoIntervencion: null,
       vigenciaContratacion: null,
       proyectoId: null
@@ -88,7 +84,6 @@ export class FichaProyectoComponent implements OnInit {
   buscar() {
     this.fichaProyectoService.getTablaProyectosByProyectoIdTipoContratacionVigencia(
       this.addressForm.get('proyectoId').value,
-      this.addressForm.get('tipoContrato').value ?? '',
       this.addressForm.get('tipoIntervencion').value ?? '',
       this.addressForm.get('vigenciaContratacion').value ?? 0
     ).subscribe(response => {
@@ -112,8 +107,8 @@ export class FichaProyectoComponent implements OnInit {
   verFicha(event: any) {
     this.indicadores = null;
     if(event != null){
-      if(event?.contratacionProyectoId > 0){
-        this.fichaProyectoService.getFlujoProyectoByContratacionProyectoId(event?.contratacionProyectoId)
+      if(event?.proyectoId > 0){
+        this.fichaProyectoService.getFlujoProyectoByProyectoId(event?.proyectoId)
         .subscribe(response => {
           this.indicadores = response;
           this.mostrarFicha = event?.ficha;
@@ -167,7 +162,6 @@ export class FichaProyectoComponent implements OnInit {
     this.listSede = [];
     this.addressForm.get('proyectoId').setValue(null);
     this.addressForm.get('vigenciaContratacion').setValue(null);
-    this.addressForm.get('tipoContrato').setValue(null);
     this.addressForm.get('tipoIntervencion').setValue(null);
   }
 

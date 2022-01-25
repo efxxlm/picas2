@@ -9,7 +9,7 @@ import { FichaProyectoService } from 'src/app/core/_services/fichaProyecto/ficha
 })
 export class PreparacionComponent implements OnInit {
 
-  contratacionProyectoId: number;
+  proyectoId: number;
   dataPreparacion: any = null;
   listaPerfil = [
     {
@@ -20,6 +20,8 @@ export class PreparacionComponent implements OnInit {
       urlSoporte: 'http//H.VIngeniero.onedrive'
     }
   ];
+  dataPreConstruccionObra: any = null;
+  dataPreConstruccionInterventoria: any = null;
 
   listaPlanes = [
     {
@@ -46,14 +48,22 @@ export class PreparacionComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.route.params.subscribe((params: Params) => {
-      this.contratacionProyectoId = params.id;
+      this.proyectoId = params.id;
     });
    }
 
   ngOnInit(): void {
-    this.fichaProyectoService.getInfoPreparacionByContratacionProyectoId(this.contratacionProyectoId)
+    this.fichaProyectoService.getInfoPreparacionByProyectoId(this.proyectoId)
     .subscribe(response => {
       this.dataPreparacion = response;
+      if(this.dataPreparacion != null){
+        if(this.dataPreparacion?.preconstruccion?.result != null){
+           this.dataPreConstruccionObra =  this.dataPreparacion?.preconstruccion?.result.find(r => r.tipoContratoCodigo == '1');
+           this.dataPreConstruccionInterventoria =  this.dataPreparacion?.preconstruccion?.result.find(r => r.tipoContratoCodigo == '2');
+        }
+        console.log(this.dataPreConstruccionObra);
+        console.log(this.dataPreConstruccionInterventoria);
+      }
     });
   }
 

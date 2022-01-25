@@ -51,7 +51,7 @@
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
-                  Contrato de obra {{ this.dataPreparacion?.preconstruccion?.result?.numeroContrato }}
+                  Contrato de obra {{ this.dataPreConstruccionObra?.numeroContrato }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
@@ -67,7 +67,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let element of this.dataPreparacion?.preconstruccion?.result?.tablaPreconstruccion">
+                  <tr *ngFor="let element of this.dataPreConstruccionObra?.tablaPreconstruccion">
                     <td class="mat-cell cdk-cell ng-star-inserted">
                       <b> {{ element.perfil }} </b>
                     </td>
@@ -97,13 +97,72 @@
               <mat-card-content>
                   <p>
                     <strong>
-                      {{ this.dataPreparacion?.preconstruccion?.result?.actaSuscrita }}
+                      {{ this.dataPreConstruccionObra?.actaSuscrita }}
                     </strong>
                   </p>
               </mat-card-content>
             </mat-card>
 
         </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion>
+      <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title class="expansion-style--title">
+                Contrato de interventoría {{ this.dataPreConstruccionInterventoria?.numeroContrato }}
+              </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="table-responsive mb-1em mt-1em">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+              <thead>
+                <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Perfil</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V requeridas</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V recibidas</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V aprobadas</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">URL con soporte</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let element of this.dataPreConstruccionInterventoria?.tablaPreconstruccion">
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <b> {{ element.perfil }} </b>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.hvRequeridas }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.hvRecibidas }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.hvAprobadas }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.urlSoporte }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card header-card--margin">
+              <mat-card-title class="header-card--text">
+                Acta suscrita
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p>
+                  <strong>
+                    {{ this.dataPreConstruccionInterventoria?.actaSuscrita }}
+                  </strong>
+                </p>
+            </mat-card-content>
+          </mat-card>
+
+      </mat-expansion-panel>
     </mat-accordion>
 
 

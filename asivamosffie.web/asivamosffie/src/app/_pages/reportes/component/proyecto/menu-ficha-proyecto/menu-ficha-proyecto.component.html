@@ -1,4 +1,4 @@
-<mat-card class="shipping-card" *ngIf="indicadores != null && indicadores != undefined">
+<mat-card class="shipping-card" *ngIf="indicadores != null && indicadores != undefined && indicadores?.informacion != null">
   <mat-card-header class="header-card header-card--margin">
     <mat-card-title class="header-card--text"> Ficha {{ indicadores?.informacion?.llaveMen }} </mat-card-title>
   </mat-card-header>
@@ -21,37 +21,37 @@
     </p>
     <div class="navegacion">
       <a class="navegacion--button"
-        [routerLink]="[ 'fichaProyecto/resumen', indicadores.informacion.contratacionProyectoId ]"
+        [routerLink]="[ 'fichaProyecto/resumen', indicadores?.informacion?.proyectoId ]"
         *ngIf="indicadores.tieneResumen == true">
         <img src="assets/img/icon/Menu-proyectos/1-Resumen.svg" alt="Resumen" />
         Resumen
       </a>
       <a class="navegacion--button"
-        [routerLink]="[ 'fichaProyecto/contratacion', indicadores.informacion.contratacionProyectoId ]"
+        [routerLink]="[ 'fichaProyecto/contratacion', indicadores?.informacion?.proyectoId ]"
         *ngIf="indicadores.tieneContratacion == true">
         <img src="assets/img/icon/Menu-proyectos/2-Contratacion.svg" alt="Contratación" />
         Contratación
       </a>
       <a class="navegacion--button"
-        [routerLink]="[ 'fichaProyecto/preparacion', indicadores.informacion.contratacionProyectoId ]"
+        [routerLink]="[ 'fichaProyecto/preparacion', indicadores?.informacion?.proyectoId]"
         *ngIf="indicadores.tienePreparacion == true">
         <img src="assets/img/icon/Menu-proyectos/3-Preparacion.svg" alt="Preparación" />
         Preparación
       </a>
       <a class="navegacion--button"
-        [routerLink]="[ 'fichaProyecto/seguimientoTecnico', indicadores.informacion.contratacionProyectoId ]"
+        [routerLink]="[ 'fichaProyecto/seguimientoTecnico', indicadores?.informacion?.proyectoId ]"
         *ngIf="indicadores.tieneSeguimientoTecnico == true">
         <img src="assets/img/icon/Menu-proyectos/4-Seguimiento-tecnico.svg" alt="Seguimiento técnico" />
         Seguimiento técnico
       </a>
       <a class="navegacion--button"
-        [routerLink]="[ 'fichaProyecto/seguimientoFinanciero', indicadores.informacion.contratacionProyectoId ]"
+        [routerLink]="[ 'fichaProyecto/seguimientoFinanciero', indicadores?.informacion?.proyectoId ]"
         *ngIf="indicadores.tieneSeguimientoFinanciero == true">
         <img src="assets/img/icon/Menu-proyectos/5-Seguimiento-financiero.svg" alt="Seguimiento financiero" />
         Seguimiento financiero
       </a>
       <a class="navegacion--button"
-        [routerLink]="[ 'fichaProyecto/entrega', indicadores.informacion.contratacionProyectoId ]"
+        [routerLink]="[ 'fichaProyecto/entrega', indicadores?.informacion?.proyectoId ]"
         *ngIf="indicadores.tieneEntrega == true">
         <img src="assets/img/icon/Menu-proyectos/6-Entrega.svg" alt="Entrega" />
         Entrega

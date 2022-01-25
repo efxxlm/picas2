@@ -157,31 +157,6 @@
             <div class="pr-1">
               <label
                 class="label-left"
-                for="tipoContrato"
-                [class.color-secondaryColor]="
-                  addressForm.get('tipoContrato').invalid && addressForm.get('tipoContrato').touched
-                ">
-                Tipo de contrato
-              </label>
-            </div>
-            <div class="col">
-              <mat-form-field class="select-width">
-                <mat-select formControlName="tipoContrato">
-                  <mat-option *ngFor="let tipoContrato of listTipoContrato" [value]="tipoContrato.codigo">
-                    {{ tipoContrato.nombre }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="row">
-            <div class="pr-1">
-              <label
-                class="label-left"
                 for="tipoIntervencion"
                 [class.color-secondaryColor]="
                   addressForm.get('tipoIntervencion').invalid && addressForm.get('tipoIntervencion').touched
@@ -241,7 +216,6 @@
           !addressForm.get('municipio').value &&
           !addressForm.get('institucionEducativa').value &&
           !addressForm.get('dede').value &&
-          !addressForm.get('tipoContrato').value &&
           !addressForm.get('tipoIntervencion').value &&
           !addressForm.get('vigenciaContratacion').value
         "
