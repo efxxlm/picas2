@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatAccordion } from '@angular/material/expansion';
 import { ActivatedRoute, Params } from '@angular/router';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { FichaProyectoService } from 'src/app/core/_services/fichaProyecto/ficha-proyecto.service';
@@ -17,6 +18,7 @@ export class PreparacionComponent implements OnInit {
   dataConstruccionObra: any = null;
   dataConstruccionInterventoria: any = null;
   listaPlanes = [];
+  openAcordeon = false;
 
   constructor(
     private fichaProyectoService: FichaProyectoService,
@@ -42,7 +44,7 @@ export class PreparacionComponent implements OnInit {
           this.dataConstruccionObra =  this.dataPreparacion?.construccion?.find(r => r.codigoTipoContrato == '1');
           this.dataConstruccionInterventoria =  this.dataPreparacion?.construccion?.find(r => r.codigoTipoContrato == '2');
         }
-        if(this.dataConstruccionObra?.planesYProgramas != null){
+        /*if(this.dataConstruccionObra?.planesYProgramas != null){
           this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planLicenciaVigente);
           this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planCambioConstructorLicencia);
           this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planActaApropiacion);
@@ -55,7 +57,7 @@ export class PreparacionComponent implements OnInit {
           this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planInventarioArboreo);
           this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planAprovechamientoForestal);
           this.listaPlanes.push(this.dataConstruccionObra?.planesYProgramas?.planManejoAguasLluvias);
-        }
+        }*/
       }
     });
   }
@@ -72,6 +74,14 @@ export class PreparacionComponent implements OnInit {
         anchor.click();
       });
   }
+
+ /* downloadPDF() {
+    this.openAcordeon = true;
+
+    setTimeout(() => {
+      window.print();
+    }, 200);
+  }*/
 
 
 }

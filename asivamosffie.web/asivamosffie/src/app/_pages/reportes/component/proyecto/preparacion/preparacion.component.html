@@ -39,16 +39,16 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-accordion>
-    <mat-expansion-panel class="expansion-style">
+  <mat-accordion [multi]="openAcordeon">
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon">
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title">
           Fase 1- Preconstrucción
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-accordion [multi]="openAcordeon">
+        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
                   Contrato de obra {{ this.dataPreConstruccionObra?.numeroContrato }}
@@ -106,8 +106,8 @@
         </mat-expansion-panel>
     </mat-accordion>
 
-    <mat-accordion>
-      <mat-expansion-panel class="expansion-style sub-expansion">
+    <mat-accordion [multi]="openAcordeon">
+      <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon">
           <mat-expansion-panel-header class="expansion-style--header">
               <mat-panel-title class="expansion-style--title">
                 Contrato de interventoría {{ this.dataPreConstruccionInterventoria?.numeroContrato }}
@@ -167,23 +167,23 @@
 
 
     </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon">
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title">
           Fase 2 - Construcción
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-accordion [multi]="openAcordeon">
+        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
                   Contrato de obra {{ this.dataConstruccionObra?.numeroContrato }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <mat-accordion>
-              <mat-expansion-panel class="expansion-style sub-expansion-black">
+            <mat-accordion [multi]="openAcordeon">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Diagnóstico
@@ -268,7 +268,7 @@
                   </mat-card>
 
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Planes y Programas
@@ -319,7 +319,7 @@
                   </p>
 
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Manejo de anticipo
@@ -360,14 +360,15 @@
                   </p>
 
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Hojas de vida del contratista de obra
                       </mat-panel-title>
                   </mat-expansion-panel-header>
 
-                  <mat-card class="shipping-card var-main-gris" *ngFor="let hv of dataConstruccionObra?.hojasDeVida; index as i;">
+                  <!--<mat-card class="shipping-card var-main-gris" *ngFor="let hv of dataConstruccionObra?.hojasDeVida; index as i;">-->
+                  <mat-card class="shipping-card var-main-gris" *ngFor="let hv of dataConstruccionObra?.hojasDeViida; index as i;">
                     <mat-card-header class="header-card header-card--margin">
                       <mat-card-title class="header-card--text">
                         Perfil {{ i + 1 }}
@@ -427,7 +428,7 @@
                   </mat-card>
 
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Programación de obra
@@ -441,7 +442,7 @@
                   </div>
 
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Flujo de inversión de recursos
@@ -455,7 +456,7 @@
                   </div>
 
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Acta suscrita
@@ -481,7 +482,7 @@
           </mat-accordion>
 
         </mat-expansion-panel>
-        <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
                   Contrato de interventoría {{ dataConstruccionInterventoria?.numeroContrato }}
@@ -500,7 +501,8 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let element of dataConstruccionInterventoria?.hojasDeVida">
+                  <tr *ngFor="let element of dataConstruccionInterventoria?.hojasDeVuida">
+                  <!--<tr *ngFor="let element of dataConstruccionInterventoria?.hojasDeVida">-->
                     <td class="mat-cell cdk-cell ng-star-inserted">
                       <b> {{ element.perfil }} </b>
                     </td>
@@ -541,5 +543,7 @@
 
     </mat-expansion-panel>
   </mat-accordion>
-
+  <!--<div class="text-center mt-2em mb-2em print-d-none">
+    <button mat-raised-button color="accent" (click)="downloadPDF()">Descargar</button>
+  </div>-->
 </section>
