@@ -21,6 +21,60 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        #region Resumen
+        public async Task<dynamic> GetInfoResumenByProyectoId(int pProyectoId)
+        {
+            List<VProyectosXcontrato> ListContratosXProyecto = _context.VProyectosXcontrato.Where(v => v.ProyectoId == pProyectoId).ToList();
+
+            foreach (var contrato in ListContratosXProyecto)
+            {
+                contrato.InfoContrato = await _context.VFichaProyectoResumenFuentesYusos.Where(p => p.ProyectoId == pProyectoId
+                                                                                                 && p.ContratacionId == contrato.ContratacionId)
+                                                                                        .ToListAsync();
+            }
+
+            return new
+            {
+                InfoProyecto = await _context.VFichaProyectoInfoContratacionProyecto.Where(r => r.ProyectoId == pProyectoId)
+                                                                                    .Select(r => new
+                                                                                    {
+                                                                                        r.Departamento,
+                                                                                        r.Municipio,
+                                                                                        r.InstitucionEducativa,
+                                                                                        r.CodigoDaneInstitucionEducativa,
+                                                                                        r.Sede,
+                                                                                        r.CodigoDaneSede,
+                                                                                        r.UbicacionLatitud,
+                                                                                        r.UbicacionLongitud,
+                                                                                        r.PlazoMesesObra,
+                                                                                        r.PlazoDiasObra,
+                                                                                        r.ValorObra,
+                                                                                        r.PlazoMesesInterventoria,
+                                                                                        r.PlazoDiasInterventoria,
+                                                                                        r.ValorInterventoria
+                                                                                    })
+                                                                                   .FirstOrDefaultAsync(),
+
+                InfoContratos = ListContratosXProyecto.Select(i => new {     
+                                                                            i.NombreContratista,
+                                                                            i.NumeroIdentificacion,
+                                                                            i.RepresentanteLegal,
+                                                                            i.NumeroInvitacion,
+                                                                            i.NumeroContrato, 
+                                                                            i.TipoSolicitudCodigo,
+                                                                            i.NombreTipoContrato,
+                                                                            i.InfoContrato 
+                                                                       }
+                                                              )
+                                                      .ToList()
+
+
+            };
+        }
+
+
+        #endregion
+
         #region Preparacion
         public async Task<dynamic> GetInfoPreparacionByProyectoId(int pProyectoId)
         {
@@ -88,11 +142,11 @@ namespace asivamosffie.services
         }
 
         private object GetProgramacionObra(ContratoConstruccion pContratoConstruccion)
-        { 
+        {
             return new
             {
                 RutaArchivo = pContratoConstruccion.ArchivoCargueIdProgramacionObra
-            }; 
+            };
         }
 
         private object GetHojasDeVida(ContratoConstruccion pContratoConstruccion)

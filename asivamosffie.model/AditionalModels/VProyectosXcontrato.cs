@@ -12,6 +12,9 @@ namespace asivamosffie.model.Models
     public partial class VProyectosXcontrato
     {
         [NotMapped]
+        public dynamic InfoContrato { get; set; }
+
+        [NotMapped]
         public DateTime? FechaUltimoSeguimientoDiario { get; set; }
 
         [NotMapped]

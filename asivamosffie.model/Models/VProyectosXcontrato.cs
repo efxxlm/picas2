@@ -28,5 +28,8 @@ namespace asivamosffie.model.Models
         public int? ApoyoId { get; set; }
         public int? SupervisorId { get; set; }
         public string NombreContratista { get; set; }
+        public string NumeroIdentificacion { get; set; }
+        public string RepresentanteLegal { get; set; }
+        public string NumeroInvitacion { get; set; }
     }
 }

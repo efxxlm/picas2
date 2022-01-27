@@ -298,6 +298,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VFichaProyectoInfoContratacionProyecto> VFichaProyectoInfoContratacionProyecto { get; set; }
         public virtual DbSet<VFichaProyectoPreparacionConstruccion> VFichaProyectoPreparacionConstruccion { get; set; }
         public virtual DbSet<VFichaProyectoPreparacionPreconstruccion> VFichaProyectoPreparacionPreconstruccion { get; set; }
+        public virtual DbSet<VFichaProyectoResumenFuentesYusos> VFichaProyectoResumenFuentesYusos { get; set; }
         public virtual DbSet<VFichaProyectoTieneContratacion> VFichaProyectoTieneContratacion { get; set; }
         public virtual DbSet<VFichaProyectoTieneEntrega> VFichaProyectoTieneEntrega { get; set; }
         public virtual DbSet<VFichaProyectoTienePreparacion> VFichaProyectoTienePreparacion { get; set; }
@@ -9776,6 +9777,14 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_FichaProyecto_InfoContratacionProyecto");
 
+                entity.Property(e => e.CodigoDaneInstitucionEducativa)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CodigoDaneSede)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Contratista)
                     .IsRequired()
                     .HasMaxLength(200)
@@ -9816,6 +9825,18 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoIntervencion)
                     .IsRequired()
                     .HasMaxLength(250);
+
+                entity.Property(e => e.UbicacionLatitud)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UbicacionLongitud)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorInterventoria).HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.ValorObra).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VFichaProyectoPreparacionConstruccion>(entity =>
@@ -9858,6 +9879,40 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.RutaSoporte).HasMaxLength(400);
             });
 
+            modelBuilder.Entity<VFichaProyectoResumenFuentesYusos>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_ResumenFuentesYUsos");
+
+                entity.Property(e => e.Fase)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.Fuente)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoContrato)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Uso)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
+            });
+
             modelBuilder.Entity<VFichaProyectoTieneContratacion>(entity =>
             {
                 entity.HasNoKey();
@@ -9877,6 +9932,11 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_FichaProyecto_TienePreparacion");
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VFichaProyectoTieneResumen>(entity =>
@@ -11085,6 +11145,21 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroIdentificacion)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroInvitacion)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RepresentanteLegal)
+                    .IsRequired()
+                    .HasMaxLength(200)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Sede)
