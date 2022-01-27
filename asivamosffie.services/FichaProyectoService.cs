@@ -21,6 +21,72 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        #region contratacion
+        public async Task<dynamic> GetInfoContratoByProyectoId(int pProyectoId)
+        {
+            List<VProyectosXcontrato> ListContratosXProyecto = _context.VProyectosXcontrato.Where(v => v.ProyectoId == pProyectoId).ToList();
+             
+            foreach (var Contrato in ListContratosXProyecto)
+            {
+                Contrato.InfoProyectos = _context.VProyectosXcontrato.Where(v => v.ContratoId == Contrato.ContratoId)
+                                                                     .Select(v => new
+                                                                     { 
+                                                                         TipoIntervencion = v.TipoIntervencion,
+                                                                         LlaveMen = v.LlaveMen,
+                                                                         Region = v.Region,
+                                                                         DepartamentoMunicipio = v.Departamento + "/" + v.Municipio,
+                                                                         InstitucionEducativa = v.InstitucionEducativa,
+                                                                         Sede = v.Sede
+                                                                     })
+                                                                     .ToList();
+
+                Contrato.ListProcesoSeleccion = _context.VFichaProyectoContratacionProcesoSeleccion.Where(c => c.ContratoId == Contrato.ContratoId).ToList();
+
+                foreach (var ProcesoSeleccion in Contrato.ListProcesoSeleccion)
+                {
+
+                    ProcesoSeleccion.ProcesoSeleccionCronograma = _context.VFichaProyectoContratacionProcesoSeleccionCronograma.Where(p => p.ProcesoSeleccionId == ProcesoSeleccion.ProcesoSeleccionId)
+                                                                                                                               .Select(p => new 
+                                                                                                                                               { 
+                                                                                                                                                 p.NombreEtapa,
+                                                                                                                                                 p.EstapaCodigo,
+                                                                                                                                                 p.FechaEtapa
+                                                                                                                                               }
+                                                                                                                                      )
+                                                                                                                               .OrderBy(p=> p.EstapaCodigo)
+                                                                                                                               .ToList();
+                }
+            } 
+
+            return new
+            {
+                InfoProyecto = await _context.VFichaProyectoInfoContratacionProyecto.Where(r => r.ProyectoId == pProyectoId)
+                                                                                    .Select(r => new
+                                                                                                    { 
+                                                                                                        r.NumeroContrato,
+                                                                                                        r.NumeroContratacion,
+                                                                                                        r.LlaveMen,
+                                                                                                        r.InstitucionEducativa,
+                                                                                                        r.Sede,
+                                                                                                        r.TipoIntervencion
+                                                                                                    }
+                                                                                            )
+                                                                                   .FirstOrDefaultAsync(),
+
+                InfoProyectosXContrato = ListContratosXProyecto.Select(s => new 
+                                                                                  { 
+                                                                                    s.ContratoId,
+                                                                                    s.TipoContratoCodigo,
+                                                                                    s.NombreTipoContrato,
+                                                                                    s.InfoProyectos,
+                                                                                    s.ListProcesoSeleccion
+                                                                                  }
+                                                                      )
+                                                               .ToList()
+            };
+        }
+        #endregion
+
         #region Resumen
         public async Task<dynamic> GetInfoResumenByProyectoId(int pProyectoId)
         {
@@ -55,19 +121,19 @@ namespace asivamosffie.services
                                                                                     })
                                                                                    .FirstOrDefaultAsync(),
 
-                InfoContratos = ListContratosXProyecto.Select(i => new {     
-                                                                            i.NombreContratista,
-                                                                            i.NumeroIdentificacion,
-                                                                            i.RepresentanteLegal,
-                                                                            i.NumeroInvitacion,
-                                                                            i.NumeroContrato, 
-                                                                            i.TipoSolicitudCodigo,
-                                                                            i.NombreTipoContrato,
-                                                                            i.InfoContrato 
-                                                                       }
+                InfoContratos = ListContratosXProyecto.Select(i => new
+                {
+                    i.NombreContratista,
+                    i.NumeroIdentificacion,
+                    i.RepresentanteLegal,
+                    i.NumeroInvitacion,
+                    i.NumeroContrato,
+                    i.TipoSolicitudCodigo,
+                    i.NombreTipoContrato,
+                    i.InfoContrato
+                }
                                                               )
                                                       .ToList()
-
 
             };
         }

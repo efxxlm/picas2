@@ -12,6 +12,12 @@ namespace asivamosffie.model.Models
     public partial class VProyectosXcontrato
     {
         [NotMapped]
+        public List<VFichaProyectoContratacionProcesoSeleccion> ListProcesoSeleccion { get; set; }
+
+        [NotMapped]
+        public dynamic InfoProyectos { get; set; }
+
+        [NotMapped]
         public dynamic InfoContrato { get; set; }
 
         [NotMapped]

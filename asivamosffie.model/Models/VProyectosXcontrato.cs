@@ -16,6 +16,7 @@ namespace asivamosffie.model.Models
         public string Sede { get; set; }
         public string Municipio { get; set; }
         public string Departamento { get; set; }
+        public string Region { get; set; }
         public int ContratoId { get; set; }
         public int ProyectoId { get; set; }
         public int ContratacionId { get; set; }

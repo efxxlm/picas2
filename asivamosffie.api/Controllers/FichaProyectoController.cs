@@ -27,7 +27,13 @@ namespace asivamosffie.api.Controllers
         {
             _fichaProyectoService = fichaProyectoService;
         }
-      
+ 
+        [HttpGet]
+        [Route("GetInfoContratoByProyectoId")]
+        public async Task<ActionResult<dynamic>> GetInfoContratoByProyectoId(int pProyectoId)
+        {
+            return await _fichaProyectoService.GetInfoContratoByProyectoId(pProyectoId);
+        } 
         [HttpGet]
         [Route("GetInfoResumenByProyectoId")]
         public async Task<ActionResult<dynamic>> GetInfoResumenByProyectoId(int pProyectoId)
