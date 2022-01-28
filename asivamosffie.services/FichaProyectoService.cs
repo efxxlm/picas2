@@ -120,7 +120,7 @@ namespace asivamosffie.services
                     ProyectoResumenFuentesYusos.NombreAportante = _requestBudgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(ProyectoResumenFuentesYusos.ContratacionProyectoAportanteId));
                 }
 
-
+           
                 contrato.InfoContrato = ListVFichaProyectoResumenFuentesYusos;
             }
 
@@ -144,7 +144,8 @@ namespace asivamosffie.services
                                                                                         r.ValorObra,
                                                                                         r.PlazoMesesInterventoria,
                                                                                         r.PlazoDiasInterventoria,
-                                                                                        r.ValorInterventoria
+                                                                                        r.ValorInterventoria,
+                                                                                        Infraestructura = _context.VFichaProyectoResumenInfraestructura.Where(d=> d.ProyectoId == r.ProyectoId).ToList()
                                                                                     })
                                                                                    .FirstOrDefaultAsync(),
 

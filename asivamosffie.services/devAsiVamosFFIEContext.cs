@@ -301,6 +301,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VFichaProyectoPreparacionConstruccion> VFichaProyectoPreparacionConstruccion { get; set; }
         public virtual DbSet<VFichaProyectoPreparacionPreconstruccion> VFichaProyectoPreparacionPreconstruccion { get; set; }
         public virtual DbSet<VFichaProyectoResumenFuentesYusos> VFichaProyectoResumenFuentesYusos { get; set; }
+        public virtual DbSet<VFichaProyectoResumenInfraestructura> VFichaProyectoResumenInfraestructura { get; set; }
         public virtual DbSet<VFichaProyectoTieneContratacion> VFichaProyectoTieneContratacion { get; set; }
         public virtual DbSet<VFichaProyectoTieneEntrega> VFichaProyectoTieneEntrega { get; set; }
         public virtual DbSet<VFichaProyectoTienePreparacion> VFichaProyectoTienePreparacion { get; set; }
@@ -9966,6 +9967,17 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(250);
 
                 entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
+            });
+
+            modelBuilder.Entity<VFichaProyectoResumenInfraestructura>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_ResumenInfraestructura");
+
+                entity.Property(e => e.TipoIntervencion)
+                    .IsRequired()
+                    .HasMaxLength(250);
             });
 
             modelBuilder.Entity<VFichaProyectoTieneContratacion>(entity =>

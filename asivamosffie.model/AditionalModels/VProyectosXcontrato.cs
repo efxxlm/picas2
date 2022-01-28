@@ -18,6 +18,9 @@ namespace asivamosffie.model.Models
         public List<VFichaProyectoContratacionProcesoSeleccion> ListProcesoSeleccion { get; set; }
 
         [NotMapped]
+        public dynamic IntraestructuraIntervenir { get; set; }
+
+        [NotMapped]
         public dynamic InfoProyectos { get; set; }
 
         [NotMapped]
