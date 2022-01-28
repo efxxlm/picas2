@@ -388,6 +388,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValorUsoXcontratoId> VValorUsoXcontratoId { get; set; }
         public virtual DbSet<VValorUsosFasesAportanteProyecto> VValorUsosFasesAportanteProyecto { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
+        public virtual DbSet<Version> Version { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -12495,6 +12496,11 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoIntervencion).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<Version>(entity =>
+            {
+                entity.Property(e => e.FechaDespliegue).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<VigenciaAporte>(entity =>

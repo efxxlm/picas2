@@ -11,7 +11,9 @@ using System.Data;
 namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
-    { 
+    {
+        Task<model.Models.Version> GetVersion();
+
         Task<dynamic> GetVideos();
 
         Task<Plantilla> GetPlantillaById(int pPlantillaId);

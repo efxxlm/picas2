@@ -26,7 +26,14 @@ namespace asivamosffie.api.Controllers
             common = prmCommon;
             _settings = settings;
         }
-
+         
+        [HttpGet]
+        [Route("GetVersion")]
+        public async Task<ActionResult<model.Models.Version>> GetVersion()
+        {
+            var result = await common.GetVersion();
+            return result;
+        }
 
         [HttpGet]
         [Route("GetVideos")]
