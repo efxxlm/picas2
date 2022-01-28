@@ -56,7 +56,7 @@
             </mat-expansion-panel-header>
 
             <div class="table-responsive mb-1em mt-1em">
-              <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris table-reporte">
+              <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris table-reporte text-center">
                 <thead>
                   <tr class="mat-header-row cdk-header-row ng-star-inserted">
                     <th class="mat-header-cell cdk-header-cell ng-star-inserted">Perfil</th>
@@ -81,7 +81,9 @@
                       {{ element.cantidadHvAprobadas }}
                     </td>
                     <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.rutaSoporte }}
+                      <a class="ruta-url max-width-none" [href]="element.rutaSoporte" target="_blank" rel="noopener noreferrer">
+                        {{ element.rutaSoporte }}
+                      </a>
                     </td>
                   </tr>
                 </tbody>
@@ -115,7 +117,7 @@
           </mat-expansion-panel-header>
 
           <div class="table-responsive mb-1em mt-1em">
-            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris table-reporte">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris table-reporte text-center">
               <thead>
                 <tr class="mat-header-row cdk-header-row ng-star-inserted">
                   <th class="mat-header-cell cdk-header-cell ng-star-inserted">Perfil</th>
@@ -140,7 +142,9 @@
                     {{ element.cantidadHvAprobadas }}
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
-                    {{ element.rutaSoporte }}
+                    <a class="ruta-url max-width-none" [href]="element.rutaSoporte" target="_blank" rel="noopener noreferrer">
+                      {{ element.rutaSoporte }}
+                    </a>
                   </td>
                 </tr>
               </tbody>
@@ -276,7 +280,7 @@
                   </mat-expansion-panel-header>
 
                   <div class="table-responsive mb-1em mt-1em">
-                    <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+                    <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris text-center">
                       <thead>
                         <tr class="mat-header-row cdk-header-row ng-star-inserted">
                           <th class="mat-header-cell cdk-header-cell ng-star-inserted">Planes y programas</th>
@@ -490,7 +494,7 @@
           </mat-expansion-panel-header>
 
           <div class="table-responsive mb-1em mt-1em">
-            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris table-reporte">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris table-reporte text-center">
               <thead>
                 <tr class="mat-header-row cdk-header-row ng-star-inserted">
                   <th class="mat-header-cell cdk-header-cell ng-star-inserted">Perfil</th>
@@ -515,7 +519,9 @@
                     {{ element.cantidadHvAprobadas }}
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
-                    {{ element.rutaSoporte }}
+                    <a class="ruta-url max-width-none" [href]="element.rutaSoporte" target="_blank" rel="noopener noreferrer">
+                      {{ element.rutaSoporte }}
+                    </a>
                   </td>
                 </tr>
               </tbody>
@@ -540,7 +546,7 @@
       </mat-accordion>
     </mat-expansion-panel>
   </mat-accordion>
-  <!--<div class="text-center mt-2em mb-2em print-d-none">
+  <div class="text-center mt-2em mb-2em print-d-none">
     <button mat-raised-button color="accent" (click)="downloadPDF();">Descargar</button>
-  </div>-->
+  </div>
 </section>
