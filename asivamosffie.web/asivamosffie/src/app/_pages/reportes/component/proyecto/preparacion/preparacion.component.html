@@ -1,7 +1,7 @@
-<section class="container" *ngIf="this.dataPreparacion != null">
+<section class="container mt-2em" *ngIf="this.dataPreparacion != null">
   <div class="container text-center">
     <div class="text-right">
-      <a routerLink="../../../" mat-button color="primary" class="btn-regresar">
+      <a routerLink="../../../" mat-button color="primary" class="btn-regresar print-d-none">
         <img src="assets/img/icon/regresar.svg" alt="Regresar">
       </a>
     </div>
@@ -39,16 +39,16 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-accordion [multi]="openAcordeon">
-    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon">
+  <mat-accordion [multi]="openAcordeon == true">
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon == true">
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title">
           Fase 1- Preconstrucción
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <mat-accordion [multi]="openAcordeon">
-        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon">
+      <mat-accordion [multi]="openAcordeon == true">
+        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon == true">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
                   Contrato de obra {{ this.dataPreConstruccionObra?.numeroContrato }}
@@ -56,7 +56,7 @@
             </mat-expansion-panel-header>
 
             <div class="table-responsive mb-1em mt-1em">
-              <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+              <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris table-reporte">
                 <thead>
                   <tr class="mat-header-row cdk-header-row ng-star-inserted">
                     <th class="mat-header-cell cdk-header-cell ng-star-inserted">Perfil</th>
@@ -106,8 +106,8 @@
         </mat-expansion-panel>
     </mat-accordion>
 
-    <mat-accordion [multi]="openAcordeon">
-      <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon">
+    <mat-accordion [multi]="openAcordeon == true">
+      <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon == true">
           <mat-expansion-panel-header class="expansion-style--header">
               <mat-panel-title class="expansion-style--title">
                 Contrato de interventoría {{ this.dataPreConstruccionInterventoria?.numeroContrato }}
@@ -115,7 +115,7 @@
           </mat-expansion-panel-header>
 
           <div class="table-responsive mb-1em mt-1em">
-            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris table-reporte">
               <thead>
                 <tr class="mat-header-row cdk-header-row ng-star-inserted">
                   <th class="mat-header-cell cdk-header-cell ng-star-inserted">Perfil</th>
@@ -167,23 +167,23 @@
 
 
     </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon">
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon == true">
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title">
           Fase 2 - Construcción
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <mat-accordion [multi]="openAcordeon">
-        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon">
+      <mat-accordion [multi]="openAcordeon == true">
+        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon == true">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
                   Contrato de obra {{ this.dataConstruccionObra?.numeroContrato }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <mat-accordion [multi]="openAcordeon">
-              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon">
+            <mat-accordion [multi]="openAcordeon == true">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon == true">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Diagnóstico
@@ -268,7 +268,7 @@
                   </mat-card>
 
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon == true">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Planes y Programas
@@ -319,7 +319,7 @@
                   </p>
 
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon == true">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Manejo de anticipo
@@ -360,15 +360,14 @@
                   </p>
 
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon == true">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Hojas de vida del contratista de obra
                       </mat-panel-title>
                   </mat-expansion-panel-header>
 
-                  <!--<mat-card class="shipping-card var-main-gris" *ngFor="let hv of dataConstruccionObra?.hojasDeVida; index as i;">-->
-                  <mat-card class="shipping-card var-main-gris" *ngFor="let hv of dataConstruccionObra?.hojasDeViida; index as i;">
+                  <mat-card class="shipping-card var-main-gris" *ngFor="let hv of dataConstruccionObra?.hojasDeVida; index as i;">
                     <mat-card-header class="header-card header-card--margin">
                       <mat-card-title class="header-card--text">
                         Perfil {{ i + 1 }}
@@ -428,35 +427,35 @@
                   </mat-card>
 
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon">
+              <mat-expansion-panel class="expansion-style sub-expansion-black print-d-none" [expanded]="openAcordeon == true">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Programación de obra
                       </mat-panel-title>
                   </mat-expansion-panel-header>
 
-                  <div class="text-centes">
-                    <button mat-raised-button color="accent" class="btn-table" (click)="descargar(false, dataConstruccionObra?.programacionObra?.rutaArchivo)">
+                  <div class="text-center">
+                    <button mat-raised-button color="accent" class="btn" (click)="descargar(false, dataConstruccionObra?.programacionObra?.rutaArchivo)">
                       Descargar archivo
                     </button>
                   </div>
 
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon">
+              <mat-expansion-panel class="expansion-style sub-expansion-black print-d-none" [expanded]="openAcordeon == true">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Flujo de inversión de recursos
                       </mat-panel-title>
                   </mat-expansion-panel-header>
 
-                  <div class="text-centes">
-                    <button mat-raised-button color="accent" class="btn-table" (click)="descargar(true, dataConstruccionObra?.flujoInversion?.rutaArchivo)">
+                  <div class="text-center">
+                    <button mat-raised-button color="accent" class="btn" (click)="descargar(true, dataConstruccionObra?.flujoInversion?.rutaArchivo)">
                       Descargar archivo
                     </button>
                   </div>
 
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon == true">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Acta suscrita
@@ -480,70 +479,68 @@
 
               </mat-expansion-panel>
           </mat-accordion>
-
         </mat-expansion-panel>
-        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                  Contrato de interventoría {{ dataConstruccionInterventoria?.numeroContrato }}
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+      </mat-accordion>
+      <mat-accordion [multi]="openAcordeon == true">
+        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon == true">
+          <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title class="expansion-style--title">
+                Contrato de interventoría {{ dataConstruccionInterventoria?.numeroContrato }}
+              </mat-panel-title>
+          </mat-expansion-panel-header>
 
-            <div class="table-responsive mb-1em mt-1em">
-              <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
-                <thead>
-                  <tr class="mat-header-row cdk-header-row ng-star-inserted">
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">Perfil</th>
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V requeridas</th>
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V recibidas</th>
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V aprobadas</th>
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">URL con soporte</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let element of dataConstruccionInterventoria?.hojasDeVuida">
-                  <!--<tr *ngFor="let element of dataConstruccionInterventoria?.hojasDeVida">-->
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                      <b> {{ element.perfil }} </b>
-                    </td>
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.cantidadHvRequeridas }}
-                    </td>
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.cantidadHvRecibidas }}
-                    </td>
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.cantidadHvAprobadas }}
-                    </td>
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.rutaSoporte }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          <div class="table-responsive mb-1em mt-1em">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris table-reporte">
+              <thead>
+                <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Perfil</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V requeridas</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V recibidas</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V aprobadas</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">URL con soporte</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let element of dataConstruccionInterventoria?.hojasDeVida">
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <b> {{ element.perfil }} </b>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.cantidadHvRequeridas }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.cantidadHvRecibidas }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.cantidadHvAprobadas }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.rutaSoporte }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-            <mat-card class="shipping-card var-main-gris">
-              <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text">
-                  Acta suscrita
-                </mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                  <p>
-                    <strong>
-                      {{ dataConstruccionInterventoria?.actaSuscrita }}
-                    </strong>
-                  </p>
-              </mat-card-content>
-            </mat-card>
-
+          <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card header-card--margin">
+              <mat-card-title class="header-card--text">
+                Acta suscrita
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p>
+                  <strong>
+                    {{ dataConstruccionInterventoria?.actaSuscrita }}
+                  </strong>
+                </p>
+            </mat-card-content>
+          </mat-card>
         </mat-expansion-panel>
-    </mat-accordion>
-
+      </mat-accordion>
     </mat-expansion-panel>
   </mat-accordion>
-  <!--<div class="text-center mt-2em mb-2em print-d-none">
-    <button mat-raised-button color="accent" (click)="downloadPDF()">Descargar</button>
-  </div>-->
+  <div class="text-center mt-2em mb-2em print-d-none">
+    <button mat-raised-button color="accent" (click)="downloadPDF();">Descargar</button>
+  </div>
 </section>

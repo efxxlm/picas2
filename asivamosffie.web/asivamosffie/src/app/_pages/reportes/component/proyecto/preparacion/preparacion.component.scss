@@ -1,0 +1,14 @@
+@media print {
+  .table-reporte tbody  {
+    overflow-x: hidden !important;
+  }
+  .table-reporte td:last-child {
+    max-width: 25em !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+}
+.btn{
+  margin-top: 10px;
+}
