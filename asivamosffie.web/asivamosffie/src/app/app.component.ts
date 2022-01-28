@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonService } from './core/_services/common/common.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,9 @@ export class AppComponent {
     ){}
 
   ngOnInit(): void {
-    this.commonSvc.getVersion().subscribe( result => { console.log("Versión Front: "+ result.front + " Back: " + result.back);});
+    this.commonSvc.getVersion().subscribe( result => {
+       console.log("Versión Front: "+ result.front + " Back: " + result.back);
+       console.log("Fecha despliegue: "+  moment( result.fechaDespliegue ).format( 'DD/MM/YYYY' ));
+      });
   }
 }
