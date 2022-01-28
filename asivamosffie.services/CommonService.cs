@@ -36,6 +36,12 @@ namespace asivamosffie.services
             _mailSettings = mailSettings.Value;
             _context = context;
         }
+        public async Task<model.Models.Version> GetVersion()
+        {
+            return await _context.Version.OrderByDescending(v => v.VersionId).FirstOrDefaultAsync();
+        }
+
+
         public async Task<dynamic> GetVideos()
         {
             return await _context.Dominio
