@@ -124,6 +124,7 @@ namespace asivamosffie.services
                 contrato.InfoContrato = ListVFichaProyectoResumenFuentesYusos;
             }
 
+            var Infraestructura = _context.VFichaProyectoResumenInfraestructura.Where(d => d.ProyectoId == pProyectoId).ToList();
             return new
             {
                 InfoProyecto = await _context.VFichaProyectoInfoContratacionProyecto.Where(r => r.ProyectoId == pProyectoId)
@@ -145,7 +146,7 @@ namespace asivamosffie.services
                                                                                         r.PlazoMesesInterventoria,
                                                                                         r.PlazoDiasInterventoria,
                                                                                         r.ValorInterventoria,
-                                                                                        Infraestructura = _context.VFichaProyectoResumenInfraestructura.Where(d=> d.ProyectoId == r.ProyectoId).ToList()
+                                                                                        Infraestructura
                                                                                     })
                                                                                    .FirstOrDefaultAsync(),
 
