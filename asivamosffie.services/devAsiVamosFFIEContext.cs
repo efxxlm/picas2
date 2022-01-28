@@ -9943,6 +9943,11 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(250);
 
+                entity.Property(e => e.NombreAportante)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -11227,6 +11232,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.RepresentanteLegal)
                     .IsRequired()
                     .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RepresentanteLegalNumeroIdentificacion)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Sede)
