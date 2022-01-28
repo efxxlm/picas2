@@ -11167,6 +11167,10 @@ namespace asivamosffie.model.Models
                     .HasColumnName("fechaRegistroProyecto")
                     .HasColumnType("datetime");
 
+                entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaSuscripcion).HasColumnType("datetime");
+
                 entity.Property(e => e.InstitucionEducativa)
                     .IsRequired()
                     .HasColumnName("institucionEducativa")
@@ -11204,6 +11208,15 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.NumeroInvitacion)
                     .IsRequired()
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroPoliza)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroSolicitud)
+                    .IsRequired()
+                    .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Region)

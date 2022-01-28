@@ -28,6 +28,8 @@ namespace asivamosffie.services
              
             foreach (var Contrato in ListContratosXProyecto)
             {
+                Contrato.CantidadProyectosAsosiados = _context.VProyectosXcontrato.Count(v => v.ContratoId == Contrato.ContratoId);
+
                 Contrato.InfoProyectos = _context.VProyectosXcontrato.Where(v => v.ContratoId == Contrato.ContratoId)
                                                                      .Select(v => new
                                                                      { 
@@ -62,7 +64,7 @@ namespace asivamosffie.services
             {
                 InfoProyecto = await _context.VFichaProyectoInfoContratacionProyecto.Where(r => r.ProyectoId == pProyectoId)
                                                                                     .Select(r => new
-                                                                                                    { 
+                                                                                                    {  
                                                                                                         r.NumeroContrato,
                                                                                                         r.NumeroContratacion,
                                                                                                         r.LlaveMen,
@@ -74,10 +76,20 @@ namespace asivamosffie.services
                                                                                    .FirstOrDefaultAsync(),
 
                 InfoProyectosXContrato = ListContratosXProyecto.Select(s => new 
-                                                                                  { 
-                                                                                    s.ContratoId,
+                                                                                  {
+                                                                                    s.NumeroSolicitud,
+                                                                                    s.FechaSolicitud,
                                                                                     s.TipoContratoCodigo,
-                                                                                    s.NombreTipoContrato,
+                                                                                    s.ValorTotal,
+                                                                                    s.CantidadProyectosAsosiados,
+
+                                                                                    s.NumeroContrato,
+                                                                                    s.FechaSuscripcion,
+                                                                                    s.ContratoId,
+                                                                                    s.ContratoSuscrito,
+                                                                                    s.NombreTipoContrato, 
+                                                                                    s.NumeroPoliza,
+                                                                             
                                                                                     s.InfoProyectos,
                                                                                     s.ListProcesoSeleccion
                                                                                   }

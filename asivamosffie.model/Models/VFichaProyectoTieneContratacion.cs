@@ -6,6 +6,5 @@ namespace asivamosffie.model.Models
     public partial class VFichaProyectoTieneContratacion
     {
         public int ProyectoId { get; set; }
-        public int ContratacionProyectoId { get; set; }
     }
 }
