@@ -116,6 +116,7 @@ namespace asivamosffie.services
                 InfoProyecto = await _context.VFichaProyectoInfoContratacionProyecto.Where(r => r.ProyectoId == pProyectoId)
                                                                                     .Select(r => new
                                                                                     {
+                                                                                        r.LlaveMen,
                                                                                         r.Departamento,
                                                                                         r.Municipio,
                                                                                         r.InstitucionEducativa,
