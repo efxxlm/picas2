@@ -565,6 +565,11 @@ export class CommonService {
     return this.http.get(`${environment.apiUrl}/Common/GetLlaveMenByContratacionProyectoId?pContratacionProyectoId=${pContratacionProyectoId}`);
   }
 
+  getVersion() {
+    return this.http.get<Version>(`${environment.apiUrl}/Common/GetVersion`);
+  }
+
+
 }
 
 export interface Dominio{
@@ -633,3 +638,10 @@ export const TiposNovedadModificacionContractual: TipoNovedadModificacionContrac
   Prorroga: ["4"],
   ModificacionCondicionesContractuales: ["5"]
 }
+
+export interface Version {
+  back: number,
+  fechaDespliegue: Date,
+  front: number,
+  versionId: number
+};
