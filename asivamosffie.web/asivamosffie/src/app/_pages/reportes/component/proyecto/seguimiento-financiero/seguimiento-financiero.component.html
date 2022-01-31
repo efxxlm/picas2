@@ -6,7 +6,7 @@
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Seguimiento financiero {{ llaveMen }}
+      Seguimiento financiero {{ infoProyecto?.informacion?.llaveMen }}
     </h1>
   </div>
 
@@ -16,19 +16,19 @@
           <strong>
             Institución Educativa:
           </strong>
-          {{ institucionEducativa }}
+          {{ infoProyecto?.informacion?.institucionEducativa }}
         </p>
         <p>
           <strong>
             Sede:
           </strong>
-          {{ sede }}
+          {{ infoProyecto?.informacion?.sede }}
         </p>
         <p>
           <strong>
             Tipo de intervención:
           </strong>
-          {{ tipoIntervencion }}
+          {{ infoProyecto?.informacion?.tipoIntervencion }}
         </p>
     </mat-card-content>
   </mat-card>

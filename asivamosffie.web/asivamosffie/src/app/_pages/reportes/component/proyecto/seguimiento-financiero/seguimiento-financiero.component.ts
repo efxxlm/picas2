@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Params } from '@angular/router';
+import { FichaProyectoService } from 'src/app/core/_services/fichaProyecto/ficha-proyecto.service';
 import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
 
 @Component({
@@ -14,11 +15,8 @@ export class SeguimientoFinancieroComponent implements OnInit {
 
   proyectoId: number;
   dataSeguimiento: any = null;
+  infoProyecto: any = null;
   openAcordeon = false;
-  llaveMen: string;
-  institucionEducativa: string;
-  sede: string;
-  tipoIntervencion: string;
   displayedColumnsEjPresupuestal: string[] = [ 'nombre', 'totalComprometido', 'facturadoAntesImpuestos', 'saldo', 'porcentajeEjecucionPresupuestal' ];
   displayedColumnsEjFinanciera: string[] = [ 'nombre', 'totalComprometido', 'ordenadoGirarAntesImpuestos', 'saldo', 'porcentajeEjecucionFinanciera' ];
   dataTableEjpresupuestal: any[] = [];
@@ -59,6 +57,7 @@ export class SeguimientoFinancieroComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private fichaProyectoService: FichaProyectoService,
     private financialBalanceService: FinancialBalanceService
   ) {
     this.route.params.subscribe((params: Params) => {
@@ -67,6 +66,10 @@ export class SeguimientoFinancieroComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.fichaProyectoService.getFlujoProyectoByProyectoId(this.proyectoId)
+    .subscribe(response => {
+      this.infoProyecto = response;
+    });
       this.financialBalanceService.getEjecucionFinancieraXProyectoId(this.proyectoId).subscribe(data => {
         data[0].forEach(element => {
           this.dataTableEjpresupuestal.push({
