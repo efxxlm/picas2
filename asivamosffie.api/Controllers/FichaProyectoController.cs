@@ -31,7 +31,7 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         [Route("GetInfoSeguimientoTecnicoByProyectoId")]
         public async Task<ActionResult<dynamic>> GetInfoSeguimientoTecnicoByProyectoId(int pProyectoId)
-        {
+        { 
             return await _fichaProyectoService.GetInfoSeguimientoTecnicoByProyectoId(pProyectoId);
         }
         [HttpGet]
