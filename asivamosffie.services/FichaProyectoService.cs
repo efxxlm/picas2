@@ -37,9 +37,9 @@ namespace asivamosffie.services
                                                                          TipoIntervencion = v.TipoIntervencion,
                                                                          LlaveMen = v.LlaveMen,
                                                                          Region = v.Region,
-                                                                         DepartamentoMunicipio = v.Departamento + "/" + v.Municipio,
-                                                                         InstitucionEducativa = v.InstitucionEducativa,
-                                                                         Sede = v.Sede
+                                                                         Departamento = v.Departamento,
+                                                                         Muncipio = v.Municipio,
+                                                                         InstitucionEducativaSede = v.InstitucionEducativa + "/ " + v.Sede,
                                                                      })
                                                                      .ToList();
 
@@ -59,7 +59,7 @@ namespace asivamosffie.services
                                                                                                                                .OrderBy(p => p.EstapaCodigo)
                                                                                                                                .ToList();
 
-                 
+
                 }
             }
 
@@ -110,8 +110,8 @@ namespace asivamosffie.services
 
             foreach (var contrato in ListContratosXProyecto)
             {
-                List<VFichaProyectoResumenFuentesYusos> ListVFichaProyectoResumenFuentesYusos  = await _context.VFichaProyectoResumenFuentesYusos.Where(p => p.ProyectoId == pProyectoId
-                                                                                                 && p.ContratacionId == contrato.ContratacionId)
+                List<VFichaProyectoResumenFuentesYusos> ListVFichaProyectoResumenFuentesYusos = await _context.VFichaProyectoResumenFuentesYusos.Where(p => p.ProyectoId == pProyectoId
+                                                                                                && p.ContratacionId == contrato.ContratacionId)
                                                                                         .ToListAsync();
 
 
@@ -120,7 +120,7 @@ namespace asivamosffie.services
                     ProyectoResumenFuentesYusos.NombreAportante = _requestBudgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(ProyectoResumenFuentesYusos.ContratacionProyectoAportanteId));
                 }
 
-           
+
                 contrato.InfoContrato = ListVFichaProyectoResumenFuentesYusos;
             }
 
