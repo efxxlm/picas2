@@ -1,12 +1,12 @@
 <section class="container">
   <div class="container text-center">
     <div class="text-right">
-      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+      <a routerLink="../../.." mat-button color="primary" class="btn-regresar">
         <img src="assets/img/icon/regresar.svg" alt="Regresar">
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Resumen N801801
+      Resumen {{ dataResumen?.infoProyecto?.llaveMen }}
     </h1>
   </div>
 
@@ -21,37 +21,37 @@
         <strong>
           Departamento:
         </strong>
-        BoyacápatriaSAS
+        {{ dataResumen?.infoProyecto?.departamento }}
       </p>
       <p>
         <strong>
           Municipio:
         </strong>
-        SusacónColpatriaSAS
+        {{ dataResumen?.infoProyecto?.municipio }}
       </p>
       <p>
         <strong>
           Institución Educativa:
         </strong>
-        I.E Señora Del Carmén
+        {{ dataResumen?.infoProyecto?.institucionEducativa }}
       </p>
       <p>
         <strong>
           Código DANE:
         </strong>
-        00000000lpatriaSAS
+        {{ dataResumen?.infoProyecto?.codigoDaneInstitucionEducativa }}
       </p>
       <p>
         <strong>
           Sede:
         </strong>
-        Única sedectoraColpatriaSAS
+        {{ dataResumen?.infoProyecto?.sede }}
       </p>
       <p>
         <strong>
           Código DANE sede:
         </strong>
-        0000000iaSAS
+        {{ dataResumen?.infoProyecto?.codigoDaneSede }}
       </p>
       <p>
         <strong>
@@ -60,11 +60,11 @@
         <b>
           Latitud:
         </b>
-        18”78”9º
+        {{ dataResumen?.infoProyecto?.ubicacionLatitud }}
         <b>
           Longitud:
         </b>
-        90”00”0º
+        {{ dataResumen?.infoProyecto?.ubicacionLongitud }}
       </p>
     </mat-card-content>
   </mat-card>
@@ -80,32 +80,27 @@
         <strong>
           Plazo de obra:
         </strong>
-        <b>
-          Meses:
-        </b>
-        10
-        <b>
-          Días:
-        </b>
-        12
+        <b>Meses:</b>{{ dataResumen?.infoProyecto?.plazoMesesObra }}
+        <b>Días:</b>{{ dataResumen?.infoProyecto?.plazoDiasObra }}
       </p>
       <p>
         <strong>
           Valor de obra:
         </strong>
-        $100.00.000
+        {{ dataResumen?.infoProyecto?.valorObra | currency:'COP':'symbol-narrow':'.0-0' }}
       </p>
       <p>
         <strong>
           Plazo de interventoría:
         </strong>
-        Meses: 01 Días:10
+        <b>Meses:</b>{{ dataResumen?.infoProyecto?.plazoMesesInterventoria }}
+        <b>Días:</b>{{ dataResumen?.infoProyecto?.plazoDiasInterventoria }}
       </p>
       <p>
         <strong>
           Valor de interventoría:
         </strong>
-        $5.000.000
+        {{ dataResumen?.infoProyecto?.valorInterventoria | currency:'COP':'symbol-narrow':'.0-0' }}
       </p>
 
       <div class="table-responsive mb-1em mt-1em w-talble">
@@ -131,11 +126,11 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-accordion>
-    <mat-expansion-panel class="expansion-style">
+  <mat-accordion [multi]="openAcordeon == true">
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon == true">
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title">
-          Contrato de obra N801801
+          Contrato de obra {{ dataConstruccionObra?.numeroContrato }}
         </mat-panel-title>
       </mat-expansion-panel-header>
 
@@ -146,36 +141,62 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div class="table-responsive mb-1em mt-1em">
-            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
-              <thead>
-                <tr class="mat-header-row cdk-header-row ng-star-inserted">
-                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Aportante</th>
-                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Valor aportante</th>
-                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Fuente</th>
-                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Uso</th>
-                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Valor uso</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let element of listaFuentesUsos">
-                  <td class="mat-cell cdk-cell ng-star-inserted">
-                    <b> {{ element.aportante }} </b>
-                  </td>
-                  <td class="mat-cell cdk-cell ng-star-inserted">
-                    {{ element.valorAportante }}
-                  </td>
-                  <td class="mat-cell cdk-cell ng-star-inserted">
-                    {{ element.fuente }}
-                  </td>
-                  <td class="mat-cell cdk-cell ng-star-inserted">
-                    {{ element.uso }}
-                  </td>
-                  <td class="mat-cell cdk-cell ng-star-inserted">
-                    {{ element.valorOso }}
-                  </td>
-                </tr>
-              </tbody>
+          <div class="table-responsive">
+            <table mat-table [dataSource]="dataConstruccionObra?.listFuentes" matSort class="mat-elevation-z8 table-form table-gris">
+              <ng-container matColumnDef="nombreAportante">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Aportante</th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element?.nombreAportante }} </td>
+              </ng-container>
+              <ng-container matColumnDef="valorAportante">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor aportante</th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element?.valorAportante | currency:'COP':'symbol-narrow':'.0-0' }} </td>
+              </ng-container>
+              <ng-container matColumnDef="fuente">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Fuente</th>
+                <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+                  <div
+                    class="sub-item-table justify-content-center align-items-center text-center"
+                    *ngFor="let fuente of element.fuentes"
+                    [class.h-3]="fuente.usos.length === 1"
+                    [class.h-6]="fuente.usos.length === 2"
+                    [class.h-9]="fuente.usos.length === 3"
+                  >
+                    {{ fuente?.fuente }}
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="uso">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Uso</th>
+                <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+                  <div
+                    class="sub-item-table justify-content-center align-items-center"
+                    *ngFor="let fuente of element.fuentes; let i = index"
+                  >
+                    <div *ngFor="let uso of fuente.usos; let j = index" class="borber-table">
+                      <div class="sub-item-table--element">
+                        {{ uso.uso }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="valorUso">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor uso</th>
+                <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+                  <div
+                    class="sub-item-table justify-content-center align-items-center"
+                    *ngFor="let fuente of element.fuentes; let i = index"
+                  >
+                    <div *ngFor="let uso of fuente.usos; let j = index" class="borber-table">
+                      <div class="sub-item-table--element">
+                        {{ uso?.valorUso | currency:'COP':'symbol-narrow':'.0-0' }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
             </table>
           </div>
         </mat-card-content>
@@ -189,32 +210,147 @@
         </mat-card-header>
         <mat-card-content>
           <div class="mb-2em">
-            <mat-card-title class="header-card--text sub-text"> 
-              Construir Futuro
+            <mat-card-title class="header-card--text sub-text">
+              {{ dataConstruccionObra?.nombreContratista }}
             </mat-card-title>
             <p>
               <strong>
                 Nit:
               </strong>
-              900.879-765-2
+              {{ dataConstruccionObra?.numeroIdentificacion }}
             </p>
             <p>
               <strong>
-                Representante lega:
+                Representante legal:
               </strong>
-              Juan Pablo Tello Posada
+              {{ dataConstruccionObra?.representanteLegal }}
             </p>
             <p>
               <strong>
                 Número de identificación del representante:
               </strong>
-              103456783
+              {{ dataConstruccionObra?.representanteLegalNumeroIdentificacion }}
             </p>
             <p>
               <strong>
                 Valor pagado:
               </strong>
-              $75.000.000
+              {{ dataConstruccionObra?.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}
+            </p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+    </mat-expansion-panel>
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon == true">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Contrato de interventoría {{ dataConstruccionInterventoria?.numeroContrato }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-card class="shipping-card var-main-gris">
+        <mat-card-header class="header-card header-card--margin">
+          <mat-card-title class="header-card--text">
+            Fuentes y usos
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="table-responsive">
+            <table mat-table [dataSource]="dataConstruccionInterventoria?.listFuentes" matSort class="mat-elevation-z8 table-form table-gris">
+              <ng-container matColumnDef="nombreAportante">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Aportante</th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element?.nombreAportante }} </td>
+              </ng-container>
+              <ng-container matColumnDef="valorAportante">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor aportante</th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element?.valorAportante | currency:'COP':'symbol-narrow':'.0-0' }} </td>
+              </ng-container>
+              <ng-container matColumnDef="fuente">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Fuente</th>
+                <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+                  <div
+                    class="sub-item-table justify-content-center align-items-center text-center"
+                    *ngFor="let fuente of element.fuentes"
+                    [class.h-3]="fuente.usos.length === 1"
+                    [class.h-6]="fuente.usos.length === 2"
+                    [class.h-9]="fuente.usos.length === 3"
+                  >
+                    {{ fuente?.fuente }}
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="uso">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Uso</th>
+                <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+                  <div
+                    class="sub-item-table justify-content-center align-items-center"
+                    *ngFor="let fuente of element.fuentes; let i = index"
+                  >
+                    <div *ngFor="let uso of fuente.usos; let j = index" class="borber-table">
+                      <div class="sub-item-table--element">
+                        {{ uso.uso }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="valorUso">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor uso</th>
+                <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+                  <div
+                    class="sub-item-table justify-content-center align-items-center"
+                    *ngFor="let fuente of element.fuentes; let i = index"
+                  >
+                    <div *ngFor="let uso of fuente.usos; let j = index" class="borber-table">
+                      <div class="sub-item-table--element">
+                        {{ uso?.valorUso | currency:'COP':'symbol-narrow':'.0-0' }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="shipping-card var-main-gris">
+        <mat-card-header class="header-card header-card--margin">
+          <mat-card-title class="header-card--text">
+            Contratistas
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="mb-2em">
+            <mat-card-title class="header-card--text sub-text">
+              {{ dataConstruccionInterventoria?.nombreContratista }}
+            </mat-card-title>
+            <p>
+              <strong>
+                Nit:
+              </strong>
+              {{ dataConstruccionInterventoria?.numeroIdentificacion }}
+            </p>
+            <p>
+              <strong>
+                Representante legal:
+              </strong>
+              {{ dataConstruccionInterventoria?.representanteLegal }}
+            </p>
+            <p>
+              <strong>
+                Número de identificación del representante:
+              </strong>
+              {{ dataConstruccionInterventoria?.representanteLegalNumeroIdentificacion }}
+            </p>
+            <p>
+              <strong>
+                Valor pagado:
+              </strong>
+              {{ dataConstruccionInterventoria?.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}
             </p>
           </div>
         </mat-card-content>
@@ -222,5 +358,7 @@
 
     </mat-expansion-panel>
   </mat-accordion>
-  
+  <div class="text-center mt-2em mb-2em print-d-none">
+    <button mat-raised-button color="accent" (click)="downloadPDF();">Descargar</button>
+  </div>
 </section>
