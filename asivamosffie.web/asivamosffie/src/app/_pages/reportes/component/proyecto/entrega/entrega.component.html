@@ -1,1 +1,68 @@
-<p>entrega works!</p>
+<section class="container">
+  <div class="container text-center">
+    <div class="text-right">
+      <a routerLink="../../.." mat-button color="primary" class="btn-regresar print-d-none">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Entrega {{ dataEntrega?.infoProyecto?.llaveMen }}
+    </h1>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>
+          Institución Educativa:
+        </strong>
+        {{ dataEntrega?.infoProyecto?.institucionEducativa }}
+      </p>
+      <p>
+        <strong>
+          Sede:
+        </strong>
+        {{ dataEntrega?.infoProyecto?.sede }}
+      </p>
+      <p>
+        <strong>
+          Tipo de intervención:
+        </strong>
+        {{ dataEntrega?.infoProyecto?.tipoIntervencion }}
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>
+          Fecha del recorrido de obra:
+        </strong>
+        {{ dataEntrega?.infoProyecto?.fechaRecorridoObra }}
+      </p>
+      <p>
+        <strong>
+          Fecha de firma del Acta de entrega física:
+        </strong>
+        {{ dataEntrega?.infoProyecto?.fechaActa }}
+      </p>
+      <p>
+        <strong>
+          Número de radicado de la entrega:
+        </strong>
+        {{ dataEntrega?.infoProyecto?.numeroRadicado }}
+      </p>
+      <p>
+        <strong>
+          Fecha de firma acta de entrega de bienes y servicios:
+        </strong>
+        {{ dataEntrega?.infoProyecto?.fechaFirmaBienes }}
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="text-center mt-2em mb-2em print-d-none">
+    <button mat-raised-button color="accent" (click)="downloadPDF();">Descargar</button>
+  </div>
+</section>
