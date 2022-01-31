@@ -12,6 +12,9 @@ namespace asivamosffie.model.Models
     public partial class VProyectosXcontrato
     {
         [NotMapped]
+        public dynamic SeguimientoTecnico { get; set; }
+
+        [NotMapped]
         public int CantidadProyectosAsosiados { get; set; }
 
         [NotMapped]

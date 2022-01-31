@@ -22,6 +22,54 @@ namespace asivamosffie.services
             _context = context;
         }
 
+
+        #region seguimiento Tecnico
+        public async Task<dynamic> GetInfoSeguimientoTecnicoByProyectoId(int pProyectoId)
+        {
+            List<VProyectosXcontrato> ListContratosXProyecto = _context.VProyectosXcontrato.Where(v => v.ProyectoId == pProyectoId).ToList();
+
+            foreach (var Contrato in ListContratosXProyecto)
+            {
+                var SeguimientoDiario = _context.VFichaProyectoSeguimientoTecnicoDiario.Where(v => v.ContratoId == Contrato.ContratoId)
+                                                                                       .OrderByDescending(v => v.SeguimientoDiarioId)
+                                                                                       .ToList();
+
+                var SeguimientoSemanal = _context.VFichaProyectoSeguimientoTecnicoSemanal.Where(v => v.ContratoId == Contrato.ContratoId)
+                                                                                         .OrderByDescending(v => v.SeguimientoSemanalAvanceFisicoId)
+                                                                                         .ToList();
+
+                Contrato.SeguimientoTecnico = new
+                {
+                    SeguimientoDiario,
+                    SeguimientoSemanal
+                };
+            }
+
+            return new
+            {
+                InfoProyecto = await _context.VFichaProyectoInfoContratacionProyecto.Where(r => r.ProyectoId == pProyectoId)
+                                                                                    .Select(r => new
+                                                                                    {
+                                                                                        r.NumeroContrato,
+                                                                                        r.NumeroContratacion,
+                                                                                        r.LlaveMen,
+                                                                                        r.InstitucionEducativa,
+                                                                                        r.Sede,
+                                                                                        r.TipoIntervencion
+                                                                                    }
+                                                                                            )
+                                                                                   .FirstOrDefaultAsync(),
+
+                SeguimientoTecnico = ListContratosXProyecto.Select(r => new
+                {
+                    r.NumeroContrato,
+                    r.TipoSolicitudCodigo,
+                    r.NombreTipoContrato,
+                    r.SeguimientoTecnico
+                }).ToList()
+            };
+        }
+        #endregion
         #region contratacion
         public async Task<dynamic> GetInfoContratoByProyectoId(int pProyectoId)
         {
@@ -57,7 +105,7 @@ namespace asivamosffie.services
                                                                                                                                }
                                                                                                                                       )
                                                                                                                                .OrderBy(p => p.EstapaCodigo)
-                                                                                                                               .ToList(); 
+                                                                                                                               .ToList();
                 }
             }
 
@@ -79,18 +127,17 @@ namespace asivamosffie.services
                 InfoProyectosXContrato = ListContratosXProyecto.Select(s => new
                 {
                     s.NumeroSolicitud,
+                    s.FechaSuscripcion,
+                    s.UrlSoporteGestionar,
+                    s.NumeroPoliza,
                     s.FechaSolicitud,
                     s.TipoContratoCodigo,
                     s.ValorTotal,
                     s.CantidadProyectosAsosiados,
-                    s.UrlSoporteGestionar,
                     s.NumeroContrato,
-                    s.FechaSuscripcion,
                     s.ContratoId,
                     s.ContratoSuscrito,
                     s.NombreTipoContrato,
-                    s.NumeroPoliza,
-
                     s.InfoProyectos,
                     s.ListProcesoSeleccion
                 }

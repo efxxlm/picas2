@@ -302,6 +302,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VFichaProyectoPreparacionPreconstruccion> VFichaProyectoPreparacionPreconstruccion { get; set; }
         public virtual DbSet<VFichaProyectoResumenFuentesYusos> VFichaProyectoResumenFuentesYusos { get; set; }
         public virtual DbSet<VFichaProyectoResumenInfraestructura> VFichaProyectoResumenInfraestructura { get; set; }
+        public virtual DbSet<VFichaProyectoSeguimientoTecnicoDiario> VFichaProyectoSeguimientoTecnicoDiario { get; set; }
+        public virtual DbSet<VFichaProyectoSeguimientoTecnicoSemanal> VFichaProyectoSeguimientoTecnicoSemanal { get; set; }
         public virtual DbSet<VFichaProyectoTieneContratacion> VFichaProyectoTieneContratacion { get; set; }
         public virtual DbSet<VFichaProyectoTieneEntrega> VFichaProyectoTieneEntrega { get; set; }
         public virtual DbSet<VFichaProyectoTienePreparacion> VFichaProyectoTienePreparacion { get; set; }
@@ -9978,6 +9980,56 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoIntervencion)
                     .IsRequired()
                     .HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<VFichaProyectoSeguimientoTecnicoDiario>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_SeguimientoTecnicoDiario");
+
+                entity.Property(e => e.DisponibilidadEquipo)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.DisponibilidadMaterial)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.DisponibilidadPersonal)
+                    .IsRequired()
+                    .HasMaxLength(12)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaSeguimiento).HasColumnType("date");
+
+                entity.Property(e => e.Productividad)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VFichaProyectoSeguimientoTecnicoSemanal>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_SeguimientoTecnicoSemanal");
+
+                entity.Property(e => e.AvanceFisico).HasColumnType("decimal(18, 3)");
+
+                entity.Property(e => e.EstadoObra)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.FechaFin).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaInicio).HasColumnType("datetime");
+
+                entity.Property(e => e.ProgramacionObra).HasColumnType("decimal(18, 3)");
             });
 
             modelBuilder.Entity<VFichaProyectoTieneContratacion>(entity =>

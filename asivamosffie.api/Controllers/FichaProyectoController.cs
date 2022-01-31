@@ -27,13 +27,19 @@ namespace asivamosffie.api.Controllers
         {
             _fichaProyectoService = fichaProyectoService;
         }
- 
+
+        [HttpGet]
+        [Route("GetInfoSeguimientoTecnicoByProyectoId")]
+        public async Task<ActionResult<dynamic>> GetInfoSeguimientoTecnicoByProyectoId(int pProyectoId)
+        {
+            return await _fichaProyectoService.GetInfoSeguimientoTecnicoByProyectoId(pProyectoId);
+        }
         [HttpGet]
         [Route("GetInfoContratoByProyectoId")]
         public async Task<ActionResult<dynamic>> GetInfoContratoByProyectoId(int pProyectoId)
         {
             return await _fichaProyectoService.GetInfoContratoByProyectoId(pProyectoId);
-        } 
+        }
         [HttpGet]
         [Route("GetInfoResumenByProyectoId")]
         public async Task<ActionResult<dynamic>> GetInfoResumenByProyectoId(int pProyectoId)
@@ -58,7 +64,6 @@ namespace asivamosffie.api.Controllers
         {
             return await _fichaProyectoService.GetVigencias();
         }
-
         [HttpGet]
         [Route("GetTablaProyectosByProyectoIdTipoContratacionVigencia")]
         public async Task<ActionResult<dynamic>> GetTablaProyectosByProyectoIdTipoContratacionVigencia(int pProyectoId, string pTipoIntervencion, int pVigencia)
