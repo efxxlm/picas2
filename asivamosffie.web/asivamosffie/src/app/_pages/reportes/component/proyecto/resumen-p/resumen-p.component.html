@@ -112,12 +112,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let element of listaAlcance">
+            <tr *ngFor="let element of dataResumen?.infoProyecto?.infraestructura">
               <td class="mat-cell cdk-cell ng-star-inserted">
-                <b> {{ element.infraestructura }} </b>
+                <b> {{ element?.tipoIntervencion }} </b>
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
-                {{ element.cantidad }}
+                {{ element?.cantidad }}
               </td>
             </tr>
           </tbody>

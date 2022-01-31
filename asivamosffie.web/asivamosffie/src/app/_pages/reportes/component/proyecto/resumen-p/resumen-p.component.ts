@@ -16,13 +16,6 @@ export class ResumenPComponent implements OnInit {
   openAcordeon = false;
   displayedColumns: string[] = [ 'nombreAportante', 'valorAportante', 'fuente', 'uso', 'valorUso' ];
 
-  listaAlcance = [
-    {
-      infraestructura: 'Laboratorio de quimíca',
-      cantidad: '4'
-    }
-  ];
-
   constructor(
     private fichaProyectoService: FichaProyectoService,
     private route: ActivatedRoute
