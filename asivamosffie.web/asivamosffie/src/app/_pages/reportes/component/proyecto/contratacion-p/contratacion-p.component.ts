@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { FichaProyectoService } from 'src/app/core/_services/fichaProyecto/ficha-proyecto.service';
 
 @Component({
   selector: 'app-contratacion-p',
@@ -6,6 +8,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./contratacion-p.component.scss']
 })
 export class ContratacionPComponent implements OnInit {
+
+  proyectoId: number;
+  dataContratacion: any = null;
+  dataContratoObra: any = null;
+  dataContratoInterventoria: any = null;
+  openAcordeon = false;
+
+  /*Tipo Dominio: 83 */
+  estadoEtapaProceso={
+    inicio : '1',
+    evaluacion : '2',
+    aprobacion : '3',
+    adjudicacion : '4'
+  }
 
   listaProyectosAsociados = [
     {
@@ -29,9 +45,41 @@ export class ContratacionPComponent implements OnInit {
     }
   ];
 
-  constructor() { }
+  constructor(
+    private fichaProyectoService: FichaProyectoService,
+    private route: ActivatedRoute
+  ) {
+    this.route.params.subscribe((params: Params) => {
+      this.proyectoId = params.id;
+    });
+  }
 
   ngOnInit(): void {
+    this.fichaProyectoService.getInfoContratoByProyectoId(this.proyectoId)
+    .subscribe(response => {
+        this.dataContratacion = response;
+        this.dataContratoObra =  this.dataContratacion?.infoProyectosXContrato?.find(r => r.tipoContratoCodigo == '1');
+        this.dataContratoInterventoria =  this.dataContratacion?.infoProyectosXContrato?.find(r => r.tipoContratoCodigo == '2');
+        if(this.dataContratoObra != null){
+          this.dataContratoObra?.listProcesoSeleccion.forEach(ps => {
+            ps.fechaApertura = ps?.procesoSeleccionCronograma.find(r => r.estapaCodigo == this.estadoEtapaProceso.inicio)?.fechaEtapa;
+            ps.fechaEvaluacion = ps?.procesoSeleccionCronograma.find(r => r.estapaCodigo == this.estadoEtapaProceso.evaluacion)?.fechaEtapa;
+            ps.fechaAdjudicacion = ps?.procesoSeleccionCronograma.find(r => r.estapaCodigo == this.estadoEtapaProceso.adjudicacion)?.fechaEtapa;
+            ps.fechaCierre = ps?.procesoSeleccionCronograma.find(r => r.estapaCodigo == this.estadoEtapaProceso.aprobacion)?.fechaEtapa;
+          });
+        }
+    });
+  }
+
+  downloadPDF() {
+    this.openAcordeon = true;
+    setTimeout(() => {
+      document.title='Contratación '+this.dataContratacion?.infoProyecto?.llaveMen;
+      window.print();
+    }, 300);
+    window.onafterprint = function(){
+      window.location.reload();
+    }
   }
 
 }

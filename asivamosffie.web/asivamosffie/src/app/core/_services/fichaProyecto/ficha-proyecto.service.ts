@@ -40,4 +40,9 @@ export class FichaProyectoService {
       return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetInfoResumenByProyectoId?pProyectoId=${ pProyectoId }`);
     }
 
+    /*CONTRATACIÓN*/
+    getInfoContratoByProyectoId(pProyectoId: number){
+      return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetInfoContratoByProyectoId?pProyectoId=${ pProyectoId }`);
+    }
+
 }

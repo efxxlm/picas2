@@ -1,118 +1,136 @@
 <section class="container">
   <div class="container text-center">
     <div class="text-right">
-      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+      <a routerLink="../../.." mat-button color="primary" class="btn-regresar">
         <img src="assets/img/icon/regresar.svg" alt="Regresar">
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Contratación N801801
+      Contratación {{ dataContratacion?.infoProyecto?.llaveMen }}
     </h1>
   </div>
 
-  <mat-accordion>
-    <mat-expansion-panel class="expansion-style">
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+        <p>
+          <strong>
+            Institución Educativa:
+          </strong>
+          {{ dataContratacion?.infoProyecto?.institucionEducativa }}
+        </p>
+        <p>
+          <strong>
+            Sede:
+          </strong>
+          {{ dataContratacion?.infoProyecto?.sede }}
+        </p>
+        <p>
+          <strong>
+            Tipo de intervención:
+          </strong>
+          {{ dataContratacion?.infoProyecto?.tipoIntervencion }}
+        </p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-accordion [multi]="openAcordeon == true">
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon == true">
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title">
-          Contrato de obra N801801
+          Contrato de obra {{ dataContratoObra?.numeroContrato }}
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-accordion [multi]="openAcordeon == true">
+        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon == true">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
                   Proceso de selección
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <mat-card class="shipping-card var-main-gris">
+            <mat-card class="shipping-card var-main-gris" *ngFor="let ps of dataContratoObra?.listProcesoSeleccion">
               <mat-card-content>
                   <p>
                     <strong>
                       Número de proceso:
                     </strong>
-                    SP 0003-2020
+                    {{ ps?.numeroProceso }}
                   </p>
                   <p>
                     <strong>
                       Fecha de solicitud:
                     </strong>
-                    20/07/2020
+                    {{ ps?.fechaCreacion | date: 'dd/MM/yyyy' }}
                   </p>
                   <p>
                     <strong>
                       Tipo de proceso de selección:
                     </strong>
-                    Selección privada
+                    {{ ps?.tipoProceso }}
                   </p>
                   <p>
                     <strong>
                       Objeto:
                     </strong>
-                    <span class="d-block">
-                      Mejorar los ambientes para el desarrollo pedagógico de los estudiantes, hecho que se traduce en 
-                      aspectos motivacionales que llevan a un mejor aprendizaje, al tiempo que asegura la capacidad del
-                      sistema para absorber y retener al mayor número de población estudiantil y a largo plazo favorece
-                      los índices de desarrollo social de la población.
+                    <span class="d-block" [innerHTML]="ps.objeto">
                     </span>
                   </p>
                   <p>
                     <strong>
                       Alcance particular:
                     </strong>
-                    <span class="d-block">
-                      Incrementar en un 45% la capacidad de estructuras educativas en la zona del Caribe que se
-                      encuentran con un alto porcentaje de deserción escolar.
+                    <span class="d-block" [innerHTML]="ps.alcanceParticular">
                     </span>
                   </p>
-                  <p>
+                  <p *ngIf="ps?.fechaApertura != null">
                     <strong>
                       Fecha de apertura:
                     </strong>
-                    21/07/2020
+                    {{ ps?.fechaApertura | date: 'dd/MM/yyyy' }}
                   </p>
-                  <p>
+                  <p *ngIf="ps?.fechaEvaluacion != null">
                     <strong>
                       Fecha de evaluación:
                     </strong>
-                    15/12/2020
+                    {{ ps?.fechaEvaluacion | date: 'dd/MM/yyyy' }}
                   </p>
-                  <p>
+                  <p *ngIf="ps?.fechaAdjudicacion != null">
                     <strong>
                       Fecha de adjudicación:
                     </strong>
-                    03/01/2021
+                    {{ ps?.fechaAdjudicacion | date: 'dd/MM/yyyy' }}
                   </p>
-                  <p>
+                  <p *ngIf="ps?.fechaCierre != null">
                     <strong>
                       Fecha de cierre:
                     </strong>
-                    20/01/2020
+                    {{ ps?.fechaCierre | date: 'dd/MM/yyyy' }}
                   </p>
                   <p>
                     <strong>
                       ¿Este proceso de selección se realiza distribución del territorio en grupos?:
                     </strong>
-                    Si
+                    <span *ngIf="ps?.esDistribucionGrupos == true">Sí</span>
+                    <span *ngIf="ps?.esDistribucionGrupos != true">No</span>
                   </p>
                   <p>
                     <strong>
                       ¿Cuántos grupos?:
                     </strong>
-                    2
+                    {{ ps?.cantidadGrupos }}
                   </p>
                   <p>
                     <strong>
                       URL con soporte:
                     </strong>
-                    one.drive.procesodeseleccionprivada0007
+                    {{ ps?.urlSoporte }}
                   </p>
               </mat-card-content>
             </mat-card>
-            
+
         </mat-expansion-panel>
-        <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon == true">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
                   Contratación
@@ -125,31 +143,31 @@
                     <strong>
                       Número de solicitud:
                     </strong>
-                    P.I_0001
+                    {{ dataContratoObra?.numeroSolicitud }}
                   </p>
                   <p>
                     <strong>
                       Fecha de solicitud:
                     </strong>
-                    20/07/2020
+                    {{ dataContratoObra?.fechaSolicitud | date: 'dd/MM/yyyy' }}
                   </p>
                   <p>
                     <strong>
                       Opción por contratar:
                     </strong>
-                    Obra
+                    {{ dataContratoObra?.nombreTipoContrato }}
                   </p>
                   <p>
                     <strong>
                       Valor total de la solicitud:
                     </strong>
-                    $105.000.000
+                   {{  dataContratoObra?.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}
                   </p>
                   <p>
                     <strong>
                       URL con soporte:
                     </strong>
-                    one.drive.contratación0007
+                    {{  dataContratoObra?.urlSoporteGestionar }}
                   </p>
 
                   <h2 class="card-subTitle">Proyectos asociados</h2>
@@ -166,24 +184,24 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr *ngFor="let element of listaProyectosAsociados">
+                        <tr *ngFor="let element of dataContratoObra?.infoProyectos">
                           <td class="mat-cell cdk-cell ng-star-inserted">
-                            <b> {{ element.numeroContrato }} </b>
+                            <b> {{ dataContratoObra?.numeroContrato }} </b>
                           </td>
                           <td class="mat-cell cdk-cell ng-star-inserted">
-                            {{ element.llaveMEN }}
+                            {{ element?.llaveMen }}
                           </td>
                           <td class="mat-cell cdk-cell ng-star-inserted">
-                            {{ element.tipoIntervension }}
+                            {{ element?.tipoIntervencion }}
                           </td>
                           <td class="mat-cell cdk-cell ng-star-inserted">
-                            {{ element.departamento }}
+                            {{ element?.departamento  }}
                           </td>
                           <td class="mat-cell cdk-cell ng-star-inserted">
-                            {{ element.municipio }}
+                            {{ element?.muncipio }}
                           </td>
                           <td class="mat-cell cdk-cell ng-star-inserted">
-                            {{ element.institucionEducativa }} / {{ element.sede }}
+                            {{ element?.institucionEducativaSede }}
                           </td>
                         </tr>
                       </tbody>
@@ -191,9 +209,9 @@
                   </div>
               </mat-card-content>
             </mat-card>
-            
+
         </mat-expansion-panel>
-        <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon == true">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
                   Contrato
@@ -206,31 +224,31 @@
                     <strong>
                       Número de contrato:
                     </strong>
-                    N801801
+                    {{ dataContratoObra?.numeroContrato }}
                   </p>
                   <p>
                     <strong>
                       Fecha de suscripción:
                     </strong>
-                    20/07/2020
+                    {{ dataContratoObra?.fechaSuscripcion }}
                   </p>
                   <p>
                     <strong>
                       Contrato suscrito:
                     </strong>
-                    http://contratosuscritoN801801.one.drive
+                    {{ dataContratoObra?.urlSoporteGestionar }}
                   </p>
                   <p>
                     <strong>
                       Número de póliza:
                     </strong>
-                    0000-9868
+                    {{ dataContratoObra?.numeroPoliza }}
                   </p>
               </mat-card-content>
             </mat-card>
-            
+
         </mat-expansion-panel>
-        <mat-expansion-panel class="expansion-style sub-expansion">
+        <!--<mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
               <mat-panel-title class="expansion-style--title">
                 Novedades
@@ -269,12 +287,228 @@
               </tbody>
             </table>
           </div>
-          
-      </mat-expansion-panel>
-    </mat-accordion>
-      
 
+      </mat-expansion-panel>-->
+      </mat-accordion>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon == true">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Contrato de interventoría {{ dataContratoInterventoria?.numeroContrato }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-accordion [multi]="openAcordeon == true">
+        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon == true">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                  Proceso de selección
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-card class="shipping-card var-main-gris" *ngFor="let ps of dataContratoInterventoria?.listProcesoSeleccion">
+              <mat-card-content>
+                  <p>
+                    <strong>
+                      Número de proceso:
+                    </strong>
+                    {{ ps?.numeroProceso }}
+                  </p>
+                  <p>
+                    <strong>
+                      Fecha de solicitud:
+                    </strong>
+                    {{ ps?.fechaCreacion | date: 'dd/MM/yyyy' }}
+                  </p>
+                  <p>
+                    <strong>
+                      Tipo de proceso de selección:
+                    </strong>
+                    {{ ps?.tipoProceso }}
+                  </p>
+                  <p>
+                    <strong>
+                      Objeto:
+                    </strong>
+                    <span class="d-block" [innerHTML]="ps.objeto">
+                    </span>
+                  </p>
+                  <p>
+                    <strong>
+                      Alcance particular:
+                    </strong>
+                    <span class="d-block" [innerHTML]="ps.alcanceParticular">
+                    </span>
+                  </p>
+                  <p *ngIf="ps?.fechaApertura != null">
+                    <strong>
+                      Fecha de apertura:
+                    </strong>
+                    {{ ps?.fechaApertura | date: 'dd/MM/yyyy' }}
+                  </p>
+                  <p *ngIf="ps?.fechaEvaluacion != null">
+                    <strong>
+                      Fecha de evaluación:
+                    </strong>
+                    {{ ps?.fechaEvaluacion | date: 'dd/MM/yyyy' }}
+                  </p>
+                  <p *ngIf="ps?.fechaAdjudicacion != null">
+                    <strong>
+                      Fecha de adjudicación:
+                    </strong>
+                    {{ ps?.fechaAdjudicacion | date: 'dd/MM/yyyy' }}
+                  </p>
+                  <p *ngIf="ps?.fechaCierre != null">
+                    <strong>
+                      Fecha de cierre:
+                    </strong>
+                    {{ ps?.fechaCierre | date: 'dd/MM/yyyy' }}
+                  </p>
+                  <p>
+                    <strong>
+                      ¿Este proceso de selección se realiza distribución del territorio en grupos?:
+                    </strong>
+                    <span *ngIf="ps?.esDistribucionGrupos == true">Sí</span>
+                    <span *ngIf="ps?.esDistribucionGrupos != true">No</span>
+                  </p>
+                  <p>
+                    <strong>
+                      ¿Cuántos grupos?:
+                    </strong>
+                    {{ ps?.cantidadGrupos }}
+                  </p>
+                  <p>
+                    <strong>
+                      URL con soporte:
+                    </strong>
+                    {{ ps?.urlSoporte }}
+                  </p>
+              </mat-card-content>
+            </mat-card>
+
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon == true">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                  Contratación
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-card class="shipping-card var-main-gris">
+              <mat-card-content>
+                  <p>
+                    <strong>
+                      Número de solicitud:
+                    </strong>
+                    {{ dataContratoInterventoria?.numeroSolicitud }}
+                  </p>
+                  <p>
+                    <strong>
+                      Fecha de solicitud:
+                    </strong>
+                    {{ dataContratoInterventoria?.fechaSolicitud | date: 'dd/MM/yyyy' }}
+                  </p>
+                  <p>
+                    <strong>
+                      Opción por contratar:
+                    </strong>
+                    {{ dataContratoInterventoria?.nombreTipoContrato }}
+                  </p>
+                  <p>
+                    <strong>
+                      Valor total de la solicitud:
+                    </strong>
+                  {{  dataContratoInterventoria?.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}
+                  </p>
+                  <p>
+                    <strong>
+                      URL con soporte:
+                    </strong>
+                    {{  dataContratoInterventoria?.urlSoporteGestionar }}
+                  </p>
+
+                  <h2 class="card-subTitle">Proyectos asociados</h2>
+                  <div class="table-responsive mb-1em mt-1em">
+                    <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+                      <thead>
+                        <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Número de contrato</th>
+                          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Llave MEN</th>
+                          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Tipo de intervensión</th>
+                          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Departamento</th>
+                          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Municipio</th>
+                          <th class="mat-header-cell cdk-header-cell ng-star-inserted">Institución Educativa/ Sede</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let element of dataContratoInterventoria?.infoProyectos">
+                          <td class="mat-cell cdk-cell ng-star-inserted">
+                            <b> {{ dataContratoObra?.numeroContrato }} </b>
+                          </td>
+                          <td class="mat-cell cdk-cell ng-star-inserted">
+                            {{ element?.llaveMen }}
+                          </td>
+                          <td class="mat-cell cdk-cell ng-star-inserted">
+                            {{ element?.tipoIntervencion }}
+                          </td>
+                          <td class="mat-cell cdk-cell ng-star-inserted">
+                            {{ element?.departamento  }}
+                          </td>
+                          <td class="mat-cell cdk-cell ng-star-inserted">
+                            {{ element?.muncipio }}
+                          </td>
+                          <td class="mat-cell cdk-cell ng-star-inserted">
+                            {{ element?.institucionEducativaSede }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+              </mat-card-content>
+            </mat-card>
+
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon == true">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                  Contrato
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-card class="shipping-card var-main-gris">
+              <mat-card-content>
+                  <p>
+                    <strong>
+                      Número de contrato:
+                    </strong>
+                    {{ dataContratoInterventoria?.numeroContrato }}
+                  </p>
+                  <p>
+                    <strong>
+                      Fecha de suscripción:
+                    </strong>
+                    {{ dataContratoInterventoria?.fechaSuscripcion }}
+                  </p>
+                  <p>
+                    <strong>
+                      Contrato suscrito:
+                    </strong>
+                    {{ dataContratoInterventoria?.urlSoporteGestionar }}
+                  </p>
+                  <p>
+                    <strong>
+                      Número de póliza:
+                    </strong>
+                    {{ dataContratoInterventoria?.numeroPoliza }}
+                  </p>
+              </mat-card-content>
+            </mat-card>
+
+        </mat-expansion-panel>
+      </mat-accordion>
     </mat-expansion-panel>
   </mat-accordion>
-  
+  <div class="text-center mt-2em mb-2em print-d-none">
+    <button mat-raised-button color="accent" (click)="downloadPDF();">Descargar</button>
+  </div>
 </section>
