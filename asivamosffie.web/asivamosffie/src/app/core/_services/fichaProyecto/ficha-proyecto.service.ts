@@ -45,4 +45,10 @@ export class FichaProyectoService {
       return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetInfoContratoByProyectoId?pProyectoId=${ pProyectoId }`);
     }
 
+    /*SEGUIMIENTO TÉCNICO*/
+    getInfoSeguimientoTecnicoByProyectoId(pProyectoId: number){
+      return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetInfoSeguimientoTecnicoByProyectoId?pProyectoId=${ pProyectoId }`);
+    }
+
+
 }
