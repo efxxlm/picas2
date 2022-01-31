@@ -57,9 +57,7 @@ namespace asivamosffie.services
                                                                                                                                }
                                                                                                                                       )
                                                                                                                                .OrderBy(p => p.EstapaCodigo)
-                                                                                                                               .ToList();
-
-
+                                                                                                                               .ToList(); 
                 }
             }
 
@@ -85,7 +83,7 @@ namespace asivamosffie.services
                     s.TipoContratoCodigo,
                     s.ValorTotal,
                     s.CantidadProyectosAsosiados,
-
+                    s.UrlSoporteGestionar,
                     s.NumeroContrato,
                     s.FechaSuscripcion,
                     s.ContratoId,
