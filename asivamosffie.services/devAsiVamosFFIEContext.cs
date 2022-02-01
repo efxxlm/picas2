@@ -275,6 +275,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VDescuentosXordenGiroXproyectoXfaseXaportanteXconcepto> VDescuentosXordenGiroXproyectoXfaseXaportanteXconcepto { get; set; }
         public virtual DbSet<VDisponibilidadPresupuestal> VDisponibilidadPresupuestal { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
+        public virtual DbSet<VDrpGeneral> VDrpGeneral { get; set; }
         public virtual DbSet<VDrpNovedadXfaseContratacionId> VDrpNovedadXfaseContratacionId { get; set; }
         public virtual DbSet<VDrpXcontratacionXproyectoXaportante> VDrpXcontratacionXproyectoXaportante { get; set; }
         public virtual DbSet<VDrpXcontratacionXproyectoXaportanteXfaseXcriterioXconceptoXusos> VDrpXcontratacionXproyectoXaportanteXfaseXcriterioXconceptoXusos { get; set; }
@@ -9368,6 +9369,23 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VDrpGeneral>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DrpGeneral");
+
+                entity.Property(e => e.NombreUso)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.TipoUsoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(38, 2)");
             });
 
             modelBuilder.Entity<VDrpNovedadXfaseContratacionId>(entity =>

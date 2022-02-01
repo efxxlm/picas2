@@ -32,9 +32,13 @@ namespace asivamosffie.services
 
 
 
-        public async Task<List<VOdgValoresFacturados>> ValidacionFacturadosODG()
+        public async Task<dynamic> ValidacionFacturadosODG()
         {
-            return await _context.VOdgValoresFacturados.ToListAsync(); 
-        }
+            return new
+            {
+                UsosFacturados = _context.VOdgValoresFacturados.ToList(),
+                UsosDrp = _context.VDrpGeneral.ToList()
+            };
+    }
     }
 }

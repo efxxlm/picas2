@@ -24,7 +24,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("ValidacionFacturadosODG")]
-        public async Task<ActionResult<List<VOdgValoresFacturados>>> ValidacionFacturadosODG()
+        public async Task<ActionResult<dynamic>> ValidacionFacturadosODG()
         { 
            return await _ValidacionesLineaPagoServices.ValidacionFacturadosODG();
         }
