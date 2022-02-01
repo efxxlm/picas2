@@ -4,6 +4,7 @@ using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
@@ -23,9 +24,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("ValidacionFacturadosODG")]
-        public async Task<ActionResult<dynamic>> ValidacionFacturadosODG()
+        public async Task<ActionResult<List<VOdgValoresFacturados>>> ValidacionFacturadosODG()
         { 
-           return _ValidacionesLineaPagoServices.ValidacionFacturadosODG();
+           return await _ValidacionesLineaPagoServices.ValidacionFacturadosODG();
         }
             
  

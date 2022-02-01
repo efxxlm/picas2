@@ -9,6 +9,6 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IValidacionesLineaPagoServices 
     {
-         Task<dynamic> ValidacionFacturadosODG();
+         Task<List<VOdgValoresFacturados>> ValidacionFacturadosODG();
     }
 }

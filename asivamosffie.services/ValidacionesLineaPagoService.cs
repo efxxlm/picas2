@@ -29,13 +29,12 @@ namespace asivamosffie.services
             _context = context;
             _commonService = commonService;
         }
-         
 
 
-        public async Task<dynamic> ValidacionFacturadosODG()
-        { 
-            return  _context.VOdgValoresFacturados.ToList(); 
+
+        public async Task<List<VOdgValoresFacturados>> ValidacionFacturadosODG()
+        {
+            return await _context.VOdgValoresFacturados.ToListAsync(); 
         }
-
     }
 }
