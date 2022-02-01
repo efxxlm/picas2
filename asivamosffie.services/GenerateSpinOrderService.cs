@@ -322,7 +322,7 @@ namespace asivamosffie.services
         private dynamic GetTablaPorcentajeParticipacion(SolicitudPago solicitudPago)
         {
             List<VRpsPorContratacion> vRpsPorContratacions = _context.VRpsPorContratacion.Where(r => r.ContratacionId == solicitudPago.ContratoSon.ContratacionId).ToList();
-            List<VDrpXcontratoXaportante> ListVDrpXcontratoXaportante = _context.VDrpXcontratoXaportante.Where(f => f.ContratoId == solicitudPago.ContratoSon.ContratoId).ToList();
+            List<VDrpXcontratoXaportante> ListVDrpXcontratoXaportante = _context.VDrpXcontratoXaportante.Where(f => f.ContratoId == solicitudPago.ContratoSon.ContratoId && f.NumeroDrp != null).ToList();
 
             List<dynamic> List = new List<dynamic>();
             int Enum = 1;
