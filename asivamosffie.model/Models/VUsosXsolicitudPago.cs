@@ -8,5 +8,6 @@ namespace asivamosffie.model.Models
         public int SolicitudPagoId { get; set; }
         public string UsoCodigo { get; set; }
         public string NombreUso { get; set; }
+        public string ConceptoPagoCriterio { get; set; }
     }
 }

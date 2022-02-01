@@ -291,6 +291,25 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso> VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXuso { get; set; }
         public virtual DbSet<VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXusoOld> VFacturadoXodgXcontratacionXproyectoXaportanteXfaseXconcepXusoOld { get; set; }
         public virtual DbSet<VFechasValidacionAjusteProgramacion> VFechasValidacionAjusteProgramacion { get; set; }
+        public virtual DbSet<VFichaContratoBusquedaContratista> VFichaContratoBusquedaContratista { get; set; }
+        public virtual DbSet<VFichaContratoBusquedaContrato> VFichaContratoBusquedaContrato { get; set; }
+        public virtual DbSet<VFichaProyectoBusquedaProyecto> VFichaProyectoBusquedaProyecto { get; set; }
+        public virtual DbSet<VFichaProyectoBusquedaProyectoTabla> VFichaProyectoBusquedaProyectoTabla { get; set; }
+        public virtual DbSet<VFichaProyectoContratacionProcesoSeleccion> VFichaProyectoContratacionProcesoSeleccion { get; set; }
+        public virtual DbSet<VFichaProyectoContratacionProcesoSeleccionCronograma> VFichaProyectoContratacionProcesoSeleccionCronograma { get; set; }
+        public virtual DbSet<VFichaProyectoInfoContratacionProyecto> VFichaProyectoInfoContratacionProyecto { get; set; }
+        public virtual DbSet<VFichaProyectoPreparacionConstruccion> VFichaProyectoPreparacionConstruccion { get; set; }
+        public virtual DbSet<VFichaProyectoPreparacionPreconstruccion> VFichaProyectoPreparacionPreconstruccion { get; set; }
+        public virtual DbSet<VFichaProyectoResumenFuentesYusos> VFichaProyectoResumenFuentesYusos { get; set; }
+        public virtual DbSet<VFichaProyectoResumenInfraestructura> VFichaProyectoResumenInfraestructura { get; set; }
+        public virtual DbSet<VFichaProyectoSeguimientoTecnicoDiario> VFichaProyectoSeguimientoTecnicoDiario { get; set; }
+        public virtual DbSet<VFichaProyectoSeguimientoTecnicoSemanal> VFichaProyectoSeguimientoTecnicoSemanal { get; set; }
+        public virtual DbSet<VFichaProyectoTieneContratacion> VFichaProyectoTieneContratacion { get; set; }
+        public virtual DbSet<VFichaProyectoTieneEntrega> VFichaProyectoTieneEntrega { get; set; }
+        public virtual DbSet<VFichaProyectoTienePreparacion> VFichaProyectoTienePreparacion { get; set; }
+        public virtual DbSet<VFichaProyectoTieneResumen> VFichaProyectoTieneResumen { get; set; }
+        public virtual DbSet<VFichaProyectoTieneSeguimientoFinanciero> VFichaProyectoTieneSeguimientoFinanciero { get; set; }
+        public virtual DbSet<VFichaProyectoTieneSeguimientoTecnico> VFichaProyectoTieneSeguimientoTecnico { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoId> VFuentesUsoXcontratoId { get; set; }
         public virtual DbSet<VFuentesUsoXcontratoIdXproyecto> VFuentesUsoXcontratoIdXproyecto { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
@@ -302,6 +321,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VNombreCuentaXodgXaportanteXconcepto> VNombreCuentaXodgXaportanteXconcepto { get; set; }
         public virtual DbSet<VNovedadContractual> VNovedadContractual { get; set; }
         public virtual DbSet<VNovedadContractualReporteHist> VNovedadContractualReporteHist { get; set; }
+        public virtual DbSet<VOdgValoresFacturados> VOdgValoresFacturados { get; set; }
         public virtual DbSet<VOrdenGiro> VOrdenGiro { get; set; }
         public virtual DbSet<VOrdenGiroPagosXusoAportante> VOrdenGiroPagosXusoAportante { get; set; }
         public virtual DbSet<VOrdenGiroPagosXusoAportanteXproyecto> VOrdenGiroPagosXusoAportanteXproyecto { get; set; }
@@ -374,6 +394,15 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<Version> Version { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -5794,8 +5823,7 @@ namespace asivamosffie.model.Models
             modelBuilder.Entity<Proyecto>(entity =>
             {
                 entity.HasIndex(e => e.LlaveMen)
-                    .HasName("uk_llavemen")
-                    .IsUnique();
+                    .HasName("inxLLaveMen");
 
                 entity.Property(e => e.CoordinacionResponsableCodigo)
                     .HasMaxLength(100)
@@ -9664,6 +9692,394 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaInicio).HasColumnType("datetime");
             });
 
+            modelBuilder.Entity<VFichaContratoBusquedaContratista>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaContrato_BusquedaContratista");
+
+                entity.Property(e => e.ContratistaId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VFichaContratoBusquedaContrato>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaContrato_BusquedaContrato");
+
+                entity.Property(e => e.ContratoId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VFichaProyectoBusquedaProyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_BusquedaProyecto");
+
+                entity.Property(e => e.Departamento)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.InstitucionEducativa)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Municipio)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Sede)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VFichaProyectoBusquedaProyectoTabla>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_BusquedaProyectoTabla");
+
+                entity.Property(e => e.CodigoTipoIntervencion)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DepartamentoMunicipio)
+                    .HasMaxLength(603)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.InstitucionEducativaSede)
+                    .IsRequired()
+                    .HasMaxLength(603)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoIntervencion)
+                    .IsRequired()
+                    .HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<VFichaProyectoContratacionProcesoSeleccion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_ContratacionProcesoSeleccion");
+
+                entity.Property(e => e.AlcanceParticular)
+                    .HasMaxLength(5000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.NumeroProceso)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Objeto)
+                    .HasMaxLength(5000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoProceso)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.UrlSoporte)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VFichaProyectoContratacionProcesoSeleccionCronograma>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_ContratacionProcesoSeleccionCronograma");
+
+                entity.Property(e => e.EstapaCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaEtapa).HasColumnType("datetime");
+
+                entity.Property(e => e.NombreEtapa)
+                    .IsRequired()
+                    .HasColumnName("nombreEtapa")
+                    .HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<VFichaProyectoInfoContratacionProyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_InfoContratacionProyecto");
+
+                entity.Property(e => e.CodigoDaneInstitucionEducativa)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CodigoDaneSede)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Contratista)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Departamento)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.InstitucionEducativa)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Municipio)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroContratacion)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Sede)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoIntervencion)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.UbicacionLatitud)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UbicacionLongitud)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorInterventoria).HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.ValorObra).HasColumnType("numeric(18, 2)");
+            });
+
+            modelBuilder.Entity<VFichaProyectoPreparacionConstruccion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_PreparacionConstruccion");
+
+                entity.Property(e => e.CodigoTipoContrato)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
+
+                entity.Property(e => e.NombreTipoContrato)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.Observaciones).IsUnicode(false);
+
+                entity.Property(e => e.Perfil)
+                    .IsRequired()
+                    .HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<VFichaProyectoPreparacionPreconstruccion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_PreparacionPreconstruccion");
+
+                entity.Property(e => e.CodigoPerfil)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NombrePerfil)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.RutaSoporte).HasMaxLength(400);
+            });
+
+            modelBuilder.Entity<VFichaProyectoResumenFuentesYusos>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_ResumenFuentesYUsos");
+
+                entity.Property(e => e.Fase)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.Fuente)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.NombreAportante)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoContrato)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Uso)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
+            });
+
+            modelBuilder.Entity<VFichaProyectoResumenInfraestructura>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_ResumenInfraestructura");
+
+                entity.Property(e => e.TipoIntervencion)
+                    .IsRequired()
+                    .HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<VFichaProyectoSeguimientoTecnicoDiario>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_SeguimientoTecnicoDiario");
+
+                entity.Property(e => e.DisponibilidadEquipo)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.DisponibilidadMaterial)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.DisponibilidadPersonal)
+                    .IsRequired()
+                    .HasMaxLength(12)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaSeguimiento).HasColumnType("date");
+
+                entity.Property(e => e.Productividad)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VFichaProyectoSeguimientoTecnicoSemanal>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_SeguimientoTecnicoSemanal");
+
+                entity.Property(e => e.AvanceFisico).HasColumnType("decimal(18, 3)");
+
+                entity.Property(e => e.EstadoObra)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.FechaFin).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaInicio).HasColumnType("datetime");
+
+                entity.Property(e => e.ProgramacionObra).HasColumnType("decimal(18, 3)");
+            });
+
+            modelBuilder.Entity<VFichaProyectoTieneContratacion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_TieneContratacion");
+            });
+
+            modelBuilder.Entity<VFichaProyectoTieneEntrega>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_TieneEntrega");
+            });
+
+            modelBuilder.Entity<VFichaProyectoTienePreparacion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_TienePreparacion");
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VFichaProyectoTieneResumen>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_TieneResumen");
+            });
+
+            modelBuilder.Entity<VFichaProyectoTieneSeguimientoFinanciero>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_TieneSeguimientoFinanciero");
+            });
+
+            modelBuilder.Entity<VFichaProyectoTieneSeguimientoTecnico>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaProyecto_TieneSeguimientoTecnico");
+            });
+
             modelBuilder.Entity<VFuentesUsoXcontratoId>(entity =>
             {
                 entity.HasNoKey();
@@ -10071,6 +10487,29 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioCreacion).HasMaxLength(400);
 
                 entity.Property(e => e.UsuarioModificacion).HasMaxLength(400);
+            });
+
+            modelBuilder.Entity<VOdgValoresFacturados>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_Odg_ValoresFacturados");
+
+                entity.Property(e => e.ConceptoPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EsPreconstruccion).HasColumnName("esPreconstruccion");
+
+                entity.Property(e => e.NombreUso)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.UsoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
             });
 
             modelBuilder.Entity<VOrdenGiro>(entity =>
@@ -10803,6 +11242,10 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_ProyectosXContrato");
 
+                entity.Property(e => e.ActaSuscrita)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Departamento)
                     .HasColumnName("departamento")
                     .HasMaxLength(300)
@@ -10817,6 +11260,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaRegistroProyecto)
                     .HasColumnName("fechaRegistroProyecto")
                     .HasColumnType("datetime");
+
+                entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaSuscripcion).HasColumnType("datetime");
 
                 entity.Property(e => e.InstitucionEducativa)
                     .IsRequired()
@@ -10839,7 +11286,43 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.Property(e => e.NombreTipoContrato)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
                 entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroIdentificacion)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroInvitacion)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroPoliza)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroSolicitud)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Region)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RepresentanteLegal)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RepresentanteLegalNumeroIdentificacion)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
@@ -10847,6 +11330,10 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasColumnName("sede")
                     .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoContratoCodigo)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoIntervencion)
@@ -11734,6 +12221,11 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_UsosXSolicitudPago");
+
+                entity.Property(e => e.ConceptoPagoCriterio)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NombreUso)
                     .IsRequired()
