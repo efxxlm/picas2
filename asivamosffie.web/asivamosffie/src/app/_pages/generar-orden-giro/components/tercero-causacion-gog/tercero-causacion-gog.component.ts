@@ -10,6 +10,7 @@ import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrar
 import humanize from 'humanize-plus';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ObservacionesOrdenGiroService } from 'src/app/core/_services/observacionesOrdenGiro/observaciones-orden-giro.service';
+import { ValidacionesLineaPagoService } from 'src/app/core/_services/validacionesLineaPago/validaciones-linea-pago.service';
 
 @Component({
   selector: 'app-tercero-causacion-gog',
@@ -45,6 +46,8 @@ export class TerceroCausacionGogComponent implements OnInit {
     ordenGiroDetalleId = 0;
     tieneAmortizacion: boolean = false;
     solicitudesPagoFase: any[];
+    usosDrp: any[];
+    usosFacturados: any[];
 
     // Get formArray de addressForm
     get criterios() {
@@ -74,7 +77,9 @@ export class TerceroCausacionGogComponent implements OnInit {
         private routes: Router,
         private registrarPagosSvc: RegistrarRequisitosPagoService,
         private ordenGiroSvc: OrdenPagoService,
-        private obsOrdenGiro: ObservacionesOrdenGiroService )
+        private obsOrdenGiro: ObservacionesOrdenGiroService,
+        private validacionSvc: ValidacionesLineaPagoService
+        )
     {
         this.commonSvc.listaFuenteTipoFinanciacion()
             .subscribe( listaFuenteTipoFinanciacion => this.listaFuenteTipoFinanciacion = listaFuenteTipoFinanciacion );
@@ -82,7 +87,11 @@ export class TerceroCausacionGogComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.getTerceroCausacion();
+      this.validacionSvc.validacionFacturadosODG().subscribe((response)=>{
+        this.usosDrp = response?.usosDrp;
+        this.usosFacturados = response?.usosFacturados;
+      });
+      this.getTerceroCausacion();
     }
 
     crearFormulario () {
@@ -1478,9 +1487,28 @@ export class TerceroCausacionGogComponent implements OnInit {
       }
     }
 
+    getValorAportante(codigo: string, aportanteId: any, fuenteFinanciacionId: any) {
+      let usoDelConcepto = this.solicitudPago.vConceptosUsosXsolicitudPagoId.find(r=> r.conceptoCodigo == codigo)?.usoCodigo;
+      let valorUsoTotal = 0;
+      let valorFacturadoTotal = 0;
+      if(aportanteId > 0 && codigo != null && fuenteFinanciacionId > 0 && usoDelConcepto != undefined && usoDelConcepto != null){
+        let drpData = this.usosDrp.find(r => r.contratacionProyectoId == this.contratacionProyectoId && r.cofinanciacionAportanteId == aportanteId && r.fuenteFinanciacionId == fuenteFinanciacionId && r.esPreConstruccion == this.esPreconstruccion && r.tipoUsoCodigo == usoDelConcepto);
+        let valoresFacturados = this.usosFacturados.filter(r => r.contratacionProyectoId == this.contratacionProyectoId && r.aportanteId == aportanteId && r.fuenteFinanciacionId == fuenteFinanciacionId && r.usoCodigo == usoDelConcepto && r.esPreconstruccion == this.esPreconstruccion);
+        if(drpData != null)
+          valorUsoTotal = drpData?.valorUso ?? 0;
+
+        if(valoresFacturados != null && valoresFacturados != null){
+            valoresFacturados.forEach(element => {
+              valorFacturadoTotal += element.valorDescuento ?? 0;
+            });
+        }
+        if (valorUsoTotal > 0) return valorUsoTotal - valorFacturadoTotal;
+      }
+      return 0;
+    }
 
     // TODO: filtrar por proyecto y fase
-    getValorAportante(codigo: string, aportanteId: any, fuenteFinanciacionId: any) {
+    getValorAportanteOld(codigo: string, aportanteId: any, fuenteFinanciacionId: any) {
       if(aportanteId > 0 && codigo != null && fuenteFinanciacionId > 0){
         if (this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.length > 0) {
           const conceptoCodigo = this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.filter((conceptoCodigo: { conceptoCodigo: string; solicitudPagoId: number; contratacionProyectoId: number; }) =>
