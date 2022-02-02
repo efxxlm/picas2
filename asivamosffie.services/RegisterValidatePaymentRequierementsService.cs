@@ -894,14 +894,15 @@ namespace asivamosffie.services
                     _context.VPagosOdgXsinAmortizacion.Where(v => v.ContratacionId == pContratacionId
                                                             )
                                                             .ToList();
+            List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
 
             if (!esSolicitudPago)
             {
                 ListPagos = ListPagos.Where(r => r.EstaAprobadaOdg == true).ToList();
                 ListPagosOdg = ListPagosOdg.Where(r => r.EstaAprobadaOdg == true).ToList();
+                DescuentosOrdenGiro = DescuentosOrdenGiro.Where(r => r.RegistroCompletoAprobar == true).ToList();
             }
 
-            List<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> DescuentosOrdenGiro = _context.VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso.Where(r => r.ContratacionId == pContratacionId).ToList();
 
             foreach (var Drp in ListDrp)
             {

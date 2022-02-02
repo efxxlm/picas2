@@ -22,5 +22,6 @@ namespace asivamosffie.model.Models
         public string NumeroContrato { get; set; }
         public string TipoPagoCodigo { get; set; }
         public int? FuenteFinanciacionId { get; set; }
+        public bool? RegistroCompletoAprobar { get; set; }
     }
 }
