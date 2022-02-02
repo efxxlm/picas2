@@ -269,17 +269,17 @@ namespace asivamosffie.services
                            .FirstOrDefaultAsync();
 
 
-            foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
-            {
-                foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
-                {
-                    foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
-                    {
-                        if (ComponenteAportante.ComponenteUso.Count > 0)
-                            ComponenteAportante.ComponenteUso = ComponenteAportante.ComponenteUso.Where(c => c.Eliminado != true).ToList();
-                    }
-                }
-            }
+            //foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
+            //{
+            //    foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
+            //    {
+            //        foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
+            //        {
+            //            if (ComponenteAportante.ComponenteUso.Count > 0)
+            //                ComponenteAportante.ComponenteUso = ComponenteAportante.ComponenteUso.Where(c => c.Eliminado != true).ToList();
+            //        }
+            //    }
+            //}
 
             contratacion.ContratacionProyecto = contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).ToList();
 
