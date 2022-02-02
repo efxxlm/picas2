@@ -237,34 +237,39 @@ namespace asivamosffie.services
             Contratacion contratacion = await _context.Contratacion.Where(r => r.ContratacionId == pContratacionId)
                 .Include(r => r.Contratista)
                 .Include(r => r.Contrato)
+
                 .Include(r => r.ContratacionProyecto)
                 .ThenInclude(r => r.ContratacionProyectoAportante)
                  .ThenInclude(r => r.CofinanciacionAportante)
-                   .ThenInclude(r => r.ProyectoAportante)
-                 .Include(r => r.ContratacionProyecto)
-                   .ThenInclude(r => r.Proyecto)
-                   .ThenInclude(r => r.ProyectoAportante)
-                     .ThenInclude(r => r.Aportante)
-                       .ThenInclude(r => r.NombreAportante)
-                 .Include(r => r.ContratacionProyecto)
-                   .ThenInclude(r => r.Proyecto)
-                     .ThenInclude(r => r.ProyectoAportante)
-                       .ThenInclude(r => r.Aportante)
-                         .ThenInclude(r => r.Departamento)
-                  .Include(r => r.ContratacionProyecto)
-                       .ThenInclude(r => r.Proyecto)
-                               .ThenInclude(r => r.ProyectoPredio)
-                                    .ThenInclude(r => r.Predio)
-               .Include(r => r.ContratacionProyecto)
-                   .ThenInclude(r => r.Proyecto)
-                      .ThenInclude(r => r.PredioPrincipal)
+                   //.ThenInclude(r => r.ProyectoAportante)
+
+                  //.Include(r => r.ContratacionProyecto)
+                  //  .ThenInclude(r => r.Proyecto)
+                  //  .ThenInclude(r => r.ProyectoAportante)
+                  //    .ThenInclude(r => r.Aportante)
+                  //      .ThenInclude(r => r.NombreAportante)
+
+                  //.Include(r => r.ContratacionProyecto)
+                  //  .ThenInclude(r => r.Proyecto)
+                  //    .ThenInclude(r => r.ProyectoAportante)
+                  //      .ThenInclude(r => r.Aportante)
+                  //        .ThenInclude(r => r.Departamento)
+
+               //   .Include(r => r.ContratacionProyecto)
+               //        .ThenInclude(r => r.Proyecto)
+               //                .ThenInclude(r => r.ProyectoPredio)
+               //                     .ThenInclude(r => r.Predio)
+               //.Include(r => r.ContratacionProyecto)
+               //    .ThenInclude(r => r.Proyecto)
+               //       .ThenInclude(r => r.PredioPrincipal)
+
                .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.Proyecto)
                       .ThenInclude(r => r.InfraestructuraIntervenirProyecto)
-                .Include(r => r.ContratacionProyecto)
-                    .ThenInclude(r => r.ContratacionProyectoAportante)
-                      .ThenInclude(r => r.ComponenteAportante)
-                           .ThenInclude(r => r.ComponenteUso)
+                //.Include(r => r.ContratacionProyecto)
+                //    .ThenInclude(r => r.ContratacionProyectoAportante)
+                //      .ThenInclude(r => r.ComponenteAportante)
+                //           .ThenInclude(r => r.ComponenteUso)
                  .Include(p => p.PlazoContratacion)
                            .FirstOrDefaultAsync();
 
@@ -304,7 +309,7 @@ namespace asivamosffie.services
                     item.Proyecto.UsuarioModificacion = ListRegiones.Find(r => r.LocalizacionId == departamento.IdPadre).Descripcion;
                     item.Proyecto.TipoIntervencionCodigo = ListTipoIntervencion.Find(r => r.Codigo == item.Proyecto.TipoIntervencionCodigo).Nombre;
 
-                    item.Proyecto.ProyectoAportante = item.Proyecto.ProyectoAportante.Where(r => r.Eliminado != true).ToList();
+                   // item.Proyecto.ProyectoAportante = item.Proyecto.ProyectoAportante.Where(r => r.Eliminado != true).ToList();
                 }
                 foreach (var praportante in item.ContratacionProyectoAportante)
                 {
@@ -333,13 +338,14 @@ namespace asivamosffie.services
                 }
                 DateTime? fechaComitetecnico = null;
 
-                var comite = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == contratacion.ContratacionId && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).
-                    Include(x => x.ComiteTecnico).ToList();
+                var comite = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == contratacion.ContratacionId 
+                                                                    && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
+                                                           .Include(x => x.ComiteTecnico)
+                                                           .FirstOrDefault();
 
-                comite = comite.Where(r => r.Eliminado != true).ToList();
-                if (comite.Count() > 0)
+                if (comite != null)
                 {
-                    ComiteTecnico ct = comite.FirstOrDefault().ComiteTecnico;
+                    ComiteTecnico ct = comite.ComiteTecnico;
                     if (ct != null)
                     {
                         fechaComitetecnico = Convert.ToDateTime(ct.FechaOrdenDia ?? DateTime.Now);
