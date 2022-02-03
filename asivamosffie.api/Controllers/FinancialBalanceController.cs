@@ -177,7 +177,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(e);
             }
         }
-
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetContratoByProyectoId")]
         public async Task<IActionResult> GetContratoByProyectoId([FromQuery] int pProyectoId)

@@ -1126,9 +1126,8 @@ namespace asivamosffie.services
                            .ToList();
 
                     contrato.TablaDRP = _registerValidatePaymentRequierementsService.GetDrpContrato(contrato);
-
-
-                    contrato.ValorPagadoContratista = contrato.SolicitudPago.Sum(r => r.ValorFacturado);
+                     
+                    contrato.ValorPagadoContratista = _context.VEjecucionPresupuestalXproyecto.Where(r => r.ProyectoId == pProyectoId && r.TipoSolicitudCodigo == contratacionProyecto.Contratacion.TipoSolicitudCodigo).Sum(r=> r.FacturadoAntesImpuestos);
 
                     contrato.TablaRecursosComprometidos = GetTablaRecursosComprometidos(contrato.ContratacionId, pProyectoId);
 
