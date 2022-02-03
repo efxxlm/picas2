@@ -21,5 +21,7 @@ namespace asivamosffie.model.Models
         public string UsoCodigo { get; set; }
         public string TipoPago { get; set; }
         public int? FuenteFinanciacionId { get; set; }
+        public decimal? ValorAmortizacion { get; set; }
+        public bool EsFactura { get; set; }
     }
 }

@@ -377,9 +377,9 @@ namespace asivamosffie.services
                     });
                 }
 
-                if(string.IsNullOrEmpty(ConceptoPago.ConceptoPago))
+                if (string.IsNullOrEmpty(ConceptoPago.ConceptoPago))
                     ConceptoPago.ConceptoPago = "No aplica";
-                 
+
                 ListTablaDescuento.Add(new
                 {
                     ConceptoPago.ConceptoPago,
@@ -417,11 +417,11 @@ namespace asivamosffie.services
 
                 List<dynamic> ListDyAportante = new List<dynamic>();
 
-               
+
                 foreach (var Aportante in ListAportante)
                 {
 
-                    var dyAportante = "No aplica"; 
+                    var dyAportante = "No aplica";
                     if (Aportante.AportanteId > 0)
                         dyAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
 
@@ -436,7 +436,7 @@ namespace asivamosffie.services
                 }
 
                 if (string.IsNullOrEmpty(ConceptoPago.ConceptoPago))
-                    ConceptoPago.ConceptoPago = "No aplica"; 
+                    ConceptoPago.ConceptoPago = "No aplica";
                 ListTablaDescuento.Add(new
                 {
                     ConceptoPago.ConceptoPago,
@@ -1126,8 +1126,8 @@ namespace asivamosffie.services
                            .ToList();
 
                     contrato.TablaDRP = _registerValidatePaymentRequierementsService.GetDrpContrato(contrato);
-                     
-                    contrato.ValorPagadoContratista = _context.VEjecucionPresupuestalXproyecto.Where(r => r.ProyectoId == pProyectoId && r.TipoSolicitudCodigo == contratacionProyecto.Contratacion.TipoSolicitudCodigo).Sum(r=> r.FacturadoAntesImpuestos);
+
+                    contrato.ValorPagadoContratista = _context.VEjecucionPresupuestalXproyecto.Where(r => r.ProyectoId == pProyectoId && r.TipoSolicitudCodigo == contratacionProyecto.Contratacion.TipoSolicitudCodigo).Sum(r => r.FacturadoAntesImpuestos);
 
                     contrato.TablaRecursosComprometidos = GetTablaRecursosComprometidos(contrato.ContratacionId, pProyectoId);
 
@@ -1297,21 +1297,22 @@ namespace asivamosffie.services
                                                                                               ).ToList();
 
                                     Aportante.NombreAportante = _budgetAvailabilityService.getNombreAportante(_context.CofinanciacionAportante.Find(Aportante.AportanteId));
+
                                     if (Aportante.ValorUso == null)
                                         Aportante.ValorUso = new List<ValorUso>();
 
                                     if (VPlantillaOrdenGiroUsos != null)
                                     {
-
-                                        if (usos.NombreUso == "Diseño - Obras Complementarias")
-                                        {
-                                            string String = "string".ToString();
-                                        }
                                         decimal Descuento = (VPlantillaOrdenGiroUsos.Sum(r => r.Descuentos)) ?? 0;
 
-                                        decimal ValorConcepto = VPlantillaOrdenGiroUsos.Sum(r => r.ValorFacturado) ?? 0;
+                                        decimal ValorFacturado = VPlantillaOrdenGiroUsos.Sum(r => r.ValorFacturado) ?? 0;
 
-                                        Decimal Total = Math.Abs((ValorUso - ValorConcepto) + Descuento);
+                                        decimal ValorDescuentoAmortizacion = VPlantillaOrdenGiroUsos.Sum(r => r.ValorAmortizacion) ?? 0;
+
+                                        // Formula 03/02/2022
+                                        //DRP - (Suma de valores facturados(incluye anticipo) + descuento amortización
+
+                                        Decimal Total = Math.Abs((ValorUso - (ValorFacturado) + ValorDescuentoAmortizacion));
 
                                         Aportante.ValorUso.Add(new ValorUso
                                         {
