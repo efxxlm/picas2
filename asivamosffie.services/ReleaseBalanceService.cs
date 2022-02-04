@@ -42,7 +42,9 @@ namespace asivamosffie.services
                     //MODIFICADO PARA RESTA GENERAL DE LOS USOS JMC
                     //MODIFICADO PARA RESTA GENERAL DE LOS USOS JMC
                     //MODIFICADO PARA RESTA GENERAL DE LOS USOS JMC
-                    List<VGetConceptoOrdenGiroUso> ListPagosOdg = _context.VGetConceptoOrdenGiroUso.Where(v => v.ContratacionId == cp.ContratacionId)
+                    List<VGetConceptoOrdenGiroUso> ListPagosOdg = _context.VGetConceptoOrdenGiroUso.Where(v => v.ContratacionId == cp.ContratacionId
+                                                                                                            && v.EstaAprobada == true          
+                                                                                                         )
                                                                                                    .ToList();
 
                     List<VPagosSolicitudXcontratacionXproyectoXuso> ListPagos = _context.VPagosSolicitudXcontratacionXproyectoXuso
@@ -316,7 +318,7 @@ namespace asivamosffie.services
                                         .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                  && r.UsoCodigo == TipoUso.TipoUsoCodigo
                                                  )
-                                        .Sum(r => r.Descuentos) ?? 0 : 0;
+                                        .Sum(r => r.ValorAmortizacion) ?? 0 : 0;
 
                         //decimal Descuentos = 0;
 
@@ -367,6 +369,17 @@ namespace asivamosffie.services
                                     }
                                 }
                             }
+
+                            //decimal Descuento = (VPlantillaOrdenGiroUsos.Sum(r => r.Descuentos)) ?? 0;
+
+                            //decimal ValorFacturado = VPlantillaOrdenGiroUsos.Sum(r => r.ValorFacturado) ?? 0;
+
+                            //decimal ValorDescuentoAmortizacion = VPlantillaOrdenGiroUsos.Sum(r => r.ValorAmortizacion) ?? 0;
+
+                            //// Formula 03/02/2022
+                            ////DRP - (Suma de valores facturados(incluye anticipo) + descuento amortización
+
+                            //Decimal Total = Math.Abs((ValorUso - (ValorFacturado) + ValorDescuentoAmortizacion));
 
 
                             saldo = Saldo > 0 ? ((ValorUso - Saldo) + Descuentos) < 0 ? 0 : (ValorUso - Saldo) + Descuentos: ValorUso;

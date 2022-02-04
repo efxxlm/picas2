@@ -395,16 +395,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<Version> Version { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
-            }
-        }
-
+         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -9603,13 +9594,13 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_EjecucionPresupuestalXProyecto");
 
-                entity.Property(e => e.FacturadoAntesImpuestos).HasColumnType("decimal(18, 0)");
+                entity.Property(e => e.FacturadoAntesImpuestos).HasColumnType("decimal(30, 0)");
 
                 entity.Property(e => e.Nombre).HasMaxLength(250);
 
-                entity.Property(e => e.PorcentajeEjecucionPresupuestal).HasColumnType("decimal(38, 16)");
+                entity.Property(e => e.PorcentajeEjecucionPresupuestal).HasColumnType("decimal(38, 6)");
 
-                entity.Property(e => e.Saldo).HasColumnType("decimal(19, 0)");
+                entity.Property(e => e.Saldo).HasColumnType("decimal(31, 0)");
 
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()
@@ -10208,7 +10199,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorAmortizacion).HasColumnType("decimal(38, 0)");
+                entity.Property(e => e.ValorAmortizacion).HasColumnType("decimal(25, 0)");
 
                 entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 0)");
             });
