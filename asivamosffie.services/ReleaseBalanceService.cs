@@ -583,6 +583,8 @@ namespace asivamosffie.services
                         {
                             List<VSaldoAliberar> usos = _context.VSaldoAliberar.Where(r => r.ProyectoId == balanceFinanciero.ProyectoId && r.ContratacionId == cp.ContratacionId && r.EsNovedad != true).ToList();
 
+                            drp = null;
+                            dpps = null;
                             if (usos.FirstOrDefault()?.DisponibilidadPresupuestalId > 0)
                             {
                                 drp = _context.DisponibilidadPresupuestal.Find(usos.FirstOrDefault().DisponibilidadPresupuestalId);
