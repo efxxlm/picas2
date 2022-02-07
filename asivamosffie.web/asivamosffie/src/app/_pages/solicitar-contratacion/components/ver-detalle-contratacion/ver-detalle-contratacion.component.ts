@@ -63,7 +63,7 @@ export class VerDetalleContratacionComponent implements OnInit {
 
           if(contratacionProyecto?.contratacionProyectoAportante != null && contratacionProyecto?.contratacionProyectoAportante != undefined){
             contratacionProyecto.contratacionProyectoAportante.forEach(cpa =>{
-              cpa.nombreAportante = contratacionProyecto.proyecto.proyectoAportante.find(r=> r.aportanteId == cpa.cofinanciacionAportanteId)?.aportante?.nombreAportanteString;
+              cpa.nombreAportante = cpa.cofinanciacionAportante?.nombreAportanteString;
             });
           }
 

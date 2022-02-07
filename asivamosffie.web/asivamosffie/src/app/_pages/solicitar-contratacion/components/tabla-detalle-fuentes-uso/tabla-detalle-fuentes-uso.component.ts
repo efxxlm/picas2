@@ -14,10 +14,10 @@ export class TablaDetalleFuentesUsoComponent implements OnInit {
   @Input() contratacionProyectoAportanteId: any;
   listaFuenteTipoFinanciacion: Dominio[] = [];
   listaFuenteFinanciacion = [];
-  
+
   dataSource = new MatTableDataSource();
   dataTable: any[] = [];
-  displayedColumns: string[] = [     
+  displayedColumns: string[] = [
     'componente',
     'fase',
     'tipoUso',
@@ -35,7 +35,7 @@ export class TablaDetalleFuentesUsoComponent implements OnInit {
     } )
 
     setTimeout(() => {
-      if ( this.contratacionProyecto.dataAportantes.length > 0 ) {
+      if ( this.contratacionProyecto?.dataAportantes?.length > 0 ) {
         this.dataTable = this.contratacionProyecto.dataAportantes.filter( da => da.contratacionProyectoAportanteId === this.contratacionProyectoAportanteId );
         this.dataSource = new MatTableDataSource ( this.dataTable );
       }

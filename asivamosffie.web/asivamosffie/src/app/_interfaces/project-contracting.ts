@@ -93,8 +93,8 @@ export interface ContratacionProyectoAportante{
     fechaModificacion?: Date,
     eliminado?: number,
     componenteAportante?: ComponenteAportante[],
-    cofinanciacionAportanteId?: number
-
+    cofinanciacionAportanteId?: number,
+    cofinanciacionAportante?: any
 }
 
 export interface ComponenteAportante{
