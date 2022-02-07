@@ -918,6 +918,7 @@ export class FormCriteriosPagoComponent implements OnInit {
           if(solicitudPagoFase?.solicitudPagoFaseAmortizacion[0] != null){
             let valorFacturadoOnlyUsoAnticipo = 0;
             let usoCodigoAnticipo = this.contrato?.vAmortizacionXproyecto?.find((r: { tieneAnticipo: boolean; }) => r.tieneAnticipo == true)?.usoCodigo;
+            let valorPorAmortizar = this.contrato?.vAmortizacionXproyecto?.find((r: { tieneAnticipo: boolean; }) => r.tieneAnticipo == true)?.valorPorAmortizar;
             valorAmortizacion = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
             this.criterios.controls.forEach( control => {
                 control.get( 'conceptos' ).value.forEach(concepto => {
@@ -927,10 +928,12 @@ export class FormCriteriosPagoComponent implements OnInit {
                 });
             });
             if(cumpleCondiciones == true){
-              console.log(valorFacturadoOnlyUsoAnticipo);
-              if ( (valorFacturadoOnlyUsoAnticipo <= valorAmortizacion) ) {
-                this.openDialog( '', `El valor amortizado no puede ser mayor al valor facturado` );
-                cumpleCondiciones = false;
+              //si el saldo a amortizar es 0 y el valor de amortización es 0 debe permitirlo << ACTA - SERGIO >>
+              if(valorPorAmortizar > 0 && valorAmortizacion > 0){
+                if ( (valorFacturadoOnlyUsoAnticipo <= valorAmortizacion) ) {
+                  this.openDialog( '', `El valor amortizado no puede ser mayor al valor facturado` );
+                  cumpleCondiciones = false;
+                }
               }
             }
           }
@@ -1134,7 +1137,9 @@ export class FormCriteriosPagoComponent implements OnInit {
         if(solicitudPagoFase != null){
           if(solicitudPagoFase?.solicitudPagoFaseAmortizacion[0] != null){
             let valorFacturadoOnlyUsoAnticipo = 0;
+            let valorPorAmortizar = 0;
             valorAmortizacion = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
+            valorPorAmortizar = solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion;
             this.criterios.controls.forEach( control => {
                 control.get( 'conceptos' ).value.forEach((concepto: { usoCodigo: any, valorFacturadoConcepto: number }) => {
                   if(concepto.usoCodigo == usoCodigoAnticipo){
@@ -1143,9 +1148,11 @@ export class FormCriteriosPagoComponent implements OnInit {
                 });
             });
             if(cumpleCondiciones == true){
-              if ( (valorFacturadoOnlyUsoAnticipo - valorFacturadoConcepto <= valorAmortizacion) ) {
-                this.openDialog( '', `El valor amortizado no puede ser mayor al valor facturado` );
-                cumpleCondiciones = false;
+              if(valorPorAmortizar > 0 && valorAmortizacion > 0){
+                if ( (valorFacturadoOnlyUsoAnticipo - valorFacturadoConcepto <= valorAmortizacion) ) {
+                  this.openDialog( '', `El valor amortizado no puede ser mayor al valor facturado` );
+                  cumpleCondiciones = false;
+                }
               }
             }
           }

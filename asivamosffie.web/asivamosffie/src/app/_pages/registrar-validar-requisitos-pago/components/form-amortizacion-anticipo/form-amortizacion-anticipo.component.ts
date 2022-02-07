@@ -222,7 +222,7 @@ export class FormAmortizacionAnticipoComponent implements OnInit {
                 }
             }
         }
-        if(this.addressForm.get('valorAmortizacion').value > 0){
+        if((this.addressForm.get('valorAmortizacion').value > 0) || (this.addressForm.get('valorAmortizacion').value == 0 && this.valorPorAmortizar?.value == 0)){
           this.estadoAmortizacion.emit('completo');
         }
         console.log(this.bloquearValorAmortizacion);

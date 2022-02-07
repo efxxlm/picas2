@@ -1192,8 +1192,10 @@ export class TerceroCausacionGogComponent implements OnInit {
           this.openDialog( '', `<b>Debe ingresar todos los valores facturados por aportante</b>` );
           return;
         }
-        //si tiene amortización el tipo de descuento debe ser obligatorio
-        if(this.tieneAmortizacion == true){
+        //si tiene amortización el tipo de descuento debe ser obligatorio // valor amortización debe ser mayor a 0 para que se hagan estas validaciones (SERGIO)
+        let valorAmortizacion = this.solicitudPagoFase?.solicitudPagoFaseAmortizacion[0].valorAmortizacion ?? 0;
+
+        if(this.tieneAmortizacion == true && valorAmortizacion > 0){
           alert =  false;
           this.criterios.controls.forEach( ( c, indexCriterio ) => {
             this.getConceptos( indexCriterio ).controls.forEach( ( conceptoControl, indexConcepto ) => {
@@ -1219,7 +1221,7 @@ export class TerceroCausacionGogComponent implements OnInit {
 
         alert =  true;
 
-        if(this.tieneAmortizacion == true){
+        if(this.tieneAmortizacion == true && valorAmortizacion > 0){
           let valorAmortizacion = this.solicitudPagoFase?.solicitudPagoFaseAmortizacion[0].valorAmortizacion ?? 0;
           let valorTotalXConceptoAnticipo = 0;
           let listXAportante = this.solicitudPago.vAportantesXanticipoXcontrato?.filter(r => r.contratacionProyectoId == this.contratacionProyectoId);
@@ -1279,8 +1281,10 @@ export class TerceroCausacionGogComponent implements OnInit {
           });
           console.log(valorTotalXConceptoAnticipo);
           console.log(valorAmortizacion);
-          if (valorTotalXConceptoAnticipo != valorAmortizacion) {
-            alert =  false;
+          if(valorAmortizacion > 0){
+            if (valorTotalXConceptoAnticipo != valorAmortizacion) {
+              alert =  false;
+            }
           }
         }
 
