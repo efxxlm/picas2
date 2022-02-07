@@ -333,14 +333,13 @@ namespace asivamosffie.services
                         praportante.CofinanciacionAportante.NombreAportante = null;
                         praportante.CofinanciacionAportante.ValorObraInterventoria = _context.ProyectoAportante.Where(c => c.ProyectoId == item.ProyectoId
                                                                                                                    && c.AportanteId == praportante.CofinanciacionAportanteId)
-                                                                                                               .Select(c => new 
-                                                                                                                              { c.ValorInterventoria, 
-                                                                                                                                c.ValorObra
-                                                                                                                              }
+                                                                                                               .Select(c => new
+                                                                                                               {
+                                                                                                                   c.ValorInterventoria,
+                                                                                                                   c.ValorObra
+                                                                                                               }
                                                                                                                       )
                                                                                                               .ToList();
-
-
                     }
 
                     //OLD
@@ -368,18 +367,15 @@ namespace asivamosffie.services
 
                 }
 
-                var comite = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == contratacion.ContratacionId
-                                                                    && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
-                                                           .Include(x => x.ComiteTecnico)
-                                                           .FirstOrDefault();
+                ComiteTecnico comite = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == contratacion.ContratacionId
+                                                                              && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
+                                                                    .Include(x => x.ComiteTecnico)
+                                                                    .Select(x => x.ComiteTecnico)
+                                                                    .FirstOrDefault();
 
                 if (comite != null)
-                {
-                    ComiteTecnico ct = comite.ComiteTecnico;
-                    if (ct != null)
-                        contratacion.FechaComiteTecnicoNotMapped = Convert.ToDateTime(ct.FechaOrdenDia ?? DateTime.Now);
-                }
-
+                    contratacion.FechaComiteTecnicoNotMapped = Convert.ToDateTime(comite.FechaOrdenDia ?? DateTime.Now);
+                 
             }
 
             return contratacion;
