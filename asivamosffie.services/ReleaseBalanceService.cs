@@ -32,7 +32,7 @@ namespace asivamosffie.services
         {
             List<dynamic> drps = new List<dynamic>();
 
-            List<ContratacionProyecto> contratacionProyectos = _context.ContratacionProyecto.Where(r => r.ProyectoId == pProyectoId).ToList();
+            List<ContratacionProyecto> contratacionProyectos = _context.ContratacionProyecto.Where(r => r.ProyectoId == pProyectoId && r.Eliminado != true).ToList();
 
 
             if (contratacionProyectos != null)
@@ -75,7 +75,8 @@ namespace asivamosffie.services
                             CofinanciacionAportante ca = _context.CofinanciacionAportante.Find(da.CofinanciacionAportanteId);
                             if (ca != null)
                                 da.NombreAportante = _requestBudgetAvailabilityService.getNombreAportante(ca);
-                            da.NombreFuente = _context.Dominio.Where(x => x.Codigo == da.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                            if(da.FuenteRecursosCodigo != null)
+                                da.NombreFuente = _context.Dominio.Where(x => x.Codigo == da.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
 
                             List<VPlantillaOrdenGiroUsos> VPlantillaOrdenGiroUsos = _context.VPlantillaOrdenGiroUsos
                                                                                      .Where(r => r.ContratoId == da.ContratoId
@@ -103,8 +104,9 @@ namespace asivamosffie.services
                             if (!liberado)
                             {
                                 da.SaldoPresupuestal = valorActual;
-                                da.SaldoTesoral = GetSaldoByDrp(cp.ContratacionId, drp.NumeroDrp, cp.ProyectoId, da.CodigoUso, (int)da.FuenteFinanciacionId, (int)da.AportanteId, (int)da.CofinanciacionAportanteId , ListPagosOdg , ListPagos);
-
+                                da.SaldoTesoral = 0;
+                                if (drp.NumeroDrp != null && da.CodigoUso != null && da.FuenteFinanciacionId != null && da.AportanteId != null && da.CofinanciacionAportanteId != null)
+                                    da.SaldoTesoral = GetSaldoByDrp(cp.ContratacionId, drp.NumeroDrp, cp.ProyectoId, da.CodigoUso, (int)da.FuenteFinanciacionId, (int)da.AportanteId, (int)da.CofinanciacionAportanteId , ListPagosOdg , ListPagos);
                             }
                             else
                             {
@@ -184,7 +186,10 @@ namespace asivamosffie.services
                                     if (!liberado)
                                     {
                                         da.SaldoPresupuestal = valorActual;
-                                        da.SaldoTesoral = GetSaldoByDrp(cp.ContratacionId, drpN.NumeroDrp, cp.ProyectoId, da.CodigoUso, (int)da.FuenteFinanciacionId, (int)da.AportanteId, (int)da.CofinanciacionAportanteId , ListPagosOdg , ListPagos);
+                                        da.SaldoTesoral = 0;
+                                        if (drpN.NumeroDrp != null && da.CodigoUso != null && da.FuenteFinanciacionId != null && da.AportanteId != null && da.CofinanciacionAportanteId != null)
+                                            da.SaldoTesoral = GetSaldoByDrp(cp.ContratacionId, drpN.NumeroDrp, cp.ProyectoId, da.CodigoUso, (int)da.FuenteFinanciacionId, (int)da.AportanteId, (int)da.CofinanciacionAportanteId, ListPagosOdg, ListPagos);
+
                                     }
                                     else
                                     {
