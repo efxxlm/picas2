@@ -60,7 +60,7 @@
             <div class="row">
               <div
                 class="col-md-6 mb-1em"
-                *ngFor="let aportante of proyecto.proyectoAportante; index as i"
+                *ngFor="let aportante of proyecto.contratacionProyectoAportante; index as i"
                 style="margin-top: 0.5em"
               >
                 <p class="mb1-em font20">
@@ -70,19 +70,19 @@
                 <p style="margin-top: 0.5em">
                   <b>Tipo de aportante:</b>
 
-                  {{ aportante.aportante.tipoAportanteString }}
+                  {{ aportante?.cofinanciacionAportante?.tipoAportanteString }}
                 </p>
                 <p>
                   <b>Aportante:</b>
-                  {{ aportante.aportante.nombreAportanteString }}
+                  {{ aportante?.cofinanciacionAportante?.nombreAportanteString }}
                 </p>
                 <p>
                   <b>Valor del aportante:</b>
                   <!-- obra -->
-                  <span *ngIf="tipoSolicitudCodigo === '1'">{{ aportante.valorObra | currency }}</span>
+                  <span *ngIf="tipoSolicitudCodigo === '1'">{{ aportante?.cofinanciacionAportante?.valorObraInterventoria[0]?.valorObra | currency }}</span>
 
                   <!-- interventoria -->
-                  <span *ngIf="tipoSolicitudCodigo === '2'">{{ aportante.valorInterventoria | currency }}</span>
+                  <span *ngIf="tipoSolicitudCodigo === '2'">{{aportante?.cofinanciacionAportante?.valorObraInterventoria[0]?.valorInterventoria | currency }}</span>
                 </p>
               </div>
             </div>
