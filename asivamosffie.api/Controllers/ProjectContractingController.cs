@@ -260,7 +260,7 @@ namespace asivamosffie.api.Controllers
                 return Ok(respuesta);
             }
         }
-
+        [AllowAnonymous]
         [Route("GetContratacionProyectoById")]
         [HttpGet]
         public async Task<ContratacionProyecto> GetContratacionProyectoById(int idContratacionProyecto)

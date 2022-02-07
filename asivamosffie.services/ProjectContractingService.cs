@@ -318,9 +318,6 @@ namespace asivamosffie.services
                 }
                 foreach (var praportante in item.ContratacionProyectoAportante)
                 {
-
-                    //NEW
-
                     if (praportante.CofinanciacionAportante == null)
                     {
                         CofinanciacionAportante cofinanciacionAportante = _context.CofinanciacionAportante.Find(praportante.CofinanciacionAportanteId);
@@ -375,7 +372,7 @@ namespace asivamosffie.services
 
                 if (comite != null)
                     contratacion.FechaComiteTecnicoNotMapped = Convert.ToDateTime(comite.FechaOrdenDia ?? DateTime.Now);
-                 
+
             }
 
             return contratacion;
@@ -420,43 +417,46 @@ namespace asivamosffie.services
                 .Where(r => !(bool)r.Eliminado && r.ContratacionProyectoId == idContratacionProyecto)
 
                 //Tipo ET DEPARTAMENTO
-                .Include(r => r.Proyecto)
-                     .ThenInclude(r => r.ProyectoAportante)
-                         .ThenInclude(r => r.Aportante)
-                           .ThenInclude(r => r.Departamento)
-                 .Include(r => r.Proyecto)
+                //.Include(r => r.Proyecto)
+                //     .ThenInclude(r => r.ProyectoAportante)
+                //         .ThenInclude(r => r.Aportante)
+                //           .ThenInclude(r => r.Departamento)
 
-                     //Tipo ET MUNICIPIO
-                     .ThenInclude(r => r.ProyectoAportante)
-                         .ThenInclude(r => r.Aportante)
-                           .ThenInclude(r => r.Municipio)
+
+                //Tipo ET MUNICIPIO
+                //.Include(r => r.Proyecto)
+                //   .ThenInclude(r => r.ProyectoAportante)
+                //       .ThenInclude(r => r.Aportante)
+                //         .ThenInclude(r => r.Municipio)
 
                 //Tipo TERCERO DOMINIO
-                .Include(r => r.Proyecto)
-                     .ThenInclude(r => r.ProyectoAportante)
-                         .ThenInclude(r => r.Aportante)
-                             .ThenInclude(r => r.NombreAportante)
+                //.Include(r => r.Proyecto)
+                //     .ThenInclude(r => r.ProyectoAportante)
+                //         .ThenInclude(r => r.Aportante)
+                //.ThenInclude(r => r.NombreAportante)
 
                 .Include(r => r.ContratacionProyectoAportante)
                     .ThenInclude(r => r.ComponenteAportante)
                         .ThenInclude(r => r.ComponenteUso)
-                .Include(r => r.Proyecto)
-                    .ThenInclude(r => r.InstitucionEducativa)
-                 .Include(r => r.Proyecto)
-                     .ThenInclude(r => r.Sede)
-                 .Include(r => r.Proyecto)
-                     .ThenInclude(r => r.LocalizacionIdMunicipioNavigation)
+
+                 //.Include(r => r.Proyecto)
+                 //    .ThenInclude(r => r.InstitucionEducativa)
+                 // .Include(r => r.Proyecto)
+                 //     .ThenInclude(r => r.Sede)
+                 // .Include(r => r.Proyecto)
+                 //     .ThenInclude(r => r.LocalizacionIdMunicipioNavigation)
                  .Include(r => r.Contratacion)
+
                      .ThenInclude(r => r.ContratacionProyecto)
                         .ThenInclude(r => r.ContratacionProyectoAportante)
                             .ThenInclude(r => r.CofinanciacionAportante)
                               .ThenInclude(r => r.FuenteFinanciacion)
                                 .ThenInclude(r => r.ControlRecurso)
+
                 .FirstOrDefaultAsync();
 
             foreach (var ContratacionProyectoAportante in contratacionProyecto.ContratacionProyectoAportante)
             {
-
                 decimal ValorGastado = 0;
                 decimal ValorDisponible = (decimal)ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum();
 
@@ -469,6 +469,17 @@ namespace asivamosffie.services
                     ComponenteAportante.ComponenteUso = ComponenteAportante.ComponenteUso.Where(c => c.Eliminado != true).ToList();
                     ValorGastado = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
                 }
+
+                CofinanciacionAportante cofinanciacionAportante = _context.CofinanciacionAportante.Find(ContratacionProyectoAportante.CofinanciacionAportanteId);
+
+
+                cofinanciacionAportante.NombreAportanteString = _requestBudgetAvailabilityService.getNombreAportante(cofinanciacionAportante);
+                Dominio NombreAportante = new Dominio {
+                                                        Nombre = cofinanciacionAportante.NombreAportanteString 
+                                                      };
+
+                ContratacionProyectoAportante.CofinanciacionAportante = cofinanciacionAportante;
+
 
                 ContratacionProyectoAportante.SaldoDisponible = ValorDisponible - ValorGastado;
             }
