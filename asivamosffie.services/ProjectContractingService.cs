@@ -346,7 +346,7 @@ namespace asivamosffie.services
                                                                                                                       )
                                                                                                               .ToList();
 
-
+                        praportante.ComponenteAportante = _context.ComponenteAportante.Where(c => c.ContratacionProyectoAportanteId == praportante.ContratacionProyectoAportanteId && c.Eliminado != true).ToList();
                         //OLD
                         //if (praportante.CofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.Ffie)
                         //{
