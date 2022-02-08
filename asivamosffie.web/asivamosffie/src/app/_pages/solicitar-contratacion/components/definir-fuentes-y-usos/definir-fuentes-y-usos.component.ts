@@ -154,7 +154,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
               const listaFase = [ ...this.fasesSelect ];
               const grupoAportante = this.createAportante();
               const listaComponentes = grupoAportante.get('componentes') as FormArray;
-              const valorAportanteProyecto = esInterventoria === true ? apo[ 'cofinanciacionAportante' ].proyectoAportante[ 0 ].valorInterventoria : apo[ 'cofinanciacionAportante' ].proyectoAportante[ 0 ].valorObra;
+              const valorAportanteProyecto = esInterventoria === true ? apo[ 'cofinanciacionAportante' ]?.valorObraInterventoria[ 0 ]?.valorInterventoria : apo[ 'cofinanciacionAportante' ]?.valorObraInterventoria[ 0 ]?.valorObra;
               let listaFuenteFinanciacion = [];
               apo[ 'cofinanciacionAportante' ].fuenteFinanciacion.forEach( fuente => {
                 const fuenteFind = listaFuenteTipoFinanciacion.find( fuenteTipo => fuenteTipo.codigo === fuente.fuenteRecursosCodigo );
@@ -174,7 +174,8 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
               }
               grupoAportante.get('valorAportanteProyecto').setValue( valorAportanteProyecto );
               grupoAportante.get('saldoDisponible').setValue(apo['saldoDisponible'] ? apo['saldoDisponible'] : 0);
-              if (apo['cofinanciacionAportante'].tipoAportanteId === 6) {
+              grupoAportante.get('nombreAportante').setValue(`${apo['cofinanciacionAportante']?.nombreAportanteString}`);
+              /*if (apo['cofinanciacionAportante'].tipoAportanteId === 6) {
                 grupoAportante.get('nombreAportante').setValue('FFIE');
               } else if (apo['cofinanciacionAportante'].tipoAportanteId === 9) {
                 if (apo['cofinanciacionAportante'].departamento !== undefined && apo['cofinanciacionAportante'].municipio === undefined) {
@@ -184,8 +185,8 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
                   grupoAportante.get('nombreAportante').setValue(`Alcaldía de ${apo['cofinanciacionAportante'].municipio.descripcion}`);
                 };
               } else if (apo['cofinanciacionAportante'].tipoAportanteId === 10) {
-                grupoAportante.get('nombreAportante').setValue(`${apo['cofinanciacionAportante'].nombreAportante.nombre}`);
-              }
+                grupoAportante.get('nombreAportante').setValue(`${apo['cofinanciacionAportante']?.nombreAportanteString}`);
+              }*/
 
               if (apo.componenteAportante.length > 0) {
                 apo.componenteAportante.forEach(compoApo => {

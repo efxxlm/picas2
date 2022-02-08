@@ -478,7 +478,15 @@ namespace asivamosffie.services
                     ComponenteAportante.ComponenteUso = ComponenteAportante.ComponenteUso.Where(c => c.Eliminado != true).ToList();
                     ValorGastado = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
                 }
-
+                ContratacionProyectoAportante.CofinanciacionAportante.ValorObraInterventoria = _context.ProyectoAportante.Where(c => c.ProyectoId == contratacionProyecto.ProyectoId
+                                                                                                                   && c.AportanteId == ContratacionProyectoAportante.CofinanciacionAportanteId)
+                                                                                                               .Select(c => new
+                                                                                                               {
+                                                                                                                   ValorInterventoria = c.ValorInterventoria ?? 0,
+                                                                                                                   ValorObra = c.ValorObra ?? 0
+                                                                                                               }
+                                                                                                                      )
+                                                                                                              .ToList();
                 ContratacionProyectoAportante.CofinanciacionAportante.NombreAportanteString = _requestBudgetAvailabilityService.getNombreAportante(ContratacionProyectoAportante.CofinanciacionAportante);
                 ContratacionProyectoAportante.CofinanciacionAportante.ContratacionProyectoAportante = null;
                 ContratacionProyectoAportante.SaldoDisponible = ValorDisponible - ValorGastado;
