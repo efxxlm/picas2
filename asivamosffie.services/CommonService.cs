@@ -46,12 +46,13 @@ namespace asivamosffie.services
         {
             return await _context.Dominio
                                        .Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Videos)
-                                       .Select(r => 
-                                                   new { 
+                                       .Select(r =>
+                                                   new
+                                                   {
                                                        r.Nombre,
-                                                       r.Descripcion 
+                                                       r.Descripcion
                                                    }
-                                      ).ToListAsync(); 
+                                      ).ToListAsync();
         }
 
 
@@ -1029,7 +1030,7 @@ namespace asivamosffie.services
 
         public string GetMonthDaysDifferences(DateTime startDate, DateTime endDate)
         {
-            DateTime baseDate = new DateTime(1,1,1);
+            DateTime baseDate = new DateTime(1, 1, 1);
             int diffDays = endDate.Subtract(startDate).Days;
             DateTime newDate = baseDate.AddDays(diffDays);
             //string diff = $"{end.Year - baseDate.Year} years, {end.Month - baseDate.Month} months and {end.Day - baseDate.Day} days";
@@ -1044,10 +1045,41 @@ namespace asivamosffie.services
             int diffDays = cEndDate.HasValue ? cEndDate.Value.Subtract(startDate).Days : endDate.Subtract(startDate).Days;
             DateTime newDate = baseDate.AddDays(diffDays);
 
-            string diff = $"M: {((newDate.Year - baseDate.Year)*12) + (newDate.Month - baseDate.Month)} D: {newDate.Day - baseDate.Day}";
+            string diff = $"M: {((newDate.Year - baseDate.Year) * 12) + (newDate.Month - baseDate.Month)} D: {newDate.Day - baseDate.Day}";
             return diff;
         }
+        public async Task<dynamic> ExcuteSqlStoredProcedureJson<T>(string query, SqlParameter[] parameterList)
+        {
 
+            var jsonRes = string.Empty;
+
+            if (_context.ChangeTracker.LazyLoadingEnabled != false)
+                _context.ChangeTracker.LazyLoadingEnabled = false;
+            using (var command = _context.Database.GetDbConnection().CreateCommand())
+            {
+                if (parameterList != null)
+                    command.Parameters.AddRange(parameterList);
+
+                command.CommandTimeout = 0;
+                command.CommandText = query;
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                if (command.Connection.State != System.Data.ConnectionState.Open)
+                    command.Connection.Open();
+
+                System.Data.Common.DbDataReader reader = await command.ExecuteReaderAsync();
+
+                if (reader.HasRows)
+                {
+                    
+                    while (await reader.ReadAsync())
+                        jsonRes += reader.GetTextReader(0).ReadToEnd();
+
+                }
+            }
+
+            return jsonRes;
+        }
         public async Task<object> ExcuteSqlStoredProcedure<T>(string query, SqlParameter[] parameterList, int ListorObject)
         {
             List<T> lobj = null;

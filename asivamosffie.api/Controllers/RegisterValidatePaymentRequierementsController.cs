@@ -123,7 +123,7 @@ namespace asivamosffie.api.Controllers
             return Ok(await _registerValidatePaymentRequierementsService.GetMontoMaximoProyecto(pContrato, pContratacionProyectoId, EsPreConstruccion));
 
         }
-
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetListProyectosByLlaveMen")]
         public async Task<IActionResult> GetListProyectosByLlaveMen([FromQuery] string pLlaveMen)

@@ -12,6 +12,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
     {
+        Task<dynamic> ExcuteSqlStoredProcedureJson<T>(string query, SqlParameter[] parameterList);
+
         Task<model.Models.Version> GetVersion();
 
         Task<dynamic> GetVideos();

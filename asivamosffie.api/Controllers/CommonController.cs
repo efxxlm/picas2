@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
 namespace asivamosffie.api.Controllers
 {
@@ -26,7 +27,18 @@ namespace asivamosffie.api.Controllers
             common = prmCommon;
             _settings = settings;
         }
+    
+        [HttpGet]
+        [Route("ExcuteSqlStoredProcedure")]
+        public async Task<ActionResult<dynamic>> ExcuteSqlStoredProcedure( )
+        { 
+            SqlParameter[] parameterList = new SqlParameter[]
+            {
          
+            }; 
+           return await common.ExcuteSqlStoredProcedureJson<dynamic>("ups_Prueba", parameterList );
+        }
+
         [HttpGet]
         [Route("GetVersion")]
         public async Task<ActionResult<model.Models.Version>> GetVersion()
