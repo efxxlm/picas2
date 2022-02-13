@@ -7,6 +7,10 @@ namespace asivamosffie.model.Models
 {
     public partial class Contratacion
     {
+
+        [NotMapped]
+        public bool EsExpensa { get; set; }
+
         [NotMapped]
         public IFormFile? pFile { get; set; }
 

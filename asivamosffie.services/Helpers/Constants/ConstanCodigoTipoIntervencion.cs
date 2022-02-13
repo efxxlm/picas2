@@ -7,5 +7,6 @@
         public const string Reconstrucción = "3";
         public const string Mejoramiento = "4";
         public const string Internado = "5"; 
+        public const string Expensas = "20";
     }
 }

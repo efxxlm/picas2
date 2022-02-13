@@ -138,6 +138,7 @@ namespace asivamosffie.api.Controllers
             return respuesta;
         }
 
+        [AllowAnonymous]
         [Route("GetListContratacion")]
         [HttpGet]
         public async Task<List<Contratacion>> GetListContratacion()

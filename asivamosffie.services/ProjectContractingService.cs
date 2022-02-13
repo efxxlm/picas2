@@ -554,16 +554,20 @@ namespace asivamosffie.services
 
             ListContratacion = await _context.Contratacion
                 .Where(r => !(bool)r.Eliminado)
+                .Include(r=> r.ContratacionProyecto)
+                   .ThenInclude(r=> r.Proyecto)
                 .ToListAsync();
 
             List<Dominio> ListParametricas =
                 _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar
                                     || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud).ToList();
-
+             
             foreach (var Contratacion in ListContratacion)
             {
                 try
-                {
+                { 
+                    Contratacion.EsExpensa = Contratacion.ContratacionProyecto.Any(r => r.Proyecto.TipoIntervencionCodigo == ConstantCodigoTipoIntervencion.Expensas);
+
                     if (!string.IsNullOrEmpty(Contratacion.TipoSolicitudCodigo))
                         Contratacion.TipoSolicitudCodigo = ListParametricas.Where(r => r.Codigo == Contratacion.TipoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).FirstOrDefault().Nombre;
 
