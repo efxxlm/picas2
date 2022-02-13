@@ -67,14 +67,24 @@ namespace asivamosffie.services
             return new Respuesta();
         }
 
-        public async Task<Respuesta> ChangeStateContratacionByIdContratacion(int idContratacion, string PCodigoEstado, string pUsusarioModifico
-            , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender
+        public async Task<Respuesta> ChangeStateContratacionByIdContratacion(
+            int idContratacion,
+            string PCodigoEstado, 
+            string pUsusarioModifico, 
+            string pDominioFront, 
+            string pMailServer, 
+            int pMailPort, 
+            bool pEnableSSL, 
+            string pPassword, 
+            string pSentender
             )
         {
             int idAccionEliminarContratacionProyecto = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Contratacion, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
+           
+
                 Contratacion contratacionOld = _context.Contratacion.Find(idContratacion);
                 contratacionOld.FechaTramite = DateTime.Now;
                 contratacionOld.UsuarioModificacion = pUsusarioModifico;
@@ -82,21 +92,30 @@ namespace asivamosffie.services
                 contratacionOld.EstadoSolicitudCodigo = PCodigoEstado;
                 _context.SaveChanges();
 
-                List<Dominio> TipoObraIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).ToList();
-                string strTipoObraIntervencion = TipoObraIntervencion.Where(r => r.Codigo == contratacionOld.TipoSolicitudCodigo).Select(r => r.Nombre).FirstOrDefault();
+                List<Dominio> TipoObraIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar)
+                                                                     .ToList();
 
-                if (PCodigoEstado == ConstanCodigoEstadoSolicitudContratacion.En_tramite.ToString())
+                string strTipoObraIntervencion = TipoObraIntervencion.Where(r => r.Codigo == contratacionOld.TipoSolicitudCodigo)
+                                                                     .Select(r => r.Nombre)
+                                                                     .FirstOrDefault();
+
+                if (PCodigoEstado == ConstanCodigoEstadoSolicitudContratacion.En_tramite)
                 {
-                    var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
+                    var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite)
+                                                                  .Select(x => x.Usuario.Email)
+                                                                  .ToList();
+
+                    Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjEnviarSolicitudContratacion);
+
                     foreach (var usuario in usuariosecretario)
                     {
-                        Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjEnviarSolicitudContratacion);
-                        string template =
-                            TemplateRecoveryPassword.Contenido
-                            .Replace("_LinkF_", pDominioFront)
-                            .Replace("[NUMERO_SOLICITUD]", contratacionOld.NumeroSolicitud)
-                            .Replace("[FECHA_SOLICITUD]", ((DateTime)contratacionOld.FechaTramite).ToString("dd-MM-yyyy"))
-                            .Replace("[OBRA_INTERVENTORIA]", strTipoObraIntervencion);
+                       
+                        string template = TemplateRecoveryPassword.Contenido
+                                                                            .Replace("_LinkF_", pDominioFront)
+                                                                            .Replace("[NUMERO_SOLICITUD]", contratacionOld.NumeroSolicitud)
+                                                                            .Replace("[FECHA_SOLICITUD]", ((DateTime)contratacionOld.FechaTramite).ToString("dd-MM-yyyy"))
+                                                                            .Replace("[OBRA_INTERVENTORIA]", strTipoObraIntervencion);
+
                         bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Solicitud  de contratación", template, pSentender, pPassword, pMailServer, pMailPort);
                     }
                 }
@@ -107,7 +126,12 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = ConstantMessagesContratacionProyecto.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesContratacionProyecto.OperacionExitosa, idAccionEliminarContratacionProyecto, pUsusarioModifico, "CAMBIAR ESTADO CONTRATACION")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, 
+                                                                                            ConstantMessagesContratacionProyecto.OperacionExitosa, 
+                                                                                            idAccionEliminarContratacionProyecto,
+                                                                                            pUsusarioModifico, 
+                                                                                            "CAMBIAR ESTADO CONTRATACION"
+                                                                                            )
                 };
             }
             catch (Exception ex)
@@ -118,7 +142,12 @@ namespace asivamosffie.services
                     IsException = true,
                     IsValidation = false,
                     Code = ConstantMessagesContratacionProyecto.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, ConstantMessagesContratacionProyecto.Error, idAccionEliminarContratacionProyecto, pUsusarioModifico, ex.InnerException.ToString().Substring(0, 500))
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Contratacion_Proyecto, 
+                                                                                            ConstantMessagesContratacionProyecto.Error, 
+                                                                                            idAccionEliminarContratacionProyecto, 
+                                                                                            pUsusarioModifico, 
+                                                                                            ex.InnerException.ToString()
+                                                                                            )
                 };
             }
 
@@ -565,7 +594,7 @@ namespace asivamosffie.services
             foreach (var Contratacion in ListContratacion)
             {
                 try
-                { 
+                {
                     Contratacion.EsExpensa = Contratacion.ContratacionProyecto.Any(r => r.Proyecto.TipoIntervencionCodigo == ConstantCodigoTipoIntervencion.Expensas);
 
                     if (!string.IsNullOrEmpty(Contratacion.TipoSolicitudCodigo))
@@ -580,6 +609,8 @@ namespace asivamosffie.services
                      || Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados
                         )
                         Contratacion.RegistroCompleto = true;
+                     
+                    Contratacion.ContratacionProyecto = null;
                 }
                 catch (Exception e)
                 {
