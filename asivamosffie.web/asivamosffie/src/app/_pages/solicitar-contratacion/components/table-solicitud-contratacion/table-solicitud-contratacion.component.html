@@ -69,7 +69,7 @@
                     || (element.estadoSolicitudCodigo === estadosContratacion.DevueltaProcesoContractual)">
             Ver detalle / Editar
           </a>
-          <button mat-raised-button color="accent" class="btn-table" (click)="enviarSolicitud(element.contratacionId)"
+          <button mat-raised-button color="accent" class="btn-table" (click)="enviarSolicitud(element)"
             *ngIf="element.estadoSolicitudCodigo === estadosContratacion.Sin_Registro && element.registroCompleto">
             Enviar Solicitud
           </button>

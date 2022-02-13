@@ -101,12 +101,20 @@ export class TableSolicitudContratacionComponent implements OnInit {
       });
   }
 
-  enviarSolicitud(id: number) {
-    this.projectContractingService.changeStateContratacionByIdContratacion(id, this.estadosSolicitud.RechazadaPorComiteTecnico)
+  enviarSolicitud(element: any) {
+    if(element.esExpensa == true){
+      this.projectContractingService.changeStateContratacionByIdContratacion(element.contratacionId, '13')
       .subscribe(respuesta => {
         this.openDialog('', `<b>${respuesta.message}</b>`);
         this.ngOnInit();
       });
+    }else{
+      this.projectContractingService.changeStateContratacionByIdContratacion(element.contratacionId, this.estadosSolicitud.RechazadaPorComiteTecnico)
+      .subscribe(respuesta => {
+        this.openDialog('', `<b>${respuesta.message}</b>`);
+        this.ngOnInit();
+      });
+    }
   }
 
 }
