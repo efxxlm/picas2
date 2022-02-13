@@ -1064,7 +1064,8 @@ namespace asivamosffie.services
         {
             try
             {
-                return await _context.ProyectoAportante
+
+               List<CofinanciacionAportante> listProyectoAportantes =await _context.ProyectoAportante
                         .Where(r => r.ProyectoId == pProyectoId)
                         .Include(r => r.Aportante)
                         .ThenInclude(r => r.Departamento)
@@ -1073,8 +1074,9 @@ namespace asivamosffie.services
                            .Include(r => r.Aportante)
                         .ThenInclude(r => r.NombreAportante)
                         .Select(r => r.Aportante)
-                        .Where(r => r.TipoAportanteId == pTipoAportanteId)
                      .ToListAsync();
+
+                return listProyectoAportantes.FirstOrDefault();
             }
             catch (Exception)
             {
@@ -3700,11 +3702,11 @@ namespace asivamosffie.services
         }
 
         public string getNombreAportante(CofinanciacionAportante confinanciacion)
-        { 
-            if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Ffie)) 
+        {
+            if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
                 return ConstanStringTipoAportante.Ffie;
 
-            else if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Tercero)) 
+            else if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
                 return _context.Dominio.Find(confinanciacion.NombreAportanteId).Nombre;
 
             else

@@ -27,7 +27,8 @@ namespace asivamosffie.api.Controllers
             common = prmCommon;
             _settings = settings;
         }
-    
+      
+
         [HttpGet]
         [Route("ExcuteSqlStoredProcedure")]
         public async Task<ActionResult<dynamic>> ExcuteSqlStoredProcedure( )

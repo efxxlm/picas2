@@ -216,8 +216,7 @@ namespace asivamosffie.services
         public async Task<dynamic> GetListSolicitudPago()
         {
             var result = await _context.SolicitudPago.Where(s => s.Eliminado != true)
-                .Include(r => r.Contrato)
-                                         .Select(s => new
+                .Include(r => r.Contrato).Select(s => new
                                          {
                                              s.EsFactura,
                                              s.TipoSolicitudCodigo,
@@ -251,10 +250,10 @@ namespace asivamosffie.services
                     r.FechaCreacion,
                     r.NumeroSolicitud,
                     r.TieneNoCumpleListaChequeo,
-                    NumeroContrato = r.NumeroContrato ?? "No Aplica",
+                    NumeroContrato = r.TipoSolicitudCodigo == EnumeratorTipoSolicitudRequisitosPagosString.Expensas  ? ConstantMessagesGeneral.NoAplica : r.NumeroContrato,
                     r.EstadoCodigo,
                     Estado = !string.IsNullOrEmpty(r.EstadoCodigo) ? ListParametricas.Where(l => l.Codigo == r.EstadoCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Solicitud_Pago).FirstOrDefault().Nombre : " - ",
-                    Modalidad = !string.IsNullOrEmpty(r.ModalidadCodigo) ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : "No aplica",
+                    Modalidad = r.TipoSolicitudCodigo != EnumeratorTipoSolicitudRequisitosPagosString.Expensas ? ListParametricas.Where(l => l.Codigo == r.ModalidadCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : ConstantMessagesGeneral.NoAplica,
                     r.EsFactura
                 });
             });

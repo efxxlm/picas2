@@ -614,6 +614,9 @@ namespace asivamosffie.services
             List<dynamic> lAvanceFinancieroxMes = new List<dynamic>();
             ChartConfig oChartConfig = null;
 
+            Dictionary<string, dynamic> SqlParameters = new Dictionary<string, dynamic>();
+
+
             SqlParameter[] parameterList = new SqlParameter[]
             {
                 new SqlParameter("@SeguimientoSemanalId", seguimientoSemanal.SeguimientoSemanalId),

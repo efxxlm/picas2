@@ -1,7 +1,14 @@
 ﻿
 namespace asivamosffie.services.Helpers.Constant
 {
-    public class ConstantMessagesRegistrarProgramacionPersonal
+
+    public class ConstantMessagesGeneral
+    {
+        public const string NoAplica = "No Aplica";
+
+    }
+
+        public class ConstantMessagesRegistrarProgramacionPersonal
     {
         #region Mensajes Informativos
 

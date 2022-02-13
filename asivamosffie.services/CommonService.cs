@@ -1050,8 +1050,10 @@ namespace asivamosffie.services
         }
         public async Task<dynamic> ExcuteSqlStoredProcedureJson<T>(string query, SqlParameter[] parameterList)
         {
+            // return _context.Auditoria.Include(r => r.MensajesValidaciones).Select(r => new { r.Observacion, r.AccionId, r.MensajesValidaciones.Mensaje}).ToList();
 
             var jsonRes = string.Empty;
+            DataTable dataTable = null;
 
             if (_context.ChangeTracker.LazyLoadingEnabled != false)
                 _context.ChangeTracker.LazyLoadingEnabled = false;
@@ -1071,14 +1073,14 @@ namespace asivamosffie.services
 
                 if (reader.HasRows)
                 {
-                    
-                    while (await reader.ReadAsync())
-                        jsonRes += reader.GetTextReader(0).ReadToEnd();
-
+                    dataTable = new DataTable();
+                    dataTable.Load(reader);
                 }
+
+                reader.Close();
             }
 
-            return jsonRes;
+            return dataTable;
         }
         public async Task<object> ExcuteSqlStoredProcedure<T>(string query, SqlParameter[] parameterList, int ListorObject)
         {
