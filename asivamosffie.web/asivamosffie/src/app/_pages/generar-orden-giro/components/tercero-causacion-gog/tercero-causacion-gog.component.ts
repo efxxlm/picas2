@@ -1193,7 +1193,7 @@ export class TerceroCausacionGogComponent implements OnInit {
           return;
         }
         //si tiene amortización el tipo de descuento debe ser obligatorio // valor amortización debe ser mayor a 0 para que se hagan estas validaciones (SERGIO)
-        let valorAmortizacion = this.solicitudPagoFase?.solicitudPagoFaseAmortizacion[0].valorAmortizacion ?? 0;
+        let valorAmortizacion = this.solicitudPagoFase?.solicitudPagoFaseAmortizacion[0]?.valorAmortizacion ?? 0;
 
         if(this.tieneAmortizacion == true && valorAmortizacion > 0){
           alert =  false;
