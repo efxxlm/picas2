@@ -24,9 +24,9 @@
           </div>
         </section>
         <p><b>Número de comité fiduciario</b>:
-          {{ dataContratacion['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.numeroComite }}</p>
+          {{ dataContratacion['sesionComiteSolicitud'][0]?.comiteTecnicoFiduciario.numeroComite }}</p>
         <p><b>Fecha de comité fiduciario</b>:
-          {{ dataContratacion['sesionComiteSolicitud'][0].comiteTecnicoFiduciario.fechaOrdenDia | date: 'dd/MM/yyyy' }}
+          {{ dataContratacion['sesionComiteSolicitud'][0]?.comiteTecnicoFiduciario.fechaOrdenDia | date: 'dd/MM/yyyy' }}
         </p>
       </mat-card-content>
     </mat-card>
