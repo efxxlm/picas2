@@ -175,7 +175,80 @@ namespace asivamosffie.services
                 }
 
             }
-            return ListSesionComiteSolicitud.Where(r => r.Eliminado != true).OrderByDescending(r => r.SesionComiteSolicitudId).Distinct().ToList();
+
+            ListSesionComiteSolicitud = ListSesionComiteSolicitud.Where(r => r.Eliminado != true).OrderByDescending(r => r.SesionComiteSolicitudId).Distinct().ToList();
+
+            List<Proyecto> proyectosExpensas = _context.Proyecto.Where(r => r.TipoIntervencionCodigo == ConstantCodigoTipoIntervencion.Expensas && r.Eliminado != true).Include(r => r.ContratacionProyecto).ThenInclude(r => r.Contratacion).ToList();
+            foreach (var proyecto in proyectosExpensas)
+            {
+                if (proyecto.ContratacionProyecto != null)
+                {
+                    foreach (var cp in proyecto.ContratacionProyecto)
+                    {
+                        Contratacion contratacion = _context.Contratacion.Where(r => r.ContratacionId == cp.ContratacionId && r.TipoSolicitudCodigo == "2").Include(r => r.Contrato).Include(r => r.DisponibilidadPresupuestal).FirstOrDefault();
+                        if (contratacion != null)
+                        {
+                            DisponibilidadPresupuestal dp = contratacion.DisponibilidadPresupuestal.Where(r => r.Eliminado != true).FirstOrDefault();
+                            bool EstaTramitado = false;
+                            string TipoSolicitud = string.Empty;
+                            bool EstadoRegistro = false;
+                            string EstadoDelRegistro = string.Empty;
+
+                            if (dp != null)
+                            {
+                                if (dp.EstadoSolicitudCodigo == "5")
+                                {
+                                    if (contratacion.Contrato.Count() > 0)
+                                    {
+                                        if (!string.IsNullOrEmpty(contratacion.Contrato.FirstOrDefault().NumeroContrato))
+                                            EstaTramitado = true;
+                                        else
+                                            EstaTramitado = false;
+                                    }
+                                    else
+                                        EstaTramitado = false;
+
+                                    TipoSolicitud = ListasParametricas
+                                                    .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
+                                                    && r.Codigo == ConstanCodigoTipoSolicitud.Contratacion
+                                                    ).FirstOrDefault().Nombre;
+
+                                    if (contratacion.RegistroCompleto == null || !(bool)contratacion.RegistroCompleto)
+                                    {
+                                        EstadoRegistro = false;
+                                        EstadoDelRegistro = "Incompleto";
+                                    }
+                                    else
+                                    {
+                                        EstadoRegistro = true;
+                                        EstadoDelRegistro = "Completo";
+                                    }
+                                    ListSesionComiteSolicitud.Add(new SesionComiteSolicitud
+                                    {
+                                        SesionComiteSolicitudId = 0,
+                                        TipoSolicitudCodigo = ConstanCodigoTipoSolicitud.Contratacion,
+                                        SolicitudId = contratacion.ContratacionId,
+                                        FechaCreacion = contratacion.FechaCreacion ?? DateTime.Now,
+                                        UsuarioCreacion = contratacion.UsuarioCreacion,
+                                        Eliminado = false,
+                                        EstaTramitado = EstaTramitado,
+                                        Contratacion = contratacion,
+                                        FechaSolicitud = (DateTime)contratacion.FechaCreacion,
+                                        NumeroSolicitud = contratacion.NumeroSolicitud,
+                                        TipoSolicitud = TipoSolicitud,
+                                        EstadoRegistro = EstadoRegistro,
+                                        EstadoCodigo = contratacion.EstadoSolicitudCodigo,
+                                        EstadoDelRegistro = EstadoDelRegistro
+                                    });
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            return ListSesionComiteSolicitud;
 
         }
 
