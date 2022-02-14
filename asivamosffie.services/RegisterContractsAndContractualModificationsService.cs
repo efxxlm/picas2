@@ -40,6 +40,13 @@ namespace asivamosffie.services
                 ).ToListAsync();
 
             List<Dominio> ListasParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
+            List<Contratacion> ListContratacionSesion = 
+                                                         _context.Contratacion
+                                                         .Include(r => r.Contrato)
+                                                         .Include(r => r.DisponibilidadPresupuestal)
+                                                         .Where(r =>   r.DisponibilidadPresupuestal.Count() > 0)
+                                                         .ToList();
+
 
             foreach (var sesionComiteSolicitud in ListSesionComiteSolicitud)
             {
@@ -49,12 +56,8 @@ namespace asivamosffie.services
                     {
                         case ConstanCodigoTipoSolicitud.Contratacion:
 
-                            Contratacion contratacion =
-                                _context.Contratacion
-                                .Include(r => r.Contrato)
-                                .Include(r => r.DisponibilidadPresupuestal)
-                                .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId && r.DisponibilidadPresupuestal.Count() > 0)
-                                .FirstOrDefault();
+                            Contratacion contratacion = ListContratacionSesion.Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId && r.DisponibilidadPresupuestal.Count() > 0)
+                                                                              .FirstOrDefault();
 
                             if (contratacion == null)
                                 break;
@@ -179,13 +182,23 @@ namespace asivamosffie.services
             ListSesionComiteSolicitud = ListSesionComiteSolicitud.Where(r => r.Eliminado != true).OrderByDescending(r => r.SesionComiteSolicitudId).Distinct().ToList();
 
             List<Proyecto> proyectosExpensas = _context.Proyecto.Where(r => r.TipoIntervencionCodigo == ConstantCodigoTipoIntervencion.Expensas && r.Eliminado != true).Include(r => r.ContratacionProyecto).ThenInclude(r => r.Contratacion).ToList();
+           
+
+            List<Contratacion> ListContratacion =   _context.Contratacion.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
+                          .Include(r => r.Contrato)
+                          .Include(r => r.DisponibilidadPresupuestal)
+                          .ToList();
+
+
             foreach (var proyecto in proyectosExpensas)
             {
                 if (proyecto.ContratacionProyecto != null)
                 {
                     foreach (var cp in proyecto.ContratacionProyecto)
                     {
-                        Contratacion contratacion = _context.Contratacion.Where(r => r.ContratacionId == cp.ContratacionId && r.TipoSolicitudCodigo == "2").Include(r => r.Contrato).Include(r => r.DisponibilidadPresupuestal).FirstOrDefault();
+                        Contratacion contratacion = ListContratacion.Where(r => r.ContratacionId == cp.ContratacionId) 
+                                                                    .FirstOrDefault();
+
                         if (contratacion != null)
                         {
                             DisponibilidadPresupuestal dp = contratacion.DisponibilidadPresupuestal.Where(r => r.Eliminado != true).FirstOrDefault();
