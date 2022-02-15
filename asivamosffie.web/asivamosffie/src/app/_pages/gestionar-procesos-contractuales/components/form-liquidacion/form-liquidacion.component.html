@@ -236,14 +236,14 @@
                   <mat-card-content>
                     <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.adicion"><b>Valor después de la modificación</b>:{{element.presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}</p>
                     <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.prorroga"><b>Plazo después de la modificación</b>:
-                      <span *ngIf="element.plazoAdicionalDias != null && element.plazoAdicionalMeses != null ">{{element.plazoAdicionalMeses + dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses }} meses / {{element.plazoAdicionalDias + dataNovedad.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias }} días</span></p>
+                      <span *ngIf="element.plazoAdicionalDias != null && element.plazoAdicionalMeses != null ">{{element.plazoAdicionalMeses + dataNovedad.contrato.contratacion?.plazoContratacion?.plazoMeses }} meses / {{element.plazoAdicionalDias + dataNovedad.contrato.contratacion?.plazoContratacion?.plazoDias }} días</span></p>
                     <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.suspension || element.tipoNovedadCodigo === this.tipoNovedad.prorroga_a_las_Suspension"><b>Fecha de inicio de la suspensión</b>: {{ element.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
                     <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.suspension || element.tipoNovedadCodigo === this.tipoNovedad.prorroga_a_las_Suspension"><b>Fecha final de la suspensión</b>: {{ element.fechaFinSuspension | date: 'dd/MM/yyyy' }}</p>
                     <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.reinicio"><b>Fecha de inicio del reinicio</b>: {{ element.fechaInicioSuspension | date: 'dd/MM/yyyy' }}</p>
                     <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.reinicio"><b>Fecha final del reinicio</b>: {{ element.fechaFinSuspension | date: 'dd/MM/yyyy' }}</p>
                     <p *ngIf="element.tipoNovedadCodigo === this.tipoNovedad.modificacion_de_Condiciones_Contractuales">
-                      <b>Cláusula</b>:<span [innerHTML]="element?.novedadContractualClausula[0].clausulaAmodificar"></span>
-                      <b>Ajuste</b>:<span [innerHTML]="element?.novedadContractualClausula[0].ajusteSolicitadoAclausula"></span>
+                      <b>Cláusula</b>:<span [innerHTML]="element?.novedadContractualClausula[0]?.clausulaAmodificar"></span>
+                      <b>Ajuste</b>:<span [innerHTML]="element?.novedadContractualClausula[0]?.ajusteSolicitadoAclausula"></span>
                     </p>
                     <p><b>Detalle de la modificación</b>: <span [innerHTML]="element.resumenJustificacion"></span></p>
                   </mat-card-content>
