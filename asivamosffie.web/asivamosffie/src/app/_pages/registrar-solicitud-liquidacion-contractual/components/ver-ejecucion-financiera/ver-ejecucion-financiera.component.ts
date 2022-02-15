@@ -33,7 +33,7 @@ export class VerEjecucionFinancieraComponent implements OnInit {
     this.getEjecucionFinancieraXProyectoId(this.proyectoId);
   }
 
-  getBalanceByProyectoId(proyectoId: number) {
+  async getBalanceByProyectoId(proyectoId: number) {
     this.financialBalanceService.getDataByProyectoId(proyectoId)
     .subscribe( getDataByProyectoId => {
         if( getDataByProyectoId.length > 0 ){
@@ -42,7 +42,7 @@ export class VerEjecucionFinancieraComponent implements OnInit {
     });
   }
 
-  getContratoByProyectoId() {
+  async getContratoByProyectoId() {
     this.financialBalanceService.getContratoByProyectoId(this.proyectoId).subscribe(data => {
       data.forEach(element => {
         this.dataTable.push({
@@ -60,9 +60,9 @@ export class VerEjecucionFinancieraComponent implements OnInit {
     });
   }
 
-  getEjecucionFinancieraXProyectoId(proyectoId: number) {
+  async getEjecucionFinancieraXProyectoId(proyectoId: number) {
     this.financialBalanceService.getEjecucionFinancieraXProyectoId(proyectoId).subscribe(data => {
-      data[0].forEach(element => {
+      data[0]?.forEach(element => {
         this.dataTableEjpresupuestal.push({
           facturadoAntesImpuestos: element.facturadoAntesImpuestos,
           nombre: element.nombre,
@@ -73,7 +73,7 @@ export class VerEjecucionFinancieraComponent implements OnInit {
           totalComprometido: element.totalComprometido
         });
       });
-      data[1].forEach(element => {
+      data[1]?.forEach(element => {
         this.dataTableEjfinanciera.push({
           nombre: element.nombre,
           ordenadoGirarAntesImpuestos: element.ordenadoGirarAntesImpuestos,
