@@ -279,10 +279,7 @@ namespace asivamosffie.services
                     .Include(c => c.Contratacion).ThenInclude(c => c.DisponibilidadPresupuestal)
                     .AsNoTracking()
                     .FirstOrDefaultAsync();
-
-
-
-
+             
             if (contrato.SolicitudPago.Count() > 0)
                 contrato.SolicitudPago = contrato.SolicitudPago
                     .Where(s => s.Eliminado != true).ToList();
@@ -1256,7 +1253,7 @@ namespace asivamosffie.services
                                                                                                                 p.Departamento,
                                                                                                                 p.Municipio,
                                                                                                                 p.InstitucionEducativa,
-                                                                                                                p.Sede,
+                                                                                                                p.ProyectoId,
                                                                                                                 p.ContratacionProyectoId,
                                                                                                                 p.ValorTotal
                                                                                                             }).ToListAsync();
