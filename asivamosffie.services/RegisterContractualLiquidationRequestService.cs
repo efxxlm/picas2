@@ -124,23 +124,22 @@ namespace asivamosffie.services
                 {
                     List<NovedadContractual> novedadContractuals = _context.NovedadContractual.Where(r => r.ContratoId == novedadesxContrato.ContratoId && r.EsAplicadaAcontrato == true).ToList();
 
-                    novedadContractuals.ForEach(async p =>
+                    foreach (var p in novedadContractuals)
                     {
                         novedades.Add(await _ContractualNoveltyService.GetNovedadContractualById(p.NovedadContractualId));
-                    });
-
+                    }
 
                 }
                 foreach (var novedadesxProyectos in contratacion?.ContratacionProyecto)
                 {
                     List<NovedadContractual> novedadContractuals = _context.NovedadContractual.Where(r => r.ProyectoId == novedadesxProyectos.ProyectoId && r.EsAplicadaAcontrato != true).ToList();
-                    novedadContractuals.ForEach(async p =>
+                    foreach (var p in novedadContractuals)
                     {
                         if (!novedades.Any(r => r.NovedadContractualId == p.NovedadContractualId))
                         {
                             novedades.Add(await _ContractualNoveltyService.GetNovedadContractualById(p.NovedadContractualId));
                         }
-                    });
+                    }
                 }
             }
             novedades.RemoveAll(r => r.Eliminado == true);

@@ -72,13 +72,13 @@ export class FormLiquidacionComponent implements OnInit {
       this.routes.navigate([ '/procesosContractuales' ]);
       return;
     };
-    this.getContratacionByContratacionId( this.activatedRoute.snapshot.params.id );
-    this.crearFormulario();
     this.sesionComiteId = this.routes.getCurrentNavigation().extras.state.sesionComiteSolicitudId;
     this.estadoCodigo = this.routes.getCurrentNavigation().extras.state.estadoCodigo;
   }
 
   ngOnInit(): void {
+    this.getContratacionByContratacionId( this.activatedRoute.snapshot.params.id );
+    this.crearFormulario();
   }
 
   async getContratacionByContratacionId(contratacionId: number) {
@@ -116,7 +116,7 @@ export class FormLiquidacionComponent implements OnInit {
           let dataTableEjpresupuestal: any[] = [];
           let dataTableEjfinanciera: any[] = [];
           this.financialBalanceService.getEjecucionFinancieraXProyectoId(r.proyectoId).subscribe(data => {
-            data[0].forEach(element => {
+            data[0]?.forEach(element => {
               dataTableEjpresupuestal.push({
                 facturadoAntesImpuestos: element.facturadoAntesImpuestos,
                 nombre: element.nombre,
@@ -127,7 +127,7 @@ export class FormLiquidacionComponent implements OnInit {
                 totalComprometido: element.totalComprometido
               });
             });
-            data[1].forEach(element => {
+            data[1]?.forEach(element => {
               dataTableEjfinanciera.push({
                 nombre: element.nombre,
                 ordenadoGirarAntesImpuestos: element.ordenadoGirarAntesImpuestos,
