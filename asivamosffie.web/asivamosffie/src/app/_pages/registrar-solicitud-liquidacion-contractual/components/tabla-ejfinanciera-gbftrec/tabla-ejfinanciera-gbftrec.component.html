@@ -1,31 +1,31 @@
 <div class="table-responsive">
     <table mat-table [dataSource]="dataSource" matSort class="mr-table">
-    
+
       <ng-container matColumnDef="nombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Concepto </th>
         <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.nombre }}</b> </td>
         <td *matFooterCellDef align="center" class="auxiliarTd"> <b>Valor total</b> </td>
       </ng-container>
-    
+
       <ng-container matColumnDef="totalComprometido">
         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Total comprometido </th>
-        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.totalComprometido | currency:'':'symbol-narrow':'.0-0' }}</td>
-        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ total.totalComprometido | currency:'':'symbol-narrow':'.0-0' }}</td>
+        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element?.totalComprometido | currency:'':'symbol-narrow':'.0-0' }}</td>
+        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ total?.totalComprometido | currency:'':'symbol-narrow':'.0-0' }}</td>
       </ng-container>
       <ng-container matColumnDef="ordenadoGirarAntesImpuestos">
         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Ordenado a girar antes de impuestos  </th>
-        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.ordenadoGirarAntesImpuestos | currency:'':'symbol-narrow':'.0-0' }}</td>
-        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ total.ordenadoGirarAntesImpuestos | currency:'':'symbol-narrow':'.0-0' }}</td>
+        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element?.ordenadoGirarAntesImpuestos | currency:'':'symbol-narrow':'.0-0' }}</td>
+        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ total?.ordenadoGirarAntesImpuestos | currency:'':'symbol-narrow':'.0-0' }}</td>
       </ng-container>
       <ng-container matColumnDef="saldo">
         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Saldo </th>
-        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.saldo | currency:'':'symbol-narrow':'.0-0' }}</td>
-        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ total.saldo | currency:'':'symbol-narrow':'.0-0' }}</td>
+        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element?.saldo | currency:'':'symbol-narrow':'.0-0' }}</td>
+        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ total?.saldo | currency:'':'symbol-narrow':'.0-0' }}</td>
       </ng-container>
       <ng-container matColumnDef="porcentajeEjecucionFinanciera">
         <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Porcentaje de ejecución financiera </th>
-        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.porcentajeEjecucionFinanciera | number:'.0-2' }}% </td>
-        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ total.porcentajeEjecucionFinanciera | number:'.0-2' }}%</td>
+        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element?.porcentajeEjecucionFinanciera | number:'.0-2' }}% </td>
+        <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ total?.porcentajeEjecucionFinanciera | number:'.0-2' }}%</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
