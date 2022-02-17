@@ -976,7 +976,18 @@ namespace asivamosffie.services
                         }
                         decimal ValorUsoResta = (decimal)ValorUso;
                         if (!esSolicitudPago)
+                        {
                             ValorUsoResta = (decimal)(ValorUso + Descuentos);
+                            foreach (var des in DescuentosOrdenGiro
+                                                        .Where(r => r.ProyectoId == ProyectoId.ProyectoId
+                                                         && r.UsoCodigo == TipoUso.TipoUsoCodigo
+                                                         ))
+                            {
+
+                                des.ValorDescuento = 0;
+                            }
+                        }
+                        
 
                         if (esSolicitudPago)
                         {
