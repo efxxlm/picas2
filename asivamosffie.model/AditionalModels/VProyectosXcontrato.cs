@@ -12,6 +12,24 @@ namespace asivamosffie.model.Models
     public partial class VProyectosXcontrato
     {
         [NotMapped]
+        public dynamic SeguimientoTecnico { get; set; }
+
+        [NotMapped]
+        public int CantidadProyectosAsosiados { get; set; }
+
+        [NotMapped]
+        public List<VFichaProyectoContratacionProcesoSeleccion> ListProcesoSeleccion { get; set; }
+
+        [NotMapped]
+        public dynamic IntraestructuraIntervenir { get; set; }
+
+        [NotMapped]
+        public dynamic InfoProyectos { get; set; }
+
+        [NotMapped]
+        public dynamic InfoContrato { get; set; }
+
+        [NotMapped]
         public DateTime? FechaUltimoSeguimientoDiario { get; set; }
 
         [NotMapped]

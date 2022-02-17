@@ -1,0 +1,11 @@
+@media print {
+  .table-reporte tbody  {
+    overflow-x: hidden !important;
+  }
+  .print {
+    display: block !important;
+  }
+}
+.btn{
+  margin-top: 10px;
+}

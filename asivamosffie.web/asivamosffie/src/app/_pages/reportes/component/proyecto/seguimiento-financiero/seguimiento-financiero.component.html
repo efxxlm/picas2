@@ -1,1 +1,133 @@
-<p>seguimiento-financiero works!</p>
+<section class="container">
+  <div class="container text-center">
+    <div class="text-right">
+      <a routerLink="../../.." mat-button color="primary" class="btn-regresar print-d-none">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Seguimiento financiero {{ infoProyecto?.informacion?.llaveMen }}
+    </h1>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+        <p>
+          <strong>
+            Institución Educativa:
+          </strong>
+          {{ infoProyecto?.informacion?.institucionEducativa }}
+        </p>
+        <p>
+          <strong>
+            Sede:
+          </strong>
+          {{ infoProyecto?.informacion?.sede }}
+        </p>
+        <p>
+          <strong>
+            Tipo de intervención:
+          </strong>
+          {{ infoProyecto?.informacion?.tipoIntervencion }}
+        </p>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-accordion [multi]="openAcordeon == true">
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon == true">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Ejecución presupuestal
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="table-responsive">
+        <table mat-table [dataSource]="dataSourceEjPresupuestal" matSort class="mr-table table-gris">
+
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Concepto </th>
+            <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.nombre }}</b> </td>
+            <td *matFooterCellDef align="center" class="auxiliarTd"> <b>Valor total</b> </td>
+          </ng-container>
+
+          <ng-container matColumnDef="totalComprometido">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Total comprometido </th>
+            <td mat-cell *matCellDef="let element" align="center" class="color-text">  {{ element.totalComprometido | currency:'':'symbol-narrow':'.0-0' }} </td>
+            <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ totalEjPresupuestal.totalComprometido | currency:'':'symbol-narrow':'.0-0' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="facturadoAntesImpuestos">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Facturado </th>
+            <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.facturadoAntesImpuestos | currency:'':'symbol-narrow':'.0-0' }}</td>
+            <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ totalEjPresupuestal.facturadoAntesImpuestos | currency:'':'symbol-narrow':'.0-0' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="saldo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Saldo </th>
+            <td mat-cell *matCellDef="let element" align="center" class="color-text">  {{ element.saldo | currency:'':'symbol-narrow':'.0-0' }}  </td>
+            <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ totalEjPresupuestal.saldo | currency:'':'symbol-narrow':'.0-0' }} </td>
+          </ng-container>
+          <ng-container matColumnDef="porcentajeEjecucionPresupuestal">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Porcentaje de ejecución presupuestal </th>
+            <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.porcentajeEjecucionPresupuestal | number:'.0-2' }} %</td>
+            <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ totalEjPresupuestal.porcentajeEjecucionPresupuestal | number:'.0-2' }}%</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsEjPresupuestal"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsEjPresupuestal;"></tr>
+          <tr mat-footer-row *matFooterRowDef="displayedColumnsEjPresupuestal"></tr>
+        </table>
+      </div>
+
+    </mat-expansion-panel>
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon == true">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title">
+          Ejecución financiera
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="table-responsive">
+        <table mat-table [dataSource]="dataSourceEjFinanciera" matSort class="mr-table table-gris">
+
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Concepto </th>
+            <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.nombre }}</b> </td>
+            <td *matFooterCellDef align="center" class="auxiliarTd"> <b>Valor total</b> </td>
+          </ng-container>
+
+          <ng-container matColumnDef="totalComprometido">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Total comprometido </th>
+            <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.totalComprometido | currency:'':'symbol-narrow':'.0-0' }}</td>
+            <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ totalEjFinanciera.totalComprometido | currency:'':'symbol-narrow':'.0-0' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="ordenadoGirarAntesImpuestos">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Ordenado a girar antes de impuestos  </th>
+            <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.ordenadoGirarAntesImpuestos | currency:'':'symbol-narrow':'.0-0' }}</td>
+            <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ totalEjFinanciera.ordenadoGirarAntesImpuestos | currency:'':'symbol-narrow':'.0-0' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="saldo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Saldo </th>
+            <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.saldo | currency:'':'symbol-narrow':'.0-0' }}</td>
+            <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid;">{{ totalEjFinanciera.saldo | currency:'':'symbol-narrow':'.0-0' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="porcentajeEjecucionFinanciera">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Porcentaje de ejecución financiera </th>
+            <td mat-cell *matCellDef="let element" align="center" class="color-text">
+              {{ element.porcentajeEjecucionFinanciera ? (element.porcentajeEjecucionFinanciera | number: '.0-2') : 0 }}%
+            </td>
+            <td *matFooterCellDef align="center" style="border-right: 1px solid; border-bottom: 1px solid">
+              {{ totalEjFinanciera.porcentajeEjecucionFinanciera ? (totalEjFinanciera.porcentajeEjecucionFinanciera | number: '.0-2') : 0 }}%
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsEjFinanciera"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsEjFinanciera;"></tr>
+          <tr mat-footer-row *matFooterRowDef="displayedColumnsEjFinanciera"></tr>
+        </table>
+      </div>
+
+
+    </mat-expansion-panel>
+  </mat-accordion>
+  <div class="text-center mt-2em mb-2em print-d-none">
+    <button mat-raised-button color="accent" (click)="downloadPDF();">Descargar</button>
+  </div>
+</section>

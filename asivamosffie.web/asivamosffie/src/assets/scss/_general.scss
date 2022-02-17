@@ -47,9 +47,9 @@ strong {
 
   @media only screen and (min-width: 75em) {
     width: 71rem;
-    
+
     mat-drawer-content & {
-      width: calc(100vw - 26em);
+      width: calc(100vw - 30em);
     }
   }
 }
@@ -451,7 +451,12 @@ iframe {
   nav,
   header,
   footer,
-  .print-d-none {
+  .print-d-none,
+  span.mat-expansion-indicator::after {
     display: none !important;
+  }
+  /*Reportes*/
+  .mat-drawer-content {
+    margin-left: 0 !important;
   }
 }

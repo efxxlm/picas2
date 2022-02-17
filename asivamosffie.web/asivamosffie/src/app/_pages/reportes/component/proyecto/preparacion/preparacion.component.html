@@ -1,12 +1,12 @@
-<section class="container">
+<section class="container mt-2em" *ngIf="this.dataPreparacion != null">
   <div class="container text-center">
     <div class="text-right">
-      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+      <a routerLink="../../../" mat-button color="primary" class="btn-regresar print-d-none">
         <img src="assets/img/icon/regresar.svg" alt="Regresar">
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Preparación N801801
+      Preparación {{ this.dataPreparacion?.informacion?.llaveMen }}
     </h1>
   </div>
 
@@ -16,47 +16,47 @@
           <strong>
             Institución Educativa:
           </strong>
-          I.E Señora Del Carmén
+          {{ this.dataPreparacion?.informacion?.institucionEducativa }}
         </p>
         <p>
           <strong>
             Sede:
           </strong>
-          Única sede
+          {{ this.dataPreparacion?.informacion?.sede }}
         </p>
         <p>
           <strong>
             Departamento:
           </strong>
-          Boyacá
+          {{ this.dataPreparacion?.informacion?.departamento }}
         </p>
         <p>
           <strong>
             Municipio:
           </strong>
-          Susacón
+          {{ this.dataPreparacion?.informacion?.municipio }}
         </p>
     </mat-card-content>
   </mat-card>
 
-  <mat-accordion>
-    <mat-expansion-panel class="expansion-style">
+  <mat-accordion [multi]="openAcordeon == true">
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon == true">
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title">
           Fase 1- Preconstrucción
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-accordion [multi]="openAcordeon == true">
+        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon == true">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
-                  Contrato de obra N801801
+                  Contrato de obra {{ this.dataPreConstruccionObra?.numeroContrato }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
             <div class="table-responsive mb-1em mt-1em">
-              <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+              <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris table-reporte text-center">
                 <thead>
                   <tr class="mat-header-row cdk-header-row ng-star-inserted">
                     <th class="mat-header-cell cdk-header-cell ng-star-inserted">Perfil</th>
@@ -67,21 +67,24 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let element of listaPerfil">
+                  <tr *ngFor="let element of this.dataPreConstruccionObra?.tablaPreconstruccion">
                     <td class="mat-cell cdk-cell ng-star-inserted">
-                      <b> {{ element.perfil }} </b>
+                      <b> {{ element.nombrePerfil }} </b>
                     </td>
                     <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.hvRequeridas }}
+                      {{ element.cantidadHvRequeridas }}
                     </td>
                     <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.hvRecibidas }}
+                      {{ element.cantidadHvRecibidas }}
                     </td>
                     <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.hvAprobadas }}
+                      {{ element.cantidadHvAprobadas }}
                     </td>
                     <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.urlSoporte }}
+                      <a class="ruta-url max-width-none print" [href]="element.rutaSoporte" target="_blank" rel="noopener noreferrer" style="display: none;">
+                        <span class="print" style="display: none;">Link</span>
+                      </a>
+                      <span class="print-d-none">{{ element.rutaSoporte }}</span>
                     </td>
                   </tr>
                 </tbody>
@@ -97,34 +100,96 @@
               <mat-card-content>
                   <p>
                     <strong>
-                      htttp:one.drive.h.vpreconstruccion.com
+                      {{ this.dataPreConstruccionObra?.actaSuscrita }}
                     </strong>
                   </p>
               </mat-card-content>
             </mat-card>
-            
+
         </mat-expansion-panel>
     </mat-accordion>
-      
+
+    <mat-accordion [multi]="openAcordeon == true">
+      <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon == true">
+          <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title class="expansion-style--title">
+                Contrato de interventoría {{ this.dataPreConstruccionInterventoria?.numeroContrato }}
+              </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="table-responsive mb-1em mt-1em">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris table-reporte text-center">
+              <thead>
+                <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Perfil</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V requeridas</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V recibidas</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V aprobadas</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">URL con soporte</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let element of this.dataPreConstruccionInterventoria?.tablaPreconstruccion">
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <b> {{ element.nombrePerfil }} </b>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.cantidadHvRequeridas }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.cantidadHvRecibidas }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.cantidadHvAprobadas }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <a class="ruta-url max-width-none print" [href]="element.rutaSoporte" target="_blank" rel="noopener noreferrer" style="display: none;">
+                      <span class="print" style="display: none;">Link</span>
+                    </a>
+                    <span class="print-d-none">{{ element.rutaSoporte }}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card header-card--margin">
+              <mat-card-title class="header-card--text">
+                Acta suscrita
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p>
+                  <strong>
+                    {{ this.dataPreConstruccionInterventoria?.actaSuscrita }}
+                  </strong>
+                </p>
+            </mat-card-content>
+          </mat-card>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+
 
     </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon == true">
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title">
           Fase 2 - Construcción
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion">
+      <mat-accordion [multi]="openAcordeon == true">
+        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon == true">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
-                  Contrato de obra N801801
+                  Contrato de obra {{ this.dataConstruccionObra?.numeroContrato }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <mat-accordion>
-              <mat-expansion-panel class="expansion-style sub-expansion-black">
+            <mat-accordion [multi]="openAcordeon == true">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon == true">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Diagnóstico
@@ -137,13 +202,14 @@
                         <strong>
                           ¿Cuenta con informe de diagnóstico aprobado por la interventoría?:
                         </strong>
-                        Sí
+                        <span *ngIf="this.dataConstruccionObra?.diagnostico?.cuentaConInformeDiagnosticoAprobado == true">Sí</span>
+                        <span *ngIf="this.dataConstruccionObra?.diagnostico?.cuentaConInformeDiagnosticoAprobado != true">No</span>
                       </p>
                       <p>
                         <strong>
                           URL con soporte:
                         </strong>
-                        https://drive.google.com/drive/informeinterventoria1
+                        {{ this.dataConstruccionObra?.diagnostico?.urlSoporte }}
                       </p>
                     </mat-card-content>
                   </mat-card>
@@ -159,32 +225,32 @@
                         <strong>
                           a. Costo directo:
                         </strong>
-                        $17.000.000
+                        {{ this.dataConstruccionObra?.diagnostico?.costoDirecto | currency:'COP':'symbol-narrow':'.0-0' }}
                       </p>
                       <p>
                         <strong>
                           b. A (administración):
                         </strong>
-                        $5.000.000
-                      </p>                      
+                        {{ this.dataConstruccionObra?.diagnostico?.administracion | currency:'COP':'symbol-narrow':'.0-0' }}
+                      </p>
                       <p>
                         <strong>
                           c. I (Imprevistos):
                         </strong>
-                        $10.000.000
-                      </p>                      
+                        {{ this.dataConstruccionObra?.diagnostico?.imprevistos | currency:'COP':'symbol-narrow':'.0-0' }}
+                      </p>
                       <p>
                         <strong>
                           d. U (Utilidad):
                         </strong>
-                        $17.000.000
-                      </p>                      
+                        {{ this.dataConstruccionObra?.diagnostico?.utilidad | currency:'COP':'symbol-narrow':'.0-0' }}
+                      </p>
                       <p>
                         <strong>
                           Valor total de la fase 2 - Construcción:
                         </strong>
-                        $49.000.000
-                      </p>                      
+                        {{ this.dataConstruccionObra?.diagnostico?.valorTotalConstruccion | currency:'COP':'symbol-narrow':'.0-0' }}
+                      </p>
                     </mat-card-content>
                   </mat-card>
 
@@ -192,22 +258,23 @@
                     <strong>
                       ¿Se requirió modificación contractual?:
                     </strong>
-                    Sí
+                    <span *ngIf="this.dataConstruccionObra?.diagnostico?.tieneModificacionContractual == true">Sí</span>
+                    <span *ngIf="this.dataConstruccionObra?.diagnostico?.tieneModificacionContractual != true">No</span>
                   </p>
 
-                  <mat-card class="shipping-card var-main-gris">
+                  <mat-card class="shipping-card var-main-gris" *ngIf="this.dataConstruccionObra?.diagnostico?.tieneModificacionContractual == true">
                     <mat-card-content>
                       <p>
                         <strong>
                           Número de solicitud de la modificación:
                         </strong>
-                        PI_00089
+                        {{ this.dataConstruccionObra?.diagnostico?.numeroModificacion }}
                       </p>
                     </mat-card-content>
                   </mat-card>
-                  
+
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon == true">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Planes y Programas
@@ -215,7 +282,7 @@
                   </mat-expansion-panel-header>
 
                   <div class="table-responsive mb-1em mt-1em">
-                    <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+                    <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris text-center">
                       <thead>
                         <tr class="mat-header-row cdk-header-row ng-star-inserted">
                           <th class="mat-header-cell cdk-header-cell ng-star-inserted">Planes y programas</th>
@@ -228,19 +295,22 @@
                       <tbody>
                         <tr *ngFor="let element of listaPlanes">
                           <td class="mat-cell cdk-cell ng-star-inserted">
-                            <b> {{ element.planesProgramas }} </b>
+                            <b> {{ element.nombre }} </b>
                           </td>
                           <td class="mat-cell cdk-cell ng-star-inserted">
-                            {{ element.recibioRequisito }}
+                            <span *ngIf="element.recibioRequisito == true">Sí</span>
+                            <span *ngIf="element.recibioRequisito == false">No</span>
+                            <span *ngIf="element.recibioRequisito == '3'">No se requiere</span>
                           </td>
                           <td class="mat-cell cdk-cell ng-star-inserted">
-                            {{ element.fechaRadicado }}
+                            {{ element.fechaRadicado | date: 'dd/MM/yyyy'}}
                           </td>
                           <td class="mat-cell cdk-cell ng-star-inserted">
-                            {{ element.fechaAprobacion }}
+                            {{ element.fechaAprobacion | date: 'dd/MM/yyyy'}}
                           </td>
                           <td class="mat-cell cdk-cell ng-star-inserted">
-                            {{ element.observacionesRequisito }}
+                            <span *ngIf="element.tieneObservaciones == true">Sí</span>
+                            <span *ngIf="element.tieneObservaciones != true">No</span>
                           </td>
                         </tr>
                       </tbody>
@@ -251,11 +321,11 @@
                     <strong>
                       URL con soporte:
                     </strong>
-                    https://drive.google.com/drive/PlanesyProgramas123
+                    {{ this.dataConstruccionObra?.planesYProgramas?.urlConSoporte }}
                   </p>
-                  
+
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon == true">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Manejo de anticipo
@@ -266,44 +336,47 @@
                     <mat-card-content>
                       <p>
                         <strong>
-                          ¿El contrato requiere anticipo?: 
+                          ¿El contrato requiere anticipo?:
                         </strong>
-                        Sí
+                        <span *ngIf="dataConstruccionObra?.manejoAnticipo?.requiereAnticipo == true">Sí</span>
+                        <span *ngIf="dataConstruccionObra?.manejoAnticipo?.requiereAnticipo != true">No</span>
                       </p>
                       <p>
                         <strong>
                           ¿Cuenta con plan de inversión aprobado para el anticipo?:
                         </strong>
-                        Sí
+                        <span *ngIf="dataConstruccionObra?.manejoAnticipo?.tienePlanInversionAprobado == true">Sí</span>
+                        <span *ngIf="dataConstruccionObra?.manejoAnticipo?.tienePlanInversionAprobado != true">No</span>
                       </p>
                       <p>
                         <strong>
                           ¿Cuenta con cronograma de amortización aprobado?:
                         </strong>
-                        Sí
+                        <span *ngIf="dataConstruccionObra?.manejoAnticipo?.tieneCronogramaAmortizacion == true">Sí</span>
+                        <span *ngIf="dataConstruccionObra?.manejoAnticipo?.tieneCronogramaAmortizacion != true">No</span>
                       </p>
                     </mat-card-content>
                   </mat-card>
-                  
+
                   <p>
                     <strong>
                       URL con soporte:
                     </strong>
-                    https://drive.google.com/drive/informeinterventoria1
+                    {{ dataConstruccionObra?.manejoAnticipo?.urlSoporte }}
                   </p>
-                  
+
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon == true">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Hojas de vida del contratista de obra
                       </mat-panel-title>
                   </mat-expansion-panel-header>
 
-                  <mat-card class="shipping-card var-main-gris">
+                  <mat-card class="shipping-card var-main-gris" *ngFor="let hv of dataConstruccionObra?.hojasDeVida; index as i;">
                     <mat-card-header class="header-card header-card--margin">
                       <mat-card-title class="header-card--text">
-                        Perfil 1
+                        Perfil {{ i + 1 }}
                       </mat-card-title>
                     </mat-card-header>
                     <mat-card-content>
@@ -311,91 +384,84 @@
                         <strong>
                           Perfil:
                         </strong>
-                        Ingeniero de obra
+                        {{ hv.perfil }}
                       </p>
                       <p>
                         <strong>
                           Cantidad de hojas de vida requeridas para el perfil:
                         </strong>
-                        2
+                        {{ hv.cantidadHvRequeridas }}
                       </p>
                       <p>
                         <strong>
                           Cantidad de hojas de vida recibidas para el perfil:
                         </strong>
-                        10
+                        {{ hv.cantidadHvRecibidas }}
                       </p>
                       <p>
                         <strong>
                           Cantidad de hojas de vida aprobadas para el perfil:
                         </strong>
-                        3
+                        {{ hv.cantidadHvAprobadas }}
                       </p>
                       <p>
                         <strong>
                           Fecha de aprobación de la totalidad de las hojas de vida:
                         </strong>
-                        07/08/2020
+                        {{ hv.fechaAprobacion }}
                       </p>
                       <p>
                         <strong>
                           Observaciones:
                         </strong>
-                        <span class="d-block">
-                          ---
+                        <span class="d-block"  [innerHTML]="hv.observaciones">
                         </span>
                       </p>
-                      <p>
+                      <p *ngFor="let item of hv.listRadicados; index as j;">
                         <strong>
-                          Número de radicado en FFIE de aprobación de hojas de vida 1:
+                          Número de radicado en FFIE de aprobación de hojas de vida {{ j + 1 }}:
                         </strong>
-                        FFFLL098764-00
-                      </p>
-                      <p>
-                        <strong>
-                          Número de radicado en FFIE de aprobación de hojas de vida 2:
-                        </strong>
-                        DDDNN5678-00
+                        {{ item.numeroRadicado }}
                       </p>
                       <p>
                         <strong>
                           URL con soporte:
                         </strong>
-                        https://drive.google.com/drive/perfil/Ingenierodeobra/hojasdevida
+                        {{ hv.rutaSoporte }}
                       </p>
                     </mat-card-content>
                   </mat-card>
-                  
+
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black">
+              <mat-expansion-panel class="expansion-style sub-expansion-black print-d-none" [expanded]="openAcordeon == true">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Programación de obra
                       </mat-panel-title>
                   </mat-expansion-panel-header>
 
-                  <div class="text-centes">
-                    <button mat-raised-button color="accent" class="btn-table">
+                  <div class="text-center">
+                    <button mat-raised-button color="accent" class="btn" (click)="descargar(false, dataConstruccionObra?.programacionObra?.rutaArchivo)">
                       Descargar archivo
                     </button>
                   </div>
-                  
+
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black">
+              <mat-expansion-panel class="expansion-style sub-expansion-black print-d-none" [expanded]="openAcordeon == true">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Flujo de inversión de recursos
                       </mat-panel-title>
                   </mat-expansion-panel-header>
 
-                  <div class="text-centes">
-                    <button mat-raised-button color="accent" class="btn-table">
+                  <div class="text-center">
+                    <button mat-raised-button color="accent" class="btn" (click)="descargar(true, dataConstruccionObra?.flujoInversion?.rutaArchivo)">
                       Descargar archivo
                     </button>
                   </div>
-                  
+
               </mat-expansion-panel>
-              <mat-expansion-panel class="expansion-style sub-expansion-black">
+              <mat-expansion-panel class="expansion-style sub-expansion-black" [expanded]="openAcordeon == true">
                   <mat-expansion-panel-header class="expansion-style--header">
                       <mat-panel-title class="expansion-style--title">
                         Acta suscrita
@@ -411,75 +477,79 @@
                     <mat-card-content>
                       <p>
                         <strong>
-                          htttp:one.drive.h.vconstruccion.com
+                          {{ dataConstruccionObra?.actaSuscrita }}
                         </strong>
                       </p>
                     </mat-card-content>
                   </mat-card>
-                  
+
               </mat-expansion-panel>
           </mat-accordion>
-            
         </mat-expansion-panel>
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                  Contrato de interventoría A513513
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+      </mat-accordion>
+      <mat-accordion [multi]="openAcordeon == true">
+        <mat-expansion-panel class="expansion-style sub-expansion" [expanded]="openAcordeon == true">
+          <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title class="expansion-style--title">
+                Contrato de interventoría {{ dataConstruccionInterventoria?.numeroContrato }}
+              </mat-panel-title>
+          </mat-expansion-panel-header>
 
-            <div class="table-responsive mb-1em mt-1em">
-              <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
-                <thead>
-                  <tr class="mat-header-row cdk-header-row ng-star-inserted">
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">Perfil</th>
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V requeridas</th>
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V recibidas</th>
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V aprobadas</th>
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">URL con soporte</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let element of listacontratoInterventoria">
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                      <b> {{ element.perfil }} </b>
-                    </td>
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.hvRequeridas }}
-                    </td>
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.hvRecibidas }}
-                    </td>
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.hvAprobadas }}
-                    </td>
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                      {{ element.urlSoporte }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            
-            <mat-card class="shipping-card var-main-gris">
-              <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text">
-                  Acta suscrita
-                </mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                  <p>
-                    <strong>
-                      htttp:one.drive.h.vpreconstruccion.com
-                    </strong>
-                  </p>
-              </mat-card-content>
-            </mat-card>
-            
+          <div class="table-responsive mb-1em mt-1em">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris table-reporte text-center">
+              <thead>
+                <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Perfil</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V requeridas</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V recibidas</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Cantidad de H.V aprobadas</th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">URL con soporte</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let element of dataConstruccionInterventoria?.hojasDeVida">
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <b> {{ element.perfil }} </b>
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.cantidadHvRequeridas }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.cantidadHvRecibidas }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ element.cantidadHvAprobadas }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <a class="ruta-url max-width-none print" [href]="element.rutaSoporte" target="_blank" rel="noopener noreferrer" style="display: none;">
+                      <span class="print" style="display: none;">Link</span>
+                    </a>
+                    <span class="print-d-none">{{ element.rutaSoporte }}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card header-card--margin">
+              <mat-card-title class="header-card--text">
+                Acta suscrita
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p>
+                  <strong>
+                    {{ dataConstruccionInterventoria?.actaSuscrita }}
+                  </strong>
+                </p>
+            </mat-card-content>
+          </mat-card>
         </mat-expansion-panel>
-    </mat-accordion>
-
+      </mat-accordion>
     </mat-expansion-panel>
   </mat-accordion>
-  
+  <div class="text-center mt-2em mb-2em print-d-none">
+    <button mat-raised-button color="accent" (click)="downloadPDF();">Descargar</button>
+  </div>
 </section>

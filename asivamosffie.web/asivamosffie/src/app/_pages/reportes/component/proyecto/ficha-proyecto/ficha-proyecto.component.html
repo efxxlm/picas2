@@ -8,28 +8,43 @@
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <div class="row">
-            <div class="pr-1">
-              <label
-                class="label-left"
-                for="llaveMen"
-                [class.color-secondaryColor]="
-                  addressForm.get('llaveMen').invalid && addressForm.get('llaveMen').touched
-                "
-              >
-              Llave MEN
-              </label>
+            <div class="row">
+                <div class="pr-1">
+                  <label
+                    class="label-left"
+                    for="llaveMen"
+                    [class.color-secondaryColor]="
+                      addressForm.get('llaveMen').invalid && addressForm.get('llaveMen').touched
+                    "
+                    >
+                    Llave MEN
+                  </label>
+                </div>
+                <div class="col d-flex">
+                    <mat-form-field
+                        class="full-width"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
+                        matTooltipClass="info-tooltip"
+                    >
+                        <input matInput #llaveMen="matAutocompleteTrigger" type="text" maxlength="100" required [matAutocomplete]="auto" formControlName="llaveMen" (ngModelChange)="getProyectos($event)">
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let proyecto of proyectosArray" [value]="proyecto.llaveMen" (click)="seleccionAutocomplete(proyecto)">
+                                {{ proyecto.llaveMen }}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <input type="hidden" formControlName="llaveMen">
+                    </mat-form-field>
+                    <button mat-button type="button" color="primary" class="busqueda--img" style="margin-bottom: 0 !important;padding-top: 0 !important;padding-bottom: 0 !important;">
+                        <img src="assets/img/icon/lupa.svg" alt="Buscar">
+                    </button>
+                </div>
+                <span class="icon-incompleto">
+                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+                      [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+                      matTooltipClass="info-tooltip" *ngIf="addressForm.get('llaveMen').invalid && addressForm.get('llaveMen').touched" />
+                </span>
             </div>
-            <div class="col">
-              <mat-form-field class="select-width">
-                <mat-select formControlName="llaveMen">
-                  <mat-option *ngFor="let tipoFicha of listaTipoFicha" [value]="tipoFicha.value">
-                    {{ tipoFicha.name }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
         </div>
       </div>
       <div class="row">
@@ -49,8 +64,8 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select formControlName="departamento">
-                  <mat-option *ngFor="let tipoFicha of listaTipoFicha" [value]="tipoFicha.value">
-                    {{ tipoFicha.name }}
+                  <mat-option *ngFor="let dpt of listDepartamento" [value]="dpt.value">
+                    {{ dpt.name }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -75,8 +90,8 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select formControlName="municipio">
-                  <mat-option *ngFor="let tipoFicha of listaTipoFicha" [value]="tipoFicha.value">
-                    {{ tipoFicha.name }}
+                  <mat-option *ngFor="let municipio of listMunicipio" [value]="municipio.value">
+                    {{ municipio.name }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -101,8 +116,8 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select formControlName="institucionEducativa">
-                  <mat-option *ngFor="let tipoFicha of listaTipoFicha" [value]="tipoFicha.value">
-                    {{ tipoFicha.name }}
+                  <mat-option *ngFor="let instEducativa of listInstEducativa" [value]="instEducativa.value">
+                    {{ instEducativa.name }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -127,8 +142,8 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select formControlName="dede">
-                  <mat-option *ngFor="let tipoFicha of listaTipoFicha" [value]="tipoFicha.value">
-                    {{ tipoFicha.name }}
+                  <mat-option *ngFor="let sede of listSede" [value]="sede.value">
+                    {{ sede.name }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -142,18 +157,18 @@
             <div class="pr-1">
               <label
                 class="label-left"
-                for="tipoContrato"
+                for="tipoIntervencion"
                 [class.color-secondaryColor]="
-                  addressForm.get('tipoContrato').invalid && addressForm.get('tipoContrato').touched
+                  addressForm.get('tipoIntervencion').invalid && addressForm.get('tipoIntervencion').touched
                 ">
-                Tipo de contrato
+                Tipo de Intervención
               </label>
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select formControlName="tipoContrato">
-                  <mat-option *ngFor="let tipoFicha of listaTipoFicha" [value]="tipoFicha.value">
-                    {{ tipoFicha.name }}
+                <mat-select formControlName="tipoIntervencion">
+                  <mat-option *ngFor="let tipoIntervencion of listTipoIntervencion" [value]="tipoIntervencion.codigo">
+                    {{ tipoIntervencion.nombre }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -167,9 +182,9 @@
             <div class="pr-1">
               <label
                 class="label-left"
-                for="vigenciaContratación"
+                for="vigenciaContratacion"
                 [class.color-secondaryColor]="
-                  addressForm.get('vigenciaContratación').invalid && addressForm.get('vigenciaContratación').touched
+                  addressForm.get('vigenciaContratacion').invalid && addressForm.get('vigenciaContratacion').touched
                 "
               >
                 Vigencia de la contratación
@@ -177,9 +192,9 @@
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select formControlName="vigenciaContratación">
-                  <mat-option *ngFor="let tipoFicha of listaTipoFicha" [value]="tipoFicha.value">
-                    {{ tipoFicha.name }}
+                <mat-select formControlName="vigenciaContratacion">
+                  <mat-option *ngFor="let vigencia of listVigencias" [value]="vigencia">
+                    {{ vigencia }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -201,8 +216,8 @@
           !addressForm.get('municipio').value &&
           !addressForm.get('institucionEducativa').value &&
           !addressForm.get('dede').value &&
-          !addressForm.get('tipoContrato').value &&
-          !addressForm.get('vigenciaContratación').value
+          !addressForm.get('tipoIntervencion').value &&
+          !addressForm.get('vigenciaContratacion').value
         "
       >
         <img src="assets/img/icon/borrar.svg" alt="buscar" />
@@ -221,9 +236,9 @@
   </mat-card>
 </form>
 
-<div class="animatedDown" *ngIf="verResultados">
-  <app-tabla-resultados-proyecto (morstrarFicha)="verFicha( $event )"></app-tabla-resultados-proyecto>
+<div class="animatedDown" *ngIf="verResultados && resultados.length > 0">
+  <app-tabla-resultados-proyecto (morstrarFicha)="verFicha( $event )" [resultados]="resultados"></app-tabla-resultados-proyecto>
 </div>
-<div class="animatedDown" *ngIf="mostrarFicha">
-  <app-menu-ficha-proyecto></app-menu-ficha-proyecto>
+<div class="animatedDown" *ngIf="mostrarFicha && indicadores != null">
+  <app-menu-ficha-proyecto [indicadores]="indicadores"></app-menu-ficha-proyecto>
 </div>

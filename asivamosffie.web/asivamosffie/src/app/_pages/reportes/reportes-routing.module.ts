@@ -68,31 +68,27 @@ const routes: Routes = [
     component: LiquidacionComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaProyecto/resumen',
+    path: 'fichaContratosProyectos/fichaProyecto/resumen/:id',
     component: ResumenPComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaProyecto/contratacion',
+    path: 'fichaContratosProyectos/fichaProyecto/contratacion/:id',
     component: ContratacionPComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaProyecto/contratacion',
-    component: ContratacionPComponent
-  },
-  {
-    path: 'fichaContratosProyectos/fichaProyecto/preparacion',
+    path: 'fichaContratosProyectos/fichaProyecto/preparacion/:id',
     component: PreparacionComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaProyecto/seguimientoTecnico',
+    path: 'fichaContratosProyectos/fichaProyecto/seguimientoTecnico/:id',
     component: SeguimientoTecnicoComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaProyecto/seguimientoFinanciero',
+    path: 'fichaContratosProyectos/fichaProyecto/seguimientoFinanciero/:id',
     component: SeguimientoFinancieroComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaProyecto/entrega',
+    path: 'fichaContratosProyectos/fichaProyecto/entrega/:id',
     component: EntregaComponent
   },
   {
