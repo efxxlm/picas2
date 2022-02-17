@@ -28,30 +28,33 @@ namespace asivamosffie.services
             List<InformeFinal> list = await _context.InformeFinal
                             .Where(r => r.EstadoInforme == ConstantCodigoEstadoInformeFinal.Con_informe_enviado_para_validación || (r.EstadoValidacion != "0" && !String.IsNullOrEmpty(r.EstadoValidacion)))
                             .Include(r => r.Proyecto)
-                                .ThenInclude(r => r.InstitucionEducativa)
+                             //   .ThenInclude(r => r.InstitucionEducativa)
                             .ToListAsync();
             List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
             List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
+            List<Dominio> Estado_Validacion_Informe_Final = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Validacion_Informe_Final).ToList();
+
             List<Dominio> TipoObraIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_por_contratar).ToList();
 
             List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
 
             foreach (var item in list)
-            {
-                InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == item.Proyecto.SedeId).FirstOrDefault();
+            { 
                 Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == item.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
                 item.Proyecto.MunicipioObj = Municipio;
+         
                 item.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
                 item.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == item.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
-                item.Proyecto.Sede = Sede;
-                if (String.IsNullOrEmpty(item.EstadoValidacion) || item.EstadoValidacion == "0")
-                {
+                item.Proyecto.Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == item.Proyecto.SedeId).FirstOrDefault();
+                if (String.IsNullOrEmpty(item.EstadoValidacion) || item.EstadoValidacion == "0") 
                     item.EstadoValidacionString = "Sin verificación";
-                }
-                else
-                {
-                    item.EstadoValidacionString = await _commonService.GetNombreDominioByCodigoAndTipoDominio(item.EstadoValidacion, (int)EnumeratorTipoDominio.Estado_Validacion_Informe_Final);
-                }
+                 
+                else 
+                    item.EstadoValidacionString = Estado_Validacion_Informe_Final.Where(r=> r.Codigo ==item.EstadoValidacion).FirstOrDefault().Nombre;
+
+                item.Proyecto.MunicipioObj.Proyecto = null;
+                item.Proyecto.Sede.ProyectoSede = null;
+                item.Proyecto.InstitucionEducativa.ProyectoInstitucionEducativa = null;
             }
             return list;
         }

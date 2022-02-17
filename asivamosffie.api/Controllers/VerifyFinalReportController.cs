@@ -25,7 +25,7 @@ namespace asivamosffie.api.Controllers
             _verifyFinalReportService = verifyFinalReportService;
             _settings = settings;
         }
-
+        [AllowAnonymous]
         [Route("GetListInformeFinal")]
         [HttpGet]
         public async Task<List<InformeFinal>> GetListInformeFinal()
