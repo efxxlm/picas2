@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
+import { TablaEjfinancieraGbftrecComponent } from '../tabla-ejfinanciera-gbftrec/tabla-ejfinanciera-gbftrec.component';
+import { TablaEjpresupuestalGbftrecComponent } from '../tabla-ejpresupuestal-gbftrec/tabla-ejpresupuestal-gbftrec.component';
 
 @Component({
   selector: 'app-ver-ejecucion-financiera',
@@ -17,6 +19,8 @@ export class VerEjecucionFinancieraComponent implements OnInit {
   listaejecucionPresupuestal: any[] = [];
   dataTableEjpresupuestal: any[] = [];
   dataTableEjfinanciera: any[] = [];
+  @ViewChild(TablaEjpresupuestalGbftrecComponent) tablaEjpresupuestalGbftrecChild:TablaEjpresupuestalGbftrecComponent;
+  @ViewChild(TablaEjfinancieraGbftrecComponent) tablaEjfinancieraGbftrecChild:TablaEjfinancieraGbftrecComponent;
 
   constructor(
     private financialBalanceService: FinancialBalanceService,
@@ -29,11 +33,11 @@ export class VerEjecucionFinancieraComponent implements OnInit {
 
   ngOnInit(): void {
     this.getBalanceByProyectoId(this.proyectoId);
-    this.getContratoByProyectoId();
+    //this.getContratoByProyectoId();
     this.getEjecucionFinancieraXProyectoId(this.proyectoId);
   }
 
-  async getBalanceByProyectoId(proyectoId: number) {
+  getBalanceByProyectoId(proyectoId: number) {
     this.financialBalanceService.getDataByProyectoId(proyectoId)
     .subscribe( getDataByProyectoId => {
         if( getDataByProyectoId.length > 0 ){
@@ -42,7 +46,7 @@ export class VerEjecucionFinancieraComponent implements OnInit {
     });
   }
 
-  async getContratoByProyectoId() {
+  getContratoByProyectoId() {
     this.financialBalanceService.getContratoByProyectoId(this.proyectoId).subscribe(data => {
       data.forEach(element => {
         this.dataTable.push({
@@ -60,9 +64,9 @@ export class VerEjecucionFinancieraComponent implements OnInit {
     });
   }
 
-  async getEjecucionFinancieraXProyectoId(proyectoId: number) {
+   getEjecucionFinancieraXProyectoId(proyectoId: number) {
     this.financialBalanceService.getEjecucionFinancieraXProyectoId(proyectoId).subscribe(data => {
-      data[0]?.forEach(element => {
+      data[0].forEach(element => {
         this.dataTableEjpresupuestal.push({
           facturadoAntesImpuestos: element.facturadoAntesImpuestos,
           nombre: element.nombre,
@@ -73,7 +77,7 @@ export class VerEjecucionFinancieraComponent implements OnInit {
           totalComprometido: element.totalComprometido
         });
       });
-      data[1]?.forEach(element => {
+      data[1].forEach(element => {
         this.dataTableEjfinanciera.push({
           nombre: element.nombre,
           ordenadoGirarAntesImpuestos: element.ordenadoGirarAntesImpuestos,
@@ -83,6 +87,8 @@ export class VerEjecucionFinancieraComponent implements OnInit {
           totalComprometido: element.totalComprometido
         });
       });
+      this.tablaEjpresupuestalGbftrecChild.ngOnInit();
+      this.tablaEjfinancieraGbftrecChild.ngOnInit();
     });
   }
 
