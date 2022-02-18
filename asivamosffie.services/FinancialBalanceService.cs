@@ -1270,7 +1270,7 @@ namespace asivamosffie.services
 
 
                                 List<VAportanteFuenteUsoProyecto> ListVAportanteFuenteUso3 =
-                                    ListVAportanteFuenteUso.Where(r => r.CofinanciacionAportanteId == item.CofinanciacionAportanteId).ToList();
+                                    ListVAportanteFuenteUso.Where(r => r.CofinanciacionAportanteId == item.CofinanciacionAportanteId && r.FuenteFinanciacionId == item.FuenteFinanciacionId).ToList();
 
                                 Fuentes.Aportante.Add(new Aportante
                                 {
