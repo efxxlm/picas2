@@ -79,10 +79,10 @@
                 <p>
                   <b>Valor del aportante:</b>
                   <!-- obra -->
-                  <span *ngIf="tipoSolicitudCodigo === '1'">{{ aportante?.cofinanciacionAportante?.valorObraInterventoria[0]?.valorObra | currency }}</span>
+                  <span *ngIf="tipoSolicitudCodigo === '1'">{{ aportante?.valorAporte | currency }}</span>
 
                   <!-- interventoria -->
-                  <span *ngIf="tipoSolicitudCodigo === '2'">{{aportante?.cofinanciacionAportante?.valorObraInterventoria[0]?.valorInterventoria | currency }}</span>
+                  <span *ngIf="tipoSolicitudCodigo === '2'">{{aportante?.valorAporte | currency }}</span>
                 </p>
               </div>
             </div>
