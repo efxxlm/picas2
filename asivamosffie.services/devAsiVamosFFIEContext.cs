@@ -268,6 +268,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VDescuentosFinancieraOdgxFuenteFinanciacionXaportante> VDescuentosFinancieraOdgxFuenteFinanciacionXaportante { get; set; }
         public virtual DbSet<VDescuentosOdgXfuenteFinanciacionXaportanteXconceptoXproyecto> VDescuentosOdgXfuenteFinanciacionXaportanteXconceptoXproyecto { get; set; }
         public virtual DbSet<VDescuentosOdgxFuenteFinanciacionXaportante> VDescuentosOdgxFuenteFinanciacionXaportante { get; set; }
+        public virtual DbSet<VDescuentosTecnicaOdgxFuenteFinanciacionXaportante> VDescuentosTecnicaOdgxFuenteFinanciacionXaportante { get; set; }
         public virtual DbSet<VDescuentosXordenGiro> VDescuentosXordenGiro { get; set; }
         public virtual DbSet<VDescuentosXordenGiroAportante> VDescuentosXordenGiroAportante { get; set; }
         public virtual DbSet<VDescuentosXordenGiroXproyectoXaportanteXconcepto> VDescuentosXordenGiroXproyectoXaportanteXconcepto { get; set; }
@@ -395,15 +396,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<Version> Version { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -9173,6 +9165,19 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 0)");
             });
 
+            modelBuilder.Entity<VDescuentosTecnicaOdgxFuenteFinanciacionXaportante>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DescuentosTecnicaODGX_FuenteFinanciacionXaportante");
+
+                entity.Property(e => e.Nombre).HasMaxLength(250);
+
+                entity.Property(e => e.TipoRecursosCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<VDescuentosXordenGiro>(entity =>
             {
                 entity.HasNoKey();
@@ -9603,13 +9608,13 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_EjecucionPresupuestalXProyecto");
 
-                entity.Property(e => e.FacturadoAntesImpuestos).HasColumnType("decimal(30, 0)");
+                entity.Property(e => e.FacturadoAntesImpuestos).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.Nombre).HasMaxLength(250);
 
                 entity.Property(e => e.PorcentajeEjecucionPresupuestal).HasColumnType("decimal(38, 6)");
 
-                entity.Property(e => e.Saldo).HasColumnType("decimal(31, 0)");
+                entity.Property(e => e.Saldo).HasColumnType("decimal(38, 0)");
 
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .IsRequired()
@@ -10285,9 +10290,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.TipoSolicitud)
-                    .IsRequired()
-                    .HasMaxLength(250);
+                entity.Property(e => e.TipoSolicitud).HasMaxLength(250);
 
                 entity.Property(e => e.TipoSolicitudCodigo)
                     .HasMaxLength(100)
@@ -10815,7 +10818,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ConsecutivoFfie)
                     .IsRequired()
                     .HasColumnName("ConsecutivoFFIE")
-                    .HasMaxLength(29)
+                    .HasMaxLength(37)
                     .IsUnicode(false);
 
                 entity.Property(e => e.DescuentoAns).HasColumnType("decimal(38, 0)");

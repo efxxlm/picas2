@@ -172,7 +172,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                             for ( const conceptoValue of criterioValue.solicitudPagoFaseCriterioConceptoPago ) {
                                 const conceptoFind = conceptosDePago.find( value => value.codigo === conceptoValue.conceptoPagoCriterio );
                                 if ( conceptoFind !== undefined ) {
-                                    listConceptos.push( { ...conceptoFind, valorFacturadoConcepto: conceptoValue.valorFacturadoConcepto } );
+                                    listConceptos.push( { ...conceptoFind, valorFacturadoConcepto: conceptoValue.valorFacturadoConcepto, usoCodigo: conceptoValue?.usoCodigo} );
                                 }
                             }
                             listCriterios.push(
@@ -429,7 +429,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                               {
                                   ordenGiroDetalleTerceroCausacionId: [ terceroCausacion.ordenGiroDetalleTerceroCausacionId ],
                                   conceptoPagoCriterio: [ concepto.codigo ],
-                                  usoCodigo: [ usoByConcepto[0]?.tipoUsoCodigo ],
+                                  usoCodigo: [ concepto?.usoCodigo ?? usoByConcepto[0]?.tipoUsoCodigo ],
                                   nombre: [ concepto.nombre ],
                                   valorTotalUso: [ valorTotalUso ],
                                   valorFacturadoConcepto: [ concepto.valorFacturadoConcepto ],
@@ -459,7 +459,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 {
                                     ordenGiroDetalleTerceroCausacionId: [ 0 ],
                                     conceptoPagoCriterio: [ concepto.codigo ],
-                                    usoCodigo: [ usoByConcepto[0]?.tipoUsoCodigo ],
+                                    usoCodigo: [ concepto?.usoCodigo ?? usoByConcepto[0]?.tipoUsoCodigo ],
                                     nombre: [ concepto.nombre ],
                                     valorTotalUso: [ valorTotalUso ],
                                     valorFacturadoConcepto: [ concepto.valorFacturadoConcepto ],
@@ -697,7 +697,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                 }
             } )
             if (
-                value > this.getValorAportante(this.getConceptos( index ).controls[ jIndex ].get('conceptoPagoCriterio').value, this.getAportantes( index, jIndex ).controls[ kIndex ].get('nombreAportante').value.cofinanciacionAportanteId, this.getAportantes( index, jIndex ).controls[ kIndex ].get('fuenteRecursos').value?.fuenteFinanciacionId)
+                value > this.getValorAportante(this.getConceptos( index ).controls[ jIndex ].get('conceptoPagoCriterio').value, this.getAportantes( index, jIndex ).controls[ kIndex ].get('nombreAportante').value.cofinanciacionAportanteId, this.getAportantes( index, jIndex ).controls[ kIndex ].get('fuenteRecursos').value?.fuenteFinanciacionId, this.getConceptos( index ).controls[ jIndex ].get('usoCodigo').value)
             ) {
                 this.getAportantes( index, jIndex ).controls[ kIndex ].get( 'valorDescuento' ).setValue( null );
                 this.openDialog( '', `<b>El valor facturado por el concepto para el aportante no puede ser mayor al valor aportante para el concepto.</b>` )
@@ -1491,8 +1491,8 @@ export class TerceroCausacionGogComponent implements OnInit {
       }
     }
 
-    getValorAportante(codigo: string, aportanteId: any, fuenteFinanciacionId: any) {
-      let usoDelConcepto = this.solicitudPago.vConceptosUsosXsolicitudPagoId.find(r=> r.conceptoCodigo == codigo)?.usoCodigo;
+    getValorAportante(codigo: string, aportanteId: any, fuenteFinanciacionId: any, usoCodigo: string) {
+      let usoDelConcepto = usoCodigo != null && usoCodigo != undefined ? usoCodigo : this.solicitudPago.vConceptosUsosXsolicitudPagoId.find(r=> r.conceptoCodigo == codigo && r.contratacionProyectoId == this.contratacionProyectoId)?.usoCodigo;
       let valorUsoTotal = 0;
       let valorFacturadoTotal = 0;
       if(aportanteId > 0 && codigo != null && fuenteFinanciacionId > 0 && usoDelConcepto != undefined && usoDelConcepto != null){

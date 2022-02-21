@@ -37,7 +37,7 @@
                                     <mat-card-title class="header-card--text mt-1em" style="padding-left: 0em !important;"> Aportante {{ k + 1 }} </mat-card-title>
                                     <p *ngIf="aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId != null && aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId != undefined">
                                         <strong>Saldo aportante para el concepto:</strong>
-                                        {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('nombreAportante').value.cofinanciacionAportanteId, aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId) | currency: '' :'symbol-narrow':'.0-0' }}
+                                        {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('nombreAportante').value.cofinanciacionAportanteId, aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId, concepto.get('usoCodigo').value) | currency: '' :'symbol-narrow':'.0-0' }}
                                     </p>
                                     <p>
                                         <b>
@@ -140,7 +140,7 @@
                                                     <div class="row">
                                                       <p *ngIf="aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId != null && aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId != undefined">
                                                         <strong>Saldo aportante para el concepto:</strong>
-                                                            {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('nombreAportante').value.cofinanciacionAportanteId, aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId) | currency: '' :'symbol-narrow':'.0-0' }}
+                                                            {{ getValorAportante(concepto.get('conceptoPagoCriterio').value, aportante.get('nombreAportante').value.cofinanciacionAportanteId, aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId, concepto.get('usoCodigo').value) | currency: '' :'symbol-narrow':'.0-0' }}
                                                         </p>
                                                     </div>
                                                 </div>

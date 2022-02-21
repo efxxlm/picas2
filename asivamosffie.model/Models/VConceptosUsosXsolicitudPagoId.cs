@@ -10,5 +10,6 @@ namespace asivamosffie.model.Models
         public string ConceptoNombre { get; set; }
         public string UsoCodigo { get; set; }
         public string UsoNombre { get; set; }
+        public int? ContratacionProyectoId { get; set; }
     }
 }
