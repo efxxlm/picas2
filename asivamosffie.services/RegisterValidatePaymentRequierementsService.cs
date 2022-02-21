@@ -1259,6 +1259,7 @@ namespace asivamosffie.services
                                                                     .Where(p => p.ContratoId == pContratoId)
                                                                                                             .Select(p => new
                                                                                                             {
+                                                                                                                p.Sede,
                                                                                                                 p.LlaveMen,
                                                                                                                 p.TipoIntervencion,
                                                                                                                 p.Departamento,
