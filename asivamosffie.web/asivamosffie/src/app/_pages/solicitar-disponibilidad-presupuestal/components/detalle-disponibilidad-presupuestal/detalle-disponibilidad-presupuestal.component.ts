@@ -61,7 +61,7 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
       this.fechaComite =data0.contratacionId&&data0.fechaComiteTecnicoNotMapped!='0001-01-01T00:00:00'?data0.fechaComiteTecnicoNotMapped:"";
       this.observaciones=data0.disponibilidadPresupuestalObservacion;
       this.estadoSolicitudCodigo = data0.estadoSolicitudCodigo;
-      this.opcionContratarCodigo=data0.opcionContratarCodigo;
+      this.opcionContratarCodigo=data0.contratacion?.tipoSolicitudCodigo;
       //this.fechaComite = data0.disponibilidadPresupuestalProyecto[0].proyecto['fechaComite'];
       data0.disponibilidadPresupuestalProyecto.forEach(element => {
         this.cargarServicio2(element.proyectoId);
