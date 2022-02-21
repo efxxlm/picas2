@@ -2820,13 +2820,15 @@ namespace asivamosffie.services
                     {
                         componente.ComponenteFuenteNovedad = componente.ComponenteFuenteNovedad.Where(x => x.Eliminado != true && x.ComponenteAportanteNovedadId == componente.ComponenteAportanteNovedadId).ToList();
 
-                        List<string> uso = new List<string>();
-                        List<string> fuenteUso = new List<string>();
-                        List<decimal> usovalor = new List<decimal>();
-                        decimal total = 0;
 
                         foreach (var font in componente.ComponenteFuenteNovedad)
                         {
+                            List<string> uso = new List<string>();
+                            List<string> fuenteUso = new List<string>();
+                            List<decimal> usovalor = new List<decimal>();
+                            decimal total = 0;
+
+
                             FuenteFinanciacion fuente = _context.FuenteFinanciacion.Find(font.FuenteFinanciacionId);
                             font.ComponenteUsoNovedad = font.ComponenteUsoNovedad.Where(x => x.Eliminado != true && x.ComponenteFuenteNovedadId == font.ComponenteFuenteNovedadId).ToList();
                             var fuenteSaldo = _context.VSaldosFuenteXaportanteId.Where(r => r.CofinanciacionAportanteId == componente.CofinanciacionAportanteId && r.FuenteFinanciacionId == font.FuenteFinanciacionId).FirstOrDefault();
