@@ -13,7 +13,7 @@
             <div class="row">
                 <div class="col d-flex justify-content-center">
                     <mat-radio-group class="radioInput" formControlName="requiereTransladoRecursos" required>
-                        <mat-radio-button [value]="true">Sí</mat-radio-button>
+                        <!--<mat-radio-button [value]="true">Sí</mat-radio-button>-->
                         <mat-radio-button [value]="false">No</mat-radio-button>
                     </mat-radio-group>
                     <span class="required-form-group" style="margin-left: 1px;">*</span>
@@ -105,7 +105,7 @@
             ¿Se requiere registrar un traslado de recursos entre los aportantes y fuentes que financian este proyecto,
             antes de aprobar el balance financiero?:
         </strong>
-        
+
         <i *ngIf="addressForm.get('requiereTransladoRecursos').value == true"> Si </i>
         <i *ngIf="addressForm.get('requiereTransladoRecursos').value != true"> No </i>
       </p>
@@ -119,7 +119,7 @@
 
 <div  class="text-center mb-3em mt-2em animatedDown"
       *ngIf="addressForm.get('requiereTransladoRecursos').value === true && addressForm.get( 'justificacionTrasladoAportanteFuente' ).value !== null && balanceFinancieroId > 0 && trasladoPendiente === false">
-    <a [routerLink]="[ '/gestionarBalanceFinancieroTrasladoRecursos/registrarTraslado', id ]" mat-raised-button color="accent" class="btn-cargar-proyecto">Registrar traslado</a><br>  
+    <a [routerLink]="[ '/gestionarBalanceFinancieroTrasladoRecursos/registrarTraslado', id ]" mat-raised-button color="accent" class="btn-cargar-proyecto">Registrar traslado</a><br>
 </div>
 
 <app-tabla-traslados-gbftrec *ngIf="addressForm.get('requiereTransladoRecursos').value === true && balanceFinancieroTraslado.length > 0" [balanceFinancieroTraslado]="balanceFinancieroTraslado"></app-tabla-traslados-gbftrec>
