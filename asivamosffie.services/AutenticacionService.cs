@@ -75,7 +75,7 @@ namespace asivamosffie.services
                     { 
                         p.Perfil = _context.Perfil.Find(p.PerfilId);
                     });
-                    List<Menu> menus = await _context.MenuPerfil.Where(y => perfiles.Select(x=>x.PerfilId).Contains(y.PerfilId)).Select(x=>x.Menu).Distinct().ToListAsync();
+                    List<Menu> menus = await _context.MenuPerfil.Where(y =>  perfiles.Select(x=>x.PerfilId).Contains(y.PerfilId)).Select(x=>x.Menu).Distinct().ToListAsync();
                     respuesta = new Respuesta { 
                                                 IsSuccessful = true, 
                                                 IsValidation = false, 

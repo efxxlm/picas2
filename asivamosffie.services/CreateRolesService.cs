@@ -24,7 +24,7 @@ namespace asivamosffie.services
     public class CreateRolesService : ICreateRolesService
     {
         private readonly ICommonService _commonService;
-        private  devAsiVamosFFIEContext _context;
+        private devAsiVamosFFIEContext _context;
         public readonly IConverter _converter;
 
         public CreateRolesService(devAsiVamosFFIEContext context, ICommonService commonService)
@@ -46,7 +46,7 @@ namespace asivamosffie.services
         public async Task<dynamic> GetMenu()
         {
             return await _context.Menu
-                         .Where(m => m.MenuId != (int)enumeratorMenu.CambioContrasena) 
+                         .Where(m => m.MenuId != (int)enumeratorMenu.CambioContrasena)
                          .Select(m =>
                                 new
                                 {
@@ -59,10 +59,28 @@ namespace asivamosffie.services
 
         public async Task<Perfil> GetPerfilByPerfilId(int pPerfilId)
         {
-            return await
+            Perfil perfil = await
                 _context.Perfil
                 .Where(p => p.PerfilId == pPerfilId)
-                .Include(mp => mp.MenuPerfil).FirstOrDefaultAsync();
+                .Include(mp => mp.MenuPerfil)
+                   .ThenInclude(r => r.Menu)
+                .FirstOrDefaultAsync();
+
+            perfil.MenuPerfil = perfil.MenuPerfil.Where(r => r.Menu.Eliminado != true).ToList();
+
+
+            List<MenuPerfil> ListMenuPerfil = new List<MenuPerfil>();
+
+            foreach (var MenuPerfil in perfil.MenuPerfil)
+            {
+                if(MenuPerfil.Menu.Eliminado!= true)
+                {
+                    ListMenuPerfil.Add(MenuPerfil); 
+                }
+            }
+            perfil.MenuPerfil = ListMenuPerfil;
+
+            return perfil;
 
         }
 
@@ -184,9 +202,9 @@ namespace asivamosffie.services
                         });
                 }
 
-                if (pPerfil.Eliminado == true) 
+                if (pPerfil.Eliminado == true)
                     await SendEmailWhenDesactivateRol(ListUsuarioPerfil.FirstOrDefault().Perfil);
-                 
+
                 return new Respuesta
                 {
                     IsSuccessful = true,
@@ -214,7 +232,7 @@ namespace asivamosffie.services
 
         private async Task<bool> SendEmailWhenDesactivateRol(Perfil pPerfil)
         {
-            Template template =  _context.Template.Find((int)(enumeratorTemplate.MensajeDesactivarRol_6_3));
+            Template template = _context.Template.Find((int)(enumeratorTemplate.MensajeDesactivarRol_6_3));
             string strContenido = ReplaceVariablesPerfil(template.Contenido, pPerfil.Nombre);
 
             List<string> ListEmails = _context.UsuarioPerfil
