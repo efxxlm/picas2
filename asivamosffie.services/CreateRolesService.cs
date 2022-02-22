@@ -46,7 +46,7 @@ namespace asivamosffie.services
         public async Task<dynamic> GetMenu()
         {
             return await _context.Menu
-                         .Where(m => m.MenuId != (int)enumeratorMenu.CambioContrasena)
+                         .Where(m => m.MenuId != (int)enumeratorMenu.CambioContrasena && m.Eliminado != true)
                          .Select(m =>
                                 new
                                 {
