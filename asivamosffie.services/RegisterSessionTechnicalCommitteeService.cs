@@ -1781,9 +1781,7 @@ namespace asivamosffie.services
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                         .ThenInclude(r => r.SesionSolicitudVoto)
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                        .ThenInclude(r => r.SesionSolicitudCompromiso)
-                    .Include(r => r.SesionComiteTema)
-                    //  .ThenInclude(r => r.SesionTemaVoto)
+                        .ThenInclude(r => r.SesionSolicitudCompromiso) 
                     .Include(r => r.SesionComiteTema)
                        .ThenInclude(r => r.TemaCompromiso)
                  .FirstOrDefaultAsync();
@@ -1859,8 +1857,14 @@ namespace asivamosffie.services
 
             List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).Include(r => r.SesionParticipante).ToList();
 
+            foreach (var item in ListSesionSolicitudVotos)
+            {
+                item.SesionParticipante.SesionSolicitudVoto = null;
+            }
+
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
             {
+            
                 SesionComiteSolicitud.SesionSolicitudVoto = ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId).ToList();
             }
 
