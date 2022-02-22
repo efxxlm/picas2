@@ -70,6 +70,24 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
     };
   }
 
+  paginadorTabla() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.paginator._intl.nextPageLabel = 'Siguiente';
+    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+      if (length === 0 || pageSize === 0) {
+        return '0 de ' + length;
+      }
+      length = Math.max(length, 0);
+      const startIndex = page * pageSize;
+      // If the start index exceeds the list length, do not try and fix the end index to the end.
+      const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+      return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+    };
+    this.paginator._intl.previousPageLabel = 'Anterior';
+  }
+
   openDialogValidacionSolicitudes(elemento: SesionComiteTema) {
 
     let sesionComiteTema: SesionComiteTema = {
@@ -140,7 +158,7 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
   }
 
   validarResgistros( listaSesionComiteTema: SesionComiteTema[] ){
-    listaSesionComiteTema.forEach( ct => {      
+    listaSesionComiteTema.forEach( ct => {
 
       if ( ct.requiereVotacion == true && ct.sesionTemaVoto.length == 0 ) { ct.completo = false }
       else ct.completo = true;
@@ -149,7 +167,7 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
         if ( tv.esAprobado != true && tv.esAprobado != false ){
           ct.completo = false;
           return
-        } 
+        }
         else ct.completo = true;
       })
     })
@@ -163,6 +181,7 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
     this.validarResgistros( lista )
 
     this.dataSource = new MatTableDataSource(lista);
+    this.paginadorTabla();
 
   }
 
