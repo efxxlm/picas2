@@ -371,6 +371,13 @@ namespace asivamosffie.services
             List<Dominio> listaDominioTipoSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal).ToList();
             List<Dominio> listaDominioTipoEspecial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_DDP_Espacial).ToList();
 
+            List<DisponibilidadPresupuestalProyecto> ListDisponibilidadPresupuestalProyecto = _context.DisponibilidadPresupuestalProyecto.Where(r => r.Eliminado != true).ToList();
+            List<VDisponibilidadPresupuestal> ListVDisponibilidadPresupuestal = _context.VDisponibilidadPresupuestal.ToList();
+            List<NovedadContractualRegistroPresupuestal> ListNovedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal.Where(r => r.Eliminado != true)
+                                                                                                                                                     .Include(r=> r.NovedadContractual) 
+                                                                                                                                                     .ToList();
+
+            List<DisponibilidadPresupuestal> ListaDisponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r => r.Eliminado != true).ToList(); 
             try
             {
                 foreach (var ddp in ListDisponibilidadPresupuestal)
@@ -379,7 +386,7 @@ namespace asivamosffie.services
                     VDisponibilidadPresupuestal DisponibilidadPresupuestal = ddp;
                     if ((pCodigoEstadoSolicitud == "8" || pCodigoEstadoSolicitud == "5") && DisponibilidadPresupuestal.TieneHistorico == true)
                     {
-                        VDisponibilidadPresupuestal ddpchange = _context.VDisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && r.EstadoSolicitudCodigo == "10" && r.EsNovedad == ddp.EsNovedad).FirstOrDefault();
+                        VDisponibilidadPresupuestal ddpchange = ListVDisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && r.EstadoSolicitudCodigo == "10" && r.EsNovedad == ddp.EsNovedad).FirstOrDefault();
                         if (ddpchange != null)
                         {
                             DisponibilidadPresupuestal = ddpchange;
@@ -389,14 +396,14 @@ namespace asivamosffie.services
 
                     if (pCodigoEstadoSolicitud == "10" && DisponibilidadPresupuestal.TieneHistorico == true)
                     {
-                        VDisponibilidadPresupuestal ddpchange = _context.VDisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && (r.EstadoSolicitudCodigo == "5" || r.EstadoSolicitudCodigo == "8") && r.EsNovedad == ddp.EsNovedad).FirstOrDefault();
+                        VDisponibilidadPresupuestal ddpchange = ListVDisponibilidadPresupuestal.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && (r.EstadoSolicitudCodigo == "5" || r.EstadoSolicitudCodigo == "8") && r.EsNovedad == ddp.EsNovedad).FirstOrDefault();
                         if (ddpchange != null)
                             DisponibilidadPresupuestal = ddpchange;
 
                     }
 
                     List<DisponibilidadPresupuestalProyecto> disponibilidadPresupuestalProyecto = new List<DisponibilidadPresupuestalProyecto>();
-                    NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal.Where(r => r.NovedadContractualRegistroPresupuestalId == DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId).Include(r => r.NovedadContractual).FirstOrDefault();
+                    NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = ListNovedadContractualRegistroPresupuestal.Where(r => r.NovedadContractualRegistroPresupuestalId == DisponibilidadPresupuestal.NovedadContractualRegistroPresupuestalId).FirstOrDefault();
 
                     if (DisponibilidadPresupuestal?.EsNovedad == true)
                     {
@@ -404,20 +411,20 @@ namespace asivamosffie.services
                         {
                             if (novedadContractualRegistroPresupuestal?.NovedadContractual.EsAplicadaAcontrato != true)
                             {
-                                disponibilidadPresupuestalProyecto = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && r.ProyectoId == novedadContractualRegistroPresupuestal.NovedadContractual.ProyectoId).ToList();
+                                disponibilidadPresupuestalProyecto = ListDisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && r.ProyectoId == novedadContractualRegistroPresupuestal.NovedadContractual.ProyectoId).ToList();
                             }
                             else
                             {
-                                disponibilidadPresupuestalProyecto = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).ToList();
+                                disponibilidadPresupuestalProyecto = ListDisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).ToList();
                             }
                         }
                     }
                     else
                     {
-                        disponibilidadPresupuestalProyecto = _context.DisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).ToList();
+                        disponibilidadPresupuestalProyecto = ListDisponibilidadPresupuestalProyecto.Where(r => r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).ToList();
                     }
-                    string strEstadoRegistro = "";
-                    string strTipoSolicitud = "";
+                    string strEstadoRegistro = String.Empty;
+                    string strTipoSolicitud = String.Empty;
                     if (!string.IsNullOrEmpty(DisponibilidadPresupuestal.EstadoSolicitudCodigo))
                         strEstadoRegistro = listaDominioEstadoSolicitud.Where(r => r.Codigo == DisponibilidadPresupuestal.EstadoSolicitudCodigo)?.FirstOrDefault()?.Nombre;
 
@@ -464,17 +471,18 @@ namespace asivamosffie.services
                             //var fuentes = _context.FuenteFinanciacion.Where(x => aportantes.Contains(x.AportanteId)).Count();
                             if (DisponibilidadPresupuestal.EsNovedad != true)
                             {
-                                DisponibilidadPresupuestal ddpTmp = _context.DisponibilidadPresupuestal.Find(DisponibilidadPresupuestal.DisponibilidadPresupuestalId);
+                                DisponibilidadPresupuestal ddpTmp = ListaDisponibilidadPresupuestal.Where(r=> r.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).FirstOrDefault();
+                                
                                 decimal totalSolicitado = 0;
                                 if (DisponibilidadPresupuestal.TieneHistorico == true || DisponibilidadPresupuestal.EstadoSolicitudCodigo == "8")
                                 {
-                                    totalSolicitado = _context.GestionFuenteFinanciacion
+                                    totalSolicitado = ListGestionFuenteFinanciacion
                                      .Where(x => x.DisponibilidadPresupuestalProyectoId != null &&
                                             ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId) && x.Eliminado != true && x.EsNovedad != true).Sum(r => r.ValorSolicitadoGenerado ?? 0);
                                 }
                                 else
                                 {
-                                    totalSolicitado = _context.GestionFuenteFinanciacion
+                                    totalSolicitado = ListGestionFuenteFinanciacion
                                      .Where(x => x.DisponibilidadPresupuestalProyectoId != null &&
                                             ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId) && x.Eliminado != true && x.EsNovedad != true).Sum(r => r.ValorSolicitado);
 
@@ -572,7 +580,7 @@ namespace asivamosffie.services
                                                                                     await _context.NovedadContractualRegistroPresupuestal
                                                                                                         .Where(x => x.Eliminado != true &&
                                                                                                                (x.EstadoSolicitudCodigo.Equals(pCodigoEstadoSolicitud) || x.EstadoSolicitudCodigo.Equals(codigocondvalidacionpre.ToString())
-                                                                                                                || x.EstadoSolicitudCodigo.Equals(codigocancelada.ToString()) || (x.EstadoSolicitudCodigo.Equals(codigocanceladaDdp.ToString()) && !string.IsNullOrEmpty(x.NumeroDrp)) ))
+                                                                                                                || x.EstadoSolicitudCodigo.Equals(codigocancelada.ToString()) || (x.EstadoSolicitudCodigo.Equals(codigocanceladaDdp.ToString()) && !string.IsNullOrEmpty(x.NumeroDrp))))
                                                                                                         .Include(x => x.DisponibilidadPresupuestal)
                                                                                                             .ThenInclude(x => x.DisponibilidadPresupuestalProyecto)
                                                                                                         .Include(x => x.DisponibilidadPresupuestal)
@@ -1058,7 +1066,7 @@ namespace asivamosffie.services
 
                 pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;
                 pDisponibilidadPresObservacion.EstadoSolicitudCodigo = estado.ToString();
-                if(pDisponibilidadPresObservacion.EsNovedad != true)
+                if (pDisponibilidadPresObservacion.EsNovedad != true)
                 {
                     pDisponibilidadPresObservacion.NovedadContractualRegistroPresupuestalId = null;
                     pDisponibilidadPresObservacion.EsNovedad = false;
@@ -1687,7 +1695,7 @@ namespace asivamosffie.services
                                     .Replace("[VALOR_APORTANTE]", "$ " + String.Format("{0:n0}", aportante.ValorAportanteAlProyecto != null ? aportante.ValorAportanteAlProyecto : 0))
                                     .Replace("[FUENTE]", fuente.Fuente)
                                     .Replace("[SALDO_FUENTE]", "$ " + String.Format("{0:n0}", fuente.Saldo_actual_de_la_fuente > 0 ? fuente.Saldo_actual_de_la_fuente : 0))
-                                    .Replace("[VALOR_FUENTE]", "$ " + String.Format("{0:n0}", fuente.Valor_solicitado_de_la_fuente ))
+                                    .Replace("[VALOR_FUENTE]", "$ " + String.Format("{0:n0}", fuente.Valor_solicitado_de_la_fuente))
                                     .Replace("[NUEVO_SALDO_FUENTE]", "$ " + String.Format("{0:n0}", fuente.Nuevo_saldo_de_la_fuente > 0 ? fuente.Nuevo_saldo_de_la_fuente : 0));
                                 tablafuentes += tr;
                             }
@@ -1716,7 +1724,7 @@ namespace asivamosffie.services
                                 }
                             }
                         }
-                    } 
+                    }
                 }
 
                 //usos      

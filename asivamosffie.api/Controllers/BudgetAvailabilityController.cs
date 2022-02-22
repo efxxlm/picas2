@@ -55,6 +55,7 @@ namespace asivamosffie.api.Controllers
         /*autor: jflorez
             descripción: objeto para entregar a front los datos ordenados de disponibilidades
             impacto: CU 3.3.3*/
+        [AllowAnonymous]
         [Route("GetListGenerarDisponibilidadPresupuestal")]
         [HttpGet]
         public async Task<List<EstadosDisponibilidad>> GetListGenerarDisponibilidadPresupuestal([FromQuery] bool showRechazado)
