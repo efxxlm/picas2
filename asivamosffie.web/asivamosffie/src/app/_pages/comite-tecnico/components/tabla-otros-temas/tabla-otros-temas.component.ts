@@ -12,7 +12,7 @@ import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 })
 export class TablaOtrosTemasComponent implements OnInit {
 
-  @Input() objetoComiteTecnico: ComiteTecnico 
+  @Input() objetoComiteTecnico: ComiteTecnico
 
   displayedColumns: string[] = ['nombreResponsable', 'tiempoIntervencion', 'tema', 'id'];
   dataSource = new MatTableDataSource();
@@ -26,6 +26,24 @@ export class TablaOtrosTemasComponent implements OnInit {
   }
 
   constructor(@Inject(DOCUMENT) readonly document: Document) { }
+
+  paginadorTabla() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.paginator._intl.nextPageLabel = 'Siguiente';
+    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+      if (length === 0 || pageSize === 0) {
+        return '0 de ' + length;
+      }
+      length = Math.max(length, 0);
+      const startIndex = page * pageSize;
+      // If the start index exceeds the list length, do not try and fix the end index to the end.
+      const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+      return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+    };
+    this.paginator._intl.previousPageLabel = 'Anterior';
+  }
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
@@ -55,7 +73,7 @@ export class TablaOtrosTemasComponent implements OnInit {
     let lista = this.objetoComiteTecnico.sesionComiteTema.filter( t => !t.esProposicionesVarios )
 
     this.dataSource = new MatTableDataSource( lista );
-    
+    this.paginadorTabla();
   }
 
 
