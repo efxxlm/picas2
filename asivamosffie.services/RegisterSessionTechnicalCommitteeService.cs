@@ -1579,7 +1579,7 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoSesionComiteSolicitud(SesionComiteSolicitud sesionComiteSolicitud, List<SesionSolicitudCompromiso> listaCompromisos = null)
         {
-            bool completo = true;
+
             if (
                (sesionComiteSolicitud.RequiereVotacion == true && string.IsNullOrEmpty(sesionComiteSolicitud.RutaSoporteVotacion)) ||
                sesionComiteSolicitud.GeneraCompromiso == null ||
@@ -1588,38 +1588,30 @@ namespace asivamosffie.services
                string.IsNullOrEmpty(sesionComiteSolicitud.Observaciones) ||
                string.IsNullOrEmpty(sesionComiteSolicitud.DesarrolloSolicitud) ||
                (sesionComiteSolicitud.GeneraCompromiso == true && sesionComiteSolicitud.CantCompromisos == null)
-                )
-            {
-                completo = false;
-            }
-
+                ) 
+                return false;
+          
             // vienen con el registro
-            sesionComiteSolicitud.SesionSolicitudCompromiso.Where(x => x.Eliminado != true).ToList().ForEach(c =>
-           {
-               if (
-                     string.IsNullOrEmpty(c.Tarea) ||
-                     c.ResponsableSesionParticipanteId == null ||
-                     c.FechaCumplimiento == null
-               )
-               {
-                   completo = false;
-               }
-
-           });
-
-            // lista aparte
-            listaCompromisos?.Where(x => x.Eliminado != true).ToList().ForEach(c =>
+            foreach (var c in sesionComiteSolicitud.SesionSolicitudCompromiso.Where(x => x.Eliminado != true).ToList())
             {
                 if (
                       string.IsNullOrEmpty(c.Tarea) ||
                       c.ResponsableSesionParticipanteId == null ||
                       c.FechaCumplimiento == null
-                )
-                {
-                    completo = false;
-                }
+                   ) 
+                    return false;  
+            }
 
-            });
+            // lista aparte
+            foreach (var c in listaCompromisos?.Where(x => x.Eliminado != true).ToList())
+            {
+                if (
+                      string.IsNullOrEmpty(c.Tarea) ||
+                      c.ResponsableSesionParticipanteId == null ||
+                      c.FechaCumplimiento == null
+                ) 
+                    return false; 
+            }
 
             if (sesionComiteSolicitud.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
             {
@@ -1633,28 +1625,27 @@ namespace asivamosffie.services
                     contratacion = sesionComiteSolicitud.Contratacion;
                 }
 
-                contratacion.ContratacionProyecto.ToList().ForEach(cp =>
-               {
-                   if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
-                       if (
-                               cp.Proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.AprobadoComiteTecnico &&
-                               cp.Proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.DevueltoComiteTecnico &&
-                               cp.Proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.RechazadoComiteTecnico
-                          )
-                           completo = false;
+                foreach (var cp in contratacion.ContratacionProyecto)
+                {
+                    if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                        if (
+                                cp.Proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.AprobadoComiteTecnico &&
+                                cp.Proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.DevueltoComiteTecnico &&
+                                cp.Proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.RechazadoComiteTecnico
+                           )
+                            return false;
 
-                   if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
-                       if (
-                               cp.Proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.AprobadoComiteTecnico &&
-                               cp.Proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.DevueltoComiteTecnico &&
-                               cp.Proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.RechazadoComiteTecnico
-                          )
-                           completo = false;
-               });
+                    if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                        if (
+                                cp.Proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.AprobadoComiteTecnico &&
+                                cp.Proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.DevueltoComiteTecnico &&
+                                cp.Proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.RechazadoComiteTecnico
+                           )
+                            return false;
+                };
 
-            }
-
-            return completo;
+            } 
+            return true;
         }
 
         private bool? ValidarRegistroCompletoSesionComiteTemaActa(SesionComiteTema pSesionComiteTema)
@@ -1762,7 +1753,8 @@ namespace asivamosffie.services
                 return new ComiteTecnico();
             }
 
-            List<Dominio> listaResponsables = _context.Dominio.Where(r => r.TipoDominioId == 46).ToList();
+            List<Dominio> listaResponsables = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico)
+                                                              .ToList();
 
             #region query
 
@@ -1794,7 +1786,7 @@ namespace asivamosffie.services
             List<SesionTemaVoto> ListSesionTemaVoto = _context.SesionTemaVoto.ToList();
 
             foreach (var ct in comiteTecnico.SesionComiteTema)
-            { 
+            {
                 ct.NombreResponsable = listaResponsables.Where(lr => lr.Codigo == ct.ResponsableCodigo).FirstOrDefault().Nombre ?? String.Empty;
 
                 ct.TemaCompromiso = ct.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
@@ -1847,10 +1839,10 @@ namespace asivamosffie.services
 
             #region voto
 
-            List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado) 
+            List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado)
                                                                                              .ToList();
 
-           
+
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
             {
                 //foreach (var item in ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId))
