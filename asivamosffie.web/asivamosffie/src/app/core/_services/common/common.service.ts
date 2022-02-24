@@ -569,6 +569,33 @@ export class CommonService {
     return this.http.get<Version>(`${environment.apiUrl}/Common/GetVersion`);
   }
 
+  plazoDespuesModificacion(plazoAdicionalDias:any, plazoAdicionalMeses:any,plazoMeses:any,plazoDias:any){
+    if(
+      plazoAdicionalDias != null && plazoAdicionalDias != undefined &&
+      plazoAdicionalMeses != null && plazoAdicionalMeses != undefined &&
+      plazoMeses != null && plazoMeses != undefined &&
+      plazoDias != null && plazoDias != undefined
+      ){
+        let days = plazoDias;
+        let months = plazoMeses + plazoAdicionalMeses;
+        let totalDiasMes = 30;
+
+        for(var i= 0; i< plazoAdicionalDias; i++){
+          if(days+1 <= totalDiasMes){
+            days = days+1;
+          }else{
+            days = 0;
+            months = months+1;
+          }
+        }
+        return {
+          plazoModificacionDias: days,
+          plazoModificacionMeses: months,
+        }
+    }
+    return null;
+  }
+
 
 }
 
@@ -645,3 +672,4 @@ export interface Version {
   front: number,
   versionId: number
 };
+

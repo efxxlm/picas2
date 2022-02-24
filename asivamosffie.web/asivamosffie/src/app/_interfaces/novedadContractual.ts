@@ -110,6 +110,8 @@ export interface NovedadContractualDescripcion{
         novedadContractualDescripcionMotivo?: NovedadContractualDescripcionMotivo[],
         novedadContractualClausula?: NovedadContractualClausula[],
         fechaEstimadaFinalizacion?: Date,
+        plazoModificacionDias?: any,
+        plazoModificacionMeses?: any,
 
 
 }

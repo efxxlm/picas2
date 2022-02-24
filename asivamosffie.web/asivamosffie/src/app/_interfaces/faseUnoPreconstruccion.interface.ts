@@ -149,6 +149,7 @@ interface Contratacion {
   contratacionProyecto: ContratacionProyecto2[];
   contrato: any[];
   disponibilidadPresupuestal: any[];
+  plazoContratacion?: any
 }
 
 export interface ContratacionProyecto2 {

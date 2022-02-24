@@ -184,6 +184,13 @@ export class FormLiquidacionComponent implements OnInit {
             }
             if(element.tipoNovedadCodigo === this.tipoNovedad.adicion)
              dataNovedad.adicionBoolean = true;
+            if(element.tipoNovedadCodigo === this.tipoNovedad.prorroga){
+              let plazoRes = this.commonSvc.plazoDespuesModificacion(element?.plazoAdicionalDias, element?.plazoAdicionalMeses, dataNovedad.contrato.contratacion?.plazoContratacion?.plazoMeses, dataNovedad.contrato.contratacion?.plazoContratacion?.plazoDias);
+              if(plazoRes != null){
+                element.plazoModificacionDias =  plazoRes.plazoModificacionDias;
+                element.plazoModificacionMeses = plazoRes.plazoModificacionMeses;
+              }
+            }
         });
         });
       }

@@ -7,6 +7,7 @@ import { DisponibilidadPresupuestalService } from 'src/app/core/_services/dispon
 import { ProcesosContractualesService } from 'src/app/core/_services/procesosContractuales/procesos-contractuales.service';
 import { TipoNovedadCodigo } from 'src/app/_interfaces/estados-novedad.interface';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
+import * as moment from 'moment';
 
 
 @Component({
@@ -78,7 +79,17 @@ export class FormModificacionContractualComponent implements OnInit {
             }
             if(element.tipoNovedadCodigo === this.tipoNovedad.adicion)
               this.adicionBoolean = true;
+            if(element.tipoNovedadCodigo === this.tipoNovedad.prorroga){
+              let plazoRes = this.commonSvc.plazoDespuesModificacion(element?.plazoAdicionalDias, element?.plazoAdicionalMeses, this.dataNovedad?.contrato?.contratacion?.plazoContratacion?.plazoMeses, this.dataNovedad?.contrato?.contratacion?.plazoContratacion?.plazoDias);
+              if(plazoRes != null){
+                element.plazoModificacionDias =  plazoRes.plazoModificacionDias;
+                element.plazoModificacionMeses = plazoRes.plazoModificacionMeses;
+              }
+            }
         });
+
+
+
         this.novedadContractualRegistroPresupuestalId = this.dataNovedad?.novedadContractualRegistroPresupuestal[0]?.novedadContractualRegistroPresupuestalId;
         this.commonSvc.modalidadesContrato()
         .subscribe( modalidadContrato => {

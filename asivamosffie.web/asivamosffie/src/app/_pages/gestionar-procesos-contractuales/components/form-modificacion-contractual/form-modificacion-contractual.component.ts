@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TiposAportante } from 'src/app/core/_services/common/common.service';
+import { CommonService, TiposAportante } from 'src/app/core/_services/common/common.service';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { TipoNovedadCodigo } from 'src/app/_interfaces/estados-novedad.interface';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
@@ -52,7 +52,9 @@ export class FormModificacionContractualComponent implements OnInit {
                 private routes: Router,
                 private procesosContractualesSvc: ProcesosContractualesService,
                 private disponibilidadServices:DisponibilidadPresupuestalService,
-                private activatedRoute: ActivatedRoute ) {
+                private activatedRoute: ActivatedRoute,
+                private commonSvc: CommonService
+                ) {
     this.getNovedadById( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
     //this.getMotivo();
@@ -78,6 +80,13 @@ export class FormModificacionContractualComponent implements OnInit {
             }
             if(element.tipoNovedadCodigo === this.tipoNovedad.adicion)
               this.adicionBoolean = true;
+            if(element.tipoNovedadCodigo === this.tipoNovedad.prorroga){
+              let plazoRes = this.commonSvc.plazoDespuesModificacion(element?.plazoAdicionalDias, element?.plazoAdicionalMeses, this.dataNovedad?.contrato?.contratacion?.plazoContratacion?.plazoMeses, this.dataNovedad?.contrato?.contratacion?.plazoContratacion?.plazoDias);
+              if(plazoRes != null){
+                element.plazoModificacionDias =  plazoRes.plazoModificacionDias;
+                element.plazoModificacionMeses = plazoRes.plazoModificacionMeses;
+              }
+            }
         });
         let rutaDocumento;
         if ( novedadContractual.urlSoporteGestionar !== undefined ) {
