@@ -115,7 +115,7 @@
                     color="accent"
                     class="btn-dialog"
                     type="submit"
-                    [disabled]="addressForm.dirty === false">
+                    [disabled]="!addressForm.valid">
                     Enviar para trámite en financiera
             </button>
         </div>
