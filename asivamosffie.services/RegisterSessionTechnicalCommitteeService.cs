@@ -1805,7 +1805,21 @@ namespace asivamosffie.services
             {
                 SesionComiteSolicitud.RegistroCompletoActa = ValidarRegistroCompletoSesionComiteSolicitudActa(SesionComiteSolicitud);
 
-                SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
+                //SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
+                List<SesionSolicitudVoto> listTmp = new List<SesionSolicitudVoto>();
+
+                foreach (SesionSolicitudVoto scv in SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList())
+                {
+                    if(listaParticipantes.Where(r => r.SesionParticipanteId == scv.SesionParticipanteId).FirstOrDefault() != null)
+                    {
+                        if (listaParticipantes.Where(r => r.SesionParticipanteId == scv.SesionParticipanteId).FirstOrDefault().Eliminado != true)
+                            listTmp.Add(scv);
+                    }
+                }
+
+                SesionComiteSolicitud.SesionSolicitudVoto = listTmp;
+
+
                 SesionComiteSolicitud.SesionSolicitudCompromiso = SesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado).ToList();
 
 
@@ -1839,31 +1853,31 @@ namespace asivamosffie.services
 
             #region voto
 
-            List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado)
-                                                                                             .ToList();
-
-
-            foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
-            {
-                //foreach (var item in ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId))
-                //{ 
-                //    SesionParticipante sesionParticipante = _context.SesionParticipante.Find(item.SesionParticipanteId);
-
-                //    SesionParticipante sesionParticipanteMapped = new SesionParticipante
-                //    {
-                //        SesionParticipanteId =   sesionParticipante.SesionParticipanteId
-                //    };
-
-
-                //    item.SesionParticipante = sesionParticipanteMapped;
-                //    item.SesionParticipante.SesionSolicitudVoto = null;
-                //    item.SesionParticipante.ComiteTecnico = null;
-                //}
-
-                SesionComiteSolicitud.SesionSolicitudVoto = ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId)
-                                                                                    .ToList();
-            }
-
+            //List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado) 
+            //                                                                                 .ToList();
+            //
+            //
+            //foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
+            //{
+            //    //foreach (var item in ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId))
+            //    //{ 
+            //    //    SesionParticipante sesionParticipante = _context.SesionParticipante.Find(item.SesionParticipanteId);
+            //
+            //    //    SesionParticipante sesionParticipanteMapped = new SesionParticipante
+            //    //    {
+            //    //        SesionParticipanteId =   sesionParticipante.SesionParticipanteId
+            //    //    };
+            //
+            //
+            //    //    item.SesionParticipante = sesionParticipanteMapped;
+            //    //    item.SesionParticipante.SesionSolicitudVoto = null;
+            //    //    item.SesionParticipante.ComiteTecnico = null;
+            //    //}
+            //
+            //    SesionComiteSolicitud.SesionSolicitudVoto = ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId)
+            //                                                                        .ToList();
+            //}
+            //
             #endregion voto
 
             #region filtroProcesoSeleccion
