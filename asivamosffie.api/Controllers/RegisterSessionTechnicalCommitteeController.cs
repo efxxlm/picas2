@@ -455,7 +455,7 @@ namespace asivamosffie.api.Controllers
         {
             return await _registerSessionTechnicalCommitteeService.GetCompromisosByComiteTecnicoId(ComiteTecnicoId, pEsFiduciario);
         }
-
+        [AllowAnonymous]
         [Route("GetComiteTecnicoByComiteTecnicoId")]
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
         {

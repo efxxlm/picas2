@@ -94,9 +94,9 @@ namespace asivamosffie.services
                                     FechaModificacion = DateTime.Now,
                                     EsAprobado = sesionSolicitudVoto.EsAprobado,
                                     Observacion = sesionSolicitudVoto.Observacion
-                                }); 
+                                });
                     }
-                } 
+                }
                 foreach (var SesionSolicitudObservacionProyecto in pSesionComiteSolicitud.SesionSolicitudObservacionProyecto)
                 {
                     if (SesionSolicitudObservacionProyecto.SesionSolicitudObservacionProyectoId == 0)
@@ -113,7 +113,7 @@ namespace asivamosffie.services
                         //SesionSolicitudObservacionProyectoOld.Observacion = SesionSolicitudObservacionProyecto.Observacion;
                         //SesionSolicitudObservacionProyectoOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
                         //SesionSolicitudObservacionProyectoOld.FechaModificacion = DateTime.Now;
- 
+
                         _context.Set<SesionSolicitudObservacionProyecto>()
                                 .Where(s => s.SesionSolicitudObservacionProyectoId == SesionSolicitudObservacionProyecto.SesionSolicitudObservacionProyectoId)
                                 .Update(s => new SesionSolicitudObservacionProyecto
@@ -144,7 +144,7 @@ namespace asivamosffie.services
 
                         _context.Set<SesionSolicitudObservacionActualizacionCronograma>()
                                 .Where(s => s.SesionSolicitudObservacionActualizacionCronogramaId == observacionActualizacionCronograma.SesionSolicitudObservacionActualizacionCronogramaId)
-                                .Update(s => new SesionSolicitudObservacionActualizacionCronograma 
+                                .Update(s => new SesionSolicitudObservacionActualizacionCronograma
                                 {
                                     Observacion = observacionActualizacionCronograma.Observacion,
                                     UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion,
@@ -156,7 +156,7 @@ namespace asivamosffie.services
                 return
                 new Respuesta
                 {
-                 //   Data = await GetComiteTecnicoByComiteTecnicoId((int)pSesionComiteSolicitud.ComiteTecnicoId),
+                    //   Data = await GetComiteTecnicoByComiteTecnicoId((int)pSesionComiteSolicitud.ComiteTecnicoId),
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
@@ -295,8 +295,6 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoSesionComiteTema(SesionComiteTema sesionComiteTemaOld, List<TemaCompromiso> listaCompromisos = null)
         {
-            bool esCompleto = true;
-
             if (
                    string.IsNullOrEmpty(sesionComiteTemaOld.Tema)
                 || string.IsNullOrEmpty(sesionComiteTemaOld.ResponsableCodigo)
@@ -311,34 +309,28 @@ namespace asivamosffie.services
                 || sesionComiteTemaOld.EstadoTemaCodigo == null
                 || (sesionComiteTemaOld.GeneraCompromiso == true && sesionComiteTemaOld.CantCompromisos == null)
                 )
-                esCompleto = false;
+                return false;
 
-
-            sesionComiteTemaOld.TemaCompromiso.Where(x => x.Eliminado != true).ToList().ForEach(compromiso =>
-          {
-              if (
-                    string.IsNullOrEmpty(compromiso.Tarea) ||
-                    compromiso.Responsable == null ||
-                    compromiso.FechaCumplimiento == null
-              )
-              {
-                  esCompleto = false;
-              }
-          });
-
-            listaCompromisos?.Where(x => x.Eliminado != true).ToList().ForEach(compromiso =>
+            foreach (var compromiso in sesionComiteTemaOld.TemaCompromiso.Where(x => x.Eliminado != true).ToList())
             {
                 if (
                       string.IsNullOrEmpty(compromiso.Tarea) ||
                       compromiso.Responsable == null ||
                       compromiso.FechaCumplimiento == null
-                )
-                {
-                    esCompleto = false;
-                }
-            });
+                    )
+                    return false;
+            }
+            foreach (var compromiso in listaCompromisos?.Where(x => x.Eliminado != true).ToList())
+            {
+                if (
+                      string.IsNullOrEmpty(compromiso.Tarea) ||
+                      compromiso.Responsable == null ||
+                      compromiso.FechaCumplimiento == null
+                   )
+                    return false;
+            }
 
-            return esCompleto;
+            return true;
 
         }
 
@@ -1781,7 +1773,7 @@ namespace asivamosffie.services
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                         .ThenInclude(r => r.SesionSolicitudVoto)
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                        .ThenInclude(r => r.SesionSolicitudCompromiso) 
+                        .ThenInclude(r => r.SesionSolicitudCompromiso)
                     .Include(r => r.SesionComiteTema)
                        .ThenInclude(r => r.TemaCompromiso)
                  .FirstOrDefaultAsync();
@@ -1799,21 +1791,19 @@ namespace asivamosffie.services
             #endregion query
 
             #region tema
+            List<SesionTemaVoto> ListSesionTemaVoto = _context.SesionTemaVoto.ToList();
 
-            comiteTecnico.SesionComiteTema.ToList().ForEach(ct =>
-            {
-                Dominio responsable = listaResponsables.Find(lr => lr.Codigo == ct.ResponsableCodigo);
-
-                if (responsable != null)
-                    ct.NombreResponsable = responsable.Nombre;
+            foreach (var ct in comiteTecnico.SesionComiteTema)
+            { 
+                ct.NombreResponsable = listaResponsables.Where(lr => lr.Codigo == ct.ResponsableCodigo).FirstOrDefault().Nombre ?? String.Empty;
 
                 ct.TemaCompromiso = ct.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
 
                 ct.RegistroCompletoActa = ValidarRegistroCompletoSesionComiteTemaActa(ct);
 
-                ct.SesionTemaVoto = _context.SesionTemaVoto.Where(r => r.SesionTemaId == ct.SesionTemaId && r.Eliminado != true).ToList();
+                ct.SesionTemaVoto = ListSesionTemaVoto.Where(r => r.SesionTemaId == ct.SesionTemaId && r.Eliminado != true).ToList();
 
-            });
+            }
 
             #endregion tema
 
@@ -1826,57 +1816,71 @@ namespace asivamosffie.services
                 SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
                 SesionComiteSolicitud.SesionSolicitudCompromiso = SesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado).ToList();
 
-                SesionComiteSolicitud.SesionSolicitudCompromiso.ToList().ForEach(ssc =>
-               {
 
-                   SesionParticipante participante = new SesionParticipante();
-                   participante.Usuario = new Usuario();
+                foreach (var ssc in SesionComiteSolicitud.SesionSolicitudCompromiso)
+                {
+                    VSesionParticipante vSesionParticipante = listaParticipantes.Where(r => r.SesionParticipanteId == ssc.ResponsableSesionParticipanteId).FirstOrDefault();
 
-                   VSesionParticipante vSesionParticipante = listaParticipantes.Where(r => r.SesionParticipanteId == ssc.ResponsableSesionParticipanteId).FirstOrDefault();
-
-                   if (vSesionParticipante != null)
-                   {
-                       participante.SesionParticipanteId = vSesionParticipante.SesionParticipanteId;
-                       participante.ComiteTecnicoId = vSesionParticipante.ComiteTecnicoId;
-                       participante.UsuarioId = vSesionParticipante.UsuarioId;
-                       participante.Eliminado = vSesionParticipante.Eliminado;
-
-                       participante.Usuario.UsuarioId = vSesionParticipante.UsuarioId;
-                       participante.Usuario.PrimerNombre = vSesionParticipante.Nombres;
-                       participante.Usuario.PrimerApellido = vSesionParticipante.Apellidos;
-                       participante.Usuario.NumeroIdentificacion = vSesionParticipante.NumeroIdentificacion;
-
-                       ssc.ResponsableSesionParticipante = participante;
-                   }
-               });
+                    if (vSesionParticipante != null)
+                    {
+                        Usuario User = new Usuario
+                        {
+                            UsuarioId = vSesionParticipante.UsuarioId,
+                            PrimerNombre = vSesionParticipante.Nombres,
+                            PrimerApellido = vSesionParticipante.Apellidos,
+                            NumeroIdentificacion = vSesionParticipante.NumeroIdentificacion
+                        };
+                        SesionParticipante participante = new SesionParticipante
+                        {
+                            Usuario = User,
+                            SesionParticipanteId = vSesionParticipante.SesionParticipanteId,
+                            ComiteTecnicoId = vSesionParticipante.ComiteTecnicoId,
+                            UsuarioId = vSesionParticipante.UsuarioId,
+                            Eliminado = vSesionParticipante.Eliminado
+                        };
+                        ssc.ResponsableSesionParticipante = participante;
+                    }
+                }
             }
 
             #endregion participantes
 
             #region voto
 
-            List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).Include(r => r.SesionParticipante).ToList();
+            List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado) 
+                                                                                             .ToList();
 
-            foreach (var item in ListSesionSolicitudVotos)
-            {
-                item.SesionParticipante.SesionSolicitudVoto = null;
-            }
-
+           
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
             {
-            
-                SesionComiteSolicitud.SesionSolicitudVoto = ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId).ToList();
+                //foreach (var item in ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId))
+                //{ 
+                //    SesionParticipante sesionParticipante = _context.SesionParticipante.Find(item.SesionParticipanteId);
+
+                //    SesionParticipante sesionParticipanteMapped = new SesionParticipante
+                //    {
+                //        SesionParticipanteId =   sesionParticipante.SesionParticipanteId
+                //    };
+
+
+                //    item.SesionParticipante = sesionParticipanteMapped;
+                //    item.SesionParticipante.SesionSolicitudVoto = null;
+                //    item.SesionParticipante.ComiteTecnico = null;
+                //}
+
+                SesionComiteSolicitud.SesionSolicitudVoto = ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId)
+                                                                                    .ToList();
             }
 
             #endregion voto
 
             #region filtroProcesoSeleccion
 
-            List<Dominio> TipoComiteSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
+            List<Dominio> TipoComiteSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud)
+                                                                .ToList();
 
-            List<ProcesoSeleccion> ListProcesoSeleccion =
-                _context.ProcesoSeleccion
-                .Where(r => !(bool)r.Eliminado).ToList();
+            List<ProcesoSeleccion> ListProcesoSeleccion = _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado)
+                                                                                   .ToList();
 
             #endregion filtroProcesoSeleccion
 
@@ -1897,6 +1901,8 @@ namespace asivamosffie.services
                         sesionComiteSolicitud.FechaSolicitud = contratacion.FechaCreacion;
 
                         sesionComiteSolicitud.NumeroSolicitud = contratacion.NumeroSolicitud;
+
+                        contratacion.ContratacionProyecto = null;
 
                         sesionComiteSolicitud.Contratacion = contratacion;
 
