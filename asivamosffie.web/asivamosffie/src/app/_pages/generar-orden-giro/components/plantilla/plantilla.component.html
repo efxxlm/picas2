@@ -138,8 +138,8 @@
         <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="8">
           TERCERO DE CAUSACIÓN
         </td>
-        <td colspan="4"></td>
-        <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="5">TERCERO DE GIRO</td>
+        <td colspan="5"></td>
+        <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="6">TERCERO DE GIRO</td>
         <tr>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONSECUTIVO FFIE</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">NOMBRE DE LA CUENTA</td>
@@ -156,7 +156,7 @@
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">TIPO DE PAGO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONCEPTO DE PAGO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">VALOR TOTAL</td>
-          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="3">DESCUENTOS</td>
+          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="4">DESCUENTOS</td>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" rowspan="2">VALOR NETO DEL GIRO</td>
           <td style="border: solid 1px #000" colspan="5">INFORMACIÓN DEL GIRO</td>
         </tr>
@@ -164,6 +164,7 @@
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">RETE GARANTÍA</td>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">DESCUENTO POR RETRASO - ANS</td>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">OTROS DESCUENTOS</td>
+          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">CONCEPTO OTROS DESCUENTOS</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">TIPO DE CUENTA (CTE-AHO) / FONDO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">ENTIDAD / FONDO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">NUMERO DE CUENTA / FONDO</td>
@@ -188,8 +189,10 @@
           <td style="border: solid 1px #000">{{ data.valorConcepto | currency: '':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000">{{ data.descuentoReteFuente | currency: '':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000">{{ data.descuentoAns | currency: '':'symbol-narrow':'.0-0' }}</td>
-          <td style="border: solid 1px #000">{{ data.descuentoOtros | currency: '':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000">{{ data.descuentoOtros | currency: '':'symbol-narrow':'.0-0' }}</td> 
+          <td style="border: solid 1px #000">{{ data.descuentoOtrosNombre}}</td>
           <td style="border: solid 1px #000">{{ data.valorConcepto - data.descuentoReteFuente - data.descuentoAns - data.descuentoOtros | currency: '':'symbol-narrow':'.0-0' }}</td>
+
           <td style="border: solid 1px #000">
             <span *ngIf="data.esCuentaAhorros === true">Ahorros</span>
             <span *ngIf="data.esCuentaAhorros === false">Corriente</span>

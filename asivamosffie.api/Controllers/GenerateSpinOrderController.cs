@@ -23,7 +23,7 @@ namespace asivamosffie.api.Controllers
             _generateSpinOrderService = _GenerateSpinOrderService;
             _settings = settings;
         }
-
+        [AllowAnonymous]
         [Route("GetInfoPlantilla")]
         [HttpGet]
         public async Task<List<VPlantillaOrdenGiro>> GetInfoPlantilla([FromQuery] int pOrdenGiroId)

@@ -30,6 +30,7 @@ namespace asivamosffie.model.Models
         public decimal? DescuentoReteFuente { get; set; }
         public decimal? DescuentoAns { get; set; }
         public decimal? DescuentoOtros { get; set; }
+        public string DescuentoOtrosNombre { get; set; }
         public bool? EsCuentaAhorros { get; set; }
         public string NombreBancoTercero { get; set; }
         public string NumeroCuentaTercero { get; set; }
