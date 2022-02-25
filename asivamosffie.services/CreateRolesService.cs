@@ -123,6 +123,7 @@ namespace asivamosffie.services
                               .Where(p => p.MenuPerfilId == MenuPerfil.MenuPerfilId)
                               .Update(p => new MenuPerfil
                               {
+                                  Activo = MenuPerfil.TienePermisoCrear == true || MenuPerfil.TienePermisoEliminar == true || MenuPerfil.TienePermisoEditar == true || MenuPerfil.TienePermisoLeer == true ? true : false,
                                   TienePermisoCrear = MenuPerfil.TienePermisoCrear,
                                   TienePermisoEliminar = MenuPerfil.TienePermisoEliminar,
                                   TienePermisoEditar = MenuPerfil.TienePermisoEditar,
