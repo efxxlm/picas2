@@ -1766,13 +1766,15 @@ namespace asivamosffie.services
                         .ThenInclude(r => r.SesionSolicitudVoto)
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                         .ThenInclude(r => r.SesionSolicitudCompromiso)
-                    .Include(r => r.SesionComiteTema)
-                       .ThenInclude(r => r.TemaCompromiso)
+                   // .Include(r => r.SesionComiteTema)
+                    //   .ThenInclude(r => r.TemaCompromiso)
                  .FirstOrDefaultAsync();
 
             List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == comiteTecnico.ComiteTecnicoId).ToList();
 
-            comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => r.Eliminado != true).ToList();
+            comiteTecnico.SesionComiteTema = _context.SesionComiteTema.Where(r=> r.ComiteTecnicoId == pComiteTecnicoId &&  r.Eliminado != true)
+                                                                      .Include(r=> r.TemaCompromiso)
+                                                                      .ToList();
 
             comiteTecnico.SesionInvitado = comiteTecnico.SesionInvitado.Where(r => r.Eliminado != true).ToList();
 
