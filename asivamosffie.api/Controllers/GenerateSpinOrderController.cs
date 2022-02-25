@@ -22,7 +22,7 @@ namespace asivamosffie.api.Controllers
         {
             _generateSpinOrderService = _GenerateSpinOrderService;
             _settings = settings;
-        }
+        } 
         [AllowAnonymous]
         [Route("GetInfoPlantilla")]
         [HttpGet]
