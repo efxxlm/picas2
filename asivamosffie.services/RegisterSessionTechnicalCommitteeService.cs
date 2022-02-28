@@ -1588,9 +1588,9 @@ namespace asivamosffie.services
                string.IsNullOrEmpty(sesionComiteSolicitud.Observaciones) ||
                string.IsNullOrEmpty(sesionComiteSolicitud.DesarrolloSolicitud) ||
                (sesionComiteSolicitud.GeneraCompromiso == true && sesionComiteSolicitud.CantCompromisos == null)
-                ) 
+                )
                 return false;
-          
+
             // vienen con el registro
             foreach (var c in sesionComiteSolicitud.SesionSolicitudCompromiso.Where(x => x.Eliminado != true).ToList())
             {
@@ -1598,21 +1598,23 @@ namespace asivamosffie.services
                       string.IsNullOrEmpty(c.Tarea) ||
                       c.ResponsableSesionParticipanteId == null ||
                       c.FechaCumplimiento == null
-                   ) 
-                    return false;  
+                   )
+                    return false;
             }
 
             // lista aparte
-            foreach (var c in listaCompromisos?.Where(x => x.Eliminado != true).ToList())
+            if (listaCompromisos != null)
             {
-                if (
-                      string.IsNullOrEmpty(c.Tarea) ||
-                      c.ResponsableSesionParticipanteId == null ||
-                      c.FechaCumplimiento == null
-                ) 
-                    return false; 
+                foreach (var c in listaCompromisos?.Where(x => x.Eliminado != true).ToList())
+                {
+                    if (
+                          string.IsNullOrEmpty(c.Tarea) ||
+                          c.ResponsableSesionParticipanteId == null ||
+                          c.FechaCumplimiento == null
+                    )
+                        return false;
+                }
             }
-
             if (sesionComiteSolicitud.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
             {
                 Contratacion contratacion = _context.Contratacion
@@ -1644,7 +1646,7 @@ namespace asivamosffie.services
                             return false;
                 };
 
-            } 
+            }
             return true;
         }
 
@@ -1766,14 +1768,14 @@ namespace asivamosffie.services
                         .ThenInclude(r => r.SesionSolicitudVoto)
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                         .ThenInclude(r => r.SesionSolicitudCompromiso)
-                   // .Include(r => r.SesionComiteTema)
-                    //   .ThenInclude(r => r.TemaCompromiso)
+                 // .Include(r => r.SesionComiteTema)
+                 //   .ThenInclude(r => r.TemaCompromiso)
                  .FirstOrDefaultAsync();
 
             List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == comiteTecnico.ComiteTecnicoId).ToList();
 
-            comiteTecnico.SesionComiteTema = _context.SesionComiteTema.Where(r=> r.ComiteTecnicoId == pComiteTecnicoId &&  r.Eliminado != true)
-                                                                      .Include(r=> r.TemaCompromiso)
+            comiteTecnico.SesionComiteTema = _context.SesionComiteTema.Where(r => r.ComiteTecnicoId == pComiteTecnicoId && r.Eliminado != true)
+                                                                      .Include(r => r.TemaCompromiso)
                                                                       .ToList();
 
             comiteTecnico.SesionInvitado = comiteTecnico.SesionInvitado.Where(r => r.Eliminado != true).ToList();
@@ -1812,7 +1814,7 @@ namespace asivamosffie.services
 
                 foreach (SesionSolicitudVoto scv in SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList())
                 {
-                    if(listaParticipantes.Where(r => r.SesionParticipanteId == scv.SesionParticipanteId).FirstOrDefault() != null)
+                    if (listaParticipantes.Where(r => r.SesionParticipanteId == scv.SesionParticipanteId).FirstOrDefault() != null)
                     {
                         if (listaParticipantes.Where(r => r.SesionParticipanteId == scv.SesionParticipanteId).FirstOrDefault().Eliminado != true)
                             listTmp.Add(scv);
