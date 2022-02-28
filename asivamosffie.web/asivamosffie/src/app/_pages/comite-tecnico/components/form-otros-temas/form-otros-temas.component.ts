@@ -9,6 +9,10 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service'
 import { forkJoin } from 'rxjs'
 import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting'
+import Quill from 'quill'
+import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
+Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste);
+
 
 @Component({
   selector: 'app-form-otros-temas',
@@ -50,7 +54,10 @@ export class FormOtrosTemasComponent implements OnInit {
       [{ list: 'ordered' }, { list: 'bullet' }],
       [{ indent: '-1' }, { indent: '+1' }],
       [{ align: [] }]
-    ]
+    ],
+    imageDropAndPaste: {
+      handler: () =>  this.openDialog('', '<b>No es permitido subir una imagen en este campo.</b>')
+    }
   }
 
   get compromisos() {
@@ -245,7 +252,7 @@ export class FormOtrosTemasComponent implements OnInit {
 
     // console.log(tema)
     this.technicalCommitteSessionService.createEditTemasCompromiso(tema).subscribe(respuesta => {
-      
+
       this.validar.emit(respuesta.data)
       this.openDialog('', `<b>${respuesta.message}</b>`)
       if (respuesta.code == '200' && !respuesta.data)
