@@ -66,16 +66,16 @@ namespace asivamosffie.services
                         ProyectoId = pProyecto.ProyectoId,
                         Departamento = departamento.Descripcion,
                         Municipio = municipio.Descripcion,
-                        InstitucionEducativa = ListInstitucionEducativaSedes.Where(ie => ie.InstitucionEducativaSedeId == pProyecto.InstitucionEducativaId).FirstOrDefault().Nombre,
-                        Sede = ListInstitucionEducativaSedes.Where(ie => ie.InstitucionEducativaSedeId == pProyecto.SedeId).FirstOrDefault().Nombre,
-                        EstadoJuridicoPredios = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Juridico_Predios) && r.Codigo == pProyecto.EstadoJuridicoCodigo).FirstOrDefault().Nombre,
-                        TipoIntervencion = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Tipo_de_Intervencion) && r.Codigo == pProyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
+                        InstitucionEducativa = ListInstitucionEducativaSedes.Where(ie => ie.InstitucionEducativaSedeId == pProyecto.InstitucionEducativaId).FirstOrDefault()?.Nombre,
+                        Sede = ListInstitucionEducativaSedes.Where(ie => ie.InstitucionEducativaSedeId == pProyecto.SedeId).FirstOrDefault()?.Nombre,
+                        EstadoJuridicoPredios = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Juridico_Predios) && r.Codigo == pProyecto.EstadoJuridicoCodigo).FirstOrDefault()?.Nombre,
+                        TipoIntervencion = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Tipo_de_Intervencion) && r.Codigo == pProyecto.TipoIntervencionCodigo).FirstOrDefault()?.Nombre,
                         EstadoProyectoObra = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Proyecto) && r.Codigo == pProyecto.EstadoProyectoObraCodigo)?.FirstOrDefault()?.Nombre,
                         EstadoProyectoInterventoria = ListParametricas.Where(r => r.TipoDominioId == ((int)EnumeratorTipoDominio.Estado_Proyecto) && r.Codigo == pProyecto.EstadoProyectoInterventoriaCodigo)?.FirstOrDefault()?.Nombre,
                         Fecha = pProyecto.FechaCreacion != null ? Convert.ToDateTime(pProyecto.FechaCreacion).ToString("yyyy-MM-dd") : pProyecto.FechaCreacion.ToString(),
                         EstadoRegistro = "COMPLETO",
-                        EstadoProyectoObraCodigo = pProyecto.EstadoProyectoObraCodigo,
-                        EstadoProyectoInterventoriaCodigo = pProyecto.EstadoProyectoInterventoriaCodigo
+                        EstadoProyectoObraCodigo = pProyecto?.EstadoProyectoObraCodigo,
+                        EstadoProyectoInterventoriaCodigo = pProyecto?.EstadoProyectoInterventoriaCodigo
                     };
 
                     if (!(bool)pProyecto.RegistroCompleto)

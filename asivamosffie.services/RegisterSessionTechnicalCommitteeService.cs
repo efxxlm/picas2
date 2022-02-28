@@ -1772,11 +1772,35 @@ namespace asivamosffie.services
                  //   .ThenInclude(r => r.TemaCompromiso)
                  .FirstOrDefaultAsync();
 
-            List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == comiteTecnico.ComiteTecnicoId).ToList();
+            List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == pComiteTecnicoId).ToList();
 
-            comiteTecnico.SesionComiteTema = _context.SesionComiteTema.Where(r => r.ComiteTecnicoId == pComiteTecnicoId && r.Eliminado != true)
-                                                                      .Include(r => r.TemaCompromiso)
-                                                                      .ToList();
+
+
+            #region Tema 
+
+
+            List<int> ListIdsSesionComiteTema = _context.SesionComiteTema.Where(r => r.ComiteTecnicoId == pComiteTecnicoId && r.Eliminado != true).Select(r => r.SesionTemaId).ToList();
+
+            List<SesionComiteTema> ListSesionComiteTema = new List<SesionComiteTema>();
+
+            foreach (var IdSesionComiteTema in ListIdsSesionComiteTema)
+            {
+                SesionComiteTema sesionComiteTema = _context.SesionComiteTema.Where(r => r.SesionTemaId == IdSesionComiteTema)
+                                                                             .Include(r => r.TemaCompromiso)
+                                                                             .FirstOrDefault();
+
+                sesionComiteTema.Observaciones = String.Empty;
+                sesionComiteTema.ComiteTecnico = null;
+                ListSesionComiteTema.Add(sesionComiteTema);
+            }
+
+
+
+           comiteTecnico.SesionComiteTema = ListSesionComiteTema;
+
+            #endregion
+
+
 
             comiteTecnico.SesionInvitado = comiteTecnico.SesionInvitado.Where(r => r.Eliminado != true).ToList();
 
