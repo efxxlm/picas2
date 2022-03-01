@@ -311,25 +311,31 @@ namespace asivamosffie.services
                 )
                 return false;
 
-            foreach (var compromiso in sesionComiteTemaOld.TemaCompromiso.Where(x => x.Eliminado != true).ToList())
+            if (sesionComiteTemaOld.TemaCompromiso != null && sesionComiteTemaOld.TemaCompromiso.Where(x => x.Eliminado != true).ToList().Count > 0)
             {
-                if (
-                      string.IsNullOrEmpty(compromiso.Tarea) ||
-                      compromiso.Responsable == null ||
-                      compromiso.FechaCumplimiento == null
-                    )
-                    return false;
-            }
-            foreach (var compromiso in listaCompromisos?.Where(x => x.Eliminado != true).ToList())
-            {
-                if (
-                      string.IsNullOrEmpty(compromiso.Tarea) ||
-                      compromiso.Responsable == null ||
-                      compromiso.FechaCumplimiento == null
-                   )
-                    return false;
+                foreach (var compromiso in sesionComiteTemaOld.TemaCompromiso.Where(x => x.Eliminado != true).ToList())
+                {
+                    if (
+                          string.IsNullOrEmpty(compromiso.Tarea) ||
+                          compromiso.Responsable == null ||
+                          compromiso.FechaCumplimiento == null
+                        )
+                        return false;
+                }
             }
 
+            if (listaCompromisos != null && listaCompromisos?.Where(x => x.Eliminado != true).ToList().Count > 0)
+            {
+                foreach (var compromiso in listaCompromisos?.Where(x => x.Eliminado != true).ToList())
+                {
+                    if (
+                          string.IsNullOrEmpty(compromiso.Tarea) ||
+                          compromiso.Responsable == null ||
+                          compromiso.FechaCumplimiento == null
+                       )
+                        return false;
+                }
+            }
             return true;
 
         }
@@ -1788,7 +1794,7 @@ namespace asivamosffie.services
                 SesionComiteTema sesionComiteTema = _context.SesionComiteTema.Where(r => r.SesionTemaId == IdSesionComiteTema)
                                                                              .Include(r => r.TemaCompromiso)
                                                                              .FirstOrDefault();
-                 
+
                 sesionComiteTema.ComiteTecnico = null;
                 ListSesionComiteTema.Add(sesionComiteTema);
             }
@@ -2639,7 +2645,7 @@ namespace asivamosffie.services
                                Observaciones = pSesionComiteTema.Observaciones,
                                ObservacionesDecision = pSesionComiteTema.ObservacionesDecision,
                                RegistroCompleto = blRegistroCompleto
-                           });  
+                           });
 
 
                 foreach (var TemaCompromiso in pSesionComiteTema.TemaCompromiso)
