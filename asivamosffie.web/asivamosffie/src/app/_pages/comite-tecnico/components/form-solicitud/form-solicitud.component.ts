@@ -63,6 +63,10 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     height: '45px'
   };
 
+  formats = [
+    'link', 'blockquote','bold', 'italic', 'underline', 'list', 'strike', 'header', 'align', 'indent'
+  ];
+
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],

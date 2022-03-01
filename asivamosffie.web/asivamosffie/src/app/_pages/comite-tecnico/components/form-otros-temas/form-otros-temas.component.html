@@ -39,6 +39,7 @@
           <quill-editor
             class="quill-editor-style card position-relative quill-editor-style--max-height"
             [modules]="config"
+            [formats]="formats"
             required
             (onContentChanged)="maxLength($event, 5000)"
             formControlName="observaciones"
@@ -148,6 +149,7 @@
           <quill-editor
             class="quill-editor-style card position-relative quill-editor-style--max-height"
             [modules]="config"
+            [formats]="formats"
             required
             (onContentChanged)="maxLength($event, 5000)"
             formControlName="observacionesDecision"

@@ -12,13 +12,12 @@ import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting'
 import Quill from 'quill'
 import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
 Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste);
-
-
 @Component({
   selector: 'app-form-otros-temas',
   templateUrl: './form-otros-temas.component.html',
   styleUrls: ['./form-otros-temas.component.scss']
 })
+
 export class FormOtrosTemasComponent implements OnInit {
   @Input() sesionComiteTema: SesionComiteTema
   @Input() listaMiembros: SesionParticipante[]
@@ -47,7 +46,9 @@ export class FormOtrosTemasComponent implements OnInit {
   })
 
   estadosArray = []
-
+  formats = [
+    'link', 'blockquote','bold', 'italic', 'underline', 'list', 'strike', 'header', 'align', 'indent'
+  ]
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -56,8 +57,8 @@ export class FormOtrosTemasComponent implements OnInit {
       [{ align: [] }]
     ],
     imageDropAndPaste: {
-      handler: () =>  this.openDialog('', '<b>No es permitido subir una imagen en este campo.</b>')
-    }
+      handler: () =>  {this.openDialog('', '<b>No es permitido subir una imagen en este campo.</b>');}
+    },
   }
 
   get compromisos() {
