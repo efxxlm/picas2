@@ -1796,7 +1796,7 @@ namespace asivamosffie.services
 
 
 
-           comiteTecnico.SesionComiteTema = ListSesionComiteTema;
+            comiteTecnico.SesionComiteTema = ListSesionComiteTema;
 
             #endregion
 
@@ -2627,15 +2627,21 @@ namespace asivamosffie.services
             {
                 SesionComiteTema SesionComiteTemadOld = _context.SesionComiteTema.Find(pSesionComiteTema.SesionTemaId);
 
-                SesionComiteTemadOld.FechaModificacion = DateTime.Now;
-                SesionComiteTemadOld.UsuarioModificacion = pSesionComiteTema.UsuarioCreacion;
+                bool blRegistroCompleto = ValidarRegistroCompletoSesionComiteTema(SesionComiteTemadOld, pSesionComiteTema.TemaCompromiso.ToList());
+                _context.Set<SesionComiteTema>()
+                           .Where(u => u.SesionTemaId == pSesionComiteTema.SesionTemaId)
+                           .Update(u => new SesionComiteTema
+                           {
+                               FechaModificacion = DateTime.Now,
+                               UsuarioModificacion = pSesionComiteTema.UsuarioCreacion,
+                               EstadoTemaCodigo = pSesionComiteTema.EstadoTemaCodigo,
+                               CantCompromisos = pSesionComiteTema.CantCompromisos,
+                               GeneraCompromiso = pSesionComiteTema.GeneraCompromiso,
+                               Observaciones = pSesionComiteTema.Observaciones,
+                               ObservacionesDecision = pSesionComiteTema.ObservacionesDecision,
+                               RegistroCompleto = blRegistroCompleto
+                           });  
 
-                SesionComiteTemadOld.EstadoTemaCodigo = pSesionComiteTema.EstadoTemaCodigo;
-                SesionComiteTemadOld.CantCompromisos = pSesionComiteTema.CantCompromisos;
-                SesionComiteTemadOld.GeneraCompromiso = pSesionComiteTema.GeneraCompromiso;
-                SesionComiteTemadOld.Observaciones = pSesionComiteTema.Observaciones;
-                SesionComiteTemadOld.ObservacionesDecision = pSesionComiteTema.ObservacionesDecision;
-                SesionComiteTemadOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteTema(SesionComiteTemadOld, pSesionComiteTema.TemaCompromiso.ToList());
 
                 foreach (var TemaCompromiso in pSesionComiteTema.TemaCompromiso)
                 {
