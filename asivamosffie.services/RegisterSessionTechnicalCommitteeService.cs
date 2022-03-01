@@ -1788,8 +1788,7 @@ namespace asivamosffie.services
                 SesionComiteTema sesionComiteTema = _context.SesionComiteTema.Where(r => r.SesionTemaId == IdSesionComiteTema)
                                                                              .Include(r => r.TemaCompromiso)
                                                                              .FirstOrDefault();
-
-                sesionComiteTema.Observaciones = String.Empty;
+                 
                 sesionComiteTema.ComiteTecnico = null;
                 ListSesionComiteTema.Add(sesionComiteTema);
             }
