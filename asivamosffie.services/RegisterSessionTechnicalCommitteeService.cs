@@ -1674,7 +1674,7 @@ namespace asivamosffie.services
                     pSesionComiteTema.GeneraCompromiso == null
                 )
             {
-                return null;
+                return false;
             }
             else
             {
@@ -2662,18 +2662,7 @@ namespace asivamosffie.services
                                Observaciones = pSesionComiteTema.Observaciones,
                                ObservacionesDecision = pSesionComiteTema.ObservacionesDecision
                            });
-
-                SesionComiteTema SesionComiteTemadOld = _context.SesionComiteTema.Find(pSesionComiteTema.SesionTemaId);
-                bool blRegistroCompleto = ValidarRegistroCompletoSesionComiteTema(SesionComiteTemadOld, pSesionComiteTema.TemaCompromiso.ToList());
-
-                _context.Set<SesionComiteTema>()
-                     .Where(u => u.SesionTemaId == pSesionComiteTema.SesionTemaId)
-                     .Update(u => new SesionComiteTema
-                     {
-                         RegistroCompleto = blRegistroCompleto
-                     });
-
-
+                 
                 foreach (var TemaCompromiso in pSesionComiteTema.TemaCompromiso)
                 {
                     if (TemaCompromiso.TemaCompromisoId == 0)
@@ -2705,6 +2694,18 @@ namespace asivamosffie.services
                     }
                 }
                 _context.SaveChanges();
+
+
+                SesionComiteTema SesionComiteTemadOld = _context.SesionComiteTema.Find(pSesionComiteTema.SesionTemaId);
+                bool blRegistroCompleto = ValidarRegistroCompletoSesionComiteTema(SesionComiteTemadOld, pSesionComiteTema.TemaCompromiso.ToList());
+
+                _context.Set<SesionComiteTema>()
+                     .Where(u => u.SesionTemaId == pSesionComiteTema.SesionTemaId)
+                     .Update(u => new SesionComiteTema
+                     {
+                         RegistroCompleto = blRegistroCompleto
+                     });
+
                 return
                    new Respuesta
                    {
