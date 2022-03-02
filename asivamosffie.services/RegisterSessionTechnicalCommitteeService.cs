@@ -271,6 +271,7 @@ namespace asivamosffie.services
                 return
                   new Respuesta
                   {
+                      Data = validarcompletosActa(pSesionComiteTema.ComiteTecnicoId ?? 0),
                       IsSuccessful = true,
                       IsException = false,
                       IsValidation = false,
@@ -354,6 +355,7 @@ namespace asivamosffie.services
                 return
                   new Respuesta
                   {
+                      Data = validarcompletosActa(sesionComiteTemaOld.ComiteTecnicoId ?? 0),
                       IsSuccessful = true,
                       IsException = false,
                       IsValidation = false,
@@ -1732,6 +1734,7 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
+                        Data = validarcompletosActa(pComiteTecnico.ComiteTecnicoId),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -2193,6 +2196,7 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
+                        Data = validarcompletosActa(pComiteTecnico.ComiteTecnicoId),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
