@@ -114,7 +114,7 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #temaInput type="text" formControlName="tema" maxlength="1000" required />
+                    <input matInput #temaInput type="text" formControlName="tema" maxlength="5000" required />
                     <input type="hidden" formControlName="sesionTemaId" />
                   </mat-form-field>
                   <span
@@ -123,7 +123,7 @@
                     matTooltip="Campo alfanumérico"
                     matTooltipClass="info-tooltip"
                   >
-                    {{ 1000 - temaInput.value.length }}
+                    {{ 5000 - temaInput.value.length }}
                   </span>
                   <span class="icon-incompleto">
                     <img
