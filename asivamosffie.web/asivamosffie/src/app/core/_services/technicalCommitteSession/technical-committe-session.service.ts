@@ -163,4 +163,8 @@ export class TechnicalCommitteSessionService {
     return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/deleteTemaCompromiso?pTemaCompromisoId=${ id }`);
    }
 
+   getValidarcompletosActa( id: number ){
+    return this.http.get<boolean>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/GetValidarcompletosActa?IdComite=${ id }` );
+   }
+
 }

@@ -253,10 +253,14 @@ export class FormOtrosTemasComponent implements OnInit {
 
     // console.log(tema)
     this.technicalCommitteSessionService.createEditTemasCompromiso(tema).subscribe(respuesta => {
-
-      this.validar.emit(respuesta.data)
+      setTimeout(() => {
+        this.technicalCommitteSessionService.getValidarcompletosActa(this.sesionComiteTema.comiteTecnicoId).subscribe(respuesta => {
+          console.log(respuesta);
+          this.validar.emit(respuesta)
+        });
+      }, 1000);
       this.openDialog('', `<b>${respuesta.message}</b>`)
-      if (respuesta.code == '200' && !respuesta.data)
+      if (respuesta.code == '200')
         this.router.navigate(['/comiteTecnico/crearActa', this.sesionComiteTema.comiteTecnicoId])
     })
   }
