@@ -2638,9 +2638,8 @@ namespace asivamosffie.services
             string CreateEdit = "";
             try
             {
-                SesionComiteTema SesionComiteTemadOld = _context.SesionComiteTema.Find(pSesionComiteTema.SesionTemaId);
-
-
+             
+                 
                 if (!string.IsNullOrEmpty(pSesionComiteTema.Observaciones))
                     if (pSesionComiteTema.Observaciones.Contains("<img"))
                         pSesionComiteTema.Observaciones = String.Empty;
@@ -2650,7 +2649,7 @@ namespace asivamosffie.services
                         pSesionComiteTema.ObservacionesDecision = String.Empty;
 
 
-                bool blRegistroCompleto = ValidarRegistroCompletoSesionComiteTema(pSesionComiteTema, pSesionComiteTema.TemaCompromiso.ToList());
+              
                 _context.Set<SesionComiteTema>()
                            .Where(u => u.SesionTemaId == pSesionComiteTema.SesionTemaId)
                            .Update(u => new SesionComiteTema
@@ -2661,9 +2660,18 @@ namespace asivamosffie.services
                                CantCompromisos = pSesionComiteTema.CantCompromisos,
                                GeneraCompromiso = pSesionComiteTema.GeneraCompromiso,
                                Observaciones = pSesionComiteTema.Observaciones,
-                               ObservacionesDecision = pSesionComiteTema.ObservacionesDecision,
-                               RegistroCompleto = blRegistroCompleto
+                               ObservacionesDecision = pSesionComiteTema.ObservacionesDecision
                            });
+
+                SesionComiteTema SesionComiteTemadOld = _context.SesionComiteTema.Find(pSesionComiteTema.SesionTemaId);
+                bool blRegistroCompleto = ValidarRegistroCompletoSesionComiteTema(SesionComiteTemadOld, pSesionComiteTema.TemaCompromiso.ToList());
+
+                _context.Set<SesionComiteTema>()
+                     .Where(u => u.SesionTemaId == pSesionComiteTema.SesionTemaId)
+                     .Update(u => new SesionComiteTema
+                     {
+                         RegistroCompleto = blRegistroCompleto
+                     });
 
 
                 foreach (var TemaCompromiso in pSesionComiteTema.TemaCompromiso)
