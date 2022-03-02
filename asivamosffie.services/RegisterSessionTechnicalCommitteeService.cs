@@ -2639,9 +2639,9 @@ namespace asivamosffie.services
 
                 if (!string.IsNullOrEmpty(pSesionComiteTema.Observaciones))
                     if (pSesionComiteTema.Observaciones.Contains("<img"))
-                    pSesionComiteTema.Observaciones = String.Empty;
+                        pSesionComiteTema.Observaciones = String.Empty;
 
-                if(!string.IsNullOrEmpty(pSesionComiteTema.ObservacionesDecision))
+                if (!string.IsNullOrEmpty(pSesionComiteTema.ObservacionesDecision))
                     if (pSesionComiteTema.ObservacionesDecision.Contains("<img"))
                         pSesionComiteTema.ObservacionesDecision = String.Empty;
 
@@ -2727,17 +2727,19 @@ namespace asivamosffie.services
                                                          .Include(r => r.SesionComiteTema)
                                                         .FirstOrDefault();
 
-            comite.SesionComiteSolicitudComiteTecnico.Where(t => t.Eliminado != true).ToList().ForEach(cs =>
-          {
-              if ((cs.RegistroCompleto.HasValue ? cs.RegistroCompleto.Value : false) == false)
-                  estaCompleto = false;
-          });
 
-            comite.SesionComiteTema.Where(t => t.Eliminado != true).ToList().ForEach(ct =>
-           {
-               if ((ct.RegistroCompleto.HasValue ? ct.RegistroCompleto.Value : false) == false)
-                   estaCompleto = false;
-           });
+            foreach (var cs in comite.SesionComiteSolicitudComiteTecnico.Where(t => t.Eliminado != true).ToList())
+            {
+                if ((cs.RegistroCompleto.HasValue ? cs.RegistroCompleto.Value : false) == false)
+                    estaCompleto = false;
+            }
+
+
+            foreach (var ct in comite.SesionComiteTema.Where(t => t.Eliminado != true).ToList())
+            { 
+                if ((ct.RegistroCompleto.HasValue ? ct.RegistroCompleto.Value : false) == false)
+                    estaCompleto = false;
+            }
 
             if (estaCompleto)
             {
