@@ -18,9 +18,9 @@ import { EstadosRevision, PerfilCodigo } from 'src/app/_interfaces/estados-actua
 export class GestionarPolizasComponent implements OnInit, OnDestroy {
 
     addressForm = this.fb.group({
-        nombre: [ null, Validators.compose([ Validators.required, Validators.minLength(1), Validators.maxLength(50)]) ],
-        numeroPoliza: [ null, Validators.compose([ Validators.required, Validators.minLength(2), Validators.maxLength(20) ]) ],
-        numeroCertificado: [ null, Validators.compose([ Validators.required, Validators.minLength(2), Validators.maxLength(20)]) ],
+        nombre: [ null, Validators.compose([ Validators.required, Validators.minLength(1), Validators.maxLength(200)]) ],
+        numeroPoliza: [ null, Validators.compose([ Validators.required, Validators.minLength(2), Validators.maxLength(100) ]) ],
+        numeroCertificado: [ null, Validators.compose([ Validators.required, Validators.minLength(2), Validators.maxLength(100)]) ],
         fecha: [ null, Validators.required ],
         seguros: this.fb.array( [] ),
         polizasYSeguros: [ null, Validators.required ],
@@ -224,7 +224,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
                     }
                 }
             } );
-            
+
             if ( registroCompleto === this.seguros.length ) {
                 registroCompletoSeguros = true;
             }
