@@ -2705,13 +2705,11 @@ namespace asivamosffie.services
                      {
                          RegistroCompleto = blRegistroCompleto
                      });
-
                  
-                validarcompletosActa(pSesionComiteTema.ComiteTecnicoId.Value);
                 return
                    new Respuesta
                    {
-                       Data = validarcompletosActa(pSesionComiteTema.ComiteTecnicoId.Value),
+                     //  Data = validarcompletosActa(pSesionComiteTema.ComiteTecnicoId.Value),
                        IsSuccessful = true,
                        IsException = false,
                        IsValidation = false,
