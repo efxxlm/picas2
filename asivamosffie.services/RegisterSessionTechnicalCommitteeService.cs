@@ -703,13 +703,22 @@ namespace asivamosffie.services
                     .Include(r => r.SesionComiteTema)
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                     .Include(r => r.SesionParticipante)
-                        .ThenInclude(r => r.Usuario).FirstOrDefaultAsync();
+                        .ThenInclude(r => r.Usuario)
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync();
 
                 comiteTecnico.SesionParticipante = comiteTecnico.SesionParticipante.Where(r => !(bool)r.Eliminado).ToList();
                 comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
 
-                comiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Convocada;
-                comiteTecnico.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
+                _context.Set<ComiteTecnico>()
+                       .Where(u => u.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
+                       .Update(u => new ComiteTecnico
+                       {
+                           EstadoComiteCodigo = ConstanCodigoEstadoComite.Convocada,
+                           UsuarioModificacion = pComiteTecnico.UsuarioCreacion
+                       });
+
+
                 comiteTecnico.FechaModificacion = DateTime.Now;
 
 
@@ -781,7 +790,7 @@ namespace asivamosffie.services
                     }
                 }
 
-                _context.SaveChanges();
+                //_context.SaveChanges();
                 return
                    new Respuesta
                    {
@@ -1774,14 +1783,13 @@ namespace asivamosffie.services
                         .ThenInclude(r => r.SesionSolicitudVoto)
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                         .ThenInclude(r => r.SesionSolicitudCompromiso)
-                 // .Include(r => r.SesionComiteTema)
-                 //   .ThenInclude(r => r.TemaCompromiso)
-                 .FirstOrDefaultAsync();
-
+                        // .Include(r => r.SesionComiteTema)
+                        //   .ThenInclude(r => r.TemaCompromiso) 
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync();
+            
             List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == pComiteTecnicoId).ToList();
-
-
-
+              
             #region Tema 
 
 
@@ -2642,7 +2650,7 @@ namespace asivamosffie.services
                         pSesionComiteTema.ObservacionesDecision = String.Empty;
 
 
-                bool blRegistroCompleto = ValidarRegistroCompletoSesionComiteTema(SesionComiteTemadOld, pSesionComiteTema.TemaCompromiso.ToList());
+                bool blRegistroCompleto = ValidarRegistroCompletoSesionComiteTema(pSesionComiteTema, pSesionComiteTema.TemaCompromiso.ToList());
                 _context.Set<SesionComiteTema>()
                            .Where(u => u.SesionTemaId == pSesionComiteTema.SesionTemaId)
                            .Update(u => new SesionComiteTema
@@ -2732,22 +2740,29 @@ namespace asivamosffie.services
 
 
             foreach (var ct in comite.SesionComiteTema.Where(t => t.Eliminado != true).ToList())
-            { 
+            {
                 if ((ct.RegistroCompleto.HasValue ? ct.RegistroCompleto.Value : false) == false)
                     estaCompleto = false;
             }
 
             if (estaCompleto)
             {
-                //comite.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada;
-                comite.EstadoComiteCodigo = ConstanCodigoEstadoComite.Desarrollada_Sin_Acta;
-                comite.EsCompleto = true;
-                _context.SaveChanges();
+                _context.Set<ComiteTecnico>()
+                            .Where(u => u.ComiteTecnicoId == pComiteTecnicoId)
+                            .Update(u => new ComiteTecnico
+                            {
+                                EstadoComiteCodigo = ConstanCodigoEstadoComite.Desarrollada_Sin_Acta,
+                                EsCompleto = true,
+                            });
             }
             else
             {
-                comite.EsCompleto = false;
-                _context.SaveChanges();
+                _context.Set<ComiteTecnico>()
+                           .Where(u => u.ComiteTecnicoId == pComiteTecnicoId)
+                           .Update(u => new ComiteTecnico
+                           {
+                               EsCompleto = false,
+                           });
             }
 
             return estaCompleto;
