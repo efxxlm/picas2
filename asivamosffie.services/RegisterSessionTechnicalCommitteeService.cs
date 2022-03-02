@@ -2706,6 +2706,8 @@ namespace asivamosffie.services
                          RegistroCompleto = blRegistroCompleto
                      });
 
+                 
+                validarcompletosActa(pSesionComiteTema.ComiteTecnicoId.Value);
                 return
                    new Respuesta
                    {
@@ -2731,14 +2733,14 @@ namespace asivamosffie.services
             }
         }
 
-        private bool validarcompletosActa(int pComiteTecnicoId)
+        private async Task <bool> validarcompletosActa(int pComiteTecnicoId)
         {
             bool estaCompleto = true;
 
-            ComiteTecnico comite = _context.ComiteTecnico.Where(ct => ct.ComiteTecnicoId == pComiteTecnicoId)
+            ComiteTecnico comite =await _context.ComiteTecnico.Where(ct => ct.ComiteTecnicoId == pComiteTecnicoId)
                                                          .Include(r => r.SesionComiteSolicitudComiteTecnico)
                                                          .Include(r => r.SesionComiteTema)
-                                                        .FirstOrDefault();
+                                                        .FirstOrDefaultAsync();
 
 
             foreach (var cs in comite.SesionComiteSolicitudComiteTecnico.Where(t => t.Eliminado != true).ToList())
@@ -2776,7 +2778,51 @@ namespace asivamosffie.services
 
             return estaCompleto;
         }
+        public async Task<bool> GetValidarcompletosActa(int IdComite)
+        {
+            bool estaCompleto = true;
 
+            ComiteTecnico comite = await _context.ComiteTecnico.Where(ct => ct.ComiteTecnicoId == IdComite)
+                                                         .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                                                         .Include(r => r.SesionComiteTema)
+                                                        .FirstOrDefaultAsync();
+
+
+            foreach (var cs in comite.SesionComiteSolicitudComiteTecnico.Where(t => t.Eliminado != true).ToList())
+            {
+                if ((cs.RegistroCompleto.HasValue ? cs.RegistroCompleto.Value : false) == false)
+                    estaCompleto = false;
+            }
+
+
+            foreach (var ct in comite.SesionComiteTema.Where(t => t.Eliminado != true).ToList())
+            {
+                if ((ct.RegistroCompleto.HasValue ? ct.RegistroCompleto.Value : false) == false)
+                    estaCompleto = false;
+            }
+
+            if (estaCompleto)
+            {
+                _context.Set<ComiteTecnico>()
+                            .Where(u => u.ComiteTecnicoId == IdComite)
+                            .Update(u => new ComiteTecnico
+                            {
+                                EstadoComiteCodigo = ConstanCodigoEstadoComite.Desarrollada_Sin_Acta,
+                                EsCompleto = true,
+                            });
+            }
+            else
+            {
+                _context.Set<ComiteTecnico>()
+                           .Where(u => u.ComiteTecnicoId == IdComite)
+                           .Update(u => new ComiteTecnico
+                           {
+                               EsCompleto = false,
+                           });
+            }
+
+            return estaCompleto;
+        }
         public void CambiarEstadoSolicitudes(int SolicitudId, string TipoSolicitud, string EstadoCodigo)
         {
             #region Contratacion

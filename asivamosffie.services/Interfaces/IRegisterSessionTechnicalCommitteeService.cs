@@ -9,6 +9,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterSessionTechnicalCommitteeService
     {
+       Task<bool> GetValidarcompletosActa(int IdComite);
+
         Task<List<SesionParticipante>> GetSesionParticipantesByIdComite(int pComiteId);
 
         Task<List<SesionSolicitudObservacionProyecto>> GetSesionSolicitudObservacionProyecto(int pSesionComiteSolicitudId, int pContratacionProyectoId);

@@ -25,7 +25,16 @@ namespace asivamosffie.api.Controllers
         {
             _settings = settings;
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
+
         }
+        [HttpGet]
+        [Route("GetValidarcompletosActa")]
+        public async Task<bool> GetValidarcompletosActa(int IdComite)
+        {
+            return await _registerSessionTechnicalCommitteeService.GetValidarcompletosActa(IdComite);
+        }
+
+
 
         [HttpGet]
         [Route("GetPlantillaActaIdComite")]
