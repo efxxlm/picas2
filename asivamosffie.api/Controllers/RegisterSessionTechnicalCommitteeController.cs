@@ -354,9 +354,13 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _registerSessionTechnicalCommitteeService.CreateEditSesionComiteTema(ListSesionComiteTemas);
-                return Ok(respuesta);
+                if (ListSesionComiteTemas != null && ListSesionComiteTemas.Count > 0)
+                {
+                    ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                    respuesta = await _registerSessionTechnicalCommitteeService.CreateEditSesionComiteTema(ListSesionComiteTemas);
+                    return Ok(respuesta);
+                }
+                return Ok();
             }
             catch (Exception ex)
             {
