@@ -2633,12 +2633,13 @@ namespace asivamosffie.services
                 SesionComiteTema SesionComiteTemadOld = _context.SesionComiteTema.Find(pSesionComiteTema.SesionTemaId);
 
 
-
-                if (pSesionComiteTema.Observaciones.Contains("<img"))
+                if (!string.IsNullOrEmpty(pSesionComiteTema.Observaciones))
+                    if (pSesionComiteTema.Observaciones.Contains("<img"))
                     pSesionComiteTema.Observaciones = String.Empty;
 
-                if (pSesionComiteTema.ObservacionesDecision.Contains("<img"))
-                    pSesionComiteTema.ObservacionesDecision = String.Empty;
+                if(!string.IsNullOrEmpty(pSesionComiteTema.ObservacionesDecision))
+                    if (pSesionComiteTema.ObservacionesDecision.Contains("<img"))
+                        pSesionComiteTema.ObservacionesDecision = String.Empty;
 
 
                 bool blRegistroCompleto = ValidarRegistroCompletoSesionComiteTema(SesionComiteTemadOld, pSesionComiteTema.TemaCompromiso.ToList());
@@ -2673,8 +2674,9 @@ namespace asivamosffie.services
                         CreateEdit = "EDITAR TEMA COMPROMISO";
                         TemaCompromiso temaCompromisoOld = _context.TemaCompromiso.Find(TemaCompromiso.TemaCompromisoId);
 
-                        if (temaCompromisoOld.Tarea.Contains("<img"))
-                            temaCompromisoOld.Tarea = String.Empty;
+                        if (!string.IsNullOrEmpty(temaCompromisoOld.Tarea))
+                            if (temaCompromisoOld.Tarea.Contains("<img"))
+                                temaCompromisoOld.Tarea = String.Empty;
 
 
                         temaCompromisoOld.Tarea = TemaCompromiso.Tarea;
