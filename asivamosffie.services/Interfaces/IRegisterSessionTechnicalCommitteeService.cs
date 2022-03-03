@@ -9,7 +9,9 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterSessionTechnicalCommitteeService
     {
-       Task<bool> GetValidarcompletosActa(int IdComite);
+        Task<string> GetPlantillaActaIdComiteHTML(int ComiteId);
+
+        Task<bool> GetValidarcompletosActa(int IdComite);
 
         Task<List<SesionParticipante>> GetSesionParticipantesByIdComite(int pComiteId);
 
@@ -59,7 +61,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> EliminarSesionComiteTema(int pSesionComiteTemaId, string pUsuarioModificacion);
 
-        Task<byte[]> GetPlantillaByTablaIdRegistroId(string pTablaId, int pRegistroId,int pComiteTecnicoId);
+        Task<byte[]> GetPlantillaByTablaIdRegistroId(string pTablaId, int pRegistroId, int pComiteTecnicoId);
 
         Task<List<ComiteGrilla>> GetListComiteGrilla();
 
@@ -76,11 +78,11 @@ namespace asivamosffie.services.Interfaces
         Task<List<SesionComentario>> GetCometariosDelActa(int pComietTecnicoId);
 
         Task<ProcesoSeleccionMonitoreo> GetProcesoSeleccionMonitoreo(int pProcesoSeleccionMonitoreoId);
-    
+
         Task<Respuesta> EliminarCompromisosSolicitud(int pSesionComiteSolicitudId, string pUsuarioModificacion);
-     
+
         Task<Respuesta> EliminarCompromisosTema(int pSesionTemaId, string pUsuarioModificacion);
-       
+
         Task<Respuesta> EnviarComiteParaAprobacion(ComiteTecnico pComiteTecnico, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender);
         Task<Respuesta> EliminarCompromisoSolicitud(int pCompromisoId, string pUsuarioModificacion);
         Task<Respuesta> EliminarCompromisoTema(int pCompromisoTemaId, string pUsuarioModificacion);

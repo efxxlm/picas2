@@ -35,7 +35,14 @@ namespace asivamosffie.api.Controllers
         }
 
 
-
+     
+        [HttpGet]
+        [Route("GetPlantillaActaIdComiteHTML")]
+        public async Task<string> GetPlantillaActaIdComiteHTML(int IdComite)
+        {
+            return await _registerSessionTechnicalCommitteeService.GetPlantillaActaIdComiteHTML(IdComite);
+        } 
+        
         [HttpGet]
         [Route("GetPlantillaActaIdComite")]
         public async Task<FileResult> GetPlantillaActaIdComite(int IdComite)

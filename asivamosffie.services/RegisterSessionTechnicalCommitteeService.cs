@@ -4850,7 +4850,58 @@ namespace asivamosffie.services
             }
 
         }
+        public async Task<string> GetPlantillaActaIdComiteHTML(int ComiteId)
+        {
+            if (ComiteId == 0)
+            {
+                return string.Empty;
+            }
+            ComiteTecnico comiteTecnico = await _context.ComiteTecnico
+                .Where(r => r.ComiteTecnicoId == ComiteId)
 
+                    //.Include(r => r.SesionComiteTema)
+                    //          .ThenInclude(r => r.TemaCompromiso)
+                    //           .ThenInclude(r => r.ResponsableNavigation)
+                    //             .ThenInclude(r => r.Usuario)
+                    //.Include(r => r.SesionComiteTema)
+                    //    .ThenInclude(r => r.SesionTemaVoto)
+
+                    .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                       .ThenInclude(r => r.SesionSolicitudCompromiso)
+                           .ThenInclude(r => r.ResponsableSesionParticipante)
+                              .ThenInclude(r => r.Usuario)
+                    .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                        .ThenInclude(r => r.SesionSolicitudVoto)
+                    .FirstOrDefaultAsync();
+
+
+            comiteTecnico.SesionComiteTema = _context.SesionComiteTema.Where(r => r.ComiteTecnicoId == ComiteId && r.Eliminado != true).ToList();
+
+            foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema)
+            {
+                SesionComiteTema.ComiteTecnico = null;
+
+                SesionComiteTema.TemaCompromiso = _context.TemaCompromiso.Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true)
+                                                                         .Include(r => r.ResponsableNavigation).ThenInclude(r => r.Usuario)
+                                                                         .ToList();
+
+
+
+                SesionComiteTema.SesionTemaVoto = _context.SesionTemaVoto.Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true).ToList();
+
+            }
+
+
+
+
+            if (comiteTecnico == null)
+            {
+                return string.Empty;
+            }
+            Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Descargar_Acta).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+
+            return await ReemplazarDatosPlantillaActa(plantilla.Contenido, comiteTecnico); 
+        }
         public async Task<byte[]> GetPlantillaActaIdComite(int ComiteId)
         {
             if (ComiteId == 0)
@@ -4859,12 +4910,14 @@ namespace asivamosffie.services
             }
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico
                 .Where(r => r.ComiteTecnicoId == ComiteId)
-                    .Include(r => r.SesionComiteTema)
-                              .ThenInclude(r => r.TemaCompromiso)
-                               .ThenInclude(r => r.ResponsableNavigation)
-                                 .ThenInclude(r => r.Usuario)
-                    .Include(r => r.SesionComiteTema)
-                        .ThenInclude(r => r.SesionTemaVoto)
+
+                    //.Include(r => r.SesionComiteTema)
+                    //          .ThenInclude(r => r.TemaCompromiso)
+                    //           .ThenInclude(r => r.ResponsableNavigation)
+                    //             .ThenInclude(r => r.Usuario)
+                    //.Include(r => r.SesionComiteTema)
+                    //    .ThenInclude(r => r.SesionTemaVoto)
+                     
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                        .ThenInclude(r => r.SesionSolicitudCompromiso)
                            .ThenInclude(r => r.ResponsableSesionParticipante)
@@ -4872,6 +4925,26 @@ namespace asivamosffie.services
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                         .ThenInclude(r => r.SesionSolicitudVoto)
                     .FirstOrDefaultAsync();
+
+
+            comiteTecnico.SesionComiteTema = _context.SesionComiteTema.Where(r => r.ComiteTecnicoId == ComiteId && r.Eliminado != true).ToList();
+
+            foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema)
+            {
+                SesionComiteTema.ComiteTecnico = null;
+
+                SesionComiteTema.TemaCompromiso = _context.TemaCompromiso.Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true)
+                                                                         .Include(r=> r.ResponsableNavigation).ThenInclude(r=> r.Usuario)
+                                                                         .ToList();
+
+
+
+                SesionComiteTema.SesionTemaVoto = _context.SesionTemaVoto.Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true).ToList();
+
+            }
+
+
+
 
             if (comiteTecnico == null)
             {
@@ -4890,23 +4963,20 @@ namespace asivamosffie.services
             {
                 string msg = "<p style='text-align:left;margin-top:5px;margin-bottom:15px;'>[MSG]</p>";
                 List<int> ListProcesoSeleccionIdSolicitudId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso).Select(r => r.SolicitudId).ToList();
-                List<int> ListContratacionId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Select(r => r.SolicitudId).ToList();
+           //     List<int> ListContratacionId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Select(r => r.SolicitudId).ToList();
                 List<int> ListNovedadContractual = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Novedad_Contractual).Select(r => r.SolicitudId).ToList();
                 List<int> ListDefensaJudicialId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Defensa_judicial).Select(r => r.SolicitudId).ToList();
                 List<int> ListControversiaActuacionId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales).Select(r => r.SolicitudId).ToList();
 
-                List<Contratacion> ListContratacion = new List<Contratacion>();
-
-                foreach (var ContratacionId in ListContratacionId)
-                {
-                    Contratacion contratacion = _context.Contratacion.Where(c => c.ContratacionId == ContratacionId)
+                List<Contratacion> ListContratacion  = _context.Contratacion.Where(c => c.Eliminado != true)
                                    .Include(r => r.Contrato)
                                    .Include(r => r.Contratista)
+                                   .Include(r => r.PlazoContratacion)
                                    .Include(r => r.ContratacionProyecto)
-                                       .ThenInclude(r => r.Proyecto).FirstOrDefault();
-
-                    ListContratacion.Add(contratacion);
-                }
+                                       .ThenInclude(r => r.Proyecto)
+                                       .ToList();
+                 
+             
 
                 List<NovedadContractual> ListContratacionNovedadContractual = new List<NovedadContractual>();
 
@@ -4935,7 +5005,12 @@ namespace asivamosffie.services
                 {
                     ListControversiaActuacion.Add(_context.ControversiaActuacion.Where(r => r.ControversiaActuacionId == ControversiaActuacionId).Include(r => r.ControversiaContractual).FirstOrDefault());
                 }
+    
+                 
 
+                List<Contratista> ListContratista = _context.Contratista.ToList();
+                List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal = _context.DisponibilidadPresupuestal.ToList();
+    
                 List<Dominio> ListaParametricas = _context.Dominio.ToList();
                 List<Localizacion> localizacions = _context.Localizacion.ToList();
                 List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId != (int)EnumeratorTipoDominio.PlaceHolder).ToList();
@@ -5302,7 +5377,7 @@ namespace asivamosffie.services
                         }
                     }
                 }
-
+            
                 //Logica Orden Del Dia
                 int enumOrdenDelDia = 1;
                 foreach (SesionComiteSolicitud SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
@@ -5320,7 +5395,8 @@ namespace asivamosffie.services
                         #region contratacion
                         case ConstanCodigoTipoSolicitud.Contratacion:
                             registrosContratacion += PlantillaContratacion;
-                            Contratacion contratacion = await _IProjectContractingService.GetAllContratacionByContratacionId(SesionComiteSolicitud.SolicitudId);
+
+                            Contratacion contratacion = ListContratacion.Where(r => r.ContratacionId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
 
                             foreach (Dominio placeholderDominio in placeholders)
                             {
@@ -5777,16 +5853,18 @@ namespace asivamosffie.services
 
                             if (contrato != null)
                             {
-                                contratacionNovedad = await _IProjectContractingService.GetAllContratacionByContratacionId(contrato.ContratacionId);
+                                contratacionNovedad = ListContratacion.Where(r=> r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
                             }
                             if (contratacionNovedad != null)
                             {
-                                contratista = _context.Contratista
+                                contratista = ListContratista
                                     .Where(r => r.ContratistaId == contratacionNovedad.ContratistaId).FirstOrDefault();
-                                disponibilidadPresupuestal = _context.DisponibilidadPresupuestal
+
+
+                                disponibilidadPresupuestal = ListDisponibilidadPresupuestal
                                     .Where(r => r.ContratacionId == contratacionNovedad.ContratacionId).FirstOrDefault();
                             }
-
+                  
                             foreach (Dominio placeholderDominio in placeholders)
                             {
                                 switch (placeholderDominio.Codigo)
@@ -6021,13 +6099,12 @@ namespace asivamosffie.services
 
                                         registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
-                                        break;
-
+                                        break; 
                                 }
                             }
                             break;
                         #endregion
-                        //TIPO DE SOLIDITUD-  DEFENSA JUDICIAL
+                        ////TIPO DE SOLIDITUD-  DEFENSA JUDICIAL
                         #region defensajudicial
                         case ConstanCodigoTipoSolicitud.Defensa_judicial:
                             registrosContratacion += PlantillaContratacion;
@@ -6045,7 +6122,7 @@ namespace asivamosffie.services
                             }
                             if (contratacionProyectoDf != null)
                             {
-                                contratacionDefensaJudicial = await _IProjectContractingService.GetAllContratacionByContratacionId(contratacionProyectoDf.ContratacionId);
+                                contratacionDefensaJudicial = ListContratacion.Find(r=> r.ContratacionId == contratacionProyectoDf.ContratacionId);
 
                             }
                             if (contratacionDefensaJudicial != null)
@@ -6282,13 +6359,12 @@ namespace asivamosffie.services
                             Contrato contratoAct = controversiaContractual != null ? controversiaContractual?.Contrato : null;
 
                             Contratacion contratacionAct = null;
-                            DisponibilidadPresupuestal disponibilidadPresupuestalAct = null;
-
+                            
                             Contratista contratistaAct = null;
 
                             if (contratoAct != null)
                             {
-                                contratacionAct = await _IProjectContractingService.GetAllContratacionByContratacionId(contratoAct.ContratacionId);
+                                contratacionAct = ListContratacion.Find(r=> r.ContratacionId == contratoAct.ContratacionId);
                             }
                             if (contratacionAct != null)
                             {
@@ -6952,24 +7028,24 @@ namespace asivamosffie.services
                     {
                         case ConstanCodigoTipoSolicitud.Contratacion:
                             RegistrosFichaContratacion += PlantillaFichaContratacion;
-                            RegistrosFichaContratacion = ReemplazarDatosPlantillaContratacion(RegistrosFichaContratacion, await _IProjectContractingService.GetAllContratacionByContratacionId(scst.SolicitudId));
+                            RegistrosFichaContratacion = ReemplazarDatosPlantillaContratacion(RegistrosFichaContratacion, ListContratacion.Where(r=> r.ContratacionId == scst.SolicitudId).FirstOrDefault());
                             break;
 
-                        case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
-                        case ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso:
-                            RegistrosFichaProcesosSeleccion += PlantillaFichaProcesosSeleccion;
-                            RegistrosFichaProcesosSeleccion = ReemplazarDatosPlantillaProcesosSeleccion(RegistrosFichaProcesosSeleccion, await GetProcesosSelecccionByProcesoSeleccionId(scst.SolicitudId));
-                            break;
+                        //case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
+                        //case ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso:
+                        //    RegistrosFichaProcesosSeleccion += PlantillaFichaProcesosSeleccion;
+                        //    RegistrosFichaProcesosSeleccion = ReemplazarDatosPlantillaProcesosSeleccion(RegistrosFichaProcesosSeleccion, await GetProcesosSelecccionByProcesoSeleccionId(scst.SolicitudId));
+                        //    break;
 
-                        case ConstanCodigoTipoSolicitud.Novedad_Contractual:
-                            RegistrosFichaNovedadContractual += PlantillaNovedadContractual;
-                            RegistrosFichaNovedadContractual = await ReemplazarDatosPlantillaNovedadContractual(RegistrosFichaNovedadContractual, await _IContractualNoveltyService.GetNovedadContractualById(scst.SolicitudId));
-                            break;
+                        //case ConstanCodigoTipoSolicitud.Novedad_Contractual:
+                        //    RegistrosFichaNovedadContractual += PlantillaNovedadContractual;
+                        //    RegistrosFichaNovedadContractual = await ReemplazarDatosPlantillaNovedadContractual(RegistrosFichaNovedadContractual, await _IContractualNoveltyService.GetNovedadContractualById(scst.SolicitudId));
+                        //    break;
 
-                        case ConstanCodigoTipoSolicitud.Defensa_judicial:
-                            RegistrosDefensaJudicial += PlantillaDefensaJudicial;
-                            RegistrosDefensaJudicial = await _judicialDefense.ReemplazarDatosPlantillaDefensaJudicial(RegistrosDefensaJudicial, scst.SolicitudId, 2);
-                            break;
+                        //case ConstanCodigoTipoSolicitud.Defensa_judicial:
+                        //    RegistrosDefensaJudicial += PlantillaDefensaJudicial;
+                        //    RegistrosDefensaJudicial = await _judicialDefense.ReemplazarDatosPlantillaDefensaJudicial(RegistrosDefensaJudicial, scst.SolicitudId, 2);
+                        //    break;
 
                         default:
                             break;
@@ -7106,6 +7182,9 @@ namespace asivamosffie.services
                 throw ex;
             }
         }
+
+
+
 
         public async Task<dynamic> ListMonitoreo(bool EsFiduciario)
         {
