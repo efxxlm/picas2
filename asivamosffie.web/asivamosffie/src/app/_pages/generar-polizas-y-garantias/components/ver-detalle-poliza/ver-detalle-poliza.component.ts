@@ -17,9 +17,9 @@ import { MatDialog } from '@angular/material/dialog';
 export class VerDetallePolizaComponent implements OnInit {
 
     addressForm = this.fb.group({
-        nombre: [ null, Validators.compose([ Validators.required, Validators.minLength(1), Validators.maxLength(50)]) ],
-        numeroPoliza: [ null, Validators.compose([ Validators.required, Validators.minLength(2), Validators.maxLength(20) ]) ],
-        numeroCertificado: [ null, Validators.compose([ Validators.required, Validators.minLength(2), Validators.maxLength(20)]) ],
+        nombre: [ null, Validators.compose([ Validators.required, Validators.minLength(1), Validators.maxLength(200)]) ],
+        numeroPoliza: [ null, Validators.compose([ Validators.required, Validators.minLength(2), Validators.maxLength(100) ]) ],
+        numeroCertificado: [ null, Validators.compose([ Validators.required, Validators.minLength(2), Validators.maxLength(100)]) ],
         fecha: [ null, Validators.required ],
         seguros: this.fb.array( [] ),
         polizasYSeguros: [ null, Validators.required ],

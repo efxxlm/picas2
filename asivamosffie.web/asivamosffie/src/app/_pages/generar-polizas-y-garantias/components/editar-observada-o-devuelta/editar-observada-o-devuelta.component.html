@@ -41,13 +41,13 @@
           </div>
           <div class="col d-flex">
             <mat-form-field class="full-width">
-              <input matInput #nombre type="text" maxlength="50" formControlName="nombre" required />
+              <input matInput #nombre type="text" maxlength="200" formControlName="nombre" required />
             </mat-form-field>
             <span class="contador"
                   [matTooltipPosition]="'above'"
                   matTooltip="Campo alfanumérico"
                   matTooltipClass="info-tooltip">
-                  {{ 50 - nombre.value.length }}
+                  {{ 200 - nombre.value.length }}
             </span>
             <span class="icon-incompleto">
               <img  class="icon-incompleto--img"
@@ -74,13 +74,13 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #numeroPoliza type="text" maxlength="20" formControlName="numeroPoliza" required>
+                  <input matInput #numeroPoliza type="text" maxlength="100" formControlName="numeroPoliza" required>
                 </mat-form-field>
                 <span class="contador"
                       [matTooltipPosition]="'above'"
                       matTooltip="Campo alfanumérico"
                       matTooltipClass="info-tooltip">
-                      {{ 20 - numeroPoliza.value.length }}
+                      {{ 100 - numeroPoliza.value.length }}
                 </span>
                 <span class="icon-incompleto">
                   <img  class="icon-incompleto--img"
@@ -112,7 +112,7 @@
                   <input  matInput
                           #numeroCertificado
                           type="text"
-                          maxlength="20"
+                          maxlength="100"
                           formControlName="numeroCertificado"
                           required>
                 </mat-form-field>
@@ -120,7 +120,7 @@
                       [matTooltipPosition]="'above'"
                       matTooltip="Campo alfanumérico"
                       matTooltipClass="info-tooltip">
-                      {{ 20 - numeroCertificado.value.length }}
+                      {{ 100 - numeroCertificado.value.length }}
                 </span>
                 <span class="icon-incompleto">
                   <img  class="icon-incompleto--img"
@@ -292,7 +292,7 @@
                     </div>
                   </div>
                 </div>
-  
+
                 <div class="row">
                   <div class="col-md-8">
                     <div class="row">
@@ -336,7 +336,7 @@
                     </div>
                   </div>
                 </div>
-  
+
                 <div class="row">
                   <div class="col-md-8">
                     <div class="row">

@@ -17,9 +17,9 @@ import humanize from 'humanize-plus';
 export class EditarEnRevisionComponent implements OnInit, OnDestroy {
 
     addressForm = this.fb.group({
-        nombre: [ null, Validators.compose([ Validators.required, Validators.minLength(1), Validators.maxLength(50)]) ],
-        numeroPoliza: [ null, Validators.compose([ Validators.required, Validators.minLength(2), Validators.maxLength(20) ]) ],
-        numeroCertificado: [ null, Validators.compose([ Validators.required, Validators.minLength(2), Validators.maxLength(20)]) ],
+        nombre: [ null, Validators.compose([ Validators.required, Validators.minLength(1), Validators.maxLength(200)]) ],
+        numeroPoliza: [ null, Validators.compose([ Validators.required, Validators.minLength(2), Validators.maxLength(100) ]) ],
+        numeroCertificado: [ null, Validators.compose([ Validators.required, Validators.minLength(2), Validators.maxLength(100)]) ],
         fecha: [ null, Validators.required ],
         seguros: this.fb.array( [] ),
         polizasYSeguros: [ null, Validators.required ],
@@ -166,7 +166,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
 
                                     if ( revision.length > 0 ) {
                                         const ultimaRevision = revision[ revision.length - 1 ];
-            
+
                                         if ( this.polizaObservacion[ this.polizaObservacion.length - 1 ] === ultimaRevision ) {
                                             this.contadorRevision--;
 
@@ -304,7 +304,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
                     }
                 }
             } );
-            
+
             if ( registroCompleto === this.seguros.length ) {
                 registroCompletoSeguros = true;
             }
@@ -388,7 +388,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
             return [
                 {
                     polizaObservacionId: this.polizaObservacionId,
-                    contratoPolizaId: this.contratoPoliza.contratoPolizaId,
+                    contratoPolizaId: this.contratoPoliza?.contratoPolizaId,
                     fechaRevision: this.addressForm.get( 'fechaRevision' ).value !== null ? new Date( this.addressForm.get( 'fechaRevision' ).value ).toISOString() : new Date().toISOString(),
                     estadoRevisionCodigo: this.addressForm.get( 'estadoRevision' ).value !== null ? this.addressForm.get( 'estadoRevision' ).value : this.estadosPoliza.enRevision,
                     fechaAprobacion,
@@ -403,7 +403,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
             contratoPoliza: [
                 {
                     contratoId: this.contrato.contratoId,
-                    contratoPolizaId: this.contratoPoliza.contratoPolizaId,
+                    contratoPolizaId: this.contratoPoliza?.contratoPolizaId,
                     nombreAseguradora: this.addressForm.get( 'nombre' ).value,
                     numeroPoliza: this.addressForm.get( 'numeroPoliza' ).value,
                     numeroCertificado: this.addressForm.get( 'numeroCertificado' ).value,
