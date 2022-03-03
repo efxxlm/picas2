@@ -3218,7 +3218,7 @@ namespace asivamosffie.services
                 return
                    new Respuesta
                    {
-                       Data = validarcompletosActa(pSesionComiteSolicitud.ComiteTecnicoId ?? 0),
+                       //Data = validarcompletosActa(pSesionComiteSolicitud.ComiteTecnicoId ?? 0),
                        IsSuccessful = true,
                        IsException = false,
                        IsValidation = false,

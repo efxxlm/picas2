@@ -332,10 +332,14 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     // console.log(Solicitud)
 
     this.technicalCommitteSessionService.createEditActasSesionSolicitudCompromiso(Solicitud).subscribe(respuesta => {
+      setTimeout(() => {
+        this.technicalCommitteSessionService.getValidarcompletosActa(this.sesionComiteSolicitud.comiteTecnicoId).subscribe(respuesta => {
+          this.validar.emit(respuesta)
+        });
+      }, 1000);
       this.openDialog('', `<b>${respuesta.message}</b>`);
       // console.log(respuesta.data)
-      this.validar.emit(respuesta.data);
-      if (respuesta.code == '200' && !respuesta.data)
+      if (respuesta.code == '200')
         this.router.navigate(['/comiteTecnico/crearActa', this.sesionComiteSolicitud.comiteTecnicoId]);
     });
   }
