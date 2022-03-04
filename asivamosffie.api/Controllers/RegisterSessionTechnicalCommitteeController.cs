@@ -35,7 +35,7 @@ namespace asivamosffie.api.Controllers
         }
 
 
-     
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetPlantillaActaIdComiteHTML")]
         public async Task<string> GetPlantillaActaIdComiteHTML(int IdComite)
@@ -550,7 +550,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetPlantillaByTablaIdRegistroId")]
         public async Task<FileResult> GetPlantillaByTablaIdRegistroId(string pTablaId, int pRegistroId, int pComiteTecnicoId)
