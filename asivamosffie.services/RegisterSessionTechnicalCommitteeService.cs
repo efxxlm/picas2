@@ -7175,9 +7175,11 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.MIEMBROS_PARTICIPANTES:
                             string strUsuariosParticipantes = string.Empty;
+                            int i = 0;
                             ListSesionParticipante.ForEach(user =>
                             {
-                                strUsuariosParticipantes += user.Usuario.PrimerNombre + " " + user.Usuario.PrimerApellido + " ";
+                                strUsuariosParticipantes += user.Usuario.GetNombreCompleto + ( i != ListSesionParticipante.Count() - 1 && ListSesionParticipante.Count() > 0 ? ", " : "");
+                                i++;
                             });
                             strContenido = strContenido.Replace(placeholderDominio.Nombre, strUsuariosParticipantes);
                             break;
@@ -7970,7 +7972,8 @@ namespace asivamosffie.services
                     }
                 }
                 List<ComponenteFuenteNovedad> ListComponenteFuenteNovedades = _context.ComponenteFuenteNovedad.Where(r => r.Eliminado != true).ToList();
-                List<Dominio> placeholders = ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
+                List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
+                //List<Dominio> placeholders = ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
                 List<FuenteFinanciacion> ListFuenteFinanciacion = _context.FuenteFinanciacion.Where(r => r.Eliminado != true).ToList();
                 Contrato contrato = novedadContractual.Contrato;
                 Contratacion contratacion = null;
