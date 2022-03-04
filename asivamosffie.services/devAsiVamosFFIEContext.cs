@@ -258,6 +258,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VConceptosUsosXsolicitudPagoId> VConceptosUsosXsolicitudPagoId { get; set; }
         public virtual DbSet<VConceptosXcontratoXfaseXproyecto> VConceptosXcontratoXfaseXproyecto { get; set; }
         public virtual DbSet<VConfinanciacionReporte> VConfinanciacionReporte { get; set; }
+        public virtual DbSet<VContratacionIdByComiteTecnico> VContratacionIdByComiteTecnico { get; set; }
         public virtual DbSet<VContratacionProyectoSolicitudLiquidacion> VContratacionProyectoSolicitudLiquidacion { get; set; }
         public virtual DbSet<VContratistaReporteHist> VContratistaReporteHist { get; set; }
         public virtual DbSet<VContratoPagosRealizados> VContratoPagosRealizados { get; set; }
@@ -2132,17 +2133,11 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.NombreAseguradora)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.NombreAseguradora).HasMaxLength(500);
 
-                entity.Property(e => e.NumeroCertificado)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
+                entity.Property(e => e.NumeroCertificado).HasMaxLength(250);
 
-                entity.Property(e => e.NumeroPoliza)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
+                entity.Property(e => e.NumeroPoliza).HasMaxLength(250);
 
                 entity.Property(e => e.UsuarioCreacion).HasMaxLength(400);
 
@@ -7152,14 +7147,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.RutaSoporte)
-                    .HasMaxLength(300)
-                    .IsUnicode(false);
+                entity.Property(e => e.RutaSoporte).HasMaxLength(1000);
 
-                entity.Property(e => e.Tema)
-                    .IsRequired()
-                    .HasMaxLength(1000)
-                    .IsUnicode(false);
+                entity.Property(e => e.Tema).IsRequired();
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
@@ -7169,11 +7159,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.ComiteTecnico)
-                    .WithMany(p => p.SesionComiteTema)
-                    .HasForeignKey(d => d.ComiteTecnicoId)
-                    .HasConstraintName("FK_SesionComiteTema_ComiteTecnico");
             });
 
             modelBuilder.Entity<SesionInvitado>(entity =>
@@ -8067,10 +8052,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Tarea)
-                    .HasMaxLength(500)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
@@ -8950,6 +8931,13 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorDocumento).HasColumnType("numeric(38, 2)");
             });
 
+            modelBuilder.Entity<VContratacionIdByComiteTecnico>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ContratacionIdByComiteTecnico");
+            });
+
             modelBuilder.Entity<VContratacionProyectoSolicitudLiquidacion>(entity =>
             {
                 entity.HasNoKey();
@@ -9335,7 +9323,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroContrato)
-                    .HasMaxLength(10)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroDdp)
