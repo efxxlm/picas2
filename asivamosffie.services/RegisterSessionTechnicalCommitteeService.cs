@@ -4977,14 +4977,30 @@ namespace asivamosffie.services
                 List<int> ListDefensaJudicialId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Defensa_judicial).Select(r => r.SolicitudId).ToList();
                 List<int> ListControversiaActuacionId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales).Select(r => r.SolicitudId).ToList();
 
-                List<Contratacion> ListContratacion = _context.Contratacion.Where(c => c.Eliminado != true)
+                List<Contratacion> ListContratacion = await _context.Contratacion
                                                                             .Include(r => r.Contrato)
                                                                             .Include(r => r.Contratista)
                                                                             .Include(r => r.PlazoContratacion)
-                                                                            .Include(r => r.ContratacionProyecto).ThenInclude(r => r.Proyecto)
-                                                                            .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante).ThenInclude(r => r.ProyectoAportante)
-                                                                            .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.ComponenteAportante).ThenInclude(r => r.ComponenteUso)
-                                                                           .ToList();
+                                                                            .Include(r => r.ContratacionProyecto)
+                                                                   .ToListAsync();
+
+                foreach (var Contratacion in ListContratacion)
+                {
+                    foreach (var ContratacionProyecto in Contratacion.ContratacionProyecto)
+                    {
+                        ContratacionProyecto.Proyecto = _context.Proyecto.Where(r => r.ProyectoId == ContratacionProyecto.ProyectoId).Include(r => r.InfraestructuraIntervenirProyecto).FirstOrDefault();
+                        ContratacionProyecto.ContratacionProyectoAportante = _context.ContratacionProyectoAportante.Where(r => r.ContratacionProyectoId == ContratacionProyecto.ContratacionProyectoId).ToList();
+
+                        foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
+                        {
+                            ContratacionProyectoAportante.ComponenteAportante = _context.ComponenteAportante.Where(r => r.ContratacionProyectoAportanteId == ContratacionProyectoAportante.ContratacionProyectoAportanteId).Include(r => r.ComponenteUso).ToList();
+                            ContratacionProyectoAportante.CofinanciacionAportante = _context.CofinanciacionAportante.Where(r => r.CofinanciacionAportanteId == ContratacionProyectoAportante.CofinanciacionAportanteId).Include(r => r.ProyectoAportante).FirstOrDefault();
+                        }
+
+                    }
+
+                }
+
 
                 List<NovedadContractual> ListNovedadContractual = new List<NovedadContractual>();
 
@@ -7359,14 +7375,12 @@ namespace asivamosffie.services
 
         public async Task<byte[]> ReplacePlantillaNovedadContractual(int pNovedadContractual)
         {
-            if (pNovedadContractual == null)
-            {
-                return Array.Empty<byte>();
-            }
-
-            //ControversiaContractual controversia = await _IContractualControversy.GetControversiaContractualById(actuacion.ControversiaContractualId);
-
-            NovedadContractual novedadContractual = await _IContractualNoveltyService.GetNovedadContractualById(pNovedadContractual);
+          
+            NovedadContractual novedadContractual = _context.NovedadContractual.Where(r => r.NovedadContractualId == pNovedadContractual)
+                                                                             .Include(r => r.Contrato)
+                                                                             .Include(r => r.NovedadContractualDescripcion).ThenInclude(r => r.NovedadContractualClausula)
+                                                                             .Include(r => r.NovedadContractualAportante).ThenInclude(r=> r.ComponenteAportanteNovedad).ThenInclude(r=> r.ComponenteFuenteNovedad).ThenInclude(r=> r.ComponenteUsoNovedad)
+                                                                              .FirstOrDefault();
 
             string TipoPlantilla = ((int)ConstanCodigoPlantillas.Ficha_novedad_contractual).ToString();
 
@@ -7950,14 +7964,28 @@ namespace asivamosffie.services
 
                 if (ListContratacion == null)
                 {
-                    ListContratacion = _context.Contratacion.Where(c => c.ContratacionId == novedadContractual.Contrato.ContratacionId)
-                                                                           .Include(r => r.Contrato)
-                                                                           .Include(r => r.Contratista)
-                                                                           .Include(r => r.PlazoContratacion)
-                                                                           .Include(r => r.ContratacionProyecto).ThenInclude(r => r.Proyecto)
-                                                                           .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante).ThenInclude(r => r.ProyectoAportante)
-                                                                           .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.ComponenteAportante).ThenInclude(r => r.ComponenteUso)
-                                                                          .ToList();
+                    ListContratacion  = _context.Contratacion.Where(c => c.ContratacionId == novedadContractual.Contrato.ContratacionId)
+                                                                            .Include(r => r.Contrato)
+                                                                            .Include(r => r.Contratista)
+                                                                            .Include(r => r.PlazoContratacion)
+                                                                            .Include(r => r.ContratacionProyecto)
+                                                             .ToList();
+                    foreach (var Contratacion in ListContratacion)
+                    {
+                        foreach (var ContratacionProyecto in Contratacion.ContratacionProyecto)
+                        {
+                            ContratacionProyecto.Proyecto = _context.Proyecto.Where(r => r.ProyectoId == ContratacionProyecto.ProyectoId).Include(r => r.InfraestructuraIntervenirProyecto).FirstOrDefault();
+                            ContratacionProyecto.ContratacionProyectoAportante = _context.ContratacionProyectoAportante.Where(r => r.ContratacionProyectoId == ContratacionProyecto.ContratacionProyectoId).ToList();
+
+                            foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
+                            {
+                                ContratacionProyectoAportante.ComponenteAportante = _context.ComponenteAportante.Where(r => r.ContratacionProyectoAportanteId == ContratacionProyectoAportante.ContratacionProyectoAportanteId).Include(r => r.ComponenteUso).ToList();
+                                ContratacionProyectoAportante.CofinanciacionAportante = _context.CofinanciacionAportante.Where(r => r.CofinanciacionAportanteId == ContratacionProyectoAportante.CofinanciacionAportanteId).Include(r => r.ProyectoAportante).FirstOrDefault();
+                            }
+
+                        }
+                    }
+                  
 
                 }
 
