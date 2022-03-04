@@ -2119,10 +2119,10 @@ namespace asivamosffie.services
 
             try
             {
+                _context.SesionParticipante.Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).Delete();
+
                 foreach (var SesionParticipante in pComiteTecnico.SesionParticipante)
-                {
-                    if (SesionParticipante.SesionParticipanteId == 0)
-                    {
+                { 
                         _context.SesionParticipante.Add(new SesionParticipante
                         {
                             FechaCreacion = DateTime.Now,
@@ -2130,15 +2130,7 @@ namespace asivamosffie.services
                             UsuarioCreacion = pComiteTecnico.UsuarioCreacion,
                             UsuarioId = SesionParticipante.UsuarioId,
                             ComiteTecnicoId = pComiteTecnico.ComiteTecnicoId,
-                        });
-                    }
-                    else
-                    {
-                        SesionParticipante sesionParticipanteOld = _context.SesionParticipante.Find(SesionParticipante.SesionParticipanteId);
-                        sesionParticipanteOld.UsuarioId = SesionParticipante.UsuarioId;
-                        sesionParticipanteOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
-                        sesionParticipanteOld.FechaModificacion = DateTime.Now;
-                    }
+                        }); 
                 }
                 foreach (var SesionInvitado in pComiteTecnico.SesionInvitado)
                 {
