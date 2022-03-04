@@ -3261,18 +3261,35 @@ namespace asivamosffie.services
 
         public async Task<byte[]> ReplacePlantillaFichaContratacion(int pContratacionId)
         {
-            Contratacion contratacion = await _IProjectContractingService.GetAllContratacionByContratacionId(pContratacionId);
+            Contratacion contratacion =await _context.Contratacion.Where(c => c.ContratacionId == pContratacionId)
+                                                                            .Include(r => r.Contrato)
+                                                                            .Include(r => r.Contratista)  
+                                                                            .Include(r => r.PlazoContratacion)
+                                                                            .Include(r => r.ContratacionProyecto) 
+                                                                   .FirstOrDefaultAsync();
 
-            if (contratacion == null)
+            foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
             {
-                return Array.Empty<byte>();
+                ContratacionProyecto.Proyecto = _context.Proyecto.Where(r => r.ProyectoId == ContratacionProyecto.ProyectoId).Include(r => r.InfraestructuraIntervenirProyecto).FirstOrDefault();
+                ContratacionProyecto.ContratacionProyectoAportante = _context.ContratacionProyectoAportante.Where(r => r.ContratacionProyectoId == ContratacionProyecto.ContratacionProyectoId).ToList();
+
+                foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
+                {
+                    ContratacionProyectoAportante.ComponenteAportante = _context.ComponenteAportante.Where(r => r.ContratacionProyectoAportanteId == ContratacionProyectoAportante.ContratacionProyectoAportanteId).Include(r => r.ComponenteUso).ToList();
+                    ContratacionProyectoAportante.CofinanciacionAportante = _context.CofinanciacionAportante.Where(r => r.CofinanciacionAportanteId == ContratacionProyectoAportante.CofinanciacionAportanteId).Include(r => r.ProyectoAportante).FirstOrDefault();
+                }
+            
             }
 
-            string TipoPlantilla = ((int)ConstanCodigoPlantillas.Ficha_De_Contratacion).ToString();
 
+            if (contratacion == null) 
+                return Array.Empty<byte>();
+  
+
+            string TipoPlantilla = ((int)ConstanCodigoPlantillas.Ficha_De_Contratacion).ToString(); 
             Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
             Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion);
-            //return ConvertirPDF(Plantilla);
+ 
             return PDF.Convertir(Plantilla);
 
         }
@@ -4960,13 +4977,13 @@ namespace asivamosffie.services
                 List<int> ListDefensaJudicialId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Defensa_judicial).Select(r => r.SolicitudId).ToList();
                 List<int> ListControversiaActuacionId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales).Select(r => r.SolicitudId).ToList();
 
-                List<Contratacion> ListContratacion = _context.Contratacion.Where(c => c.Eliminado != true) 
+                List<Contratacion> ListContratacion = _context.Contratacion.Where(c => c.Eliminado != true)
                                                                             .Include(r => r.Contrato)
                                                                             .Include(r => r.Contratista)
                                                                             .Include(r => r.PlazoContratacion)
                                                                             .Include(r => r.ContratacionProyecto).ThenInclude(r => r.Proyecto)
-                                                                            .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante).ThenInclude(r=> r.ProyectoAportante)
-                                                                            .Include(r=> r.ContratacionProyecto).ThenInclude(r=> r.ContratacionProyectoAportante).ThenInclude(r=> r.ComponenteAportante).ThenInclude(r=> r.ComponenteUso) 
+                                                                            .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante).ThenInclude(r => r.ProyectoAportante)
+                                                                            .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.ComponenteAportante).ThenInclude(r => r.ComponenteUso)
                                                                            .ToList();
 
                 List<NovedadContractual> ListNovedadContractual = new List<NovedadContractual>();
@@ -5004,7 +5021,7 @@ namespace asivamosffie.services
                 List<Contratista> ListContratista = _context.Contratista.ToList();
                 List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal = _context.DisponibilidadPresupuestal.ToList();
 
-               
+
                 List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId != (int)EnumeratorTipoDominio.PlaceHolder).ToList();
                 List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
                 List<InstitucionEducativaSede> ListIntitucionEducativa = _context.InstitucionEducativaSede.ToList();
@@ -6113,13 +6130,13 @@ namespace asivamosffie.services
                             DisponibilidadPresupuestal disponibilidadPresupuestalDefensaJudicial = null;
                             Contratista contratistaDf = null;
 
-                            if (defensaJudicial.DefensaJudicialContratacionProyecto != null) 
+                            if (defensaJudicial.DefensaJudicialContratacionProyecto != null)
                                 contratacionProyectoDf = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == defensaJudicial.DefensaJudicialContratacionProyecto.FirstOrDefault().ContratacionProyectoId).FirstOrDefault();
- 
-                            if (contratacionProyectoDf != null) 
+
+                            if (contratacionProyectoDf != null)
                                 contratacionDefensaJudicial = ListContratacion.Find(r => r.ContratacionId == contratacionProyectoDf.ContratacionId);
 
-                           
+
                             if (contratacionDefensaJudicial != null)
                             {
                                 contratistaDf = _context.Contratista
@@ -6657,14 +6674,14 @@ namespace asivamosffie.services
                                 int cantidadNoAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true).Count();
                                 if (Tema.RequiereVotacion == true)
                                 {
-                                    if (cantidadAprobadas > cantidadNoAprobadas) 
-                                        strRequiereVotacion = "Aprobada"; 
-                                    else 
-                                        strRequiereVotacion = "No Aprobada"; 
+                                    if (cantidadAprobadas > cantidadNoAprobadas)
+                                        strRequiereVotacion = "Aprobada";
+                                    else
+                                        strRequiereVotacion = "No Aprobada";
                                 }
-                                else 
+                                else
                                     strRequiereVotacion = "No fue requerida";
-                            
+
                                 RegistrosNuevosTemas = RegistrosNuevosTemas.Replace(placeholderDominio.Nombre, strRequiereVotacion);
                                 break;
 
@@ -6673,12 +6690,12 @@ namespace asivamosffie.services
                                 int cantidadAprobado = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true).Count();
                                 int cantidadNoAprobo = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true).Count();
 
-                                if (cantidadNoAprobo == 0) 
+                                if (cantidadNoAprobo == 0)
                                     TextoResultadoVotacion = PlantillaVotacionUnanime;
-                                 
-                                else if (cantidadAprobado > cantidadNoAprobo) 
+
+                                else if (cantidadAprobado > cantidadNoAprobo)
                                     TextoResultadoVotacion = PlantillaNoVotacionUnanime;
-                                 
+
                                 TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", Tema.RutaSoporte);
 
                                 RegistrosNuevosTemas = RegistrosNuevosTemas
@@ -7050,7 +7067,7 @@ namespace asivamosffie.services
                 RegistrosFichaContratacion += RegistrosDefensaJudicial;
 
                 //Plantilla Principal 
-                
+
                 foreach (Dominio placeholderDominio in placeholders)
                 {
                     switch (placeholderDominio.Codigo)
@@ -7923,12 +7940,25 @@ namespace asivamosffie.services
         {
             try
             {
-                if (ListPlantillas != null)
+                if (ListPlantillas == null)
                 {
                     ListPlantillas = _context.Plantilla.ToList();
                     ListaParametricas = _context.Dominio.ToList();
                     ListaLocalizaciones = _context.Localizacion.ToList();
                     ListaInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
+                }
+
+                if (ListContratacion == null)
+                {
+                    ListContratacion = _context.Contratacion.Where(c => c.ContratacionId == novedadContractual.Contrato.ContratacionId)
+                                                                           .Include(r => r.Contrato)
+                                                                           .Include(r => r.Contratista)
+                                                                           .Include(r => r.PlazoContratacion)
+                                                                           .Include(r => r.ContratacionProyecto).ThenInclude(r => r.Proyecto)
+                                                                           .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante).ThenInclude(r => r.ProyectoAportante)
+                                                                           .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.ComponenteAportante).ThenInclude(r => r.ComponenteUso)
+                                                                          .ToList();
+
                 }
 
                 List<Dominio> placeholders = ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
@@ -8207,7 +8237,7 @@ namespace asivamosffie.services
 
                 if (contrato != null)
                 {
-                    contratacion = ListContratacion.Find(r=> r.ContratacionId == contrato.ContratacionId);
+                    contratacion = ListContratacion.Find(r => r.ContratacionId == contrato.ContratacionId);
                 }
                 if (contratacion != null)
                 {
