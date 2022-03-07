@@ -1770,12 +1770,14 @@ namespace asivamosffie.services
                 return new ComiteTecnico();
             }
 
-            List<Dominio> listaResponsables = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico)
+            List<Dominio> listaResponsables = _context.Dominio.AsNoTracking()
+                                                              .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico)
                                                               .ToList();
 
             #region query
 
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico
+                 .AsNoTracking()
                  .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
                     .Include(r => r.SesionInvitado)
                     .Include(r => r.SesionResponsable)
@@ -1788,18 +1790,18 @@ namespace asivamosffie.services
                         .AsNoTracking()
                         .FirstOrDefaultAsync();
 
-            List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == pComiteTecnicoId).ToList();
+            List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.AsNoTracking().Where(r => r.ComiteTecnicoId == pComiteTecnicoId).ToList();
 
             #region Tema 
 
 
-            List<int> ListIdsSesionComiteTema = _context.SesionComiteTema.Where(r => r.ComiteTecnicoId == pComiteTecnicoId && r.Eliminado != true).Select(r => r.SesionTemaId).ToList();
+            List<int> ListIdsSesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => r.ComiteTecnicoId == pComiteTecnicoId && r.Eliminado != true).Select(r => r.SesionTemaId).ToList();
 
             List<SesionComiteTema> ListSesionComiteTema = new List<SesionComiteTema>();
 
             foreach (var IdSesionComiteTema in ListIdsSesionComiteTema)
             {
-                SesionComiteTema sesionComiteTema = _context.SesionComiteTema.Where(r => r.SesionTemaId == IdSesionComiteTema)
+                SesionComiteTema sesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => r.SesionTemaId == IdSesionComiteTema)
                                                                              .Include(r => r.TemaCompromiso)
                                                                              .FirstOrDefault();
 
@@ -1824,7 +1826,7 @@ namespace asivamosffie.services
             #endregion query
 
             #region tema
-            List<SesionTemaVoto> ListSesionTemaVoto = _context.SesionTemaVoto.ToList();
+            List<SesionTemaVoto> ListSesionTemaVoto = _context.SesionTemaVoto.AsNoTracking().ToList();
 
             foreach (var ct in comiteTecnico.SesionComiteTema)
             {
@@ -4866,6 +4868,7 @@ namespace asivamosffie.services
                 return string.Empty;
             }
             ComiteTecnico comiteTecnico = _context.ComiteTecnico
+                .AsNoTracking()
                 .Where(r => r.ComiteTecnicoId == ComiteId)
                      .Include(r => r.SesionComiteSolicitudComiteTecnico)
                        .ThenInclude(r => r.SesionSolicitudCompromiso)
@@ -4876,19 +4879,23 @@ namespace asivamosffie.services
                     .FirstOrDefault();
 
 
-            comiteTecnico.SesionComiteTema = _context.SesionComiteTema.Where(r => r.ComiteTecnicoId == ComiteId && r.Eliminado != true).ToList();
+            comiteTecnico.SesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => r.ComiteTecnicoId == ComiteId && r.Eliminado != true).ToList();
 
             foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema)
             {
                 SesionComiteTema.ComiteTecnico = null;
 
-                SesionComiteTema.TemaCompromiso = _context.TemaCompromiso.Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true)
+                SesionComiteTema.TemaCompromiso = _context.TemaCompromiso.AsNoTracking()
+                                                                         .Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true)
                                                                          .Include(r => r.ResponsableNavigation).ThenInclude(r => r.Usuario)
                                                                          .ToList();
 
 
 
-                SesionComiteTema.SesionTemaVoto = _context.SesionTemaVoto.Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true).ToList();
+                SesionComiteTema.SesionTemaVoto = _context.SesionTemaVoto
+                                                                        .AsNoTracking()
+                                                                        .Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true)
+                                                                        .ToList();
 
             }
 
@@ -4899,7 +4906,12 @@ namespace asivamosffie.services
             {
                 return string.Empty;
             }
-            Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Descargar_Acta).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+            Plantilla plantilla = _context.Plantilla.AsNoTracking()
+                                                    .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Descargar_Acta)
+                                                    .ToString())
+                                                    .Include(r => r.Encabezado)
+                                                    .Include(r => r.PieDePagina)
+                                                    .FirstOrDefault();
 
             return await ReemplazarDatosPlantillaActa(plantilla.Contenido, comiteTecnico);
         }
@@ -4910,6 +4922,7 @@ namespace asivamosffie.services
                 return Array.Empty<byte>();
             }
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico
+                .AsNoTracking()
                 .Where(r => r.ComiteTecnicoId == ComiteId)
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                        .ThenInclude(r => r.SesionSolicitudCompromiso)
@@ -4920,16 +4933,16 @@ namespace asivamosffie.services
                     .FirstOrDefaultAsync();
 
             if (comiteTecnico.SesionComiteTema.Count > 0)
-                comiteTecnico.SesionComiteTema = _context.SesionComiteTema.Where(r => r.ComiteTecnicoId == ComiteId && r.Eliminado != true).ToList();
+                comiteTecnico.SesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => r.ComiteTecnicoId == ComiteId && r.Eliminado != true).ToList();
 
             foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema)
             {
                 SesionComiteTema.ComiteTecnico = null;
 
-                SesionComiteTema.TemaCompromiso = _context.TemaCompromiso.Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true)
+                SesionComiteTema.TemaCompromiso = _context.TemaCompromiso.AsNoTracking().Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true)
                                                                          .Include(r => r.ResponsableNavigation).ThenInclude(r => r.Usuario)
                                                                          .ToList();
-                SesionComiteTema.SesionTemaVoto = _context.SesionTemaVoto.Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true)
+                SesionComiteTema.SesionTemaVoto = _context.SesionTemaVoto.AsNoTracking().Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true)
                                                                          .ToList();
 
             }
@@ -4941,7 +4954,7 @@ namespace asivamosffie.services
             {
                 return Array.Empty<byte>();
             }
-            Plantilla plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Descargar_Acta).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+            Plantilla plantilla = _context.Plantilla.AsNoTracking().Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Descargar_Acta).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
 
             plantilla.Contenido = await ReemplazarDatosPlantillaActa(plantilla.Contenido, comiteTecnico);
             //return ConvertirPDF(plantilla);
@@ -4954,7 +4967,7 @@ namespace asivamosffie.services
             {
                 string msg = "<p style='text-align:left;margin-top:5px;margin-bottom:15px;'>[MSG]</p>";
                 List<int> ListProcesoSeleccionIdSolicitudId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso).Select(r => r.SolicitudId).ToList();
-                List<int> ListContratacionId = _context.VContratacionIdByComiteTecnico.Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).Select(r => r.ContratacionId).ToList();
+                List<int> ListContratacionId = _context.VContratacionIdByComiteTecnico.AsNoTracking().Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).Select(r => r.ContratacionId).ToList();
                 List<int> ListNovedadContractualId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Novedad_Contractual).Select(r => r.SolicitudId).ToList();
                 List<int> ListDefensaJudicialId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Defensa_judicial).Select(r => r.SolicitudId).ToList();
                 List<int> ListControversiaActuacionId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales).Select(r => r.SolicitudId).ToList();
@@ -4964,22 +4977,19 @@ namespace asivamosffie.services
                                                                                 .Include(r => r.Contratista)
                                                                                 .Include(r => r.PlazoContratacion)
                                                                                 .Include(r => r.ContratacionProyecto)
-                                                                                .ThenInclude(r => r.Proyecto).ThenInclude(r => r.InfraestructuraIntervenirProyecto)
-                                                                                //.Include(r => r.ContratacionProyecto).ThenInclude(r=> r.ContratacionProyectoAportante).ThenInclude(r=> r.ComponenteAportante).ThenInclude(r=> r.ComponenteUso)
-                                                                                //.Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante).ThenInclude(r => r.ProyectoAportante)
-
+                                                                                .ThenInclude(r => r.Proyecto).ThenInclude(r => r.InfraestructuraIntervenirProyecto) 
                                                                                 .ToList();
                 foreach (var Contratacion in ListContratacion)
                 {
                     foreach (var ContratacionProyecto in Contratacion.ContratacionProyecto)
                     {
                         // ContratacionProyecto.Proyecto = _context.Proyecto.Where(r => r.ProyectoId == ContratacionProyecto.ProyectoId).Include(r => r.InfraestructuraIntervenirProyecto).FirstOrDefault();
-                        ContratacionProyecto.ContratacionProyectoAportante = _context.ContratacionProyectoAportante.Where(r => r.ContratacionProyectoId == ContratacionProyecto.ContratacionProyectoId).ToList();
+                        ContratacionProyecto.ContratacionProyectoAportante = _context.ContratacionProyectoAportante.AsNoTracking().Where(r => r.ContratacionProyectoId == ContratacionProyecto.ContratacionProyectoId).ToList();
 
                         foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
                         {
-                            ContratacionProyectoAportante.ComponenteAportante = _context.ComponenteAportante.Where(r => r.ContratacionProyectoAportanteId == ContratacionProyectoAportante.ContratacionProyectoAportanteId).Include(r => r.ComponenteUso).ToList();
-                            ContratacionProyectoAportante.CofinanciacionAportante = _context.CofinanciacionAportante.Where(r => r.CofinanciacionAportanteId == ContratacionProyectoAportante.CofinanciacionAportanteId).Include(r => r.ProyectoAportante).FirstOrDefault();
+                            ContratacionProyectoAportante.ComponenteAportante = _context.ComponenteAportante.AsNoTracking().Where(r => r.ContratacionProyectoAportanteId == ContratacionProyectoAportante.ContratacionProyectoAportanteId).Include(r => r.ComponenteUso).ToList();
+                            ContratacionProyectoAportante.CofinanciacionAportante = _context.CofinanciacionAportante.AsNoTracking().Where(r => r.CofinanciacionAportanteId == ContratacionProyectoAportante.CofinanciacionAportanteId).Include(r => r.ProyectoAportante).FirstOrDefault();
                         }
 
                     }
@@ -4988,7 +4998,8 @@ namespace asivamosffie.services
 
                 List<NovedadContractual> ListNovedadContractual = new List<NovedadContractual>();
 
-                ListNovedadContractual = _context.NovedadContractual.Where(r => ListNovedadContractualId.Contains(r.NovedadContractualId))
+                ListNovedadContractual = _context.NovedadContractual.AsNoTracking()
+                                                                    .Where(r => ListNovedadContractualId.Contains(r.NovedadContractualId))
                                                                              .Include(r => r.Contrato)
                                                                              .Include(r => r.NovedadContractualDescripcion).ThenInclude(r => r.NovedadContractualClausula)
                                                                              .Include(r => r.NovedadContractualAportante).ThenInclude(r => r.ComponenteAportanteNovedad).ThenInclude(r => r.ComponenteFuenteNovedad)//.ThenInclude(r => r.FuenteFinanciacion)
@@ -4999,7 +5010,7 @@ namespace asivamosffie.services
 
                 foreach (var idProcesoSeleccion in ListProcesoSeleccionIdSolicitudId)
                 {
-                    ListProcesoSeleccion.Add(_context.ProcesoSeleccion.Find(idProcesoSeleccion));
+                    ListProcesoSeleccion.Add(_context.ProcesoSeleccion.AsNoTracking().Where(r=> r.ProcesoSeleccionId == idProcesoSeleccion).FirstOrDefault());
                 }
 
                 List<DefensaJudicial> ListDefensaJudicial = new List<DefensaJudicial>();
@@ -5016,30 +5027,30 @@ namespace asivamosffie.services
                     ListControversiaActuacion.Add(_context.ControversiaActuacion.Where(r => r.ControversiaActuacionId == ControversiaActuacionId).Include(r => r.ControversiaContractual).FirstOrDefault());
                 }
 
-                List<Contratista> ListContratista = _context.Contratista.ToList();
-                List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal = _context.DisponibilidadPresupuestal.ToList();
+                List<Contratista> ListContratista = _context.Contratista.AsNoTracking().ToList();
+                List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal = _context.DisponibilidadPresupuestal.AsNoTracking().ToList();
 
 
-                List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId != (int)EnumeratorTipoDominio.PlaceHolder).ToList();
-                List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
-                List<InstitucionEducativaSede> ListIntitucionEducativa = _context.InstitucionEducativaSede.ToList();
-                List<Localizacion> localizacions = _context.Localizacion.ToList();
-                List<SesionParticipante> ListSesionParticipante = _context.SesionParticipante
+                List<Dominio> ListParametricas = _context.Dominio.AsNoTracking().Where(r => r.TipoDominioId != (int)EnumeratorTipoDominio.PlaceHolder).ToList();
+                List<Dominio> placeholders = _context.Dominio.AsNoTracking().Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
+                List<InstitucionEducativaSede> ListIntitucionEducativa = _context.InstitucionEducativaSede.AsNoTracking().ToList();
+                List<Localizacion> localizacions = _context.Localizacion.AsNoTracking().ToList();
+                List<SesionParticipante> ListSesionParticipante = _context.SesionParticipante.AsNoTracking()
                     .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
                     .Include(r => r.Usuario)
                     .ToList();
 
-                List<SesionInvitado> ListInvitados = _context.SesionInvitado
+                List<SesionInvitado> ListInvitados = _context.SesionInvitado.AsNoTracking()
                     .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).ToList();
 
-                List<SesionResponsable> ListResponsables = _context.SesionResponsable
+                List<SesionResponsable> ListResponsables = _context.SesionResponsable.AsNoTracking()
                         .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).ToList();
 
 
                 //Tablas Dinamicas
 
                 //Plantilla orden dia
-                List<Plantilla> ListPlantillas = _context.Plantilla.ToList();
+                List<Plantilla> ListPlantillas = _context.Plantilla.AsNoTracking().ToList();
 
                 string PlantillaSolicitudesContractuales = ListPlantillas
                  .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Tabla_Solicitudes_Contractuales)
@@ -7361,7 +7372,8 @@ namespace asivamosffie.services
         public async Task<byte[]> ReplacePlantillaNovedadContractual(int pNovedadContractual)
         {
 
-            NovedadContractual novedadContractual = _context.NovedadContractual.Where(r => r.NovedadContractualId == pNovedadContractual)
+            NovedadContractual novedadContractual = _context.NovedadContractual.AsNoTracking()
+                                                                             .Where(r => r.NovedadContractualId == pNovedadContractual)
                                                                              .Include(r => r.Contrato)
                                                                              .Include(r => r.NovedadContractualDescripcion).ThenInclude(r => r.NovedadContractualClausula)
                                                                              .Include(r => r.NovedadContractualAportante).ThenInclude(r => r.ComponenteAportanteNovedad).ThenInclude(r => r.ComponenteFuenteNovedad).ThenInclude(r => r.ComponenteUsoNovedad)
@@ -7941,15 +7953,15 @@ namespace asivamosffie.services
             {
                 if (ListPlantillas == null)
                 {
-                    ListPlantillas = _context.Plantilla.ToList();
-                    ListaParametricas = _context.Dominio.ToList();
-                    ListaLocalizaciones = _context.Localizacion.ToList();
-                    ListaInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
+                    ListPlantillas = _context.Plantilla.AsNoTracking().ToList();
+                    ListaParametricas = _context.Dominio.AsNoTracking().ToList();
+                    ListaLocalizaciones = _context.Localizacion.AsNoTracking().ToList();
+                    ListaInstitucionEducativaSedes = _context.InstitucionEducativaSede.AsNoTracking().ToList();
                 }
 
                 if (ListContratacion == null)
                 {
-                    ListContratacion = _context.Contratacion.Where(c => c.ContratacionId == novedadContractual.Contrato.ContratacionId)
+                    ListContratacion = _context.Contratacion.AsNoTracking().Where(c => c.ContratacionId == novedadContractual.Contrato.ContratacionId)
                                                                             .Include(r => r.Contrato)
                                                                             .Include(r => r.Contratista)
                                                                             .Include(r => r.PlazoContratacion)
@@ -7959,22 +7971,22 @@ namespace asivamosffie.services
                     {
                         foreach (var ContratacionProyecto in Contratacion.ContratacionProyecto)
                         {
-                            ContratacionProyecto.Proyecto = _context.Proyecto.Where(r => r.ProyectoId == ContratacionProyecto.ProyectoId).Include(r => r.InfraestructuraIntervenirProyecto).FirstOrDefault();
-                            ContratacionProyecto.ContratacionProyectoAportante = _context.ContratacionProyectoAportante.Where(r => r.ContratacionProyectoId == ContratacionProyecto.ContratacionProyectoId).ToList();
+                            ContratacionProyecto.Proyecto = _context.Proyecto.AsNoTracking().Where(r => r.ProyectoId == ContratacionProyecto.ProyectoId).Include(r => r.InfraestructuraIntervenirProyecto).FirstOrDefault();
+                            ContratacionProyecto.ContratacionProyectoAportante = _context.ContratacionProyectoAportante.AsNoTracking().Where(r => r.ContratacionProyectoId == ContratacionProyecto.ContratacionProyectoId).ToList();
 
                             foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
                             {
-                                ContratacionProyectoAportante.ComponenteAportante = _context.ComponenteAportante.Where(r => r.ContratacionProyectoAportanteId == ContratacionProyectoAportante.ContratacionProyectoAportanteId).Include(r => r.ComponenteUso).ToList();
-                                ContratacionProyectoAportante.CofinanciacionAportante = _context.CofinanciacionAportante.Where(r => r.CofinanciacionAportanteId == ContratacionProyectoAportante.CofinanciacionAportanteId).Include(r => r.ProyectoAportante).FirstOrDefault();
+                                ContratacionProyectoAportante.ComponenteAportante = _context.ComponenteAportante.AsNoTracking().Where(r => r.ContratacionProyectoAportanteId == ContratacionProyectoAportante.ContratacionProyectoAportanteId).Include(r => r.ComponenteUso).ToList();
+                                ContratacionProyectoAportante.CofinanciacionAportante = _context.CofinanciacionAportante.AsNoTracking().Where(r => r.CofinanciacionAportanteId == ContratacionProyectoAportante.CofinanciacionAportanteId).Include(r => r.ProyectoAportante).FirstOrDefault();
                             }
 
                         }
                     }
                 }
-                List<ComponenteFuenteNovedad> ListComponenteFuenteNovedades = _context.ComponenteFuenteNovedad.Where(r => r.Eliminado != true).ToList();
-                List<Dominio> placeholders = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
+                List<ComponenteFuenteNovedad> ListComponenteFuenteNovedades = _context.ComponenteFuenteNovedad.AsNoTracking().Where(r => r.Eliminado != true).ToList();
+                List<Dominio> placeholders = ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
                 //List<Dominio> placeholders = ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.PlaceHolder).ToList();
-                List<FuenteFinanciacion> ListFuenteFinanciacion = _context.FuenteFinanciacion.Where(r => r.Eliminado != true).ToList();
+                List<FuenteFinanciacion> ListFuenteFinanciacion = _context.FuenteFinanciacion.AsNoTracking().Where(r => r.Eliminado != true).ToList();
                 Contrato contrato = novedadContractual.Contrato;
                 Contratacion contratacion = null;
                 DisponibilidadPresupuestal disponibilidadPresupuestal = null;

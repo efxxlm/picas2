@@ -388,9 +388,13 @@ namespace asivamosffie.services
         public async Task<List<Dominio>> GetListDominioByIdTipoDominio(int pIdTipoDominio)
         {
             //JMARTINEZ
-            List<Dominio> listDominio = await _context.Dominio.Where(r => r.TipoDominioId == pIdTipoDominio && (bool)r.Activo).ToListAsync();
+            List<Dominio> listDominio = await _context.Dominio.AsNoTracking()
+                                                              .Where(r => r.TipoDominioId == pIdTipoDominio && (bool)r.Activo)
+                                                              .ToListAsync();
             //Vuelve todo mayuscula
             listDominio.ForEach(r => r.Nombre.ToUpper());
+
+
             return listDominio;
         }
 

@@ -247,7 +247,7 @@ namespace asivamosffie.services
                                                                         //    .ThenInclude(r => r.TemaCompromiso)
                                                                         //.Include(r => r.SesionComiteTema)
                                                                         //    .ThenInclude(r => r.SesionTemaVoto) 
-
+                                                                        .AsNoTracking()
                                                                         .Include(r => r.SesionComiteTecnicoCompromiso)
                                                                             .ThenInclude(r => r.CompromisoSeguimiento)
                                                                         .Include(r => r.SesionComiteSolicitudComiteTecnico)
@@ -265,36 +265,36 @@ namespace asivamosffie.services
                                                                         .AsNoTracking()
                                                                         .FirstOrDefaultAsync();
 
-                item.SesionComentario = _context.SesionComentario.Where(s => s.ComiteTecnicoId == item.ComiteTecnicoId).ToList();
+                item.SesionComentario = _context.SesionComentario.AsNoTracking().Where(s => s.ComiteTecnicoId == item.ComiteTecnicoId).ToList();
 
-                item.SesionComiteTema = _context.SesionComiteTema.Where(r => r.ComiteTecnicoId == comiteTecnicoId && r.Eliminado != true).ToList();
+                item.SesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => r.ComiteTecnicoId == comiteTecnicoId && r.Eliminado != true).ToList();
 
                 foreach (var SesionComiteTema in item.SesionComiteTema)
                 {
                     SesionComiteTema.ComiteTecnico = null;
 
-                    SesionComiteTema.TemaCompromiso = _context.TemaCompromiso.Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true).ToList();
-                    SesionComiteTema.SesionTemaVoto = _context.SesionTemaVoto.Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true).ToList();
+                    SesionComiteTema.TemaCompromiso = _context.TemaCompromiso.AsNoTracking().Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true).ToList();
+                    SesionComiteTema.SesionTemaVoto = _context.SesionTemaVoto.AsNoTracking().Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true).ToList();
 
                 }
                       
 
-                List<Dominio> ListParametricas = _context.Dominio.ToList();
-                List<Contratacion> ListContratacion = _context.Contratacion.ToList();
-                List<ProcesoSeleccion> ListProcesosSelecicon = _context.ProcesoSeleccion.ToList();
-                List<ControversiaContractual> ListControversiasContractuales = _context.ControversiaContractual.ToList();
-                List<NovedadContractual> ListModificacionesContractuales = _context.NovedadContractual.ToList();
-                List<SesionParticipanteVoto> ListParticipanteVotos = _context.SesionParticipanteVoto.ToList();
-                List<ControversiaActuacion> ListControversiaActuacion = _context.ControversiaActuacion.ToList();
-                List<DefensaJudicial> ListDefensaJudicial = _context.DefensaJudicial.ToList();
-                List<ProcesoSeleccionMonitoreo> ListProcesoSeleccionMonitoreo = _context.ProcesoSeleccionMonitoreo.ToList();
+                List<Dominio> ListParametricas = _context.Dominio.AsNoTracking().ToList();
+                List<Contratacion> ListContratacion = _context.Contratacion.AsNoTracking().ToList();
+                List<ProcesoSeleccion> ListProcesosSelecicon = _context.ProcesoSeleccion.AsNoTracking().ToList();
+                List<ControversiaContractual> ListControversiasContractuales = _context.ControversiaContractual.AsNoTracking().ToList();
+                List<NovedadContractual> ListModificacionesContractuales = _context.NovedadContractual.AsNoTracking().ToList();
+                List<SesionParticipanteVoto> ListParticipanteVotos = _context.SesionParticipanteVoto.AsNoTracking().ToList();
+                List<ControversiaActuacion> ListControversiaActuacion = _context.ControversiaActuacion.AsNoTracking().ToList();
+                List<DefensaJudicial> ListDefensaJudicial = _context.DefensaJudicial.AsNoTracking().ToList();
+                List<ProcesoSeleccionMonitoreo> ListProcesoSeleccionMonitoreo = _context.ProcesoSeleccionMonitoreo.AsNoTracking().ToList();
 
 
                
 
                 bool BorrarCompromisosFiduciarios = item.EsComiteFiduciario ?? false;
 
-                List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.Where(r => r.ComiteTecnicoId == item.ComiteTecnicoId).ToList();
+                List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.AsNoTracking().Where(r => r.ComiteTecnicoId == item.ComiteTecnicoId).ToList();
                 item.SesionParticipanteView = listaParticipantes;
                 if (item.SesionComiteTecnicoCompromiso.Count() > 0)
                     item.SesionComiteTecnicoCompromiso = item.SesionComiteTecnicoCompromiso.Where(r => !(bool)r.Eliminado).ToList();
