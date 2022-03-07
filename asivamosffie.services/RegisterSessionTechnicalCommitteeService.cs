@@ -2124,15 +2124,15 @@ namespace asivamosffie.services
                 _context.SesionParticipante.Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).Delete();
 
                 foreach (var SesionParticipante in pComiteTecnico.SesionParticipante)
-                { 
-                        _context.SesionParticipante.Add(new SesionParticipante
-                        {
-                            FechaCreacion = DateTime.Now,
-                            Eliminado = false,
-                            UsuarioCreacion = pComiteTecnico.UsuarioCreacion,
-                            UsuarioId = SesionParticipante.UsuarioId,
-                            ComiteTecnicoId = pComiteTecnico.ComiteTecnicoId,
-                        }); 
+                {
+                    _context.SesionParticipante.Add(new SesionParticipante
+                    {
+                        FechaCreacion = DateTime.Now,
+                        Eliminado = false,
+                        UsuarioCreacion = pComiteTecnico.UsuarioCreacion,
+                        UsuarioId = SesionParticipante.UsuarioId,
+                        ComiteTecnicoId = pComiteTecnico.ComiteTecnicoId,
+                    });
                 }
                 foreach (var SesionInvitado in pComiteTecnico.SesionInvitado)
                 {
@@ -4931,9 +4931,8 @@ namespace asivamosffie.services
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                         .ThenInclude(r => r.SesionSolicitudVoto)
                     .FirstOrDefaultAsync();
-
-            if (comiteTecnico.SesionComiteTema.Count > 0)
-                comiteTecnico.SesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => r.ComiteTecnicoId == ComiteId && r.Eliminado != true).ToList();
+             
+            comiteTecnico.SesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => r.ComiteTecnicoId == ComiteId && r.Eliminado != true).ToList();
 
             foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema)
             {
@@ -4977,7 +4976,7 @@ namespace asivamosffie.services
                                                                                 .Include(r => r.Contratista)
                                                                                 .Include(r => r.PlazoContratacion)
                                                                                 .Include(r => r.ContratacionProyecto)
-                                                                                .ThenInclude(r => r.Proyecto).ThenInclude(r => r.InfraestructuraIntervenirProyecto) 
+                                                                                .ThenInclude(r => r.Proyecto).ThenInclude(r => r.InfraestructuraIntervenirProyecto)
                                                                                 .ToList();
                 foreach (var Contratacion in ListContratacion)
                 {
@@ -5010,7 +5009,7 @@ namespace asivamosffie.services
 
                 foreach (var idProcesoSeleccion in ListProcesoSeleccionIdSolicitudId)
                 {
-                    ListProcesoSeleccion.Add(_context.ProcesoSeleccion.AsNoTracking().Where(r=> r.ProcesoSeleccionId == idProcesoSeleccion).FirstOrDefault());
+                    ListProcesoSeleccion.Add(_context.ProcesoSeleccion.AsNoTracking().Where(r => r.ProcesoSeleccionId == idProcesoSeleccion).FirstOrDefault());
                 }
 
                 List<DefensaJudicial> ListDefensaJudicial = new List<DefensaJudicial>();
@@ -7189,7 +7188,7 @@ namespace asivamosffie.services
                             int i = 0;
                             ListSesionParticipante.ForEach(user =>
                             {
-                                strUsuariosParticipantes += user.Usuario.GetNombreCompleto + ( i != ListSesionParticipante.Count() - 1 && ListSesionParticipante.Count() > 0 ? ", " : "");
+                                strUsuariosParticipantes += user.Usuario.GetNombreCompleto + (i != ListSesionParticipante.Count() - 1 && ListSesionParticipante.Count() > 0 ? ", " : "");
                                 i++;
                             });
                             strContenido = strContenido.Replace(placeholderDominio.Nombre, strUsuariosParticipantes);
