@@ -21,6 +21,7 @@ using iTextSharp.tool.xml.html;
 using iTextSharp.tool.xml.pipeline.html;
 using iTextSharp.tool.xml.pipeline.css;
 using iTextSharp.tool.xml.pipeline.end;
+using SelectPdf;
 
 namespace asivamosffie.services.Helpers
 {
@@ -36,7 +37,43 @@ namespace asivamosffie.services.Helpers
         }
 
 
+        public static byte[] Convertir3(Plantilla pPlantilla, bool? pEsHorizontal = false)
+        {
 
+            string contenido = pPlantilla.Contenido ?? " ";
+
+                Margenes margenes = new Margenes
+            {
+                Arriba = (float)pPlantilla.MargenArriba,
+                Abajo = (float)pPlantilla.MargenAbajo,
+                Derecha = (float)pPlantilla.MargenDerecha,
+                Izquierda = (float)pPlantilla.MargenIzquierda
+            };
+
+            contenido = contenido.Replace("\r\n", "");
+            contenido = contenido.Replace("\r\n", "");
+            contenido = contenido.Replace("\r\n", "");
+            contenido = contenido.Replace("<br>", "");
+            contenido = contenido.Replace("<br/>", "");
+            contenido = contenido.Replace("<br />", "");
+            contenido = contenido.Replace("</br>", "");
+
+            HtmlToPdf htmlToPdf = new HtmlToPdf();
+            htmlToPdf.Options.PdfPageSize = PdfPageSize.A4;
+            htmlToPdf.Options.PdfPageOrientation = PdfPageOrientation.Portrait;
+            htmlToPdf.Options.MarginLeft = 10;
+            htmlToPdf.Options.MarginRight = 10;
+            htmlToPdf.Options.MarginTop = 20;
+            htmlToPdf.Options.MarginBottom = 20;
+
+
+
+            SelectPdf.PdfDocument pdfDocument = htmlToPdf.ConvertHtmlString(contenido);
+            byte[] pdf = pdfDocument.Save();
+            pdfDocument.Close();
+                 
+            return pdf;
+        }
         public static byte[] Convertir(Plantilla pPlantilla, bool? pEsHorizontal = false)
         {
             string contenido = pPlantilla.Contenido ?? " ";
@@ -71,7 +108,7 @@ namespace asivamosffie.services.Helpers
                 iTextSharp.text.Rectangle z = PageSize.LETTER;
                 document = new Document(z, (float)margenIzquierdo, (float)margenDerecho, (float)margenSuperior, (float)margenInferior);
 
-                if ( pEsHorizontal == true )
+                if (pEsHorizontal == true)
                     document.SetPageSize(iTextSharp.text.PageSize.LETTER.Rotate());
 
 
@@ -84,7 +121,7 @@ namespace asivamosffie.services.Helpers
 
                 document.Open();
 
-                
+
                 HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
 
                 htmlContext.SetTagFactory(Tags.GetHtmlTagProcessorFactory());
@@ -139,14 +176,14 @@ namespace asivamosffie.services.Helpers
                     tbHeader.DefaultCell.Border = 0;
 
                     //tbHeader.AddCell(new Paragraph());
-                    
+
                     PdfPCell _cell = new PdfPCell(new Paragraph("FONDO DE FINANCIAMIENTO DE INFRAESTRUCTURA EDUCATIVA - FFIE \n MINISTERIO DE EDUCACIÓN"));
                     _cell.HorizontalAlignment = Element.ALIGN_CENTER;
                     _cell.Border = 0;
 
                     tbHeader.AddCell(_cell);
 
-                    tbHeader.WriteSelectedRows(0, -1, document.LeftMargin, writer.PageSize.GetTop(document.TopMargin) + this.MargenSuperior + 40 , writer.DirectContent);
+                    tbHeader.WriteSelectedRows(0, -1, document.LeftMargin, writer.PageSize.GetTop(document.TopMargin) + this.MargenSuperior + 40, writer.DirectContent);
 
                     PdfPTable tbFooter = new PdfPTable(3);
                     tbFooter.TotalWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin;
@@ -164,7 +201,7 @@ namespace asivamosffie.services.Helpers
 
                     tbFooter.AddCell(_cell);
 
-                    tbFooter.WriteSelectedRows(0, -1, document.LeftMargin, writer.PageSize.GetBottom(document.BottomMargin) - this.MargenInferior -10 , writer.DirectContent);
+                    tbFooter.WriteSelectedRows(0, -1, document.LeftMargin, writer.PageSize.GetBottom(document.BottomMargin) - this.MargenInferior - 10, writer.DirectContent);
 
                     string pathImage = Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png");
 
