@@ -6,7 +6,6 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { CompromisosActasComiteService } from '../../../../core/_services/compromisosActasComite/compromisos-actas-comite.service';
 import { TechnicalCommitteSessionService } from '../../../../core/_services/technicalCommitteSession/technical-committe-session.service';
 import { CommonService } from '../../../../core/_services/common/common.service';
-import { forkJoin } from 'rxjs';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 
 @Component({
@@ -266,7 +265,6 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
         })
 
     } else {
-
       this.comiteTecnicoSvc.getPlantillaActaBySesionComiteSolicitudId(comiteTecnicoId)
         .subscribe((resp: any) => {
 
@@ -280,9 +278,37 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
           anchor.click();
 
         })
-
-
     }
   }
 
-};
+  /*downloadPDF(textHtml: any) {
+    var pdf = new jsPDF({
+                orientation: "landscape",
+                format: "letter",
+            });
+      pdf.html(textHtml, {
+        html2canvas: {
+            // insert html2canvas options here, e.g.
+            scale: 1
+        },
+        callback: (doc) => {
+          const pageCount = doc.getNumberOfPages();
+          for(let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            const pageSize = doc.internal.pageSize;
+            const pageWidth = pageSize.width ? pageSize.width : pageSize.getWidth();
+            const pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+            const header = '--';
+            const footer = `Page ${i} of ${pageCount}`;
+
+            // Header
+            doc.text(header, 40, 15, { baseline: 'top' });
+            // Footer
+            doc.text(footer, pageWidth / 2 - (doc.getTextWidth(footer) / 2), pageHeight - 15, { baseline: 'bottom' });
+            doc.addPage();
+          }
+          doc.save("a4.pdf");
+        }
+      });
+    }*/
+  }

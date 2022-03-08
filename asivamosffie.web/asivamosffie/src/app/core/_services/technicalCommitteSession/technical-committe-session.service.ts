@@ -135,6 +135,11 @@ export class TechnicalCommitteSessionService {
     return this.http.get(`${environment.apiUrl}/CommitteeSessionFiduciario/GetPlantillaActaIdComite?IdComite=${ id }`, { responseType: "blob" } );
    }
 
+
+   getPlantillaActaIdComiteHTML( id: number ){
+    return this.http.get(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/GetPlantillaActaIdComiteHTML?IdComite=${ id }`,{responseType: 'text'});
+   }
+
    getCometariosDelActa( id: number ){
     return this.http.get<SesionComentario[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getCometariosDelActa?pComietTecnicoId=${ id }`);
    }
