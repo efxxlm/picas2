@@ -20,3 +20,11 @@ th.mat-header-cell {
   --w-quill: 30em;
   margin: auto;
 }
+
+.text-limit{
+  max-width: calc(100% - 1em);
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
