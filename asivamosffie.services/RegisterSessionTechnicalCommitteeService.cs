@@ -5962,7 +5962,7 @@ namespace asivamosffie.services
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.CONTRATISTA_NOMBRE:
-                                        registrosContratacion = registrosContratacion.Replace(placeholderDominio.Nombre, ""/*contratista != null ? contratista.Nombre : ""*/);
+                                        registrosContratacion = registrosContratacion.Replace(placeholderDominio.Nombre, contratista != null ? contratista.Nombre : "");
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.FECHA_INICIO_CONTRATO:
@@ -7192,7 +7192,7 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.REGISTROS_ANEXOS:
                             strContenido = strContenido
-                                .Replace(placeholderDominio.Nombre, ""/*RegistrosFichaContratacion*/);
+                                .Replace(placeholderDominio.Nombre, RegistrosFichaContratacion);
                             break;
 
                         //Registros de plantilla
