@@ -5869,7 +5869,7 @@ namespace asivamosffie.services
                         case ConstanCodigoTipoSolicitud.Novedad_Contractual:
                             registrosContratacion += PlantillaNovedades;
 
-                            NovedadContractual novedad = await _IContractualNoveltyService.GetNovedadContractualById(SesionComiteSolicitud.SolicitudId);
+                            NovedadContractual novedad = ListNovedadContractual.Where(r => r.NovedadContractualId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
 
                             string tipoNovedadString = string.Empty;
 
@@ -5898,19 +5898,11 @@ namespace asivamosffie.services
 
                             Contratista contratista = null;
 
-                            if (contrato != null)
-                            {
-                                contratacionNovedad = ListContratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
-                            }
-                            if (contratacionNovedad != null)
-                            {
-                                contratista = ListContratista
-                                    .Where(r => r.ContratistaId == contratacionNovedad.ContratistaId).FirstOrDefault();
 
+                            contratacionNovedad = novedad.Contrato.Contratacion; 
+                            contratista = novedad.Contrato.Contratacion.Contratista; 
+                            disponibilidadPresupuestal = novedad.Contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault();
 
-                                disponibilidadPresupuestal = ListDisponibilidadPresupuestal
-                                    .Where(r => r.ContratacionId == contratacionNovedad.ContratacionId).FirstOrDefault();
-                            }
 
                             foreach (Dominio placeholderDominio in placeholders)
                             {
@@ -5924,12 +5916,12 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.NUMERO_SOLICITUD_CONTRATACION:
                                         registrosContratacion = registrosContratacion
-                                            .Replace(placeholderDominio.Nombre, ""/*novedad.NumeroSolicitud*/);
+                                            .Replace(placeholderDominio.Nombre, novedad.NumeroSolicitud);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.CANTIDAD_DE_PROYECTOS_ASOCIADOS:
                                         registrosContratacion = registrosContratacion
-                                            .Replace(placeholderDominio.Nombre, ""/*contratacionNovedad.ContratacionProyecto.Where(R => !(bool)R.Eliminado).Count().ToString()*/);
+                                            .Replace(placeholderDominio.Nombre, contratacionNovedad.ContratacionProyecto.Where(R => !(bool)R.Eliminado).Count().ToString());
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.FECHA_SOLICITUD_CONTRATACION:
@@ -5939,7 +5931,7 @@ namespace asivamosffie.services
                                             FechaSolicitud = ((DateTime)contratacionNovedad.FechaTramite).ToString("dd-MM-yyy");
                                         }
                                         registrosContratacion = registrosContratacion
-                                            .Replace(placeholderDominio.Nombre, ""/*FechaSolicitud*/);
+                                            .Replace(placeholderDominio.Nombre, FechaSolicitud);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.TIPO_SOLICITUD_CONTRATACION:
@@ -5956,17 +5948,17 @@ namespace asivamosffie.services
                                        && r.Codigo == contratacionNovedad.TipoSolicitudCodigo).FirstOrDefault().Nombre;
 
                                         registrosContratacion = registrosContratacion
-                                            .Replace(placeholderDominio.Nombre, ""/*StrTipoContrato*/
+                                            .Replace(placeholderDominio.Nombre, StrTipoContrato
                                            );
                                         break;
                                     //Datos Contratista y contrato
 
                                     case ConstanCodigoVariablesPlaceHolders.NUMERO_CONTRATO:
-                                        registrosContratacion = registrosContratacion.Replace(placeholderDominio.Nombre, ""/* contrato != null ? contrato.NumeroContrato : ""*/);
+                                        registrosContratacion = registrosContratacion.Replace(placeholderDominio.Nombre, contrato != null ? contrato.NumeroContrato : "");
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.TIPO_CONTROVERSIA:
-                                        registrosContratacion = registrosContratacion.Replace(placeholderDominio.Nombre, ""/*tipoNovedadString*/);
+                                        registrosContratacion = registrosContratacion.Replace(placeholderDominio.Nombre, tipoNovedadString);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.CONTRATISTA_NOMBRE:
@@ -7033,79 +7025,79 @@ namespace asivamosffie.services
                 }
 
                 //Anexos
-                //string Anexos = string.Empty;
+                string Anexos = string.Empty;
 
-                ////Plantilla Compromisos Solicitud
-                //string PlantillaFichaContratacion = ListPlantillas
-                // .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_De_Contratacion)
-                //    .ToString()).FirstOrDefault()
-                // .Contenido;
-                //string RegistrosFichaContratacion = string.Empty;
-                ////Plantilla proceso de seleccion
-                //string PlantillaFichaProcesosSeleccion = ListPlantillas
-                // .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_De_Procesos_De_Seleccion)
-                //    .ToString()).FirstOrDefault()
-                // .Contenido;
+                //Plantilla Compromisos Solicitud
+                string PlantillaFichaContratacion = ListPlantillas
+                 .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_De_Contratacion)
+                    .ToString()).FirstOrDefault()
+                 .Contenido;
+                string RegistrosFichaContratacion = string.Empty;
+                //Plantilla proceso de seleccion
+                string PlantillaFichaProcesosSeleccion = ListPlantillas
+                 .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_De_Procesos_De_Seleccion)
+                    .ToString()).FirstOrDefault()
+                 .Contenido;
 
-                //string PlantillaNovedadContractual = ListPlantillas
-                // .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_novedad_contractual)
-                //    .ToString()).FirstOrDefault()
-                // .Contenido;
+                string PlantillaNovedadContractual = ListPlantillas
+                 .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_novedad_contractual)
+                    .ToString()).FirstOrDefault()
+                 .Contenido;
 
-                //string PlantillaDefensaJudicial = ListPlantillas
-                // .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_Estudio_Defensa_Judicial)
-                //    .ToString()).FirstOrDefault()
-                // .Contenido;
+                string PlantillaDefensaJudicial = ListPlantillas
+                 .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_Estudio_Defensa_Judicial)
+                    .ToString()).FirstOrDefault()
+                 .Contenido;
 
-                //string RegistrosFichaNovedadContractual = string.Empty;
+                string RegistrosFichaNovedadContractual = string.Empty;
 
-                //string RegistrosFichaProcesosSeleccion = string.Empty;
+                string RegistrosFichaProcesosSeleccion = string.Empty;
 
-                //string RegistrosDefensaJudicial = string.Empty;
+                string RegistrosDefensaJudicial = string.Empty;
                 #endregion
 
-                //foreach (var scst in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
-                //{
-                //    switch (scst.TipoSolicitudCodigo)
-                //    {
-                //        case ConstanCodigoTipoSolicitud.Contratacion:
-                //            RegistrosFichaContratacion += PlantillaFichaContratacion;
-                //            RegistrosFichaContratacion = ReemplazarDatosPlantillaContratacion(RegistrosFichaContratacion, ListContratacion.Where(r => r.ContratacionId == scst.SolicitudId).FirstOrDefault());
-                //            break;
+                foreach (var scst in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
+                {
+                    switch (scst.TipoSolicitudCodigo)
+                    {
+                        case ConstanCodigoTipoSolicitud.Contratacion:
+                            RegistrosFichaContratacion += PlantillaFichaContratacion;
+                            RegistrosFichaContratacion = ReemplazarDatosPlantillaContratacion(RegistrosFichaContratacion, ListContratacion.Where(r => r.ContratacionId == scst.SolicitudId).FirstOrDefault());
+                            break;
 
-                //        case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
-                //        case ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso:
-                //            RegistrosFichaProcesosSeleccion += PlantillaFichaProcesosSeleccion;
-                //            RegistrosFichaProcesosSeleccion = ReemplazarDatosPlantillaProcesosSeleccion(RegistrosFichaProcesosSeleccion, await GetProcesosSelecccionByProcesoSeleccionId(scst.SolicitudId));
-                //            break;
+                        case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
+                        case ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso:
+                            RegistrosFichaProcesosSeleccion += PlantillaFichaProcesosSeleccion;
+                            RegistrosFichaProcesosSeleccion = ReemplazarDatosPlantillaProcesosSeleccion(RegistrosFichaProcesosSeleccion, await GetProcesosSelecccionByProcesoSeleccionId(scst.SolicitudId));
+                            break;
 
-                //        case ConstanCodigoTipoSolicitud.Novedad_Contractual:
-                //            RegistrosFichaNovedadContractual += PlantillaNovedadContractual;
-                //            // RegistrosFichaNovedadContractual = await ReemplazarDatosPlantillaNovedadContractual(RegistrosFichaNovedadContractual, await _IContractualNoveltyService.GetNovedadContractualById(scst.SolicitudId));
-                //            RegistrosFichaNovedadContractual = await ReemplazarDatosPlantillaNovedadContractual(RegistrosFichaNovedadContractual,
-                //                                                                                                ListNovedadContractual.Where(r => r.NovedadContractualId == scst.SolicitudId).FirstOrDefault(),
-                //                                                                                                ListPlantillas,
-                //                                                                                                ListParametricas,
-                //                                                                                                localizacions,
-                //                                                                                                ListIntitucionEducativa,
-                //                                                                                                ListContratacion
-                //                );
-                //            break;
+                        case ConstanCodigoTipoSolicitud.Novedad_Contractual:
+                            RegistrosFichaNovedadContractual += PlantillaNovedadContractual;
+                            // RegistrosFichaNovedadContractual = await ReemplazarDatosPlantillaNovedadContractual(RegistrosFichaNovedadContractual, await _IContractualNoveltyService.GetNovedadContractualById(scst.SolicitudId));
+                            RegistrosFichaNovedadContractual = await ReemplazarDatosPlantillaNovedadContractual(RegistrosFichaNovedadContractual,
+                                                                                                                ListNovedadContractual.Where(r => r.NovedadContractualId == scst.SolicitudId).FirstOrDefault(),
+                                                                                                                ListPlantillas,
+                                                                                                                ListParametricas,
+                                                                                                                localizacions,
+                                                                                                                ListIntitucionEducativa,
+                                                                                                                ListContratacion
+                                );
+                            break;
 
-                //        case ConstanCodigoTipoSolicitud.Defensa_judicial:
-                //            RegistrosDefensaJudicial += PlantillaDefensaJudicial;
-                //            RegistrosDefensaJudicial = await _judicialDefense.ReemplazarDatosPlantillaDefensaJudicial(RegistrosDefensaJudicial, scst.SolicitudId, 2);
-                //            break;
+                        case ConstanCodigoTipoSolicitud.Defensa_judicial:
+                            RegistrosDefensaJudicial += PlantillaDefensaJudicial;
+                            RegistrosDefensaJudicial = await _judicialDefense.ReemplazarDatosPlantillaDefensaJudicial(RegistrosDefensaJudicial, scst.SolicitudId, 2);
+                            break;
 
-                //        default:
-                //            break;
-                //    }
+                        default:
+                            break;
+                    }
 
-                //}
-                ////Suma de las fichas 
-                //RegistrosFichaContratacion += RegistrosFichaProcesosSeleccion;
-                //RegistrosFichaContratacion += RegistrosFichaNovedadContractual;
-                //RegistrosFichaContratacion += RegistrosDefensaJudicial;
+                }
+                //Suma de las fichas 
+                RegistrosFichaContratacion += RegistrosFichaProcesosSeleccion;
+                RegistrosFichaContratacion += RegistrosFichaNovedadContractual;
+                RegistrosFichaContratacion += RegistrosDefensaJudicial;
 
                 //Plantilla Principal 
 
@@ -7890,7 +7882,7 @@ namespace asivamosffie.services
 
                                 case ConstanCodigoVariablesPlaceHolders.TIPO_NOVEDAD_OTRAS:
                                     if (existeOtro)
-                                        Historiales = Historiales.Replace(placeholderDominio.Nombre, NovedadesOtras); 
+                                        Historiales = Historiales.Replace(placeholderDominio.Nombre, NovedadesOtras);
                                     else
                                         Historiales = Historiales.Replace(placeholderDominio.Nombre, String.Empty);
 
@@ -7900,7 +7892,7 @@ namespace asivamosffie.services
                                     if (existeAdicion)
                                         Historiales = Historiales.Replace(placeholderDominio.Nombre, NovedadesAdicion);
                                     else
-                                        Historiales = Historiales.Replace(placeholderDominio.Nombre, String.Empty); 
+                                        Historiales = Historiales.Replace(placeholderDominio.Nombre, String.Empty);
                                     break;
 
                                 case ConstanCodigoVariablesPlaceHolders.TIPO_NOVEDAD_PRORROGA:
@@ -7912,10 +7904,10 @@ namespace asivamosffie.services
                                     break;
 
                                 case ConstanCodigoVariablesPlaceHolders.TIPO_NOVEDAD_MODIFICACION:
-                                    if (existeModificacion) 
+                                    if (existeModificacion)
                                         Historiales = Historiales.Replace(placeholderDominio.Nombre, NovedadesModificacion);
-                                    else 
-                                        Historiales = Historiales.Replace(placeholderDominio.Nombre, NovedadesModificacion); 
+                                    else
+                                        Historiales = Historiales.Replace(placeholderDominio.Nombre, NovedadesModificacion);
                                     break;
                             }
                         }
@@ -8316,21 +8308,21 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.TIPO_NOVEDAD_OTRAS:
-                            if (existeOtroDetalle) 
+                            if (existeOtroDetalle)
                                 DetallesSolicitudes = DetallesSolicitudes.Replace(placeholderDominio.Nombre, NovedadesOtras);
                             else
                                 DetallesSolicitudes = DetallesSolicitudes.Replace(placeholderDominio.Nombre, String.Empty);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.TIPO_NOVEDAD_ADICION:
-                            if (existeAdicionDetalle) 
+                            if (existeAdicionDetalle)
                                 DetallesSolicitudes = DetallesSolicitudes.Replace(placeholderDominio.Nombre, NovedadesAdicion);
                             else
                                 DetallesSolicitudes = DetallesSolicitudes.Replace(placeholderDominio.Nombre, String.Empty);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.TIPO_NOVEDAD_PRORROGA:
-                            if (existeProrrogaDetalle) 
+                            if (existeProrrogaDetalle)
                                 DetallesSolicitudes = DetallesSolicitudes.Replace(placeholderDominio.Nombre, NovedadesProrroga);
                             else
                                 DetallesSolicitudes = DetallesSolicitudes.Replace(placeholderDominio.Nombre, String.Empty);
@@ -8338,7 +8330,7 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.TIPO_NOVEDAD_MODIFICACION:
-                            if (existeModificacionDetalle) 
+                            if (existeModificacionDetalle)
                                 DetallesSolicitudes = DetallesSolicitudes.Replace(placeholderDominio.Nombre, NovedadesModificacion);
                             else
                                 DetallesSolicitudes = DetallesSolicitudes.Replace(placeholderDominio.Nombre, String.Empty);
@@ -8841,22 +8833,22 @@ namespace asivamosffie.services
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.TIPO_NOVEDAD_OTRAS:
-                                if (existeOtro) 
+                                if (existeOtro)
                                     Historiales = Historiales.Replace(placeholderDominio.Nombre, NovedadesOtras);
-                              else
+                                else
                                     Historiales = Historiales.Replace(placeholderDominio.Nombre, String.Empty);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.TIPO_NOVEDAD_ADICION:
-                                if (existeAdicion) 
+                                if (existeAdicion)
                                     Historiales = Historiales.Replace(placeholderDominio.Nombre, NovedadesAdicion);
-                                else 
+                                else
                                     Historiales = Historiales.Replace(placeholderDominio.Nombre, String.Empty);
 
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.TIPO_NOVEDAD_PRORROGA:
-                                if (existeProrroga) 
+                                if (existeProrroga)
                                     Historiales = Historiales.Replace(placeholderDominio.Nombre, NovedadesProrroga);
                                 else
                                     Historiales = Historiales.Replace(placeholderDominio.Nombre, String.Empty);
@@ -8864,9 +8856,9 @@ namespace asivamosffie.services
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.TIPO_NOVEDAD_MODIFICACION:
-                                if (existeModificacion) 
+                                if (existeModificacion)
                                     Historiales = Historiales.Replace(placeholderDominio.Nombre, NovedadesModificacion);
-                               else
+                                else
                                     Historiales = Historiales.Replace(placeholderDominio.Nombre, String.Empty);
                                 break;
                         }
