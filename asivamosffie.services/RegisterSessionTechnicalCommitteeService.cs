@@ -1791,7 +1791,7 @@ namespace asivamosffie.services
                         .FirstOrDefaultAsync();
 
             List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.AsNoTracking().Where(r => r.ComiteTecnicoId == pComiteTecnicoId).ToList();
-
+            comiteTecnico.SesionParticipante = _context.SesionParticipante.Where(r => r.ComiteTecnicoId == pComiteTecnicoId && r.Eliminado != true).ToList();
             #region Tema 
 
 
