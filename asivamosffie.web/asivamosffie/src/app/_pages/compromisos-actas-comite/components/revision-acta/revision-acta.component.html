@@ -86,7 +86,7 @@
                 *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.contratacion"
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
-                  <b>Solicitud {{ sesionComite.numeroSolicitud }}</b>
+                  <b>Solicitud {{ sesionComite?.numeroSolicitud }}</b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <mat-expansion-panel-header
@@ -98,8 +98,8 @@
                     >Solicitud
                     {{
                       sesionComite.modificacionContractual !== undefined
-                        ? sesionComite.modificacionContractual.numeroSolicitud
-                        : sesionComite.numeroSolicitud
+                        ? sesionComite.modificacionContractual?.numeroSolicitud
+                        : sesionComite?.numeroSolicitud
                     }}
                   </b>
                 </mat-panel-title>
@@ -113,8 +113,8 @@
                     >Solicitud
                     {{
                       sesionComite.controversiaContractual !== undefined
-                        ? sesionComite.controversiaContractual.numeroSolicitud
-                        : sesionComite.numeroSolicitud
+                        ? sesionComite.controversiaContractual?.numeroSolicitud
+                        : sesionComite?.numeroSolicitud
                     }}
                   </b>
                 </mat-panel-title>
@@ -125,7 +125,7 @@
                 *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion"
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
-                  <b>Solicitud {{ sesionComite.numeroSolicitud }} </b>
+                  <b>Solicitud {{ sesionComite?.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
@@ -134,7 +134,7 @@
                 *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso"
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
-                  <b>Solicitud {{ sesionComite.numeroSolicitud }} </b>
+                  <b>Solicitud {{ sesionComite?.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
@@ -143,7 +143,7 @@
                 *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.ActuacionesControversias"
               >
                 <mat-panel-title class="expansion-style--title sub-expansion">
-                  <b>Solicitud {{ sesionComite.controversiaActuacion !== undefined ? sesionComite.controversiaActuacion.controversiaContractual.numeroSolicitud : sesionComite.numeroSolicitud }} </b>
+                  <b>Solicitud {{ sesionComite.controversiaActuacion !== undefined ? sesionComite.controversiaActuacion.controversiaContractual?.numeroSolicitud : sesionComite?.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
