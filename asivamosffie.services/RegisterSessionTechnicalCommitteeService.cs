@@ -1792,7 +1792,7 @@ namespace asivamosffie.services
                         .FirstOrDefaultAsync();
 
             List<VSesionParticipante> listaParticipantes = _context.VSesionParticipante.AsNoTracking().Where(r => r.ComiteTecnicoId == pComiteTecnicoId).ToList();
-            comiteTecnico.SesionParticipante = _context.SesionParticipante.Where(r => r.ComiteTecnicoId == pComiteTecnicoId && r.Eliminado != true).ToList();
+            comiteTecnico.SesionParticipante = _context.SesionParticipante.AsNoTracking().Where(r => r.ComiteTecnicoId == pComiteTecnicoId && r.Eliminado != true).ToList();
             #region Tema 
 
 
@@ -1809,15 +1809,11 @@ namespace asivamosffie.services
                 sesionComiteTema.ComiteTecnico = null;
                 ListSesionComiteTema.Add(sesionComiteTema);
             }
-
-
-
+             
             comiteTecnico.SesionComiteTema = ListSesionComiteTema;
 
             #endregion
-
-
-
+             
             comiteTecnico.SesionInvitado = comiteTecnico.SesionInvitado.Where(r => r.Eliminado != true).ToList();
 
             comiteTecnico.SesionResponsable = comiteTecnico.SesionResponsable.Where(r => r.Eliminado != true).ToList();
