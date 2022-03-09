@@ -75,6 +75,27 @@ export class CrearActaComponent implements OnInit {
           this.listaProposiciones = this.objetoComiteTecnico.sesionComiteTema.filter(t => t.esProposicionesVarios == true)
 
           console.log(response)
+          this.listaTemas.forEach(lt =>{
+            if(lt.registroCompletoActa == false){
+              lt.registroCompletoActa = undefined;
+                if(lt?.observaciones != null || lt?.observaciones != undefined ||
+                 lt?.estadoTemaCodigo != null || lt?.estadoTemaCodigo != undefined ||
+                 lt?.observacionesDecision != null || lt?.observacionesDecision != undefined ||
+                 lt?.generaCompromiso != null || lt?.generaCompromiso != undefined
+                )lt.registroCompletoActa = false;
+            }
+          });
+
+          this.listaProposiciones.forEach(lp =>{
+            if(lp.registroCompletoActa == false){
+              lp.registroCompletoActa = undefined;
+                if(lp?.observaciones != null || lp?.observaciones != undefined ||
+                  lp?.estadoTemaCodigo != null || lp?.estadoTemaCodigo != undefined ||
+                  lp?.observacionesDecision != null || lp?.observacionesDecision != undefined ||
+                  lp?.generaCompromiso != null || lp?.generaCompromiso != undefined
+                )lp.registroCompletoActa = false;
+            }
+          });
 
           setTimeout(() => {
 
@@ -113,7 +134,7 @@ export class CrearActaComponent implements OnInit {
     let cantidadVacios = 0;
 
      if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico && this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length > 0) {
-      
+
       this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(cs => {
 
         if (cs.registroCompletoActa === undefined){
@@ -126,7 +147,7 @@ export class CrearActaComponent implements OnInit {
 
       if ( this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length === cantidadCompletos ){
         this.solicitudesCompletas = true;
-      }else 
+      }else
       if ( this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length === cantidadVacios ){
         this.solicitudesCompletas = null;
       }else{
@@ -145,7 +166,7 @@ export class CrearActaComponent implements OnInit {
         if (t.registroCompletoActa === true)
           this.temasCompletos = true;
        });
-  
+
        this.listaTemas.forEach(t => {
         if (t.registroCompletoActa === false)
           this.temasCompletos = false;
@@ -153,14 +174,14 @@ export class CrearActaComponent implements OnInit {
     }else{
       this.temasCompletos = true;
     }
- 
+
 
     if (this.listaProposiciones && this.listaProposiciones.length > 0){
       this.listaProposiciones.forEach(p => {
         if (p.registroCompletoActa === true)
           this.proposicionesCompletos = true;
       })
-  
+
       this.listaProposiciones.forEach(p => {
         if (p.registroCompletoActa === false)
           this.proposicionesCompletos = false;
@@ -168,7 +189,7 @@ export class CrearActaComponent implements OnInit {
     }else{
       this.proposicionesCompletos = true;
     }
-    
+
 
   }
 
