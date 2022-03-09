@@ -433,10 +433,11 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   Observaciones(elemento: SesionComiteSolicitud) {
      console.log(elemento.tipoSolicitudCodigo, elemento);
+     console.log(this.listaMiembrosNoFilter);
      if (elemento?.sesionSolicitudVoto) {
         elemento.sesionSolicitudVoto.forEach(voto => {
           let usuario: Usuario = this.listaMiembrosNoFilter.find(m => m.usuarioId == voto?.sesionParticipante?.usuarioId);
-          voto.nombreParticipante = `${usuario.primerNombre} ${usuario.primerApellido}`;
+          voto.nombreParticipante = `${usuario?.primerNombre} ${usuario?.primerApellido}`;
        });
      }
 

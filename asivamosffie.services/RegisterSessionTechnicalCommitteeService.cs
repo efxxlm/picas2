@@ -1783,6 +1783,7 @@ namespace asivamosffie.services
                     .Include(r => r.SesionResponsable)
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                         .ThenInclude(r => r.SesionSolicitudVoto)
+                           .ThenInclude(r => r.SesionParticipante)
                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
                         .ThenInclude(r => r.SesionSolicitudCompromiso)
                         // .Include(r => r.SesionComiteTema)
