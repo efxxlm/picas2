@@ -4977,6 +4977,7 @@ namespace asivamosffie.services
                 List<int> ListNovedadContractualId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Novedad_Contractual).Select(r => r.SolicitudId).ToList();
                 List<int> ListDefensaJudicialId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Defensa_judicial).Select(r => r.SolicitudId).ToList();
                 List<int> ListControversiaActuacionId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales).Select(r => r.SolicitudId).ToList();
+                List<int> ListControversiaContractualId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales).Select(r => r.SolicitudId).ToList();
                 List<Localizacion> localizacions = _context.Localizacion.AsNoTracking().ToList();
                 List<Dominio> ListParametricas = _context.Dominio.AsNoTracking().ToList();
                 List<Contratacion> ListContratacion = _context.Contratacion.Where(r => ListContratacionId.Contains(r.ContratacionId))
@@ -4985,6 +4986,7 @@ namespace asivamosffie.services
                                                                                 .Include(r => r.PlazoContratacion)
                                                                                  .Include(r => r.ContratacionProyecto).ThenInclude(r => r.Proyecto).ThenInclude(r => r.InfraestructuraIntervenirProyecto)
                                                                                 .ToList();
+
                 foreach (var Contratacion in ListContratacion)
                 {
                     foreach (var ContratacionProyecto in Contratacion.ContratacionProyecto)
@@ -5049,6 +5051,13 @@ namespace asivamosffie.services
                 foreach (var ControversiaActuacionId in ListControversiaActuacionId)
                 {
                     ListControversiaActuacion.Add(_context.ControversiaActuacion.Where(r => r.ControversiaActuacionId == ControversiaActuacionId).Include(r => r.ControversiaContractual).FirstOrDefault());
+                }
+
+                List<ControversiaContractual> ListControversiaContractual = new List<ControversiaContractual>();
+
+                foreach (var ControversiaControversiaId in ListControversiaContractualId)
+                {
+                    ListControversiaContractual.Add(_context.ControversiaContractual.Where(r => r.ControversiaContractualId == ControversiaControversiaId).FirstOrDefault());
                 }
 
                 List<Contratista> ListContratista = _context.Contratista.AsNoTracking().ToList();
@@ -5193,7 +5202,6 @@ namespace asivamosffie.services
 
                             case ConstanCodigoTipoSolicitud.Contratacion:
                                 Contratacion contratacion = ListContratacion.Where(c => c.ContratacionId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
-
                                 foreach (Dominio placeholderDominio in placeholders)
                                 {
                                     switch (placeholderDominio.Codigo)
@@ -5221,15 +5229,12 @@ namespace asivamosffie.services
                                             break;
                                     }
                                 }
-
                                 break;
 
                             //TIPO SOLICITUD PROCESOS DE SELECCION
                             case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
                             case ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso:
-
                                 ProcesoSeleccion procesoSeleccion = ListProcesoSeleccion.Where(r => r.ProcesoSeleccionId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
-
                                 foreach (Dominio placeholderDominio in placeholders)
                                 {
                                     switch (placeholderDominio.Codigo)
@@ -5260,9 +5265,7 @@ namespace asivamosffie.services
                                 break;
 
                             case ConstanCodigoTipoSolicitud.Novedad_Contractual:
-
                                 NovedadContractual novedad = ListNovedadContractual.Where(c => c.NovedadContractualId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
-
                                 foreach (Dominio placeholderDominio in placeholders)
                                 {
                                     switch (placeholderDominio.Codigo)
@@ -5290,11 +5293,9 @@ namespace asivamosffie.services
                                             break;
                                     }
                                 }
-
                                 break;
                             case ConstanCodigoTipoSolicitud.Defensa_judicial:
                                 DefensaJudicial defensaJudicial = _context.DefensaJudicial.Find(SesionComiteSolicitud.SolicitudId);
-
                                 foreach (Dominio placeholderDominio in placeholders)
                                 {
                                     switch (placeholderDominio.Codigo)
@@ -5322,11 +5323,9 @@ namespace asivamosffie.services
                                             break;
                                     }
                                 }
-
                                 break;
                             case ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales:
                                 ControversiaActuacion controversiaActuacion = ListControversiaActuacion.Where(c => c.ControversiaActuacionId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
-
                                 foreach (Dominio placeholderDominio in placeholders)
                                 {
                                     switch (placeholderDominio.Codigo)
@@ -5354,7 +5353,38 @@ namespace asivamosffie.services
                                             break;
                                     }
                                 }
+                                break;
 
+                            case ConstanCodigoTipoSolicitud.ControversiasContractuales: 
+                                ControversiaContractual controversiaContractual = ListControversiaContractual.Where(c => c.ControversiaContractualId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
+
+                                foreach (Dominio placeholderDominio in placeholders)
+                                {
+                                    switch (placeholderDominio.Codigo)
+                                    {
+                                        case ConstanCodigoVariablesPlaceHolders.NUMERO_SOLICITUD:
+                                            RegistrosSolicitudesContractuales = RegistrosSolicitudesContractuales
+                                                .Replace(placeholderDominio.Nombre, controversiaContractual?.NumeroSolicitud);
+                                            break;
+
+                                        case ConstanCodigoVariablesPlaceHolders.FECHA_SOLICITUD:
+                                            string FechaSolicitud = string.Empty;
+                                            if (controversiaContractual.FechaSolicitud.HasValue)
+                                            {
+                                                FechaSolicitud = ((DateTime)controversiaContractual.FechaSolicitud).ToString("dd-MM-yyy");
+                                            }
+                                            RegistrosSolicitudesContractuales = RegistrosSolicitudesContractuales
+                                                .Replace(placeholderDominio.Nombre, FechaSolicitud);
+                                            break;
+
+                                        case ConstanCodigoVariablesPlaceHolders.TIPO_SOLICITUD:
+                                            RegistrosSolicitudesContractuales = RegistrosSolicitudesContractuales
+                                                .Replace(placeholderDominio.Nombre,
+                                                ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
+                                                && r.Codigo == SesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre);
+                                            break;
+                                    }
+                                }
                                 break;
                             default:
                                 break;
@@ -5715,11 +5745,13 @@ namespace asivamosffie.services
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.ALCANCE_PARTICULAR_PROCESO:
-                                        registrosContratacion = registrosContratacion
+                                        procesoSeleccion.AlcanceParticular = procesoSeleccion.AlcanceParticular.Replace("style", "");
+                                       registrosContratacion = registrosContratacion
                                           .Replace(placeholderDominio.Nombre, procesoSeleccion.AlcanceParticular);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.JUSTIFICACION_PROCESO:
+                                        procesoSeleccion.Justificacion = procesoSeleccion.Justificacion.Replace("style", "");
                                         registrosContratacion = registrosContratacion
                                           .Replace(placeholderDominio.Nombre, procesoSeleccion.Justificacion);
                                         break;
@@ -5899,8 +5931,8 @@ namespace asivamosffie.services
                             Contratista contratista = null;
 
 
-                            contratacionNovedad = novedad.Contrato.Contratacion; 
-                            contratista = novedad.Contrato.Contratacion.Contratista; 
+                            contratacionNovedad = novedad.Contrato.Contratacion;
+                            contratista = novedad.Contrato.Contratacion.Contratista;
                             disponibilidadPresupuestal = novedad.Contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault();
 
 
@@ -7845,6 +7877,13 @@ namespace asivamosffie.services
                                             NovedadesModificacion = NovedadesModificacion.Replace("[TP_NUM_CLAUSULA]", (enumClausula++).ToString());
                                             NovedadesModificacion = NovedadesModificacion.Replace("[TP_CLAUSULA]", clausula.ClausulaAmodificar != null ? clausula.ClausulaAmodificar : string.Empty);
                                             NovedadesModificacion = NovedadesModificacion.Replace("[TP_AJUSTE_CLAUSULA]", clausula.AjusteSolicitadoAclausula != null ? clausula.AjusteSolicitadoAclausula : string.Empty);
+                                        }
+                                        else
+                                        {
+                                            NovedadesModificacion = NovedadesModificacion.Replace("[TP_NUM_CLAUSULA]", String.Empty);
+                                            NovedadesModificacion = NovedadesModificacion.Replace("[TP_CLAUSULA]", String.Empty);
+                                            NovedadesModificacion = NovedadesModificacion.Replace("[TP_AJUSTE_CLAUSULA]", String.Empty);
+
                                         }
                                     }
                                 }
