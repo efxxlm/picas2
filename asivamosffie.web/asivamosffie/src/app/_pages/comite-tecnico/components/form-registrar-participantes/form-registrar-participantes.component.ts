@@ -500,9 +500,16 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
       this.technicalCommitteSessionService.createEditSesionInvitadoAndParticipante(comite)
         .subscribe(respuesta => {
-          this.openDialog('', `<b>${respuesta.message}</b>`)
-          if (respuesta.code == "200")
+  
+          if (respuesta.code != "501"){
+            this.openDialog('', `<b>${respuesta.message}</b>`)
             this.ngOnInit();
+          }
+     
+          if (respuesta.code == "501"){
+          this.openDialog('', `<b>Los participantes del comité no se pueden eliminar después de realizar una votación.</b>`)
+          this.ngOnInit();
+        }
         })
     }
   }

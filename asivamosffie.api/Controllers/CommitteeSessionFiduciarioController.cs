@@ -32,7 +32,7 @@ namespace asivamosffie.api.Controllers
 
 
         #region "ORDEN DEL DIA";
-
+        [AllowAnonymous]
         [Route("GetCommitteeSessionFiduciario")]
         public async Task<IActionResult> GetCommitteeSessionFiduciario()
         {

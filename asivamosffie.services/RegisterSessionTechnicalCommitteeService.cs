@@ -839,7 +839,7 @@ namespace asivamosffie.services
 
                 string template = TemplateConvocar.Contenido.Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
                                                             .Replace("[FECHA_COMITE]", comiteTecnico.FechaOrdenDia.Value.ToString("dd/MM/yyyy"))
-                                                            .Replace("[URL_APLICACION]", pDominioFront + "compromisosActasComite");
+                                                            .Replace("[URL_APLICACION]", pDominioFront + "#/compromisosActasComite");
 
 
 
@@ -2127,7 +2127,7 @@ namespace asivamosffie.services
                 {
                     return new Respuesta
                     {
-                         
+                        Code = ConstantSesionComiteTecnico.ErrorEliminarDependencia
                     };
                 }
               
