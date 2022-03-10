@@ -97,6 +97,10 @@ namespace asivamosffie.services.Helpers
                 contenido = contenido.Replace("<br/>", "");
                 contenido = contenido.Replace("<br />", "");
                 contenido = contenido.Replace("</br>", "");
+                contenido = contenido.Replace("class=\"ql-align-justify\"", "style=\"text-align:justify\"");
+                contenido = contenido.Replace("class=\"ql-align-right\"", "style=\"text-align:right\"");
+                contenido = contenido.Replace("class=\"ql-align-left\"", "style=\"text-align:left\"");
+
                 FontFactory.RegisterDirectories();
 
                 double margenIzquierdo = CentimetrosAMedidaPDF(margenes.Izquierda);
