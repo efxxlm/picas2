@@ -2118,8 +2118,19 @@ namespace asivamosffie.services
 
             try
             {
-                _context.SesionParticipante.Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).Delete();
+                try
+                {
+                    _context.SesionParticipante.Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId).Delete();
 
+                }
+                catch (Exception e)
+                {
+                    return new Respuesta
+                    {
+                         
+                    };
+                }
+              
                 foreach (var SesionParticipante in pComiteTecnico.SesionParticipante)
                 {
                     _context.SesionParticipante.Add(new SesionParticipante
