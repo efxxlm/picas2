@@ -507,7 +507,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
           }
      
           if (respuesta.code == "501"){
-          this.openDialog('', `<b>Los participantes del comité no se pueden eliminar después de realizar una votación.</b>`)
+          this.openDialog('', `<b>La información no se puede modificar después de realizar la votación.</b>`)
           this.ngOnInit();
         }
         })
