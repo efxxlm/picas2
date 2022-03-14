@@ -5939,7 +5939,7 @@ namespace asivamosffie.services
                             Contratista contratista = null;
 
 
-                            contratacionNovedad = novedad.Contrato.Contratacion;
+                            contratacionNovedad = ListContratacion.Where(r=> r.Contrato.FirstOrDefault().ContratoId == novedad.ContratoId).FirstOrDefault();
                             contratista = novedad.Contrato.Contratacion.Contratista;
                             disponibilidadPresupuestal = novedad.Contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault();
 

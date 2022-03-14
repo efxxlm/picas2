@@ -28,7 +28,8 @@ namespace asivamosffie.model.Models
         public bool? EsProposicionesVarios { get; set; }
         public bool? RequiereVotacion { get; set; }
         public string EstadoTemaCodigo { get; set; }
-        public bool? GeneraCompromiso { get; set; }
+        public bool? GeneraCompromiso { get; set; }       
+        public bool? EsComiteFiduciario { get; set; }
         public int? CantCompromisos { get; set; }
         public bool? RegistroCompleto { get; set; }
 

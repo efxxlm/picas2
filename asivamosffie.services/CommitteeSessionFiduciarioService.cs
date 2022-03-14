@@ -69,18 +69,34 @@ namespace asivamosffie.services
                 List<ComiteTecnico> listaComites = await _context.ComiteTecnico.Where(ct => (ct.EsComiteFiduciario == null || ct.EsComiteFiduciario == false)
                                                                                             && ct.EstadoActaCodigo == "3") // aprobada
                                                                                 .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                                                                                //.Include( r => r.SesionComiteSolicitudComiteTecnicoFiduciario )
-                                                                                .ToListAsync(); //Aprobadas
+                                                                                .Include(r => r.SesionComiteTema)
+                                                                                .ToListAsync();
+
+                //var ListSesionComiteTema = _context.SesionComiteTema.Where(r => r.Eliminado != true && r.EsAprobado == true && r.EsComiteFiduciario != true)
+                //                                                    .Select(r => new {
+                //                                                                        r.ComiteTecnicoId,
+                //                                                                        r.SesionTemaId,
+                //                                                                        r.Tema ,
+                //                                                                        r.ResponsableCodigo , 
+                //                                                                        r.TiempoIntervencion,
+                //                                                                        r.RutaSoporte , 
+                //                                                                        r.EsProposicionesVarios
+                //                                                    }).ToList();
 
                 List<Dominio> ListTipoSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
 
-                listaComites.ForEach(c =>
+
+                foreach (var c in listaComites)
                 {
+                    if (c.SesionComiteTema.Count > 0)
+                        c.SesionComiteTema = c.SesionComiteTema.Where(r => r.Eliminado != true && r.EsAprobado == true && r.EsComiteFiduciario != true).ToList();
+
                     dynamic comite = new
                     {
                         nombreSesion = c.NumeroComite,
                         fecha = c.FechaOrdenDia,
                         comiteTecnicoId = c.ComiteTecnicoId,
+                        temas = c.SesionComiteTema,
                         data = new List<dynamic>()
                     };
 
@@ -120,7 +136,6 @@ namespace asivamosffie.services
                                                 TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).FirstOrDefault().Nombre,
                                                 tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion
                                             });
-
                                         break;
                                     }
                                 case ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso:
@@ -284,7 +299,7 @@ namespace asivamosffie.services
                     if (comite.data.Count > 0)
                         listaComitesGrilla.Add(comite);
 
-                });
+                }
 
 
 
@@ -1607,7 +1622,7 @@ namespace asivamosffie.services
             pPlantilla = pPlantilla.Replace("[PREGUNTA_5]", strPregunta_5);
             pPlantilla = pPlantilla.Replace("[PREGUNTA_6]", strPregunta_6);
             return pPlantilla;
-        } 
+        }
         private string ReemplazarDatosPlantillaProcesosSeleccion(string pPlantilla, ProcesoSeleccion pProcesoSeleccion)
         {
             pProcesoSeleccion.ProcesoSeleccionProponente = _context.ProcesoSeleccionProponente.Where(r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
@@ -2096,17 +2111,17 @@ namespace asivamosffie.services
                         await _context.Set<SesionComiteTema>().Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId)
                                                .UpdateAsync(r => new SesionComiteTema()
                                                {
-                                                    UsuarioModificacion = ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion,
-                                                    FechaModificacion = DateTime.Now,
-                                                    Tema = SesionComiteTema.Tema,
-                                                    ResponsableCodigo = SesionComiteTema.ResponsableCodigo,
-                                                    TiempoIntervencion = SesionComiteTema.TiempoIntervencion,
-                                                    RutaSoporte = SesionComiteTema.RutaSoporte,
-                                                    Observaciones = SesionComiteTema.Observaciones,
-                                                    EsAprobado = SesionComiteTema.EsAprobado,
-                                                    ObservacionesDecision = SesionComiteTema.ObservacionesDecision,
-                                                    ComiteTecnicoId = SesionComiteTema.ComiteTecnicoId,
-                        });
+                                                   UsuarioModificacion = ListSesionComiteTemas.FirstOrDefault().UsuarioCreacion,
+                                                   FechaModificacion = DateTime.Now,
+                                                   Tema = SesionComiteTema.Tema,
+                                                   ResponsableCodigo = SesionComiteTema.ResponsableCodigo,
+                                                   TiempoIntervencion = SesionComiteTema.TiempoIntervencion,
+                                                   RutaSoporte = SesionComiteTema.RutaSoporte,
+                                                   Observaciones = SesionComiteTema.Observaciones,
+                                                   EsAprobado = SesionComiteTema.EsAprobado,
+                                                   ObservacionesDecision = SesionComiteTema.ObservacionesDecision,
+                                                   ComiteTecnicoId = SesionComiteTema.ComiteTecnicoId,
+                                               });
 
                     }
                 }
@@ -3556,7 +3571,7 @@ namespace asivamosffie.services
                .Include(r => r.ProcesoSeleccionProponente)
                .FirstOrDefaultAsync();
 
-        } 
+        }
 
         private async Task<string> ReemplazarDatosPlantillaActa(string strContenido, ComiteTecnico pComiteTecnico)
         {
@@ -4240,7 +4255,7 @@ namespace asivamosffie.services
                                                     }
                                                 }
                                             }
-                                            
+
                                         }
 
                                         registrosContratacion = registrosContratacion
