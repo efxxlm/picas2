@@ -80,13 +80,13 @@ namespace asivamosffie.services
                 List<Dominio> listaResponsables = _context.Dominio.AsNoTracking()
                                                         .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico)
                                                         .ToList();
-                foreach (var c in listaComites)
-                {
-                    ListSesionComiteTemaFiduciaria.AddRange(c.SesionComiteTema.Where(r => r.Eliminado != true && r.SesionTemaComiteTecnicoId != null)
-                                                                               .ToList()
-                                                                               .Select(r => r.SesionTemaComiteTecnicoId)
-                                                                               .ToList());
-                }
+                //foreach (var c in listaComites)
+                //{
+                //    ListSesionComiteTemaFiduciaria.AddRange(c.SesionComiteTema.Where(r => r.Eliminado != true && r.SesionTemaComiteTecnicoId != null)
+                //                                                               .ToList()
+                //                                                               .Select(r => r.SesionTemaComiteTecnicoId)
+                //                                                               .ToList());
+                //}
 
                 foreach (var c in listaComites)
                 {
