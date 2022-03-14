@@ -66,31 +66,38 @@ namespace asivamosffie.services
 
             try
             {
-                List<ComiteTecnico> listaComites = await _context.ComiteTecnico.Where(ct => (ct.EsComiteFiduciario == null || ct.EsComiteFiduciario == false)
+                List<ComiteTecnico> listaComites = await _context.ComiteTecnico.AsNoTracking()
+                                                                                .Where(ct => (ct.EsComiteFiduciario == null || ct.EsComiteFiduciario == false)
                                                                                             && ct.EstadoActaCodigo == "3") // aprobada
                                                                                 .Include(r => r.SesionComiteSolicitudComiteTecnico)
                                                                                 .Include(r => r.SesionComiteTema)
                                                                                 .ToListAsync();
 
-                //var ListSesionComiteTema = _context.SesionComiteTema.Where(r => r.Eliminado != true && r.EsAprobado == true && r.EsComiteFiduciario != true)
-                //                                                    .Select(r => new {
-                //                                                                        r.ComiteTecnicoId,
-                //                                                                        r.SesionTemaId,
-                //                                                                        r.Tema ,
-                //                                                                        r.ResponsableCodigo , 
-                //                                                                        r.TiempoIntervencion,
-                //                                                                        r.RutaSoporte , 
-                //                                                                        r.EsProposicionesVarios
-                //                                                    }).ToList();
-
                 List<Dominio> ListTipoSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
 
+                List<int?> ListSesionComiteTemaFiduciaria = new List<int?>();
+
+                foreach (var c in listaComites)
+                {
+                    ListSesionComiteTemaFiduciaria.AddRange(c.SesionComiteTema.Where(r => r.Eliminado != true && r.SesionTemaComiteTecnicoId != null)
+                                                                               .ToList()
+                                                                               .Select(r => r.SesionTemaComiteTecnicoId)
+                                                                               .ToList());
+                }
 
                 foreach (var c in listaComites)
                 {
                     if (c.SesionComiteTema.Count > 0)
-                        c.SesionComiteTema = c.SesionComiteTema.Where(r => r.Eliminado != true && r.EsAprobado == true  ).ToList();
+                    {
+                        c.SesionComiteTema = c.SesionComiteTema.Where(r => r.Eliminado != true && r.EsAprobado == true && r.SesionTemaComiteTecnicoId == null && !ListSesionComiteTemaFiduciaria.Contains(r.SesionTemaId)).ToList();
 
+                        foreach (var SesionComiteTema in c.SesionComiteTema)
+                        {
+                            SesionComiteTema.ComiteTecnico = null;
+                        }
+                    }
+                   
+                     
                     dynamic comite = new
                     {
                         nombreSesion = c.NumeroComite,

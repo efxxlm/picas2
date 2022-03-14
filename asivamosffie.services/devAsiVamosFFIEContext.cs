@@ -7159,6 +7159,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.ComiteTecnico)
+                    .WithMany(p => p.SesionComiteTema)
+                    .HasForeignKey(d => d.ComiteTecnicoId)
+                    .HasConstraintName("FK__SesionCom__Comit__1B13F4C6");
             });
 
             modelBuilder.Entity<SesionInvitado>(entity =>
