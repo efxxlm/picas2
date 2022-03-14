@@ -89,7 +89,7 @@ namespace asivamosffie.services
                 foreach (var c in listaComites)
                 {
                     if (c.SesionComiteTema.Count > 0)
-                        c.SesionComiteTema = c.SesionComiteTema.Where(r => r.Eliminado != true && r.EsAprobado == true && r.EsComiteFiduciario != true).ToList();
+                        c.SesionComiteTema = c.SesionComiteTema.Where(r => r.Eliminado != true && r.EsAprobado == true  ).ToList();
 
                     dynamic comite = new
                     {
