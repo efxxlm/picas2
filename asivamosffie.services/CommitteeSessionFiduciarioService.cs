@@ -87,7 +87,8 @@ namespace asivamosffie.services
                 //                                                               .Select(r => r.SesionTemaComiteTecnicoId)
                 //                                                               .ToList());
                 //}
-
+                 
+                
                 foreach (var c in listaComites)
                 {
                     if (c.SesionComiteTema.Count > 0)
