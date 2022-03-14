@@ -4903,12 +4903,8 @@ namespace asivamosffie.services
                 SesionComiteTema.SesionTemaVoto = _context.SesionTemaVoto
                                                                         .AsNoTracking()
                                                                         .Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true)
-                                                                        .ToList();
-
-            }
-
-
-
+                                                                        .ToList(); 
+            } 
 
             if (comiteTecnico == null)
             {

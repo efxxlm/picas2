@@ -73,10 +73,13 @@ namespace asivamosffie.services
                                                                                 .Include(r => r.SesionComiteTema)
                                                                                 .ToListAsync();
 
-                List<Dominio> ListTipoSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
+                List<Dominio> ListTipoSolicitud = _context.Dominio.AsNoTracking().Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
 
                 List<int?> ListSesionComiteTemaFiduciaria = new List<int?>();
 
+                List<Dominio> listaResponsables = _context.Dominio.AsNoTracking()
+                                                        .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico)
+                                                        .ToList();
                 foreach (var c in listaComites)
                 {
                     ListSesionComiteTemaFiduciaria.AddRange(c.SesionComiteTema.Where(r => r.Eliminado != true && r.SesionTemaComiteTecnicoId != null)
@@ -93,6 +96,7 @@ namespace asivamosffie.services
 
                         foreach (var SesionComiteTema in c.SesionComiteTema)
                         {
+                            SesionComiteTema.NombreResponsable = listaResponsables.Where(lr => lr.Codigo == SesionComiteTema.ResponsableCodigo).FirstOrDefault().Nombre ?? String.Empty;
                             SesionComiteTema.ComiteTecnico = null;
                         }
                     }
