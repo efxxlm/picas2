@@ -80,7 +80,19 @@ export class CrearOrdenDelDiaComponent implements OnInit {
       this.dataSolicitudContractual = response[1];
       this.listaTipoTemas = response[2].filter(t => t.codigo != "3");
       this.dataTemasNuevos = this.dataSolicitudContractual.filter(r => r?.temas?.length > 0);
-
+      var data = this.dataTemasNuevos;
+      this.dataTemasNuevos = [];
+      data.forEach(r => {
+        var temas = r.temas;
+        r.temas = [];
+        temas.forEach(t => {
+          if(t?.comiteTecnicoFiduciarioIdMapped == this.idSesion || t?.comiteTecnicoFiduciarioIdMapped == null || t?.comiteTecnicoFiduciarioIdMapped == undefined){
+            r.temas.push(t);
+          }
+        })
+        if(r.temas.length > 0)
+          this.dataTemasNuevos.push(r);
+      })
       if (this.idSesion > 0)
         this.editMode();
 
