@@ -216,7 +216,7 @@ namespace asivamosffie.services
             List<ComiteTecnico> ListComiteTecnico =
                        await _context.ComiteTecnico
                        .Include(s => s.SesionParticipante)
-                       .Where(s => s.SesionParticipante.Any(s => s.UsuarioId == pUserId && s.ComiteTecnico.Eliminado != true))
+                       .Where(s => s.SesionParticipante.Any(s => s.UsuarioId == pUserId && s.ComiteTecnico.Eliminado != true && s.Eliminado != true))
                        .Include(r => r.SesionComiteTema)
                           .ThenInclude(r => r.TemaCompromiso)
                       .OrderByDescending(r => r.ComiteTecnicoId)
