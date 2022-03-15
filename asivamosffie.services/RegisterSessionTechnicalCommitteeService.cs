@@ -707,8 +707,8 @@ namespace asivamosffie.services
                         .AsNoTracking()
                         .FirstOrDefaultAsync();
 
-                comiteTecnico.SesionParticipante = comiteTecnico.SesionParticipante.Where(r => !(bool)r.Eliminado).ToList();
-                comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList();
+                comiteTecnico.SesionParticipante = comiteTecnico.SesionParticipante.Where(r => r.Eliminado != true).ToList();
+                comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => r.Eliminado != true).ToList();
 
                 _context.Set<ComiteTecnico>()
                        .Where(u => u.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
