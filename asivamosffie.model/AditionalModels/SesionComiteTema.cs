@@ -12,6 +12,11 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public bool? RegistroCompletoActa { get; set; }
+
+
+        [NotMapped]
+        public int? ComiteTecnicoFiduciarioIdMapped { get; set; }
+
     }
 
 }

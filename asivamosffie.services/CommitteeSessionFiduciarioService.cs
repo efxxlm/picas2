@@ -75,29 +75,35 @@ namespace asivamosffie.services
 
                 List<Dominio> ListTipoSolicitud = _context.Dominio.AsNoTracking().Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
 
-                List<int?> ListSesionComiteTemaFiduciaria = new List<int?>();
+      
 
                 List<Dominio> listaResponsables = _context.Dominio.AsNoTracking()
                                                         .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico)
                                                         .ToList();
-                //foreach (var c in listaComites)
-                //{
-                //    ListSesionComiteTemaFiduciaria.AddRange(c.SesionComiteTema.Where(r => r.Eliminado != true && r.SesionTemaComiteTecnicoId != null)
-                //                                                               .ToList()
-                //                                                               .Select(r => r.SesionTemaComiteTecnicoId)
-                //                                                               .ToList());
-                //}
-                 
-                
+
+                List<int?> ListSesionComiteTemaFiduciaria = new List<int?>();
+
+                foreach (var c in listaComites)
+                {
+                    ListSesionComiteTemaFiduciaria.AddRange(c.SesionComiteTema.Where(r => r.Eliminado != true && r.SesionTemaComiteTecnicoId != null)
+                                                                               .ToList()
+                                                                               .Select(r => r.SesionTemaComiteTecnicoId)
+                                                                               .ToList());
+                }
+
+
                 foreach (var c in listaComites)
                 {
                     if (c.SesionComiteTema.Count > 0)
                     {
-                        c.SesionComiteTema = c.SesionComiteTema.Where(r => r.Eliminado != true && r.EsAprobado == true && r.SesionTemaComiteTecnicoId == null && r.EsProposicionesVarios != true && !ListSesionComiteTemaFiduciaria.Contains(r.SesionTemaId)).ToList();
+                        c.SesionComiteTema = c.SesionComiteTema.Where(r => r.Eliminado != true && r.EsAprobado == true && r.SesionTemaComiteTecnicoId == null && r.EsProposicionesVarios != true ).ToList();
 
                         foreach (var SesionComiteTema in c.SesionComiteTema)
                         {
                             SesionComiteTema.NombreResponsable = listaResponsables.Where(lr => lr.Codigo == SesionComiteTema.ResponsableCodigo).FirstOrDefault().Nombre ?? String.Empty;
+
+                            if (ListSesionComiteTemaFiduciaria.Contains(SesionComiteTema.SesionTemaId))
+                                SesionComiteTema.ComiteTecnicoFiduciarioIdMapped = _context.SesionComiteTema.Where(r => r.SesionTemaComiteTecnicoId == SesionComiteTema.SesionTemaId && r.Eliminado != true).FirstOrDefault().ComiteTecnicoId;
                             SesionComiteTema.ComiteTecnico = null;
                         }
                     }
