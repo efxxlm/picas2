@@ -81,17 +81,8 @@ namespace asivamosffie.services
                                                         .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico)
                                                         .ToList();
 
-                List<int?> ListSesionComiteTemaFiduciaria = new List<int?>();
-
-                foreach (var c in listaComites)
-                {
-                    ListSesionComiteTemaFiduciaria.AddRange(c.SesionComiteTema.Where(r => r.Eliminado != true && r.SesionTemaComiteTecnicoId != null)
-                                                                               .ToList()
-                                                                               .Select(r => r.SesionTemaComiteTecnicoId)
-                                                                               .ToList());
-                }
-
-
+                List<SesionComiteTema> ListSesionComiteTemaFiduciaria = _context.SesionComiteTema.Where(r => r.Eliminado != true && r.SesionTemaComiteTecnicoId != null).ToList();
+ 
                 foreach (var c in listaComites)
                 {
                     if (c.SesionComiteTema.Count > 0)
@@ -102,8 +93,9 @@ namespace asivamosffie.services
                         {
                             SesionComiteTema.NombreResponsable = listaResponsables.Where(lr => lr.Codigo == SesionComiteTema.ResponsableCodigo).FirstOrDefault().Nombre ?? String.Empty;
 
-                            if (ListSesionComiteTemaFiduciaria.Contains(SesionComiteTema.SesionTemaId))
-                                SesionComiteTema.ComiteTecnicoFiduciarioIdMapped = _context.SesionComiteTema.Where(r => r.SesionTemaComiteTecnicoId == SesionComiteTema.SesionTemaId && r.Eliminado != true).FirstOrDefault().ComiteTecnicoId;
+                            if (ListSesionComiteTemaFiduciaria.Select(r=> r.SesionTemaComiteTecnicoId).Contains(SesionComiteTema.SesionTemaId))
+                                SesionComiteTema.ComiteTecnicoFiduciarioIdMapped = ListSesionComiteTemaFiduciaria.Where(r => r.SesionTemaComiteTecnicoId == SesionComiteTema.SesionTemaId && r.Eliminado != true).FirstOrDefault().ComiteTecnicoId;
+                         
                             SesionComiteTema.ComiteTecnico = null;
                         }
                     }
