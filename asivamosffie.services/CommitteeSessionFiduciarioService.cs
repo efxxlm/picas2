@@ -93,7 +93,7 @@ namespace asivamosffie.services
                 {
                     if (c.SesionComiteTema.Count > 0)
                     {
-                        c.SesionComiteTema = c.SesionComiteTema.Where(r => r.Eliminado != true && r.EsAprobado == true && r.SesionTemaComiteTecnicoId == null && !ListSesionComiteTemaFiduciaria.Contains(r.SesionTemaId)).ToList();
+                        c.SesionComiteTema = c.SesionComiteTema.Where(r => r.Eliminado != true && r.EsAprobado == true && r.SesionTemaComiteTecnicoId == null && r.EsProposicionesVarios != true && !ListSesionComiteTemaFiduciaria.Contains(r.SesionTemaId)).ToList();
 
                         foreach (var SesionComiteTema in c.SesionComiteTema)
                         {
