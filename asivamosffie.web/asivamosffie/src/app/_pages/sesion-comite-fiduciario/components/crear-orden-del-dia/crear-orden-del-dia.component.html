@@ -34,7 +34,7 @@
     <div class="text-center mt-2em d-flex align-items-center">
       <p class="mb-0 pr-1">
         <img src="assets/img/icon/sim.svg" alt="información" class="icon" />
-        Seleccione los temas que desea incluir al comité fiduciario
+        Seleccione las solicitudes contractuales que desea incluir al comité fiduciario
       </p>
       <span class="seleccionados"> {{ totalSolicitudes() }} </span>
     </div>
@@ -53,6 +53,34 @@
           [style.pointer-events]="getStyle()"
         >
         </app-tabla-sesiones>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <!-- Temas nuevos -->
+  <div *ngIf="temaNuevoBoolean">
+    <div class="text-center mt-2em d-flex align-items-center">
+      <p class="mb-0 pr-1">
+        <img src="assets/img/icon/sim.svg" alt="información" class="icon" />
+        Seleccione los temas que desea incluir al comité fiduciario
+      </p>
+      <span class="seleccionados"> {{ totalTemas() }} </span>
+    </div>
+
+    <mat-accordion>
+      <mat-expansion-panel class="expansion-style" *ngFor="let datasolicitud of dataTemasNuevos">
+        <mat-expansion-panel-header class="expansion-style--header width-40">
+          <mat-panel-title class="expansion-style--title">
+            Sesión del {{ datasolicitud.fecha | date: 'dd/MM/yyyy' }} {{ datasolicitud.nombreSesion }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-tabla-sesiones-temas
+          (temasSeleccionados)="getTemasSeleccionados($event)"
+          [dataSolicitud]="datasolicitud"
+          [style.pointer-events]="getStyle()"
+        >
+        </app-tabla-sesiones-temas>
       </mat-expansion-panel>
     </mat-accordion>
   </div>

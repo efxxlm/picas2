@@ -41,6 +41,7 @@ import { tablaComentariosActaComponent } from './components/tabla-comentarios-ac
 import { VotacionSolicitudActualizaCronogramaComponent } from './components/votacion-solicitud-actualiza_cronograma/votacion-solicitud-actualiza_cronograma.component';
 import { DialogVerDetalleComponent } from './components/dialog-ver-detalle/dialog-ver-detalle.component';
 import { ObservacionSecretarioComponent } from './components/observacion-secretario/observacion-secretario.component'
+import { TablaSesionesTemasComponent } from './components/tabla-sesiones-temas/tabla-sesiones-temas.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { ObservacionSecretarioComponent } from './components/observacion-secreta
     tablaComentariosActaComponent,
     VotacionSolicitudActualizaCronogramaComponent,
     DialogVerDetalleComponent,
-    ObservacionSecretarioComponent
+    ObservacionSecretarioComponent,
+    TablaSesionesTemasComponent
   ],
   imports: [
     CommonModule,

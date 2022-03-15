@@ -20,7 +20,7 @@ export interface SolicitudesContractuales{
     data?: any[],
     numeroComite?: string,
     seleccionado?: boolean
-
+    temas?: any[]
 }
 
 export interface ComiteTecnico{
@@ -84,7 +84,7 @@ export interface SesionComiteTema{
 
     sesionTemaVoto?: SesionTemaVoto[],
     temaCompromiso?: TemaCompromiso[],
-
+    sesionTemaComiteTecnicoId?: number
 }
 
 export interface SesionComiteSolicitud {

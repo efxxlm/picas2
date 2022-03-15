@@ -448,6 +448,8 @@ namespace asivamosffie.services
                             sesionComiteTemaOld.EsAprobado = SesionComiteTema.EsAprobado;
                             sesionComiteTemaOld.ObservacionesDecision = SesionComiteTema.Observaciones;
                             sesionComiteTemaOld.EsProposicionesVarios = SesionComiteTema.EsProposicionesVarios;
+                            sesionComiteTemaOld.Eliminado = SesionComiteTema.Eliminado != true ? false : true;
+
                             sesionComiteTemaOld.RegistroCompleto = ValidarRegistroCompletoSesionComiteTema(sesionComiteTemaOld);
                         }
                     }

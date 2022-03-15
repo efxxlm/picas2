@@ -31,6 +31,10 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   temaNuevoBoolean: boolean = false;
   tipoDeTemas: FormControl = new FormControl();
   solicitudesSeleccionadas = [];
+  temasSeleccionadas = [];
+  dataTemasNuevos: any[] = [];
+  temasFromComite = [];
+
   estadosComite = EstadosComite;
   objetoComiteTecnico: ComiteTecnico;
 
@@ -75,6 +79,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
       this.responsablesArray = response[0];
       this.dataSolicitudContractual = response[1];
       this.listaTipoTemas = response[2].filter(t => t.codigo != "3");
+      this.dataTemasNuevos = this.dataSolicitudContractual.filter(r => r?.temas?.length > 0);
 
       if (this.idSesion > 0)
         this.editMode();
@@ -114,58 +119,58 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
   //Contador solicitudes seleccionadas
   totalSolicitudes() {
-
     let contador = 0;
-
     for (let solicitud of this.solicitudesSeleccionadas) {
-
       contador += solicitud.data.length;
-
     };
-
     return contador;
+  }
 
+  //Contador temas seleccionadas
+  totalTemas() {
+    let contador = 0;
+    for (let solicitud of this.temasSeleccionadas) {
+      contador += solicitud.temas.filter(r => r.seleccionado == true).length;
+    };
+    return contador;
   }
 
   //Metodo para recibir las solicitudes contractuales
   getSesionesSeleccionada(event: DataTable) {
-
     console.log(this.solicitudesSeleccionadas, event)
     if (event.estado) {
-
       const index = this.solicitudesSeleccionadas.findIndex(value => value.data[0].idSolicitud === event.solicitud.data[0].idSolicitud);
-
       if (index === -1) {
         this.solicitudesSeleccionadas.push(event.solicitud);
       } else {
         this.solicitudesSeleccionadas.splice(index, 1, event.solicitud);
       }
-
-
     } else {
-
-
-
       if (event.solicitud.data.length === 0) {
-    console.log(this.solicitudesSeleccionadas, event)
-
-
+        console.log(this.solicitudesSeleccionadas, event)
         const index = this.solicitudesSeleccionadas.findIndex(value => value.data[0].idSolicitud === event.solicitud.data[0].idSolicitud);
-
         this.solicitudesSeleccionadas.splice(index, 1);
-
       } else {
-
         const index = this.solicitudesSeleccionadas.findIndex(value => value.data[0].idSolicitud === event.solicitud.data[0].idSolicitud);
         this.solicitudesSeleccionadas.splice(index, 1, event.solicitud);
+      }
+    };
+    console.log('solicitudes seleccionadas: ', this.solicitudesSeleccionadas);
+  };
 
+    //Metodo para recibir los temas nuevos
+    getTemasSeleccionados(event: any) {
+      const index = this.temasSeleccionadas.findIndex(value => value.comiteTecnicoId === event.comiteTecnicoId);
+      if (index === -1) {
+        this.temasSeleccionadas.push(event);
+      }else{
+        this.temasSeleccionadas[index].temas = event.temas;
+        if(!event.temas.find(r => r.seleccionado == true)){
+          this.temasSeleccionadas.splice(index, 1);
+        }
       }
 
     };
-
-    console.log('solicitudes seleccionadas: ', this.solicitudesSeleccionadas);
-
-  };
 
   editMode() {
     this.estaEditando = true;
@@ -192,8 +197,10 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
         temas.clear();
         this.solicitudesSeleccionadas = [];
+        this.temasSeleccionadas = [];
+        this.temasFromComite = [];
 
-        comite.sesionComiteTema.filter(t => t.esProposicionesVarios != true).forEach(te => {
+        comite.sesionComiteTema.filter(t => t.esProposicionesVarios != true && t.sesionTemaComiteTecnicoId == null).forEach(te => {
           let grupoTema = this.crearTema();
           let responsable = this.responsablesArray.find(m => m.codigo == te.responsableCodigo)
 
@@ -207,7 +214,23 @@ export class CrearOrdenDelDiaComponent implements OnInit {
           this.tema.push(grupoTema);
         })
 
-        console.log(comite);
+        this.temasFromComite = comite.sesionComiteTema.filter(t => t.sesionTemaComiteTecnicoId > 0);
+        this.temasFromComite.forEach(sct => {
+          this.dataTemasNuevos.forEach(dt => {
+            dt.temas.filter(t => t.sesionTemaId == sct.sesionTemaComiteTecnicoId).forEach(tema =>{
+                tema.seleccionado = true;
+                if(!this.temasSeleccionadas.find(r => r.comiteTecnicoId ==  dt.comiteTecnicoId)){
+                  this.temasSeleccionadas.push({
+                    comiteTecnicoId: dt.comiteTecnicoId,
+                    data: dt.data,
+                    fecha: dt.fecha,
+                    nombreSesion: dt.nombreSesion,
+                    temas: dt.temas
+                  });
+                }
+            });
+          })
+        })
 
         let existeComite = false;
 
@@ -399,6 +422,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
         sesionComiteTema: [],
         sesionComiteSolicitudComiteTecnico: [],
       }
+      console.log(this.tema);
 
       this.tema.controls.forEach(control => {
         let sesionComiteTema: SesionComiteTema = {
@@ -414,7 +438,40 @@ export class CrearOrdenDelDiaComponent implements OnInit {
         sesion.sesionComiteTema.push(sesionComiteTema);
       })
 
-      this.solicitudesSeleccionadas.forEach(ss => {
+      this.temasFromComite.forEach(tfc => {
+        var t = this.temasSeleccionadas.filter(r => r.temas.find(r => r.sesionTemaId == tfc.sesionTemaComiteTecnicoId));
+        if(t.length == 0){
+          let sesionComiteTema: SesionComiteTema = {
+            sesionTemaId: tfc.sesionTemaId,
+            comiteTecnicoId: tfc.comiteTecnicoId,
+            tema: tfc.tema,
+            responsableCodigo: tfc.responsableCodigo,
+            tiempoIntervencion: tfc.tiempoIntervencion,
+            rutaSoporte: tfc.rutaSoporte,
+            eliminado: true
+           }
+          sesion.sesionComiteTema.push(sesionComiteTema);
+        }
+     })
+
+      this.temasSeleccionadas.forEach(ts => {
+        ts.temas.forEach(sol => {
+          let sesionComiteTema: SesionComiteTema = {
+            sesionTemaId: this.temasFromComite.find(r => r.sesionTemaComiteTecnicoId == sol.sesionTemaId)?.sesionTemaId ?? 0,
+            comiteTecnicoId: sol.comiteTecnicoId,
+            sesionTemaComiteTecnicoId: sol.sesionTemaId,
+            tema: sol.tema,
+            responsableCodigo: sol.responsableCodigo,
+            tiempoIntervencion: sol.tiempoIntervencion,
+            rutaSoporte: sol.rutaSoporte,
+            eliminado: sol.seleccionado == true ? false : true ?? false
+           }
+          if(!(sesionComiteTema.sesionTemaId == 0 && sesionComiteTema.eliminado == true))
+            sesion.sesionComiteTema.push(sesionComiteTema);
+        });
+     })
+
+     this.solicitudesSeleccionadas.forEach(ss => {
         ss.data.forEach(sol => {
           let sesionSol: SesionComiteSolicitud = {
             sesionComiteSolicitudId: sol.idSolicitud,
@@ -432,7 +489,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
           this.openDialog('', `<b>${respuesta.message}</b>`);
           if (respuesta.code == "200")
             this.router.navigate(['/comiteFiduciario'])
-        })
+      })
 
     }
   }

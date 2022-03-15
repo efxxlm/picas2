@@ -3,7 +3,8 @@ export interface SolicitudContractual {
   fecha: string;
   data: DataSesion[];
   id?: number,
-  tipoSolicitudCodigo?: string
+  tipoSolicitudCodigo?: string,
+  temas?: any[]
 };
 
 export interface DataSesion {
