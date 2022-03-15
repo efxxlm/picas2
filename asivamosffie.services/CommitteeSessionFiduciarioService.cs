@@ -75,32 +75,33 @@ namespace asivamosffie.services
 
                 List<Dominio> ListTipoSolicitud = _context.Dominio.AsNoTracking().Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
 
-      
+
 
                 List<Dominio> listaResponsables = _context.Dominio.AsNoTracking()
                                                         .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico)
                                                         .ToList();
 
                 List<SesionComiteTema> ListSesionComiteTemaFiduciaria = _context.SesionComiteTema.Where(r => r.Eliminado != true && r.SesionTemaComiteTecnicoId != null).ToList();
- 
+
                 foreach (var c in listaComites)
                 {
+
                     if (c.SesionComiteTema.Count > 0)
                     {
-                        c.SesionComiteTema = c.SesionComiteTema.Where(r => r.Eliminado != true && r.EsAprobado == true && r.SesionTemaComiteTecnicoId == null && r.EsProposicionesVarios != true ).ToList();
+                        c.SesionComiteTema = c.SesionComiteTema.Where(r => r.Eliminado != true && r.EsAprobado == true && r.SesionTemaComiteTecnicoId == null && (r.EsProposicionesVarios != true || r.EsProposicionesVarios == null)).ToList();
 
                         foreach (var SesionComiteTema in c.SesionComiteTema)
                         {
                             SesionComiteTema.NombreResponsable = listaResponsables.Where(lr => lr.Codigo == SesionComiteTema.ResponsableCodigo).FirstOrDefault().Nombre ?? String.Empty;
 
-                            if (ListSesionComiteTemaFiduciaria.Select(r=> r.SesionTemaComiteTecnicoId).Contains(SesionComiteTema.SesionTemaId))
+                            if (ListSesionComiteTemaFiduciaria.Select(r => r.SesionTemaComiteTecnicoId).Contains(SesionComiteTema.SesionTemaId))
                                 SesionComiteTema.ComiteTecnicoFiduciarioIdMapped = ListSesionComiteTemaFiduciaria.Where(r => r.SesionTemaComiteTecnicoId == SesionComiteTema.SesionTemaId && r.Eliminado != true).FirstOrDefault().ComiteTecnicoId;
-                         
+
                             SesionComiteTema.ComiteTecnico = null;
                         }
                     }
-                   
-                     
+
+
                     dynamic comite = new
                     {
                         nombreSesion = c.NumeroComite,
@@ -306,7 +307,7 @@ namespace asivamosffie.services
                                     }
                             }
                     }
-                    if (comite.data.Count > 0)
+                    if (comite.data.Count > 0 || comite.temas.Count > 0)
                         listaComitesGrilla.Add(comite);
 
                 }
