@@ -5463,7 +5463,7 @@ namespace asivamosffie.services
 
                 //Logica Orden Del Dia
                 int enumOrdenDelDia = 1;
-                foreach (SesionComiteSolicitud SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico)
+                foreach (SesionComiteSolicitud SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico.OrderByDescending(r=> r.TipoSolicitudCodigo))
                 {
                     string RegistrosProyectos = string.Empty;
 
@@ -5648,7 +5648,7 @@ namespace asivamosffie.services
                                                 TextoResultadoVotacion = PlantillaNoVotacionUnanime;
                                             }
 
-                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", SesionComiteSolicitud.RutaSoporteVotacion);
+                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", _commonService.SetUrlInAnchore(SesionComiteSolicitud.RutaSoporteVotacion));
 
                                         }
 
@@ -5840,7 +5840,7 @@ namespace asivamosffie.services
                                                 TextoResultadoVotacion = PlantillaNoVotacionUnanime;
                                             }
 
-                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", SesionComiteSolicitud.RutaSoporteVotacion);
+                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]",_commonService.SetUrlInAnchore(SesionComiteSolicitud.RutaSoporteVotacion));
 
                                         }
 
@@ -6141,7 +6141,7 @@ namespace asivamosffie.services
                                                 TextoResultadoVotacion = PlantillaNoVotacionUnanime;
                                             }
 
-                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", SesionComiteSolicitud.RutaSoporteVotacion);
+                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", _commonService.SetUrlInAnchore(SesionComiteSolicitud.RutaSoporteVotacion));
 
                                         }
 
@@ -6381,7 +6381,7 @@ namespace asivamosffie.services
                                                 TextoResultadoVotacion = PlantillaNoVotacionUnanime;
                                             }
 
-                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", SesionComiteSolicitud.RutaSoporteVotacion);
+                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", _commonService.SetUrlInAnchore( SesionComiteSolicitud.RutaSoporteVotacion));
 
                                         }
 
@@ -6647,7 +6647,7 @@ namespace asivamosffie.services
                                                 TextoResultadoVotacion = PlantillaNoVotacionUnanime;
                                             }
 
-                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", SesionComiteSolicitud.RutaSoporteVotacion);
+                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", _commonService.SetUrlInAnchore(SesionComiteSolicitud.RutaSoporteVotacion));
 
                                         }
 
@@ -6765,7 +6765,7 @@ namespace asivamosffie.services
                                 else if (cantidadAprobado > cantidadNoAprobo)
                                     TextoResultadoVotacion = PlantillaNoVotacionUnanime;
 
-                                TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", Tema.RutaSoporte);
+                                TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", _commonService.SetUrlInAnchore(Tema.RutaSoporte));
 
                                 RegistrosNuevosTemas = RegistrosNuevosTemas
                                 .Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
@@ -6852,7 +6852,7 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.URL_CON_SOPORTE_TEMA:
                                 RegistrosTemas = RegistrosTemas
-                                    .Replace(placeholderDominio.Nombre, Tema.RutaSoporte);
+                                    .Replace(placeholderDominio.Nombre, _commonService.SetUrlInAnchore((Tema.RutaSoporte)));
                                 break;
 
                         }
@@ -6897,7 +6897,7 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.URL_CON_SOPORTE_TEMA:
                                 RegistrosProposicionesVarios = RegistrosProposicionesVarios
-                                    .Replace(placeholderDominio.Nombre, Tema.RutaSoporte);
+                                    .Replace(placeholderDominio.Nombre, _commonService.SetUrlInAnchore(Tema.RutaSoporte));
                                 break;
 
                         }
@@ -6979,7 +6979,7 @@ namespace asivamosffie.services
                                     TextoResultadoVotacion = PlantillaNoVotacionUnanime;
                                 }
 
-                                TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", Tema.RutaSoporte);
+                                TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", _commonService.SetUrlInAnchore(Tema.RutaSoporte));
 
                                 RegistrosProposicionVarios = RegistrosProposicionVarios
                                 .Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
@@ -7725,7 +7725,7 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.URL_SOPORTE_SOLICITUD:
-                            DetallesSolicitudes = DetallesSolicitudes.Replace(placeholderDominio.Nombre, controversiaContractual.RutaSoporte != null ? controversiaContractual.RutaSoporte : "");
+                            DetallesSolicitudes = DetallesSolicitudes.Replace(placeholderDominio.Nombre, controversiaContractual.RutaSoporte != null ? _commonService.SetUrlInAnchore(controversiaContractual.RutaSoporte) : "");
                             break;
                         //DIFERENTES TAI
                         case ConstanCodigoVariablesPlaceHolders.FECHA_RADICADO_SAC:

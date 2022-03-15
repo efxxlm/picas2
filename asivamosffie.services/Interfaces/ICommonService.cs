@@ -12,6 +12,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
     {
+        public string SetUrlInAnchore(string pUrl);
         Task<dynamic> ExcuteSqlStoredProcedureJson<T>(string query, SqlParameter[] parameterList);
 
         Task<model.Models.Version> GetVersion();

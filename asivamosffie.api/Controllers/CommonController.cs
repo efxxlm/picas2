@@ -27,17 +27,17 @@ namespace asivamosffie.api.Controllers
             common = prmCommon;
             _settings = settings;
         }
-      
+
 
         [HttpGet]
         [Route("ExcuteSqlStoredProcedure")]
-        public async Task<ActionResult<dynamic>> ExcuteSqlStoredProcedure( )
-        { 
+        public async Task<ActionResult<dynamic>> ExcuteSqlStoredProcedure()
+        {
             SqlParameter[] parameterList = new SqlParameter[]
             {
-         
-            }; 
-           return await common.ExcuteSqlStoredProcedureJson<dynamic>("ups_Prueba", parameterList );
+
+            };
+            return await common.ExcuteSqlStoredProcedureJson<dynamic>("ups_Prueba", parameterList);
         }
 
         [HttpGet]
@@ -59,11 +59,15 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("GetHtmlToPdf")]
-        public async Task<FileResult> GetHtmlToPdf([FromBody] Plantilla pPlantilla)
+        public async Task<FileResult> GetHtmlToPdf(string pPlantilla)
         {
             try
             {
-                return File(await common.GetHtmlToPdf(pPlantilla), "application/pdf");
+                Plantilla plantilla = new Plantilla { 
+                 
+                Contenido = pPlantilla
+                };
+                return File(await common.GetHtmlToPdf(plantilla), "application/pdf");
             }
             catch (Exception e)
             {
@@ -279,7 +283,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return common.GetValorTotalDisponibilidad(pDisponibilidadPresupuestalId,false);
+                return common.GetValorTotalDisponibilidad(pDisponibilidadPresupuestalId, false);
             }
             catch (Exception ex)
             {

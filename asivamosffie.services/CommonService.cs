@@ -36,6 +36,17 @@ namespace asivamosffie.services
             _mailSettings = mailSettings.Value;
             _context = context;
         }
+
+
+        public string SetUrlInAnchore(string pUrl)
+        {
+            return pUrl;
+
+            if (pUrl.Contains("N/A") || pUrl.Contains("n/a"))
+                return pUrl;
+
+            return "<a target='_blank' href='" + pUrl + "'> Link </a>"; 
+        }
         public async Task<model.Models.Version> GetVersion()
         {
             return await _context.Version.OrderByDescending(v => v.VersionId).FirstOrDefaultAsync();
@@ -64,10 +75,7 @@ namespace asivamosffie.services
                                                           .Include(r => r.Encabezado).Include(r => r.PieDePagina)
                                                           .FirstOrDefaultAsync();
 
-            plantilla.MargenAbajo = pPlantilla.MargenAbajo;
-            plantilla.MargenArriba = pPlantilla.MargenArriba;
-            plantilla.MargenDerecha = pPlantilla.MargenDerecha;
-            plantilla.MargenIzquierda = pPlantilla.MargenIzquierda;
+
 
             plantilla.Contenido = plantilla.Contenido.Replace("[HTML]", pPlantilla.Contenido);
             return PDF.Convertir(plantilla, pPlantilla.EsHorizontal);
