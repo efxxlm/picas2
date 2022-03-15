@@ -390,7 +390,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     return this.fb.group({
       sesionTemaId: [],
       tema: [null, Validators.compose([
-        Validators.required, Validators.minLength(1), Validators.maxLength(1000)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(5000)])
       ],
       responsable: [null, Validators.required],
       tiempoIntervencion: [null, Validators.compose([
