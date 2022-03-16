@@ -2329,6 +2329,7 @@ namespace asivamosffie.services
 
                 ListaParticipantes = await _context.SesionParticipante
                 .Where(r => r.ComiteTecnicoId == pComiteId && !(bool)r.Eliminado)
+                 .Include(r => r.Usuario)
                 .Include(r => r.SesionSolicitudObservacionProyecto)
                 .ToListAsync();
 

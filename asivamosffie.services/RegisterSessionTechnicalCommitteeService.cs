@@ -1810,11 +1810,11 @@ namespace asivamosffie.services
                 sesionComiteTema.ComiteTecnico = null;
                 ListSesionComiteTema.Add(sesionComiteTema);
             }
-             
+
             comiteTecnico.SesionComiteTema = ListSesionComiteTema;
 
             #endregion
-             
+
             comiteTecnico.SesionInvitado = comiteTecnico.SesionInvitado.Where(r => r.Eliminado != true).ToList();
 
             comiteTecnico.SesionResponsable = comiteTecnico.SesionResponsable.Where(r => r.Eliminado != true).ToList();
@@ -2131,7 +2131,7 @@ namespace asivamosffie.services
                         Code = ConstantSesionComiteTecnico.ErrorEliminarDependencia
                     };
                 }
-              
+
                 foreach (var SesionParticipante in pComiteTecnico.SesionParticipante)
                 {
                     _context.SesionParticipante.Add(new SesionParticipante
@@ -4240,6 +4240,7 @@ namespace asivamosffie.services
 
                         if (pContratacion.Contratista != null)
                         {
+                            pContratacion.Contratista.Nombre.Replace("&", " ");
                             pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.Contratista.Nombre);
                         }
                         else
@@ -4904,8 +4905,8 @@ namespace asivamosffie.services
                 SesionComiteTema.SesionTemaVoto = _context.SesionTemaVoto
                                                                         .AsNoTracking()
                                                                         .Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true)
-                                                                        .ToList(); 
-            } 
+                                                                        .ToList();
+            }
 
             if (comiteTecnico == null)
             {
@@ -5360,7 +5361,7 @@ namespace asivamosffie.services
                                 }
                                 break;
 
-                            case ConstanCodigoTipoSolicitud.ControversiasContractuales: 
+                            case ConstanCodigoTipoSolicitud.ControversiasContractuales:
                                 ControversiaContractual controversiaContractual = ListControversiaContractual.Where(c => c.ControversiaContractualId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
 
                                 foreach (Dominio placeholderDominio in placeholders)
@@ -5463,7 +5464,7 @@ namespace asivamosffie.services
 
                 //Logica Orden Del Dia
                 int enumOrdenDelDia = 1;
-                foreach (SesionComiteSolicitud SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico.OrderByDescending(r=> r.TipoSolicitudCodigo))
+                foreach (SesionComiteSolicitud SesionComiteSolicitud in pComiteTecnico.SesionComiteSolicitudComiteTecnico.OrderByDescending(r => r.TipoSolicitudCodigo))
                 {
                     string RegistrosProyectos = string.Empty;
 
@@ -5751,8 +5752,8 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.ALCANCE_PARTICULAR_PROCESO:
                                         procesoSeleccion.AlcanceParticular = procesoSeleccion.AlcanceParticular.Replace("style", "");
-                                       registrosContratacion = registrosContratacion
-                                          .Replace(placeholderDominio.Nombre, procesoSeleccion.AlcanceParticular);
+                                        registrosContratacion = registrosContratacion
+                                           .Replace(placeholderDominio.Nombre, procesoSeleccion.AlcanceParticular);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.JUSTIFICACION_PROCESO:
@@ -5840,7 +5841,7 @@ namespace asivamosffie.services
                                                 TextoResultadoVotacion = PlantillaNoVotacionUnanime;
                                             }
 
-                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]",_commonService.SetUrlInAnchore(SesionComiteSolicitud.RutaSoporteVotacion));
+                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", _commonService.SetUrlInAnchore(SesionComiteSolicitud.RutaSoporteVotacion));
 
                                         }
 
@@ -5936,7 +5937,7 @@ namespace asivamosffie.services
                             Contratista contratista = null;
 
 
-                            contratacionNovedad = ListContratacion.Where(r=> r.Contrato.FirstOrDefault().ContratoId == novedad.ContratoId).FirstOrDefault();
+                            contratacionNovedad = ListContratacion.Where(r => r.Contrato.FirstOrDefault().ContratoId == novedad.ContratoId).FirstOrDefault();
                             contratista = novedad.Contrato.Contratacion.Contratista;
                             disponibilidadPresupuestal = novedad.Contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault();
 
@@ -5999,6 +6000,7 @@ namespace asivamosffie.services
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.CONTRATISTA_NOMBRE:
+                                        contratista.Nombre = contratista.Nombre.Replace("&", "&amp;");
                                         registrosContratacion = registrosContratacion.Replace(placeholderDominio.Nombre, contratista != null ? contratista.Nombre : "");
                                         break;
 
@@ -6381,7 +6383,7 @@ namespace asivamosffie.services
                                                 TextoResultadoVotacion = PlantillaNoVotacionUnanime;
                                             }
 
-                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", _commonService.SetUrlInAnchore( SesionComiteSolicitud.RutaSoporteVotacion));
+                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", _commonService.SetUrlInAnchore(SesionComiteSolicitud.RutaSoporteVotacion));
 
                                         }
 
@@ -6808,7 +6810,7 @@ namespace asivamosffie.services
                                     }
                                 }
                                 RegistrosNuevosTemas = RegistrosNuevosTemas
-                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>nuevos temas</strong> para esta solicitud") : registrosCompromisosSolicitud);
+                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>nuevos compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                 break;
                         }
                     }
@@ -7989,6 +7991,7 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.CONTRATISTA_NOMBRE:
+                            contratista.Nombre = contratista.Nombre.Replace("&", "&amp;");
                             pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, contratista != null ? contratista.Nombre : "");
                             break;
 
@@ -8944,6 +8947,7 @@ namespace asivamosffie.services
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.CONTRATISTA_NOMBRE:
+                            contratista.Nombre = contratista.Nombre.Replace("&", "&amp;");
                             pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, contratista != null ? contratista.Nombre : "");
                             break;
 
