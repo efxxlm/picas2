@@ -7436,7 +7436,7 @@ namespace asivamosffie.services
 
             NovedadContractual novedadContractual = _context.NovedadContractual.AsNoTracking()
                                                                              .Where(r => r.NovedadContractualId == pNovedadContractual)
-                                                                                    .Include(r => r.NovedadContractualObservaciones)
+                                                                                    .Include(r => r.NovedadContractualObservaciones) 
                                                                                     .Include(r => r.Contrato)
                                                                                         .ThenInclude(r => r.Contratacion)
                                                                                             .ThenInclude(r => r.Contratista)
@@ -8058,18 +8058,20 @@ namespace asivamosffie.services
                                                                                 .Include(r => r.Contrato)
                                                                                 .Include(r => r.Contratista)
                                                                                 .Include(r => r.PlazoContratacion)
-                                                                                .Include(r => r.ContratacionProyecto).ThenInclude(r => r.Proyecto).ThenInclude(r => r.InfraestructuraIntervenirProyecto)
+                                                                                .Include(r => r.ContratacionProyecto).ThenInclude(r => r.Proyecto).ThenInclude(r => r.InfraestructuraIntervenirProyecto) 
+                                                                                .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r=> r.CofinanciacionAportante).ThenInclude(r=> r.Municipio) 
+                                                                                .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r=> r.CofinanciacionAportante).ThenInclude(r=> r.Departamento)
+                                                                                .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r=> r.CofinanciacionAportante).ThenInclude(r=> r.NombreAportante)
+                                                                                .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante).ThenInclude(r => r.ProyectoAportante)
                                                                                 .ToList();
                     foreach (var Contratacion in ListContratacion)
                     {
                         foreach (var ContratacionProyecto in Contratacion.ContratacionProyecto)
                         {
-                            ContratacionProyecto.ContratacionProyectoAportante = _context.ContratacionProyectoAportante.AsNoTracking().Where(r => r.ContratacionProyectoId == ContratacionProyecto.ContratacionProyectoId).Include(r => r.CofinanciacionAportante).ToList();
-
                             foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
                             {
                                 ContratacionProyectoAportante.ComponenteAportante = _context.ComponenteAportante.AsNoTracking().Where(r => r.ContratacionProyectoAportanteId == ContratacionProyectoAportante.ContratacionProyectoAportanteId).Include(r => r.ComponenteUso).ToList();
-                                ContratacionProyectoAportante.CofinanciacionAportante = _context.CofinanciacionAportante.AsNoTracking().Where(r => r.CofinanciacionAportanteId == ContratacionProyectoAportante.CofinanciacionAportanteId).Include(r => r.ProyectoAportante).FirstOrDefault();
+ 
                             }
 
                         }
