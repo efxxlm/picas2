@@ -261,6 +261,7 @@ export interface SesionTemaVoto{
     fechaModificacion?: Date,
     usuarioModificacion?: string,
     eliminado?: boolean,
+    noAplica?: boolean,
 
     nombreParticipante?: string,
 
