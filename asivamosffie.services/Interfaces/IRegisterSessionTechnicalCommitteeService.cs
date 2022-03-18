@@ -9,6 +9,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterSessionTechnicalCommitteeService
     {
+        Task<string> ReemplazarDatosPlantillaActa(string strContenido, ComiteTecnico pComiteTecnico);
         Task<string> GetPlantillaActaIdComiteHTML(int ComiteId);
 
         Task<bool> GetValidarcompletosActa(int IdComite);

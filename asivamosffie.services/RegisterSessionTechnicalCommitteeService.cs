@@ -4973,7 +4973,7 @@ namespace asivamosffie.services
             }
         }
 
-        private async Task<string> ReemplazarDatosPlantillaActa(string strContenido, ComiteTecnico pComiteTecnico)
+        public async Task<string> ReemplazarDatosPlantillaActa(string strContenido, ComiteTecnico pComiteTecnico)
         {
             try
             {
@@ -4986,7 +4986,8 @@ namespace asivamosffie.services
                 List<int> ListControversiaContractualId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales).Select(r => r.SolicitudId).ToList();
                 List<Localizacion> localizacions = _context.Localizacion.AsNoTracking().ToList();
                 List<Dominio> ListParametricas = _context.Dominio.AsNoTracking().ToList();
-                List<Contratacion> ListContratacion  = _context.Contratacion.AsNoTracking()
+                List<Contratacion> ListContratacion  = _context.Contratacion.AsNoTracking() 
+                                                                                .Where(r => ListContratacionId.Contains(r.ContratacionId)) 
                                                                                 .Include(r => r.Contrato)
                                                                                 .Include(r => r.Contratista)
                                                                                 .Include(r => r.PlazoContratacion)
