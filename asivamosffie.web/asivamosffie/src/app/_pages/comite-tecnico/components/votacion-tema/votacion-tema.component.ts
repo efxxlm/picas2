@@ -107,18 +107,19 @@ export class VotacionTemaComponent implements OnInit {
       let grupoVotacion = this.crearParticipante();
 
       grupoVotacion.get('nombreParticipante').setValue(v.nombreParticipante);
-      grupoVotacion.get('aprobacion').setValue(v.esAprobado);
       grupoVotacion.get('noAplica').setValue(v.noAplica);
       grupoVotacion.get('observaciones').setValue(v.observacion);
-
       grupoVotacion.get('sesionTemaVotoId').setValue(v.sesionTemaVotoId);
       grupoVotacion.get('sesionTemaId').setValue(v.sesionTemaId);
       grupoVotacion.get('sesionParticipanteId').setValue(v.sesionParticipanteId);
 
+      grupoVotacion.get('aprobacion').setValue(v.esAprobado);
+      if (v.noAplica) grupoVotacion.get('aprobacion').setValue('noAplica');
+
       this.listaVotacion.push(grupoVotacion);
     });
 
-    // console.log( this.addressForm.value )
+    // console.log('sesionComiteTema => ', this.data.sesionComiteTema);
   }
 
   agregarAprovacion() {

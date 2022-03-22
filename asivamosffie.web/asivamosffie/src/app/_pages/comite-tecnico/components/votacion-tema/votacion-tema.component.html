@@ -35,8 +35,12 @@
                   <mat-checkbox formControlName=""></mat-checkbox>
                 </section> -->
                 <div *ngIf="data.esVerDetalle === true">
-                  <span *ngIf="addressForm.get('aprobacion').value === true">Sí</span>
-                  <span *ngIf="addressForm.get('aprobacion').value !== true">No</span>
+                  <span *ngIf="!addressForm.get('noAplica').value && addressForm.get('aprobacion').value === true">
+                    Sí
+                  </span>
+                  <span *ngIf="!addressForm.get('noAplica').value && addressForm.get('aprobacion').value !== true">
+                    No
+                  </span>
                   <span *ngIf="addressForm.get('noAplica').value === true">No aplica</span>
                 </div>
                 <div *ngIf="data.esVerDetalle !== true">
@@ -120,12 +124,26 @@
               {{ addressForm.controls[i].get('nombreParticipante').value }}
             </td>
             <td class="mat-cell cdk-cell ng-star-inserted">
-              <span *ngIf="addressForm.controls[i].get('aprobacion').value === true">Sí</span>
-              <span *ngIf="addressForm.controls[i].get('aprobacion').value !== true">No</span>
+              <span
+                *ngIf="
+                  !addressForm.controls[i].get('noAplica').value &&
+                  addressForm.controls[i].get('aprobacion').value === true
+                "
+              >
+                Sí
+              </span>
+              <span
+                *ngIf="
+                  !addressForm.controls[i].get('noAplica').value &&
+                  addressForm.controls[i].get('aprobacion').value !== true
+                "
+              >
+                No
+              </span>
               <span *ngIf="addressForm.controls[i].get('noAplica').value === true">No aplica</span>
             </td>
             <td class="mat-cell cdk-cell ng-star-inserted">
-              <p [innerHTML]="addressForm.controls[i].get('observaciones').value">
+              <p [innerHTML]="addressForm.controls[i].get('observaciones').value"></p>
             </td>
           </tr>
         </tbody>

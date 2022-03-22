@@ -93,6 +93,10 @@
     .ql-container.ql-snow {
       border-bottom: $fontColor solid 1px;
 
+      .mat-table & {
+        border: none;
+      }
+
       &.invalid {
         .ql-container.ql-snow {
           border-bottom: $secondaryColor solid 1px;

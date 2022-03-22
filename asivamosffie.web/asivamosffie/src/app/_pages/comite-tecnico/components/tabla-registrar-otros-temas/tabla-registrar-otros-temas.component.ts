@@ -12,19 +12,16 @@ import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.serv
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { TagContentType } from '@angular/compiler';
 
-
 @Component({
   selector: 'app-tabla-registrar-otros-temas',
   templateUrl: './tabla-registrar-otros-temas.component.html',
   styleUrls: ['./tabla-registrar-otros-temas.component.scss']
 })
 export class TablaRegistrarOtrosTemasComponent implements OnInit {
-
   @Input() objetoComiteTecnico: ComiteTecnico;
   @Input() esVerDetalle: boolean;
   @Input() esProposicionesVarios: boolean;
   @Output() validar: EventEmitter<any> = new EventEmitter();
-
 
   listaMiembros: Usuario[];
 
@@ -42,16 +39,14 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private technicalCommitteSessionService: TechnicalCommitteSessionService,
-    private commonService: CommonService,
-
-  ) { }
+    private commonService: CommonService
+  ) {}
 
   ngOnInit(): void {
-
-    console.log(this.esProposicionesVarios)
-    this.commonService.listaUsuarios().then((respuesta) => {
+    // console.log(this.esProposicionesVarios);
+    this.commonService.listaUsuarios().then(respuesta => {
       this.listaMiembros = respuesta;
-    })
+    });
 
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
@@ -63,9 +58,7 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
       length = Math.max(length, 0);
       const startIndex = page * pageSize;
       // If the start index exceeds the list length, do not try and fix the end index to the end.
-      const endIndex = startIndex < length ?
-        Math.min(startIndex + pageSize, length) :
-        startIndex + pageSize;
+      const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
   }
@@ -89,46 +82,39 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
   }
 
   openDialogValidacionSolicitudes(elemento: SesionComiteTema) {
-
     let sesionComiteTema: SesionComiteTema = {
       sesionTemaId: elemento.sesionTemaId,
       tema: elemento.tema,
+      sesionTemaVoto: []
+    };
 
-      sesionTemaVoto: [],
-
-    }
-
-    console.log(this.objetoComiteTecnico.sesionParticipante.length)
+    // console.log(this.objetoComiteTecnico.sesionParticipante.length);
 
     this.objetoComiteTecnico.sesionParticipante.forEach(p => {
-      let temaVoto: SesionTemaVoto = elemento.sesionTemaVoto.find(v => v.sesionTemaId == elemento.sesionTemaId && v.sesionParticipanteId == p.sesionParticipanteId);
-      let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)
+      let temaVoto: SesionTemaVoto = elemento.sesionTemaVoto.find(
+        v => v.sesionTemaId == elemento.sesionTemaId && v.sesionParticipanteId == p.sesionParticipanteId
+      );
+      let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId);
 
-      if ( temaVoto ){
+      if (temaVoto) {
         temaVoto.nombreParticipante = `${usuario.primerNombre} ${usuario.primerApellido}`;
-      }else{
+      } else {
         temaVoto = {
-
           sesionTemaVotoId: 0,
           sesionTemaId: elemento.sesionTemaId,
           sesionParticipanteId: p.sesionParticipanteId,
           esAprobado: null,
           observacion: null,
-          nombreParticipante: `${usuario.primerNombre} ${usuario.primerApellido}`,
-
-        }
+          nombreParticipante: `${usuario.primerNombre} ${usuario.primerApellido}`
+        };
       }
 
-
-
-
-
-      sesionComiteTema.sesionTemaVoto.push(temaVoto)
-    })
-
+      sesionComiteTema.sesionTemaVoto.push(temaVoto);
+    });
 
     const dialog = this.dialog.open(VotacionTemaComponent, {
-      width: '70em', data: { sesionComiteTema: sesionComiteTema, esVerDetalle: this.esVerDetalle  }
+      width: '70em',
+      data: { sesionComiteTema: sesionComiteTema, esVerDetalle: this.esVerDetalle }
     });
 
     dialog.afterClosed().subscribe(c => {
@@ -139,50 +125,45 @@ export class TablaRegistrarOtrosTemasComponent implements OnInit {
       this.validar.emit(null);
       //     })
       // }
-    })
-
+    });
   }
 
   changeRequiere(check: boolean, solicitudTema: SesionComiteTema) {
-
     this.objetoComiteTecnico.sesionComiteTema.forEach(tem => {
       if (tem.sesionTemaId == solicitudTema.sesionTemaId) {
-        this.technicalCommitteSessionService.noRequiereVotacionSesionComiteTema(solicitudTema, check)
+        this.technicalCommitteSessionService
+          .noRequiereVotacionSesionComiteTema(solicitudTema, check)
           .subscribe(respuesta => {
-            tem.completo = !check
+            tem.completo = !check;
             this.validar.emit(null);
-          })
+          });
       }
     });
-
   }
 
-  validarResgistros( listaSesionComiteTema: SesionComiteTema[] ){
-    listaSesionComiteTema.forEach( ct => {
+  validarResgistros(listaSesionComiteTema: SesionComiteTema[]) {
+    listaSesionComiteTema.forEach(ct => {
+      if (ct.requiereVotacion == true && ct.sesionTemaVoto.length == 0) {
+        ct.completo = false;
+      } else ct.completo = true;
 
-      if ( ct.requiereVotacion == true && ct.sesionTemaVoto.length == 0 ) { ct.completo = false }
-      else ct.completo = true;
-
-      ct.sesionTemaVoto.forEach( tv => {
-        if ( tv.esAprobado != true && tv.esAprobado != false ){
+      ct.sesionTemaVoto.forEach(tv => {
+        if (tv.esAprobado != true && tv.esAprobado != false) {
           ct.completo = false;
-          return
-        }
-        else ct.completo = true;
-      })
-    })
+          return;
+        } else ct.completo = true;
+      });
+    });
   }
 
   cargarRegistro() {
+    let lista = this.objetoComiteTecnico.sesionComiteTema.filter(
+      t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == this.esProposicionesVarios
+    );
 
-    let lista = this.objetoComiteTecnico.sesionComiteTema.
-      filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == this.esProposicionesVarios)
-
-    this.validarResgistros( lista )
+    this.validarResgistros(lista);
 
     this.dataSource = new MatTableDataSource(lista);
     this.paginadorTabla();
-
   }
-
 }
