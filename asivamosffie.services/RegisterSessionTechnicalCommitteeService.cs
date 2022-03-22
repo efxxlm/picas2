@@ -234,6 +234,7 @@ namespace asivamosffie.services
         }
 
         public async Task<Respuesta> CreateEditSesionTemaVoto(SesionComiteTema pSesionComiteTema)
+
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Comite_Tema_Voto, (int)EnumeratorTipoDominio.Acciones);
             try
@@ -4986,8 +4987,8 @@ namespace asivamosffie.services
                 List<int> ListControversiaContractualId = pComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales).Select(r => r.SolicitudId).ToList();
                 List<Localizacion> localizacions = _context.Localizacion.AsNoTracking().ToList();
                 List<Dominio> ListParametricas = _context.Dominio.AsNoTracking().ToList();
-                List<Contratacion> ListContratacion  = _context.Contratacion.AsNoTracking() 
-                                                                                .Where(r => ListContratacionId.Contains(r.ContratacionId)) 
+                List<Contratacion> ListContratacion = _context.Contratacion.AsNoTracking()
+                                                                                .Where(r => ListContratacionId.Contains(r.ContratacionId))
                                                                                 .Include(r => r.Contrato)
                                                                                 .Include(r => r.Contratista)
                                                                                 .Include(r => r.PlazoContratacion)
@@ -5587,24 +5588,21 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.DECISIONES_SOLICITUD:
 
-                                        string strRequiereVotacion = "";
+                                        string strRequiereVotacion = string.Empty;
                                         int cantidadAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true && r.ComiteTecnicoFiduciarioId == null).Count();
                                         int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId == null).Count();
                                         if (SesionComiteSolicitud.RequiereVotacion == true)
                                         {
                                             if (cantidadAprobadas > cantidadNoAprobadas)
-                                            {
                                                 strRequiereVotacion = "Aprobada";
-                                            }
+
                                             else
-                                            {
                                                 strRequiereVotacion = "No Aprobada";
-                                            }
+
                                         }
                                         else
-                                        {
                                             strRequiereVotacion = "No fue requerida";
-                                        }
+
                                         registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre, strRequiereVotacion);
                                         break;
@@ -5789,18 +5787,13 @@ namespace asivamosffie.services
                                         if (SesionComiteSolicitud.RequiereVotacion == true)
                                         {
                                             if (cantidadAprobadas > cantidadNoAprobadas)
-                                            {
                                                 strRequiereVotacion = "Aprobada";
-                                            }
                                             else
-                                            {
                                                 strRequiereVotacion = "No Aprobada";
-                                            }
                                         }
                                         else
-                                        {
                                             strRequiereVotacion = "No fue requerida";
-                                        }
+
                                         registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre, strRequiereVotacion);
                                         break;
@@ -6739,12 +6732,20 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.DECISIONES_SOLICITUD:
 
-                                string strRequiereVotacion = "";
-                                int cantidadAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true).Count();
-                                int cantidadNoAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true).Count();
+                                string strRequiereVotacion = string.Empty;
+                                int cantidadAprobadas = Tema.SesionTemaVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value == true && r.NoAplica != true);
+                                int cantidadNoAprobadas = Tema.SesionTemaVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value != true && r.NoAplica != true);
+
+
+                                int CantidadNoAplica = Tema.SesionTemaVoto.Count(r => r.Eliminado != true && r.NoAplica == true);
+                                int CantidadVotos = Tema.SesionTemaVoto.Count(r => r.Eliminado != true);
+
+
                                 if (Tema.RequiereVotacion == true)
                                 {
-                                    if (cantidadAprobadas > cantidadNoAprobadas)
+                                    if (CantidadNoAplica == CantidadVotos)
+                                        strRequiereVotacion = "No Aplica";
+                                    else if (cantidadAprobadas > cantidadNoAprobadas)
                                         strRequiereVotacion = "Aprobada";
                                     else
                                         strRequiereVotacion = "No Aprobada";
@@ -6757,8 +6758,8 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.RESULTADO_VOTACION:
                                 string TextoResultadoVotacion = "";
-                                int cantidadAprobado = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true).Count();
-                                int cantidadNoAprobo = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true).Count();
+                                int cantidadAprobado = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true && r.NoAplica != true).Count();
+                                int cantidadNoAprobo = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true && r.NoAplica != true).Count();
 
                                 if (cantidadNoAprobo == 0)
                                     TextoResultadoVotacion = PlantillaVotacionUnanime;
@@ -6768,8 +6769,7 @@ namespace asivamosffie.services
 
                                 TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", _commonService.SetUrlInAnchore(Tema.RutaSoporte));
 
-                                RegistrosNuevosTemas = RegistrosNuevosTemas
-                                .Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
+                                RegistrosNuevosTemas = RegistrosNuevosTemas.Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
@@ -6944,19 +6944,17 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.DECISIONES_SOLICITUD:
 
-                                string strRequiereVotacion = "";
-                                int cantidadAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true).Count();
-                                int cantidadNoAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true).Count();
+                                string strRequiereVotacion = string.Empty;
+                                int cantidadAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true && r.NoAplica != true).Count();
+                                int cantidadNoAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true && r.NoAplica != true).Count();
                                 if (Tema.RequiereVotacion == true)
                                 {
                                     if (cantidadAprobadas > cantidadNoAprobadas)
-                                    {
                                         strRequiereVotacion = "Aprobada";
-                                    }
+
                                     else
-                                    {
                                         strRequiereVotacion = "No Aprobada";
-                                    }
+
                                 }
                                 else
                                 {
@@ -6967,23 +6965,19 @@ namespace asivamosffie.services
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.RESULTADO_VOTACION:
-                                string TextoResultadoVotacion = "";
-                                int cantidadAprobado = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true).Count();
-                                int cantidadNoAprobo = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true).Count();
+                                string TextoResultadoVotacion = string.Empty;
+                                int cantidadAprobado = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true && r.NoAplica != true).Count();
+                                int cantidadNoAprobo = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true && r.NoAplica != true).Count();
 
                                 if (cantidadNoAprobo == 0)
-                                {
                                     TextoResultadoVotacion = PlantillaVotacionUnanime;
-                                }
+
                                 else if (cantidadAprobado > cantidadNoAprobo)
-                                {
                                     TextoResultadoVotacion = PlantillaNoVotacionUnanime;
-                                }
 
                                 TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", _commonService.SetUrlInAnchore(Tema.RutaSoporte));
 
-                                RegistrosProposicionVarios = RegistrosProposicionVarios
-                                .Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
+                                RegistrosProposicionVarios = RegistrosProposicionVarios.Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
@@ -8070,7 +8064,7 @@ namespace asivamosffie.services
                             foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
                             {
                                 ContratacionProyectoAportante.ComponenteAportante = _context.ComponenteAportante.AsNoTracking().Where(r => r.ContratacionProyectoAportanteId == ContratacionProyectoAportante.ContratacionProyectoAportanteId).Include(r => r.ComponenteUso).ToList();
-                            } 
+                            }
                         }
                     }
                 }

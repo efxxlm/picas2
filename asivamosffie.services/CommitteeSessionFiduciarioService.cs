@@ -52,7 +52,7 @@ namespace asivamosffie.services
             _IContractualNoveltyService = contractualNoveltyService;
             _IRegisterSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
             _judicialDefense = judicialDefense;
-            _IContractualControversy = contractualControversy; 
+            _IContractualControversy = contractualControversy;
         }
 
 
@@ -3606,14 +3606,14 @@ namespace asivamosffie.services
 
                 #region consulta Contratacion
 
-               
-                    Contratacion contratacion = _context.Contratacion.AsNoTracking()
-                                                                     .Where(c => ListContratacionId.Contains(c.ContratacionId))
-                                                                     .Include(r => r.Contrato)
-                                                                     .Include(r => r.Contratista)
-                                                                     .Include(r => r.ContratacionProyecto)
-                                                                       .ThenInclude(r => r.Proyecto)
-                                                                     .FirstOrDefault(); 
+
+                Contratacion contratacion = _context.Contratacion.AsNoTracking()
+                                                                 .Where(c => ListContratacionId.Contains(c.ContratacionId))
+                                                                 .Include(r => r.Contrato)
+                                                                 .Include(r => r.Contratista)
+                                                                 .Include(r => r.ContratacionProyecto)
+                                                                   .ThenInclude(r => r.Proyecto)
+                                                                 .FirstOrDefault();
                 #endregion consulta Contratacion
 
                 #region consulta Proceso Seleccion
@@ -4199,13 +4199,10 @@ namespace asivamosffie.services
                                         if (SesionComiteSolicitud.RequiereVotacionFiduciario == true)
                                         {
                                             if (cantidadAprobadas > cantidadNoAprobadas)
-                                            {
                                                 strRequiereVotacion = "Aprobada";
-                                            }
                                             else
-                                            {
                                                 strRequiereVotacion = "No Aprobada";
-                                            }
+
                                         }
                                         else
                                         {
@@ -4241,11 +4238,9 @@ namespace asivamosffie.services
                                         {
                                             if (compromiso.Eliminado != true && compromiso.EsFiduciario == true)
                                             {
-                                                // bool ReplaceComplete = false;
                                                 registrosCompromisosSolicitud += PlantillaCompromisosSolicitud;
                                                 foreach (Dominio placeholderDominio3 in placeholders)
                                                 {
-                                                    //if (ReplaceComplete) { break; }
                                                     switch (placeholderDominio3.Codigo)
                                                     {
                                                         case ConstanCodigoVariablesPlaceHolders.TAREA_COMPROMISO:
@@ -4266,13 +4261,10 @@ namespace asivamosffie.services
                                                     }
                                                 }
                                             }
-
                                         }
-
                                         registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                         break;
-
                                 }
                             }
                             break;
@@ -4364,20 +4356,15 @@ namespace asivamosffie.services
                                         if (SesionComiteSolicitud.RequiereVotacion == true)
                                         {
                                             if (cantidadAprobadas > cantidadNoAprobadas)
-                                            {
                                                 strRequiereVotacion = "Aprobada";
-                                            }
+
                                             else
-                                            {
-                                                strRequiereVotacion = "No Aprobada";
-                                            }
+                                                strRequiereVotacion = "No Aprobada"; 
                                         }
                                         else
-                                        {
                                             strRequiereVotacion = "No fue requerida";
-                                        }
-                                        registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, strRequiereVotacion);
+
+                                        registrosContratacion = registrosContratacion.Replace(placeholderDominio.Nombre, strRequiereVotacion);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
@@ -5282,17 +5269,23 @@ namespace asivamosffie.services
                             case ConstanCodigoVariablesPlaceHolders.DECISIONES_SOLICITUD:
 
                                 string strRequiereVotacion = String.Empty;
-                                int cantidadAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true).Count();
-                                int cantidadNoAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true).Count();
+                                int cantidadAprobadas = Tema.SesionTemaVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value == true && r.NoAplica != true);
+                                int cantidadNoAprobadas = Tema.SesionTemaVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value != true && r.NoAplica != true);
+
+                                int CantidadNoAplica = Tema.SesionTemaVoto.Count(r => r.Eliminado != true && r.NoAplica == true);
+                                int CantidadVotos = Tema.SesionTemaVoto.Count(r => r.Eliminado != true);
+
                                 if (Tema.RequiereVotacion == true)
                                 {
-                                    if (cantidadAprobadas > cantidadNoAprobadas) 
-                                        strRequiereVotacion = "Aprobada"; 
-                                    else 
-                                        strRequiereVotacion = "No Aprobada"; 
+                                    if (CantidadNoAplica == CantidadVotos)
+                                        strRequiereVotacion = "No Aplica";
+                                    else if (cantidadAprobadas > cantidadNoAprobadas)
+                                        strRequiereVotacion = "Aprobada";
+                                    else
+                                        strRequiereVotacion = "No Aprobada";
                                 }
-                                else 
-                                    strRequiereVotacion = "No fue requerida"; 
+                                else
+                                    strRequiereVotacion = "No fue requerida";
                                 RegistrosNuevosTemas = RegistrosNuevosTemas
                                    .Replace(placeholderDominio.Nombre, strRequiereVotacion);
                                 break;
@@ -5319,7 +5312,7 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
                                 RegistrosNuevosTemas = RegistrosNuevosTemas
-                                   .Replace(placeholderDominio.Nombre, Tema.ObservacionesDecision.Replace("style",string.Empty));
+                                   .Replace(placeholderDominio.Nombre, Tema.ObservacionesDecision.Replace("style", string.Empty));
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.REGISTROS_TEMAS:
@@ -5502,18 +5495,21 @@ namespace asivamosffie.services
                             case ConstanCodigoVariablesPlaceHolders.DECISIONES_SOLICITUD:
 
                                 string strRequiereVotacion = "";
-                                int cantidadAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true).Count();
-                                int cantidadNoAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true).Count();
+                                int cantidadAprobadas = Tema.SesionTemaVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value == true);
+                                int cantidadNoAprobadas = Tema.SesionTemaVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value != true);
+
+
+                                int CantidadNoAplica = Tema.SesionTemaVoto.Count(r => r.Eliminado != true && r.NoAplica == true);
+                                int CantidadVotos = Tema.SesionTemaVoto.Count(r => r.Eliminado != true);
+
                                 if (Tema.RequiereVotacion == true)
                                 {
-                                    if (cantidadAprobadas > cantidadNoAprobadas)
-                                    {
+                                    if (CantidadNoAplica == CantidadVotos)
+                                        strRequiereVotacion = "No Aplica";
+                                    else if (cantidadAprobadas > cantidadNoAprobadas)
                                         strRequiereVotacion = "Aprobada";
-                                    }
                                     else
-                                    {
                                         strRequiereVotacion = "No Aprobada";
-                                    }
                                 }
                                 else
                                 {
@@ -5897,21 +5893,21 @@ namespace asivamosffie.services
                 return Array.Empty<byte>();
             }
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico.AsNoTracking()
-                                                                        .Where(r => r.ComiteTecnicoId == ComiteId) 
+                                                                        .Where(r => r.ComiteTecnicoId == ComiteId)
                                                                             .Include(r => r.SesionComiteTema)
                                                                                         .ThenInclude(r => r.TemaCompromiso)
                                                                                             .ThenInclude(r => r.ResponsableNavigation)
                                                                                                 .ThenInclude(r => r.Usuario)
                                                                             .Include(r => r.SesionComiteTema)
                                                                                 .ThenInclude(r => r.SesionTemaVoto)
-                                                                            .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario) 
+                                                                            .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                                                                                 .ThenInclude(r => r.SesionSolicitudCompromiso)
                                                                                     .ThenInclude(r => r.ResponsableSesionParticipante)
                                                                                         .ThenInclude(r => r.Usuario)
                                                                             .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                                                                                 .ThenInclude(r => r.SesionSolicitudVoto)
                                                                             .FirstOrDefaultAsync();
-             
+
             if (comiteTecnico == null)
             {
                 return Array.Empty<byte>();
@@ -5921,10 +5917,10 @@ namespace asivamosffie.services
             string TipoPlantilla = ((int)ConstanCodigoPlantillas.Descargar_Acta_Comite_Fiduciario).ToString();
 
             Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-             Plantilla.Contenido = await ReemplazarDatosPlantillaActa(Plantilla.Contenido, comiteTecnico);
-          //  Plantilla.Contenido =await _IRegisterSessionTechnicalCommitteeService.ReemplazarDatosPlantillaActa(Plantilla.Contenido, comiteTecnico);
-                
-                //return ConvertirPDF(plantilla);
+            Plantilla.Contenido = await ReemplazarDatosPlantillaActa(Plantilla.Contenido, comiteTecnico);
+            //  Plantilla.Contenido =await _IRegisterSessionTechnicalCommitteeService.ReemplazarDatosPlantillaActa(Plantilla.Contenido, comiteTecnico);
+
+            //return ConvertirPDF(plantilla);
             return PDF.Convertir(Plantilla);
         }
     }
