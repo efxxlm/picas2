@@ -926,8 +926,8 @@ namespace asivamosffie.services
                 if (responsable != null)
                     ct.NombreResponsable = responsable.Nombre;
 
-                if (ct.SesionTemaVoto.Count > 0)
-                    ct.SesionTemaVoto = ct.SesionTemaVoto.Where(r => r.NoAplica != true).ToList();
+                //if (ct.SesionTemaVoto.Count > 0)
+                //    ct.SesionTemaVoto = ct.SesionTemaVoto.Where(r => r.NoAplica != true).ToList();
 
                 ct.TemaCompromiso = ct.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
 
