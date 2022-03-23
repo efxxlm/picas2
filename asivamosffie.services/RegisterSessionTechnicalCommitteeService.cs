@@ -1798,17 +1798,19 @@ namespace asivamosffie.services
             #region Tema 
 
 
-            List<int> ListIdsSesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => r.ComiteTecnicoId == pComiteTecnicoId && r.Eliminado != true).Select(r => r.SesionTemaId).ToList();
 
+            List<int> ListIdsSesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => r.ComiteTecnicoId == pComiteTecnicoId && r.Eliminado != true).Select(r => r.SesionTemaId).ToList();
+ 
             List<SesionComiteTema> ListSesionComiteTema = new List<SesionComiteTema>();
 
             foreach (var IdSesionComiteTema in ListIdsSesionComiteTema)
             {
                 SesionComiteTema sesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => r.SesionTemaId == IdSesionComiteTema)
                                                                              .Include(r => r.TemaCompromiso)
+                                                                             .Include(r => r.SesionTemaVoto)
                                                                              .FirstOrDefault();
 
-                sesionComiteTema.ComiteTecnico = null;
+                sesionComiteTema.ComiteTecnico = null; 
                 ListSesionComiteTema.Add(sesionComiteTema);
             }
 
@@ -1825,7 +1827,7 @@ namespace asivamosffie.services
             #endregion query
 
             #region tema
-            List<SesionTemaVoto> ListSesionTemaVoto = _context.SesionTemaVoto.AsNoTracking().ToList();
+            List<SesionTemaVoto> ListSesionTemaVoto = _context.SesionTemaVoto.AsNoTracking().Where(s=> s.Eliminado != true && s.NoAplica != true).ToList();
 
             foreach (var ct in comiteTecnico.SesionComiteTema)
             {

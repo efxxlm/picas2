@@ -104,9 +104,9 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
               }
             });
             if ( totalNoAprobado > 0 ) {
-              tema.resultadoVotacion = 'No Aprobó';
+              tema.resultadoVotacion = 'No Aprobó  ';
             } else {
-              tema.resultadoVotacion = 'Aprobó';
+              tema.resultadoVotacion = 'Aprobó ';
             }
             tema.totalAprobado = totalAprobado;
             tema.totalNoAprobado = totalNoAprobado;
@@ -122,7 +122,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
               }
             });
             if ( totalNoAprobado > 0 ) {
-              tema.resultadoVotacion = 'No Aprobó';
+              tema.resultadoVotacion = 'No Aprobó  ';
             } else {
               tema.resultadoVotacion = 'Aprobó';
             }

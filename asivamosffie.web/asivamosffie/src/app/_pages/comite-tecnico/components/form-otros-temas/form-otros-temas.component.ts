@@ -271,20 +271,24 @@ export class FormOtrosTemasComponent implements OnInit {
         if (sv.esAprobado) this.cantidadAprobado++
         else this.cantidadNoAprobado++
       })
-
-      if (this.cantidadNoAprobado == 0) {
+       if(this.cantidadAprobado == 0 && this.cantidadNoAprobado == 0){ 
+        this.resultadoVotacion = 'No aplica'
+      }
+      else if (this.cantidadNoAprobado == 0 && this.cantidadAprobado > 0) {
         this.resultadoVotacion = 'Aprobó'
         this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
-      } else if (this.cantidadAprobado == 0) {
-        this.resultadoVotacion = 'No Aprobó'
-        this.estadosArray = this.estadosArray.filter(e =>
-          [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes(e.codigo)
-        )
-      } else if (this.cantidadAprobado > this.cantidadNoAprobado) {
+      }  
+      else if (this.cantidadAprobado > this.cantidadNoAprobado) {
         this.resultadoVotacion = 'Aprobó'
       } else if (this.cantidadAprobado <= this.cantidadNoAprobado) {
         this.resultadoVotacion = 'No Aprobó'
       }
+      else if (this.cantidadAprobado == 0) {
+        this.resultadoVotacion = '  '
+        this.estadosArray = this.estadosArray.filter(e =>
+          [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes(e.codigo)
+        )
+      } 
     }
 
     let estados: string[] = ['1', '3', '5', '8']

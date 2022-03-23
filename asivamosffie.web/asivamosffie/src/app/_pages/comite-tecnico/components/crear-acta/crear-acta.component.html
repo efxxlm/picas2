@@ -4,9 +4,9 @@
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
-    <div class="text-center" >
+    <div class="text-center">
         <h1 class="title-menu--h1">
-            Crear acta {{ objetoComiteTecnico.numeroComite }} 
+            Crear acta {{ objetoComiteTecnico.numeroComite }}
         </h1>
         <b class="sub-text">{{ objetoComiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }}</b>
     </div>
@@ -31,25 +31,21 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" 
-                    [class.sin-diligenciar]="solicitudesCompletas === null"
+                <mat-panel-title class="expansion-style--title" [class.sin-diligenciar]="solicitudesCompletas === null"
                     [class.en-proceso]="solicitudesCompletas === false"
                     [class.completo]="solicitudesCompletas === true">
                     Validación de solicitudes contractuales
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            
+
             <mat-accordion>
-                <mat-expansion-panel
-                    class="expansion-style sub-expansion"
-                    *ngFor="let sesionComiteSolicitud of objetoComiteTecnico.sesionComiteSolicitudComiteTecnico"
-                >
+                <mat-expansion-panel class="expansion-style sub-expansion"
+                    *ngFor="let sesionComiteSolicitud of objetoComiteTecnico.sesionComiteSolicitudComiteTecnico">
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title "
-                        [class.sin-diligenciar]="sesionComiteSolicitud.registroCompletoActa === undefined"
-                        [class.en-proceso]="sesionComiteSolicitud.registroCompletoActa === false"
-                        [class.completo]="sesionComiteSolicitud.registroCompletoActa === true"
-                            >
+                            [class.sin-diligenciar]="sesionComiteSolicitud.registroCompletoActa === undefined"
+                            [class.en-proceso]="sesionComiteSolicitud.registroCompletoActa === false"
+                            [class.completo]="sesionComiteSolicitud.registroCompletoActa === true">
                             Solicitud {{ sesionComiteSolicitud.numeroSolicitud }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -59,10 +55,8 @@
                     </button>
 
                     <app-form-solicitud #Solicitud [sesionComiteSolicitud]="sesionComiteSolicitud"
-                        [listaMiembros]="objetoComiteTecnico.sesionParticipante" 
-                        (validar)="habilitar($event)"
-                        [style.pointer-events]="getStyle()"
-                        [EstadosolicitudActa]="objetoComiteTecnico.estadoActaCodigo"
+                        [listaMiembros]="objetoComiteTecnico.sesionParticipante" (validar)="habilitar($event)"
+                        [style.pointer-events]="getStyle()" [EstadosolicitudActa]="objetoComiteTecnico.estadoActaCodigo"
                         [fechaComite]="objetoComiteTecnico.fechaOrdenDia">
 
                     </app-form-solicitud>
@@ -72,21 +66,19 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" 
-                    [class.sin-diligenciar]="temasCompletos === null"
-                    [class.en-proceso]="temasCompletos === false"
-                    [class.completo]="temasCompletos === true">
+                <mat-panel-title class="expansion-style--title" [class.sin-diligenciar]="temasCompletos === null"
+                    [class.en-proceso]="temasCompletos === false" [class.completo]="temasCompletos === true">
                     Otros temas
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-accordion *ngFor="let tema of listaTemas; let i = index">
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title" 
+                        <mat-panel-title class="expansion-style--title"
                             [class.sin-diligenciar]="tema.registroCompletoActa === undefined"
-                            [class.en-proceso]="tema.registroCompletoActa === false" 
+                            [class.en-proceso]="tema.registroCompletoActa === false"
                             [class.completo]="tema.registroCompletoActa === true">
-                            Tema {{ i + 1 }}
+                            Tema {{ i + 1 }} 
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
@@ -94,10 +86,8 @@
                     </button>
 
                     <app-form-otros-temas #otros [sesionComiteTema]="tema"
-                        [listaMiembros]="objetoComiteTecnico.sesionParticipante" 
-                        (validar)="habilitar($event)"
-                        [style.pointer-events]="getStyle()"
-                        [fechaComite]="objetoComiteTecnico.fechaOrdenDia">
+                        [listaMiembros]="objetoComiteTecnico.sesionParticipante" (validar)="habilitar($event)"
+                        [style.pointer-events]="getStyle()" [fechaComite]="objetoComiteTecnico.fechaOrdenDia">
                     </app-form-otros-temas>
                 </mat-expansion-panel>
             </mat-accordion>
@@ -105,7 +95,7 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" 
+                <mat-panel-title class="expansion-style--title"
                     [class.sin-diligenciar]="proposicionesCompletos === null"
                     [class.en-proceso]="proposicionesCompletos === false"
                     [class.completo]="proposicionesCompletos === true">
@@ -116,9 +106,9 @@
             <mat-accordion *ngFor="let tema of listaProposiciones; let i = index">
                 <mat-expansion-panel class="expansion-style sub-expansion">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title" 
+                        <mat-panel-title class="expansion-style--title"
                             [class.sin-diligenciar]="tema.registroCompletoActa === undefined "
-                            [class.en-proceso]="tema.registroCompletoActa === false" 
+                            [class.en-proceso]="tema.registroCompletoActa === false"
                             [class.completo]="tema.registroCompletoActa === true">
                             Tema {{ i + 1 }}
                         </mat-panel-title>
@@ -129,10 +119,8 @@
                     </button>
 
                     <app-form-otros-temas #proposiciones [sesionComiteTema]="tema"
-                        [listaMiembros]="objetoComiteTecnico.sesionParticipante" 
-                        (validar)="habilitar($event)"
-                        [style.pointer-events]="getStyle()"
-                        [fechaComite]="objetoComiteTecnico.fechaOrdenDia">
+                        [listaMiembros]="objetoComiteTecnico.sesionParticipante" (validar)="habilitar($event)"
+                        [style.pointer-events]="getStyle()" [fechaComite]="objetoComiteTecnico.fechaOrdenDia">
                     </app-form-otros-temas>
                 </mat-expansion-panel>
             </mat-accordion>

@@ -905,23 +905,34 @@ namespace asivamosffie.services
                  .AsNoTracking()
                  .FirstOrDefaultAsync();
 
+
+            //foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema)
+            //{
+            //    if (SesionComiteTema.SesionTemaVoto.Count > 0)
+            //        SesionComiteTema.SesionTemaVoto = SesionComiteTema.SesionTemaVoto.Where(r => r.NoAplica != true).ToList();
+            //}
+
+
             //    comiteTecnico.SesionParticipante = sesionParticipantes;
 
             comiteTecnico.SesionInvitado = comiteTecnico.SesionInvitado.Where(r => !(bool)r.Eliminado).ToList();
 
             comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => r.Eliminado != true).ToList();
 
-            comiteTecnico.SesionComiteTema.ToList().ForEach(ct =>
+            foreach (var ct in comiteTecnico.SesionComiteTema)
             {
                 Dominio responsable = listaResponsables.Find(lr => lr.Codigo == ct.ResponsableCodigo);
 
                 if (responsable != null)
                     ct.NombreResponsable = responsable.Nombre;
 
+                if (ct.SesionTemaVoto.Count > 0)
+                    ct.SesionTemaVoto = ct.SesionTemaVoto.Where(r => r.NoAplica != true).ToList();
+
                 ct.TemaCompromiso = ct.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
 
                 ct.RegistroCompletoActa = ValidarRegistroCompletoSesionComiteTemaActa(ct);
-            });
+            } 
 
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
@@ -944,8 +955,8 @@ namespace asivamosffie.services
             List<Dominio> TipoComiteSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
 
             List<ProcesoSeleccion> ListProcesoSeleccion =
-                _context.ProcesoSeleccion
-                .Where(r => !(bool)r.Eliminado).ToList();
+                                                        _context.ProcesoSeleccion
+                                                        .Where(r => !(bool)r.Eliminado).ToList();
 
             List<Contratacion> ListContratacion = _context.Contratacion.ToList();
 
@@ -3607,13 +3618,13 @@ namespace asivamosffie.services
                 #region consulta Contratacion
 
 
-                Contratacion contratacion = _context.Contratacion.AsNoTracking()
+                ListContratacion = _context.Contratacion.AsNoTracking()
                                                                  .Where(c => ListContratacionId.Contains(c.ContratacionId))
                                                                  .Include(r => r.Contrato)
                                                                  .Include(r => r.Contratista)
                                                                  .Include(r => r.ContratacionProyecto)
                                                                    .ThenInclude(r => r.Proyecto)
-                                                                 .FirstOrDefault();
+                                                                 .ToList();
                 #endregion consulta Contratacion
 
                 #region consulta Proceso Seleccion
@@ -4406,8 +4417,14 @@ namespace asivamosffie.services
 
                                                     case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_COMPROMISO:
                                                         registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                            .Replace(placeholderDominio3.Nombre, compromiso.ResponsableSesionParticipante.Usuario.PrimerNombre
-                                                            + " " + compromiso.ResponsableSesionParticipante.Usuario.PrimerApellido);
+                                                            .Replace(placeholderDominio3.Nombre, 
+                                                                        compromiso.ResponsableSesionParticipante.Usuario.PrimerNombre
+                                                                + " " + compromiso.ResponsableSesionParticipante.Usuario.SegundoNombre
+                                                                + " " + compromiso.ResponsableSesionParticipante.Usuario.PrimerApellido
+                                                                + " " + compromiso.ResponsableSesionParticipante.Usuario.SegundoApellido
+
+
+                                                            );
                                                         break;
 
                                                     case ConstanCodigoVariablesPlaceHolders.FECHA_CUMPLIMIENTO_COMPROMISO:
@@ -5807,7 +5824,7 @@ namespace asivamosffie.services
                             string strUsuariosParticipantes = string.Empty;
                             ListSesionParticipante.ForEach(user =>
                             {
-                                strUsuariosParticipantes += user.Usuario.PrimerNombre + " " + user.Usuario.PrimerApellido + " ";
+                                strUsuariosParticipantes += user.Usuario.PrimerNombre + " " + user.Usuario.SegundoNombre + " " + user.Usuario.PrimerApellido + " " + user.Usuario.SegundoApellido;
                             });
                             strContenido = strContenido.Replace(placeholderDominio.Nombre, strUsuariosParticipantes);
                             break;
