@@ -3242,7 +3242,7 @@ namespace asivamosffie.services
                         SesionTemaVoto SesionTemaVotoOld = _context.SesionTemaVoto.Find(SesionTemaVoto.SesionTemaVotoId);
                         //SesionTemaVotoOld.FechaModificacion = DateTime.Now;
                         //SesionTemaVotoOld.UsuarioModificacion = pSesionComiteTema.UsuarioCreacion;
-
+                        SesionTemaVotoOld.NoAplica = SesionTemaVoto.NoAplica;
                         SesionTemaVotoOld.EsAprobado = SesionTemaVoto.EsAprobado;
                         SesionTemaVotoOld.Observacion = SesionTemaVoto.Observacion;
                     }
@@ -4452,7 +4452,7 @@ namespace asivamosffie.services
                                 }
                             }
 
-                            Contrato contrato = novedad != null ? novedad.Contrato : null;
+                            Contrato contrato = novedad?.Contrato;
 
                             Contratacion contratacionNovedad = null;
                             DisponibilidadPresupuestal disponibilidadPresupuestal = null;

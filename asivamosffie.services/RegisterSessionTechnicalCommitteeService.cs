@@ -263,7 +263,7 @@ namespace asivamosffie.services
                         SesionTemaVoto SesionTemaVotoOld = _context.SesionTemaVoto.Find(SesionTemaVoto.SesionTemaVotoId);
                         //SesionTemaVotoOld.FechaModificacion = DateTime.Now;
                         //SesionTemaVotoOld.UsuarioModificacion = pSesionComiteTema.UsuarioCreacion;
-
+                        SesionTemaVotoOld.NoAplica = SesionTemaVoto.NoAplica;
                         SesionTemaVotoOld.EsAprobado = SesionTemaVoto.EsAprobado;
                         SesionTemaVotoOld.Observacion = SesionTemaVoto.Observacion;
                     }
