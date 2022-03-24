@@ -47,7 +47,7 @@ export class FormOtrosTemasComponent implements OnInit {
 
   estadosArray = []
   formats = [
-    'link', 'blockquote','bold', 'italic', 'underline', 'list', 'strike', 'header', 'align', 'indent'
+    'link', 'blockquote', 'bold', 'italic', 'underline', 'list', 'strike', 'header', 'align', 'indent'
   ]
   config = {
     toolbar: [
@@ -57,7 +57,7 @@ export class FormOtrosTemasComponent implements OnInit {
       [{ align: [] }]
     ],
     imageDropAndPaste: {
-      handler: () =>  {this.openDialog('', '<b>No es permitido subir una imagen en este campo.</b>');}
+      handler: () => { this.openDialog('', '<b>No es permitido subir una imagen en este campo.</b>'); }
     },
   }
 
@@ -94,7 +94,7 @@ export class FormOtrosTemasComponent implements OnInit {
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n-1, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
 
@@ -208,11 +208,11 @@ export class FormOtrosTemasComponent implements OnInit {
         this.openDialog(
           '',
           '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos</b>'
-          )
-          this.addressForm.get('cuantosCompromisos').setValue(this.compromisos.length)
-        }
+        )
+        this.addressForm.get('cuantosCompromisos').setValue(this.compromisos.length)
       }
-      if (this.estaEditando) this.addressForm.markAllAsTouched();
+    }
+    if (this.estaEditando) this.addressForm.markAllAsTouched();
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -267,17 +267,20 @@ export class FormOtrosTemasComponent implements OnInit {
 
   cargarRegistro() {
     if (this.sesionComiteTema.requiereVotacion) {
-      this.sesionComiteTema.sesionTemaVoto.forEach(sv => {
+
+      var ListTemas = this.sesionComiteTema.sesionTemaVoto.filter(r => r.esAprobado != true);
+
+      ListTemas.forEach(sv => {
         if (sv.esAprobado) this.cantidadAprobado++
         else this.cantidadNoAprobado++
       })
-       if(this.cantidadAprobado == 0 && this.cantidadNoAprobado == 0){ 
+      if (this.cantidadAprobado == 0 && this.cantidadNoAprobado == 0) {
         this.resultadoVotacion = 'No aplica'
       }
       else if (this.cantidadNoAprobado == 0 && this.cantidadAprobado > 0) {
         this.resultadoVotacion = 'Aprobó'
         this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
-      }  
+      }
       else if (this.cantidadAprobado > this.cantidadNoAprobado) {
         this.resultadoVotacion = 'Aprobó'
       } else if (this.cantidadAprobado <= this.cantidadNoAprobado) {
@@ -288,7 +291,7 @@ export class FormOtrosTemasComponent implements OnInit {
         this.estadosArray = this.estadosArray.filter(e =>
           [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes(e.codigo)
         )
-      } 
+      }
     }
 
     let estados: string[] = ['1', '3', '5', '8']
@@ -302,7 +305,7 @@ export class FormOtrosTemasComponent implements OnInit {
         let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteTema.estadoTemaCodigo)
         console.log(estadoSeleccionado, this.estadosArray)
 
-        this.addressForm.get('observaciones').setValue(this.sesionComiteTema.observaciones),
+          this.addressForm.get('observaciones').setValue(this.sesionComiteTema.observaciones),
           this.addressForm.get('estadoSolicitud').setValue(estadoSeleccionado),
           this.addressForm.get('observacionesDecision').setValue(this.sesionComiteTema.observacionesDecision),
           this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteTema.generaCompromiso),

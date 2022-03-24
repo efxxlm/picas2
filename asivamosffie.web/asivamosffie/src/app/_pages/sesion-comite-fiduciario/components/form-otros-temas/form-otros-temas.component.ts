@@ -301,17 +301,20 @@ export class FormOtrosTemasComponent implements OnInit {
 
         this.estadosArray = response.filter(s => estados.includes(s.codigo));
         if ( this.sesionComiteTema.requiereVotacion ){
-          this.sesionComiteTema.sesionTemaVoto.forEach(sv => {
+          this.sesionComiteTema.sesionTemaVoto.filter(R=> R.noAplica != true).forEach(sv => {
             if (sv.esAprobado)
               this.cantidadAprobado++;
             else
               this.cantidadNoAprobado++;
           })
 
-          if (this.cantidadNoAprobado == 0){
+          if(this.cantidadNoAprobado == 0 && this.cantidadAprobado == 0)
+          {
+            this.resultadoVotacion = 'No Aplica'
+          }  else  if (this.cantidadNoAprobado == 0 && this.cantidadAprobado > 0){
             this.resultadoVotacion = 'Aprobó'
             this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteFiduciario)
-          }else if ( this.cantidadAprobado == 0 ){
+          }else if ( this.cantidadAprobado == 0 && this.cantidadNoAprobado > 0){
             this.resultadoVotacion = 'No Aprobó'
             this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteFiduciario, EstadosSolicitud.DevueltaPorComiteFiduciario].includes(e.codigo))
           }else if ( this.cantidadAprobado > this.cantidadNoAprobado ){

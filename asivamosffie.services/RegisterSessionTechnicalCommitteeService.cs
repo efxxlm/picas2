@@ -1801,17 +1801,14 @@ namespace asivamosffie.services
 
             List<int> ListIdsSesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => r.ComiteTecnicoId == pComiteTecnicoId && r.Eliminado != true).Select(r => r.SesionTemaId).ToList();
 
-            List<SesionComiteTema> ListSesionComiteTema = new List<SesionComiteTema>();
+            List<SesionComiteTema> ListSesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => ListIdsSesionComiteTema.Contains( r.SesionTemaId))
+                                                                  .Include(r => r.TemaCompromiso)
+                                                                  .Include(r => r.SesionTemaVoto)
+                                                                  .ToList();
 
-            foreach (var IdSesionComiteTema in ListIdsSesionComiteTema)
-            {
-                SesionComiteTema sesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => r.SesionTemaId == IdSesionComiteTema)
-                                                                             .Include(r => r.TemaCompromiso)
-                                                                             .Include(r => r.SesionTemaVoto)
-                                                                             .FirstOrDefault();
-
-                sesionComiteTema.ComiteTecnico = null;
-                ListSesionComiteTema.Add(sesionComiteTema);
+            foreach (var SesionComiteTema in ListSesionComiteTema)
+            { 
+                SesionComiteTema.ComiteTecnico = null; 
             }
 
             comiteTecnico.SesionComiteTema = ListSesionComiteTema;
@@ -1827,7 +1824,7 @@ namespace asivamosffie.services
             #endregion query
 
             #region tema
-            List<SesionTemaVoto> ListSesionTemaVoto = _context.SesionTemaVoto.AsNoTracking().Where(s => s.Eliminado != true ).ToList();
+            List<SesionTemaVoto> ListSesionTemaVoto = _context.SesionTemaVoto.AsNoTracking().Where(s => s.Eliminado != true).ToList();
 
             foreach (var ct in comiteTecnico.SesionComiteTema)
             {
@@ -3338,6 +3335,11 @@ namespace asivamosffie.services
 
         }
 
+        private string DeleteColorHtml(string pHtml)
+        {
+            return pHtml.Replace("style", string.Empty);
+        }
+
         public string ReemplazarDatosPlantillaProcesosSeleccion(string pPlantilla, ProcesoSeleccion pProcesoSeleccion)
         {
             pProcesoSeleccion.ProcesoSeleccionProponente = _context.ProcesoSeleccionProponente.Where(r => r.ProcesoSeleccionId == pProcesoSeleccion.ProcesoSeleccionId).ToList();
@@ -3482,22 +3484,22 @@ namespace asivamosffie.services
                         {
                             case ConstanCodigoVariablesPlaceHolders.CONDICIONES_JURIDICAS_HABILITANTES_ABIERTA_PS:
                                 ProcesosSeleccionAbierta = ProcesosSeleccionAbierta.
-                                  Replace(placeholderDominio.Nombre, pProcesoSeleccion.CondicionesJuridicasHabilitantes);
+                                  Replace(placeholderDominio.Nombre, DeleteColorHtml(pProcesoSeleccion.CondicionesJuridicasHabilitantes));
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.CONDICIONES_FINANCIERAS_HABILITANTES_ABIERTA_PS:
                                 ProcesosSeleccionAbierta = ProcesosSeleccionAbierta.
-                                  Replace(placeholderDominio.Nombre, pProcesoSeleccion.CondicionesFinancierasHabilitantes);
+                                  Replace(placeholderDominio.Nombre, DeleteColorHtml(pProcesoSeleccion.CondicionesFinancierasHabilitantes));
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.CONDICIONES_TECNICAS_HABILITANTES_ABIERTA_PS:
                                 ProcesosSeleccionAbierta = ProcesosSeleccionAbierta.
-                                  Replace(placeholderDominio.Nombre, pProcesoSeleccion.CondicionesTecnicasHabilitantes);
+                                  Replace(placeholderDominio.Nombre, DeleteColorHtml(pProcesoSeleccion.CondicionesTecnicasHabilitantes));
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.CONDICIONES_ASIGNACION_PUNTAJE_ABIERTA_PS:
                                 ProcesosSeleccionAbierta = ProcesosSeleccionAbierta.
-                                  Replace(placeholderDominio.Nombre, pProcesoSeleccion.CondicionesAsignacionPuntaje);
+                                  Replace(placeholderDominio.Nombre, DeleteColorHtml(pProcesoSeleccion.CondicionesAsignacionPuntaje));
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.RESPONSABLES_ABIERTA_PS:
@@ -3506,12 +3508,12 @@ namespace asivamosffie.services
                                 Usuario responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId);
 
                                 if (responsable != null)
-                                    NombresPreponente = string.Concat(responsable.PrimerNombre, " ", responsable.PrimerApellido, " - ");
+                                    NombresPreponente = " Responsable del equipo técnico: "+ responsable.GetNombreCompleto + " ";
 
                                 responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid);
 
                                 if (responsable != null)
-                                    NombresPreponente += string.Concat(responsable.PrimerNombre, " ", responsable.PrimerApellido, " - ");
+                                    NombresPreponente += " - Responsable del equipo estructurador:" +  responsable.GetNombreCompleto ;
 
                                 ProcesosSeleccionAbierta = ProcesosSeleccionAbierta.
                                 Replace(placeholderDominio.Nombre, NombresPreponente);
@@ -6811,7 +6813,7 @@ namespace asivamosffie.services
                                     }
                                 }
                                 RegistrosNuevosTemas = RegistrosNuevosTemas
-                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>nuevos compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
+                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong> compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                 break;
                         }
                     }
@@ -7133,6 +7135,8 @@ namespace asivamosffie.services
                 RegistrosFichaContratacion += RegistrosFichaNovedadContractual;
                 RegistrosFichaContratacion += RegistrosDefensaJudicial;
 
+                if (string.IsNullOrEmpty(RegistrosFichaContratacion))
+                    RegistrosFichaContratacion = "No se tienen <strong> solicitudes contractuales</strong> para este comite";
                 //Plantilla Principal 
 
                 foreach (Dominio placeholderDominio in placeholders)

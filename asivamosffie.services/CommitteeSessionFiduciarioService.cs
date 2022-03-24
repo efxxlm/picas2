@@ -932,7 +932,7 @@ namespace asivamosffie.services
                 ct.TemaCompromiso = ct.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
 
                 ct.RegistroCompletoActa = ValidarRegistroCompletoSesionComiteTemaActa(ct);
-            } 
+            }
 
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
@@ -4370,7 +4370,7 @@ namespace asivamosffie.services
                                                 strRequiereVotacion = "Aprobada";
 
                                             else
-                                                strRequiereVotacion = "No Aprobada"; 
+                                                strRequiereVotacion = "No Aprobada";
                                         }
                                         else
                                             strRequiereVotacion = "No fue requerida";
@@ -4417,7 +4417,7 @@ namespace asivamosffie.services
 
                                                     case ConstanCodigoVariablesPlaceHolders.RESPONSABLE_COMPROMISO:
                                                         registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                            .Replace(placeholderDominio3.Nombre, 
+                                                            .Replace(placeholderDominio3.Nombre,
                                                                         compromiso.ResponsableSesionParticipante.Usuario.PrimerNombre
                                                                 + " " + compromiso.ResponsableSesionParticipante.Usuario.SegundoNombre
                                                                 + " " + compromiso.ResponsableSesionParticipante.Usuario.PrimerApellido
@@ -5278,9 +5278,8 @@ namespace asivamosffie.services
                                     ); ;
                                 break;
 
-                            case ConstanCodigoVariablesPlaceHolders.DESARROLLO_DE_TEMA:
-                                RegistrosNuevosTemas = RegistrosNuevosTemas
-                                   .Replace(placeholderDominio.Nombre, Tema.Observaciones.Replace("style", string.Empty));
+                            case ConstanCodigoVariablesPlaceHolders.DESARROLLO_DE_TEMA: 
+                                RegistrosNuevosTemas = RegistrosNuevosTemas.Replace(placeholderDominio.Nombre, !string.IsNullOrEmpty(Tema.Observaciones) ? Tema.Observaciones.Replace("style", string.Empty) : string.Empty);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.DECISIONES_SOLICITUD:
@@ -5328,8 +5327,11 @@ namespace asivamosffie.services
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
-                                RegistrosNuevosTemas = RegistrosNuevosTemas
-                                   .Replace(placeholderDominio.Nombre, Tema.ObservacionesDecision.Replace("style", string.Empty));
+
+                                if (!string.IsNullOrEmpty(Tema.ObservacionesDecision))
+                                    RegistrosNuevosTemas = RegistrosNuevosTemas.Replace(placeholderDominio.Nombre, Tema.ObservacionesDecision.Replace("style", string.Empty));
+                                else
+                                    RegistrosNuevosTemas = RegistrosNuevosTemas.Replace(placeholderDominio.Nombre, string.Empty);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.REGISTROS_TEMAS:
@@ -5709,6 +5711,9 @@ namespace asivamosffie.services
                 RegistrosFichaContratacion += RegistrosFichaNovedadContractual;
                 RegistrosFichaContratacion += RegistrosDefensaJudicial;
 
+
+                if (string.IsNullOrEmpty(RegistrosFichaContratacion))
+                    RegistrosFichaContratacion = "No se tienen <strong> anexos generados </strong> desde el sistema para este comité";
                 #endregion Anexos
 
                 #region Plantilla Principal 
@@ -5780,7 +5785,7 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.SOLICITUDES_CONTRATO:
                             strContenido = strContenido
-                                .Replace(placeholderDominio.Nombre, registrosContratacion);
+                                .Replace(placeholderDominio.Nombre, !string.IsNullOrEmpty(registrosContratacion) ? registrosContratacion : "No se tienen <strong> solicitudes contractuales</strong> para este comité");
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.SOLICITUDES_PROCESO_SELECCION:
