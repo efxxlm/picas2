@@ -78,6 +78,7 @@ export interface NovedadContractual{
         novedadContractualRegistroPresupuestal?: any[],
 
         proyectosSeleccionado?: any[],
+        datosContratoProyectoModificadosXNovedad?: any[]
 
 }
 

@@ -43,13 +43,15 @@ namespace asivamosffie.services
                 AjusteProgramacion ajusteProgramacion = await _context.AjusteProgramacion
                                                                     .Include(x => x.AjustePragramacionObservacion)
                                                                     .FirstOrDefaultAsync(x => x.AjusteProgramacionId == pAjusteProgramacionId);
-
-                ajusteProgramacion.ObservacionObra = getObservacion(ajusteProgramacion, true, true, ajusteProgramacion.ArchivoCargueIdProgramacionObra);
-                ajusteProgramacion.ObservacionObraHistorico = getObservacionHistorico(ajusteProgramacion, true);
-                ajusteProgramacion.ObservacionObraInterventor = getObservacion(ajusteProgramacion, true, false, ajusteProgramacion.ArchivoCargueIdProgramacionObra);
-                ajusteProgramacion.ObservacionFlujo = getObservacion(ajusteProgramacion, false, true, ajusteProgramacion.ArchivoCargueIdFlujoInversion);
-                ajusteProgramacion.ObservacionFlujoHistorico = getObservacionHistorico(ajusteProgramacion, false);
-                ajusteProgramacion.ObservacionFlujoInterventor = getObservacion(ajusteProgramacion, false, false, ajusteProgramacion.ArchivoCargueIdFlujoInversion);
+                if (ajusteProgramacion != null)
+                {
+                    ajusteProgramacion.ObservacionObra = getObservacion(ajusteProgramacion, true, true, ajusteProgramacion.ArchivoCargueIdProgramacionObra);
+                    ajusteProgramacion.ObservacionObraHistorico = getObservacionHistorico(ajusteProgramacion, true);
+                    ajusteProgramacion.ObservacionObraInterventor = getObservacion(ajusteProgramacion, true, false, ajusteProgramacion.ArchivoCargueIdProgramacionObra);
+                    ajusteProgramacion.ObservacionFlujo = getObservacion(ajusteProgramacion, false, true, ajusteProgramacion.ArchivoCargueIdFlujoInversion);
+                    ajusteProgramacion.ObservacionFlujoHistorico = getObservacionHistorico(ajusteProgramacion, false);
+                    ajusteProgramacion.ObservacionFlujoInterventor = getObservacion(ajusteProgramacion, false, false, ajusteProgramacion.ArchivoCargueIdFlujoInversion);
+                }
 
             return ajusteProgramacion;
             }

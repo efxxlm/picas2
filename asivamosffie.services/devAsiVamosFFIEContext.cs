@@ -262,6 +262,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VContratacionProyectoSolicitudLiquidacion> VContratacionProyectoSolicitudLiquidacion { get; set; }
         public virtual DbSet<VContratistaReporteHist> VContratistaReporteHist { get; set; }
         public virtual DbSet<VContratoPagosRealizados> VContratoPagosRealizados { get; set; }
+        public virtual DbSet<VContratoProyectoFechaEstimadaFinalizacion> VContratoProyectoFechaEstimadaFinalizacion { get; set; }
+        public virtual DbSet<VContratoProyectoValorEstimado> VContratoProyectoValorEstimado { get; set; }
         public virtual DbSet<VContratosXcontratacionProyecto> VContratosXcontratacionProyecto { get; set; }
         public virtual DbSet<VCuentaBancariaPago> VCuentaBancariaPago { get; set; }
         public virtual DbSet<VDefensaJudicialContratacionProyecto> VDefensaJudicialContratacionProyecto { get; set; }
@@ -338,6 +340,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VPermisosMenus> VPermisosMenus { get; set; }
         public virtual DbSet<VPlantillaOrdenGiro> VPlantillaOrdenGiro { get; set; }
         public virtual DbSet<VPlantillaOrdenGiroUsos> VPlantillaOrdenGiroUsos { get; set; }
+        public virtual DbSet<VPresupuestoAdicionalXproyecto> VPresupuestoAdicionalXproyecto { get; set; }
         public virtual DbSet<VProcesoSeleccionIntegrante> VProcesoSeleccionIntegrante { get; set; }
         public virtual DbSet<VProcesoSeleccionReporteHist> VProcesoSeleccionReporteHist { get; set; }
         public virtual DbSet<VProgramacionBySeguimientoSemanal> VProgramacionBySeguimientoSemanal { get; set; }
@@ -383,6 +386,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VUsuarioRol> VUsuarioRol { get; set; }
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VValorConstruccionXproyectoContrato> VValorConstruccionXproyectoContrato { get; set; }
+        public virtual DbSet<VValorContratoNovedad> VValorContratoNovedad { get; set; }
         public virtual DbSet<VValorFacturadoContrato> VValorFacturadoContrato { get; set; }
         public virtual DbSet<VValorFacturadoContratoXproyecto> VValorFacturadoContratoXproyecto { get; set; }
         public virtual DbSet<VValorFacturadoContratoXproyectoXuso> VValorFacturadoContratoXproyectoXuso { get; set; }
@@ -397,15 +401,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<Version> Version { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -9076,6 +9071,38 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorFacturado).HasColumnType("numeric(38, 2)");
             });
 
+            modelBuilder.Entity<VContratoProyectoFechaEstimadaFinalizacion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ContratoProyectoFechaEstimadaFinalizacion");
+
+                entity.Property(e => e.FechaEstimadaFinContrato).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaEstimadaFinProyecto).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaFinContrato).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaFinProyecto).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaInicioProyecto).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<VContratoProyectoValorEstimado>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ContratoProyectoValorEstimado");
+
+                entity.Property(e => e.ValorContrato).HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.ValorProyecto).HasColumnType("numeric(18, 2)");
+
+                entity.Property(e => e.ValorTotalContrato).HasColumnType("numeric(38, 2)");
+
+                entity.Property(e => e.ValorTotalProyecto).HasColumnType("numeric(38, 2)");
+            });
+
             modelBuilder.Entity<VContratosXcontratacionProyecto>(entity =>
             {
                 entity.HasNoKey();
@@ -10988,6 +11015,15 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorNetoGiro).HasColumnType("decimal(25, 3)");
             });
 
+            modelBuilder.Entity<VPresupuestoAdicionalXproyecto>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_PresupuestoAdicionalXProyecto");
+
+                entity.Property(e => e.ValorAdicionProyecto).HasColumnType("numeric(38, 2)");
+            });
+
             modelBuilder.Entity<VProcesoSeleccionIntegrante>(entity =>
             {
                 entity.HasNoKey();
@@ -12387,6 +12423,17 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorConstruccion)
                     .HasColumnName("valorConstruccion")
                     .HasColumnType("numeric(38, 2)");
+            });
+
+            modelBuilder.Entity<VValorContratoNovedad>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ValorContratoNovedad");
+
+                entity.Property(e => e.ValorAdicionalContrato).HasColumnType("numeric(38, 2)");
+
+                entity.Property(e => e.ValorContrato).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VValorFacturadoContrato>(entity =>

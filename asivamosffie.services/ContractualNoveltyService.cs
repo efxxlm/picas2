@@ -399,6 +399,26 @@ namespace asivamosffie.services
                     novedadContractual.Contrato.FechaEstimadaFinalizacion = _commonService.GetFechaEstimadaFinalizacion((int)novedadContractual.ContratoId);
                     novedadContractual.Contrato.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(novedadContractual.Contrato.ContratoId, true, false, 0);
                 }
+                VContratoProyectoFechaEstimadaFinalizacion datosFechas = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId).FirstOrDefault();
+                VContratoProyectoValorEstimado datosAdicion = _context.VContratoProyectoValorEstimado.Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId).FirstOrDefault();
+                if(datosFechas != null && datosAdicion != null)
+                {
+                    List<dynamic> datosContratoProyectoModificadosXNovedad = new List<dynamic>();
+                    datosContratoProyectoModificadosXNovedad.Add(new
+                    {
+                        datosFechas?.FechaInicioProyecto,
+                        datosFechas?.FechaFinProyecto,
+                        datosFechas?.FechaEstimadaFinProyecto,
+                        datosFechas?.FechaFinContrato,
+                        datosFechas?.FechaEstimadaFinContrato,
+                        datosAdicion?.ValorProyecto,
+                        datosAdicion?.ValorTotalProyecto,
+                        datosAdicion?.ValorContrato,
+                        datosAdicion?.ValorTotalContrato
+                    });
+
+                    novedadContractual.DatosContratoProyectoModificadosXNovedad = datosContratoProyectoModificadosXNovedad;
+                }
             }
 
             List<NovedadContractualAportante> novedadContractualAportantes = _context.NovedadContractualAportante

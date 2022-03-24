@@ -84,6 +84,9 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public bool? VaComite { get; set; }
 
+        [NotMapped]
+        public List<dynamic> DatosContratoProyectoModificadosXNovedad { get; set; }
+
     }
 
 }

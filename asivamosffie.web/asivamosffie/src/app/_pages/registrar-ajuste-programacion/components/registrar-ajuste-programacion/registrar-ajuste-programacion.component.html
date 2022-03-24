@@ -127,9 +127,39 @@
       </p>
       <p>
         <strong>
-          Valor total del proyecto:
+          Fecha de inicio del proyecto:
+        </strong>
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaInicioProyecto | date: 'dd/MM/yyyy' }}
+      </p>
+      <p>
+        <strong>
+          Fecha final antes de la modificación del proyecto:
+        </strong>
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaFinProyecto | date: 'dd/MM/yyyy' }}
+      </p>
+      <p>
+        <strong>
+          Nueva fecha de finalización del proyecto:
+        </strong>
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaEstimadaFinProyecto | date: 'dd/MM/yyyy' }}
+      </p>
+      <p>
+        <strong>
+          Valor total del proyecto (Obra e Interventoría):
         </strong>
         {{ novedad?.proyectosSeleccionado?.valorTotal | currency: '':'symbol':'3.0' }}
+      </p>
+      <p>
+        <strong>
+          Valor total del proyecto:
+        </strong>
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorProyecto | currency: '':'symbol':'3.0' }}
+      </p>
+      <p>
+        <strong>
+          Valor total del proyecto Modificado:
+        </strong>
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorTotalProyecto | currency: '':'symbol':'3.0' }}
       </p>
     </mat-card-content>
   </mat-card>
