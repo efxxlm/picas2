@@ -4274,7 +4274,7 @@ namespace asivamosffie.services
                                             }
                                         }
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
+                                        .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se trabajaron <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                         break;
                                 }
                             }
@@ -4436,7 +4436,7 @@ namespace asivamosffie.services
                                         }
 
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
+                                        .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se trabajaron <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                         break;
 
                                 }
@@ -4720,7 +4720,7 @@ namespace asivamosffie.services
                                         }
 
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
+                                        .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se trabajaron <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                         break;
 
                                 }
@@ -4962,7 +4962,7 @@ namespace asivamosffie.services
                                         }
 
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
+                                        .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se trabajaron <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                         break;
 
                                 }
@@ -5228,7 +5228,7 @@ namespace asivamosffie.services
                                         }
 
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
+                                        .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se trabajaron <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                         break;
 
                                 }
@@ -5366,7 +5366,7 @@ namespace asivamosffie.services
                                     }
                                 }
                                 RegistrosNuevosTemas = RegistrosNuevosTemas
-                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
+                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se trabajaron <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                 break;
                         }
                     }
@@ -5595,7 +5595,7 @@ namespace asivamosffie.services
                                 }
 
                                 RegistrosProposicionVarios = RegistrosProposicionVarios
-                             .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
+                             .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se trabajaronn <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                 break;
                         }
                     }
@@ -5621,7 +5621,7 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_PARTICIPANTE:
                                 RegistrosFirmas = RegistrosFirmas
-                                    .Replace(placeholderDominio.Nombre, SesionParticipante.Usuario.PrimerNombre + " " + SesionParticipante.Usuario.PrimerApellido);
+                                    .Replace(placeholderDominio.Nombre, SesionParticipante.Usuario.GetNombreCompleto);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.CARGO_PARTICIPANTE:
@@ -5775,7 +5775,7 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.REGISTROS_TABLA_INVITADOS:
                             strContenido = strContenido
-                                .Replace(placeholderDominio.Nombre, RegistrosInvitados);
+                                .Replace(placeholderDominio.Nombre, !string.IsNullOrEmpty(RegistrosInvitados) ? RegistrosInvitados : "No se tienen <strong> invitados </strong> para esta sesión."); 
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.REGISTROS_TABLA_RESPONSABLES:
@@ -5785,7 +5785,7 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.SOLICITUDES_CONTRATO:
                             strContenido = strContenido
-                                .Replace(placeholderDominio.Nombre, !string.IsNullOrEmpty(registrosContratacion) ? registrosContratacion : "No se tienen <strong> solicitudes contractuales</strong> para este comité");
+                                .Replace(placeholderDominio.Nombre, !string.IsNullOrEmpty(registrosContratacion) ? registrosContratacion : "No se trabajaron <strong> solicitudes contractuales</strong> para este comité");
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.SOLICITUDES_PROCESO_SELECCION:
@@ -5800,7 +5800,7 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.REGISTROS_PROPOSICIONES_VARIOS:
                             strContenido = strContenido
-                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(RegistrosProposicionVarios) ? msg.Replace("[MSG]", "No se tienen <strong>proposiciones y varios</strong> para esta solicitud.") : RegistrosProposicionVarios);
+                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(RegistrosProposicionVarios) ? msg.Replace("[MSG]", "No se trabajaron <strong>proposiciones y varios</strong> para esta solicitud.") : RegistrosProposicionVarios);
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.REGISTROS_FIRMAS:
