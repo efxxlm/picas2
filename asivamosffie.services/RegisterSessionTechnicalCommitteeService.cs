@@ -1801,14 +1801,14 @@ namespace asivamosffie.services
 
             List<int> ListIdsSesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => r.ComiteTecnicoId == pComiteTecnicoId && r.Eliminado != true).Select(r => r.SesionTemaId).ToList();
 
-            List<SesionComiteTema> ListSesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => ListIdsSesionComiteTema.Contains( r.SesionTemaId))
+            List<SesionComiteTema> ListSesionComiteTema = _context.SesionComiteTema.AsNoTracking().Where(r => ListIdsSesionComiteTema.Contains(r.SesionTemaId))
                                                                   .Include(r => r.TemaCompromiso)
                                                                   .Include(r => r.SesionTemaVoto)
                                                                   .ToList();
 
             foreach (var SesionComiteTema in ListSesionComiteTema)
-            { 
-                SesionComiteTema.ComiteTecnico = null; 
+            {
+                SesionComiteTema.ComiteTecnico = null;
             }
 
             comiteTecnico.SesionComiteTema = ListSesionComiteTema;
@@ -3508,12 +3508,12 @@ namespace asivamosffie.services
                                 Usuario responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId);
 
                                 if (responsable != null)
-                                    NombresPreponente = " Responsable del equipo técnico: "+ responsable.GetNombreCompleto + " ";
+                                    NombresPreponente = " Responsable del equipo técnico: " + responsable.GetNombreCompleto + " ";
 
                                 responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid);
 
                                 if (responsable != null)
-                                    NombresPreponente += " - Responsable del equipo estructurador:" +  responsable.GetNombreCompleto ;
+                                    NombresPreponente += " - Responsable del equipo estructurador:" + responsable.GetNombreCompleto;
 
                                 ProcesosSeleccionAbierta = ProcesosSeleccionAbierta.
                                 Replace(placeholderDominio.Nombre, NombresPreponente);
@@ -6813,7 +6813,7 @@ namespace asivamosffie.services
                                     }
                                 }
                                 RegistrosNuevosTemas = RegistrosNuevosTemas
-                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong> compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
+                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se trabajaron <strong> compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                 break;
                         }
                     }
@@ -6960,10 +6960,9 @@ namespace asivamosffie.services
                                         strRequiereVotacion = "No Aprobada";
 
                                 }
-                                else
-                                {
+                                else 
                                     strRequiereVotacion = "No fue requerida";
-                                }
+                                 
                                 RegistrosProposicionVarios = RegistrosProposicionVarios
                                    .Replace(placeholderDominio.Nombre, strRequiereVotacion);
                                 break;
@@ -7021,7 +7020,7 @@ namespace asivamosffie.services
                                 }
 
                                 RegistrosProposicionVarios = RegistrosProposicionVarios
-                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se tienen <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
+                                .Replace(placeholderDominio.Nombre, string.IsNullOrEmpty(registrosCompromisosSolicitud) ? msg.Replace("[MSG]", "No se trabajaron <strong>compromisos</strong> para esta solicitud") : registrosCompromisosSolicitud);
                                 break;
                         }
                     }
@@ -7042,8 +7041,7 @@ namespace asivamosffie.services
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_PARTICIPANTE:
-                                RegistrosFirmas = RegistrosFirmas
-                                    .Replace(placeholderDominio.Nombre, SesionParticipante.Usuario.PrimerNombre + " " + SesionParticipante.Usuario.PrimerApellido);
+                                RegistrosFirmas = RegistrosFirmas.Replace(placeholderDominio.Nombre, SesionParticipante.Usuario.GetNombreCompleto);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.CARGO_PARTICIPANTE:
@@ -7136,7 +7134,7 @@ namespace asivamosffie.services
                 RegistrosFichaContratacion += RegistrosDefensaJudicial;
 
                 if (string.IsNullOrEmpty(RegistrosFichaContratacion))
-                    RegistrosFichaContratacion = "No se tienen <strong> solicitudes contractuales</strong> para este comite";
+                    RegistrosFichaContratacion = "No se tienen <strong> anexos generados </strong> desde el sistema para este comité";
                 //Plantilla Principal 
 
                 foreach (Dominio placeholderDominio in placeholders)
@@ -7205,7 +7203,7 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.SOLICITUDES_CONTRATO:
                             strContenido = strContenido
-                                .Replace(placeholderDominio.Nombre, registrosContratacion);
+                                .Replace(placeholderDominio.Nombre, !string.IsNullOrEmpty(registrosContratacion) ? registrosContratacion : "No se trabajaron <strong> solicitudes contractuales</strong> para este comité");
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.SOLICITUDES_PROCESO_SELECCION:
