@@ -6778,7 +6778,7 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
                                 RegistrosNuevosTemas = RegistrosNuevosTemas
-                                   .Replace(placeholderDominio.Nombre, Tema.ObservacionesDecision ?? string.Empty);
+                                   .Replace(placeholderDominio.Nombre, DeleteColorHtml(Tema.ObservacionesDecision) ?? string.Empty);
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.REGISTROS_TEMAS:
