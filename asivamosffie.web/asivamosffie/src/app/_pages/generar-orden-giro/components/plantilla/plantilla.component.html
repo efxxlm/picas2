@@ -138,7 +138,7 @@
         <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="8">
           TERCERO DE CAUSACIÓN
         </td>
-        <td colspan="5"></td>
+        <td colspan="6"></td>
         <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="6">TERCERO DE GIRO</td>
         <tr>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONSECUTIVO FFIE</td>
@@ -189,8 +189,8 @@
           <td style="border: solid 1px #000">{{ data.valorConcepto | currency: '':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000">{{ data.descuentoReteFuente | currency: '':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000">{{ data.descuentoAns | currency: '':'symbol-narrow':'.0-0' }}</td>
-          <td style="border: solid 1px #000">{{ data.descuentoOtros | currency: '':'symbol-narrow':'.0-0' }}</td> 
-          <td style="border: solid 1px #000">{{ data.descuentoOtrosNombre}}</td>
+          <td style="border: solid 1px #000">{{ data.descuentoOtros | currency: '':'symbol-narrow':'.0-0' }}</td>  
+          <td style="border: solid 1px #000">{{ data.descuentoOtrosNombre}}</td> 
           <td style="border: solid 1px #000">{{ data.valorConcepto - data.descuentoReteFuente - data.descuentoAns - data.descuentoOtros | currency: '':'symbol-narrow':'.0-0' }}</td>
 
           <td style="border: solid 1px #000">
@@ -209,6 +209,7 @@
           <td style="border: solid 1px #000">{{ descuentoReteFuente | currency: '':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000">{{ descuentoAns | currency: '':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000">{{ descuentoOtros | currency: '':'symbol-narrow':'.0-0' }}</td>
+          <td style="border: solid 1px #000"> N/A</td>
           <td style="border: solid 1px #000">{{ valorTotal | currency: '':'symbol-narrow':'.0-0' }}</td>
         </tr>
         <tr>
