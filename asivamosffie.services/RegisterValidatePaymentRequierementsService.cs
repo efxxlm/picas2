@@ -2133,25 +2133,24 @@ namespace asivamosffie.services
                                                            .Where(l => l.CriterioPagoCodigo == pSolicitudPagoFaseCriterio.TipoCriterioCodigo
                                                                     && l.Eliminado != true)
                                                            .Include(r => r.ListaChequeoListaChequeoItem)
-                                                                                                        .FirstOrDefault();
+                                                           .FirstOrDefault();
 
             if (listaChequeo != null)
             {
                 int? SolicitudPagoId = _context.SolicitudPagoFase
                                         .Where(r => r.SolicitudPagoFaseId == pSolicitudPagoFaseCriterio.SolicitudPagoFaseId)
-                                            .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
-                                                    .ThenInclude(r => r.SolicitudPago)
+                                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                                        .ThenInclude(r => r.SolicitudPago)
                                         .Select(s => s.SolicitudPagoRegistrarSolicitudPago.SolicitudPago.SolicitudPagoId)
-                                                                                                                        .FirstOrDefault();
+                                        .FirstOrDefault();
 
 
                 int? SolicitudPagoListaChequeoId = _context.SolicitudPagoListaChequeo.Where(s => s.SolicitudPagoId == SolicitudPagoId
-                                                                                    && s.Eliminado != true
-                                                                                    && s.TipoCriterioCodigo == pSolicitudPagoFaseCriterio.TipoCriterioCodigo)
-                                                                                .Select(r => r.SolicitudPagoId).FirstOrDefault();
-
-
-
+                                                                                         && s.Eliminado != true
+                                                                                         && s.TipoCriterioCodigo == pSolicitudPagoFaseCriterio.TipoCriterioCodigo)
+                                                                                      .Select(r => r.SolicitudPagoId)
+                                                                                      .FirstOrDefault();
+                 
                 if (SolicitudPagoListaChequeoId == 0 && SolicitudPagoId > 0)
                 {
 
