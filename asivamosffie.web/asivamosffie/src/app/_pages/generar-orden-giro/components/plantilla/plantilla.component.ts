@@ -174,9 +174,8 @@ export class PlantillaComponent implements OnInit {
       this.infoPlantilla.forEach(element => {
         this.valorConcepto += element.valorConcepto;
         this.descuentoReteFuente += element.descuentoReteFuente;
-        this.descuentoAns += element.descuentoAns;
-        this.descuentoOtros += element.descuentoOtros;
-
+        this.descuentoAns += element.descuentoAns; 
+        this.descuentoOtros += element.otrosDescuentosValorConcepto.map(value => value.valorDescuento).reduce((a,b)=> a+b); 
         const valorAcumulado = element.valorConcepto - element.descuentoReteFuente - element.descuentoAns - element.descuentoOtros;
         this.valorTotal += valorAcumulado;
       });

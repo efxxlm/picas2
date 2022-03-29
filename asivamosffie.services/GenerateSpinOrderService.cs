@@ -43,7 +43,45 @@ namespace asivamosffie.services
 
         public async Task<List<VPlantillaOrdenGiro>> GetInfoPlantilla(int pOrdenGiroId)
         {
-            return await _context.VPlantillaOrdenGiro.Where(r => r.OrdenGiroId == pOrdenGiroId).OrderBy(r => r.LlaveMen).OrderBy(r=> r.ConsecutivoFfie).ToListAsync();
+            List<VPlantillaOrdenGiro> infoPlantillaOrdenGiros = new List<VPlantillaOrdenGiro>();
+            try
+            {
+                infoPlantillaOrdenGiros = await _context.VPlantillaOrdenGiro.Where(r => r.OrdenGiroId == pOrdenGiroId).OrderBy(r => r.LlaveMen).OrderBy(r => r.ConsecutivoFfie).ToListAsync();
+
+                List<VDescuentosXordenGiroXproyectoXaportanteXconcepto> ListOtrosDescuentos = _context.VDescuentosXordenGiroXproyectoXaportanteXconcepto.Where(v => v.OrdenGiroId == pOrdenGiroId)
+                                                                                                                                                        .ToList();
+
+                ListOtrosDescuentos = ListOtrosDescuentos.Where(r => Int32.Parse(r.TipoDescuentoCodigo) != 3).ToList();//DESCUENTO ANS
+                ListOtrosDescuentos = ListOtrosDescuentos.Where(r => Int32.Parse(r.TipoDescuentoCodigo) != 4).ToList();//DESCUENTO RETEFUENTE
+
+                foreach (var PlantillaOrdenGiros in infoPlantillaOrdenGiros)
+                {
+
+                    PlantillaOrdenGiros.OtrosDescuentosValorConcepto = ListOtrosDescuentos.Where(r =>
+                                                                                                        r.TipoPagoCodigo == PlantillaOrdenGiros.TipoPagoCodigo
+                                                                                                     && r.ContratacionProyectoId == PlantillaOrdenGiros.ContratacionProyectoId
+                                                                                                     && r.AportanteId == PlantillaOrdenGiros.AportanteId
+                                                                                                     && r.ConceptoCodigo == PlantillaOrdenGiros.ConceptoCodigo
+                                                                                                     && r.ProyectoId == PlantillaOrdenGiros.ProyectoId
+                                                                                                 )
+                                                                                           .Select(r =>
+                                                                                                        new
+                                                                                                        {
+                                                                                                            NombreDescuento = r.Nombre,
+                                                                                                            ValorDescuento = r.ValorDescuento
+                                                                                                        }
+                                                                                                   )
+                                                                                           .ToList(); 
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return infoPlantillaOrdenGiros;
         }
 
         public async Task<dynamic> GetValorConceptoByAportanteId(int pAportanteId, int pSolicitudPagoId, string pConceptoPago)
@@ -168,7 +206,7 @@ namespace asivamosffie.services
             pSolicitudPago.MedioPagoCodigo = solicitudPago?.OrdenGiro?.OrdenGiroTercero?.FirstOrDefault()?.MedioPagoGiroCodigo;
             pSolicitudPago.PrimerOrdenGiroTerceroChequeGerencia = solicitudPago?.OrdenGiro?.OrdenGiroTercero?.FirstOrDefault()?.OrdenGiroTerceroChequeGerencia?.FirstOrDefault();
             pSolicitudPago.PrimerOrdenGiroTerceroTransferenciaElectronica = solicitudPago?.OrdenGiro?.OrdenGiroTercero?.FirstOrDefault()?.OrdenGiroTerceroTransferenciaElectronica?.FirstOrDefault();
-        
+
             if (pSolicitudPago.PrimerOrdenGiroTerceroChequeGerencia != null)
                 pSolicitudPago.PrimerOrdenGiroTerceroChequeGerencia.OrdenGiroTerceroChequeGerenciaId = 0;
             if (pSolicitudPago.PrimerOrdenGiroTerceroTransferenciaElectronica != null)
@@ -295,7 +333,7 @@ namespace asivamosffie.services
             List<Dominio> FuenteRecursos = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).ToList();
             foreach (var item in vAportanteFuenteUsos)
             {
-                decimal Descuento = ListDescuentos.Where(r => r.AportanteId == item.CofinanciacionAportanteId 
+                decimal Descuento = ListDescuentos.Where(r => r.AportanteId == item.CofinanciacionAportanteId
                                                            && r.FuenteFinanciacionId == item.FuenteFinanciacionId)
                                                   .Sum(r => r.ValorDescuento) ?? 0;
 
@@ -580,7 +618,7 @@ namespace asivamosffie.services
                                                          && r.FuenteFinanciacionId == Drp.FuenteFinanciacionId
                                                           && r.Pagado == false
                                                          )
-                                                .Sum(r => r.SaldoUso) ?? 0  : ListPagos
+                                                .Sum(r => r.SaldoUso) ?? 0 : ListPagos
                                                 .Where(r => r.ProyectoId == ProyectoId.ProyectoId
                                                          && r.TipoUsoCodigo == TipoUso.TipoUsoCodigo
                                                           && r.Pagado == false
@@ -831,7 +869,7 @@ namespace asivamosffie.services
                 foreach (var OrdenGiroDetalle in ordenGiro1.OrdenGiroDetalle)
                 {
                     foreach (var OrdenGiroDetalleTerceroCausacion in OrdenGiroDetalle.OrdenGiroDetalleTerceroCausacion)
-                    { 
+                    {
                         if (OrdenGiroDetalleTerceroCausacion.ValorNetoGiro != null)
                         {
                             _context.Set<OrdenGiro>()
@@ -854,7 +892,7 @@ namespace asivamosffie.services
             bool blRegistroCompleto = false;
             try
             {
-                SolicitudPago solicitudPago = await GetSolicitudPagoBySolicitudPagoId(pSolicitudPago,false);
+                SolicitudPago solicitudPago = await GetSolicitudPagoBySolicitudPagoId(pSolicitudPago, false);
                 blRegistroCompleto = ValidarRegistroCompletoOrdenGiro(solicitudPago.OrdenGiro);
 
                 if (blRegistroCompleto == true)

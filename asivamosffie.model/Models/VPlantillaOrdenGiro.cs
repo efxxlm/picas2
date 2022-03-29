@@ -5,12 +5,16 @@ namespace asivamosffie.model.Models
 {
     public partial class VPlantillaOrdenGiro
     {
+        public string TipoPagoCodigo { get; set; }
+        public int? ContratacionProyectoId { get; set; }
+        public int? AportanteId { get; set; }
+        public string ConceptoCodigo { get; set; }
+        public int? ProyectoId { get; set; }
         public bool? EstaAprobada { get; set; }
         public int? ContratacionId { get; set; }
         public int? ContratoId { get; set; }
         public string NumeroDdp { get; set; }
         public string InstitucionEducativa { get; set; }
-        public int? ProyectoId { get; set; }
         public string LlaveMen { get; set; }
         public int? OrdenGiroId { get; set; }
         public string ConsecutivoFfie { get; set; }
@@ -23,7 +27,6 @@ namespace asivamosffie.model.Models
         public string TerceroCausasionNombre { get; set; }
         public string Numerofactura { get; set; }
         public string Concepto { get; set; }
-        public int? AportanteId { get; set; }
         public string FormaPago { get; set; }
         public decimal? ValorConcepto { get; set; }
         public decimal? ValorNetoGiro { get; set; }

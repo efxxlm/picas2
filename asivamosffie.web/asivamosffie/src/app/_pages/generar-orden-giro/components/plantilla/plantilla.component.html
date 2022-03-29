@@ -9,11 +9,8 @@
     <p class="text-center" style="margin: auto">
       FONDO DE FINANCIAMIENTO DE INFRAESTRUCTURA EDUCATIVA - FFIE MINISTERIO DE EDUCACIÓN
     </p>
-    <img
-      src="assets/img/pdf/informe-esmanal/image001.png"
-      alt="Fondo de financiamiento de infraestructura educativa"
-      style="height: 50px; margin-right: 10px"
-    />
+    <img src="assets/img/pdf/informe-esmanal/image001.png" alt="Fondo de financiamiento de infraestructura educativa"
+      style="height: 50px; margin-right: 10px" />
   </div>
   <h1 style="text-align: center; font-size: 20px; font-weight: 700">
     ALIANZA FIDUCIARIA S.A. FORMATO DE ORDEN DE GIRO - TRANSACCIONES ELECTRÓNICAS
@@ -23,21 +20,17 @@
       <table style="border-collapse: collapse">
         <tbody>
           <tr>
-            <th
-              style="
+            <th style="
                 background-color: #deeaf6;
                 border: solid 1px #000;
                 border-bottom: none;
                 font-weight: 700;
                 padding: 16px;
-              "
-            >
+              ">
               NOMBRE DEL NEGOCIO
             </th>
-            <td
-              style="border: solid 1px #000"
-              style="border: solid 1px #000; border-bottom: none; font-weight: 700; padding: 16px"
-            >
+            <td style="border: solid 1px #000"
+              style="border: solid 1px #000; border-bottom: none; font-weight: 700; padding: 16px">
               CONSORCIO FFIE ALIANZA BBVA MEN CTO 1380 DE 2015
             </td>
           </tr>
@@ -52,8 +45,7 @@
       </table>
     </div>
     <div style="float: right">
-      <div
-        style="
+      <div style="
           border: solid 1px #000;
           font-weight: 700;
 
@@ -63,8 +55,7 @@
           align-items: center;
           width: 180px;
           justify-content: center;
-        "
-      >
+        ">
         <span [ngSwitch]="solicitudPago.tipoSolicitudCodigo">
           <p *ngSwitchCase="tipoSolicitudCodigo.obra">Obra</p>
           <p *ngSwitchCase="tipoSolicitudCodigo.interventoria">Interventoría</p>
@@ -84,8 +75,8 @@
           </td>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">
             {{
-              solicitudPago.contratoSon.contratacion.contratacionProyecto[0].contratacionProyectoAportante[0]
-                .cofinanciacionAportante.fuenteFinanciacion[0].cuentaBancaria[0].codigoSifi
+            solicitudPago.contratoSon.contratacion.contratacionProyecto[0].contratacionProyectoAportante[0]
+            .cofinanciacionAportante.fuenteFinanciacion[0].cuentaBancaria[0].codigoSifi
             }}
           </td>
         </tr>
@@ -141,31 +132,38 @@
         <td colspan="6"></td>
         <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="6">TERCERO DE GIRO</td>
         <tr>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONSECUTIVO FFIE</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">NOMBRE DE LA CUENTA</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONSECUTIVO FFIE
+          </td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">NOMBRE DE LA
+            CUENTA</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">N° CTA</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">BANCO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">TIPO CTA</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CÓDIGO SIFI</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">Número DDP</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">IDENTIFICACIÓN</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">IDENTIFICACIÓN
+          </td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">NOMBRE</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">No. FACTURA</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">PROYECTO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">LLAVE MEN</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">TIPO DE PAGO</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONCEPTO DE PAGO</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">CONCEPTO DE PAGO
+          </td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700" rowspan="2">VALOR TOTAL</td>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" colspan="4">DESCUENTOS</td>
-          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" rowspan="2">VALOR NETO DEL GIRO</td>
+          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700" rowspan="2">VALOR NETO DEL
+            GIRO</td>
           <td style="border: solid 1px #000" colspan="5">INFORMACIÓN DEL GIRO</td>
         </tr>
         <tr>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">RETE GARANTÍA</td>
-          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">DESCUENTO POR RETRASO - ANS</td>
+          <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">DESCUENTO POR RETRASO - ANS
+          </td>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">OTROS DESCUENTOS</td>
           <td style="border: solid 1px #000; background-color: #deeaf6; font-weight: 700">CONCEPTO OTROS DESCUENTOS</td>
-          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">TIPO DE CUENTA (CTE-AHO) / FONDO</td>
+          <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">TIPO DE CUENTA (CTE-AHO) /
+            FONDO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">ENTIDAD / FONDO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">NUMERO DE CUENTA / FONDO</td>
           <td style="border: solid 1px #000; background-color: #c5e0b3; font-weight: 700">IDENTIFICACIÓN</td>
@@ -189,9 +187,26 @@
           <td style="border: solid 1px #000">{{ data.valorConcepto | currency: '':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000">{{ data.descuentoReteFuente | currency: '':'symbol-narrow':'.0-0' }}</td>
           <td style="border: solid 1px #000">{{ data.descuentoAns | currency: '':'symbol-narrow':'.0-0' }}</td>
-          <td style="border: solid 1px #000">{{ data.descuentoOtros | currency: '':'symbol-narrow':'.0-0' }}</td>  
-          <td style="border: solid 1px #000">{{ data.descuentoOtrosNombre}}</td> 
-          <td style="border: solid 1px #000">{{ data.valorConcepto - data.descuentoReteFuente - data.descuentoAns - data.descuentoOtros | currency: '':'symbol-narrow':'.0-0' }}</td>
+
+          <td style="border: solid 1px #000">
+
+            <ng-container *ngFor="let descuentosValor of data.otrosDescuentosValorConcepto">
+              <span>
+                {{descuentosValor.valorDescuento | currency: '':'symbol-narrow':'.0-0'}} <br>
+              </span>
+            </ng-container> 
+          </td>
+ 
+          <td style="border: solid 1px #000">
+            <ng-container *ngFor="let descuentos of data.otrosDescuentosValorConcepto">
+              <span>
+                {{descuentos.nombreDescuento}} <br>
+              </span>
+            </ng-container>
+          </td>
+          
+          <td style="border: solid 1px #000">{{ data.valorConcepto - data.descuentoReteFuente - data.descuentoAns -
+            data.descuentoOtros | currency: '':'symbol-narrow':'.0-0' }}</td>
 
           <td style="border: solid 1px #000">
             <span *ngIf="data.esCuentaAhorros === true">Ahorros</span>
