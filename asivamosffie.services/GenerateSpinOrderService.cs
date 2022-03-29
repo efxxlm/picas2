@@ -51,27 +51,30 @@ namespace asivamosffie.services
                 List<VDescuentosXordenGiroXproyectoXaportanteXconcepto> ListOtrosDescuentos = _context.VDescuentosXordenGiroXproyectoXaportanteXconcepto.Where(v => v.OrdenGiroId == pOrdenGiroId)
                                                                                                                                                         .ToList();
 
-                ListOtrosDescuentos = ListOtrosDescuentos.Where(r => Int32.Parse(r.TipoDescuentoCodigo) != 3).ToList();//DESCUENTO ANS
-                ListOtrosDescuentos = ListOtrosDescuentos.Where(r => Int32.Parse(r.TipoDescuentoCodigo) != 4).ToList();//DESCUENTO RETEFUENTE
-
-                foreach (var PlantillaOrdenGiros in infoPlantillaOrdenGiros)
+                if (ListOtrosDescuentos.Count > 0)
                 {
+                    ListOtrosDescuentos = ListOtrosDescuentos.Where(r => Int32.Parse(r.TipoDescuentoCodigo) != 3).ToList();//DESCUENTO ANS
+                    ListOtrosDescuentos = ListOtrosDescuentos.Where(r => Int32.Parse(r.TipoDescuentoCodigo) != 4).ToList();//DESCUENTO RETEFUENTE
 
-                    PlantillaOrdenGiros.OtrosDescuentosValorConcepto = ListOtrosDescuentos.Where(r =>
-                                                                                                        r.TipoPagoCodigo == PlantillaOrdenGiros.TipoPagoCodigo
-                                                                                                     && r.ContratacionProyectoId == PlantillaOrdenGiros.ContratacionProyectoId
-                                                                                                     && r.AportanteId == PlantillaOrdenGiros.AportanteId
-                                                                                                     && r.ConceptoCodigo == PlantillaOrdenGiros.ConceptoCodigo
-                                                                                                     && r.ProyectoId == PlantillaOrdenGiros.ProyectoId
-                                                                                                 )
-                                                                                           .Select(r =>
-                                                                                                        new
-                                                                                                        {
-                                                                                                            NombreDescuento = r.Nombre,
-                                                                                                            ValorDescuento = r.ValorDescuento
-                                                                                                        }
-                                                                                                   )
-                                                                                           .ToList(); 
+                    foreach (var PlantillaOrdenGiros in infoPlantillaOrdenGiros)
+                    {
+
+                        PlantillaOrdenGiros.OtrosDescuentosValorConcepto = ListOtrosDescuentos.Where(r =>
+                                                                                                            r.TipoPagoCodigo == PlantillaOrdenGiros.TipoPagoCodigo
+                                                                                                         && r.ContratacionProyectoId == PlantillaOrdenGiros.ContratacionProyectoId
+                                                                                                         && r.AportanteId == PlantillaOrdenGiros.AportanteId
+                                                                                                         && r.ConceptoCodigo == PlantillaOrdenGiros.ConceptoCodigo
+                                                                                                         && r.ProyectoId == PlantillaOrdenGiros.ProyectoId
+                                                                                                     )
+                                                                                               .Select(r =>
+                                                                                                            new
+                                                                                                            {
+                                                                                                                NombreDescuento = r.Nombre,
+                                                                                                                ValorDescuento = r.ValorDescuento
+                                                                                                            }
+                                                                                                       )
+                                                                                               .ToList();
+                    }
                 }
 
             }
