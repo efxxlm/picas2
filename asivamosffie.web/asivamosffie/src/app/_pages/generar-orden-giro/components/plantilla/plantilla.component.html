@@ -195,9 +195,22 @@
                 {{descuentosValor.valorDescuento | currency: '':'symbol-narrow':'.0-0'}} <br>
               </span>
             </ng-container> 
+
+            <ng-container  *ngIf="data.otrosDescuentosValorConcepto?.length === 0 || data.otrosDescuentosValorConcepto === undefined ">
+              <span>
+                 $0
+              </span>
+            </ng-container> 
+
           </td>
  
+       
           <td style="border: solid 1px #000">
+            <ng-container  *ngIf="data.otrosDescuentosValorConcepto?.length === 0 || data.otrosDescuentosValorConcepto === undefined ">
+              <span>
+                N/A
+              </span>
+            </ng-container> 
             <ng-container *ngFor="let descuentos of data.otrosDescuentosValorConcepto">
               <span>
                 {{descuentos.nombreDescuento}} <br>
