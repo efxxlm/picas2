@@ -111,26 +111,30 @@ export class ValidacionPresupuestalComponent implements OnInit {
   sePuedeValidarFuente() {
     if (this.detailavailabilityBudget) {
       if (this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_administrativo ||
-          this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_especial) {
+          this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_especial) { 
           //if (this.valorGestionado == this.detailavailabilityBudget.valorSolicitud && this.detailavailabilityBudget.estadoRegistro == true) {
           if (this.detailavailabilityBudget?.valorGestionado == this.detailavailabilityBudget?.valorSolicitud && this.detailavailabilityBudget?.estadoRegistro == true) {
             return true;
           }
-          else {
+          else { 
             return false;
           }
         }
         else {//para tradicional
           if (this.detailavailabilityBudget.valorSolicitud == this.valorGestionado) {
+ 
             return true;
           }
           else {
+            console.error(this.valorGestionado);
+
+            console.error(this.detailavailabilityBudget.valorSolicitud);
             return false;
           }
 
         }
     }
-    else {
+    else { 
       return false;
     }
   }

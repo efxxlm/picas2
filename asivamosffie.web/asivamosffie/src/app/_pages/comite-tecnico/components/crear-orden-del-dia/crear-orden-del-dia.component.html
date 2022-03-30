@@ -331,12 +331,16 @@
               </div>
               <div class="row">
                 <div class="pr-1">
-                  <p><b>Tiempo de intervención: </b> {{ registroPresupuestal.get( 'tiempoIntervencion' ).value }} Minutos</p>
+                  <p><b>Tiempo de intervención:  </b> {{ registroPresupuestal.get( 'tiempoIntervencion' ).value }} Minutos</p>
                 </div>
               </div>
               <div class="row">
-                <div class="pr-1">
-                  <p><b> URL con soporte: </b> {{ registroPresupuestal.get( 'url' ).value }}</p>
+                <div style="scroll-padding-top: initial" class="pr-1">
+                  <p><b> URL con soporte: </b>  
+             
+                    <a href="{{ registroPresupuestal.get( 'url' ).value }}" >Link del soporte: Tema {{ i + 1 }}  </a> 
+          
+                  </p>
                 </div>
               </div>
             </div>
