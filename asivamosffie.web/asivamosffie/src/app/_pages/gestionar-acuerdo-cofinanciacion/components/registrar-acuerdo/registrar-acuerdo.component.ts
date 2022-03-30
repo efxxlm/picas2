@@ -559,7 +559,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
     }
     aportante.cauntosDocumentos = aportante.cofinanciacionDocumento.length;
     
-    if (this.datosAportantes.get('aportantes')['controls']) {
+    if (this.datosAportantes.get('aportantes')['controls'][indexd]) {
       this.datosAportantes.get('aportantes')['controls'][indexd]
         .controls.cauntosDocumentos.setValue(aportante.cofinanciacionDocumento.length);
     }
