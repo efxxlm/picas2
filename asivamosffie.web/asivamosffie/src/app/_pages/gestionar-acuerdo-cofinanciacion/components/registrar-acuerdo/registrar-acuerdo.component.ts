@@ -558,8 +558,11 @@ export class RegistrarAcuerdoComponent implements OnInit {
       aportante.cofinanciacionDocumento.splice(index, 1);
     }
     aportante.cauntosDocumentos = aportante.cofinanciacionDocumento.length;
-    this.datosAportantes.get('aportantes')['controls'][indexd]
-      .controls.cauntosDocumentos.setValue(aportante.cofinanciacionDocumento.length);
+    
+    if (this.datosAportantes.get('aportantes')['controls']) {
+      this.datosAportantes.get('aportantes')['controls'][indexd]
+        .controls.cauntosDocumentos.setValue(aportante.cofinanciacionDocumento.length);
+    }
     if(docid>0)
     {
       this.cofinanciacionService.eliminarDocumento(docid).subscribe( cof => 
