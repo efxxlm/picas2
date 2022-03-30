@@ -995,7 +995,7 @@ namespace asivamosffie.services
             bool descuentoAmortizacion = false;
 
             if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == true)
-            { 
+            {
                 foreach (var item in pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento)
                 {
                     if (item.TipoDescuentoCodigo == "5")
@@ -1004,6 +1004,17 @@ namespace asivamosffie.services
                     if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(item))
                         return false;
                 }
+            }
+            //Eliminar Los Descuentos que creo
+            else
+            {
+                _context.Set<OrdenGiroDetalleTerceroCausacionDescuento>()
+                        .Where(o => o.OrdenGiroDetalleTerceroCausacionId == pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId)
+                        .Update(r => new OrdenGiroDetalleTerceroCausacionDescuento()
+                           {
+                               FechaModificacion = DateTime.Now, 
+                               Eliminado = true
+                           });
             }
 
             if (tieneAmortizacion && !descuentoAmortizacion)
