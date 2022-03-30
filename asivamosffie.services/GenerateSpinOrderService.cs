@@ -994,13 +994,16 @@ namespace asivamosffie.services
 
             bool descuentoAmortizacion = false;
 
-            foreach (var item in pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento)
-            {
-                if (item.TipoDescuentoCodigo == "5")
-                    descuentoAmortizacion = true;
+            if (pOrdenGiroDetalleTerceroCausacion.TieneDescuento == true)
+            { 
+                foreach (var item in pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionDescuento)
+                {
+                    if (item.TipoDescuentoCodigo == "5")
+                        descuentoAmortizacion = true;
 
-                if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(item))
-                    return false;
+                    if (!ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacionDescuento(item))
+                        return false;
+                }
             }
 
             if (tieneAmortizacion && !descuentoAmortizacion)
@@ -1453,6 +1456,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
+                    bool blRegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion, pOrdenGiroDetalleTerceroCausacion.TieneAmortizacion);
                     _context.Set<OrdenGiroDetalleTerceroCausacion>()
                             .Where(o => o.OrdenGiroDetalleTerceroCausacionId == pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId)
                             .Update(r => new OrdenGiroDetalleTerceroCausacion()
@@ -1468,7 +1472,7 @@ namespace asivamosffie.services
                                 UsuarioModificacion = pUsuarioCreacion,
                                 ConceptoCodigo = pOrdenGiroDetalleTerceroCausacion.ConceptoCodigo,
                                 ValorFacturadoConcepto = pOrdenGiroDetalleTerceroCausacion.ValorFacturadoConcepto,
-                                RegistroCompleto = ValidarRegistroCompletoOrdenGiroDetalleTerceroCausacion(pOrdenGiroDetalleTerceroCausacion, pOrdenGiroDetalleTerceroCausacion.TieneAmortizacion)
+                                RegistroCompleto = blRegistroCompleto
                             });
                 }
 

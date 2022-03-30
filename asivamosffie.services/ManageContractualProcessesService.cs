@@ -767,7 +767,11 @@ namespace asivamosffie.services
 
 
                 List<SesionComiteSolicitud> sesionComiteSolicitud = _context.SesionComiteSolicitud
-                     .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion && !(bool)r.Eliminado)
+                     .Where(r => r.SolicitudId == contratacion.ContratacionId
+                         && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion 
+                         && !(bool)r.Eliminado
+                         && r.ComiteTecnico.EstadoComiteCodigo != "7" //Fallida
+                         )
                      .Include(r => r.ComiteTecnico)
                      .Include(r => r.ComiteTecnicoFiduciario)
                      .ToList();
