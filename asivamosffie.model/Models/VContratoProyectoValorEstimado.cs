@@ -12,5 +12,7 @@ namespace asivamosffie.model.Models
         public decimal? ValorTotalProyecto { get; set; }
         public decimal? ValorContrato { get; set; }
         public decimal? ValorTotalContrato { get; set; }
+        public decimal? ValorTotalObraInterventoria { get; set; }
+        public decimal? ValorEstimadoObraInterventoria { get; set; }
     }
 }

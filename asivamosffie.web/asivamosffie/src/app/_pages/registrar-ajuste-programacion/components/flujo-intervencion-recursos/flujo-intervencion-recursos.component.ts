@@ -47,8 +47,11 @@ export class FlujoIntervencionRecursosComponent implements AfterViewInit, OnInit
   @Input() plazoContratacion:any;
   @Input() valorContrato:number;
   @Input() esVerDetalle:number;
-  @Output() estadoSemaforo = new EventEmitter<string>();
   @Input() ajusteProgramacion:any;
+  @Input() datosContratoProyectoModificadosXNovedad:any;
+
+  @Output() estadoSemaforo = new EventEmitter<string>();
+
 
   existeRegistroValido = false;
 

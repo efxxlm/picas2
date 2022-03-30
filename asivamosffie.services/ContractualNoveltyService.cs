@@ -411,10 +411,14 @@ namespace asivamosffie.services
                         datosFechas?.FechaEstimadaFinProyecto,
                         datosFechas?.FechaFinContrato,
                         datosFechas?.FechaEstimadaFinContrato,
+                        datosFechas?.SemanasEstimadasProyecto,
+                        datosFechas?.SemanasProyecto,
                         datosAdicion?.ValorProyecto,
                         datosAdicion?.ValorTotalProyecto,
                         datosAdicion?.ValorContrato,
-                        datosAdicion?.ValorTotalContrato
+                        datosAdicion?.ValorTotalContrato,
+                        datosAdicion?.ValorTotalObraInterventoria,
+                        datosAdicion?.ValorEstimadoObraInterventoria
                     });
 
                     novedadContractual.DatosContratoProyectoModificadosXNovedad = datosContratoProyectoModificadosXNovedad;

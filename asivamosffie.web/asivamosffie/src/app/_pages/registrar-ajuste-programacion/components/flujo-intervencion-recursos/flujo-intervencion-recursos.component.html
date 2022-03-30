@@ -1,14 +1,14 @@
 <div class="d-flex justify-content-center mt-1em">
   <p class="px-2em">
-    Duración en meses del proyecto:
+    Duración en semanas del proyecto:
     <b>
-      {{ plazoContratacion?.plazoMeses }}
+      {{ datosContratoProyectoModificadosXNovedad?.semanasEstimadasProyecto }}
     </b>
   </p>
   <p class="px-2em">
-    Valor total del contrato:
+    Valor total del proyecto:
     <b>
-      {{ valorContrato | currency: 'COP':'symbol-narrow':'.0-0' }}
+      {{ datosContratoProyectoModificadosXNovedad?.valorTotalProyecto | currency: 'COP':'symbol-narrow':'.0-0' }}
     </b>
   </p>
 </div>

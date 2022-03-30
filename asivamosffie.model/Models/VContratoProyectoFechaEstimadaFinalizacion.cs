@@ -12,5 +12,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaFinProyecto { get; set; }
         public DateTime? FechaFinContrato { get; set; }
         public DateTime? FechaEstimadaFinContrato { get; set; }
+        public int? SemanasProyecto { get; set; }
+        public int? SemanasEstimadasProyecto { get; set; }
     }
 }

@@ -875,18 +875,9 @@ namespace asivamosffie.services
 
             AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
 
-            DateTime? fechaInicioContrato = proyectoTemp.FechaInicioEtapaObra;
-            //DateTime fechaFinalContrato = proyectoTemp.FechaFinEtapaObra;
-            DateTime fechaFinalContrato = _commonService.GetFechaEstimadaFinalizacion(pContratoId) ?? proyectoTemp.FechaFinEtapaObra;
-
-           /* novedadContractual.NovedadContractualDescripcion.ToList().ForEach(ncd =>
-            {
-                if (ncd.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio && ajusteProgramacion.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion)
-                {
-                    double cantidadDiasAgregados = (ncd.FechaFinSuspension.Value - ncd.FechaInicioSuspension.Value).TotalDays;
-                    proyectoTemp.FechaFinEtapaObra = proyectoTemp.FechaFinEtapaObra.AddDays(cantidadDiasAgregados);
-                }
-            });*/
+            //DateTime? fechaInicioContrato = proyectoTemp.FechaInicioEtapaObra;
+            //DateTime fechaFinalContrato = _commonService.GetFechaEstimadaFinalizacion(pContratoId) ?? proyectoTemp.FechaFinEtapaObra;
+            VContratoProyectoFechaEstimadaFinalizacion datosFechas = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => r.ProyectoId == contratoConstruccion.ProyectoId && r.ContratoId == contratoConstruccion.ContratoId).FirstOrDefault();
 
             int CantidadRegistrosVacios = 0;
             int CantidadResgistrosValidos = 0;
@@ -899,7 +890,6 @@ namespace asivamosffie.services
 
             ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.AjusteProgramacionObra), pAjusteProgramacionId);
 
-            // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
             if (archivoCarge != null)
             {
                 using (var stream = new MemoryStream())
@@ -932,19 +922,6 @@ namespace asivamosffie.services
                             temp.FechaCreacion = DateTime.Now;
                             temp.UsuarioCreacion = pUsuarioCreo;
                             temp.AjusteProgramacionId = pAjusteProgramacionId;
-
-                            /*List<AjusteProgramacionFlujo> listaFlujo = _context.AjusteProgramacionFlujo.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
-
-                            if (listaFlujo.Count() > 1)
-                            {
-                                worksheet.Cells[1, 1].AddComment("se debe eliminar una carga de flujo de inversión asociada a este Proyecto", "Admin");
-                                worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
-                                tieneErrores = true;
-                                CantidadResgistrosValidos--;
-                                estructuraValidaValidacionGeneral = false;
-                                mensajeRespuesta = "se debe eliminar una carga de flujo de inversión asociada a este Proyecto";
-                            }*/
 
                             #region Tipo Actividad
                             // #1
@@ -1065,17 +1042,17 @@ namespace asivamosffie.services
                             }
 
                             // fechas contrato
-                            if (temp.FechaInicio.Date < fechaInicioContrato.Value.Date)
+                            if (temp.FechaInicio.Date < datosFechas.FechaInicioProyecto)
                             {
-                                worksheet.Cells[i, 4].AddComment("La fecha Inicial de la actividad no puede ser inferior a la fecha inicial del contrato", "Admin");
+                                worksheet.Cells[i, 4].AddComment("La fecha Inicial de la actividad no puede ser inferior a la fecha inicial del proyecto", "Admin");
                                 worksheet.Cells[i, 4].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                                 worksheet.Cells[i, 4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                                 tieneErrores = true;
                             }
 
-                            if (temp.FechaFin.Date > fechaFinalContrato.Date)
+                            if (temp.FechaFin.Date > datosFechas.FechaEstimadaFinProyecto)
                             {
-                                worksheet.Cells[i, 5].AddComment("La fecha final de la actividad no puede ser mayor a la fecha final del contrato", "Admin");
+                                worksheet.Cells[i, 5].AddComment("La fecha final de la actividad no puede ser mayor a la fecha final del proyecto", "Admin");
                                 worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                                 worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                                 tieneErrores = true;
@@ -1272,6 +1249,8 @@ namespace asivamosffie.services
                                                                         .FirstOrDefault();
 
             Proyecto proyecto = _technicalRequirementsConstructionPhaseService.CalcularFechasContrato(pProyectoId, contratoConstruccion.FechaInicioObra, contratoConstruccion.ContratoId);
+            VContratoProyectoValorEstimado datosAdicion = _context.VContratoProyectoValorEstimado.Where(r => r.ProyectoId == contratoConstruccion.ProyectoId && r.ContratoId == contratoConstruccion.ContratoId).FirstOrDefault();
+            VContratoProyectoFechaEstimadaFinalizacion datosFechas = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => r.ProyectoId == contratoConstruccion.ProyectoId && r.ContratoId == contratoConstruccion.ContratoId).FirstOrDefault();
 
             NovedadContractual novedadContractual = _context.NovedadContractual
                                                                 .Include(x => x.NovedadContractualDescripcion)
@@ -1286,22 +1265,10 @@ namespace asivamosffie.services
                 }
             });
 
-            List<dynamic> listaFechas = CrearNuevasFecha(proyecto, novedadContractual, ajusteProgramacion);
+            //List<dynamic> listaFechas = CrearNuevasFecha(proyecto, novedadContractual, ajusteProgramacion); --> era de diego, se reemplaza por la vista
 
             //Numero semanas
-            int numberOfWeeks = listaFechas.Count();
-
-            //int numberOfWeeks = Convert.ToInt32(Math.Floor((proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays / 7));
-            //if (Convert.ToInt32(Math.Round((proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays % 7)) > 0)
-            //    numberOfWeeks++;
-
-            //Capitulos cargados
-            //AjusteProgramacionObra[] listaProgramacion = _context.AjusteProgramacionObra
-            //                                                    .Where(
-            //                                                            p => p.AjusteProgramacionId == pAjusteProgramacionId &&
-            //                                                            p.TipoActividadCodigo == "C")
-            //                                                    .OrderBy(p => p.AjusteProgramacionObraId)
-            //                                                    .ToArray();
+            int numberOfWeeks = datosFechas.SemanasEstimadasProyecto ?? datosFechas.SemanasProyecto ?? 0;
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -1309,8 +1276,6 @@ namespace asivamosffie.services
             DocumentService _documentService = new DocumentService(_context, _commonService);
 
             ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.AjusteFlujoInversion), pAjusteProgramacionId);
-
-            // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
 
             bool estructuraValidaValidacionGeneral = true;
             string mensajeRespuesta = string.Empty;
@@ -1340,10 +1305,11 @@ namespace asivamosffie.services
                     }
 
                     bool tieneErrores = false;
-
+                    bool validacionError = false;
                     // valida numero semanas
                     if (numberOfWeeks != cantidadSemnas)
                     {
+                        validacionError = true;
                         worksheet.Cells[1, 1].AddComment("Numero de semanas no es igual al del proyecto", "Admin");
                         worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                         worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
@@ -1351,17 +1317,6 @@ namespace asivamosffie.services
                         estructuraValidaValidacionGeneral = false;
                         mensajeRespuesta = "Numero de semanas no es igual al del proyecto";
                     }
-                    /*
-                    //valida numero capitulos
-                    if (listaProgramacion.Count() != cantidadCapitulos && worksheet.Cells[1, 1].Comment == null)
-                    {
-                        worksheet.Cells[1, 1].AddComment("Numero de capitulos no es igual a la programacion", "Admin");
-                        worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                        worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
-                        tieneErrores = true;
-                        estructuraValidaValidacionGeneral = false;
-                        mensajeRespuesta = "Numero de capitulos no es igual a la programacion";
-                    }*/
 
                     decimal sumaTotal = 0;
 
@@ -1453,7 +1408,7 @@ namespace asivamosffie.services
                         }
                     }
 
-                    if (proyecto.ValorObra != sumaTotal && worksheet.Cells[1, 1].Comment == null)
+                    if (datosAdicion.ValorTotalProyecto != sumaTotal && !validacionError)
                     {
                         worksheet.Cells[1, 1].AddComment("La suma de los valores no es igual al valor total de obra del proyecto", "Admin");
                         worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;

@@ -37,51 +37,35 @@
         </strong>
         {{ ajusteProgramacionInfo.novedadesSeleccionadas }}
       </p>
-      <p *ngIf="modificaFecha">
-        <strong >
-          Fecha de inicio:
-        </strong>
-        {{
-          (novedad?.contrato?.fechaActaInicioFase2
-            ? novedad?.contrato?.fechaActaInicioFase2
-            : novedad?.contrato?.fechaActaInicioFase1
-          ) | date: 'dd/MM/yyyy'
-        }}
-      </p>
-      <p  *ngIf="modificaFecha">
+      <p>
         <strong>
-          Fecha final antes de la modificación:
+          Fecha de inicio del proyecto:
         </strong>
-        {{
-          (novedad?.contrato?.fechaTerminacionFase2
-            ? novedad?.contrato?.fechaTerminacionFase2
-            : novedad?.contrato?.fechaTerminacion
-          ) | date: 'dd/MM/yyyy'
-        }}
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaInicioProyecto | date: 'dd/MM/yyyy' }}
       </p>
-      <p *ngIf="modificaFecha">
-        <strong >
-          Nueva fecha de finalización:
+      <p>
+        <strong>
+          Fecha final antes de la modificación del proyecto:
         </strong>
-        {{
-          (novedad?.contrato?.fechaEstimadaFinalizacion ? novedad?.contrato?.fechaEstimadaFinalizacion :
-            novedad?.contrato?.fechaTerminacionFase2
-            ? novedad?.contrato?.fechaTerminacionFase2
-            : novedad?.contrato?.fechaTerminacion
-          ) | date: 'dd/MM/yyyy'
-        }}
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaFinProyecto | date: 'dd/MM/yyyy' }}
       </p>
-      <p *ngIf="esAdicion">
-        <strong >
-          Valor inicial:
+      <p>
+        <strong>
+          Nueva fecha de finalización del proyecto:
         </strong>
-        {{ novedad?.contrato?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud | currency: 'COP':'symbol-narrow':'.0-0'  }}
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaEstimadaFinProyecto | date: 'dd/MM/yyyy' }}
       </p>
-      <p *ngIf="esAdicion">
+      <p>
         <strong >
-          Valor después de la modificación:
+          Valor inicial (Obra):
         </strong>
-        {{ novedad?.contrato?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud + presupuestoAdicionalSolicitado | currency: 'COP':'symbol-narrow':'.0-0'  }}
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorProyecto | currency: '':'symbol':'3.0' }}
+      </p>
+      <p>
+        <strong >
+          Valor después de la modificación (Obra):
+        </strong>
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorTotalProyecto | currency: '':'symbol':'3.0' }}
       </p>
       <p>
         <strong>
@@ -127,39 +111,15 @@
       </p>
       <p>
         <strong>
-          Fecha de inicio del proyecto:
-        </strong>
-        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaInicioProyecto | date: 'dd/MM/yyyy' }}
-      </p>
-      <p>
-        <strong>
-          Fecha final antes de la modificación del proyecto:
-        </strong>
-        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaFinProyecto | date: 'dd/MM/yyyy' }}
-      </p>
-      <p>
-        <strong>
-          Nueva fecha de finalización del proyecto:
-        </strong>
-        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaEstimadaFinProyecto | date: 'dd/MM/yyyy' }}
-      </p>
-      <p>
-        <strong>
           Valor total del proyecto (Obra e Interventoría):
         </strong>
-        {{ novedad?.proyectosSeleccionado?.valorTotal | currency: '':'symbol':'3.0' }}
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorTotalObraInterventoria | currency: '':'symbol':'3.0' }}
       </p>
       <p>
         <strong>
-          Valor total del proyecto:
+          Valor total del proyecto después de la modificación (Obra e Interventoría):
         </strong>
-        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorProyecto | currency: '':'symbol':'3.0' }}
-      </p>
-      <p>
-        <strong>
-          Valor total del proyecto Modificado:
-        </strong>
-        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorTotalProyecto | currency: '':'symbol':'3.0' }}
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorEstimadoObraInterventoria | currency: '':'symbol':'3.0' }}
       </p>
     </mat-card-content>
   </mat-card>
@@ -167,6 +127,7 @@
   <div class="mb-2em" *ngIf="novedad?.contrato?.contratacion">
     <app-expansion-panel
                         [ajusteProgramacionInfo]="ajusteProgramacionInfo"
+                        [datosContratoProyectoModificadosXNovedad]="novedad?.datosContratoProyectoModificadosXNovedad[0]"
                         [novedadContractualRegistroPresupuestal] = "novedad?.novedadContractualRegistroPresupuestal[0]"
                         [plazoContratacion] = "novedad?.contrato?.contratacion?.plazoContratacion"
                         [valorContrato] = "novedad?.contrato?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud + presupuestoAdicionalSolicitado"
