@@ -22,7 +22,7 @@ namespace asivamosffie.api.Controllers
         {
             _resource = resource;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<List<ControlRecurso>> Get()
         {

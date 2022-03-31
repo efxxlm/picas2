@@ -33,6 +33,7 @@ namespace asivamosffie.services
             return await _context.ControlRecurso.FindAsync(id); 
         }
          
+    
         public async Task<List<ControlRecurso>> GetResourceControlGridBySourceFunding(int id)
         {
             try
@@ -68,6 +69,12 @@ namespace asivamosffie.services
                     r.FuenteFinanciacion = _context.ControlRecurso.Where(ff => ff.ControlRecursoId == r.ControlRecursoId).Include(f => f.FuenteFinanciacion).ThenInclude(a => a.Aportante).Select(r => r.FuenteFinanciacion).FirstOrDefault();
                     r.CofinanciacionDocumento = _context.CofinanciacionDocumento.Find(r.VigenciaAporteId);
                     r.VigenciaAporte = _context.VigenciaAporte.Find(r.VigenciaAporteId);
+
+
+                    r.RegistroPresupuestal.ControlRecurso = null;
+                    r.FuenteFinanciacion.ControlRecurso = null;
+                    r.CuentaBancaria.ControlRecurso = null;
+
                 }; 
                 return ControlGrid.OrderBy(r => r.RegistroPresupuestal?.NumeroRp).ThenByDescending(r => r.RegistroPresupuestalId).ToList(); 
             }
