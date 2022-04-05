@@ -1737,7 +1737,8 @@
               <mat-select required [(ngModel)]="infraestructura.infraestructuraCodigo"
               [disabled]="!bitPuedoEditar">
                 <mat-option *ngFor="let listado of listaInfraestructura" [value]="listado.codigo">
-                  {{ listado.nombre }} {{ listado.codigo }}
+                  {{ listado.nombre }} 
+                      <!-- Por alguna razón se puso 05-04-22 JMC  {{ listado.codigo }} -->
                 </mat-option>
               </mat-select>
             </mat-form-field>
