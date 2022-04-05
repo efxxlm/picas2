@@ -10,6 +10,9 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IContractualNoveltyService
     {
+        Task<List<CofinanciacionAportante>> GetAportanteByNovedadContractualId(int pNovedadContractualId);
+        Task<List<CofinanciacionAportante>> GetAportanteByContratacion(int pId);
+
         Task<Respuesta> CreateEditNovedadContractual(NovedadContractual novedadContractual);
         Task<List<VNovedadContractual>> GetListGrillaNovedadContractualObra();
         Task<List<VNovedadContractual>> GetListGrillaNovedadContractualInterventoria();
@@ -28,8 +31,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditNovedadContractualTramite(NovedadContractual novedadContractual);
         Task<Respuesta> EnviarAComite(int pNovedadContractualId, string pUsuario);
         Task<Respuesta> RechazarPorInterventor(NovedadContractual pNovedadContractual, string pUsuario);
-        Task<Respuesta> RechazarPorSupervisor(NovedadContractual pNovedadContractual, string pUsuario);
-        Task<List<CofinanciacionAportante>> GetAportanteByContratacion(int pId);
+        Task<Respuesta> RechazarPorSupervisor(NovedadContractual pNovedadContractual, string pUsuario); 
         Task<List<FuenteFinanciacion>> GetFuentesByAportante(int pConfinanciacioAportanteId);
         Task<Respuesta> CancelarNovedad(int pNovedadContractualId, string pUsuario);
         Task<Respuesta> AprobacionTecnicaJuridica(int pNovedadContractualId, string pUsuario);

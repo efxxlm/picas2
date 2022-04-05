@@ -379,7 +379,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetNovedadContractualById")]
         public async Task<NovedadContractual> GetNovedadContractualById([FromQuery] int pId)
@@ -410,6 +410,22 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        [HttpGet]
+        [Route("GetAportanteByNovedadContractualId")]
+        public async Task<List<CofinanciacionAportante>> GetAportanteByNovedadContractualId([FromQuery] int pNovedadContractualId)
+        {
+            try
+            {
+                return await _contractualModification.GetAportanteByNovedadContractualId(pNovedadContractualId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
 
         [HttpGet]
         [Route("GetAportanteByContratacion")]

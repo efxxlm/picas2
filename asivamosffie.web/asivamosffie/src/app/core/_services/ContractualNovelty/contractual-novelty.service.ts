@@ -100,6 +100,12 @@ export class ContractualNoveltyService {
     return this.http.put<Respuesta>( `${ this.urlApi }/rechazarPorSupervisor`, novedad ); 
   }
 
+  GetAportanteByNovedadContractualId( pNovedadContractualId: number)
+  {
+    return this.http.get<any[]>( `${ this.urlApi }/GetAportanteByNovedadContractualId?pNovedadContractualId=${pNovedadContractualId}` ); 
+  }
+
+
   GetAportanteByContratacion(pId)
   {
     return this.http.get<any[]>( `${ this.urlApi }/GetAportanteByContratacion?pId=${pId}` ); 

@@ -227,7 +227,7 @@ namespace asivamosffie.services
             {
                 int existeNovedad = _context.NovedadContractual.Where(x => x.Eliminado != true && x.ContratoId == contrato.ContratoId).Count();
                 contrato.FechaEstimadaFinalizacion = _commonService.GetFechaEstimadaFinalizacion(contrato.ContratoId);
-                
+
                 bool tieneActa = false;
                 if (
                         contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp != null &&
@@ -236,7 +236,7 @@ namespace asivamosffie.services
                         listaNovedadesActivas.Where(x => x.ContratoId == contrato.ContratoId).Count() == 0)
                     )
                 {
-                    if(contrato?.Contratacion?.Contratista != null)
+                    if (contrato?.Contratacion?.Contratista != null)
                     {
                         contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
                         contrato.Contratacion.Contratista.TipoIdentificacionNotMapped = listDominioTipoDocumento.Where(x => x.Codigo == contrato?.Contratacion?.Contratista?.TipoIdentificacionCodigo)?.FirstOrDefault()?.Nombre;
@@ -298,7 +298,7 @@ namespace asivamosffie.services
         }
 
         public async Task<NovedadContractual> GetNovedadContractualById(int pId)
-        { 
+        {
             List<Dominio> LisDominios = _context.Dominio
                                                 .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento
                                                          || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual
@@ -394,14 +394,14 @@ namespace asivamosffie.services
                                                                 .AsNoTracking().FirstOrDefault();
             if (novedadContractual != null)
             {
-                if(novedadContractual.Contrato != null)
+                if (novedadContractual.Contrato != null)
                 {
                     novedadContractual.Contrato.FechaEstimadaFinalizacion = _commonService.GetFechaEstimadaFinalizacion((int)novedadContractual.ContratoId);
                     novedadContractual.Contrato.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(novedadContractual.Contrato.ContratoId, true, false, 0);
                 }
                 VContratoProyectoFechaEstimadaFinalizacion datosFechas = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId).FirstOrDefault();
                 VContratoProyectoValorEstimado datosAdicion = _context.VContratoProyectoValorEstimado.Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId).FirstOrDefault();
-                if(datosFechas != null && datosAdicion != null)
+                if (datosFechas != null && datosAdicion != null)
                 {
                     List<dynamic> datosContratoProyectoModificadosXNovedad = new List<dynamic>();
                     datosContratoProyectoModificadosXNovedad.Add(new
@@ -557,7 +557,7 @@ namespace asivamosffie.services
                 {
                     decimal valorSolicitud = 0;
                     DisponibilidadPresupuestal ddp = novedadContractual.Contrato?.Contratacion?.DisponibilidadPresupuestal.FirstOrDefault();
-                    valorSolicitud = _commonService.GetValorTotalDisponibilidad(ddp.DisponibilidadPresupuestalId,false);
+                    valorSolicitud = _commonService.GetValorTotalDisponibilidad(ddp.DisponibilidadPresupuestalId, false);
                     foreach (var disponibilidad in novedadContractual.Contrato?.Contratacion?.DisponibilidadPresupuestal)
                     {
                         disponibilidad.ValorTotalDisponibilidad = valorSolicitud;
@@ -599,7 +599,7 @@ namespace asivamosffie.services
                 foreach (NovedadContractualAportante novedadContractualAportante in novedadContractual.NovedadContractualAportante)
                 {
                     CofinanciacionAportante cofinanciacion = _context.CofinanciacionAportante.Find(novedadContractualAportante.CofinanciacionAportanteId);
-                    if(cofinanciacion != null)
+                    if (cofinanciacion != null)
                         novedadContractualAportante.NombreAportante = getNombreAportante(cofinanciacion);
 
                     if (cofinanciacion != null)
@@ -670,10 +670,10 @@ namespace asivamosffie.services
 
             return novedadContractual;
         }
-
         public async Task<List<CofinanciacionAportante>> GetAportanteByContratacion(int pId)
         {
             List<CofinanciacionAportante> listaAportantes = new List<CofinanciacionAportante>();
+
 
             Contratacion contratacion = _context.Contratacion
                                                     .Include(x => x.ContratacionProyecto)
@@ -682,37 +682,37 @@ namespace asivamosffie.services
                                                     .FirstOrDefault(x => x.ContratacionId == pId);
 
             contratacion.ContratacionProyecto.ToList().ForEach(cp =>
-           {
-               cp.ContratacionProyectoAportante.ToList().ForEach(cpa =>
-              {
-                  CofinanciacionAportante cofinanciacionAportante = new CofinanciacionAportante();
-                  cofinanciacionAportante.CofinanciacionAportanteId = cpa.CofinanciacionAportante.CofinanciacionAportanteId;
+            {
+                cp.ContratacionProyectoAportante.ToList().ForEach(cpa =>
+                {
+                    CofinanciacionAportante cofinanciacionAportante = new CofinanciacionAportante();
+                    cofinanciacionAportante.CofinanciacionAportanteId = cpa.CofinanciacionAportante.CofinanciacionAportanteId;
 
-                  if (cpa.CofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.Ffie)
-                  {
-                      cofinanciacionAportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;
-                  }
-                  else if (cpa.CofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.ET)
-                  {
-                      //verifico si tiene municipio
-                      if (cpa.CofinanciacionAportante.MunicipioId != null)
-                      {
-                          cofinanciacionAportante.NombreAportanteString = _context.Localizacion.Find(cpa.CofinanciacionAportante.MunicipioId).Descripcion;
-                      }
-                      else//solo departamento
-                      {
-                          cofinanciacionAportante.NombreAportanteString = cpa.CofinanciacionAportante.DepartamentoId == null ? "" : _context.Localizacion.Find(cpa.CofinanciacionAportante.DepartamentoId).Descripcion;
+                    if (cpa.CofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.Ffie)
+                    {
+                        cofinanciacionAportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;
+                    }
+                    else if (cpa.CofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.ET)
+                    {
+                        //verifico si tiene municipio
+                        if (cpa.CofinanciacionAportante.MunicipioId != null)
+                        {
+                            cofinanciacionAportante.NombreAportanteString = _context.Localizacion.Find(cpa.CofinanciacionAportante.MunicipioId).Descripcion;
+                        }
+                        else//solo departamento
+                        {
+                            cofinanciacionAportante.NombreAportanteString = cpa.CofinanciacionAportante.DepartamentoId == null ? "" : _context.Localizacion.Find(cpa.CofinanciacionAportante.DepartamentoId).Descripcion;
 
-                      }
+                        }
 
-                  }
-                  else
-                  {
-                      cofinanciacionAportante.NombreAportanteString = _context.Dominio.Find(cpa.CofinanciacionAportante.NombreAportanteId).Nombre;
-                  }
-                  listaAportantes.Add(cofinanciacionAportante);
-              });
-           });
+                    }
+                    else
+                    {
+                        cofinanciacionAportante.NombreAportanteString = _context.Dominio.Find(cpa.CofinanciacionAportante.NombreAportanteId).Nombre;
+                    }
+                    listaAportantes.Add(cofinanciacionAportante);
+                });
+            });
 
             return listaAportantes;
 
@@ -762,6 +762,57 @@ namespace asivamosffie.services
             //    });
             //}//);
 
+        }
+        public async Task<List<CofinanciacionAportante>> GetAportanteByNovedadContractualId(int pNovedadContractualId)
+        {
+            List<CofinanciacionAportante> listaAportantes = new List<CofinanciacionAportante>();
+
+            NovedadContractual novedadContractual = await _context.NovedadContractual.AsNoTracking()
+                                                                               .Where(r => r.NovedadContractualId == pNovedadContractualId)
+                                                                               .Include(r => r.Contrato)
+                                                                                   .ThenInclude(r => r.Contratacion)
+                                                                                        .ThenInclude(r => r.ContratacionProyecto)
+                                                                                             .ThenInclude(r => r.ContratacionProyectoAportante)
+                                                                                                           .ThenInclude(r => r.CofinanciacionAportante)
+                                                                               .FirstOrDefaultAsync();
+
+            List<Localizacion> LocalizacionList = _context.Localizacion.AsNoTracking().ToList();
+            List<Dominio> ListNombreAportante = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Nombre_Aportante_Aportante);
+
+            foreach (var ContratacionProyecto in novedadContractual?.Contrato?.Contratacion?.ContratacionProyecto.Where(r=> r.ProyectoId == novedadContractual.ProyectoId).ToList())
+            {
+                foreach (var ContratacionProyectoAportante in ContratacionProyecto?.ContratacionProyectoAportante)
+                {
+                    CofinanciacionAportante cofinanciacionAportante = new CofinanciacionAportante
+                    {
+                        CofinanciacionAportanteId = ContratacionProyectoAportante.CofinanciacionAportante.CofinanciacionAportanteId
+                    };
+                    if (ContratacionProyectoAportante.CofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.Ffie)
+                    {
+                        cofinanciacionAportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;
+                    }
+                    else if (ContratacionProyectoAportante.CofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.ET)
+                    {
+                        //verifico si tiene municipio
+                        if (ContratacionProyectoAportante.CofinanciacionAportante.MunicipioId != null)
+                        {
+                            cofinanciacionAportante.NombreAportanteString = LocalizacionList.Find(r => r.LocalizacionId == ContratacionProyectoAportante.CofinanciacionAportante.MunicipioId)
+                                                                                            .Descripcion;
+                        }
+                        else//solo departamento
+                        {
+                            cofinanciacionAportante.NombreAportanteString = ContratacionProyectoAportante.CofinanciacionAportante.DepartamentoId == null ? String.Empty :  
+                            LocalizacionList.Find(r => r.LocalizacionId == ContratacionProyectoAportante.CofinanciacionAportante.DepartamentoId).Descripcion; 
+                        }
+                    }
+                    else
+                    {
+                        cofinanciacionAportante.NombreAportanteString = ListNombreAportante.Find(r=> r.DominioId ==ContratacionProyectoAportante.CofinanciacionAportante.NombreAportanteId).Nombre;
+                    }
+                    listaAportantes.Add(cofinanciacionAportante); 
+                }
+            } 
+            return listaAportantes;
         }
 
         public async Task<List<FuenteFinanciacion>> GetFuentesByAportante(int pConfinanciacioAportanteId)
