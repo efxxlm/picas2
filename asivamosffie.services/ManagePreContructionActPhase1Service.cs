@@ -841,12 +841,14 @@ namespace asivamosffie.services
             plantilla.Contenido = plantilla.Contenido.Replace("[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]", contrato?.Interventor?.NumeroIdentificacion);
 
             plantilla.Contenido = plantilla.Contenido.Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", ti.ToTitleCase(contrato?.Contratacion?.Contratista?.RepresentanteLegal) ?? string.Empty + Supervisor?.GetNombreCompleto ?? " ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[CEDULA_SUPERVISOR]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion);
+            plantilla.Contenido = plantilla.Contenido.Replace("[NOMBRE_ENTIDAD_CONTRATISTA_OBRA]", ti.ToTitleCase(contrato?.Contratacion?.Contratista?.Nombre));
             plantilla.Contenido = plantilla.Contenido.Replace("[NIT_ENTIDAD_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.NumeroIdentificacion);
-            plantilla.Contenido = plantilla.Contenido.Replace("[CARGO_SUPERVISOR]"," ");
-            plantilla.Contenido = plantilla.Contenido.Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.Nombre);
 
-            plantilla.Contenido = plantilla.Contenido.Replace("[NOMBRE_ENTIDAD_CONTRATISTA_OBRA]", ti.ToTitleCase(contrato?.Contratacion?.Contratista?.RepresentanteLegal));
+            plantilla.Contenido = plantilla.Contenido.Replace("[CEDULA_SUPERVISOR]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion);
+            plantilla.Contenido = plantilla.Contenido.Replace("[CARGO_SUPERVISOR]"," ");
+  
+
+
 
             plantilla.Contenido = plantilla.Contenido.Replace("[NUMERO_DRP]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().NumeroDrp);
             plantilla.Contenido = plantilla.Contenido.Replace("[FECHA_GENERACION_DRP]", (bool)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaDrp.HasValue ? ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaDrp).ToString("dd-MM-yyyy") : " ");
