@@ -2087,25 +2087,21 @@ namespace asivamosffie.services
         //Solicitudes de comite tecnico
         public async Task<List<CustonReuestCommittee>> GetReuestCommittee()
         {
-            using (SqlConnection sql = new SqlConnection(_connectionString))
+            using SqlConnection sql = new SqlConnection(_connectionString);
+            using SqlCommand cmd = new SqlCommand("GetBudgetAvailabilityRequest", sql);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            var response = new List<CustonReuestCommittee>();
+            await sql.OpenAsync();
+
+            using (var reader = await cmd.ExecuteReaderAsync())
             {
-                using (SqlCommand cmd = new SqlCommand("GetBudgetAvailabilityRequest", sql))
+                while (await reader.ReadAsync())
                 {
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    var response = new List<CustonReuestCommittee>();
-                    await sql.OpenAsync();
-
-                    using (var reader = await cmd.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            response.Add(MapToValue(reader));
-                        }
-                    }
-
-                    return response;
+                    response.Add(MapToValue(reader));
                 }
             }
+
+            return response;
         }
 
         public CustonReuestCommittee MapToValue(SqlDataReader reader)

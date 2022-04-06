@@ -268,7 +268,7 @@ export class FormOtrosTemasComponent implements OnInit {
   cargarRegistro() {
     if (this.sesionComiteTema.requiereVotacion) {
 
-      var ListTemas = this.sesionComiteTema.sesionTemaVoto.filter(r => r.esAprobado != true);
+      var ListTemas = this.sesionComiteTema.sesionTemaVoto.filter(r => r.noAplica != true);
 
       ListTemas.forEach(sv => {
         if (sv.esAprobado) this.cantidadAprobado++
