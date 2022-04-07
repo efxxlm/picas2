@@ -37,6 +37,18 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public DateTime? NuevaFechaDeFinalizacion(Contrato pContrato)
+        {
+            VContratoProyectoFechaEstimadaFinalizacion vContratoProyectoFechaEstimadaFinalizacion = null;
+
+            vContratoProyectoFechaEstimadaFinalizacion = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => r.ContratoId == pContrato.ContratoId)
+                                                                                                            .FirstOrDefault();
+
+            if (vContratoProyectoFechaEstimadaFinalizacion != null)
+                pContrato.FechaEstimadaFinalizacion = vContratoProyectoFechaEstimadaFinalizacion.FechaEstimadaFinContrato;
+
+            return pContrato.FechaEstimadaFinalizacion;
+        }
 
         public string SetUrlInAnchore(string pUrl)
         {
@@ -45,13 +57,12 @@ namespace asivamosffie.services
             if (pUrl.Contains("N/A") || pUrl.Contains("n/a"))
                 return pUrl;
 
-            return "<a target='_blank' href='" + pUrl + "'> Link </a>"; 
+            return "<a target='_blank' href='" + pUrl + "'> Link </a>";
         }
         public async Task<model.Models.Version> GetVersion()
         {
             return await _context.Version.OrderByDescending(v => v.VersionId).FirstOrDefaultAsync();
         }
-
 
         public async Task<dynamic> GetVideos()
         {

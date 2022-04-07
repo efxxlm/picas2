@@ -8,6 +8,8 @@ namespace asivamosffie.model.Models
 {
     public partial class Contrato
     {
+       
+
         [NotMapped]
         public IFormFile PFile { get; set; }
 

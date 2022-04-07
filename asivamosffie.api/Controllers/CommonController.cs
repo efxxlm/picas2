@@ -57,15 +57,15 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        [HttpPost]
+        [HttpGet]
         [Route("GetHtmlToPdf")]
-        public async Task<FileResult> GetHtmlToPdf(string pPlantilla)
+        public async Task<FileResult> GetHtmlToPdf()
         {
             try
             {
-                Plantilla plantilla = new Plantilla { 
-                 
-                Contenido = pPlantilla
+                Plantilla plantilla = new Plantilla
+                {
+                    Contenido = "asdsad"
                 };
                 return File(await common.GetHtmlToPdf(plantilla), "application/pdf");
             }
