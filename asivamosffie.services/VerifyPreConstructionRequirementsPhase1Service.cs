@@ -105,7 +105,7 @@ namespace asivamosffie.services
                         EstadoCodigo = c.EstadoVerificacionCodigo,
                         EstaDevuelto,
                         RegistroCompleto,
-                        EstadoNombre = c.EstadoVerificacionCodigo == ConstanCodigoEstadoVerificacionContrato.Con_requisitos_tecnicos_aprobados ? Parametricas.Where(r => r.Codigo == c.EstadoVerificacionCodigo).FirstOrDefault().Descripcion : Parametricas.Where(r => r.Codigo == c.EstadoVerificacionCodigo).FirstOrDefault().Nombre
+                        EstadoNombre = c.EstadoVerificacionCodigo == ConstanCodigoEstadoVerificacionContrato.Con_requisitos_tecnicos_aprobados ? Parametricas.Where(r => r.Codigo == c.EstadoVerificacionCodigo).FirstOrDefault().Descripcion : Parametricas.Where(r => r.Codigo == c.EstadoVerificacionCodigo).FirstOrDefault()?.Nombre ?? string.Empty
                     });
                 });
             }
