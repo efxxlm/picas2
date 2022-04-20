@@ -229,7 +229,7 @@ namespace asivamosffie.services
             foreach (var l in ListComiteTecnico)
             {
                 l.SesionComentario = l.SesionComentario = ListSesionComentario.Where(s => s.ComiteTecnicoId == l.ComiteTecnicoId).ToList();
-                l.esVotoAprobado = l.SesionComentario.Where(r => r.MiembroSesionParticipanteId == pUserId && r.ValidacionVoto == false && (r.EstadoActaVoto == ConstantCodigoActas.Aprobada || r.EstadoActaVoto == ConstantCodigoActas.Devuelta)).Count() > 0;
+                l.esVotoAprobado = l.SesionComentario.Count(r => r.MiembroSesionParticipanteId == pUserId && r.ValidacionVoto == false && (r.EstadoActaVoto == ConstantCodigoActas.Aprobada || r.EstadoActaVoto == ConstantCodigoActas.Devuelta)) > 0;
             }
 
             return ListComiteTecnico;
@@ -277,7 +277,7 @@ namespace asivamosffie.services
                     SesionComiteTema.SesionTemaVoto = _context.SesionTemaVoto.AsNoTracking().Where(r => r.SesionTemaId == SesionComiteTema.SesionTemaId && SesionComiteTema.Eliminado != true).ToList();
 
                 }
-                      
+
 
                 List<Dominio> ListParametricas = _context.Dominio.AsNoTracking().ToList();
                 List<Contratacion> ListContratacion = _context.Contratacion.AsNoTracking().ToList();
@@ -290,7 +290,7 @@ namespace asivamosffie.services
                 List<ProcesoSeleccionMonitoreo> ListProcesoSeleccionMonitoreo = _context.ProcesoSeleccionMonitoreo.AsNoTracking().ToList();
 
 
-               
+
 
                 bool BorrarCompromisosFiduciarios = item.EsComiteFiduciario ?? false;
 
@@ -808,7 +808,7 @@ namespace asivamosffie.services
 
         private bool ValidarTodosVotacion(ComiteTecnico pComiteTecnico)
         {
-            int CantidadParticipantes = pComiteTecnico.SesionParticipante.Count();
+            int CantidadParticipantes = pComiteTecnico.SesionParticipante.Count(c => c.Eliminado != true);
             int CantidadDeVotos = _context.SesionComentario.Count(c => c.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId && c.ValidacionVoto != true);
 
             return CantidadParticipantes == CantidadDeVotos;
