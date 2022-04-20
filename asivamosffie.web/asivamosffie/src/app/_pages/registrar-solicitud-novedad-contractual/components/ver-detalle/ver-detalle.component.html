@@ -190,7 +190,7 @@
               </p>
               <p *ngIf="((descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2') && !((novedad?.estadoCodigo == '26' && novedad?.vaComite) || (novedad?.estadoCodigo == '25' && !novedad?.vaComite)))">
                 <strong>
-                  Fecha estimada de terminación del contrato:
+                  Fecha estimada de terminación del contrato: 
                 </strong>
                 {{ descripcion?.fechaEstimadaFinalizacion | date: 'dd/MM/yyyy' }}
               </p>

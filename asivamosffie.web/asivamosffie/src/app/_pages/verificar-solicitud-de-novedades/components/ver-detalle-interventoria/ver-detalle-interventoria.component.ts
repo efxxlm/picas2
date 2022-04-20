@@ -40,12 +40,13 @@ export class VerDetalleInterventoriaComponent implements OnInit {
           this.novedad = respuesta;
 
           this.fechaFinalizacionContrato = (this.novedad?.contrato?.fechaEstimadaFinalizacion ? this.novedad?.contrato?.fechaEstimadaFinalizacion : this.novedad?.contrato?.fechaTerminacionFase2 ? this.novedad?.contrato?.fechaTerminacionFase2 : this.novedad?.contrato?.fechaTerminacion);
-          this.fechaFinalizacionContrato = moment( new Date( this.fechaFinalizacionContrato ).setHours( 0, 0, 0, 0 ) );
-          respuesta.novedadContractualDescripcion.forEach( d => {
+          /* this.fechaFinalizacionContrato = moment( new Date( this.fechaFinalizacionContrato ).setHours( 0, 0, 0, 0 ) );*/
+         respuesta.novedadContractualDescripcion.forEach( d => {
             const fechaInicio = moment( new Date( d?.fechaInicioSuspension ).setHours( 0, 0, 0, 0 ) );
             const fechaFin = moment( new Date( d?.fechaFinSuspension ).setHours( 0, 0, 0, 0 ) );
             const duracionDias = fechaFin.diff( fechaInicio, 'days' );
-            d.fechaEstimadaFinalizacion = moment(this.fechaFinalizacionContrato).add(duracionDias, 'days').toDate();
+             /* d.fechaEstimadaFinalizacion = moment(this.fechaFinalizacionContrato).add(duracionDias, 'days').toDate();*/
+           d.fechaEstimadaFinalizacion = this.fechaFinalizacionContrato;
           });
         });
 

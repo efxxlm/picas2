@@ -36,6 +36,32 @@ namespace asivamosffie.services
             _mailSettings = mailSettings.Value;
             _context = context;
         }
+<<<<<<< Updated upstream
+=======
+
+        public DateTime? NuevaFechaDeFinalizacion(Contrato pContrato)
+        {
+            VContratoProyectoFechaEstimadaFinalizacion vContratoProyectoFechaEstimadaFinalizacion = null;
+
+            vContratoProyectoFechaEstimadaFinalizacion = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => r.ContratoId == pContrato.ContratoId)
+                                                                                                            .FirstOrDefault();
+
+            if (vContratoProyectoFechaEstimadaFinalizacion != null && vContratoProyectoFechaEstimadaFinalizacion.FechaEstimadaFinContrato.HasValue)
+                pContrato.FechaEstimadaFinalizacion = vContratoProyectoFechaEstimadaFinalizacion.FechaEstimadaFinContrato;
+
+            return pContrato.FechaEstimadaFinalizacion;
+        }
+
+        public string SetUrlInAnchore(string pUrl)
+        {
+            return pUrl;
+
+            if (pUrl.Contains("N/A") || pUrl.Contains("n/a"))
+                return pUrl;
+
+            return "<a target='_blank' href='" + pUrl + "'> Link </a>";
+        }
+>>>>>>> Stashed changes
         public async Task<model.Models.Version> GetVersion()
         {
             return await _context.Version.OrderByDescending(v => v.VersionId).FirstOrDefaultAsync();

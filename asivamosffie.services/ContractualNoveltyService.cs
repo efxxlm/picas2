@@ -394,11 +394,47 @@ namespace asivamosffie.services
                                                                 .AsNoTracking().FirstOrDefault();
             if (novedadContractual != null)
             {
+<<<<<<< Updated upstream
                 if(novedadContractual.Contrato != null)
                 {
                     novedadContractual.Contrato.FechaEstimadaFinalizacion = _commonService.GetFechaEstimadaFinalizacion((int)novedadContractual.ContratoId);
                     novedadContractual.Contrato.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(novedadContractual.Contrato.ContratoId, true, false, 0);
                 }
+=======
+                VContratoProyectoFechaEstimadaFinalizacion datosFechas = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId).FirstOrDefault();
+                VContratoProyectoValorEstimado datosAdicion = _context.VContratoProyectoValorEstimado.Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId).FirstOrDefault();
+
+                if (novedadContractual.Contrato != null)
+                {
+                    //  novedadContractual.Contrato.FechaEstimadaFinalizacion = _commonService.GetFechaEstimadaFinalizacion((int)novedadContractual.ContratoId);
+                    novedadContractual.Contrato.FechaEstimadaFinalizacion = _commonService.NuevaFechaDeFinalizacion(novedadContractual.Contrato); 
+                    novedadContractual.Contrato.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(novedadContractual.Contrato.ContratoId, true, false, 0);
+                }
+                 if (datosFechas != null && datosAdicion != null)
+                {
+                    List<dynamic> datosContratoProyectoModificadosXNovedad = new List<dynamic>
+                    {
+                        new
+                        {
+                            datosFechas?.FechaInicioProyecto,
+                            datosFechas?.FechaFinProyecto,
+                            datosFechas?.FechaEstimadaFinProyecto,
+                            datosFechas?.FechaFinContrato,
+                            datosFechas?.FechaEstimadaFinContrato,
+                            datosFechas?.SemanasEstimadasProyecto,
+                            datosFechas?.SemanasProyecto,
+                            datosAdicion?.ValorProyecto,
+                            datosAdicion?.ValorTotalProyecto,
+                            datosAdicion?.ValorContrato,
+                            datosAdicion?.ValorTotalContrato,
+                            datosAdicion?.ValorTotalObraInterventoria,
+                            datosAdicion?.ValorEstimadoObraInterventoria
+                        }
+                    };
+
+                    novedadContractual.DatosContratoProyectoModificadosXNovedad = datosContratoProyectoModificadosXNovedad;
+                }
+>>>>>>> Stashed changes
             }
 
             List<NovedadContractualAportante> novedadContractualAportantes = _context.NovedadContractualAportante
