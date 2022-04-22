@@ -377,6 +377,11 @@ namespace asivamosffie.services
                     {
                         if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
                         {
+                            SesionComiteSolicitudComiteTecnico.NovedadContractual =
+                              ListModificacionesContractuales
+                                .Where(r => r.NovedadContractualId == SesionComiteSolicitudComiteTecnico.SolicitudId)
+                                .FirstOrDefault();
+
                             SesionComiteSolicitudComiteTecnico.ModificacionContractual =
                                 ListModificacionesContractuales
                                 .Where(r => r.NovedadContractualId == SesionComiteSolicitudComiteTecnico.SolicitudId)

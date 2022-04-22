@@ -5610,12 +5610,10 @@ namespace asivamosffie.services
                                         int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId == null).Count();
                                         if (SesionComiteSolicitud.RequiereVotacion == true)
                                         {
-                                            if (cantidadAprobadas > cantidadNoAprobadas)
-                                                strRequiereVotacion = "Aprobada";
-
-                                            else
+                                            if (cantidadNoAprobadas > 0)
                                                 strRequiereVotacion = "No Aprobada";
-
+                                            else if (cantidadNoAprobadas == 0)
+                                                strRequiereVotacion = "Aprobada";
                                         }
                                         else
                                             strRequiereVotacion = "No fue requerida";
@@ -5803,7 +5801,7 @@ namespace asivamosffie.services
                                         int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId == null).Count();
                                         if (SesionComiteSolicitud.RequiereVotacion == true)
                                         {
-                                            if (cantidadAprobadas > cantidadNoAprobadas)
+                                            if (cantidadNoAprobadas == 0)
                                                 strRequiereVotacion = "Aprobada";
                                             else
                                                 strRequiereVotacion = "No Aprobada";
@@ -6096,14 +6094,11 @@ namespace asivamosffie.services
                                         int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId == null).Count();
                                         if (SesionComiteSolicitud.RequiereVotacion == true)
                                         {
-                                            if (cantidadAprobadas > cantidadNoAprobadas)
-                                            {
+                                            if (cantidadNoAprobadas == 0)
                                                 strRequiereVotacion = "Aprobada";
-                                            }
-                                            else
-                                            {
+                                            else 
                                                 strRequiereVotacion = "No Aprobada";
-                                            }
+
                                         }
                                         else
                                         {
@@ -6336,14 +6331,11 @@ namespace asivamosffie.services
                                         int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId == null).Count();
                                         if (SesionComiteSolicitud.RequiereVotacion == true)
                                         {
-                                            if (cantidadAprobadas > cantidadNoAprobadas)
-                                            {
-                                                strRequiereVotacion = "Aprobada";
-                                            }
-                                            else
-                                            {
+                                            if (cantidadNoAprobadas == 0) 
+                                                strRequiereVotacion = "Aprobada"; 
+                                            else 
                                                 strRequiereVotacion = "No Aprobada";
-                                            }
+                                           
                                         }
                                         else
                                         {
@@ -6602,14 +6594,11 @@ namespace asivamosffie.services
                                         int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId == null).Count();
                                         if (SesionComiteSolicitud.RequiereVotacion == true)
                                         {
-                                            if (cantidadAprobadas > cantidadNoAprobadas)
-                                            {
-                                                strRequiereVotacion = "Aprobada";
-                                            }
-                                            else
-                                            {
+                                            if (cantidadNoAprobadas == 0) 
+                                                strRequiereVotacion = "Aprobada"; 
+                                            else 
                                                 strRequiereVotacion = "No Aprobada";
-                                            }
+                                             
                                         }
                                         else
                                         {
@@ -6762,7 +6751,7 @@ namespace asivamosffie.services
                                 {
                                     if (CantidadNoAplica == CantidadVotos)
                                         strRequiereVotacion = "No Aplica";
-                                    else if (cantidadAprobadas > cantidadNoAprobadas)
+                                    else if (cantidadNoAprobadas == 0)
                                         strRequiereVotacion = "Aprobada";
                                     else
                                         strRequiereVotacion = "No Aprobada";
@@ -6966,7 +6955,7 @@ namespace asivamosffie.services
                                 int cantidadNoAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true && r.NoAplica != true).Count();
                                 if (Tema.RequiereVotacion == true)
                                 {
-                                    if (cantidadAprobadas > cantidadNoAprobadas)
+                                    if (cantidadNoAprobadas == 0)
                                         strRequiereVotacion = "Aprobada";
 
                                     else
