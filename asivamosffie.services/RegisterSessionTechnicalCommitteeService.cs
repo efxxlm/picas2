@@ -4997,10 +4997,12 @@ namespace asivamosffie.services
                                                                                 .Include(r => r.Contratista)
                                                                                 .Include(r => r.PlazoContratacion)
                                                                                 .Include(r => r.ContratacionProyecto).ThenInclude(r => r.Proyecto).ThenInclude(r => r.InfraestructuraIntervenirProyecto)
-                                                                                .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante).ThenInclude(r => r.Municipio)
-                                                                                .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante).ThenInclude(r => r.Departamento)
-                                                                                .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante).ThenInclude(r => r.NombreAportante)
-                                                                                .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante).ThenInclude(r => r.ProyectoAportante)
+                                                                                //.Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante).ThenInclude(r => r.Municipio)
+                                                                                //.Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante).ThenInclude(r => r.Departamento)
+                                                                                //.Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante).ThenInclude(r => r.NombreAportante)
+                                                                                //.Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante).ThenInclude(r => r.ProyectoAportante)
+                                                                                .Include(r => r.ContratacionProyecto).ThenInclude(r => r.ContratacionProyectoAportante).ThenInclude(r => r.CofinanciacionAportante)
+
                                                                                 .ToList();
                 foreach (var Contratacion in ListContratacion)
                 {
@@ -5008,7 +5010,18 @@ namespace asivamosffie.services
                     {
                         foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
                         {
-                            ContratacionProyectoAportante.ComponenteAportante = _context.ComponenteAportante.AsNoTracking().Where(r => r.ContratacionProyectoAportanteId == ContratacionProyectoAportante.ContratacionProyectoAportanteId).Include(r => r.ComponenteUso).ToList();
+                            ContratacionProyectoAportante.ComponenteAportante = _context.ComponenteAportante.AsNoTracking()
+                                                                                                            .Where(r => r.ContratacionProyectoAportanteId == ContratacionProyectoAportante.ContratacionProyectoAportanteId)
+                                                                                                            .Include(r => r.ComponenteUso)
+                                                                                                            .ToList();
+
+                            ContratacionProyectoAportante.CofinanciacionAportante = _context.CofinanciacionAportante.AsNoTracking()
+                                                                                                                    .Where(r => r.CofinanciacionAportanteId == ContratacionProyectoAportante.CofinanciacionAportanteId)
+                                                                                                                    .Include(r => r.Municipio)
+                                                                                                                    .Include(r => r.Departamento)
+                                                                                                                    .Include(r => r.NombreAportante)
+                                                                                                                    .Include(r => r.ProyectoAportante)
+                                                                                                                    .FirstOrDefault();
                         }
                     }
                 }
@@ -6960,9 +6973,9 @@ namespace asivamosffie.services
                                         strRequiereVotacion = "No Aprobada";
 
                                 }
-                                else 
+                                else
                                     strRequiereVotacion = "No fue requerida";
-                                 
+
                                 RegistrosProposicionVarios = RegistrosProposicionVarios
                                    .Replace(placeholderDominio.Nombre, strRequiereVotacion);
                                 break;
@@ -7193,7 +7206,7 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.REGISTROS_TABLA_INVITADOS:
                             strContenido = strContenido
-                                .Replace(placeholderDominio.Nombre, !string.IsNullOrEmpty(RegistrosInvitados) ? RegistrosInvitados : "No se tienen <strong> invitados </strong> para esta sesión.") ;
+                                .Replace(placeholderDominio.Nombre, !string.IsNullOrEmpty(RegistrosInvitados) ? RegistrosInvitados : "No se tienen <strong> invitados </strong> para esta sesión.");
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.REGISTROS_TABLA_RESPONSABLES:
