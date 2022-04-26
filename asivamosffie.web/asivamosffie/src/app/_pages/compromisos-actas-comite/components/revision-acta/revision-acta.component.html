@@ -23,8 +23,8 @@
       <mat-card-content class="colorMainColor">
         <div class="d-flex" style="margin-left: 1.5em">
           <p *ngFor="let participante of miembrosParticipantes; let i = index" class="ml-min">
-            {{ participante }}<span *ngIf="i < miembrosParticipantes.length - 1">,</span
-            ><span *ngIf="i === miembrosParticipantes.length - 1">.</span>
+            {{ participante }}<span *ngIf="i < miembrosParticipantes.length - 1">,</span><span
+              *ngIf="i === miembrosParticipantes.length - 1">.</span>
           </p>
         </div>
       </mat-card-content>
@@ -35,32 +35,32 @@
         <mat-card-title class="header-card--text"> Responsables secretaría técnica </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-          <div *ngFor="let responsable of responsables; let i = index" style="margin-left: 1.5em">
-            <mat-card-title class="header-card--text alineacion-titulos2 pl-0"> Responsable {{ i + 1 }} </mat-card-title>
-            <div class="row">
-              <div class="pr-1">
-                <p><strong>Nombre Secretario: </strong>{{ responsable?.nombre }}</p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="pr-1">
-                <p><strong>Cargo: </strong>{{ responsable?.cargo }}</p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="pr-1">
-                <p><strong>Entidad: </strong>{{ responsable?.entidad }}</p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="pr-1">
-                <p><strong>¿Es delegado?: </strong>
-                  <span *ngIf="responsable?.esDelegado != true" class="color-text">No</span>
-                  <span *ngIf="responsable?.esDelegado == true" class="color-text">Sí</span>
-                </p>
-              </div>
+        <div *ngFor="let responsable of responsables; let i = index" style="margin-left: 1.5em">
+          <mat-card-title class="header-card--text alineacion-titulos2 pl-0"> Responsable {{ i + 1 }} </mat-card-title>
+          <div class="row">
+            <div class="pr-1">
+              <p><strong>Nombre Secretario: </strong>{{ responsable?.nombre }}</p>
             </div>
           </div>
+          <div class="row">
+            <div class="pr-1">
+              <p><strong>Cargo: </strong>{{ responsable?.cargo }}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="pr-1">
+              <p><strong>Entidad: </strong>{{ responsable?.entidad }}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="pr-1">
+              <p><strong>¿Es delegado?: </strong>
+                <span *ngIf="responsable?.esDelegado != true" class="color-text">No</span>
+                <span *ngIf="responsable?.esDelegado == true" class="color-text">Sí</span>
+              </p>
+            </div>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
 
@@ -73,77 +73,63 @@
         <section *ngIf="acta.sesionComiteSolicitudComiteTecnico !== null">
           <mat-accordion *ngFor="let sesionComite of acta.sesionComiteSolicitudComiteTecnico">
             <mat-expansion-panel class="expansion-style sub-expansion">
-              <mat-expansion-panel-header
-                class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.procesoSeleccion"
-              >
+              <mat-expansion-panel-header class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.procesoSeleccion">
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.procesoSeleccion.numeroProceso }}</b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <mat-expansion-panel-header
-                class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.contratacion"
-              >
+              <mat-expansion-panel-header class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.contratacion">
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite?.numeroSolicitud }}</b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <mat-expansion-panel-header
-                class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.novedadContractual"
-              >
+              <mat-expansion-panel-header class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.novedadContractual">
                 <mat-panel-title class="expansion-style--title sub-expansion">
-                  <b
-                    >Solicitud
+                  <b>Solicitud
                     {{
-                      sesionComite.modificacionContractual !== undefined
-                        ? sesionComite.modificacionContractual?.numeroSolicitud
-                        : sesionComite?.numeroSolicitud
+                    sesionComite.modificacionContractual !== undefined
+                    ? sesionComite.modificacionContractual?.numeroSolicitud
+                    : sesionComite?.numeroSolicitud
                     }}
                   </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <mat-expansion-panel-header
-                class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual"
-              >
+              <mat-expansion-panel-header class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual">
                 <mat-panel-title class="expansion-style--title sub-expansion">
-                  <b
-                    >Solicitud
+                  <b>Solicitud
                     {{
-                      sesionComite.controversiaContractual !== undefined
-                        ? sesionComite.controversiaContractual?.numeroSolicitud
-                        : sesionComite?.numeroSolicitud
+                    sesionComite.controversiaContractual !== undefined
+                    ? sesionComite.controversiaContractual?.numeroSolicitud
+                    : sesionComite?.numeroSolicitud
                     }}
                   </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
-              <mat-expansion-panel-header
-                class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion"
-              >
+              <mat-expansion-panel-header class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion">
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite?.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
-              <mat-expansion-panel-header
-                class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso"
-              >
+              <mat-expansion-panel-header class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso">
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite?.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
-              <mat-expansion-panel-header
-                class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.ActuacionesControversias"
-              >
+              <mat-expansion-panel-header class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.ActuacionesControversias">
                 <mat-panel-title class="expansion-style--title sub-expansion">
-                  <b>Solicitud {{ sesionComite.controversiaActuacion !== undefined ? sesionComite.controversiaActuacion.controversiaContractual?.numeroSolicitud : sesionComite?.numeroSolicitud }} </b>
+                  <b>Solicitud {{ sesionComite.controversiaActuacion !== undefined ?
+                    sesionComite.controversiaActuacion.controversiaContractual?.numeroSolicitud :
+                    sesionComite?.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
@@ -154,63 +140,51 @@
         <section *ngIf="acta.sesionComiteSolicitudComiteTecnicoFiduciario !== undefined">
           <mat-accordion *ngFor="let sesionComite of acta.sesionComiteSolicitudComiteTecnicoFiduciario">
             <mat-expansion-panel class="expansion-style sub-expansion">
-              <mat-expansion-panel-header
-                class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.procesoSeleccion"
-              >
+              <mat-expansion-panel-header class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.procesoSeleccion">
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.procesoSeleccion.numeroProceso }}</b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <mat-expansion-panel-header
-                class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.contratacion"
-              >
+              <mat-expansion-panel-header class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.contratacion">
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.contratacion.numeroSolicitud }}</b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <mat-expansion-panel-header
-                class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.novedadContractual"
-              >
+              <mat-expansion-panel-header class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.novedadContractual">
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.modificacionContractual.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <mat-expansion-panel-header
-                class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual"
-              >
+              <mat-expansion-panel-header class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.controversiaContractual">
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.controversiaContractual.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
-              <mat-expansion-panel-header
-                class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion"
-              >
+              <mat-expansion-panel-header class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.actualizacionProcesoSeleccion">
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
-              <mat-expansion-panel-header
-                class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso"
-              >
+              <mat-expansion-panel-header class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.evaluacionProceso">
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.procesoSeleccion.numeroProceso }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
-              <mat-expansion-panel-header
-                class="expansion-style--header"
-                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.ActuacionesControversias"
-              >
+              <mat-expansion-panel-header class="expansion-style--header"
+                *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.ActuacionesControversias">
                 <mat-panel-title class="expansion-style--title sub-expansion">
-                  <b>Solicitud {{ sesionComite.controversiaActuacion !== undefined ? sesionComite.controversiaActuacion.controversiaContractual.numeroSolicitud : sesionComite.numeroSolicitud }} </b>
+                  <b>Solicitud {{ sesionComite.controversiaActuacion !== undefined ?
+                    sesionComite.controversiaActuacion.controversiaContractual.numeroSolicitud :
+                    sesionComite.numeroSolicitud }} </b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
@@ -275,16 +249,10 @@
                         </div>
                         <div class="col">
                           <mat-radio-group class="radio-color-detalle">
-                            <mat-radio-button [value]="true" [checked]="true" *ngIf="tema.temaCompromiso.length > 0"
-                              >Si</mat-radio-button
-                            >
-                            <mat-radio-button
-                              [value]="false"
-                              [checked]="true"
-                              class="ml-min"
-                              *ngIf="tema.temaCompromiso.length === 0"
-                              >No</mat-radio-button
-                            >
+                            <mat-radio-button [value]="true" [checked]="true" *ngIf="tema.temaCompromiso.length > 0">Si
+                            </mat-radio-button>
+                            <mat-radio-button [value]="false" [checked]="true" class="ml-min"
+                              *ngIf="tema.temaCompromiso.length === 0">No</mat-radio-button>
                           </mat-radio-group>
                         </div>
                       </div>
@@ -371,16 +339,10 @@
                         </div>
                         <div class="col">
                           <mat-radio-group class="radio-color-detalle">
-                            <mat-radio-button [value]="true" [checked]="true" *ngIf="tema.temaCompromiso.length > 0"
-                              >Si</mat-radio-button
-                            >
-                            <mat-radio-button
-                              [value]="false"
-                              [checked]="true"
-                              class="ml-min"
-                              *ngIf="tema.temaCompromiso.length === 0"
-                              >No</mat-radio-button
-                            >
+                            <mat-radio-button [value]="true" [checked]="true" *ngIf="tema.temaCompromiso.length > 0">Si
+                            </mat-radio-button>
+                            <mat-radio-button [value]="false" [checked]="true" class="ml-min"
+                              *ngIf="tema.temaCompromiso.length === 0">No</mat-radio-button>
                           </mat-radio-group>
                         </div>
                       </div>
@@ -417,39 +379,20 @@
   </section>
 
   <div class="tabs--actions mt-2">
-    <button
-      mat-raised-button
-      color="accent"
-      class="tabs--btn"
-      (click)="aprobarActa(acta.comiteTecnicoId)"
-      [disabled]="acta.estadoActaCodigo !== estadoActa.revisarActa"
-    >
+    <button mat-raised-button color="accent" class="tabs--btn" (click)="aprobarActa(acta.comiteTecnicoId)"
+      [disabled]="acta.estadoActaCodigo !== estadoActa.revisarActa">
       Aprobar acta
     </button>
-    <button
-      mat-raised-button
-      color="accent"
-      class="tabs--btn"
-      *ngIf="acta.estadoActaCodigo === estadoActa.revisarActa"
-      (click)="comentarActa = !comentarActa"
-    >
+    <button mat-raised-button color="accent" class="tabs--btn" *ngIf="acta.estadoActaCodigo === estadoActa.revisarActa"
+      (click)="comentarActa = !comentarActa">
       Comentar y devolver acta
     </button>
-    <button
-      mat-raised-button
-      color="accent"
-      class="tabs--btn"
-      (click)="comentarios = !comentarios"
-      *ngIf="acta.estadoActaCodigo === estadoActa.devuelto"
-    >
+    <button mat-raised-button color="accent" class="tabs--btn" (click)="comentarios = !comentarios"
+      *ngIf="acta.estadoActaCodigo === estadoActa.devuelto">
       Comentarios del acta
     </button>
-    <button
-      mat-raised-button
-      color="accent"
-      class="tabs--btn"
-      (click)="getActaPdf(acta.comiteTecnicoId, acta.numeroComite)"
-    >
+    <button mat-raised-button color="accent" class="tabs--btn"
+      (click)="getActaPdf(acta.comiteTecnicoId, acta.numeroComite)">
       Descargar acta preliminar
     </button>
   </div>
@@ -457,42 +400,30 @@
   <div *ngIf="comentarActa">
     <form autocomplete="off" [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="d-flex mt-2em align-items-center animatedDown">
-        <div
-          class="text-area-quill"
-          [class.color-secondaryColor]="
+        <div class="text-area-quill" [class.color-secondaryColor]="
             (form.get('comentarioActa').invalid && form.get('comentarioActa').touched) ||
             (form.get('comentarioActa').invalid && estaEditando)
-          "
-        >
-          <label
-            class="text-area-quill--label align-left-label"
-            [class.colorMainColor]="
+          ">
+          <label class="text-area-quill--label align-left-label" [class.colorMainColor]="
               !(
                 (form.get('comentarioActa').invalid && form.get('comentarioActa').touched) ||
                 (form.get('comentarioActa').invalid && estaEditando)
               )
-            "
-          >
+            ">
             Comentarios al acta
           </label>
           <p class="padding-p">
             Fecha:
             <b class="text-color">
               {{
-                acta.sesionComentario.length > 0
-                  ? (acta.sesionComentario[0].fecha | date: 'dd/MM/yyyy')
-                  : (fechaComentario | date: 'dd/MM/yyyy')
+              acta.sesionComentario.length > 0
+              ? (acta.sesionComentario[0].fecha | date: 'dd/MM/yyyy')
+              : (fechaComentario | date: 'dd/MM/yyyy')
               }}
             </b>
           </p>
-          <quill-editor
-            class="quill-editor-style ml-1em"
-            [styles]="editorStyle"
-            [modules]="config"
-            (onContentChanged)="maxLength($event, 1000)"
-            formControlName="comentarioActa"
-            required
-          >
+          <quill-editor class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"
+            (onContentChanged)="maxLength($event, 1000)" formControlName="comentarioActa" required>
           </quill-editor>
         </div>
         <span class="contador miles" *ngIf="form.get('comentarioActa').value !== null">
@@ -500,18 +431,12 @@
         </span>
         <span class="contador miles" *ngIf="form.get('comentarioActa').value === null"> 1000 </span>
         <span class="icon-incompleto">
-          <img
-            class="icon-incompleto--img"
-            src="assets/img/icon/incompleto.svg"
-            alt="este campo es requerido"
-            [matTooltipPosition]="'above'"
-            matTooltip="Debe ingresar la información en el campo para continuar"
-            matTooltipClass="info-tooltip"
-            *ngIf="
+          <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
+            [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
+            matTooltipClass="info-tooltip" *ngIf="
               (form.get('comentarioActa').invalid && form.get('comentarioActa').touched) ||
               (form.get('comentarioActa').invalid && estaEditando)
-            "
-          />
+            " />
         </span>
       </div>
 
@@ -534,6 +459,7 @@
   </div>
 
   <div class="container text-center">
-    <app-tabla-detalle-acta *ngIf="acta.sesionComentario.length > 0" [data]="acta.sesionComentario"></app-tabla-detalle-acta>
+    <app-tabla-detalle-acta *ngIf="acta.sesionComentario.length > 0" [data]="acta.sesionComentario">
+    </app-tabla-detalle-acta>
   </div>
 </div>
