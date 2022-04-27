@@ -22,66 +22,66 @@ export class ContractualNoveltyService {
 
   getContratosAutocomplete()
   {
-    return this.http.get<Contrato[]>( `${ this.urlApi }/GetListContract` ); 
+    return this.http.get<Contrato[]>( `${ this.urlApi }/GetListContract` );
   }
-  
+
   postRegistroNovedadContractual( pNContrato: FormData) {
     return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditarModification`, pNContrato );
   }
-  
+
   getListGrillaNovedadContractualObra()
   {
-    return this.http.get<any[]>( `${ this.urlApi }/getListGrillaNovedadContractualObra` ); 
+    return this.http.get<any[]>( `${ this.urlApi }/getListGrillaNovedadContractualObra` );
   }
 
   getListGrillaNovedadContractualInterventoria()
   {
-    return this.http.get<any[]>( `${ this.urlApi }/getListGrillaNovedadContractualInterventoria` ); 
+    return this.http.get<any[]>( `${ this.urlApi }/getListGrillaNovedadContractualInterventoria` );
   }
 
   getProyectosContrato(ncontrato) {
-    return this.http.get<any[]>( `${ this.urlApi }/GetProyectsByContract?pContratoId=${ncontrato}` ); 
+    return this.http.get<any[]>( `${ this.urlApi }/GetProyectsByContract?pContratoId=${ncontrato}` );
   }
 
   eliminarNovedadContractual(id) {
-    return this.http.delete<Respuesta>( `${ this.urlApi }/eliminarNovedadContractual?pNovedaContractual=${ id }` ); 
+    return this.http.delete<Respuesta>( `${ this.urlApi }/eliminarNovedadContractual?pNovedaContractual=${ id }` );
   }
 
   eliminarNovedadClausula(id) {
-    return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarNovedadClausula?pNovedadContractuaClausulalId=${ id }` ); 
+    return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarNovedadClausula?pNovedadContractuaClausulalId=${ id }` );
   }
 
   getNovedadContractualById(id) {
-    return this.http.get<NovedadContractual>( `${ this.urlApi }/getNovedadContractualById?pId=${ id }` ); 
+    return this.http.get<NovedadContractual>( `${ this.urlApi }/getNovedadContractualById?pId=${ id }` );
   }
 
   aprobarSolicitud( id ){
-    return this.http.put<Respuesta>( `${ this.urlApi }/aprobarSolicitud?pNovedaContractual=${ id }`, null ); 
+    return this.http.put<Respuesta>( `${ this.urlApi }/aprobarSolicitud?pNovedaContractual=${ id }`, null );
   }
 
   enviarAlSupervisor( id ){
-    return this.http.put<Respuesta>( `${ this.urlApi }/enviarAlSupervisor?pNovedaContractual=${ id }`, null ); 
+    return this.http.put<Respuesta>( `${ this.urlApi }/enviarAlSupervisor?pNovedaContractual=${ id }`, null );
   }
 
   createEditObservacion( novedad: NovedadContractual, esSupervisor?: boolean, esTramite?: boolean ){
-    return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacion?esSupervisor=${ esSupervisor }&esTramite=${ esTramite }`, novedad ); 
+    return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacion?esSupervisor=${ esSupervisor }&esTramite=${ esTramite }`, novedad );
   }
 
   tramitarSolicitud( id ){
-    return this.http.put<Respuesta>( `${ this.urlApi }/tramitarSolicitud?pNovedaContractual=${ id }`, null ); 
+    return this.http.put<Respuesta>( `${ this.urlApi }/tramitarSolicitud?pNovedaContractual=${ id }`, null );
   }
 
   devolverSolicitud( id ){
-    return this.http.put<Respuesta>( `${ this.urlApi }/devolverSolicitud?pNovedaContractual=${ id }`, null ); 
+    return this.http.put<Respuesta>( `${ this.urlApi }/devolverSolicitud?pNovedaContractual=${ id }`, null );
   }
 
   devolverSolicitudASupervisor( id ){
-    return this.http.put<Respuesta>( `${ this.urlApi }/DevolverSolicitudASupervisor?pNovedaContractual=${ id }`, null ); 
+    return this.http.put<Respuesta>( `${ this.urlApi }/DevolverSolicitudASupervisor?pNovedaContractual=${ id }`, null );
   }
 
   getListGrillaNovedadContractualGestionar()
   {
-    return this.http.get<any[]>( `${ this.urlApi }/getListGrillaNovedadContractualGestionar` ); 
+    return this.http.get<any[]>( `${ this.urlApi }/getListGrillaNovedadContractualGestionar` );
   }
 
   createEditNovedadContractualTramite( novedadContractual: NovedadContractual ) {
@@ -89,55 +89,60 @@ export class ContractualNoveltyService {
   }
 
   enviarAComite( id ){
-    return this.http.put<Respuesta>( `${ this.urlApi }/enviarAComite?pNovedaContractual=${ id }`, null ); 
+    return this.http.put<Respuesta>( `${ this.urlApi }/enviarAComite?pNovedaContractual=${ id }`, null );
   }
 
   rechazarPorInterventor( novedad ){
-    return this.http.put<Respuesta>( `${ this.urlApi }/rechazarPorInterventor`, novedad ); 
+    return this.http.put<Respuesta>( `${ this.urlApi }/rechazarPorInterventor`, novedad );
   }
 
   rechazarPorSupervisor( novedad ){
-    return this.http.put<Respuesta>( `${ this.urlApi }/rechazarPorSupervisor`, novedad ); 
+    return this.http.put<Respuesta>( `${ this.urlApi }/rechazarPorSupervisor`, novedad );
   }
 
   GetAportanteByNovedadContractualId( pNovedadContractualId: number)
   {
-    return this.http.get<any[]>( `${ this.urlApi }/GetAportanteByNovedadContractualId?pNovedadContractualId=${pNovedadContractualId}` ); 
+    return this.http.get<any[]>( `${ this.urlApi }/GetAportanteByNovedadContractualId?pNovedadContractualId=${pNovedadContractualId}` );
   }
 
 
   GetAportanteByContratacion(pId)
   {
-    return this.http.get<any[]>( `${ this.urlApi }/GetAportanteByContratacion?pId=${pId}` ); 
+    return this.http.get<any[]>( `${ this.urlApi }/GetAportanteByContratacion?pId=${pId}` );
   }
 
-  
+
   GetFuentesByAportante(pId)
   {
-    return this.http.get<FuenteFinanciacion[]>( `${ this.urlApi }/GetFuentesByAportante?pConfinanciacioAportanteId=${pId}` ); 
+    return this.http.get<FuenteFinanciacion[]>( `${ this.urlApi }/GetFuentesByAportante?pConfinanciacioAportanteId=${pId}` );
   }
 
   CancelarNovedad( pId ){
-    return this.http.put<Respuesta>( `${ this.urlApi }/CancelarNovedad?pNovedadContractualId=${pId}`, null ); 
+    return this.http.put<Respuesta>( `${ this.urlApi }/CancelarNovedad?pNovedadContractualId=${pId}`, null );
   }
 
   AprobacionTecnicaJuridica( id ){
-    return this.http.put<Respuesta>( `${ this.urlApi }/AprobacionTecnicaJuridica?pNovedaContractual=${ id }`, null ); 
+    return this.http.put<Respuesta>( `${ this.urlApi }/AprobacionTecnicaJuridica?pNovedaContractual=${ id }`, null );
   }
 
   eliminarNovedadContractualAportante(pNovedadContractualAportante : number) {
-    return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarNovedadContractualAportante?pNovedadContractualAportante=${ pNovedadContractualAportante }` ); 
+    return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarNovedadContractualAportante?pNovedadContractualAportante=${ pNovedadContractualAportante }` );
   }
 
   eliminarComponenteAportanteNovedad(pComponenteAportanteNovedad : number) {
-    return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarComponenteAportanteNovedad?pComponenteAportanteNovedad=${ pComponenteAportanteNovedad }` ); 
+    return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarComponenteAportanteNovedad?pComponenteAportanteNovedad=${ pComponenteAportanteNovedad }` );
   }
 
   eliminarComponenteFuenteNovedad(pComponenteFuenteNovedad : number) {
-    return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarComponenteFuenteNovedad?pComponenteFuenteNovedad=${ pComponenteFuenteNovedad }` ); 
+    return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarComponenteFuenteNovedad?pComponenteFuenteNovedad=${ pComponenteFuenteNovedad }` );
   }
 
   eliminarComponenteUsoNovedad(pComponenteUsoNovedad : number) {
-    return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarComponenteUsoNovedad?pComponenteUsoNovedad=${ pComponenteUsoNovedad }` ); 
+    return this.http.delete<Respuesta>( `${ this.urlApi }/EliminarComponenteUsoNovedad?pComponenteUsoNovedad=${ pComponenteUsoNovedad }` );
+  }
+
+  getDatosContratoProyectoModificadosXNovedad(pProyectoId: number, pContratoId: number)
+  {
+    return this.http.get<any[]>( `${ this.urlApi }/GetDatosContratoProyectoModificadosXNovedad?pProyectoId=${pProyectoId}&pContratoId=${pContratoId}` );
   }
 }

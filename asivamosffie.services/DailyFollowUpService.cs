@@ -700,7 +700,8 @@ namespace asivamosffie.services
         {
             List<string> listaFechas = new List<string>();
             List<DateTime> listaFechasTotal = new List<DateTime>();
-
+            List<string> listFechasSuspendidas = _context.VDiasSuspendidosNovedadXproyectoXcontrato.Where(r => r.ContratacionProyectoId == pId && r.FechaSuspendida != null).Select(x => ((DateTime)x.FechaSuspendida).ToShortDateString()).ToList();
+            
             ContratacionProyecto contratacion = await _context.ContratacionProyecto
                                                                 .Where(r => r.ContratacionProyectoId == pId)
                                                                 .Include(r => r.Proyecto)
@@ -711,61 +712,38 @@ namespace asivamosffie.services
                                                                 .FirstOrDefaultAsync();
 
             Proyecto proyectoTemp = _technicalRequirementsConstructionPhaseService.CalcularFechaInicioContratoFase2(contratacion.Proyecto.ContratoConstruccion.FirstOrDefault().ContratoConstruccionId);
+            VContratoProyectoFechaEstimadaFinalizacion datosFechas = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => r.ContratacionProyectoId == pId).FirstOrDefault();
 
             // DateTime fechaInicial = contratacion.Contratacion.Contrato.FirstOrDefault().FechaActaInicioFase2.Value;
             // DateTime fechaFin = fechaInicial.AddMonths(contratacion.Proyecto.PlazoMesesObra.Value);
             // fechaFin = fechaFin.AddDays(contratacion.Proyecto.PlazoDiasObra.Value);
 
-            DateTime fechaInicial = proyectoTemp.FechaInicioEtapaObra;
-            DateTime fechaFin = proyectoTemp.FechaFinEtapaObra;
+            DateTime fechaInicial = datosFechas != null ? datosFechas.FechaInicioProyecto ?? proyectoTemp.FechaInicioEtapaObra : proyectoTemp.FechaInicioEtapaObra;
+            DateTime fechaFin = datosFechas != null ? datosFechas.FechaEstimadaFinProyecto ?? datosFechas.FechaFinProyecto ?? proyectoTemp.FechaFinEtapaObra : proyectoTemp.FechaFinEtapaObra;
 
             while (fechaFin >= fechaInicial)
             {
                 listaFechasTotal.Add(fechaInicial);
                 fechaInicial = fechaInicial.AddDays(1);
-
             }
 
-            //if ( _environment.IsProduction())
-            //{
-            //    if (listaFechasTotal.Count() > 0)
-            //    {
-            //        bool fechaSeleccionada = false;
-            //        string ultimaFecha = string.Empty;
-            //        listaFechasTotal.OrderBy(r => r.Date).ToList().ForEach(f =>
-            //        {
-            //            if (contratacion.SeguimientoDiario
-            //                                      .Where(s => s.FechaSeguimiento.ToShortDateString() == f.ToShortDateString() && s.Eliminado != true)
-            //                                      .Count() == 0
-            //                   && fechaSeleccionada == false
-            //                 )
-            //            {
-            //                ultimaFecha = f.ToString("d/M/yyyy", CultureInfo.InvariantCulture);
-            //                fechaSeleccionada = true;
-            //            }
-            //        });
-
-            //        listaFechas.Add(ultimaFecha);
-            //    }
-            //}
-            //else
             {
                 if (listaFechasTotal.Count() > 0)
                 {
                     bool fechaSeleccionada = false;
                     string ultimaFecha = string.Empty;
-                    listaFechasTotal.OrderBy(r => r.Date).ToList().ForEach(f =>
+
+                    foreach (var f in listaFechasTotal.OrderBy(r => r.Date).ToList())
                     {
                         if (contratacion.SeguimientoDiario
-                                                  .Where(s => s.FechaSeguimiento.ToShortDateString() == f.ToShortDateString() && s.Eliminado != true)
-                                                  .Count() == 0
-                               && fechaSeleccionada == false
-                             )
+                          .Where(s => s.FechaSeguimiento.ToShortDateString() == f.ToShortDateString() && s.Eliminado != true)
+                          .Count() == 0 && fechaSeleccionada == false && !listFechasSuspendidas.Contains(f.ToShortDateString()))
                         {
                             ultimaFecha = f.ToString("d/M/yyyy", CultureInfo.InvariantCulture);
                             fechaSeleccionada = true;
+                            break;
                         }
-                    });
+                    }
 
                     listaFechas.Add(ultimaFecha);
                 }

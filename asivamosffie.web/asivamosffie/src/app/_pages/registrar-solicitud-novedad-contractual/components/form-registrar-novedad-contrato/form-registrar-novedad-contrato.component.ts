@@ -7,6 +7,7 @@ import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNov
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { NovedadContractualClausula, NovedadContractualDescripcion, NovedadContractualDescripcionMotivo } from 'src/app/_interfaces/novedadContractual';
 import * as moment from 'moment';
+import { truncate } from 'fs';
 
 @Component({
   selector: 'app-form-registrar-novedad-contrato',
@@ -20,11 +21,18 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
   @Input() fechaSolicitudNovedad: Date;
   @Input() fechaFinSuspensionVal: Date;
   @Input() contrato: any;
+  @Input() datosContratoProyectoModificadosXNovedad: any;
+  @Input() estadoNovedad: string;
   @Output() guardar = new EventEmitter();
+
+  presupuestoModificado: number;
+  plazoDiasModificado: number;
+  plazoMesesModificado: number;
+  validaParaModificar = false;
 
   nombreTiposolicitud: string;
   fechaFinalizacionContrato;
-  fechaEstimadaFinalizacion : Date;
+  fechaEstimadaFinalizacion;
   addressForm = this.fb.group({
     novedadContractualDescripcionId: [],
     fechaSolicitudNovedad: [null, Validators.required],
@@ -177,7 +185,10 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
   }
 
   ngOnInit(): void {
-    console.log(this.fechaFinSuspensionVal);
+
+    if(this.estadoNovedad == "12" || this.estadoNovedad == "19" || this.estadoNovedad == "25" || this.estadoNovedad == "26" )
+      this.validaParaModificar = true;
+
     if(this.fechaFinSuspensionVal != null && this.fechaFinSuspensionVal != undefined){
       this.fechaFinSuspensionVal =  moment(this.fechaFinSuspensionVal).add(1, 'days').toDate();
     }
@@ -191,9 +202,14 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
     this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response => {
       this.tipoNovedadArray = response;
     });
-    this.fechaFinalizacionContrato = (this.contrato?.fechaEstimadaFinalizacion ? this.contrato?.fechaEstimadaFinalizacion : this.contrato?.fechaTerminacionFase2 ? this.contrato?.fechaTerminacionFase2 : this.contrato?.fechaTerminacion)
-    this.fechaEstimadaFinalizacion = this.fechaFinalizacionContrato;
-    this.updateFechaEstimada();
+    this.fechaEstimadaFinalizacion = this.datosContratoProyectoModificadosXNovedad?.fechaEstimadaFinProyecto;
+    this.updateFechaEstimada(true);
+    //si el estado es en proceso y no debe quitarse aun hay que quitar esto, falta por definir
+    this.presupuestoModificado =  this.datosContratoProyectoModificadosXNovedad?.valorTotalProyecto - (this.validaParaModificar == true ?  (this.addressForm.get('presupuestoAdicional').value > 0 ? this.addressForm.get('presupuestoAdicional').value : 0) : 0);
+    let pDias = (this.datosContratoProyectoModificadosXNovedad?.plazoEstimadoDiasProyecto + (this.datosContratoProyectoModificadosXNovedad?.plazoEstimadoMesesProyecto * 30)) - (this.validaParaModificar == true ? ((this.addressForm.get('plazoAdicionalDias').value > 0 ? this.addressForm.get('plazoAdicionalDias').value : 0) + (this.addressForm.get('plazoAdicionalMeses').value > 0 ? this.addressForm.get('plazoAdicionalMeses').value * 30 : 0)) : 0);
+    this.plazoDiasModificado =  Math.trunc(pDias%30);
+    this.plazoMesesModificado =  Math.trunc(pDias/30);
+
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -309,12 +325,29 @@ export class FormRegistrarNovedadContratoComponent implements OnInit, OnChanges 
 
   }
 
-  updateFechaEstimada(){
-    this.fechaFinalizacionContrato = moment( new Date( this.fechaFinalizacionContrato ).setHours( 0, 0, 0, 0 ) );
+  updateFechaEstimada(primeravez : boolean){
     const fechaInicio = moment( new Date( this.addressForm.get('fechaInicio').value ).setHours( 0, 0, 0, 0 ) );
     const fechaFin = moment( new Date( this.addressForm.get('fechaFinal').value ).setHours( 0, 0, 0, 0 ) );
     const duracionDias = fechaFin.diff( fechaInicio, 'days' );
-    this.fechaEstimadaFinalizacion =  moment(this.fechaFinalizacionContrato).add(duracionDias, 'days').toDate();
+
+    if(primeravez == true && this.validaParaModificar == true)
+      this.fechaEstimadaFinalizacion = moment(this.fechaEstimadaFinalizacion).add(-duracionDias, 'days');
+
+    return  moment(this.fechaEstimadaFinalizacion).add(duracionDias, 'days').toDate()
+  }
+
+  valuePresupuesto(){
+    return this.presupuestoModificado  + (this.addressForm.get('presupuestoAdicional').value > 0 ? this.addressForm.get('presupuestoAdicional').value : 0);
+  }
+
+  valuePlazoProyecto(){
+    let diasAdicionales = this.plazoDiasModificado + (this.addressForm.get('plazoAdicionalDias').value > 0 ? this.addressForm.get('plazoAdicionalDias').value : 0);
+    let mesesAdicionales = this.plazoMesesModificado + (this.addressForm.get('plazoAdicionalMeses').value > 0 ? this.addressForm.get('plazoAdicionalMeses').value * 30 : 0);
+    let total = diasAdicionales + mesesAdicionales;
+    let pDias = Math.trunc(total%30);
+    let pMeses = Math.trunc(total/30);
+
+    return pMeses + " Meses / " + pDias + " Días";
   }
 
 }

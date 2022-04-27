@@ -179,6 +179,14 @@
           </div>
         </div>
       </div>
+      <p  *ngIf="novedadDescripcion.tipoNovedadCodigo == '3'">
+        <strong >
+          Valor después de la modificación
+          <span *ngIf="datosContratoProyectoModificadosXNovedad?.tipoSolicitudCodigo == '1'">(Obra) </span>
+          <span *ngIf="datosContratoProyectoModificadosXNovedad?.tipoSolicitudCodigo == '2'">(Interventoría </span>:
+        </strong>
+        {{ valuePresupuesto() | currency: '':'symbol':'3.0' }}
+      </p>
       <div
         *ngIf="
           novedadDescripcion.tipoNovedadCodigo == '1' ||
@@ -212,7 +220,6 @@
                     readonly
                     (click)="pickerPlazoInicio.open()"
                     placeholder="DD/MM/AAAA"
-                    (dateChange)="updateFechaEstimada($event)"
                     required
                   />
                   <mat-datepicker #pickerPlazoInicio></mat-datepicker>
@@ -277,7 +284,6 @@
                   formControlName="fechaFinal"
                   readonly
                   (click)="pickerPlazoFin.open()"
-                  (dateChange)="updateFechaEstimada()"
                   placeholder="DD/MM/AAAA"
                   required
                 />
@@ -319,7 +325,7 @@
             >
               Fecha estimada de terminación del contrato:
             </label>
-            <span> {{ fechaEstimadaFinalizacion  | date: 'dd/MM/yyyy' }}</span>
+            <span> {{ updateFechaEstimada(false)  | date: 'dd/MM/yyyy' }}</span>
           </div>
         </div>
       </div>
@@ -603,7 +609,12 @@
           </div>
         </div>
       </div>
-
+      <p  *ngIf="novedadDescripcion.tipoNovedadCodigo == '4'">
+        <strong >
+          Plazo después de la modificación:
+        </strong>
+        {{ valuePlazoProyecto() }}
+      </p>
       <section *ngIf="novedadDescripcion.tipoNovedadCodigo === '5'">
         <div formArrayName="clausula" *ngFor="let clausula of clausulaField.controls; let i = index">
           <div [formGroupName]="i">

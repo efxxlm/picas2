@@ -80,5 +80,6 @@ namespace asivamosffie.model.APIModels
         public string EstadoSolicitudCodigo { get; set; }
         public bool TieneHistorico { get; set; }
         public bool TieneSolicitudPago { get; set; }
+        public int ContratoId { get; set; }
     }
 }

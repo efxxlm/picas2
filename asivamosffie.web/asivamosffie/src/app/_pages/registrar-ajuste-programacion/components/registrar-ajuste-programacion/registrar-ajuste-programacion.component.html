@@ -57,13 +57,17 @@
       </p>
       <p>
         <strong >
-          Valor inicial (Obra):
+          Valor inicial
+          <span *ngIf="novedad?.datosContratoProyectoModificadosXNovedad[0]?.tipoSolicitudCodigo == '1'">(Obra) </span>
+          <span *ngIf="novedad?.datosContratoProyectoModificadosXNovedad[0]?.tipoSolicitudCodigo == '2'">(Interventoría </span>:
         </strong>
         {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorProyecto | currency: '':'symbol':'3.0' }}
       </p>
       <p>
         <strong >
-          Valor después de la modificación (Obra):
+          Valor después de la modificación
+          <span *ngIf="novedad?.datosContratoProyectoModificadosXNovedad[0]?.tipoSolicitudCodigo == '1'">(Obra) </span>
+          <span *ngIf="novedad?.datosContratoProyectoModificadosXNovedad[0]?.tipoSolicitudCodigo == '2'">(Interventoría </span>:
         </strong>
         {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorTotalProyecto | currency: '':'symbol':'3.0' }}
       </p>

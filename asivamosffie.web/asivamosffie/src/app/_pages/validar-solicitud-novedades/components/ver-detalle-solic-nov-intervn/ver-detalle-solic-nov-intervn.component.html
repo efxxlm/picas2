@@ -39,46 +39,37 @@
       </p>
       <p>
         <strong>Valor del contrato:</strong>
-        <span>{{ (novedad.contrato?.contratacion?.disponibilidadPresupuestal?.length > 0 ?
-          novedad.contrato?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud : 0 ) | currency: '':'symbol':'3.0' }}</span>
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorContrato | currency: '':'symbol':'3.0' }}
       </p>
       <p>
-        <strong>Plazo:</strong>
+        <strong>Valor después de la modificación del contrato:</strong>
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorTotalContrato | currency: '':'symbol':'3.0' }}
+      </p>
+      <p>
+        <strong> Plazo: </strong>
         {{
-          novedad?.contrato?.contratacion?.plazoContratacion != null ?
-          (novedad?.contrato?.contratacion?.plazoContratacion?.plazoMeses) : 0
+          novedad?.datosContratoProyectoModificadosXNovedad[0]?.plazoMesesContrato
         }}
         Meses
-        <span>
-          {{
-            novedad?.contrato?.contratacion?.plazoContratacion != null ?
-            (novedad?.contrato?.contratacion?.plazoContratacion?.plazoDias) : 0
-          }}
-          Días
-        </span>
+        {{
+          novedad?.datosContratoProyectoModificadosXNovedad[0]?.plazoDiasContrato
+        }}
+        Días
       </p>
       <p>
-        <strong>Fecha de inicio de contrato:</strong>
-        <span>
-          {{
-            (novedad.contrato?.fechaActaInicioFase2
-              ? novedad.contrato?.fechaActaInicioFase2
-              : novedad.contrato?.fechaActaInicioFase1
-            ) | date: 'dd/MM/yyyy'
-          }}
-        </span>
+        <strong> Fecha de inicio de contrato: </strong>
+        {{
+          (novedad.contrato?.fechaActaInicioFase2
+            ? novedad.contrato?.fechaActaInicioFase2
+            : novedad.contrato?.fechaActaInicioFase1
+          ) | date: 'dd/MM/yyyy'
+        }}
       </p>
       <p>
-        <strong>Fecha de finalización de contrato:</strong>
-        <span>
-          {{
-            (novedad?.contrato?.fechaEstimadaFinalizacion ? novedad?.contrato?.fechaEstimadaFinalizacion :
-              novedad.contrato?.fechaTerminacionFase2
-              ? novedad.contrato?.fechaTerminacionFase2
-              : novedad.contrato?.fechaTerminacion
-            ) | date: 'dd/MM/yyyy'
-          }}
-        </span>
+        <strong> Fecha de finalización de contrato: </strong>
+        {{
+          novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaFinContrato | date: 'dd/MM/yyyy'
+        }}
       </p>
       <div *ngIf="novedad.esAplicadaAcontrato !== true">
         <h2 class="card-subTitle">Proyecto asociado</h2>
@@ -101,6 +92,34 @@
         <p>
           <strong> Sede: </strong>
           {{ novedad.proyectosSeleccionado.sede }}
+        </p>
+        <p>
+          <strong >
+            Valor inicial del proyecto
+            <span *ngIf="novedad?.datosContratoProyectoModificadosXNovedad[0]?.tipoSolicitudCodigo == '1'">(Obra) </span>
+            <span *ngIf="novedad?.datosContratoProyectoModificadosXNovedad[0]?.tipoSolicitudCodigo == '2'">(Interventoría </span>:
+          </strong>
+          {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorProyecto | currency: '':'symbol':'3.0' }}
+        </p>
+        <p>
+          <strong >
+            Valor después de la modificación
+            <span *ngIf="novedad?.datosContratoProyectoModificadosXNovedad[0]?.tipoSolicitudCodigo == '1'">(Obra) </span>
+            <span *ngIf="novedad?.datosContratoProyectoModificadosXNovedad[0]?.tipoSolicitudCodigo == '2'">(Interventoría </span>:
+          </strong>
+          {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorTotalProyecto | currency: '':'symbol':'3.0' }}
+        </p>
+        <p>
+          <strong>
+            Valor total del proyecto (Obra e Interventoría):
+          </strong>
+          {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorTotalObraInterventoria | currency: '':'symbol':'3.0' }}
+        </p>
+        <p>
+          <strong>
+            Valor total del proyecto después de la modificación (Obra e Interventoría):
+          </strong>
+          {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorEstimadoObraInterventoria | currency: '':'symbol':'3.0' }}
         </p>
       </div>
     </mat-card-content>
@@ -169,6 +188,13 @@
                 <strong>Plazo adicional días: </strong> {{ descripcion.plazoAdicionalDias }}
               </p>
 
+              <p  *ngIf="descripcion.tipoNovedadCodigo == '4'">
+                <strong >
+                  Plazo después de la modificación:
+                </strong>
+                {{ valuePlazoProyecto(descripcion.plazoAdicionalMeses, descripcion.plazoAdicionalDias) }}
+              </p>
+
               <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
                 <strong>
                   Fecha de inicio
@@ -191,7 +217,7 @@
                 <strong>
                   Fecha estimada de terminación del contrato:
                 </strong>
-                {{ descripcion?.fechaEstimadaFinalizacion | date: 'dd/MM/yyyy' }}
+                <span> {{ updateFechaEstimada(descripcion.fechaFinSuspension, descripcion.fechaInicioSuspension )  | date: 'dd/MM/yyyy' }}</span>
               </p>
               <p *ngIf="descripcion.tipoNovedadCodigo == '6'">
                 <strong>
@@ -202,6 +228,15 @@
               <p *ngIf="descripcion.tipoNovedadCodigo == '3'">
                 <strong>Presupuesto adicional solicitado: </strong>
                 {{ descripcion.presupuestoAdicionalSolicitado | currency: '':'symbol-narrow':'.0-0' }}
+              </p>
+
+              <p  *ngIf="descripcion.tipoNovedadCodigo == '3'">
+                <strong >
+                  Valor después de la modificación
+                  <span *ngIf="datosContratoProyectoModificadosXNovedad?.tipoSolicitudCodigo == '1'">(Obra) </span>
+                  <span *ngIf="datosContratoProyectoModificadosXNovedad?.tipoSolicitudCodigo == '2'">(Interventoría) </span>:
+                </strong>
+                {{ valuePresupuesto(descripcion.presupuestoAdicionalSolicitado) | currency: '':'symbol':'3.0' }}
               </p>
 
               <section *ngIf="descripcion.tipoNovedadCodigo === '5'">

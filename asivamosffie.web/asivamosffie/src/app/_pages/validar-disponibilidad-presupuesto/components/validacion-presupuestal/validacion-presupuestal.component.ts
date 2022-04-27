@@ -8,6 +8,7 @@ import { RechasadaPorValidacionComponent } from '../rechasada-por-validacion/rec
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { TipoDDP } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 import { FormGestionarFuentesAdministrativasComponent } from '../form-gestionar-fuentes-administrativas/form-gestionar-fuentes-administrativas.component';
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 
 @Component({
   selector: 'app-validacion-presupuestal',
@@ -21,8 +22,10 @@ export class ValidacionPresupuestalComponent implements OnInit {
   constructor(public dialog: MatDialog, private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
     private router: Router, private sanitized: DomSanitizer,
+    private contractualNoveltyService: ContractualNoveltyService
   ) { }
   detailavailabilityBudget: any = null;
+  datosContratoProyectoModificadosXNovedad: any;
   esModificacion = false;
   pTipoDDP = TipoDDP;
 
@@ -72,8 +75,14 @@ export class ValidacionPresupuestalComponent implements OnInit {
               }
             }
           }
+          if(this.detailavailabilityBudget != null){
+            this.contractualNoveltyService.getDatosContratoProyectoModificadosXNovedad(0, this.detailavailabilityBudget.contratoId).subscribe(respuesta => {
+              this.datosContratoProyectoModificadosXNovedad = respuesta;
+            });
+          }
           }
         });
+
       // }else{
       //   this.disponibilidadServices.GetDetailAvailabilityBudgetProyect(id)
       //   .subscribe(listas => {
@@ -111,18 +120,18 @@ export class ValidacionPresupuestalComponent implements OnInit {
   sePuedeValidarFuente() {
     if (this.detailavailabilityBudget) {
       if (this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_administrativo ||
-          this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_especial) { 
+          this.detailavailabilityBudget.tipoSolicitudCodigo == this.pTipoDDP.DDP_especial) {
           //if (this.valorGestionado == this.detailavailabilityBudget.valorSolicitud && this.detailavailabilityBudget.estadoRegistro == true) {
           if (this.detailavailabilityBudget?.valorGestionado == this.detailavailabilityBudget?.valorSolicitud && this.detailavailabilityBudget?.estadoRegistro == true) {
             return true;
           }
-          else { 
+          else {
             return false;
           }
         }
         else {//para tradicional
           if (this.detailavailabilityBudget.valorSolicitud == this.valorGestionado) {
- 
+
             return true;
           }
           else {
@@ -134,7 +143,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
 
         }
     }
-    else { 
+    else {
       return false;
     }
   }

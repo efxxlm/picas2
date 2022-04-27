@@ -611,7 +611,9 @@ namespace asivamosffie.services
                                     ONDO DE FINANCIAMIENTO DE INFRAESTRUCTURA EDUCATIVA - FFIE</span>
                         </p>
                         <p class='Footer' style='text-align:center;'><span style='font-family:Arial;font-size:8pt;text-transform:none;font-weight:normal;font-style:normal;font-variant:normal;'>
-                                NIT. 900900129-8</span>
+                                NIT. 900900
+
+9-8</span>
                         </p>
                         <p class='Footer' style='text-align:center;'>
                             <span style='font-family:Arial;font-size:8pt;text-transform:none;font-weight:normal;font-style:normal;font-variant:normal;'>

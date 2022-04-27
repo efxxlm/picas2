@@ -232,13 +232,14 @@
 </form>
 <div class="animatedDown" *ngIf="addressForm.controls.tipoNovedad.value">
   <app-accordion-novedades
-    [tiposNovedadModificacionContractual]="tiposNovedadModificacionContractual"
+    [tiposNovedadModificacionContractual]= "tiposNovedadModificacionContractual"
     [novedadeContractual]="novedadContractual"
     [fechaSolicitudNovedad]="addressForm.get('fechaSolicitudNovedad').value"
     [estaEditando]="estaEditando"
     [fechaSolicitudNovedad]="addressForm.get('fechaSolicitudNovedad').value"
     [fechaFinSuspensionVal]="fechaFinSuspensionVal"
     [contrato]="contrato"
+    [datosContratoProyectoModificadosXNovedad]="contrato?.datosContratoProyectoModificadosXNovedad[0]"
     (guardar)="onSubmit()"
   >
   </app-accordion-novedades>

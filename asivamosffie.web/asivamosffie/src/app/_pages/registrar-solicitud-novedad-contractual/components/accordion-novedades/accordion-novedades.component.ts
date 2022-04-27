@@ -15,6 +15,7 @@ export class AccordionNovedadesComponent implements OnInit {
   @Input() fechaSolicitudNovedad: Date;
   @Input() fechaFinSuspensionVal: Date;
   @Input() contrato: any;
+  @Input() datosContratoProyectoModificadosXNovedad: any;
 
 
   constructor() { }

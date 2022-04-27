@@ -65,6 +65,7 @@ export class RegistrarSolicitudComponent implements OnInit {
               this.novedadAplicada.setValue(novedad.esAplicadaAcontrato);
               this.proyecto = novedad['proyectosSeleccionado'];
               this.contrato = novedad.contrato;
+              this.contrato.datosContratoProyectoModificadosXNovedad = this.novedad.datosContratoProyectoModificadosXNovedad;
 
               if (this.novedadAplicada.value == false) {
                 this.contractualNoveltyService.getProyectosContrato(this.contrato.contratoId).subscribe(
@@ -137,12 +138,13 @@ export class RegistrarSolicitudComponent implements OnInit {
     }
     console.log(this.numeroContratoSeleccionado, this.contratos, this.contratos.filter(x => x.numeroContrato == this.numeroContratoSeleccionado.numeroContrato));
     this.contrato = this.contratos.filter(x => x.numeroContrato == this.numeroContratoSeleccionado.numeroContrato)[0];
-    console.log(this.contrato, this.proyecto);
   }
 
   seleccionarProyecto(proy) {
-    console.log(proy, this.contrato)
     this.proyecto = proy;
+    this.contractualNoveltyService.getDatosContratoProyectoModificadosXNovedad(this.proyecto.proyectoId, this.contrato.contratoId).subscribe(respuesta => {
+      this.contrato.datosContratoProyectoModificadosXNovedad = respuesta;
+    });
   }
 
 }

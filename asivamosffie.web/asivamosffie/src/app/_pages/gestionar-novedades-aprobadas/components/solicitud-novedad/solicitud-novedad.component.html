@@ -31,14 +31,13 @@
     </p>
     <p>
       <strong>Valor del contrato:</strong>
-      <span>{{ (novedad.contrato?.contratacion?.disponibilidadPresupuestal?.length > 0 ?
-        novedad.contrato?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud : 0 ) | currency: '':'symbol':'3.0' }}</span>
+      <span>{{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorTotalContrato | currency: '':'symbol':'3.0' }}</span>
     </p>
     <p>
       <strong>Plazo:</strong>
       <span>
-        {{ novedad?.contrato?.contratacion?.plazoContratacion != null ? (novedad?.contrato?.contratacion?.plazoContratacion?.plazoMeses) : 0 }} Meses
-        {{ novedad?.contrato?.contratacion?.plazoContratacion != null ? (novedad?.contrato?.contratacion?.plazoContratacion?.plazoDias) : 0 }} Días
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesProyecto }} Meses
+        {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoDiasProyecto }} Días
       </span>
     </p>
     <p>
@@ -47,7 +46,11 @@
     </p>
     <p>
       <strong>Fecha de finalización de contrato:</strong>
-      {{ (novedad.contrato?.fechaEstimadaFinalizacion ? novedad.contrato?.fechaEstimadaFinalizacion : novedad.contrato?.fechaTerminacionFase2 ? novedad.contrato?.fechaTerminacionFase2 : novedad.contrato?.fechaTerminacion) | date:'dd/MM/yyyy'}}
+      {{ (novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaFinContrato) | date:'dd/MM/yyyy'}}
+    </p>
+    <p>
+      <strong>Fecha estimada de finalización de contrato:</strong>
+      {{ (novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaEstimadaFinContrato) | date:'dd/MM/yyyy'}}
     </p>
 
     <div *ngIf="novedad.esAplicadaAcontrato !== true">
@@ -174,6 +177,13 @@
         <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo adicional meses: </strong> {{ descripcion.plazoAdicionalMeses }}</p>
         <p *ngIf="descripcion.tipoNovedadCodigo == '4'"><strong>plazo adicional días: </strong> {{ descripcion.plazoAdicionalDias }}</p>
 
+        <p  *ngIf="descripcion.tipoNovedadCodigo == '4'">
+          <strong >
+            Plazo después de la modificación:
+          </strong>
+          {{ valuePlazoProyecto(descripcion.plazoAdicionalMeses, descripcion.plazoAdicionalDias) }}
+        </p>
+
         <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
           <strong *ngIf="descripcion.tipoNovedadCodigo == '1'">Fecha de inicio de la suspensión: </strong>
           <strong *ngIf="descripcion.tipoNovedadCodigo == '2'">Fecha de inicio de la prórroga a las suspensión: </strong>
@@ -189,7 +199,7 @@
           <strong>
             Fecha estimada de terminación del contrato:
           </strong>
-          {{ descripcion?.fechaEstimadaFinalizacion | date: 'dd/MM/yyyy' }}
+          <span> {{ updateFechaEstimada(descripcion.fechaFinSuspension, descripcion.fechaInicioSuspension )  | date: 'dd/MM/yyyy' }}</span>
         </p>
         <p *ngIf="descripcion.tipoNovedadCodigo == '6'">
           <strong>
@@ -198,7 +208,14 @@
           {{ descripcion.fechaInicioSuspension | date: 'dd/MM/yyyy' }}
         </p>
         <p *ngIf="descripcion.tipoNovedadCodigo == '3'" ><strong>Presupuesto adicional solicitado: </strong> {{ descripcion.presupuestoAdicionalSolicitado | currency: '':'symbol':'3.0' }} </p>
-
+        <p  *ngIf="descripcion.tipoNovedadCodigo == '3'">
+          <strong >
+            Valor después de la modificación
+            <span *ngIf="datosContratoProyectoModificadosXNovedad?.tipoSolicitudCodigo == '1'">(Obra) </span>
+            <span *ngIf="datosContratoProyectoModificadosXNovedad?.tipoSolicitudCodigo == '2'">(Interventoría) </span>:
+          </strong>
+          {{ valuePresupuesto(descripcion.presupuestoAdicionalSolicitado) | currency: '':'symbol':'3.0' }}
+        </p>
         <section *ngIf="descripcion.tipoNovedadCodigo === '5'">
           <section *ngFor="let clausula of descripcion?.novedadContractualClausula; let i = index;">
             <mat-card-title class="header-card--text sub-text">

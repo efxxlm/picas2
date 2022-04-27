@@ -473,5 +473,18 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetDatosContratoProyectoModificadosXNovedad")]
+        public async Task<ActionResult<List<dynamic>>> GetDatosContratoProyectoModificadosXNovedad([FromQuery] int pProyectoId, [FromQuery] int pContratoId)
+        {
+            try
+            {
+                return await _contractualModification.GetDatosContratoProyectoModificadosXNovedad(pProyectoId,pContratoId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

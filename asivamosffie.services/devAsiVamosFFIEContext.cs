@@ -277,6 +277,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VDescuentosXordenGiroXproyectoXaportanteXconcepto> VDescuentosXordenGiroXproyectoXaportanteXconcepto { get; set; }
         public virtual DbSet<VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso> VDescuentosXordenGiroXproyectoXaportanteXconceptoXuso { get; set; }
         public virtual DbSet<VDescuentosXordenGiroXproyectoXfaseXaportanteXconcepto> VDescuentosXordenGiroXproyectoXfaseXaportanteXconcepto { get; set; }
+        public virtual DbSet<VDiasSuspendidosNovedadXproyectoXcontrato> VDiasSuspendidosNovedadXproyectoXcontrato { get; set; }
         public virtual DbSet<VDisponibilidadPresupuestal> VDisponibilidadPresupuestal { get; set; }
         public virtual DbSet<VDominio> VDominio { get; set; }
         public virtual DbSet<VDrpGeneral> VDrpGeneral { get; set; }
@@ -4167,7 +4168,9 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Mensaje)
                     .IsRequired()
-                    .HasMaxLength(512)
+                    .HasMaxLength(5
+                    
+                    )
                     .IsUnicode(false)
                     .HasComment("Mensaje Validacion");
 
@@ -7158,7 +7161,7 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.ComiteTecnico)
                     .WithMany(p => p.SesionComiteTema)
                     .HasForeignKey(d => d.ComiteTecnicoId)
-                    .HasConstraintName("FK__SesionCom__Comit__1B13F4C6");
+                    .HasConstraintName("FK__SesionCom__Comit__4944D3CA");
             });
 
             modelBuilder.Entity<SesionInvitado>(entity =>
@@ -8668,9 +8671,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.NumeroPoliza)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
+                entity.Property(e => e.NumeroPoliza).HasMaxLength(250);
             });
 
             modelBuilder.Entity<VAjusteProgramacion>(entity =>
@@ -9086,6 +9087,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaFinProyecto).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaInicioProyecto).HasColumnType("datetime");
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VContratoProyectoValorEstimado>(entity =>
@@ -9096,17 +9101,13 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.ValorContrato).HasColumnType("numeric(18, 2)");
 
-                entity.Property(e => e.ValorEstimadoObraInterventoria)
-                    .HasColumnName("valorEstimadoObraInterventoria")
-                    .HasColumnType("numeric(38, 2)");
+                entity.Property(e => e.ValorEstimadoObraInterventoria).HasColumnType("numeric(38, 2)");
 
                 entity.Property(e => e.ValorProyecto).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.ValorTotalContrato).HasColumnType("numeric(38, 2)");
 
-                entity.Property(e => e.ValorTotalObraInterventoria)
-                    .HasColumnName("valorTotalObraInterventoria")
-                    .HasColumnType("numeric(18, 2)");
+                entity.Property(e => e.ValorTotalObraInterventoria).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.ValorTotalProyecto).HasColumnType("numeric(38, 2)");
             });
@@ -9348,6 +9349,17 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ValorDescuento).HasColumnType("decimal(25, 0)");
+            });
+
+            modelBuilder.Entity<VDiasSuspendidosNovedadXproyectoXcontrato>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_DiasSuspendidosNovedadXProyectoXContrato");
+
+                entity.Property(e => e.FechaSuspendida).HasColumnType("datetime");
+
+                entity.Property(e => e.ProyectoId).HasColumnName("proyectoId");
             });
 
             modelBuilder.Entity<VDisponibilidadPresupuestal>(entity =>
@@ -10283,10 +10295,6 @@ namespace asivamosffie.model.Models
                 entity.HasNoKey();
 
                 entity.ToView("V_ListCompromisosTemas");
-
-                entity.Property(e => e.Compromiso)
-                    .HasMaxLength(500)
-                    .IsUnicode(false);
 
                 entity.Property(e => e.EstadoCodigo)
                     .HasMaxLength(100)
@@ -11383,9 +11391,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.NumeroPoliza)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
+                entity.Property(e => e.NumeroPoliza).HasMaxLength(250);
 
                 entity.Property(e => e.NumeroSolicitud)
                     .IsRequired()

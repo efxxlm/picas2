@@ -502,6 +502,8 @@ namespace asivamosffie.services
 
                     string nombreEntidad = string.Empty;
                     string contratoNumero = !contrato.Any() ? string.Empty : contrato.Select(x => x.NumeroContrato).FirstOrDefault().ToString();
+                    int contratoId = !contrato.Any() ? 0 : contrato.Select(x => x.ContratoId).FirstOrDefault();
+
                     if (contrato.Any())
                     {
                         var contratacion = _context.Contratacion.Find(contrato.FirstOrDefault().ContratacionId);
@@ -622,7 +624,8 @@ namespace asivamosffie.services
                         ValorTotalDisponibilidad = ListDP.ValorTotalDisponibilidad,
                         TieneNovedad = existeNovedad > 0 ? true : false,
                         TieneHistorico = vdpp != null ? true : false,
-                        TieneSolicitudPago = tieneSolicitudPago
+                        TieneSolicitudPago = tieneSolicitudPago,
+                        ContratoId = contratoId
                     };
 
                     ListDetailValidarDisponibilidadPresupuesal.Add(detailDisponibilidadPresupuesal);
@@ -950,6 +953,8 @@ namespace asivamosffie.services
 
                     string nombreEntidad = string.Empty;
                     string contratoNumero = !contrato.Any() ? string.Empty : contrato.Select(x => x.NumeroContrato).FirstOrDefault().ToString();
+                    int contratoId = !contrato.Any() ? 0 : contrato.Select(x => x.ContratoId).FirstOrDefault();
+
                     if (contrato.Any())
                     {
                         var contratacion = _context.Contratacion.Find(contrato.FirstOrDefault().ContratacionId);
@@ -1051,7 +1056,8 @@ namespace asivamosffie.services
                         EstadoRegistro = blnEstado,
                         SesionComiteSolicitud = sesionComiteSolicitud,
                         ValorTotalDisponibilidad = ListDP.ValorTotalDisponibilidad,
-                        TieneNovedad = existeNovedad > 0 ? true : false
+                        TieneNovedad = existeNovedad > 0 ? true : false,
+                        ContratoId = contratoId
                     };
 
                     ListDetailValidarDisponibilidadPresupuesal.Add(detailDisponibilidadPresupuesal);
@@ -3108,6 +3114,8 @@ namespace asivamosffie.services
 
                 string nombreEntidad = "";
                 string contratoNumero = !contrato.Any() ? "" : contrato.Select(x => x.NumeroContrato).FirstOrDefault().ToString();
+                int contratoId = !contrato.Any() ? 0 : contrato.Select(x => x.ContratoId).FirstOrDefault();
+
                 if (contrato.Any())
                 {
                     var contratacion = _context.Contratacion.Find(contrato.FirstOrDefault().ContratacionId);
@@ -3202,8 +3210,8 @@ namespace asivamosffie.services
                     NovedadContractual = detailDP.NovedadContractualId != null ? _context.NovedadContractual.Where(x => x.NovedadContractualId == detailDP.NovedadContractualId).Include(x => x.NovedadContractualDescripcion).FirstOrDefault() : null,
                     EstadoRegistro = blnEstado,
                     ValorTotalDisponibilidad = ValorTotalDisponibilidad,
-                    TieneHistorico = vdpp != null ? true : false
-
+                    TieneHistorico = vdpp != null ? true : false,
+                    ContratoId = contratoId
                 };
                 ListDetailValidarDisponibilidadPresupuesal.Add(detailDisponibilidadPresupuesal);
             }

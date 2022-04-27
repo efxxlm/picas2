@@ -401,30 +401,8 @@ namespace asivamosffie.services
                     novedadContractual.Contrato.FechaTerminacionFase2 = DateTime.Now;
                     novedadContractual.Contrato.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(novedadContractual.Contrato.ContratoId, true, false, 0);
                 }
-                VContratoProyectoFechaEstimadaFinalizacion datosFechas = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId).FirstOrDefault();
-                VContratoProyectoValorEstimado datosAdicion = _context.VContratoProyectoValorEstimado.Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId).FirstOrDefault();
-                if (datosFechas != null && datosAdicion != null)
-                {
-                    List<dynamic> datosContratoProyectoModificadosXNovedad = new List<dynamic>();
-                    datosContratoProyectoModificadosXNovedad.Add(new
-                    {
-                        datosFechas?.FechaInicioProyecto,
-                        datosFechas?.FechaFinProyecto,
-                        datosFechas?.FechaEstimadaFinProyecto,
-                        datosFechas?.FechaFinContrato,
-                        datosFechas?.FechaEstimadaFinContrato,
-                        datosFechas?.SemanasEstimadasProyecto,
-                        datosFechas?.SemanasProyecto,
-                        datosAdicion?.ValorProyecto,
-                        datosAdicion?.ValorTotalProyecto,
-                        datosAdicion?.ValorContrato,
-                        datosAdicion?.ValorTotalContrato,
-                        datosAdicion?.ValorTotalObraInterventoria,
-                        datosAdicion?.ValorEstimadoObraInterventoria
-                    });
 
-                    novedadContractual.DatosContratoProyectoModificadosXNovedad = datosContratoProyectoModificadosXNovedad;
-                }
+                novedadContractual.DatosContratoProyectoModificadosXNovedad = await GetDatosContratoProyectoModificadosXNovedad((int)novedadContractual.ProyectoId, (int)novedadContractual.ContratoId);
             }
 
             List<NovedadContractualAportante> novedadContractualAportantes = _context.NovedadContractualAportante
@@ -839,6 +817,45 @@ namespace asivamosffie.services
             }
 
             return listaFuentes;
+        }
+
+        public async Task<List<dynamic>> GetDatosContratoProyectoModificadosXNovedad(int pProyectoId, int pContratoId)
+        {
+            List<dynamic> datosContratoProyectoModificadosXNovedad = new List<dynamic>();
+
+            VContratoProyectoFechaEstimadaFinalizacion datosFechas = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => (pProyectoId > 0 ? r.ProyectoId == pProyectoId : r.ProyectoId == r.ProyectoId) && r.ContratoId == pContratoId).FirstOrDefault();
+            VContratoProyectoValorEstimado datosAdicion = _context.VContratoProyectoValorEstimado.Where(r => (pProyectoId > 0 ? r.ProyectoId == pProyectoId : r.ProyectoId == r.ProyectoId) && r.ContratoId == pContratoId).FirstOrDefault();
+
+            if (datosFechas != null && datosAdicion != null)
+            {
+                datosContratoProyectoModificadosXNovedad.Add(new
+                {
+                    datosFechas?.FechaInicioProyecto,
+                    datosFechas?.FechaFinProyecto,
+                    datosFechas?.FechaEstimadaFinProyecto,
+                    datosFechas?.FechaFinContrato,
+                    datosFechas?.FechaEstimadaFinContrato,
+                    datosFechas?.SemanasEstimadasProyecto,
+                    datosFechas?.SemanasProyecto,
+                    datosFechas?.PlazoDiasContrato,
+                    datosFechas?.PlazoMesesContrato,
+                    datosFechas?.PlazoDiasProyecto,
+                    datosFechas?.PlazoMesesProyecto,
+                    datosFechas?.PlazoEstimadoDiasProyecto,
+                    datosFechas?.PlazoEstimadoMesesProyecto,
+                    datosFechas?.PlazoEstimadoMesesContrato,
+                    datosFechas?.PlazoEstimadoDiasContrato,
+                    datosAdicion?.ValorProyecto,
+                    datosAdicion?.ValorTotalProyecto,
+                    datosAdicion?.ValorContrato,
+                    datosAdicion?.ValorTotalContrato,
+                    datosAdicion?.ValorTotalObraInterventoria,
+                    datosAdicion?.ValorEstimadoObraInterventoria,
+                    datosFechas?.TipoSolicitudCodigo
+                });
+            }
+
+            return datosContratoProyectoModificadosXNovedad;
         }
 
         #endregion Gets

@@ -30,12 +30,21 @@
         {{detailavailabilityBudget?.valorSolicitud | currency:'':'symbol':'3.0'}}
       </p>
       <p *ngIf="detailavailabilityBudget?.novedadContractual">
+        <strong>Valor antes de la modificación:</strong>
+        <span *ngIf="!(detailavailabilityBudget?.estadoSolicitudCodigo == '5' || detailavailabilityBudget?.estadoSolicitudCodigo == '8')">{{detailavailabilityBudget?.valorTotalDisponibilidad + detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}</span>
+        <span *ngIf="(detailavailabilityBudget?.estadoSolicitudCodigo == '5' || detailavailabilityBudget?.estadoSolicitudCodigo == '8')">{{detailavailabilityBudget?.valorTotalDisponibilidad | currency:'':'symbol':'3.0'}}</span>
+      </p>
+      <p *ngIf="detailavailabilityBudget?.novedadContractual">
         <strong>Valor después de la modificación:</strong>
         <span *ngIf="!(detailavailabilityBudget?.estadoSolicitudCodigo == '5' || detailavailabilityBudget?.estadoSolicitudCodigo == '8')">{{detailavailabilityBudget?.valorTotalDisponibilidad + detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}</span>
         <span *ngIf="(detailavailabilityBudget?.estadoSolicitudCodigo == '5' || detailavailabilityBudget?.estadoSolicitudCodigo == '8')">{{detailavailabilityBudget?.valorTotalDisponibilidad | currency:'':'symbol':'3.0'}}</span>
       </p>
       <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo == pTipoDDP.DDP_tradicional">
         <strong>Plazo:</strong>
+        {{ detailavailabilityBudget?.plazo }}
+      </p>
+      <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo == pTipoDDP.DDP_tradicional">
+        <strong>Plazo después de la modificación::</strong>
         {{ detailavailabilityBudget?.plazo }}
       </p>
       <div>

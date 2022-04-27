@@ -54,17 +54,16 @@
             </p>
             <p *ngIf="detailavailabilityBudget?.novedadContractual">
               <strong>Valor antes de la modificación:</strong>
-              <span>{{detailavailabilityBudget?.valorTotalDisponibilidad | currency:'':'symbol':'3.0'}}</span>
+              <span>{{ datosContratoProyectoModificadosXNovedad[0]?.valorContrato | currency:'':'symbol':'3.0'}}</span>
             </p>
             <p *ngIf="detailavailabilityBudget?.novedadContractual">
-              <strong *ngIf="!(detailavailabilityBudget?.estadoSolicitudCodigo == '5' || detailavailabilityBudget?.estadoSolicitudCodigo == '8')">Valor después de la modificación:</strong>
-              <span *ngIf="!(detailavailabilityBudget?.estadoSolicitudCodigo == '5' || detailavailabilityBudget?.estadoSolicitudCodigo == '8')">{{detailavailabilityBudget?.valorTotalDisponibilidad + detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}</span>
+              <strong>Valor después de la modificación:</strong>
+              <span>{{ datosContratoProyectoModificadosXNovedad[0]?.valorTotalContrato | currency:'':'symbol':'3.0' }}</span>
             </p>
             <p *ngIf="detailavailabilityBudget?.novedadContractual?.novedadContractualDescripcion[0].plazoAdicionalMeses">
                 <strong>Plazo  de la modificación:</strong>
-
-                {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].plazoAdicionalMeses}} meses /
-                {{detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].plazoAdicionalDias}} dias
+                {{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesContrato }} meses /
+                {{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoDiasContrato }} dias
             </p>
             <p *ngIf="detailavailabilityBudget?.novedadContractual">
                 <strong>Detalle de la modificación:</strong>

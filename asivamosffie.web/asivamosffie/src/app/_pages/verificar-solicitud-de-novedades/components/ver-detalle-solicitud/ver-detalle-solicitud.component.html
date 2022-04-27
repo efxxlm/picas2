@@ -180,6 +180,13 @@
                 <strong>Plazo adicional días: </strong> {{ descripcion.plazoAdicionalDias }}
               </p>
 
+              <p  *ngIf="descripcion.tipoNovedadCodigo == '4'">
+                <strong >
+                  Plazo después de la modificación:
+                </strong>
+                {{ valuePlazoProyecto(descripcion.plazoAdicionalMeses, descripcion.plazoAdicionalDias) }}
+              </p>
+
               <p *ngIf="descripcion.tipoNovedadCodigo == '1' || descripcion.tipoNovedadCodigo == '2'">
                 <strong>
                   Fecha de inicio
@@ -202,12 +209,21 @@
                 <strong>
                   Fecha estimada de terminación del contrato:
                 </strong>
-                {{ descripcion?.fechaEstimadaFinalizacion | date: 'dd/MM/yyyy' }}
+                <span> {{ updateFechaEstimada(descripcion.fechaFinSuspension, descripcion.fechaInicioSuspension )  | date: 'dd/MM/yyyy' }}</span>
               </p>
 
               <p *ngIf="descripcion.tipoNovedadCodigo == '3'">
                 <strong>Presupuesto adicional solicitado: </strong>
                 {{ descripcion.presupuestoAdicionalSolicitado | currency: '':'symbol':'3.0' }}
+              </p>
+
+              <p  *ngIf="descripcion.tipoNovedadCodigo == '3'">
+                <strong >
+                  Valor después de la modificación
+                  <span *ngIf="datosContratoProyectoModificadosXNovedad?.tipoSolicitudCodigo == '1'">(Obra) </span>
+                  <span *ngIf="datosContratoProyectoModificadosXNovedad?.tipoSolicitudCodigo == '2'">(Interventoría) </span>:
+                </strong>
+                {{ valuePresupuesto(descripcion.presupuestoAdicionalSolicitado) | currency: '':'symbol':'3.0' }}
               </p>
 
               <section *ngIf="descripcion.tipoNovedadCodigo === '5'">
