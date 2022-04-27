@@ -95,12 +95,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         this.listaResponsables = respuesta[3];
         this.listaLimite = respuesta[4].filter(x => x.codigo == this.procesoSeleccion.tipoProcesoCodigo);
         this.listaSalarioMinimo = respuesta[5];
-        this.listaetapaActualProceso = respuesta[6];
-
-        this.listaTipoAlcance = this.listaTipoAlcance.filter(t => t.codigo == "1" || t.codigo == "2" || t.codigo == "3")
-
-        resolve();
-
+        this.listaetapaActualProceso = respuesta[6]; 
+        resolve(); 
       });
     });
   }
