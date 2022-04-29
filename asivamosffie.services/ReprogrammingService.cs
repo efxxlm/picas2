@@ -1905,31 +1905,35 @@ namespace asivamosffie.services
                     {
 
                         int? mesId = 0;
+                        bool semanaAdicional = tempFlujo.Posicion.Value < listaSeguimientoSemanal.Length ? true : false;
 
-                        listaMeses.ToList().ForEach(m =>
+                        if (semanaAdicional)
                         {
-                            if (
-                                    listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaInicio.Value.Date >= m.FechaInicio.Date &&
-                                    listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaFin.Value.Date <= m.FechaFin.Date
-                                )
+                            listaMeses.ToList().ForEach(m =>
                             {
-                                mesId = m.MesEjecucionId;
-                            }
-                            else if (
-                                       listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaInicio.Value.Date <= m.FechaFin &&
-                                       listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaFin.Value.Date >= m.FechaFin
+                                if (
+                                        listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaInicio.Value.Date >= m.FechaInicio.Date &&
+                                        listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaFin.Value.Date <= m.FechaFin.Date
                                     )
-                            {
-                                mesId = m.MesEjecucionId;
-                            }
-                        });
+                                {
+                                    mesId = m.MesEjecucionId;
+                                }
+                                else if (
+                                           listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaInicio.Value.Date <= m.FechaFin &&
+                                           listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaFin.Value.Date >= m.FechaFin
+                                        )
+                                {
+                                    mesId = m.MesEjecucionId;
+                                }
+                            });
+                        }
 
                         AjusteProgramacionFlujo flujo = new AjusteProgramacionFlujo()
                         {
                             AjusteProgramacionId = tempFlujo.AjusteProgramacionId.Value,
                             Semana = tempFlujo.Semana,
                             Valor = tempFlujo.Valor,
-                            SeguimientoSemanalId = listaSeguimientoSemanal[tempFlujo.Posicion.Value].SeguimientoSemanalId,
+                            SeguimientoSemanalId = semanaAdicional == true ? listaSeguimientoSemanal[tempFlujo.Posicion.Value].SeguimientoSemanalId : 0,
                             MesEjecucionId = mesId.Value == 0 ? null : mesId,
                             ProgramacionId = listaProgramacion[tempFlujo.PosicionCapitulo.Value].ProgramacionId,
 
