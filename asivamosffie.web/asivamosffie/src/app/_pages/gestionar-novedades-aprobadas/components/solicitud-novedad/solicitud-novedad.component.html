@@ -74,6 +74,15 @@
             <th class="mat-header-cell cdk-header-cell ng-star-inserted">
               Sede
             </th>
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+              Fecha de inicio de proyecto
+            </th>
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+              Fecha de finalización de proyecto
+            </th>
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+              Fecha estimada de finalización de proyecto
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -92,6 +101,15 @@
             </td>
             <td class="mat-cell cdk-cell ng-star-inserted">
               {{ novedad.proyectosSeleccionado.sede }}
+            </td>
+            <td class="mat-cell cdk-cell ng-star-inserted">
+              {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaInicioProyecto | date:'dd/MM/yyyy'}}
+            </td>
+            <td class="mat-cell cdk-cell ng-star-inserted">
+              {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaFinProyecto | date:'dd/MM/yyyy'}}
+            </td>
+            <td class="mat-cell cdk-cell ng-star-inserted">
+              {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaEstimadaFinProyecto | date:'dd/MM/yyyy'}}
             </td>
           </tr>
         </tbody>
