@@ -236,7 +236,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
     let dias = this.addressForm.get('diasPlazoEjFase2').value > 0 ? this.addressForm.get('diasPlazoEjFase2').value  :0;
     newdate.setDate(newdate.getDate() + (meses * 30) + dias);
     let newDateFinal = new Date(newdate);
-    newDateFinal.setDate(newDateFinal.getDate() + this.plazoActualContratoDias)
+    //newDateFinal.setDate(newDateFinal.getDate() + this.plazoActualContratoDias) //se estaba sumando dos veces el plazo ?? LCT -JCM (02/05/2022)
     // console.log(newDateFinal);
     this.addressForm.get('fechaPrevistaTerminacion').setValue(newDateFinal);
 
