@@ -630,7 +630,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       console.log(valor);
       if (valor > maximo
         ||
-        valor < minimo) {
+        valor < minimo) { 
         listaGrupo.controls[i].get("valorMinimoCategoria").setValue(undefined);
         this.openDialog("", "<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
       }

@@ -147,8 +147,8 @@ export class InvitacionAbiertaComponent implements OnInit {
       (pProceso.tipoIntervencionCodigo !== "" && pProceso.tipoIntervencionCodigo !== undefined) ||
       (pProceso.tipoAlcanceCodigo !== "" && pProceso.tipoAlcanceCodigo !== undefined) ||
       (pProceso.esDistribucionGrupos !== undefined) ||
-      (pProceso.responsableEstructuradorUsuarioid !== undefined) ||
-      (pProceso.responsableTecnicoUsuarioId !== undefined) ||
+      (pProceso.tipoResponsableEstructuradorCodigo !== undefined) ||
+      (pProceso.tipoResponsableTecnicoCodigo !== undefined) ||
       (pProceso.condicionesAsignacionPuntaje !== undefined && pProceso.condicionesAsignacionPuntaje !== '' ) ||
       (pProceso.condicionesFinancierasHabilitantes !== undefined && pProceso.condicionesFinancierasHabilitantes !== '' ) ||
       (pProceso.condicionesJuridicasHabilitantes !== undefined && pProceso.condicionesJuridicasHabilitantes !== '' ) ||
@@ -167,8 +167,8 @@ export class InvitacionAbiertaComponent implements OnInit {
         (pProceso.tipoIntervencionCodigo === "" || pProceso.tipoIntervencionCodigo === undefined) ||
         (pProceso.tipoAlcanceCodigo === "" || pProceso.tipoAlcanceCodigo === undefined) ||
         (pProceso.esDistribucionGrupos === undefined) ||
-        (pProceso.responsableEstructuradorUsuarioid === undefined) ||
-        (pProceso.responsableTecnicoUsuarioId === undefined) ||
+        (pProceso.tipoResponsableEstructuradorCodigo === undefined) ||
+        (pProceso.tipoResponsableTecnicoCodigo === undefined) ||
         (pProceso.condicionesAsignacionPuntaje === undefined || pProceso.condicionesAsignacionPuntaje === '' ) ||
         (pProceso.condicionesFinancierasHabilitantes === undefined || pProceso.condicionesFinancierasHabilitantes === '' ) ||
         (pProceso.condicionesJuridicasHabilitantes === undefined || pProceso.condicionesJuridicasHabilitantes === '' ) ||

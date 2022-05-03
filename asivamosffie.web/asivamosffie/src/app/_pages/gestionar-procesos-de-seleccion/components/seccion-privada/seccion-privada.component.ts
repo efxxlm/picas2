@@ -168,9 +168,9 @@ export class SeccionPrivadaComponent implements OnInit {
 
       (pProceso.esDistribucionGrupos !== "" && pProceso.esDistribucionGrupos !== undefined) ||
 
-      (pProceso.responsableEstructuradorUsuarioid !== '' && pProceso.responsableEstructuradorUsuarioid !== undefined) ||
+      (pProceso.tipoResponsableTecnicoCodigo !== '' && pProceso.tipoResponsableTecnicoCodigo !== undefined) ||
 
-      (pProceso.responsableTecnicoUsuarioId !== '' && pProceso.responsableTecnicoUsuarioId !== undefined) ||
+      (pProceso.tipoResponsableEstructuradorCodigo !== '' && pProceso.tipoResponsableEstructuradorCodigo !== undefined) ||
 
       (pProceso.procesoSeleccionGrupo !== undefined && pProceso.procesoSeleccionGrupo.length > 0) ||
 
@@ -194,9 +194,9 @@ export class SeccionPrivadaComponent implements OnInit {
 
         (pProceso.esDistribucionGrupos === "" || pProceso.esDistribucionGrupos === undefined) ||
 
-        (pProceso.responsableEstructuradorUsuarioid === '' || pProceso.responsableEstructuradorUsuarioid === undefined) ||
+        (pProceso.tipoResponsableTecnicoCodigo === '' || pProceso.tipoResponsableTecnicoCodigo === undefined) ||
 
-        (pProceso.responsableTecnicoUsuarioId === '' || pProceso.responsableTecnicoUsuarioId === undefined) ||
+        (pProceso.tipoResponsableEstructuradorCodigo === '' || pProceso.tipoResponsableEstructuradorCodigo === undefined) ||
 
         (pProceso.procesoSeleccionGrupo === undefined || pProceso.procesoSeleccionGrupo.length === 0) ||
 

@@ -177,7 +177,7 @@ export class InvitacionCerradaComponent implements OnInit {
   estaIncompletoDescripcion(pProceso: any): number {
 
 
-    console.log(pProceso);
+    console.error(pProceso);
 
     let retorno: number = 0; //sin-diligenciar
 
@@ -190,8 +190,8 @@ export class InvitacionCerradaComponent implements OnInit {
       (pProceso.tipoIntervencionCodigo !== "" && pProceso.tipoIntervencionCodigo !== undefined) ||
       (pProceso.tipoAlcanceCodigo !== "" && pProceso.tipoAlcanceCodigo !== undefined) ||
       (pProceso.esDistribucionGrupos !== undefined) ||
-      (pProceso.responsableEstructuradorUsuarioid !== undefined) ||
-      (pProceso.responsableTecnicoUsuarioId !== undefined) ||
+      (pProceso.tipoResponsableTecnicoCodigo !== "" && pProceso.tipoResponsableTecnicoCodigo !== undefined) ||
+      (pProceso.tipoResponsableEstructuradorCodigo !== "" && pProceso.tipoResponsableEstructuradorCodigo !== undefined) ||
       //(pProceso.condicionesAsignacionPuntaje !== undefined && pProceso.condicionesAsignacionPuntaje !== '' ) ||
       //(pProceso.condicionesFinancierasHabilitantes !== undefined && pProceso.condicionesFinancierasHabilitantes !== '' ) ||
       //(pProceso.condicionesJuridicasHabilitantes !== undefined && pProceso.condicionesJuridicasHabilitantes !== '' ) ||
@@ -210,8 +210,9 @@ export class InvitacionCerradaComponent implements OnInit {
         (pProceso.tipoIntervencionCodigo === "" || pProceso.tipoIntervencionCodigo === undefined) ||
         (pProceso.tipoAlcanceCodigo === "" || pProceso.tipoAlcanceCodigo === undefined) ||
         (pProceso.esDistribucionGrupos === undefined) ||
-        (pProceso.responsableEstructuradorUsuarioid === undefined) ||
-        (pProceso.responsableTecnicoUsuarioId === undefined) ||
+        
+        (pProceso.tipoResponsableTecnicoCodigo == undefined && pProceso.tipoResponsableTecnicoCodigo === "") ||
+        (pProceso.tipoResponsableEstructuradorCodigo == undefined && pProceso.tipoResponsableEstructuradorCodigo === "") ||
         //(pProceso.condicionesAsignacionPuntaje === undefined || pProceso.condicionesAsignacionPuntaje === '' ) ||
         //(pProceso.condicionesFinancierasHabilitantes === undefined || pProceso.condicionesFinancierasHabilitantes === '' ) ||
         //(pProceso.condicionesJuridicasHabilitantes === undefined || pProceso.condicionesJuridicasHabilitantes === '' ) ||
