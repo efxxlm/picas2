@@ -52,10 +52,10 @@ namespace asivamosffie.services
                 List<VProyectosXcontrato> ListvProyectosXcontratos = new List<VProyectosXcontrato>();
 
                 foreach (var p in listaInfoProyectos)
-                {  
+                {
                     //no se muestran los que no tengan fase de construcción (requisitos)
                     int existe = _context.ContratoConstruccion.Where(r => r.ContratoId == p.ContratoId && r.ProyectoId == p.ProyectoId).Count();
-                   
+
                     List<SeguimientoDiario> listaSeguimientoDiario = _context.SeguimientoDiario
                                                                     .Where(s => s.ContratacionProyectoId == p.ContratacionProyectoId &&
                                                                            s.Eliminado != true)
@@ -96,14 +96,14 @@ namespace asivamosffie.services
                         if (existe > 0)
                         {
                             ListvProyectosXcontratos.Add(p);
-                        }  
+                        }
                     }
                 }
             }
             catch (Exception e)
-            { 
+            {
                 throw;
-            } 
+            }
             return listaInfoProyectos;
         }
 
@@ -342,21 +342,45 @@ namespace asivamosffie.services
             try
             {
                 pSeguimientoDiario.EstadoCodigo = ConstanCodigoEstadoSeguimientoDiario.EnProcesoDeRegistro;
+                SeguimientoSemanal NuevoSeguimiento = new SeguimientoSemanal();
+                SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal();
 
-                SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal
-                                                                    .Where(
-                                                                            r => r.ContratacionProyectoId == pSeguimientoDiario.ContratacionProyectoId &&
-                                                                            r.FechaInicio.Value.Date <= pSeguimientoDiario.FechaSeguimiento.Date &&
-                                                                            r.FechaFin.Value.Date >= pSeguimientoDiario.FechaSeguimiento.Date
-                                                                           )
-                                                                    .FirstOrDefault();
+                seguimientoSemanal = _context.SeguimientoSemanal
+                                                                .Where(
+                                                                        r => r.ContratacionProyectoId == pSeguimientoDiario.ContratacionProyectoId &&
+                                                                        r.FechaInicio.Value.Date <= pSeguimientoDiario.FechaSeguimiento.Date &&
+                                                                        r.FechaFin.Value.Date >= pSeguimientoDiario.FechaSeguimiento.Date
+                                                                        )
+                                                                .FirstOrDefault();
+
+                if (seguimientoSemanal == null)
+                {
+                    int intNumeroSemana = _context.SeguimientoSemanal.Count(c => c.ContratacionProyectoId == pSeguimientoDiario.ContratacionProyectoId) + 1;
+
+                    DateTime? UltimaFechaFinRegistrada = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pSeguimientoDiario.ContratacionProyectoId)
+                                                                                   .OrderByDescending(r => r.NumeroSemana)
+                                                                                   .FirstOrDefault()
+                                                                                   .FechaFin;
+
+                    NuevoSeguimiento = new SeguimientoSemanal
+                    {
+                        ContratacionProyectoId = pSeguimientoDiario.ContratacionProyectoId,
+                        NumeroSemana = intNumeroSemana,
+                        FechaInicio = UltimaFechaFinRegistrada.Value.AddDays(1),
+                        FechaFin = UltimaFechaFinRegistrada.Value.AddDays(7),
+                        UsuarioCreacion = pSeguimientoDiario.UsuarioCreacion,
+                        RegistroCompleto = false
+                    };
+                    _context.SeguimientoSemanal.Add(NuevoSeguimiento); 
+                    _context.SaveChanges(); 
+                }
 
                 if (pSeguimientoDiario.SeguimientoDiarioId == 0)
                 {
                     CreateEdit = "CREAR SEGUIMIENTO DIARIO";
                     pSeguimientoDiario.FechaCreacion = DateTime.Now;
                     pSeguimientoDiario.Eliminado = false;
-                    pSeguimientoDiario.SeguimientoSemanalId = seguimientoSemanal.SeguimientoSemanalId;
+                    pSeguimientoDiario.SeguimientoSemanalId = seguimientoSemanal?.SeguimientoSemanalId == null ? NuevoSeguimiento.SeguimientoSemanalId : seguimientoSemanal.SeguimientoSemanalId;
                     pSeguimientoDiario.RegistroCompleto = VerificarRegistroCompleto(pSeguimientoDiario);
 
                     _context.SeguimientoDiario.Add(pSeguimientoDiario);
@@ -701,7 +725,7 @@ namespace asivamosffie.services
             List<string> listaFechas = new List<string>();
             List<DateTime> listaFechasTotal = new List<DateTime>();
             List<string> listFechasSuspendidas = _context.VDiasSuspendidosNovedadXproyectoXcontrato.Where(r => r.ContratacionProyectoId == pId && r.FechaSuspendida != null).Select(x => ((DateTime)x.FechaSuspendida).ToShortDateString()).ToList();
-            
+
             ContratacionProyecto contratacion = await _context.ContratacionProyecto
                                                                 .Where(r => r.ContratacionProyectoId == pId)
                                                                 .Include(r => r.Proyecto)
@@ -735,8 +759,7 @@ namespace asivamosffie.services
 
                     foreach (var f in listaFechasTotal.OrderBy(r => r.Date).ToList())
                     {
-                        if (contratacion.SeguimientoDiario
-                          .Where(s => s.FechaSeguimiento.ToShortDateString() == f.ToShortDateString() && s.Eliminado != true)
+                        if (contratacion.SeguimientoDiario.Where(s => s.FechaSeguimiento.ToShortDateString() == f.ToShortDateString() && s.Eliminado != true)
                           .Count() == 0 && fechaSeleccionada == false && !listFechasSuspendidas.Contains(f.ToShortDateString()))
                         {
                             ultimaFecha = f.ToString("d/M/yyyy", CultureInfo.InvariantCulture);
