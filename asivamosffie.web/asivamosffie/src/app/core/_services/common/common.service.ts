@@ -24,55 +24,55 @@ export class CommonService {
     return retorno;
   }
 
-  getDocumento ( pPath: string ) {
-    return this.http.get( `${ environment.apiUrl }/Document/GetFileByPath?pPath=${ pPath }`, { responseType: "blob" } );
+  getDocumento(pPath: string) {
+    return this.http.get(`${environment.apiUrl}/Document/GetFileByPath?pPath=${pPath}`, { responseType: "blob" });
   };
 
-  listaTipoAportante(){
+  listaTipoAportante() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=3`);
   }
 
 
-  listaNombreAportante(){
+  listaNombreAportante() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=4`);
   }
-  listaNombreTipoAportante(){
+  listaNombreTipoAportante() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=3`);
   }
 
-  listaDepartamentos(){
+  listaDepartamentos() {
     return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListDepartamento`);
   }
 
-  listaMunicipiosByIdDepartamento(pIdDepartamento: string){
+  listaMunicipiosByIdDepartamento(pIdDepartamento: string) {
     return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListMunicipiosByIdDepartamento?idDepartamento=${pIdDepartamento}`);
   }
 
-  GetDepartamentoByIdMunicipio(pidMunicipio: string){
+  GetDepartamentoByIdMunicipio(pidMunicipio: string) {
     return this.http.get<Localizacion>(`${environment.apiUrl}/Common/GetDepartamentoByIdMunicipio?pIdMunicipio=${pidMunicipio}`);
   }
 
-  listaTipoDocFinanciacion(){
+  listaTipoDocFinanciacion() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=7`);
   }
 
-  listaTipoIntervencion(){
+  listaTipoIntervencion() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=1`);
   }
 
-  listaRegion(){
+  listaRegion() {
     return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListRegion`);
   }
 
-  listaDepartamentosByRegionId(pIdRegion:string){
+  listaDepartamentosByRegionId(pIdRegion: string) {
     return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListDepartamentoByRegionId?idRegion=${pIdRegion}`);
   }
 
-  listaIntitucionEducativaByMunicipioId(pidMunicipio:string){
+  listaIntitucionEducativaByMunicipioId(pidMunicipio: string) {
     return this.http.get<any[]>(`${environment.apiUrl}/Common/ListIntitucionEducativaByMunicipioId?idMunicipio=${pidMunicipio}`);
   }
 
-  listaSedeByInstitucionEducativaId(pidInstitucionEducativaId:number){
+  listaSedeByInstitucionEducativaId(pidInstitucionEducativaId: number) {
     return this.http.get<any[]>(`${environment.apiUrl}/Common/ListSedeByInstitucionEducativaId?idInstitucionEducativaId=${pidInstitucionEducativaId}`);
   }
   listaTipoPredios() {
@@ -99,143 +99,150 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/ListVigenciaAporte`);
   }
 
-  listaAportanteByTipoAportanteId(pTipoAportanteID:number){
+  listaAportanteByTipoAportanteId(pTipoAportanteID: number) {
     return this.http.get<any[]>(`${environment.apiUrl}/Cofinancing/GetListAportanteByTipoAportanteId?pTipoAportanteID=${pTipoAportanteID}`);
   }
 
-  listaDocumentoByAportanteId(pAportanteID:number){
+  listaDocumentoByAportanteId(pAportanteID: number) {
     return this.http.get<any[]>(`${environment.apiUrl}/Cofinancing/GetListDocumentoByAportanteId?pAportanteID=${pAportanteID}`);
   }
 
-  listMunicipiosByIdMunicipio(idMunicipio:string){
+  listMunicipiosByIdMunicipio(idMunicipio: string) {
     return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListMunicipiosByIdMunicipio?idMunicipio=${idMunicipio}`);
   }
 
-  listDepartamentoByIdMunicipio(idMunicipio:string){
+  listDepartamentoByIdMunicipio(idMunicipio: string) {
     return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/listDepartamentoByIdMunicipio?idMunicipio=${idMunicipio}`);
   }
 
-  listaTipoAlcance(){
+  listaTipoAlcance() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=9`);
   }
 
-  listaTipoProcesoSeleccion(){
+  listaTipoProcesoSeleccion() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=27`);
   }
 
-  listaPresupuestoProcesoSeleccion(){
+  listaPresupuestoProcesoSeleccion() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=10`);
   }
 
-  listaTipoProponente(){
+  listaTipoProponente() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=28`);
   }
 
-  listaEtapaProcesoSeleccion(){
+  listaEtapaProcesoSeleccion() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=34`);
   }
 
-  listaEstadoProcesoSeleccion(){
+  listaEstadoProcesoSeleccion() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=35`);
   }
-  listaEstadoProcesoSeleccionMonitoreo(){
+  listaEstadoProcesoSeleccionMonitoreo() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=79`);
   }
 
-  listaTipoDisponibilidadPresupuestal(){
+  listaTipoDisponibilidadPresupuestal() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=36`);
   }
 
-  listaTipoDisponibilidadPresupuestalNotCode(minCode:string){
+  listaTipoDisponibilidadPresupuestalNotCode(minCode: string) {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominioNotCode?pIdDominio=36&pMinCode=${minCode}`);
   }
 
-  listaEstadoCronogramaSeguimiento(){
+  listaEstadoCronogramaSeguimiento() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=40`);
   }
 
-  getUsuariosByPerfil( pIdPerfil: number ){
-    return this.http.get<any[]>(`${environment.apiUrl}/Common/GetUsuariosByPerfil?pIdPerfil=${ pIdPerfil }`);
+  getUsuariosByPerfil(pIdPerfil: number) {
+    return this.http.get<any[]>(`${environment.apiUrl}/Common/GetUsuariosByPerfil?pIdPerfil=${pIdPerfil}`);
+  }
+  listaResponsableEquipoTecnico() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=71`);
+  }
+  listaResponsableEquipoEstructurador() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=73`);
   }
 
-  listaFases(){
+
+  listaFases() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=16`);
   }
-  listaSalarios(){
+  listaSalarios() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=64`);
   }
-  listaEtapaActualProceso(){
+  listaEtapaActualProceso() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=83`);
   }
-  listaLimiteSalarios(){
+  listaLimiteSalarios() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=65`);
   }
 
-  listaComponentes(){
+  listaComponentes() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=12`);
   }
 
-  listaUsos(){
+  listaUsos() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=13`);
   }
 
-  listaMiembrosComiteTecnico(){
+  listaMiembrosComiteTecnico() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=46`);
   }
 
-  listaTipoSolicitud(){
+  listaTipoSolicitud() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=29`);
   }
 
-  listaEstadoSolicitud(){
+  listaEstadoSolicitud() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=50`);
   }
 
-  listaPerfil () {
+  listaPerfil() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=11`);
   }
 
-  listaEstadoCompromisos(){
+  listaEstadoCompromisos() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=45`);
   }
 
-  listaTipoTema(){
+  listaTipoTema() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=42`);
   }
 
-  listaEstadoProyecto(){
+  listaEstadoProyecto() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=63`);
   }
 
   listaTipoActividades() {
-    return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=109` );
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=109`);
   }
 
   listaTipoSolicitudAsociada() {
-    return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=52` );
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=52`);
   }
 
 
-  listaEstadoRevision(){
+  listaEstadoRevision() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=61`);
   }
 
-  listaEstadosPoliza(){
+  listaEstadosPoliza() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=51`)
   }
   listaTipoEnsayos() {
-    return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=74` );
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=74`);
   }
 
   listaCausaAccidente() {
-    return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=75` );
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=75`);
   }
 
-  listaInstanciasdeSeguimientoTecnico(){
+  listaInstanciasdeSeguimientoTecnico() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=76`);
   }
 
-  listaTipoNovedadModificacionContractual(){
+  listaTipoNovedadModificacionContractual() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=113`);
   }
 
@@ -251,7 +258,7 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=116`);
   }
 
-  listaTipodocumento(){
+  listaTipodocumento() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=30`);
   }
 
@@ -259,7 +266,7 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=119`);
   }
 
-  listaCanalIngreso(){
+  listaCanalIngreso() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=121`);
   }
 
@@ -347,7 +354,7 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=173`);
   }
 
-  listaMotivosNovedadContractual(){
+  listaMotivosNovedadContractual() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=174`);
   }
 
@@ -406,11 +413,11 @@ export class CommonService {
   }
 
 
-  public listaUsuarios(){
+  public listaUsuarios() {
 
     let lista: Usuario[] = [];
 
-    return new Promise<Usuario[]>( resolve => {
+    return new Promise<Usuario[]>(resolve => {
       forkJoin([
         this.getUsuariosByPerfil(1),
         this.getUsuariosByPerfil(2),
@@ -418,10 +425,9 @@ export class CommonService {
         this.getUsuariosByPerfil(4),
         this.getUsuariosByPerfil(5),
 
-      ]).subscribe( response => {
+      ]).subscribe(response => {
 
-        for (let i = 0; i < 5; i++)
-        {
+        for (let i = 0; i < 5; i++) {
           lista = lista.concat(response[i])
         }
 
@@ -430,8 +436,7 @@ export class CommonService {
     })
   }
 
-  public forkProject():Observable<any[]>
-  {
+  public forkProject(): Observable<any[]> {
     return forkJoin([
       this.listaTipoIntervencion(),
       this.listaRegion(),
@@ -442,88 +447,88 @@ export class CommonService {
       this.listaCoordinaciones(),
       this.listaConvocatoria()
 
-      ]);
+    ]);
   }
-  forkDepartamentoMunicipio(idMunicipio:string){
+  forkDepartamentoMunicipio(idMunicipio: string) {
     return forkJoin([
       this.listMunicipiosByIdMunicipio(idMunicipio),
       this.listDepartamentoByIdMunicipio(idMunicipio)
     ]);
   }
 
-  listaFuenteRecursos(){
+  listaFuenteRecursos() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=18`);
   }
 
-  listaFuenteTipoFinanciacion(){
+  listaFuenteTipoFinanciacion() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=8`);
   }
 
-  listaBancos(){
+  listaBancos() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=22`);
   }
 
-  listaTipoDDPEspecial(){
+  listaTipoDDPEspecial() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=49`);
   }
 
-  listaGarantiasPolizas(){
+  listaGarantiasPolizas() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=58`);
   }
 
-  listaTiposDeControversiaContractual(){
+  listaTiposDeControversiaContractual() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=100`);
   }
-  listaMotivosSolicitudControversiaContractual(){
+  listaMotivosSolicitudControversiaContractual() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=99`);
   }
-  listaEstadosAvanceTramite(){
+  listaEstadosAvanceTramite() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=90`);
   }
-  listaActuacionAdelantada(){
+  listaActuacionAdelantada() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=104`);
   }
 
-  listaDisponibilidadMaterial(){
+  listaDisponibilidadMaterial() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=92`);
   }
 
-  listaDisponibilidadEquipo(){
+  listaDisponibilidadEquipo() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=93`);
   }
 
-  listaProductividad(){
+  listaProductividad() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=94`);
   }
 
-  listaCausaBajaDisponibilidadMaterial(){
+  listaCausaBajaDisponibilidadMaterial() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=95`);
   }
 
-  listaCausaBajaDisponibilidadEquipo(){
+  listaCausaBajaDisponibilidadEquipo() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=96`);
   }
 
-  listaCausaBajaDisponibilidadProductividad(){
+  listaCausaBajaDisponibilidadProductividad() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=97`);
   }
 
-  listaProximaActuacionRequerida(){
+  listaProximaActuacionRequerida() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=103`);
   }
 
-  listaEstadosAvanceReclamacion(){
+  listaEstadosAvanceReclamacion() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=127`);
   }
 
-  listaEstadosControversiaNoTAI(){
+  listaEstadosControversiaNoTAI() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=128`);
   }
 
-  listaRequiereSolicitudConcepto(){
+  listaRequiereSolicitudConcepto() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=129`);
   }
-  listaEstadoAvanceMesaTrabajo(){
+  listaEstadoAvanceMesaTrabajo() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=130`);
   }
   listaEtapaJudicial() {
@@ -538,10 +543,10 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=178`);
   }
 
-  vigenciasDesde2015(): number[]{
+  vigenciasDesde2015(): number[] {
     const fecha = new Date();
-    let vigencias: number[]=[];
-    for (let i = 2015; i < fecha.getFullYear() + 5; i++){
+    let vigencias: number[] = [];
+    for (let i = 2015; i < fecha.getFullYear() + 5; i++) {
       vigencias.push(i);
     }
 
@@ -553,7 +558,7 @@ export class CommonService {
     return retorno;
   }
 
-  GetHtmlToPdf(pdf: any){
+  GetHtmlToPdf(pdf: any) {
     return this.http.post(`${environment.apiUrl}/common/GetHtmlToPdf`, pdf, { responseType: "blob" });
   }
 
@@ -569,29 +574,29 @@ export class CommonService {
     return this.http.get<Version>(`${environment.apiUrl}/Common/GetVersion`);
   }
 
-  plazoDespuesModificacion(plazoAdicionalDias:any, plazoAdicionalMeses:any,plazoMeses:any,plazoDias:any){
-    if(
+  plazoDespuesModificacion(plazoAdicionalDias: any, plazoAdicionalMeses: any, plazoMeses: any, plazoDias: any) {
+    if (
       plazoAdicionalDias != null && plazoAdicionalDias != undefined &&
       plazoAdicionalMeses != null && plazoAdicionalMeses != undefined &&
       plazoMeses != null && plazoMeses != undefined &&
       plazoDias != null && plazoDias != undefined
-      ){
-        let days = plazoDias;
-        let months = plazoMeses + plazoAdicionalMeses;
-        let totalDiasMes = 30;
+    ) {
+      let days = plazoDias;
+      let months = plazoMeses + plazoAdicionalMeses;
+      let totalDiasMes = 30;
 
-        for(var i= 0; i< plazoAdicionalDias; i++){
-          if(days+1 <= totalDiasMes){
-            days = days+1;
-          }else{
-            days = 0;
-            months = months+1;
-          }
+      for (var i = 0; i < plazoAdicionalDias; i++) {
+        if (days + 1 <= totalDiasMes) {
+          days = days + 1;
+        } else {
+          days = 0;
+          months = months + 1;
         }
-        return {
-          plazoModificacionDias: days,
-          plazoModificacionMeses: months,
-        }
+      }
+      return {
+        plazoModificacionDias: days,
+        plazoModificacionMeses: months,
+      }
     }
     return null;
   }
@@ -599,7 +604,7 @@ export class CommonService {
 
 }
 
-export interface Dominio{
+export interface Dominio {
   descripcion?: string;
   dominioId?: number,
   tipoDominioId?: number,
@@ -609,13 +614,13 @@ export interface Dominio{
   disabled?: boolean,
 }
 
-export interface Localizacion{
+export interface Localizacion {
   localizacionId: string,
   descripcion: string,
-  idPadre:string
+  idPadre: string
 }
 
-export interface Respuesta{
+export interface Respuesta {
   isSuccessful: boolean;
   isValidation: boolean;
   isException: boolean;
@@ -625,32 +630,32 @@ export interface Respuesta{
   token?: any;
 }
 
-interface TipoAportante{
+interface TipoAportante {
   FFIE: string[];
   ET: string[];
   Tercero: string[];
 }
 
 export const TiposAportante: TipoAportante = {
-  FFIE:   ["6"],
-  ET:     ["9"],
-  Tercero:["10"]
+  FFIE: ["6"],
+  ET: ["9"],
+  Tercero: ["10"]
 }
 
-interface InstanciaSeguimientoTecnico{
+interface InstanciaSeguimientoTecnico {
   ComitedeObra: string[];
   ComitedeAsesores: string[];
   NoAplica: string[];
 }
 
 export const InstanciasSeguimientoTecnico: InstanciaSeguimientoTecnico = {
-  ComitedeObra:   ["1"],
-  ComitedeAsesores:     ["2"],
-  NoAplica:["3"]
+  ComitedeObra: ["1"],
+  ComitedeAsesores: ["2"],
+  NoAplica: ["3"]
 }
 
 
-interface TipoNovedadModificacionContractual{
+interface TipoNovedadModificacionContractual {
   Suspension: string[];
   ProrrogaSuspension: string[];
   Adicion: string[];
@@ -660,7 +665,7 @@ interface TipoNovedadModificacionContractual{
 
 export const TiposNovedadModificacionContractual: TipoNovedadModificacionContractual = {
   Suspension: ["1"],
-  ProrrogaSuspension:["2"],
+  ProrrogaSuspension: ["2"],
   Adicion: ["3"],
   Prorroga: ["4"],
   ModificacionCondicionesContractuales: ["5"]

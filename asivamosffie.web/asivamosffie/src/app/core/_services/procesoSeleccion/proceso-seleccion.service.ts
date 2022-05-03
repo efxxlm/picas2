@@ -136,8 +136,9 @@ export interface ProcesoSeleccion{
   tipoProcesoNombre?: string,
   esDistribucionGrupos?: boolean,
   cantGrupos?: number,
-  responsableTecnicoUsuarioId?: number,
-  responsableEstructuradorUsuarioid?: number,
+
+  tipoResponsableTecnicoCodigo?: string,
+  tipoResponsableEstructuradorCodigo?: string,
 
   condicionesJuridicasHabilitantes?: string,
   condicionesFinancierasHabilitantes?: string,

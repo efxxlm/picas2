@@ -28,7 +28,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   listaTipoIntervencion: Dominio[];
   listaTipoAlcance: Dominio[];
   listatipoPresupuesto: Dominio[];
-  listaResponsables: Usuario[];
+  listaResponsablesTecnico: Dominio[];
+  listaResponsablesEstructurador: Dominio[];
   addressForm = this.fb.group({});
   tiposProceso = TiposProcesoSeleccion;
 
@@ -82,20 +83,21 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         this.commonService.listaTipoIntervencion(),
         this.commonService.listaTipoAlcance(),
         this.commonService.listaPresupuestoProcesoSeleccion(),
-        this.commonService.getUsuariosByPerfil(2),
+        this.commonService.listaResponsableEquipoTecnico(),
         this.commonService.listaLimiteSalarios(),
         this.commonService.listaSalarios(),
         this.commonService.listaEtapaActualProceso(),
-
+        this.commonService.listaResponsableEquipoEstructurador(),
       ]).subscribe(respuesta => {
 
         this.listaTipoIntervencion = respuesta[0];
         this.listaTipoAlcance = respuesta[1];
         this.listatipoPresupuesto = respuesta[2];
-        this.listaResponsables = respuesta[3];
+        this.listaResponsablesTecnico = respuesta[3];
         this.listaLimite = respuesta[4].filter(x => x.codigo == this.procesoSeleccion.tipoProcesoCodigo);
         this.listaSalarioMinimo = respuesta[5];
         this.listaetapaActualProceso = respuesta[6]; 
+        this.listaResponsablesEstructurador = respuesta[7];
         resolve(); 
       });
     });
@@ -366,8 +368,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       this.procesoSeleccion.tipoIntervencionCodigo = this.addressForm.get('tipoIntervencion').value ? this.addressForm.get('tipoIntervencion').value.codigo : null,
       this.procesoSeleccion.tipoAlcanceCodigo = this.addressForm.get('tipoAlcance').value ? this.addressForm.get('tipoAlcance').value.codigo : null,
       this.procesoSeleccion.esDistribucionGrupos = this.addressForm.get('distribucionEnGrupos').value ? this.addressForm.get('distribucionEnGrupos').value : null,
-      this.procesoSeleccion.responsableTecnicoUsuarioId = this.addressForm.get('responsableEquipoTecnico').value ? this.addressForm.get('responsableEquipoTecnico').value.usuarioId : null,
-      this.procesoSeleccion.responsableEstructuradorUsuarioid = this.addressForm.get('responsableEquipoestructurado').value ? this.addressForm.get('responsableEquipoestructurado').value.usuarioId : null,
+      this.procesoSeleccion.tipoResponsableTecnicoCodigo = this.addressForm.get('responsableEquipoTecnico').value ? this.addressForm.get('responsableEquipoTecnico').value.codigo : null,
+      this.procesoSeleccion.tipoResponsableEstructuradorCodigo = this.addressForm.get('responsableEquipoestructurado').value ? this.addressForm.get('responsableEquipoestructurado').value.codigo : null,
       this.procesoSeleccion.cantGrupos = this.addressForm.get('cuantosGrupos').value ? this.addressForm.get('cuantosGrupos').value : null,
       this.procesoSeleccion.procesoSeleccionGrupo = [],
       this.procesoSeleccion.procesoSeleccionCronograma = [];
@@ -422,8 +424,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     this.ngOnInit().then(() => {
       const tipoIntervencion = this.listaTipoIntervencion.find(t => t.codigo === this.procesoSeleccion.tipoIntervencionCodigo);
       const tipoAlcance = this.listaTipoAlcance.find(a => a.codigo === this.procesoSeleccion.tipoAlcanceCodigo);
-      const responsableEquipoTecnico = this.listaResponsables.find(a => a.usuarioId === this.procesoSeleccion.responsableTecnicoUsuarioId);
-      const responsableEquipoestructurado = this.listaResponsables.find(a => a.usuarioId === this.procesoSeleccion.responsableEstructuradorUsuarioid);
+      const responsableEquipoTecnico = this.listaResponsablesTecnico.find(a => a.codigo === this.procesoSeleccion.tipoResponsableTecnicoCodigo);
+      const responsableEquipoestructurado = this.listaResponsablesEstructurador.find(a => a.codigo === this.procesoSeleccion.tipoResponsableEstructuradorCodigo);
       const listaGrupo = this.addressForm.get('grupos') as FormArray;
       const listaCronograma = this.addressForm.get('cronogramas') as FormArray;
 

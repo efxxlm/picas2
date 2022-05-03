@@ -1787,18 +1787,26 @@ namespace asivamosffie.services
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.RESPONSABLES_ABIERTA_PS:
-                                string NombresPreponente = "";
 
-                                Usuario responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId);
+                                string NombresPreponente = string.Empty;
 
-                                if (responsable != null)
-                                    NombresPreponente = string.Concat(responsable.PrimerNombre, " ", responsable.PrimerApellido, " - ");
+                                if (!string.IsNullOrEmpty(pProcesoSeleccion.TipoResponsableTecnicoCodigo))
+                                {
+                                    NombresPreponente = ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Responsable_Equipo_Tecnico
+                                                                                  && r.Codigo == pProcesoSeleccion.TipoResponsableTecnicoCodigo)
+                                                                         .FirstOrDefault()
+                                                                         .Nombre;
 
-                                responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid);
+                                }
 
-                                if (responsable != null)
-                                    NombresPreponente += string.Concat(responsable.PrimerNombre, " ", responsable.PrimerApellido, " - ");
-
+                                if (!string.IsNullOrEmpty(pProcesoSeleccion.TipoResponsableEstructuradorCodigo))
+                                { 
+                                    NombresPreponente += ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Responsable_Equipo_Estructurador
+                                                                                   && r.Codigo == pProcesoSeleccion.TipoResponsableEstructuradorCodigo)
+                                                                          .FirstOrDefault()
+                                                                          .Nombre; 
+                                }         
+        
                                 ProcesosSeleccionAbierta = ProcesosSeleccionAbierta.
                                 Replace(placeholderDominio.Nombre, NombresPreponente);
                                 break;
@@ -1823,17 +1831,25 @@ namespace asivamosffie.services
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.RESPONSABLES_CERRADA_PS:
-                                string NombresPreponente = "";
+                              
+                                string NombresPreponente = string.Empty;
 
-                                Usuario responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId);
+                                if (!string.IsNullOrEmpty(pProcesoSeleccion.TipoResponsableTecnicoCodigo))
+                                {
+                                    NombresPreponente = ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Responsable_Equipo_Tecnico
+                                                                                  && r.Codigo == pProcesoSeleccion.TipoResponsableTecnicoCodigo)
+                                                                         .FirstOrDefault()
+                                                                         .Nombre;
 
-                                if (responsable != null)
-                                    NombresPreponente = string.Concat(responsable.PrimerNombre, " ", responsable.PrimerApellido, " - ");
+                                }
 
-                                responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid);
-
-                                if (responsable != null)
-                                    NombresPreponente += string.Concat(responsable.PrimerNombre, " ", responsable.PrimerApellido, " - ");
+                                if (!string.IsNullOrEmpty(pProcesoSeleccion.TipoResponsableEstructuradorCodigo))
+                                {
+                                    NombresPreponente += ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Responsable_Equipo_Estructurador
+                                                                                   && r.Codigo == pProcesoSeleccion.TipoResponsableEstructuradorCodigo)
+                                                                          .FirstOrDefault()
+                                                                          .Nombre;
+                                }
 
                                 ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
                                 Replace(placeholderDominio.Nombre, NombresPreponente);
@@ -1841,8 +1857,8 @@ namespace asivamosffie.services
 
                             //[4:02 PM, 8/26/2020] Faber Ivolucion: se campo no tiene descripción
                             //[4:03 PM, 8 / 26 / 2020] Faber Ivolucion: no se si lo quitaron o ya en aparece algo en el control de cambios
-                            //    [4:04 PM, 8 / 26 / 2020] JULIÁN MARTÍNEZ C: y el VALOR_CONTIZACION_CERRADA
-                            //        [4:12 PM, 8 / 26 / 2020] Faber Ivolucion: Tampoco aparece en CU
+                            //[4:04 PM, 8 / 26 / 2020] JULIÁN MARTÍNEZ C: y el VALOR_CONTIZACION_CERRADA
+                            //[4:12 PM, 8 / 26 / 2020] Faber Ivolucion: Tampoco aparece en CU
 
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_ORGANIZACION_CERRADA_PS:
 
@@ -5278,7 +5294,7 @@ namespace asivamosffie.services
                                     ); ;
                                 break;
 
-                            case ConstanCodigoVariablesPlaceHolders.DESARROLLO_DE_TEMA: 
+                            case ConstanCodigoVariablesPlaceHolders.DESARROLLO_DE_TEMA:
                                 RegistrosNuevosTemas = RegistrosNuevosTemas.Replace(placeholderDominio.Nombre, !string.IsNullOrEmpty(Tema.Observaciones) ? Tema.Observaciones.Replace("style", string.Empty) : string.Empty);
                                 break;
 
@@ -5775,7 +5791,7 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.REGISTROS_TABLA_INVITADOS:
                             strContenido = strContenido
-                                .Replace(placeholderDominio.Nombre, !string.IsNullOrEmpty(RegistrosInvitados) ? RegistrosInvitados : "No se tienen <strong> invitados </strong> para esta sesión."); 
+                                .Replace(placeholderDominio.Nombre, !string.IsNullOrEmpty(RegistrosInvitados) ? RegistrosInvitados : "No se tienen <strong> invitados </strong> para esta sesión.");
                             break;
 
                         case ConstanCodigoVariablesPlaceHolders.REGISTROS_TABLA_RESPONSABLES:

@@ -3503,17 +3503,26 @@ namespace asivamosffie.services
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.RESPONSABLES_ABIERTA_PS:
-                                string NombresPreponente = "";
 
-                                Usuario responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId);
+                                string NombresPreponente = string.Empty;
 
-                                if (responsable != null)
-                                    NombresPreponente = " Responsable del equipo técnico: " + responsable.GetNombreCompleto + " ";
+                                if (!string.IsNullOrEmpty(pProcesoSeleccion.TipoResponsableTecnicoCodigo))
+                                {
+                                    NombresPreponente = " Responsable del equipo técnico: " 
+                                                       + ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Responsable_Equipo_Tecnico
+                                                                                   && r.Codigo == pProcesoSeleccion.TipoResponsableTecnicoCodigo)
+                                                                          .FirstOrDefault()
+                                                                          .Nombre; 
+                                }
 
-                                responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid);
-
-                                if (responsable != null)
-                                    NombresPreponente += " - Responsable del equipo estructurador:" + responsable.GetNombreCompleto;
+                                if (!string.IsNullOrEmpty(pProcesoSeleccion.TipoResponsableEstructuradorCodigo))
+                                {
+                                    NombresPreponente += " - Responsable del equipo estructurador:"
+                                                         + ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Responsable_Equipo_Estructurador
+                                                                                     && r.Codigo == pProcesoSeleccion.TipoResponsableEstructuradorCodigo)
+                                                                            .FirstOrDefault()
+                                                                            .Nombre;
+                                } 
 
                                 ProcesosSeleccionAbierta = ProcesosSeleccionAbierta.
                                 Replace(placeholderDominio.Nombre, NombresPreponente);
@@ -3542,17 +3551,25 @@ namespace asivamosffie.services
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.RESPONSABLES_CERRADA_PS:
-                                string NombresPreponente = "";
 
-                                Usuario responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableTecnicoUsuarioId);
+                                string NombresPreponente = string.Empty;
 
-                                if (responsable != null)
-                                    NombresPreponente = string.Concat(responsable.PrimerNombre, " ", responsable.PrimerApellido, " - ");
+                                if (!string.IsNullOrEmpty(pProcesoSeleccion.TipoResponsableTecnicoCodigo))
+                                {
+                                    NombresPreponente = ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Responsable_Equipo_Tecnico
+                                                                                  && r.Codigo == pProcesoSeleccion.TipoResponsableTecnicoCodigo)
+                                                                         .FirstOrDefault()
+                                                                         .Nombre; 
+                                }
 
-                                responsable = listaUsuarios.Find(r => r.UsuarioId == pProcesoSeleccion.ResponsableEstructuradorUsuarioid);
+                                if (!string.IsNullOrEmpty(pProcesoSeleccion.TipoResponsableEstructuradorCodigo))
+                                {
+                                    NombresPreponente += ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Responsable_Equipo_Estructurador
+                                                                                   && r.Codigo == pProcesoSeleccion.TipoResponsableEstructuradorCodigo)
+                                                                          .FirstOrDefault()
+                                                                          .Nombre;
+                                }
 
-                                if (responsable != null)
-                                    NombresPreponente += string.Concat(responsable.PrimerNombre, " ", responsable.PrimerApellido, " - ");
 
                                 ProcesosSeleccionCerrada = ProcesosSeleccionCerrada.
                                 Replace(placeholderDominio.Nombre, NombresPreponente);

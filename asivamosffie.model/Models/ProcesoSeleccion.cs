@@ -27,8 +27,8 @@ namespace asivamosffie.model.Models
         public string TipoProcesoCodigo { get; set; }
         public bool? EsDistribucionGrupos { get; set; }
         public int? CantGrupos { get; set; }
-        public int? ResponsableTecnicoUsuarioId { get; set; }
-        public int? ResponsableEstructuradorUsuarioid { get; set; }
+        public string TipoResponsableTecnicoCodigo { get; set; }
+        public string TipoResponsableEstructuradorCodigo { get; set; }
         public string CondicionesJuridicasHabilitantes { get; set; }
         public string CondicionesFinancierasHabilitantes { get; set; }
         public string CondicionesTecnicasHabilitantes { get; set; }

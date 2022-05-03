@@ -359,7 +359,7 @@
               maxlength="2"
               formControlName="cuantosGrupos"
               (keypress)="validateNumberKeypress($event)"
-              onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
+            
               oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               (keyup)="CambioNumeroAportantes()"
               required
@@ -675,7 +675,7 @@
                     max="99"
                     maxlength="2"
                     (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
+                   
                     oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                     (keyup)="CambioNumeroMeses(i)"
                     formControlName="plazoMeses"
@@ -922,8 +922,8 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="responsableEquipoTecnico" required>
-                      <mat-option *ngFor="let responsable of listaResponsables" [value]="responsable">
-                        {{ responsable.primerNombre }} {{ responsable.primerApellido }}
+                      <mat-option *ngFor="let responsable of listaResponsablesTecnico" [value]="responsable">
+                        {{ responsable.nombre }} {{ responsable.nombre }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -965,8 +965,8 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="responsableEquipoestructurado" required>
-                      <mat-option *ngFor="let responsable of listaResponsables" [value]="responsable">
-                        {{ responsable.primerNombre }} {{ responsable.primerApellido }}
+                      <mat-option *ngFor="let responsable of listaResponsablesEstructurador" [value]="responsable">
+                        {{ responsable.nombre }} {{ responsable.nombre }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>

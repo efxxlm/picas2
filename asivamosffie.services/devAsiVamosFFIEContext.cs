@@ -403,6 +403,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<Version> Version { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -4168,9 +4169,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Mensaje)
                     .IsRequired()
-                    .HasMaxLength(5
-                    
-                    )
+                    .HasMaxLength(512)
                     .IsUnicode(false)
                     .HasComment("Mensaje Validacion");
 
@@ -5432,6 +5431,14 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.TipoProcesoCodigo)
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoResponsableEstructuradorCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoResponsableTecnicoCodigo)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
 
                 entity.Property(e => e.UrlSoporteEvaluacion)
@@ -7161,7 +7168,7 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.ComiteTecnico)
                     .WithMany(p => p.SesionComiteTema)
                     .HasForeignKey(d => d.ComiteTecnicoId)
-                    .HasConstraintName("FK__SesionCom__Comit__4944D3CA");
+                    .HasConstraintName("FK__SesionCom__Comit__1B13F4C6");
             });
 
             modelBuilder.Entity<SesionInvitado>(entity =>

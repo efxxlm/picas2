@@ -83,14 +83,14 @@ namespace asivamosffie.services
             {
                 var procesoSeleccion = await _context.ProcesoSeleccion.Where(r => !(bool)r.Eliminado)
                                             .Include(r => r.ProcesoSeleccionObservacion)
-                                            .Include(r => r.ProcesoSeleccionProponente).ThenInclude(r=> r.ProcesoSeleccionIntegrante) 
+                                            .Include(r => r.ProcesoSeleccionProponente).ThenInclude(r => r.ProcesoSeleccionIntegrante)
                                             .IncludeFilter(r => r.ProcesoSeleccionCotizacion.Where(r => !(bool)r.Eliminado))
                                             .IncludeFilter(r => r.ProcesoSeleccionCronograma.Where(r => !(bool)r.Eliminado))
                                             .IncludeFilter(r => r.ProcesoSeleccionGrupo.Where(r => !(bool)r.Eliminado))
                                             .FirstOrDefaultAsync(proceso => proceso.ProcesoSeleccionId == id);
                 procesoSeleccion.ListaContratistas = _context.Contratista.Where(x => x.NumeroInvitacion == procesoSeleccion.NumeroProceso).ToList();
                 procesoSeleccion.ProcesoSeleccionGrupo = procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList();
-                 
+
                 foreach (var proces in procesoSeleccion.ProcesoSeleccionProponente)
                 {
                     if (proces.LocalizacionIdMunicipio == null)
@@ -145,8 +145,8 @@ namespace asivamosffie.services
                         TipoProcesoCodigo = procesoSeleccion.TipoProcesoCodigo,
                         EsDistribucionGrupos = procesoSeleccion.EsDistribucionGrupos,
                         CantGrupos = procesoSeleccion.CantGrupos,
-                        ResponsableTecnicoUsuarioId = procesoSeleccion.ResponsableTecnicoUsuarioId,
-                        ResponsableEstructuradorUsuarioid = procesoSeleccion.ResponsableEstructuradorUsuarioid,
+                        TipoResponsableTecnicoCodigo = procesoSeleccion.TipoResponsableTecnicoCodigo,
+                        TipoResponsableEstructuradorCodigo = procesoSeleccion.TipoResponsableEstructuradorCodigo,
                         CondicionesJuridicasHabilitantes = procesoSeleccion.CondicionesJuridicasHabilitantes,
                         CondicionesTecnicasHabilitantes = procesoSeleccion.CondicionesTecnicasHabilitantes,
                         CondicionesAsignacionPuntaje = procesoSeleccion.CondicionesAsignacionPuntaje,
@@ -188,8 +188,8 @@ namespace asivamosffie.services
                     ProcesoSeleccionAntiguo.TipoProcesoCodigo = procesoSeleccion.TipoProcesoCodigo;
                     ProcesoSeleccionAntiguo.EsDistribucionGrupos = procesoSeleccion.EsDistribucionGrupos;
                     ProcesoSeleccionAntiguo.CantGrupos = procesoSeleccion.CantGrupos;
-                    ProcesoSeleccionAntiguo.ResponsableTecnicoUsuarioId = procesoSeleccion.ResponsableTecnicoUsuarioId;
-                    ProcesoSeleccionAntiguo.ResponsableEstructuradorUsuarioid = procesoSeleccion.ResponsableEstructuradorUsuarioid;
+                    ProcesoSeleccionAntiguo.TipoResponsableTecnicoCodigo = procesoSeleccion.TipoResponsableTecnicoCodigo;
+                    ProcesoSeleccionAntiguo.TipoResponsableEstructuradorCodigo = procesoSeleccion.TipoResponsableEstructuradorCodigo;
                     ProcesoSeleccionAntiguo.CondicionesJuridicasHabilitantes = procesoSeleccion.CondicionesJuridicasHabilitantes;
                     ProcesoSeleccionAntiguo.CondicionesFinancierasHabilitantes = procesoSeleccion.CondicionesFinancierasHabilitantes;
                     ProcesoSeleccionAntiguo.CondicionesTecnicasHabilitantes = procesoSeleccion.CondicionesTecnicasHabilitantes;
@@ -811,7 +811,7 @@ namespace asivamosffie.services
                                 FechaModificacion = DateTime.Now,
                                 Eliminado = false,
                                 UsuarioModificacion = procesoSeleccionProponente.UsuarioModificacion,
-                                RegistroCompleto = ValidarRegistroCompletoProponente(procesoSeleccionProponente), 
+                                RegistroCompleto = ValidarRegistroCompletoProponente(procesoSeleccionProponente),
                                 TipoProponenteCodigo = procesoSeleccionProponente.TipoProponenteCodigo,
                                 NombreProponente = procesoSeleccionProponente.NombreProponente,
                                 TipoIdentificacionCodigo = procesoSeleccionProponente.TipoIdentificacionCodigo,
@@ -866,7 +866,7 @@ namespace asivamosffie.services
 
         private bool? ValidarRegistroCompletoProponente(List<ProcesoSeleccionProponente> ListProcesoSeleccionProponente)
         {
-            if (ListProcesoSeleccionProponente.Count()== 0)
+            if (ListProcesoSeleccionProponente.Count() == 0)
                 return null;
 
             foreach (var procesoSeleccionProponente in ListProcesoSeleccionProponente)
@@ -914,7 +914,7 @@ namespace asivamosffie.services
         public Respuesta CreateEditarProcesoSeleccionIntegrante(ProcesoSeleccionIntegrante procesoSeleccionIntegrante)
         {
             try
-            { 
+            {
                 if (procesoSeleccionIntegrante.ProcesoSeleccionIntegranteId == 0)
                 {
                     procesoSeleccionIntegrante.FechaCreacion = DateTime.Now;
@@ -1074,19 +1074,20 @@ namespace asivamosffie.services
                     }
                     else
                     {
-                        contratista = new Contratista();
-
-                        contratista.TipoIdentificacionCodigo = (p.TipoProponenteCodigo == "4" || p.TipoProponenteCodigo == "2") ? "3" : "1"; //Nit - cedula
-                        contratista.NumeroIdentificacion = string.IsNullOrEmpty(p.NumeroIdentificacion) ? "0" : p.NumeroIdentificacion;
-                        contratista.Nombre = p.NombreProponente;
-                        contratista.RepresentanteLegal = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? p.NombreProponente : p.NombreRepresentanteLegal;
-                        contratista.RepresentanteLegalNumeroIdentificacion = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? "" : p.CedulaRepresentanteLegal;
-                        contratista.NumeroInvitacion = pProcesoSeleccion.NumeroProceso;
-                        contratista.TipoProponenteCodigo = p.TipoProponenteCodigo;
-                        contratista.Activo = !p.Eliminado;
-                        contratista.FechaCreacion = DateTime.Now;
-                        contratista.UsuarioCreacion = pUsuarioCreo.ToUpper();
-                        contratista.ProcesoSeleccionProponenteId = p.ProcesoSeleccionProponenteId;
+                        contratista = new Contratista
+                        {
+                            TipoIdentificacionCodigo = (p.TipoProponenteCodigo == "4" || p.TipoProponenteCodigo == "2") ? "3" : "1", //Nit - cedula
+                            NumeroIdentificacion = string.IsNullOrEmpty(p.NumeroIdentificacion) ? "0" : p.NumeroIdentificacion,
+                            Nombre = p.NombreProponente,
+                            RepresentanteLegal = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? p.NombreProponente : p.NombreRepresentanteLegal,
+                            RepresentanteLegalNumeroIdentificacion = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? "" : p.CedulaRepresentanteLegal,
+                            NumeroInvitacion = pProcesoSeleccion.NumeroProceso,
+                            TipoProponenteCodigo = p.TipoProponenteCodigo,
+                            Activo = !p.Eliminado,
+                            FechaCreacion = DateTime.Now,
+                            UsuarioCreacion = pUsuarioCreo.ToUpper(),
+                            ProcesoSeleccionProponenteId = p.ProcesoSeleccionProponenteId
+                        };
 
                         _context.Contratista.Add(contratista);
                     }
@@ -1530,8 +1531,8 @@ namespace asivamosffie.services
                      string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
                      string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
                      string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.EsDistribucionGrupos)) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
+                     string.IsNullOrEmpty(procesoSeleccion.TipoResponsableTecnicoCodigo) ||
+                     string.IsNullOrEmpty(procesoSeleccion.TipoResponsableEstructuradorCodigo) ||
                      string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesAsignacionPuntaje)) ||
                      string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesFinancierasHabilitantes)) ||
                      string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CondicionesJuridicasHabilitantes)) ||
@@ -1664,8 +1665,8 @@ namespace asivamosffie.services
                      string.IsNullOrEmpty(procesoSeleccion.TipoIntervencionCodigo) ||
                      string.IsNullOrEmpty(procesoSeleccion.TipoAlcanceCodigo) ||
                      string.IsNullOrEmpty(procesoSeleccion.TipoProcesoCodigo) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableTecnicoUsuarioId)) ||
-                     string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.ResponsableEstructuradorUsuarioid)) ||
+                     string.IsNullOrEmpty(procesoSeleccion.TipoResponsableTecnicoCodigo) ||
+                     string.IsNullOrEmpty(procesoSeleccion.TipoResponsableEstructuradorCodigo) ||
                      string.IsNullOrEmpty(Convert.ToString(procesoSeleccion.CantidadCotizaciones)) ||
                      string.IsNullOrEmpty(procesoSeleccion.EstadoProcesoSeleccionCodigo) ||
                      string.IsNullOrEmpty(procesoSeleccion.EtapaProcesoSeleccionCodigo)
@@ -2139,18 +2140,25 @@ namespace asivamosffie.services
         /*jflorez
          impacto: 3.1.3
          resumen: tarea programada para enviar mensaje al equipo estructurador cuando se vence una actividad*/
+        /// <summary>
+        /// 03/05/2022 Julian Martinez Castañeda
+        /// Este Servicio queda inservible ya que el ticket 2022042930000011 elimina la relación con el usuario 
         public async Task getActividadesVencidas(string dominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender)
         {
-            var tareas = _context.ProcesoSeleccionCronograma.Where(x => x.FechaMaxima < DateTime.Now && !(bool)x.Eliminado && x.ProcesoSeleccion.ResponsableEstructuradorUsuarioid != null && x.CronogramaSeguimiento.Count() == 0).Select(x => new { x.ProcesoSeleccion.NumeroProceso, x.ProcesoSeleccion.ResponsableEstructuradorUsuarioid }).ToList();
+            var tareas = _context.ProcesoSeleccionCronograma.Where(x => x.FechaMaxima < DateTime.Now && !(bool)x.Eliminado
+                                                                        && !string.IsNullOrEmpty(x.ProcesoSeleccion.TipoResponsableEstructuradorCodigo)
+                                                                        && x.CronogramaSeguimiento.Count() == 0)
+                                                            .Select(x => new { x.ProcesoSeleccion.NumeroProceso, x.ProcesoSeleccion.TipoResponsableEstructuradorCodigo })
+                                                            .ToList();
 
-            foreach (var tarea in tareas.Select(x => x.ResponsableEstructuradorUsuarioid).Distinct())
-            {
-                string texto = string.Join("<br>", tareas.Where(x => x.ResponsableEstructuradorUsuarioid == tarea).Select(x => x.NumeroProceso));
-                var usuarioenvio = _context.Usuario.Find(tarea);
-                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.ActividadesNoMonitoreadasProcesoSeleccion);
-                string template = TemplateRecoveryPassword.Contenido.Replace("_LinkF_", dominioFront).Replace("[TablaSolicitudes]", texto);
-                bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioenvio.Email, "Actividades procesos de selección", template, sender, password, mailServer, mailPort);
-            }
+            //foreach (var tarea in tareas.Select(x => x.ResponsableEstructuradorUsuarioid).Distinct())
+            //{
+            //    string texto = string.Join("<br>", tareas.Where(x => x.ResponsableEstructuradorUsuarioid == tarea).Select(x => x.NumeroProceso));
+            //    var usuarioenvio = _context.Usuario.Find(tarea);
+            //    Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.ActividadesNoMonitoreadasProcesoSeleccion);
+            //    string template = TemplateRecoveryPassword.Contenido.Replace("_LinkF_", dominioFront).Replace("[TablaSolicitudes]", texto);
+            //    bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioenvio.Email, "Actividades procesos de selección", template, sender, password, mailServer, mailPort);
+            //}
         }
     }
 }
