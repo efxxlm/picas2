@@ -188,48 +188,75 @@ export class TerceroCausacionGogComponent implements OnInit {
 
                     //const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
                     let dataAportantes = await this.ordenGiroSvc.getAportantesNew( this.solicitudPago );
-                    for (let i = 0; i < dataAportantes.listaTipoAportante.length; i++) {
-                        const element = dataAportantes.listaTipoAportante[i];
-                        const element2 = this.solicitudPago.tablaInformacionFuenteRecursos[i];
-                        element.aportanteId = element2.cofinanciacionAportanteId
-                    }
+                    // for (let i = 0; i < dataAportantes.listaTipoAportante.length; i++) {
+                    //     const element = dataAportantes.listaTipoAportante[i];
+                    //     const element2 = this.solicitudPago.tablaInformacionFuenteRecursos[i];
+                    //     element.aportanteId = element2.cofinanciacionAportanteId
+                    // }
 
-                    if (this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.length > 0) {
-                      const conceptosxContratacionProyecto = this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.filter((r: { contratacionProyectoId: number; }) => r.contratacionProyectoId === this.contratacionProyectoId);
-                      const aportantesxContratacionProyecto = [];
-                      if(conceptosxContratacionProyecto.length > 0){
-                        conceptosxContratacionProyecto.forEach((cp: { aportanteId: any; }) => {
-                          if(aportantesxContratacionProyecto.indexOf(cp.aportanteId) === -1) {
-                            aportantesxContratacionProyecto.push(cp.aportanteId);
-                          }
-                        });
-                      }
-                      const listaNombreAportante = [];
-                      const  listaTipoAportante = [];
+                    if ( this.solicitudPago.tablaInformacionFuenteRecursos && this.solicitudPago.tablaInformacionFuenteRecursos.length > 0 ) {
+                        const tipoAportantesList = [ ...dataAportantes.listaTipoAportante ]
+                        const tipoAportanteTemp = []
+                        this.solicitudPago.tablaInformacionFuenteRecursos.forEach(
+                            ff => {
+                                const taIndex = tipoAportantesList.findIndex( ta => ta.dominioId ===  ff.tipoAportanteId && !ta.aportanteId )
 
-                      if ( dataAportantes.listaNombreAportante.length > 0  ) {
-                        dataAportantes.listaNombreAportante.forEach((r: any, index: number) => {
-                          let position = aportantesxContratacionProyecto.indexOf(r.cofinanciacionAportanteId);
-                          if(position !== -1) {
-                            listaNombreAportante.push(r);
-
-                            const lta = dataAportantes.listaTipoAportante.find(la => la.aportanteId == r.cofinanciacionAportanteId);
-                            if(lta != undefined){
-                              if(listaTipoAportante.findIndex(r => r.dominioId == lta.dominioId && r.tipoDominioId == lta.tipoDominioId && r.codigo == lta.codigo) === -1){
-                                listaTipoAportante.push(lta);
-                              }
+                                if ( taIndex !== -1 ) {
+                                    tipoAportanteTemp.push(
+                                        {
+                                            ...tipoAportantesList[ taIndex ],
+                                            aportanteId: ff.cofinanciacionAportanteId
+                                        }
+                                    )
+                                }
                             }
+                        )
 
-                          }
-                        });
-                      }
-                      if(listaNombreAportante.length > 0){
-                        dataAportantes = {
-                          listaNombreAportante: listaNombreAportante,
-                          listaTipoAportante: listaTipoAportante
-                        };
-                      }
+                        dataAportantes.listaTipoAportante = tipoAportanteTemp
                     }
+
+                    // if (this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.length > 0) {
+                    //     console.log( this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto )
+                    //   const conceptosxContratacionProyecto = this.solicitudPago.valorXProyectoXFaseXAportanteXConcepto.filter((r: { contratacionProyectoId: number; }) => r.contratacionProyectoId === this.contratacionProyectoId);
+                    //   const aportantesxContratacionProyecto = [];
+                    //   console.log( conceptosxContratacionProyecto )
+                    //   if(conceptosxContratacionProyecto.length > 0){
+                    //     conceptosxContratacionProyecto.forEach((cp: { aportanteId: any; }) => {
+                    //       if(aportantesxContratacionProyecto.indexOf(cp.aportanteId) === -1) {
+                    //         aportantesxContratacionProyecto.push(cp.aportanteId);
+                    //       }
+                    //     });
+                    //   }
+                    //   const listaNombreAportante = [];
+                    //   const  listaTipoAportante = [];
+
+                    //   if ( dataAportantes.listaNombreAportante.length > 0  ) {
+                    //     console.log( aportantesxContratacionProyecto )
+                    //     dataAportantes.listaNombreAportante.forEach((r: any, index: number) => {
+                    //       let position = aportantesxContratacionProyecto.indexOf(r.cofinanciacionAportanteId);
+                    //       if(position !== -1) {
+                    //         listaNombreAportante.push(r);
+                    //         const lta = dataAportantes.listaTipoAportante.find(la => la.aportanteId == r.cofinanciacionAportanteId);
+
+                    //         if(lta != undefined){
+                    //           if(listaTipoAportante.findIndex(r => r.dominioId == lta.dominioId && r.tipoDominioId == lta.tipoDominioId && r.codigo == lta.codigo) === -1){
+                    //             listaTipoAportante.push(lta);
+                    //           }
+                    //         }
+
+                    //       }
+                    //     });
+                    //   }
+
+                    //   console.log( 'linea 236', listaNombreAportante )
+                    //   console.log( listaTipoAportante )
+                    //   if(listaNombreAportante.length > 0){
+                    //     dataAportantes = {
+                    //       listaNombreAportante: listaNombreAportante,
+                    //       listaTipoAportante: listaTipoAportante
+                    //     };
+                    //   }
+                    // }
 
                     if ( this.solicitudPago.tablaUsoFuenteAportante !== undefined ) {
                         if ( this.solicitudPago.tablaUsoFuenteAportante.usos !== undefined ) {
@@ -1496,8 +1523,8 @@ export class TerceroCausacionGogComponent implements OnInit {
       let valorUsoTotal = 0;
       let valorFacturadoTotal = 0;
       if(aportanteId > 0 && codigo != null && fuenteFinanciacionId > 0 && usoDelConcepto != undefined && usoDelConcepto != null){
-        let drpData = this.usosDrp.find(r => r.contratacionProyectoId == this.contratacionProyectoId && r.cofinanciacionAportanteId == aportanteId && r.fuenteFinanciacionId == fuenteFinanciacionId && r.esPreConstruccion == this.esPreconstruccion && r.tipoUsoCodigo == usoDelConcepto);
-        let valoresFacturados = this.usosFacturados.filter(r => r.contratacionProyectoId == this.contratacionProyectoId && r.aportanteId == aportanteId && r.fuenteFinanciacionId == fuenteFinanciacionId && r.usoCodigo == usoDelConcepto && r.esPreconstruccion == this.esPreconstruccion);
+        let drpData = this.usosDrp?.find(r => r.contratacionProyectoId == this.contratacionProyectoId && r.cofinanciacionAportanteId == aportanteId && r.fuenteFinanciacionId == fuenteFinanciacionId && r.esPreConstruccion == this.esPreconstruccion && r.tipoUsoCodigo == usoDelConcepto);
+        let valoresFacturados = this.usosFacturados?.filter(r => r.contratacionProyectoId == this.contratacionProyectoId && r.aportanteId == aportanteId && r.fuenteFinanciacionId == fuenteFinanciacionId && r.usoCodigo == usoDelConcepto && r.esPreconstruccion == this.esPreconstruccion);
         if(drpData != null)
           valorUsoTotal = drpData?.valorUso ?? 0;
 
