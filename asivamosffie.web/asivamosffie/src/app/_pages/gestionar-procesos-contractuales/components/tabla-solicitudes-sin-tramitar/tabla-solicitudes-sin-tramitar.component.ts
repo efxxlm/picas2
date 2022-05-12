@@ -85,6 +85,8 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
       if ( dataTable.length > 0 ) {
         dataTable.forEach( registro => registro.fechaSolicitud !== undefined ? registro.fechaSolicitud = registro.fechaSolicitud.split('T')[0].split('-').reverse().join('/') : '---' );
+      } else {
+          this.estadoAcordeon.emit( 'completo' );
       }
 
       this.dataSource = new MatTableDataSource( dataTable );
