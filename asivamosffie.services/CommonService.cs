@@ -1054,6 +1054,8 @@ namespace asivamosffie.services
 
         public string GetMonthDaysDifferences(DateTime startDate, DateTime endDate)
         {
+            if (startDate > endDate)
+                return "Error en fechas";
             DateTime baseDate = new DateTime(1, 1, 1);
             int diffDays = endDate.Subtract(startDate).Days;
             DateTime newDate = baseDate.AddDays(diffDays);

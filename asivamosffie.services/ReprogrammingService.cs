@@ -1710,6 +1710,7 @@ namespace asivamosffie.services
                         ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion;
 
                         VerificarRegistroCompletoAjusteProgramacion(ajusteProgramacionId);
+                        _context.SaveChanges();
                     }
 
 
