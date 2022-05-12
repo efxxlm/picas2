@@ -6,7 +6,7 @@ namespace asivamosffie.model.Models
     public partial class VContratoProyectoFechaEstimadaFinalizacion
     {
         public int ContratoId { get; set; }
-        public int ProyectoId { get; set; }
+        public int? ProyectoId { get; set; }
         public int? ContratacionProyectoId { get; set; }
         public string TipoSolicitudCodigo { get; set; }
         public DateTime? FechaInicioProyecto { get; set; }

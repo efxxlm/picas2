@@ -36,7 +36,6 @@ export interface ContratoModificado {
 }
 
 export interface Contrato {
-
   contratacionId: number;
   fechaTramite: string;
   tipoContratoCodigo: string;
@@ -72,6 +71,7 @@ export interface Contrato {
   modalidadCodigo?: string;
   fechaTerminacionFase2?: Date;
   fechaEstimadaFinalizacion?: Date;
+  tipoSolicitudCodigo?: string;
 }
 
 interface ContratoPoliza {

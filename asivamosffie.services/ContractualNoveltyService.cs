@@ -148,6 +148,22 @@ namespace asivamosffie.services
 
         #region Gets
 
+        public async Task<List<VContratosDisponiblesNovedad>> GetListContractNew()
+        {
+            List<VContratosDisponiblesNovedad> VlistaContratos = _context.VContratosDisponiblesNovedad.ToList();
+
+            List<NovedadContractual> novedades = _context.NovedadContractual
+                .Where(r => r.Eliminado != true)
+                .ToList();
+
+
+            foreach (var c in VlistaContratos)
+            {
+                c.NovedadContractual = novedades.Where(r=> r.ContratoId == c.ContratoId).ToList();
+            }
+            return VlistaContratos;
+        }
+
         /// <summary>
         /// CU 4.1.3 - get list of contracts assign to logged user for autocomplete
         /// </summary>

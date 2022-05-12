@@ -40,5 +40,6 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> EliminarComponenteFuenteNovedad(int pComponenteFuenteNovedad, string pUsuario);
         Task<Respuesta> EliminarComponenteUsoNovedad(int pComponenteUsoNovedad, string pUsuario);
         Task<List<dynamic>> GetDatosContratoProyectoModificadosXNovedad(int pProyectoId, int pContratoId);
+        Task<List<VContratosDisponiblesNovedad>> GetListContractNew();
     }
 }

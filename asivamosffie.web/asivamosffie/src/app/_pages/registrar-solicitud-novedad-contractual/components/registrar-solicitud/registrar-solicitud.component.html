@@ -103,7 +103,7 @@
       </p>
       <p>
         <strong>Nombre del contratista:</strong>
-        {{ contrato?.contratacion?.contratista?.nombre }}
+        {{ contrato?.nombreContratista }}
       </p>
       <p>
         <strong>Tipo de identificación:</strong>
@@ -113,7 +113,7 @@
       </p>
       <p>
         <strong>Número de identificación</strong>
-        {{ contrato?.contratacion?.contratista?.numeroIdentificacion }}
+        {{ contrato?.tipoIdentificacion }}
       </p>
       <!-- <p>
         <strong>Tipo de intervención:</strong>
@@ -142,13 +142,13 @@
       <p>
         <strong>Plazo:</strong>
         {{
-          contrato?.contratacion?.plazoContratacion != null ?
-          (contrato?.contratacion?.plazoContratacion?.plazoMeses) : 0
+          contrato?.plazoMeses != null ?
+          (contrato?.plazoMeses) : 0
         }}
         meses /
         {{
-            contrato?.contratacion?.plazoContratacion != null ?
-            (contrato?.contratacion?.plazoContratacion?.plazoDias) : 0
+            contrato?.plazoDias != null ?
+            (contrato?.plazoDias) : 0
         }}
         días
       </p>

@@ -386,6 +386,8 @@ export class FormDetallarSolicitudNovedadComponent implements OnInit {
 
   validarSaldoDisponible(saldoIngresado: number, nombreAportante: string, aportante) {
     let saldoDisponible = this.presupuestoAdicionalSolicitado;
+    if(nombreAportante == undefined || nombreAportante == null)
+      nombreAportante = ''
 
      if (saldoIngresado > saldoDisponible) {
        this.openDialog('', `<b>El valor del aportante ${nombreAportante} al proyecto es superior al valor disponible, verifique por favor con él área financiera.</b>`);

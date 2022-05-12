@@ -27,12 +27,13 @@ namespace asivamosffie.api.Controllers
            impacto: CU 4.1.3*/
         [HttpGet]
         [Route("GetListContract")]
-        public async Task<ActionResult<List<Contrato>>> GetListContract()
+        public async Task<ActionResult<List<VContratosDisponiblesNovedad>>> GetListContract()
         {
             try
             {
                 int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
-                return await _contractualModification.GetListContract(pUserId);
+                //return await _contractualModification.GetListContract(pUserId);
+                return await _contractualModification.GetListContractNew();
             }
             catch (Exception ex)
             {
