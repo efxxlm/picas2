@@ -123,11 +123,12 @@ export class FormProyectoComponent implements OnInit {
             const fasescompleto = this.solicitudPagoFase.filter(fase => fase.contratacionProyectoId === this.proyecto.get('contratacionProyectoId').value && fase.registroCompleto === true)
             const fasesEnProceso = this.solicitudPagoFase.filter(fase => fase.contratacionProyectoId === this.proyecto.get('contratacionProyectoId').value && fase.registroCompleto === false)
 
-            if(this.solicitudPagoFase[0].solicitudPagoFaseAmortizacion[0].valorAmortizacion > -1)
+            if( this.solicitudPagoFase[0].solicitudPagoFaseAmortizacion
+                && this.solicitudPagoFase[0].solicitudPagoFaseAmortizacion.length > 0
+                && this.solicitudPagoFase[0].solicitudPagoFaseAmortizacion[0].valorAmortizacion > -1 )
             {
                 this.estadoSemaforoAmortizacion = 'completo'
             }
- 
 
             if (fasescompleto.length === fases.length) {
                 this.estadoSemaforoFase = 'completo'

@@ -230,6 +230,8 @@ export class FormGenerarOrdenGiroComponent implements OnInit {
                 arraySemaforoelement.push(element.estadoSemaforo)
             }
         });
+
+        if ( arraySemaforoelement.find(n => n === 'completo') && arraySemaforoelement.find(n => n === 'sin-diligenciar') ) return 'en-proceso'
         if (arraySemaforoelement.every(n => n === 'completo')) return 'completo'
         if (arraySemaforoelement.every(n => n === 'completo')) return 'en-proceso'
         if (arraySemaforoelement.some(n => n === 'sin-diligenciar')) return 'sin-diligenciar'

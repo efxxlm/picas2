@@ -83,6 +83,14 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
         this.estadoAcordeon.emit( 'en-proceso' );
       }
 
+      if ( conTrue === 0 && conFalse > 0 && conFalse === dataTable.length ) {
+        this.estadoAcordeon.emit( 'sin-diligenciar' );
+      }
+
+      if ( conTrue > 0 && conFalse === 0 && conTrue === dataTable.length ) {
+        this.estadoAcordeon.emit( 'completo' );
+      }
+
       if ( dataTable.length > 0 ) {
         dataTable.forEach( registro => registro.fechaSolicitud !== undefined ? registro.fechaSolicitud = registro.fechaSolicitud.split('T')[0].split('-').reverse().join('/') : '---' );
       } else {
