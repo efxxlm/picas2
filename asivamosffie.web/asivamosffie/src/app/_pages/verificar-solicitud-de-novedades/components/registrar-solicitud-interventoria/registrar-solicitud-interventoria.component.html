@@ -119,39 +119,54 @@
         <strong>
           Nombre del contratista:
         </strong>
-        {{contrato?.contratacion.contratista.nombre}}
+        {{ contrato?.nombreContratista }}
       </p>
       <p>
         <strong>Tipo de identificación:</strong>
         <span>
-          {{contrato?.contratacion.contratista.tipoIdentificacionNotMapped}}
+          {{ contrato?.tipoIdentificacion }}
         </span>
       </p>
       <p>
         <strong>
           Número de identificación
         </strong>
-        {{contrato?.contratacion.contratista.numeroIdentificacion}}
+        {{ contrato?.numeroIdentificacion }}
       </p>
       <!-- <p>
         <strong>Tipo de intervención:</strong>
         NPI Preguntar
       </p> -->
-      <p>
+      <p *ngIf="contrato.datosContratoProyectoModificadosXNovedad != null">
         <strong>Valor del contrato:</strong>
-        {{ (contrato?.contratacion?.disponibilidadPresupuestal?.length > 0 ?
-          contrato?.contratacion?.disponibilidadPresupuestal[0]?.valorSolicitud : 0 ) | currency: '':'symbol':'3.0' }}
+        <span>
+          {{ contrato?.datosContratoProyectoModificadosXNovedad[0]?.valorContrato | currency:'':'symbol':'3.0' }}
+        </span>
+      </p>
+      <p *ngIf="contrato.datosContratoProyectoModificadosXNovedad != null">
+        <strong >
+          Valor del proyecto
+          <span *ngIf="contrato?.datosContratoProyectoModificadosXNovedad[0]?.tipoSolicitudCodigo == '1'">(Obra) </span>
+          <span *ngIf="contrato?.datosContratoProyectoModificadosXNovedad[0]?.tipoSolicitudCodigo == '2'">(Interventoría) </span>:
+        </strong>
+        {{ contrato?.datosContratoProyectoModificadosXNovedad[0]?.valorProyecto | currency: '':'symbol':'3.0' }}
+      </p>
+      <p *ngIf="contrato.datosContratoProyectoModificadosXNovedad != null">
+        <strong>
+          Valor total del proyecto (Obra e Interventoría):
+        </strong>
+        {{ contrato?.datosContratoProyectoModificadosXNovedad[0]?.valorTotalObraInterventoria | currency: '':'symbol':'3.0' }}
       </p>
       <p>
         <strong>Plazo:</strong>
         {{
-          contrato?.contratacion?.plazoContratacion != null ?
-          (contrato?.contratacion?.plazoContratacion?.plazoMeses) : 0
+          contrato?.plazoMeses != null ?
+          (contrato?.plazoMeses) : 0
         }}
         meses /
         {{
-          contrato?.contratacion?.plazoContratacion != null ?
-          (contrato?.contratacion?.plazoContratacion?.plazoDias) : 0
+          contrato?.plazoDias != null ?
+          (contrato?.plazoDias) : 0
         }}
         días
       </p>
@@ -163,7 +178,12 @@
         <strong>Fecha de finalización de contrato:</strong>
         {{ (contrato?.fechaTerminacionFase2 ? contrato?.fechaTerminacionFase2 : contrato?.fechaTerminacion) | date:'dd/MM/yyyy'}}
       </p>
-
+      <p *ngIf="contrato?.datosContratoProyectoModificadosXNovedad != null && contrato?.datosContratoProyectoModificadosXNovedad != undefined">
+        <strong>Fecha estimada de finalización de contrato:</strong>
+        {{
+          contrato?.datosContratoProyectoModificadosXNovedad[0]?.fechaEstimadaFinContrato | date: 'dd/MM/yyyy'
+        }}
+      </p>
       <div class="animatedDown" *ngIf="novedadAplicada.value === false && proyecto">
         <h2 class="card-subTitle">Proyecto asociado</h2>
         <p>

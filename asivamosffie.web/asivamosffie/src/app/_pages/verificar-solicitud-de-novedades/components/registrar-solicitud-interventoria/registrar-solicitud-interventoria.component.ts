@@ -60,6 +60,7 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
             this.novedadAplicada.setValue(novedad.esAplicadaAcontrato);
             this.proyecto = novedad['proyectosSeleccionado'];
             this.contrato = novedad.contrato;
+            this.contrato.datosContratoProyectoModificadosXNovedad = this.novedad.datosContratoProyectoModificadosXNovedad;
 
             if (this.novedadAplicada.value == false) {
               this.contractualNoveltyService.getProyectosContrato(this.contrato.contratoId).subscribe(
@@ -89,9 +90,9 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
 
     //traigo contratos
     this.contractualNoveltyService.getContratosAutocomplete().subscribe(respuesta=>{
-      this.contratos=respuesta.filter( r => r.contratacion.tipoSolicitudCodigo === '2' ); // interventoria
+      this.contratos=respuesta.filter( r => r.tipoSolicitudCodigo === '2' ); // interventoria
       //this.options=respuesta.map(function(task,index,array){return task.numeroContrato})
-      this.options=respuesta.filter( r => r.contratacion.tipoSolicitudCodigo === '2' ); // interventoria
+      this.options=respuesta.filter( r => r.tipoSolicitudCodigo === '2' ); // interventoria
     });
     this.filteredOptions = this.numeroContrato.valueChanges.pipe(
       startWith(''),
@@ -152,6 +153,9 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
   seleccionarProyecto( proy ){
     console.log(proy, this.contrato)
     this.proyecto = proy;
+    this.contractualNoveltyService.getDatosContratoProyectoModificadosXNovedad(this.proyecto.proyectoId, this.contrato.contratoId).subscribe(respuesta => {
+      this.contrato.datosContratoProyectoModificadosXNovedad = respuesta;
+    });
   }
 
 }
