@@ -69,9 +69,6 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
         }
       }
 
-      if ( conTrue === dataTable.length ) {
-        this.estadoAcordeon.emit( 'completo' );
-      }
       if ( conFalse === dataTable.length ) {
         this.estadoAcordeon.emit( 'sin-diligenciar' );
       }
@@ -85,10 +82,6 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
       if ( conTrue === 0 && conFalse > 0 && conFalse === dataTable.length ) {
         this.estadoAcordeon.emit( 'sin-diligenciar' );
-      }
-
-      if ( conTrue > 0 && conFalse === 0 && conTrue === dataTable.length ) {
-        this.estadoAcordeon.emit( 'completo' );
       }
 
       if ( dataTable.length > 0 ) {
