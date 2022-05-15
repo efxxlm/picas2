@@ -60,7 +60,7 @@ export class PlantillaComponent implements OnInit {
   infoPlantilla: any;
   tablaOrdenGiro = [];
   valorNetoGiro = 0;
-  listAportantes : string = '';
+  listAportantes: string = '';
   listA = [];
   descuentos = { valorTotal: 0, retegarantia: 0, ans: 0, otrosDescuentos: 0 };
 
@@ -74,7 +74,7 @@ export class PlantillaComponent implements OnInit {
     private ordenGiroSvc: OrdenPagoService,
     private fb: FormBuilder,
     private registrarPagosSvc: RegistrarRequisitosPagoService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getOrdenGiro();
@@ -101,17 +101,17 @@ export class PlantillaComponent implements OnInit {
 
     solicitudPago.tablaPorcentajeParticipacion.forEach(tp => {
       tp.listAportantes.forEach(element => {
-        if(!this.listA.find(r => r.nombreAportante == element.nombreAportante))
-          this.listA.push({nombreAportante: element.nombreAportante});
+        if (!this.listA.find(r => r.nombreAportante == element.nombreAportante))
+          this.listA.push({ nombreAportante: element.nombreAportante });
       });
     });
 
     this.listA.forEach(element => {
-      if(this.listAportantes == ''){
+      if (this.listAportantes == '') {
         this.listAportantes += element.nombreAportante;
-      }else{
-        if(this.listAportantes)
-        this.listAportantes += ", "+ element.nombreAportante;
+      } else {
+        if (this.listAportantes)
+          this.listAportantes += ", " + element.nombreAportante;
       }
     });
 
@@ -171,14 +171,16 @@ export class PlantillaComponent implements OnInit {
     this.ordenGiroSvc.getInfoPlantilla(ordenGiroId).subscribe(response => {
       this.infoPlantilla = response;
       console.log(this.infoPlantilla);
-      this.infoPlantilla.forEach(element => {
-        this.valorConcepto += element.valorConcepto;
-        this.descuentoReteFuente += element.descuentoReteFuente;
-        this.descuentoAns += element.descuentoAns; 
-        this.descuentoOtros += element.otrosDescuentosValorConcepto.map(value => value.valorDescuento).reduce((a,b)=> a+b); 
-        const valorAcumulado = element.valorConcepto - element.descuentoReteFuente - element.descuentoAns - element.descuentoOtros;
+      this.infoPlantilla.forEach(element => { 
+        this.valorConcepto += element.valorConcepto ?? 0;
+        this.descuentoReteFuente += element.descuentoReteFuente ?? 0;
+        this.descuentoAns += element.descuentoAns ?? 0;
+        if (element.otrosDescuentosValorConcepto?.length !== 0)
+          this.descuentoOtros += element.otrosDescuentosValorConcepto.map(value => value.valorDescuento).reduce((a, b) => a + b);
+        const valorAcumulado = (element.valorConcepto - element.descuentoReteFuente - element.descuentoAns - element.descuentoOtros) ?? 0;
         this.valorTotal += valorAcumulado;
       });
+      console.error('valor concepto', this.valorConcepto);
     });
   }
 
