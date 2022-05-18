@@ -367,11 +367,15 @@ namespace asivamosffie.services
                         if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
                         {
                             SesionComiteSolicitudComiteTecnico.ProcesoSeleccion = ListProcesosSelecicon.Where(r => r.ProcesoSeleccionId == SesionComiteSolicitudComiteTecnico.SolicitudId).FirstOrDefault();
+                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.ProcesoSeleccion.NumeroProceso;
+                             
                         }
                     }
                     if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
                     {
                         SesionComiteSolicitudComiteTecnico.Contratacion = ListContratacion.Where(r => r.ContratacionId == SesionComiteSolicitudComiteTecnico.SolicitudId).FirstOrDefault();
+
+                        SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.Contratacion.NumeroSolicitud;
                     }
                     if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Novedad_Contractual)
                     {
@@ -386,6 +390,8 @@ namespace asivamosffie.services
                                 ListModificacionesContractuales
                                 .Where(r => r.NovedadContractualId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                 .FirstOrDefault();
+
+                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.NovedadContractual.NumeroSolicitud;
                         }
                     }
                     if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales)
@@ -396,6 +402,8 @@ namespace asivamosffie.services
                                 ListControversiasContractuales
                                 .Where(r => r.ControversiaContractualId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                 .FirstOrDefault();
+                             
+                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.ControversiaContractual.NumeroSolicitud;
                         }
                     }
                     if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Defensa_judicial)
@@ -406,6 +414,8 @@ namespace asivamosffie.services
                                 ListDefensaJudicial
                                 .Where(r => r.DefensaJudicialId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                 .FirstOrDefault();
+
+                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.DefensaJudicial.NumeroProceso;
                         }
                     }
                     if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion)
@@ -416,6 +426,8 @@ namespace asivamosffie.services
                                 ListProcesoSeleccionMonitoreo
                                 .Where(r => r.ProcesoSeleccionMonitoreoId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                 .FirstOrDefault();
+                             
+                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.ProcesoSeleccionMonitoreo.NumeroProceso;
                         }
                     }
                     if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso)
@@ -423,6 +435,8 @@ namespace asivamosffie.services
                         if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
                         {
                             SesionComiteSolicitudComiteTecnico.ProcesoSeleccion = ListProcesosSelecicon.Where(r => r.ProcesoSeleccionId == SesionComiteSolicitudComiteTecnico.SolicitudId).FirstOrDefault();
+
+                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.ProcesoSeleccion.NumeroProceso; 
                         }
                     }
                     if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales)
@@ -433,6 +447,8 @@ namespace asivamosffie.services
                                 ListControversiaActuacion
                                 .Where(r => r.ControversiaActuacionId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                 .FirstOrDefault();
+
+                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.ControversiaActuacion.NumeroActuacion;
                         }
                     }
                 }
@@ -456,6 +472,9 @@ namespace asivamosffie.services
                         if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
                         {
                             SesionComiteSolicitudComiteTecnico.ProcesoSeleccion = ListProcesosSelecicon.Where(r => r.ProcesoSeleccionId == SesionComiteSolicitudComiteTecnico.SolicitudId).FirstOrDefault();
+
+                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.ProcesoSeleccion.NumeroProceso;
+
                         }
                     }
                     if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
@@ -470,6 +489,8 @@ namespace asivamosffie.services
                                 ListModificacionesContractuales
                                 .Where(r => r.NovedadContractualId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                 .FirstOrDefault();
+                             
+                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.ModificacionContractual.NumeroSolicitud;
                         }
                     }
                     if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales)
@@ -480,7 +501,9 @@ namespace asivamosffie.services
                                 ListControversiasContractuales
                                 .Where(r => r.ControversiaContractualId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                 .FirstOrDefault();
-                        }
+
+                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.ControversiaContractual.NumeroSolicitud;
+                         }
                     }
                     if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Defensa_judicial)
                     {
@@ -490,6 +513,9 @@ namespace asivamosffie.services
                                 ListDefensaJudicial
                                 .Where(r => r.DefensaJudicialId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                 .FirstOrDefault();
+
+                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.DefensaJudicial.NumeroProceso;
+
                         }
                     }
                     if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion)
@@ -500,6 +526,8 @@ namespace asivamosffie.services
                                 ListProcesoSeleccionMonitoreo
                                 .Where(r => r.ProcesoSeleccionMonitoreoId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                 .FirstOrDefault();
+
+                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.ProcesoSeleccionMonitoreo.NumeroProceso;
                         }
                     }
                     if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Evaluacion_De_Proceso)
@@ -507,6 +535,8 @@ namespace asivamosffie.services
                         if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
                         {
                             SesionComiteSolicitudComiteTecnico.ProcesoSeleccion = ListProcesosSelecicon.Where(r => r.ProcesoSeleccionId == SesionComiteSolicitudComiteTecnico.SolicitudId).FirstOrDefault();
+                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.ProcesoSeleccion.NumeroProceso;
+
                         }
                     }
                     if (SesionComiteSolicitudComiteTecnico.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales)
@@ -517,6 +547,7 @@ namespace asivamosffie.services
                                 ListControversiaActuacion
                                 .Where(r => r.ControversiaActuacionId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                 .FirstOrDefault();
+                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.ControversiaActuacion.NumeroActuacion;
                         }
                     }
                 }

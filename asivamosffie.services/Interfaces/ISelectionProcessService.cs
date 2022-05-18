@@ -32,7 +32,7 @@ namespace asivamosffie.services.Interfaces
         //Proponente
         Task<ProcesoSeleccionCronograma> GetProcesoSeleccionProponenteById(int id);
         Task<ActionResult<List<GrillaProcesoSeleccionProponente>>> GetGridProcesoSeleccionProponente(int? procesoSeleccionId);
-        Respuesta CreateEditarProcesoSeleccionProponente(ProcesoSeleccionProponente procesoSeleccionProponente);
+        Respuesta CreateEditarProcesoSeleccionProponente(ProcesoSeleccionProponente procesoSeleccionProponente , int pIdProcesoSeleccionActial);
 
         //Integrante
         Task<ProcesoSeleccionIntegrante> GetProcesoSeleccionIntegranteById(int id);
