@@ -243,7 +243,7 @@ namespace asivamosffie.services
                 }
 
                 if (procesoSeleccion.ProcesoSeleccionProponente.Count() > 0)
-                {  
+                {
                     //Eliminar las relaciones anteriores por si el front no envia los mismos proponentes
 
                     _context.Set<ProcesoSeleccionProponente>()
@@ -252,7 +252,7 @@ namespace asivamosffie.services
                             {
                                 Eliminado = true
                             });
-                     
+
                     foreach (var ProcesoSeleccionProponente in procesoSeleccion.ProcesoSeleccionProponente)
                     {
 
@@ -273,7 +273,7 @@ namespace asivamosffie.services
                     proponente.EmailProponente = proponente.EmailProponente;
                     proponente.Eliminado = false;
                     proponente.ProcesoSeleccionId = procesoSeleccion.ProcesoSeleccionId;
-                    this.CreateEditarProcesoSeleccionProponente(proponente , procesoSeleccion.ProcesoSeleccionId);
+                    this.CreateEditarProcesoSeleccionProponente(proponente, procesoSeleccion.ProcesoSeleccionId);
                 }
 
 
@@ -831,6 +831,8 @@ namespace asivamosffie.services
                 }
                 else
                 {
+                    bool blRegistroCompleto = (bool)ValidarRegistroCompletoProponente(procesoSeleccionProponente);
+
                     _context.Set<ProcesoSeleccionProponente>()
                             .Where(r => r.ProcesoSeleccionProponenteId == procesoSeleccionProponente.ProcesoSeleccionProponenteId)
                             .Update(r => new ProcesoSeleccionProponente
@@ -838,7 +840,7 @@ namespace asivamosffie.services
                                 FechaModificacion = DateTime.Now,
                                 Eliminado = false,
                                 UsuarioModificacion = procesoSeleccionProponente.UsuarioModificacion,
-                                RegistroCompleto = ValidarRegistroCompletoProponente(procesoSeleccionProponente),
+                                RegistroCompleto = blRegistroCompleto,
                                 TipoProponenteCodigo = procesoSeleccionProponente.TipoProponenteCodigo,
                                 NombreProponente = procesoSeleccionProponente.NombreProponente,
                                 TipoIdentificacionCodigo = procesoSeleccionProponente.TipoIdentificacionCodigo,
@@ -882,14 +884,17 @@ namespace asivamosffie.services
 
         private bool? ValidarRegistroCompletoProponente(ProcesoSeleccionProponente procesoSeleccionProponente)
         {
-            return (
-                  !string.IsNullOrEmpty(procesoSeleccionProponente.NombreProponente)
-               || !string.IsNullOrEmpty(procesoSeleccionProponente.NumeroIdentificacion)
-               || !string.IsNullOrEmpty(procesoSeleccionProponente.LocalizacionIdMunicipio)
-               || !string.IsNullOrEmpty(procesoSeleccionProponente.DireccionProponente)
-               || !string.IsNullOrEmpty(procesoSeleccionProponente.TelefonoProponente)
-               || !string.IsNullOrEmpty(procesoSeleccionProponente.EmailProponente)
-                );
+            if (
+                  string.IsNullOrEmpty(procesoSeleccionProponente.NombreProponente)
+               || string.IsNullOrEmpty(procesoSeleccionProponente.NumeroIdentificacion)
+               || string.IsNullOrEmpty(procesoSeleccionProponente.LocalizacionIdMunicipio)
+               || string.IsNullOrEmpty(procesoSeleccionProponente.DireccionProponente)
+               || string.IsNullOrEmpty(procesoSeleccionProponente.TelefonoProponente)
+               || string.IsNullOrEmpty(procesoSeleccionProponente.EmailProponente)
+                ) 
+                return false;
+            else
+                return true;
         }
 
         private bool? ValidarRegistroCompletoProponente(List<ProcesoSeleccionProponente> ListProcesoSeleccionProponente)
@@ -1734,7 +1739,7 @@ namespace asivamosffie.services
                         return false;
                 }
 
-                foreach (var ProcesoSeleccionProponente in procesoSeleccion.ProcesoSeleccionProponente.Where(r=> r.Eliminado == false))
+                foreach (var ProcesoSeleccionProponente in procesoSeleccion.ProcesoSeleccionProponente.Where(r => r.Eliminado == false))
                 {
                     if (ValidarRegistroCompletoProponente(ProcesoSeleccionProponente) == false)
                         return false;
