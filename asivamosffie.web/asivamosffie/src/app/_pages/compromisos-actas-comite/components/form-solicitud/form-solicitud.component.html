@@ -15,12 +15,7 @@
         <div class="pr-1">
           <span class="label-left">Número de la solicitud</span>
         </div>
-        <div class="col"  >
-          <b class="label-left color-blue">
-            {{ solicitudes.numeroSolicitud }}
-          </b>
-        </div>
-     <!--
+
         <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.procesoSeleccion">
           <b class="label-left color-blue">
             {{ solicitudes.procesoSeleccion.numeroProceso }}
@@ -31,7 +26,7 @@
             {{ solicitudes.contratacion.numeroSolicitud }}
           </b>
         </div>
-        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.modificacionContractual">
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.modificacionContractual || solicitudes.tipoSolicitudCodigo === tipoSolicitudCodigo.novedadContractual">
           <b class="label-left color-blue">
             {{ solicitudes.novedadContractual.numeroSolicitud }}
           </b>
@@ -56,7 +51,7 @@
             {{ solicitudes.controversiaActuacion !== undefined ? solicitudes.controversiaActuacion.controversiaContractual?.numeroSolicitud : solicitudes?.numeroSolicitud }}
           </b>
         </div>
--->
+
       </div>
       <div class="row">
         <div class="pr-1">
