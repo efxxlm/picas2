@@ -1063,7 +1063,7 @@ namespace asivamosffie.services
 
                             bool validacionFecha = false;
 
-                            List<VFechasValidacionAjusteProgramacion> vFechas = _context.VFechasValidacionAjusteProgramacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                            List<VFechasValidacionAjusteProgramacion> vFechas = _context.VFechasValidacionAjusteProgramacion.Where(r => r.ContratacionProyectoId == pContratacionProyectId).ToList();
                             foreach (var fechaAct in vFechas)
                             {
                                 if (!((temp.FechaInicio.Date < fechaAct.FechaInicio && temp.FechaFin.Date < fechaAct.FechaInicio) || (temp.FechaInicio.Date > fechaAct.FechaFin)))

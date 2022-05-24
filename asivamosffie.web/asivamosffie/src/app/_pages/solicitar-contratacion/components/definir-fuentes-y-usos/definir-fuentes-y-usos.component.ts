@@ -511,7 +511,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     let valoresCorrectos = true;
     let valorTotalSumado = 0;
     let totalAportantes = 0;
-
+    let valorTotalUsos =0;
     this.contratacionProyecto.contratacionProyectoAportante = [];
 
     this.aportantes.controls.forEach(controlAportante => {
@@ -557,7 +557,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
           };
 
           valorSumado = valorSumado + componenteUso.valorUso;
-
+          valorTotalUsos  = valorTotalUsos + valorSumado;
           componenteAportante.componenteUso.push(componenteUso);
         });
 
@@ -565,8 +565,10 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
       });
 
-      if (valorSumado != valorTotal) {
+      if (valorTotalUsos != valorTotal) {
 
+        console.error('valorTotalUsos',valorTotalUsos);
+        console.error('valorTotal',valorTotal);
         valoresCorrectos = false;
       };
 
@@ -582,14 +584,15 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       return;
     };
     if (this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '2' && totalAportantes === this.aportantes.controls.length) {
-      if (valorTotalSumado !== this.contratacionProyecto.proyecto.valorInterventoria) {
+      if (valorTotalUsos !== this.contratacionProyecto.proyecto.valorInterventoria) {
         this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de interventoría.</b>');
         return;
       };
     };
 
     if (this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '1' && totalAportantes === this.aportantes.controls.length) {
-      if (valorTotalSumado !== this.contratacionProyecto.proyecto.valorObra) {
+      if (valorTotalUsos !== this.contratacionProyecto.proyecto.valorObra) {
+ 
         this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de obra.</b>');
         return;
       };

@@ -2830,7 +2830,10 @@ namespace asivamosffie.services
 
             if (TipoSolicitud == ConstanCodigoTipoSolicitud.Contratacion)
             {
-                Contratacion contratacion = _context.Contratacion.Find(SolicitudId);
+                Contratacion contratacion = _context.Contratacion.Where(r=> r.ContratacionId == SolicitudId)
+                                                                 .Include(c=> c.ContratacionProyecto)
+                                                                 .ThenInclude(c=> c.Proyecto)
+                                                                 .FirstOrDefault();
 
                 if (contratacion != null)
                 {
@@ -2845,6 +2848,34 @@ namespace asivamosffie.services
                     if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico)
                     {
                         contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteTecnico;
+
+                        if(contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacionString.Interventoria)
+                        {
+                            foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
+                            {
+                                _context.Set<Proyecto>()
+                                        .Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)
+                                        .Update(p => new Proyecto
+                                        {
+                                            EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.RechazadoComiteTecnico,
+                                            RegistroCompleto = false
+                                        });
+                            }
+                        }
+                        else
+                        { 
+                            foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
+                            {
+                                _context.Set<Proyecto>()
+                                        .Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)
+                                        .Update(p => new Proyecto
+                                        {
+                                            EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.RechazadoComiteTecnico,
+                                            RegistroCompleto = false
+                                        });
+                            } 
+                        }
+                       
                     }
                 }
             }
@@ -4993,8 +5024,7 @@ namespace asivamosffie.services
             {
                 return Array.Empty<byte>();
             }
-        }
-
+        } 
         public async Task<string> ReemplazarDatosPlantillaActa(string strContenido, ComiteTecnico pComiteTecnico)
         {
             try
@@ -7281,10 +7311,7 @@ namespace asivamosffie.services
             {
                 throw ex;
             }
-        }
-
-
-
+        } 
 
         public async Task<dynamic> ListMonitoreo(bool EsFiduciario)
         {
