@@ -239,7 +239,7 @@
     [fechaSolicitudNovedad]="addressForm.get('fechaSolicitudNovedad').value"
     [fechaFinSuspensionVal]="fechaFinSuspensionVal"
     [contrato]="contrato"
-    [datosContratoProyectoModificadosXNovedad]="contrato?.datosContratoProyectoModificadosXNovedad[0]"
+    [datosContratoProyectoModificadosXNovedad]="contrato?.datosContratoProyectoModificadosXNovedad ? contrato?.datosContratoProyectoModificadosXNovedad[0] : undefined"
     (guardar)="onSubmit()"
   >
   </app-accordion-novedades>

@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatTableDataSource,MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ProjectService } from 'src/app/core/_services/project/project.service';
@@ -11,17 +11,18 @@ import { Router } from '@angular/router';
 
 
 export interface RegistrosCargados {
-  id:number;
-  fecha:string,
-  departamento:string,
-    municipio:string,
-    institucion:string,
-    sede:string,
-    estado:string,
-    estadoj:string,
-    estadop:string,
-    gestion:any,
-    proyectoDisponible: boolean
+  id: number;
+  llaveMen: string;
+  fecha: string,
+  departamento: string,
+  municipio: string,
+  institucion: string,
+  sede: string,
+  estado: string,
+  estadoj: string,
+  estadop: string,
+  gestion: any,
+  proyectoDisponible: boolean
 }
 
 @Component({
@@ -34,20 +35,21 @@ export class TablaProyectosTecnicoComponent {
   //displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadoj','estadop','gestion'];
 
   displayedColumns: string[] =
-  [
-    'fecha',
-    'departamento',
-    'municipio',
-    'institucion',
-    'sede',
-    'estado',
-    //'estadop',
-    'gestion'
-  ];
+    [
+      'fecha',
+      'llaveMen',
+      'departamento',
+      'municipio',
+      'institucion',
+      'sede',
+      'estado',
+      //'estadop',
+      'gestion'
+    ];
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  dataSource= new MatTableDataSource();
+  dataSource = new MatTableDataSource();
   proyectoid: number;
 
   applyFilter(event: Event) {
@@ -55,8 +57,8 @@ export class TablaProyectosTecnicoComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor(private projectService: ProjectService,public dialog: MatDialog,
-    public datepipe: DatePipe,private router: Router,) {
+  constructor(private projectService: ProjectService, public dialog: MatDialog,
+    public datepipe: DatePipe, private router: Router,) {
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -67,23 +69,20 @@ export class TablaProyectosTecnicoComponent {
   }
 
   openDialogSiNo(modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
-      data: { modalTitle, modalText,siNoBoton:true }
+      data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result === true)
-      {
+      if (result === true) {
         this.projectService.deleteProjectById(this.proyectoid).subscribe(respuesta => {
           let proyecto = respuesta;
-          if(respuesta)
-          {
+          if (respuesta) {
             this.inicializar();
             this.openDialog('', "<b>La información a sido eliminada correctamente.</b>");
           }
-          else
-          {
+          else {
             this.openDialog('', "<b>El registro tiene información que depende de él no se puede eliminar.</b>");
           }
         },
@@ -105,36 +104,43 @@ export class TablaProyectosTecnicoComponent {
     });
   }
 
-  inicializar()
-  {
+  inicializar() {
     this.projectService.getListProjects().subscribe(respuesta => {
       respuesta.forEach(element => {
         element.fecha = element.fecha.split('T')[0].split('-').reverse().join('/');
       });
-      let datos:RegistrosCargados[]=[];
+      let datos: RegistrosCargados[] = [];
       console.log(respuesta);
       respuesta.forEach(element => {
         datos.push({
-          fecha:element.fecha,
-          id:element.proyectoId,
-          departamento:element.departamento,
-          municipio:element.municipio,
-          estado:element.estadoRegistro,
-          estadoj:element.estadoJuridicoPredios,
-          estadop:element.estadoProyecto,
-          institucion:element.institucionEducativa,
-          sede:element.sede,
+          fecha: element.fecha,
+          llaveMen: element.llaveMen,
+          id: element.proyectoId,
+          departamento: element.departamento,
+          municipio: element.municipio,
+          estado: element.estadoRegistro,
+          estadoj: element.estadoJuridicoPredios,
+          estadop: element.estadoProyecto,
+          institucion: element.institucionEducativa,
+          sede: element.sede,
           gestion:
           {
-            id:element.proyectoId,
-            estadoProyectoObra:element.estadoProyectoObra,
-            estadoProyectoInterventoria:element.estadoProyectoInterventoria
+            id: element.proyectoId,
+            estadoProyectoObra: element.estadoProyectoObra,
+            estadoProyectoInterventoria: element.estadoProyectoInterventoria
           },
-          proyectoDisponible: (element.codigoEstadoProyectoInterventoria === "9" || element.codigoEstadoProyectoInterventoria === "1") && (element.codigoEstadoProyectoObra === "9" || element.codigoEstadoProyectoObra === "1") ? true : false
+          proyectoDisponible: (element.codigoEstadoProyectoInterventoria === "9" 
+                            || element.codigoEstadoProyectoInterventoria === "1"
+                            || element.codigoEstadoProyectoInterventoria === "5"
+                            ) 
+                            && (element.codigoEstadoProyectoObra === "9" 
+                             || element.codigoEstadoProyectoObra === "1"
+                             || element.codigoEstadoProyectoObra === "5"
+                             ) ? true : false
         });
       });
 
-      this.dataSource=new MatTableDataSource<RegistrosCargados>(datos);
+      this.dataSource = new MatTableDataSource<RegistrosCargados>(datos);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -153,41 +159,38 @@ export class TablaProyectosTecnicoComponent {
       };
       this.paginator._intl.previousPageLabel = 'Anterior';
     },
-    err => {
-      let mensaje: string;
-      console.log(err);
-      if (err.message){
-        mensaje = err.message;
-      }
-      else if (err.error.message){
-        mensaje = err.error.message;
-      }
-      this.openDialog('Error', mensaje);
-   },
-   () => {
-    //console.log('terminó');
-   });
+      err => {
+        let mensaje: string;
+        console.log(err);
+        if (err.message) {
+          mensaje = err.message;
+        }
+        else if (err.error.message) {
+          mensaje = err.error.message;
+        }
+        this.openDialog('Error', mensaje);
+      },
+      () => {
+        //console.log('terminó');
+      });
   }
   ngOnInit(): void {
     this.inicializar();
   }
 
-  ver(gestion:any, estado: boolean = false)
-  {
+  ver(gestion: any, estado: boolean = false) {
     console.log(gestion);
-    this.router.navigate(['/crearProyecto/crearProyecto', { id: gestion, estado: estado}]);
+    this.router.navigate(['/crearProyecto/crearProyecto', { id: gestion, estado: estado }]);
   }
 
-  eliminar(gestion:any)
-  {
+  eliminar(gestion: any) {
     console.log(gestion);
-    this.proyectoid=gestion;
+    this.proyectoid = gestion;
     this.openDialogSiNo('', "<b>¿Está seguro de eliminar este registro?</b>",);
 
   }
 
-  enviar(gestion:any)
-  {
+  enviar(gestion: any) {
     console.log(gestion);
   }
 }

@@ -10428,6 +10428,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Municipio)
                     .HasMaxLength(300)
                     .IsUnicode(false);

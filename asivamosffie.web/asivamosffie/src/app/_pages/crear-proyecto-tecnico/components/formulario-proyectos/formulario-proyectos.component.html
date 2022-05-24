@@ -6,8 +6,9 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1">
-      <span *ngIf="proyecto.proyectoId && bitPuedoEditar"> Ver detalle / Editar </span>
-      <span *ngIf="proyecto.proyectoId  && !bitPuedoEditar"> Ver detalle </span>
+      <span *ngIf="!bitPuedoEditar"> Ver detalle {{bitPuedoEditar}} </span>
+      <span *ngIf="bitPuedoEditar"> Ver detalle / Editar </span>
+
       Infraestructura
     </h1>
   </div>
