@@ -357,7 +357,7 @@ namespace asivamosffie.services
                     if (!string.IsNullOrEmpty(SesionComiteSolicitudComiteTecnico.EstadoCodigo))
                     {
                         SesionComiteSolicitudComiteTecnico.EstadoCodigo = ListParametricas
-                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud
+                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Sesion_Comite_Solicitud
                                 && r.Codigo == SesionComiteSolicitudComiteTecnico.EstadoCodigo).FirstOrDefault().Nombre;
                     }
 
@@ -462,7 +462,8 @@ namespace asivamosffie.services
                     if (!string.IsNullOrEmpty(SesionComiteSolicitudComiteTecnico.EstadoCodigo))
                     {
                         SesionComiteSolicitudComiteTecnico.EstadoCodigo = ListParametricas
-                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud
+                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Sesion_Comite_Solicitud
+
                                 && r.Codigo == SesionComiteSolicitudComiteTecnico.EstadoCodigo).FirstOrDefault().Nombre;
                     }
 
