@@ -9841,11 +9841,18 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_FichaContrato_BusquedaContrato");
 
-                entity.Property(e => e.ContratoId).ValueGeneratedOnAdd();
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.TipoContratacion)
+                    .IsRequired()
+                    .HasMaxLength(250);
             });
 
             modelBuilder.Entity<VFichaProyectoBusquedaProyecto>(entity =>

@@ -5,8 +5,8 @@ namespace asivamosffie.model.Models
 {
     public partial class VListaProyectos
     {
-        public string LlaveMen { get; set; }
         public int ProyectoId { get; set; }
+        public string LlaveMen { get; set; }
         public string Municipio { get; set; }
         public string Departamento { get; set; }
         public string InstitucionEducativa { get; set; }
