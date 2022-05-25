@@ -70,6 +70,7 @@ namespace asivamosffie.services
                                                                                 .Where(ct => (ct.EsComiteFiduciario == null || ct.EsComiteFiduciario == false)
                                                                                             && ct.EstadoActaCodigo == "3") // aprobada
                                                                                 .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                                                                                   .ThenInclude(r=> r.ComiteTecnicoFiduciario)
                                                                                 .Include(r => r.SesionComiteTema)
                                                                                 .ToListAsync();
 
@@ -112,8 +113,8 @@ namespace asivamosffie.services
                     };
 
                     foreach (var ss in c.SesionComiteSolicitudComiteTecnico)
-                    {
-                        if (ss.EstadoCodigo == "1" && ss.ComiteTecnicoFiduciarioId == null)
+                    { 
+                        if (ss.EstadoCodigo == "1" && (ss.ComiteTecnicoFiduciarioId == null || ss.ComiteTecnicoFiduciario.EstadoComiteCodigo == ConstanCodigoEstadoComite.Fallida))
                             switch (ss.TipoSolicitudCodigo)
                             {
                                 case ConstanCodigoTipoSolicitud.Contratacion:
