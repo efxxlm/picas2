@@ -19,7 +19,7 @@ export class SoporteProjectComponent implements OnInit {
   documentFile: FormControl;
   file: any;
 
-  constructor(private avanceSemanalSvc: RegistrarAvanceSemanalService, private dialog: MatDialog) {}
+  constructor(private avanceSemanalSvc: RegistrarAvanceSemanalService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.declararDocumentFile();
@@ -33,10 +33,14 @@ export class SoporteProjectComponent implements OnInit {
   }
 
   fileName(event: any) {
-    if (event.target.files.length > 0) {
-      this.file = event.target.files[0];
-      this.archivo = event.target.files[0].name;
-    }
+    var mime = event.target.files[0].name.split('.').pop();
+    if (mime != 'mpp') { 
+      this.openDialog("" , "<b>La extensión del archivo no es válida, por favor verifique e intente nuevamente</b>")
+    } else
+      if (event.target.files.length > 0) {
+        this.file = event.target.files[0];
+        this.archivo = event.target.files[0].name;
+      }
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -53,7 +57,7 @@ export class SoporteProjectComponent implements OnInit {
       async response => {
         this.openDialog('', `<b>La información se ha guardado correctamente.</b>`);
         this.actualizarSemaforoSuportProyectRuta.emit(true);
-        setTimeout(() => {location.reload();}, 2000);
+        setTimeout(() => { location.reload(); }, 2000);
       },
       err => this.openDialog('', `<b>${err.message}</b>`)
     );

@@ -2850,9 +2850,21 @@ namespace asivamosffie.services
                         contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteTecnico;
 
                         if(contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacionString.Interventoria)
-                        {
+                        { 
                             foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
                             {
+
+                                bool blTieneOtroContratoElProyecto = _context.ContratacionProyecto.Count(r => r.ProyectoId == ContratacionProyecto.ProyectoId
+                                                                         && r.ContratacionId != ContratacionProyecto.ContratacionId
+                                                                         && r.Eliminado != true) > 0;
+                                if (!blTieneOtroContratoElProyecto)
+                                {
+                                    _context.Set<Proyecto>().Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)
+                                                            .Update(p => new Proyecto
+                                                            { 
+                                                                RegistroCompleto = false
+                                                            }); 
+                                }
                                 _context.Set<Proyecto>()
                                         .Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)
                                         .Update(p => new Proyecto
@@ -2866,16 +2878,25 @@ namespace asivamosffie.services
                         { 
                             foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
                             {
+                                bool blTieneOtroContratoElProyecto = _context.ContratacionProyecto.Count(r => r.ProyectoId == ContratacionProyecto.ProyectoId
+                                                                         && r.ContratacionId != ContratacionProyecto.ContratacionId
+                                                                         && r.Eliminado != true) > 0;
+                                if (!blTieneOtroContratoElProyecto)
+                                {
+                                    _context.Set<Proyecto>().Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)
+                                                            .Update(p => new Proyecto
+                                                            {
+                                                                RegistroCompleto = false
+                                                            });
+                                } 
                                 _context.Set<Proyecto>()
                                         .Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)
                                         .Update(p => new Proyecto
                                         {
-                                            EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.RechazadoComiteTecnico,
-                                            RegistroCompleto = false
+                                            EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.RechazadoComiteTecnico 
                                         });
                             } 
-                        }
-                       
+                        } 
                     }
                 }
             }
