@@ -27,7 +27,14 @@ namespace asivamosffie.api.Controllers
         {
             _fichaContratoService  = fichaContratoService ; 
         }
-         
+
+        [HttpGet]
+        [Route("GetFlujoContratoByContratoId")]
+        public async Task<ActionResult<dynamic>> GetFlujoContratoByContratoId(int pContratoId)
+        {
+            return await _fichaContratoService.GetFlujoContratoByContratoId(pContratoId);
+        }
+
         [HttpGet]
         [Route("GetContratosByNumeroContrato")]
         public async Task<ActionResult<dynamic>> GetContratosByNumeroContrato(string pNumeroContrato)

@@ -22,18 +22,36 @@ namespace asivamosffie.services
             _context = context;
 
         }
-        async Task<dynamic> GetFlujoContratoByContratoId(int pContratoId)
-        {
-            return new { };
+        public async Task<dynamic> GetFlujoContratoByContratoId(int pContratoId)
+        { 
+            var contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId)
+                                                .Include(c => c.Contratacion)
+                                                .ThenInclude(c => c.Contratista)
+                                                .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(r => r.Proyecto).ThenInclude(c => c.InstitucionEducativa)
+                                                .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(r => r.Proyecto).ThenInclude(c => c.Sede)
+                                                .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(r => r.Proyecto).ThenInclude(c => c.Departamento)
+                                                .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(r => r.Proyecto).ThenInclude(c => c.Municipio)  
+                                                .FirstOrDefault();
+                                                
+            return new
+            {
+                Informacion = contrato,
+                TieneResumen = true,
+                TieneContratacion = true,
+                TienePreparacion = true,
+                TieneSeguimientoTecnico = true,
+                TieneSeguimientoFinanciero = true,
+                TieneEntrega = true,
+            }; 
         }
         public async Task<dynamic> GetContratosByNumeroContrato(string pNumeroContrato)
         {
 
             List<VFichaContratoBusquedaContrato> LsitVFichaContratoBusquedaContrato = await _context.VFichaContratoBusquedaContrato
-                                                                                        .Where(r => r.NumeroContrato.ToUpper().Contains(pNumeroContrato.ToUpper()))
+                                                                                        //.Where(r => r.NumeroContrato.ToUpper().Contains(pNumeroContrato.ToUpper()))
                                                                                         .ToListAsync();
 
-            return LsitVFichaContratoBusquedaContrato.OrderByDescending(o => o.ContratoId).ToList(); 
+            return LsitVFichaContratoBusquedaContrato.OrderByDescending(o => o.ContratoId).ToList();
         }
     }
 }

@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 namespace asivamosffie.services.Interfaces
 {
     public interface IFichaContratoService
-    { 
+    {
+        Task<dynamic> GetFlujoContratoByContratoId(int pContratoId);
         Task<dynamic> GetContratosByNumeroContrato(string pNumeroContrato);  
     } 
 }
