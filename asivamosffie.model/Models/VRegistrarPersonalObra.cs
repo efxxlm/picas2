@@ -17,5 +17,6 @@ namespace asivamosffie.model.Models
         public string InstitucionEducativa { get; set; }
         public string EstadoProgramacionInicialCodigo { get; set; }
         public string EstadoProgramacionInicial { get; set; }
+        public bool? ExisteReprogramacionActiva { get; set; }
     }
 }
