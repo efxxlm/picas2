@@ -6,6 +6,7 @@ using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Z.EntityFramework.Plus;
@@ -25,23 +26,54 @@ namespace asivamosffie.services
         public async Task<dynamic> GetFlujoContratoByContratoId(int pContratoId)
         { 
             var contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId)
-                                                .Include(c => c.Contratacion)
-                                                .ThenInclude(c => c.Contratista)
-                                                .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(r => r.Proyecto).ThenInclude(c => c.InstitucionEducativa)
-                                                .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(r => r.Proyecto).ThenInclude(c => c.Sede)
-                                                .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(r => r.Proyecto).ThenInclude(c => c.Departamento)
-                                                .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(r => r.Proyecto).ThenInclude(c => c.Municipio)  
+                                                .Include(r=> r.ContratoPoliza).ThenInclude(c=> c.PolizaGarantia)
+                                                .Include(c => c.Contratacion).ThenInclude(c => c.Contratista)
+                                                .Include(c => c.Contratacion).ThenInclude(c => c.ContratacionProyecto).ThenInclude(r => r.Proyecto) 
                                                 .FirstOrDefault();
-                                                
+
+
+            List<dynamic> infoProyectos = new List<dynamic>();
+
+            foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
+            {
+                Proyecto proyecto = _context.Proyecto.Where(r => r.ProyectoId == ContratacionProyecto.ProyectoId)
+                                                    .Include(c => c.InstitucionEducativa)
+                                                    .Include(c => c.Sede)
+                                                    .Include(c => c.LocalizacionIdMunicipioNavigation)
+                                                    .FirstOrDefault();
+
+                Localizacion Departamento = _context.Localizacion.Find(proyecto.LocalizacionIdMunicipioNavigation.IdPadre);
+                infoProyectos.Add(new 
+                {
+                   DepartamentoMunicipio = Departamento.Descripcion + " / "+ ContratacionProyecto.Proyecto.LocalizacionIdMunicipioNavigation.Descripcion,
+                   InstitucionEducativaSede = ContratacionProyecto.Proyecto.InstitucionEducativa.Nombre + " / " + ContratacionProyecto.Proyecto.Sede.Nombre,
+                }); 
+            }
+
+            var infoContrato = new
+            {
+                ContratoId = pContratoId, 
+                NumeroContrato = contrato.NumeroContrato,
+                Contratista = contrato.Contratacion.Contratista.Nombre,
+                InfoProyectos = infoProyectos,
+                TipoContrato = contrato.Contratacion.TipoSolicitudCodigo == 
+                ConstanCodigoTipoContratacionString.Obra ? (CultureInfo.InvariantCulture.TextInfo.ToTitleCase(ConstanCodigoTipoContratacionSTRING.Obra)) 
+                : CultureInfo.InvariantCulture.TextInfo.ToTitleCase(ConstanCodigoTipoContratacionSTRING.Interventoria),
+                Vigencia = contrato.ContratoPoliza.FirstOrDefault().PolizaGarantia.FirstOrDefault().Vigencia
+            };
+             
             return new
             {
-                Informacion = contrato,
+                Informacion = infoContrato,
                 TieneResumen = true,
+                TieneSeleccion = true,
                 TieneContratacion = true,
-                TienePreparacion = true,
-                TieneSeguimientoTecnico = true,
-                TieneSeguimientoFinanciero = true,
-                TieneEntrega = true,
+                TienePolizasSeguros = true,
+                TieneEjecucionFinanciera = true,
+                TieneNovedades = true,
+                TieneControversias= true,
+                TieneProcesosDefenzaJudicial= true,
+                TieneLiquidacion = true,
             }; 
         }
         public async Task<dynamic> GetContratosByNumeroContrato(string pNumeroContrato)
