@@ -446,31 +446,18 @@
             <div class="d-flex align-items-center mtop">
                 <div class="text-area-quill izqTitle auxBox">
                     <label for="observaciones" class="text-area-quill--label"
-                        style="padding: 0; margin-left: 0; margin-top: .5em;" [class.color-secondaryColor]="
-                        (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
-                        (addressForm.get('observaciones').invalid && estaEditando)
-                      ">Observaciones</label>
+                        style="padding: 0; margin-left: 0; margin-top: .5em;" >Observaciones</label>
                     <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                         #observaciones (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"
                         style="padding: 1.5em 0em 1.2em;"
-                        [class.invalid]="(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
-              (addressForm.get('observaciones').invalid && estaEditando)"></quill-editor>
+                      ></quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
                     {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
                 </span>
                 <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                     1000
-                </span>
-                <span class="icon-incompleto">
-                    <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
-                        [matTooltipPosition]="'above'"
-                        matTooltip="Debe ingresar la información en el campo para continuar"
-                        matTooltipClass="info-tooltip" *ngIf="
-                    (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
-                    (addressForm.get('observaciones').invalid && estaEditando)
-                  " />
-                </span>
+                </span> 
             </div>
         </mat-card-content>
     </mat-card>
