@@ -1297,7 +1297,7 @@ namespace asivamosffie.services
                       ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO);
 
                 if (!ValidarDetalleTercero)
-                    mensaje += " - Recuerde que los aportantes y la fuente deben seleccionarse en los descuento y en tercero de causación";
+                    mensaje += " - Recuerde que los aportantes y la fuente deben seleccionarse en los descuentos y en tercero de causación";
 
          
 
