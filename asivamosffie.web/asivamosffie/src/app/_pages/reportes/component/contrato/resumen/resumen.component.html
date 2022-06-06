@@ -1,87 +1,67 @@
 <section class="container">
   <div class="container text-center">
-    <div class="text-right">
-      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
-        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    <div class="text-right print-d-none">
+      <a routerLink="../../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Resumen N801801
+      Resumen <span *ngIf="contrato">{{ contrato.numeroContrato }}</span>
     </h1>
     <p class="info-sub-title">
-      Contratista <b>Construir futuro</b>
+      Contratista <b *ngIf="contrato"> {{ contrato.contratista }} </b>
     </p>
   </div>
 
-  <mat-card class="shipping-card var-main-gris">
+  <mat-card class="shipping-card var-main-gris" *ngIf="contrato">
     <mat-card-content>
       <p>
-        <strong>
-          Tipo de contrato:
-        </strong>
-        Obra
+        <strong> Tipo de contrato: </strong>
+        {{ contrato.tipoContrato }}
       </p>
       <p>
-        <strong>
-          Estado:
-        </strong>
-        Liquidado
+        <strong> Estado: </strong>
+        {{ contrato.estadoContrato }}
       </p>
       <p>
-        <strong>
-          Valor actual del contrato:
-        </strong>
-        $105.000.000
+        <strong> Valor actual del contrato: </strong>
+        {{ contrato.valorContrato | currency: 'COP':'symbol-narrow':'.0-0' }}
       </p>
-      <p>
-        <strong>
-          Fecha de suscripción:
-        </strong>
+      <!-- <p>
+        <strong> Fecha de suscripción: </strong>
         22/10/2020
-      </p>
+      </p> -->
     </mat-card-content>
   </mat-card>
 
-  <mat-accordion>
-    <mat-expansion-panel class="expansion-style">
+  <mat-accordion [multi]="openAcordeon">
+    <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of listProyectos" [expanded]="openAcordeon">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title">
-          LL457326
-        </mat-panel-title>
+        <mat-panel-title class="expansion-style--title"> {{ proyecto.proyecto.llaveMen }} </mat-panel-title>
       </mat-expansion-panel-header>
-      
+
       <mat-card class="shipping-card var-main-gris">
         <mat-card-content>
-          <p>
-            <strong>
-              Tipo de intervensión:
-            </strong>
-            Remodelación
+          <p class="mt-1em">
+            <strong> Tipo de intervensión: </strong>
+            {{ proyecto.proyecto.tipoIntervencion }}
           </p>
           <h2 class="card-subTitle">Ubicación</h2>
           <p>
-            <strong>
-              Departamento:
-            </strong>
-            Boyacá
+            <strong> Departamento: </strong>
+            {{ proyecto.proyecto.departamento }}
           </p>
           <p>
-            <strong>
-              Municipio:
-            </strong>
-            Susacón
+            <strong> Municipio: </strong>
+            {{ proyecto.proyecto.municipio }}
           </p>
           <p>
-            <strong>
-              Institución Educativa:
-            </strong>
-            I.E Nuestra Señora del Carmén
+            <strong> Institución Educativa: </strong>
+            {{ proyecto.proyecto.institucionEducativaSede }}
           </p>
           <p>
-            <strong>
-              Sede:
-            </strong>
-            Única sede
+            <strong> Sede: </strong>
+            {{ proyecto.proyecto.sede }}
           </p>
           <h2 class="card-subTitle">Inversión</h2>
           <div class="table-responsive mb-1em mt-1em w-talble">
@@ -94,15 +74,15 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let element of listaInversion">
+                <tr *ngFor="let element of proyecto.proyecto.inversion; index as i">
                   <td class="mat-cell cdk-cell ng-star-inserted">
-                    <b> {{ element.drp }} </b>
+                    <b> {{ i + 1 }} </b>
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
-                    {{ element.numeroDRP }}
+                    {{ element.numeroDrp }}
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
-                    {{ element.valor }}
+                    {{ element.valor | currency: 'COP':'symbol-narrow':'.0-0' }}
                   </td>
                 </tr>
               </tbody>
@@ -121,7 +101,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let element of listaFuentesUsos">
+                <tr *ngFor="let element of proyecto.proyecto.fuentesUsos">
                   <td class="mat-cell cdk-cell ng-star-inserted">
                     <b> {{ element.aportante }} </b>
                   </td>
@@ -135,7 +115,7 @@
                     {{ element.uso }}
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
-                    {{ element.valorUso }}
+                    {{ element.valorUso | currency: 'COP':'symbol-narrow':'.0-0' }}
                   </td>
                 </tr>
               </tbody>
@@ -143,8 +123,10 @@
           </div>
         </mat-card-content>
       </mat-card>
-
     </mat-expansion-panel>
   </mat-accordion>
-
 </section>
+
+<div class="text-center mt-2em mb-2em print-d-none">
+  <button mat-raised-button color="accent" (click)="downloadPDF()">Descargar</button>
+</div>

@@ -32,7 +32,7 @@ const routes: Routes = [
     component: FichaContratosProyectosComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaContrato/resumen',
+    path: 'fichaContratosProyectos/fichaContrato/resumen/:id',
     component: ResumenComponent
   },
   {

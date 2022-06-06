@@ -15,5 +15,13 @@ export class FichaContratoService {
   getContratosByNumeroContrato( pNumeroContrato: string ){
     return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_contrato}/GetContratosByNumeroContrato?pNumeroContrato=${ pNumeroContrato }`);
   }
+   
+  getFlujoContratoByContratoId( pContratoId: string ){
+    return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_contrato}/GetFlujoContratoByContratoId?pContratoId=${ pContratoId }`);
+  }
+   
+  getInfoResumenByContratoId( pContratoId: string ){
+    return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_contrato}/GetInfoResumenByContratoId?pContratoId=${ pContratoId }`);
+  }
 
 }
