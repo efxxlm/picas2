@@ -39,5 +39,6 @@ namespace asivamosffie.model.Models
         public string RepresentanteLegal { get; set; }
         public string RepresentanteLegalNumeroIdentificacion { get; set; }
         public string NumeroInvitacion { get; set; }
+        public bool? ExisteReprogramacionActiva { get; set; }
     }
 }
