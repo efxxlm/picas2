@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { CommonService } from 'src/app/core/_services/common/common.service';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { ContratosModificacionesContractualesService } from 'src/app/core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
 import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
@@ -15,6 +15,14 @@ import { Router } from '@angular/router';
   styleUrls: ['./registrar-solicitud-interventoria.component.scss']
 })
 export class RegistrarSolicitudInterventoriaComponent implements OnInit {
+  
+  listaTipoDocumento: Dominio[] = [];
+  numeroContratoSeleccionado: any;
+  proyectos=[];
+  proyecto:any;
+  contratos=[];
+  contrato:any;
+  novedad:NovedadContractual = {};
 
   numeroContrato = new FormControl();
   novedadAplicada = new FormControl();
@@ -32,26 +40,27 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
   constructor(
     private contractualNoveltyService: ContractualNoveltyService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private commonSvc: CommonService,
     )
 
   {
 
   }
-  numeroContratoSeleccionado: any;
-  proyectos=[];
-  proyecto:any;
-  contratos=[];
-  contrato:any;
-  novedad:NovedadContractual = {};
 
-  ngOnInit() {
+
+ async ngOnInit() {
+    const listaDocumento = await this.commonSvc.listaTipodocumento().toPromise()
+    this.listaTipoDocumento = listaDocumento
+
 
     this.activatedRoute.params.subscribe( parametros => {
       this.detalleId = parametros.id;
       this.contractualNoveltyService.getNovedadContractualById( parametros.id )
         .subscribe( novedad => {
-
+ 
+        
+       
           if (novedad.novedadContractualId !== 0) {
 
             this.novedad = novedad;
@@ -100,6 +109,14 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
     );
 
   }
+  findTipoDocumentoById( codigo: string ) {
+    if ( this.listaTipoDocumento.length > 0 ) {
+        const tipoDocumento = this.listaTipoDocumento.find( td => td.codigo === codigo )
+
+        if ( tipoDocumento ) 
+          return tipoDocumento.nombre
+    }
+}
 
   guardar() {
     if (this.detalleId !== 0) {
