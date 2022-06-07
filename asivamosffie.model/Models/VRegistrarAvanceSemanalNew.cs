@@ -14,6 +14,9 @@ namespace asivamosffie.model.Models
         public int? SeguimientoSemanalId { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public int ContratoId { get; set; }
+        public int? SupervisorId { get; set; }
+        public int? ApoyoId { get; set; }
+        public int? InterventorId { get; set; }
         public string FechaUltimoReporte { get; set; }
         public string EstadoObra { get; set; }
         public string EstadoObraCodigo { get; set; }
