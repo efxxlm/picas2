@@ -70,7 +70,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _registerWeeklyProgressService.GetVRegistrarAvanceSemanalNew();
+                return await _registerWeeklyProgressService.GetVRegistrarAvanceSemanalNew(Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
             }
             catch (Exception ex)
             {

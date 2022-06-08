@@ -330,6 +330,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VNovedadContractual> VNovedadContractual { get; set; }
         public virtual DbSet<VNovedadContractualReporteHist> VNovedadContractualReporteHist { get; set; }
         public virtual DbSet<VNovedadesActivas> VNovedadesActivas { get; set; }
+        public virtual DbSet<VOdgPagos> VOdgPagos { get; set; }
         public virtual DbSet<VOdgValoresFacturados> VOdgValoresFacturados { get; set; }
         public virtual DbSet<VOrdenGiro> VOrdenGiro { get; set; }
         public virtual DbSet<VOrdenGiroPagosXusoAportante> VOrdenGiroPagosXusoAportante { get; set; }
@@ -10688,6 +10689,26 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.NumeroSolicitud)
                     .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VOdgPagos>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_OdgPagos");
+
+                entity.Property(e => e.ConceptoPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CriterioPagoCodigo)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoPagoCodigo)
+                    .HasMaxLength(2)
                     .IsUnicode(false);
             });
 

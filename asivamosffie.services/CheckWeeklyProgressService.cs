@@ -875,9 +875,12 @@ namespace asivamosffie.services
             return ListBitaCora;
         }
 
-        public async Task<List<VVerificarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal)
+        public async Task<List<VVerificarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal, int pUserId)
         {
-            return await _context.VVerificarSeguimientoSemanal.ToListAsync();
+            return await _context.VVerificarSeguimientoSemanal.Where(c => c.ApoyoId == pUserId
+                                                                       || c.SupervisorId == pUserId
+                                                                       || c.InterventorId == pUserId)
+                                                              .ToListAsync();
         }
 
         #endregion

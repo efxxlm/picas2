@@ -665,13 +665,13 @@ namespace asivamosffie.services
         }
 
         public async Task<List<ProyectoGrilla>> GetListProyectsByFilters(
-            string pTipoIntervencion,
-            string pLlaveMen,
-            string pRegion,
-            string pDepartamento,
-            string pMunicipio,
-            int pIdInstitucionEducativa,
-            int pIdSede)
+          string pTipoIntervencion,
+          string pLlaveMen,
+          string pRegion,
+          string pDepartamento,
+          string pMunicipio,
+          int pIdInstitucionEducativa,
+          int pIdSede)
         {
             //estado de registro “Completo”, que tienen viabilidad jurídica y técnica
             List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();

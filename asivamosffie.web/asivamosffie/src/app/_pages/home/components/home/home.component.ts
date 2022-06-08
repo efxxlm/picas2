@@ -41,6 +41,7 @@ export class HomeComponent implements OnInit {
 
   getMenu() {
     this.common.loadMenu().subscribe(data => {
+      console.log(data);
       this.optionsMenu = data;
       data.forEach(element => {
         if (element.menu.faseCodigo === '1') {

@@ -897,6 +897,11 @@ namespace asivamosffie.services
             {
                 SolicitudPago solicitudPago = await GetSolicitudPagoBySolicitudPagoId(pSolicitudPago, false);
                 blRegistroCompleto = ValidarRegistroCompletoOrdenGiro(solicitudPago.OrdenGiro);
+                bool ValidarDetalleTercero = ValidarDetalleTerceroDescuentos(solicitudPago.OrdenGiro);
+
+                if (!ValidarDetalleTercero)
+                    blRegistroCompleto = false;
+
 
                 if (blRegistroCompleto == true)
                     blRegistroCompleto = ValidarCantidadProyectos(solicitudPago);
@@ -1011,10 +1016,10 @@ namespace asivamosffie.services
                 _context.Set<OrdenGiroDetalleTerceroCausacionDescuento>()
                         .Where(o => o.OrdenGiroDetalleTerceroCausacionId == pOrdenGiroDetalleTerceroCausacion.OrdenGiroDetalleTerceroCausacionId)
                         .Update(r => new OrdenGiroDetalleTerceroCausacionDescuento()
-                           {
-                               FechaModificacion = DateTime.Now, 
-                               Eliminado = true
-                           });
+                        {
+                            FechaModificacion = DateTime.Now,
+                            Eliminado = true
+                        });
             }
 
             if (tieneAmortizacion && !descuentoAmortizacion)
@@ -1091,6 +1096,8 @@ namespace asivamosffie.services
                 if (!ValidarRegistroCompletoOrdenGiroTercero(item))
                     return false;
             }
+
+
 
             return true;
         }
@@ -1233,13 +1240,20 @@ namespace asivamosffie.services
 
             try
             {
+                bool ValidarDetalleTercero = false;
                 if (pOrdenGiro.OrdenGiroId == 0)
                 {
+                    bool ValidarResgistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
+                    ValidarDetalleTercero = ValidarDetalleTerceroDescuentos(pOrdenGiro);
+
+                    if (!ValidarDetalleTercero)
+                        ValidarResgistroCompleto = false;
+
                     pOrdenGiro.ConsecutivoOrigen = await _commonService.EnumeradorOrigenOrdenGiro();
                     pOrdenGiro.NumeroSolicitud = await _commonService.EnumeradorOrdenGiro((int)pOrdenGiro?.SolicitudPagoId);
                     pOrdenGiro.FechaCreacion = DateTime.Now;
                     pOrdenGiro.Eliminado = false;
-                    pOrdenGiro.RegistroCompleto = ValidarRegistroCompletoOrdenGiro(pOrdenGiro);
+                    pOrdenGiro.RegistroCompleto = ValidarResgistroCompleto;
                     pOrdenGiro.EstadoCodigo = ((int)EnumEstadoOrdenGiro.En_Proceso_Generacion).ToString();
                     _context.OrdenGiro.Add(pOrdenGiro);
                     _context.SaveChanges();
@@ -1273,6 +1287,20 @@ namespace asivamosffie.services
                 if (pOrdenGiro?.OrdenGiroDetalle.Count() > 0)
                     CreateEditOrdenGiroDetalle(pOrdenGiro.OrdenGiroDetalle.FirstOrDefault(), pOrdenGiro.UsuarioCreacion, pOrdenGiro.SolicitudPagoId);
 
+                ValidarDetalleTercero = ValidarDetalleTerceroDescuentos(pOrdenGiro);
+               
+                string mensaje = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
+                      (int)enumeratorMenu.Generar_Orden_de_giro,
+                      GeneralCodes.OperacionExitosa,
+                      idAccion,
+                      pOrdenGiro.UsuarioCreacion,
+                      ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO);
+
+                if (!ValidarDetalleTercero)
+                    mensaje += " - Recuerde que los aportantes y la fuente deben seleccionarse en los descuentos y en tercero de causación";
+
+         
+
 
                 Respuesta respuesta =
                      new Respuesta
@@ -1280,13 +1308,12 @@ namespace asivamosffie.services
                          IsSuccessful = true,
                          IsException = false,
                          IsValidation = false,
+                         Data = new
+                         {
+                             ValidacionDescuento = ValidarDetalleTercero
+                         },
                          Code = GeneralCodes.OperacionExitosa,
-                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo(
-                             (int)enumeratorMenu.Generar_Orden_de_giro,
-                             GeneralCodes.OperacionExitosa,
-                             idAccion,
-                             pOrdenGiro.UsuarioCreacion,
-                             ConstantCommonMessages.SpinOrder.REGISTRAR_ORDENES_GIRO)
+                         Message = mensaje
                      };
 
                 _context.SaveChanges();
@@ -1307,6 +1334,34 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Generar_Orden_de_giro, GeneralCodes.Error, idAccion, pOrdenGiro.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
+        }
+
+
+
+        private bool ValidarDetalleTerceroDescuentos(OrdenGiro pOrdenGiro)
+        {
+            List<VDescuentosXordenGiroXproyectoXaportanteXconcepto> VDescuentosTecnica =
+                _context.VDescuentosXordenGiroXproyectoXaportanteXconcepto
+                                                                            .Where(c => c.OrdenGiroId == pOrdenGiro.OrdenGiroId
+                                                                                     && c.EsTerceroCausacion == 0
+                                                                                  )
+                                                                            .ToList();
+
+            List<VOdgPagos> VOdgPagos = _context.VOdgPagos.Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
+                                                          .ToList();
+
+            foreach (var DescuentosTecnica in VDescuentosTecnica)
+            {
+                if (VOdgPagos.Count(r => r.AportanteId == DescuentosTecnica.AportanteId
+                                       && r.ContratacionProyectoId == DescuentosTecnica.ContratacionProyectoId
+                                       && r.ConceptoPagoCodigo == DescuentosTecnica.ConceptoCodigo
+                                       && r.TipoPagoCodigo == DescuentosTecnica.TipoPagoCodigo) == 0
+                                   )
+                    return false;
+            }
+
+
+            return true;
         }
 
         private void CreateEditOrdenGiroDetalleObservacion(OrdenGiroDetalleObservacion pOrdenGiroDetalleObservacion, string pUsuarioCreacion)
