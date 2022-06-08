@@ -23,6 +23,68 @@ namespace asivamosffie.services
             _context = context;
 
         }
+
+        #region ProcesosSeleccion
+        public async Task<dynamic> GetInfoProcesosSeleccionByContratoId(int pContratoId)
+        {
+            var contrato = await _context.Contrato
+                               .Where(c => c.ContratoId == pContratoId)
+                               .Include(c => c.Contratacion)
+                               .ThenInclude(c => c.Contratista)
+                               .ThenInclude(r => r.ProcesoSeleccionProponente)
+                               .ThenInclude(r => r.ProcesoSeleccion)
+                               .ThenInclude(r => r.ProcesoSeleccionGrupo).FirstOrDefaultAsync();
+
+
+            var procesosSeleccion = contrato.Contratacion.Contratista.ProcesoSeleccionProponente.ProcesoSeleccion;
+
+            List<dynamic> GruposProcesoSeleccion = new List<dynamic>();
+            List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Presupuesto_Proceso_de_Selección 
+                                                                      || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Proceso_Seleccion)
+                                                             .ToList();
+
+            int countCantidadGrupo = 1;
+
+            foreach (var ProcesoSeleccionGrupo in contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.ProcesoSeleccion?.ProcesoSeleccionGrupo)
+            {
+                GruposProcesoSeleccion.Add(new
+                {
+                    GrupoNumero = 1,
+                    NombreGrupo = ProcesoSeleccionGrupo.NombreGrupo,
+                    TipoPresupuesto = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Presupuesto_Proceso_de_Selección 
+                                                               && r.Codigo == ProcesoSeleccionGrupo.TipoPresupuestoCodigo)
+                                                      .FirstOrDefault().Nombre,
+                    Valor = ProcesoSeleccionGrupo.Valor,
+                    PlazoMeses = ProcesoSeleccionGrupo.PlazoMeses
+
+                });
+                countCantidadGrupo++;
+            }
+            dynamic Contrato = new
+            {
+                NumeroProceso = procesosSeleccion.NumeroProceso,
+                FechaSolicitud = procesosSeleccion.FechaCreacion,
+                TipoProceso = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Proceso_Seleccion
+                                                               && r.Codigo == procesosSeleccion.TipoProcesoCodigo)
+                                                      .FirstOrDefault().Nombre,
+                Objeto = procesosSeleccion.Objeto,
+                AlcanceParticular = procesosSeleccion.AlcanceParticular,
+                FechaApertura = DateTime.Now,
+                FechaEvaluacion = DateTime.Now,
+                FechaAdjudicacion = DateTime.Now,
+                FechaCierre = DateTime.Now,
+                TieneDistribucionTerritorioGrupo  = procesosSeleccion.EsDistribucionGrupos,
+                CuantosGrupos = procesosSeleccion.ProcesoSeleccionGrupo.Count,
+                UrlSoporte = procesosSeleccion.UrlSoporteEvaluacion,
+                  
+                GruposProcesoSeleccion
+            };
+
+
+            return Contrato; 
+        }
+        #endregion
+
         #region Resumen
 
         public async Task<dynamic> GetInfoResumenByContratoId(int pContratoId)
@@ -38,12 +100,12 @@ namespace asivamosffie.services
             List<VFichaContratoProyectoDrp> vFichaContratoProyectoDrps = _context.VFichaContratoProyectoDrp.Where(c => c.ContratoId == pContratoId).ToList();
             string strEstadoContratacion = await _commonService.GetNombreDominioByCodigoAndTipoDominio(contrato.Contratacion.EstadoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Solicitud);
 
-            foreach (var item in vFichaContratoProyectoDrps)
+            foreach (var item in vFichaContratoProyectoDrps.Where(r => r.AportanteId > 0).ToList())
             {
                 item.NombreAportante = GetNombreAportante(_context.CofinanciacionAportante.Find(item.AportanteId));
             }
 
-            List<dynamic>  ListProyectos = new List<dynamic>();  
+            List<dynamic> ListProyectos = new List<dynamic>();
             foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
             {
                 List<VFichaContratoProyectoDrp> vFichaContratoProyectoDrp = vFichaContratoProyectoDrps.Where(c => c.ProyectoId == ContratacionProyecto.ProyectoId)
@@ -183,7 +245,11 @@ namespace asivamosffie.services
 
         private string GetNombreAportante(CofinanciacionAportante confinanciacion)
         {
-            string nombreAportante;
+            string nombreAportante = string.Empty;
+
+            if (confinanciacion == null)
+                return nombreAportante;
+
             if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
             {
                 nombreAportante = ConstanStringTipoAportante.Ffie;

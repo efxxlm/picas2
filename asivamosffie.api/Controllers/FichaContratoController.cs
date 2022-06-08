@@ -14,26 +14,37 @@ using System.Threading.Tasks;
 
 namespace asivamosffie.api.Controllers
 {
-   
+
     [Route("api/[controller]")]
     [ApiController]
- 
+
     public class FichaContratoController : ControllerBase
-    { 
-        private readonly IFichaContratoService  _fichaContratoService;
+    {
+        private readonly IFichaContratoService _fichaContratoService;
 
 
         public FichaContratoController(IFichaContratoService fichaContratoService)
         {
-            _fichaContratoService  = fichaContratoService ; 
+            _fichaContratoService = fichaContratoService;
         }
-   
+ 
+        [HttpGet]
+        [Route("GetInfoProcesosSeleccionByContratoId")]
+        public async Task<ActionResult<dynamic>> GetInfoProcesosSeleccionByContratoId(int pContratoId)
+        {
+            return await _fichaContratoService.GetInfoProcesosSeleccionByContratoId(pContratoId);
+        }   
+        
+        
         [HttpGet]
         [Route("GetInfoResumenByContratoId")]
         public async Task<ActionResult<dynamic>> GetInfoResumenByContratoId(int pContratoId)
         {
             return await _fichaContratoService.GetInfoResumenByContratoId(pContratoId);
-        }     [HttpGet]
+        }
+
+
+        [HttpGet]
         [Route("GetFlujoContratoByContratoId")]
         public async Task<ActionResult<dynamic>> GetFlujoContratoByContratoId(int pContratoId)
         {
@@ -45,6 +56,6 @@ namespace asivamosffie.api.Controllers
         public async Task<ActionResult<dynamic>> GetContratosByNumeroContrato(string pNumeroContrato)
         {
             return await _fichaContratoService.GetContratosByNumeroContrato(pNumeroContrato);
-        } 
+        }
     }
 }
