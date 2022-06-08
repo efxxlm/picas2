@@ -25,12 +25,78 @@ namespace asivamosffie.services
         }
 
 
+        #region Polizas y Seguros 
+
+        public async Task<dynamic> GetInfoPolizasSegurosByContratoId(int pContratoId)
+        {
+
+            List<VFichaContratoPolizasYactualizaciones> ListPolizas = _context.VFichaContratoPolizasYactualizaciones.Where(r => r.ContratoId == pContratoId).ToList();
+
+            List<VFichaContratoPolizasYactualizaciones> ListPolizasOriginal = ListPolizas.Where(r => (bool)r.EsDrpOriginal).ToList();
+            List<VFichaContratoPolizasYactualizaciones> ListPolizasACT = ListPolizas.Where(r => !(bool)r.EsDrpOriginal).ToList();
+
+
+            VFichaContratoPolizasYactualizaciones Primera = ListPolizasOriginal.FirstOrDefault();
+
+            List<dynamic> dyListPolizas = new List<dynamic>();
+
+            foreach (var PolizasOriginal in ListPolizasOriginal)
+            {
+                dyListPolizas.Add(new
+                {
+                    NumeroPoliza = PolizasOriginal.PolizasSeguros,
+                    VigenciaPoliza = PolizasOriginal.Vigencia,
+                    VigenciaAmparo = PolizasOriginal.VigenciaAmparo,
+                    ValorAmparo = PolizasOriginal.ValorAmparo
+                });
+            }
+
+
+            List<dynamic> dyListPolizasACT = new List<dynamic>();
+
+            foreach (var PolizasACT in ListPolizasACT)
+            {
+                VFichaContratoPolizasYactualizaciones Original = ListPolizasOriginal.Find(r => r.PolizasSeguros == PolizasACT.PolizasSeguros);
+                 
+                dyListPolizasACT.Add(new
+                {
+                    NombrePoliza = PolizasACT.PolizasSeguros,
+
+                    VigenciaPoliza = Original.Vigencia,
+                    VigenciaPolizaActualizada = PolizasACT.Vigencia,
+
+                    VigenciaAmparo = Original.VigenciaAmparo,
+                    VigenciaAmparoActualizada = PolizasACT.VigenciaAmparo,
+
+                    ValorAmparo = Original.ValorAmparo,
+                    ValorAmparoActualizada = PolizasACT.ValorAmparo,
+                }); 
+            }
+
+            return new 
+            {
+                Primera.NumeroContrato,
+                Primera.NombreContratista,
+                Primera.TipoContrato,
+                Primera.NumeroPoliza,
+                Primera.NombreAseguradora,
+                Primera.NumeroCertificado,
+                Primera.FechaExpedicion,
+                dyListPolizas,
+                dyListPolizasACT
+            };
+        }
+
+
+        #endregion
+
+
         #region Contratacion
 
         public async Task<dynamic> GetInfoContratacionByContratoId(int pContratoId)
         {
             var Contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId)
-                                            .Include(r => r.Contratacion).ThenInclude(r => r.ContratacionProyecto).ThenInclude(r=> r.Proyecto)
+                                            .Include(r => r.Contratacion).ThenInclude(r => r.ContratacionProyecto).ThenInclude(r => r.Proyecto)
                                             .Include(r => r.Contratacion).ThenInclude(r => r.Contratista)
                                             .FirstOrDefault();
 
@@ -52,20 +118,20 @@ namespace asivamosffie.services
                 Localizacion Departamento = Localizacion.Find(r => r.LocalizacionId == Municipio.IdPadre);
 
 
-                VListaProyectos.Add(new 
+                VListaProyectos.Add(new
                 {
-                   NumeroContrato = Contrato.NumeroContrato,
-                   LlaveMen = proyecto.LlaveMen,
-                   TipoIntervencion = ListTipoIntervencion.Where(r=> r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
-                   Departamento = Departamento.Descripcion,
-                   Municipio = Municipio.Descripcion,
-                   InstitucionEducativa = InstitucionEducativa.Nombre,
-                   Sede = Sede.Nombre
-                }); 
+                    NumeroContrato = Contrato.NumeroContrato,
+                    LlaveMen = proyecto.LlaveMen,
+                    TipoIntervencion = ListTipoIntervencion.Where(r => r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
+                    Departamento = Departamento.Descripcion,
+                    Municipio = Municipio.Descripcion,
+                    InstitucionEducativa = InstitucionEducativa.Nombre,
+                    Sede = Sede.Nombre
+                });
             }
 
 
-            return new 
+            return new
             {
                 NumeroContrato = Contrato.NumeroContrato,
                 Contratista = Contrato.Contratacion.Contratista.Nombre,
@@ -95,7 +161,7 @@ namespace asivamosffie.services
             var procesosSeleccion = contrato.Contratacion.Contratista.ProcesoSeleccionProponente.ProcesoSeleccion;
 
             List<dynamic> GruposProcesoSeleccion = new List<dynamic>();
-            List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Presupuesto_Proceso_de_Selección 
+            List<Dominio> ListParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Presupuesto_Proceso_de_Selección
                                                                       || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Proceso_Seleccion)
                                                              .ToList();
 
@@ -107,7 +173,7 @@ namespace asivamosffie.services
                 {
                     GrupoNumero = 1,
                     NombreGrupo = ProcesoSeleccionGrupo.NombreGrupo,
-                    TipoPresupuesto = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Presupuesto_Proceso_de_Selección 
+                    TipoPresupuesto = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Presupuesto_Proceso_de_Selección
                                                                && r.Codigo == ProcesoSeleccionGrupo.TipoPresupuestoCodigo)
                                                       .FirstOrDefault().Nombre,
                     Valor = ProcesoSeleccionGrupo.Valor,
@@ -133,15 +199,15 @@ namespace asivamosffie.services
                 FechaEvaluacion = DateTime.Now,
                 FechaAdjudicacion = DateTime.Now,
                 FechaCierre = DateTime.Now,
-                TieneDistribucionTerritorioGrupo  = procesosSeleccion.EsDistribucionGrupos,
+                TieneDistribucionTerritorioGrupo = procesosSeleccion.EsDistribucionGrupos,
                 CuantosGrupos = procesosSeleccion.ProcesoSeleccionGrupo.Count,
                 UrlSoporte = procesosSeleccion.UrlSoporteEvaluacion,
-                  
+
                 GruposProcesoSeleccion
             };
 
 
-            return Contrato; 
+            return Contrato;
         }
         #endregion
 

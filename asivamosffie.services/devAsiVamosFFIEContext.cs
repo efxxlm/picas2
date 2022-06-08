@@ -300,6 +300,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VFechasValidacionAjusteProgramacion> VFechasValidacionAjusteProgramacion { get; set; }
         public virtual DbSet<VFichaContratoBusquedaContratista> VFichaContratoBusquedaContratista { get; set; }
         public virtual DbSet<VFichaContratoBusquedaContrato> VFichaContratoBusquedaContrato { get; set; }
+        public virtual DbSet<VFichaContratoPolizasYactualizaciones> VFichaContratoPolizasYactualizaciones { get; set; }
         public virtual DbSet<VFichaContratoProyectoDrp> VFichaContratoProyectoDrp { get; set; }
         public virtual DbSet<VFichaProyectoBusquedaProyecto> VFichaProyectoBusquedaProyecto { get; set; }
         public virtual DbSet<VFichaProyectoBusquedaProyectoTabla> VFichaProyectoBusquedaProyectoTabla { get; set; }
@@ -9857,6 +9858,44 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoContratacion)
                     .IsRequired()
                     .HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<VFichaContratoPolizasYactualizaciones>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaContrato_PolizasYActualizaciones");
+
+                entity.Property(e => e.FechaExpedicion).HasColumnType("datetime");
+
+                entity.Property(e => e.NombreAseguradora).HasMaxLength(500);
+
+                entity.Property(e => e.NombreContratista)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroCertificado).HasMaxLength(250);
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroPoliza).HasMaxLength(250);
+
+                entity.Property(e => e.PolizasSeguros)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.TipoContrato)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.ValorAmparo).HasColumnType("numeric(38, 2)");
+
+                entity.Property(e => e.Vigencia).HasColumnType("datetime");
+
+                entity.Property(e => e.VigenciaAmparo).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<VFichaContratoProyectoDrp>(entity =>
