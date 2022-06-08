@@ -14,63 +14,71 @@
       <a
         *ngIf="indicadores.tieneResumen"
         class="navegacion--button"
-        [routerLink]="[ 'fichaContrato/resumen', indicadores?.informacion?.contratoId ]"
+        [routerLink]="['fichaContrato/resumen', indicadores?.informacion?.contratoId]"
       >
         <img src="assets/img/icon/Menu-contratos/1-Resumen.svg" alt="Resumen" />
         Resumen
       </a>
       <a
         *ngIf="indicadores.tieneSeleccion"
-        class="navegacion--button" routerLink="fichaContrato/seleccion"
+        class="navegacion--button"
+        [routerLink]="['fichaContrato/seleccion', indicadores?.informacion?.contratoId]"
       >
         <img src="assets/img/icon/Menu-contratos/2-Seleccion.svg" alt="Selección" />
         Selección
       </a>
       <a
         *ngIf="indicadores.tieneContratacion"
-        class="navegacion--button" routerLink="fichaContrato/contratacion"
+        class="navegacion--button"
+        [routerLink]="['fichaContrato/contratacion', indicadores?.informacion?.contratoId]"
       >
         <img src="assets/img/icon/Menu-contratos/3-contratacion.svg" alt="Contratación" />
         Contratación
       </a>
       <a
         *ngIf="indicadores.tienePolizasSeguros"
-        class="navegacion--button" routerLink="fichaContrato/polizasSeguros"
+        class="navegacion--button"
+        [routerLink]="['fichaContrato/polizasSeguros', indicadores?.informacion?.contratoId]"
       >
         <img src="assets/img/icon/Menu-contratos/4-polizas-y-seguros.svg" alt="Pólizas y seguros" />
         Pólizas y seguros
       </a>
       <a
         *ngIf="indicadores.tieneEjecucionFinanciera"
-        class="navegacion--button" routerLink="fichaContrato/ejecucionFinanciera"
+        class="navegacion--button"
+        [routerLink]="['fichaContrato/ejecucionFinanciera', indicadores?.informacion?.contratoId]"
       >
         <img src="assets/img/icon/Menu-contratos/5-Ejecucion-financiera.svg" alt="Ejecución financiera" />
         Ejecución financiera
       </a>
       <a
         *ngIf="indicadores.tieneNovedades"
-        class="navegacion--button" routerLink="fichaContrato/novedades"
+        class="navegacion--button"
+        [routerLink]="['fichaContrato/novedades', indicadores?.informacion?.contratoId]"
       >
         <img src="assets/img/icon/Menu-contratos/6-Novedades.svg" alt="Novedades" />
         Novedades
       </a>
       <a
         *ngIf="indicadores.tieneControversias"
-        class="navegacion--button" routerLink="fichaContrato/controversias"
+        class="navegacion--button"
+        [routerLink]="['fichaContrato/controversias', indicadores?.informacion?.contratoId]"
       >
         <img src="assets/img/icon/Menu-contratos/7-Controversias.svg" alt="Controversias" />
         Controversias
       </a>
       <a
         *ngIf="indicadores.tieneProcesosDefenzaJudicial"
-        class="navegacion--button" routerLink="fichaContrato/procesosDefensaJudicial"
+        class="navegacion--button"
+        [routerLink]="['fichaContrato/procesosDefensaJudicial', indicadores?.informacion?.contratoId]"
       >
         <img src="assets/img/icon/Menu-contratos/8-P-Defensa-judicial.svg" alt="Procesos de defensa judicial" />
         Procesos de defensa judicial
       </a>
       <a
         *ngIf="indicadores.tieneLiquidacion"
-        class="navegacion--button" routerLink="fichaContrato/liquidacion"
+        class="navegacion--button"
+        [routerLink]="['fichaContrato/liquidacion', indicadores?.informacion?.contratoId]"
       >
         <img src="assets/img/icon/Menu-contratos/9-Liquidacion.svg" alt="Liquidación" />
         Liquidación

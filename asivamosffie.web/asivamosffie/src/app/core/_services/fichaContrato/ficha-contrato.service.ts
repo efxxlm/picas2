@@ -6,22 +6,45 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class FichaContratoService {
-  private urlApi = `${ environment.apiUrl }`;
+  private urlApi = `${environment.apiUrl}`;
 
-  constructor( private http: HttpClient ) { }
+  constructor(private http: HttpClient) {}
 
   ficha_contrato = 'FichaContrato';
-   
-  getContratosByNumeroContrato( pNumeroContrato: string ){
-    return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_contrato}/GetContratosByNumeroContrato?pNumeroContrato=${ pNumeroContrato }`);
-  }
-   
-  getFlujoContratoByContratoId( pContratoId: string ){
-    return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_contrato}/GetFlujoContratoByContratoId?pContratoId=${ pContratoId }`);
-  }
-   
-  getInfoResumenByContratoId( pContratoId: string ){
-    return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_contrato}/GetInfoResumenByContratoId?pContratoId=${ pContratoId }`);
+
+  getContratosByNumeroContrato(pNumeroContrato: string) {
+    return this.http.get<any[]>(
+      `${this.urlApi}/${this.ficha_contrato}/GetContratosByNumeroContrato?pNumeroContrato=${pNumeroContrato}`
+    );
   }
 
+  getFlujoContratoByContratoId(pContratoId: string) {
+    return this.http.get<any[]>(
+      `${this.urlApi}/${this.ficha_contrato}/GetFlujoContratoByContratoId?pContratoId=${pContratoId}`
+    );
+  }
+
+  getInfoResumenByContratoId(pContratoId: string) {
+    return this.http.get<any[]>(
+      `${this.urlApi}/${this.ficha_contrato}/GetInfoResumenByContratoId?pContratoId=${pContratoId}`
+    );
+  }
+
+  getInfoProcesosSeleccionByContratoId(pContratoId: string) {
+    return this.http.get<any[]>(
+      `${this.urlApi}/${this.ficha_contrato}/GetInfoProcesosSeleccionByContratoId?pContratoId=${pContratoId}`
+    );
+  }
+
+  getInfoContratacionByContratoId(pContratoId: string) {
+    return this.http.get<any[]>(
+      `${this.urlApi}/${this.ficha_contrato}/GetInfoContratacionByContratoId?pContratoId=${pContratoId}`
+    );
+  }
+
+  getInfoPolizasSegurosByContratoId(pContratoId: string) {
+    return this.http.get<any[]>(
+      `${this.urlApi}/${this.ficha_contrato}/GetInfoPolizasSegurosByContratoId?pContratoId=${pContratoId}`
+    );
+  }
 }
