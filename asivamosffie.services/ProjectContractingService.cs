@@ -656,13 +656,13 @@ namespace asivamosffie.services
         }
 
         public async Task<List<ProyectoGrilla>> GetListProyectsByFilters(
-            string pTipoIntervencion,
-            string pLlaveMen,
-            string pRegion,
-            string pDepartamento,
-            string pMunicipio,
-            int pIdInstitucionEducativa,
-            int pIdSede)
+          string pTipoIntervencion,
+          string pLlaveMen,
+          string pRegion,
+          string pDepartamento,
+          string pMunicipio,
+          int pIdInstitucionEducativa,
+          int pIdSede)
         {
             //estado de registro “Completo”, que tienen viabilidad jurídica y técnica
             List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
@@ -712,13 +712,35 @@ namespace asivamosffie.services
             foreach (var proyecto in ListProyectos)
             {
                 if (proyecto.ContratacionProyecto.Count() > 0)
+                {
+                    //Quitar las contrataciones que estan eliminadas 
                     proyecto.ContratacionProyecto = proyecto.ContratacionProyecto.Where(r => r.Eliminado != true).ToList();
+
+
+                    //Quitar las contrataciones que estan rechazadas por comite tecnico
+                    List<int> idsContratacionProyecto = proyecto.ContratacionProyecto.Where(r => r.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteTecnico)
+                                                                                     .Select(r => r.ContratacionProyectoId)
+                                                                                     .ToList();
+
+                    proyecto.ContratacionProyecto = proyecto.ContratacionProyecto.Where(r => !idsContratacionProyecto.Contains(r.ContratacionProyectoId))
+                                                                                  .ToList();
+                }
 
                 bool cumpleCondicionTai = false;
 
                 if (!string.IsNullOrEmpty(proyecto.TipoIntervencionCodigo))
                 {
                     Localizacion departamento = ListDepartamentos.Find(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipioNavigation.IdPadre);
+
+                    string strNumeroSolicitud = string.Empty;
+
+                    if (proyecto.ContratacionProyecto.Count() > 0)
+                    {
+                        foreach (var ContratacionProyecto in proyecto?.ContratacionProyecto)
+                        {
+                            strNumeroSolicitud += ContratacionProyecto.Contratacion.TipoSolicitudCodigo == "1" ? "Obra: " + ContratacionProyecto.Contratacion.NumeroSolicitud + " " : "Interventoria: " + ContratacionProyecto.Contratacion.NumeroSolicitud;
+                        }
+                    }
 
                     ProyectoGrilla proyectoGrilla = new ProyectoGrilla
                     {
@@ -731,7 +753,7 @@ namespace asivamosffie.services
                         Sede = proyecto.Sede.Nombre,
                         ProyectoId = proyecto.ProyectoId,
                         ContratacionId = proyecto?.ContratacionProyecto?.FirstOrDefault()?.ContratacionId,
-                        NumeroSolicitud = proyecto?.ContratacionProyecto?.FirstOrDefault()?.Contratacion?.NumeroSolicitud ?? "No asignado"
+                        NumeroSolicitud = !string.IsNullOrEmpty(strNumeroSolicitud) ? strNumeroSolicitud : "No asignado"
                     };
 
                     cumpleCondicionTai = ValidarCumpleTaiContratistaxProyectoId(proyecto.ProyectoId);
