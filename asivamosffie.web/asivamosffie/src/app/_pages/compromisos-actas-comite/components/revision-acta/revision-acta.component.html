@@ -188,11 +188,9 @@
               <mat-expansion-panel-header class="expansion-style--header"
                 *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.ActuacionesControversias">
                 <mat-panel-title class="expansion-style--title sub-expansion">
-                  <b>Solicitud {{ sesionComite.controversiaActuacion !== undefined ?
-                    sesionComite.controversiaActuacion.controversiaContractual.numeroSolicitud :
-                    sesionComite.numeroSolicitud }} </b>
+                  <b>Solicitud {{ sesionComite.numeroSolicitud}} </b>
                 </mat-panel-title>
-              </mat-expansion-panel-header>
+              </mat-expansion-panel-header> 
 
               <app-form-solicitud [solicitudes]="sesionComite" [esComiteFiduciario]="true"></app-form-solicitud>
             </mat-expansion-panel>
