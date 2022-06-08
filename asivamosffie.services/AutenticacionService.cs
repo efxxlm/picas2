@@ -83,6 +83,9 @@ namespace asivamosffie.services
                                                                     ).Select(x=>x.Menu)
                                                                     .Distinct()
                                                                     .ToListAsync();
+
+                    menus = menus.Distinct().ToList();
+
                     respuesta = new Respuesta { 
                                                 IsSuccessful = true, 
                                                 IsValidation = false, 

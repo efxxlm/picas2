@@ -544,11 +544,14 @@ namespace asivamosffie.services
                     {
                         if (SesionComiteSolicitudComiteTecnico.SolicitudId > 0)
                         {
-                            SesionComiteSolicitudComiteTecnico.ControversiaActuacion =
-                                ListControversiaActuacion
+
+                            ControversiaActuacion controversiaActuacion = ListControversiaActuacion
                                 .Where(r => r.ControversiaActuacionId == SesionComiteSolicitudComiteTecnico.SolicitudId)
                                 .FirstOrDefault();
-                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = SesionComiteSolicitudComiteTecnico.ControversiaActuacion.NumeroActuacion;
+
+                            SesionComiteSolicitudComiteTecnico.ControversiaActuacion = controversiaActuacion;
+                             
+                            SesionComiteSolicitudComiteTecnico.NumeroSolicitud = controversiaActuacion.NumeroActuacion;
                         }
                     }
                 }
