@@ -24,6 +24,62 @@ namespace asivamosffie.services
 
         }
 
+
+        #region Contratacion
+
+        public async Task<dynamic> GetInfoContratacionByContratoId(int pContratoId)
+        {
+            var Contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId)
+                                            .Include(r => r.Contratacion).ThenInclude(r => r.ContratacionProyecto).ThenInclude(r=> r.Proyecto)
+                                            .Include(r => r.Contratacion).ThenInclude(r => r.Contratista)
+                                            .FirstOrDefault();
+
+            List<VFichaContratoProyectoDrp> vFichaContratoProyectoDrps = _context.VFichaContratoProyectoDrp.Where(c => c.ContratoId == pContratoId).ToList();
+
+            List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
+            List<Localizacion> Localizacion = _context.Localizacion.ToList();
+            List<InstitucionEducativaSede> ListInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
+
+            List<dynamic> VListaProyectos = new List<dynamic>();
+            foreach (var ContratacionProyecto in Contrato.Contratacion.ContratacionProyecto)
+            {
+                Proyecto proyecto = ContratacionProyecto.Proyecto;
+
+                InstitucionEducativaSede Sede = ListInstitucionEducativaSedes.Find(r => r.InstitucionEducativaSedeId == proyecto.SedeId);
+                InstitucionEducativaSede InstitucionEducativa = ListInstitucionEducativaSedes.Find(r => r.InstitucionEducativaSedeId == Sede.PadreId);
+
+                Localizacion Municipio = Localizacion.Find(r => r.LocalizacionId == proyecto.LocalizacionIdMunicipio);
+                Localizacion Departamento = Localizacion.Find(r => r.LocalizacionId == Municipio.IdPadre);
+
+
+                VListaProyectos.Add(new 
+                {
+                   NumeroContrato = Contrato.NumeroContrato,
+                   LlaveMen = proyecto.LlaveMen,
+                   TipoIntervencion = ListTipoIntervencion.Where(r=> r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre,
+                   Departamento = Departamento.Descripcion,
+                   Municipio = Municipio.Descripcion,
+                   InstitucionEducativa = InstitucionEducativa.Nombre,
+                   Sede = Sede.Nombre
+                }); 
+            }
+
+
+            return new 
+            {
+                NumeroContrato = Contrato.NumeroContrato,
+                Contratista = Contrato.Contratacion.Contratista.Nombre,
+                NumeroSolicitud = Contrato.Contratacion.NumeroSolicitud,
+                FechaSolicitud = Contrato.Contratacion.FechaTramite,
+                OpcionContratar = Contrato.Contratacion.TipoSolicitudCodigo == EnumeratorTipoSolicitudRequisitosPagosString.Contratos_de_obra ? ConstanCodigoTipoContratacionSTRING.Obra : ConstanCodigoTipoContratacionSTRING.Interventoria,
+                ValorSolicitud = vFichaContratoProyectoDrps.Sum(c => c.ValorUso),
+                UrlSoporte = Contrato.RutaDocumento,
+                VListaProyectos
+            };
+        }
+
+        #endregion
+
         #region ProcesosSeleccion
         public async Task<dynamic> GetInfoProcesosSeleccionByContratoId(int pContratoId)
         {
@@ -62,6 +118,10 @@ namespace asivamosffie.services
             }
             dynamic Contrato = new
             {
+                NumeroContrato = contrato.NumeroContrato,
+                Contratista = contrato.Contratacion.Contratista.Nombre,
+
+
                 NumeroProceso = procesosSeleccion.NumeroProceso,
                 FechaSolicitud = procesosSeleccion.FechaCreacion,
                 TipoProceso = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Proceso_Seleccion
