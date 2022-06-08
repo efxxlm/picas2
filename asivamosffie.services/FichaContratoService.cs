@@ -345,10 +345,10 @@ namespace asivamosffie.services
             return new
             {
                 Informacion = infoContrato,
-                TieneResumen = true,
-                TieneSeleccion = true,
-                TieneContratacion = true,
-                TienePolizasSeguros = true,
+                TieneResumen = _context.VFichaContratoProyectoDrp.Any(c => c.ContratoId == pContratoId),
+                TieneSeleccion = _context.VFichaContratoTieneProcesosSeleccion.Any(r=> r.ContratoId == pContratoId),
+                TieneContratacion = contrato.Contratacion.ContratacionId > 0,
+                TienePolizasSeguros = _context.VFichaContratoPolizasYactualizaciones.Any(r=> r.ContratoId == pContratoId),
                 TieneEjecucionFinanciera = true,
                 TieneNovedades = true,
                 TieneControversias = true,

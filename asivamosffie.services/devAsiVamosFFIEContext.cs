@@ -302,6 +302,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VFichaContratoBusquedaContrato> VFichaContratoBusquedaContrato { get; set; }
         public virtual DbSet<VFichaContratoPolizasYactualizaciones> VFichaContratoPolizasYactualizaciones { get; set; }
         public virtual DbSet<VFichaContratoProyectoDrp> VFichaContratoProyectoDrp { get; set; }
+        public virtual DbSet<VFichaContratoTieneProcesosSeleccion> VFichaContratoTieneProcesosSeleccion { get; set; }
         public virtual DbSet<VFichaProyectoBusquedaProyecto> VFichaProyectoBusquedaProyecto { get; set; }
         public virtual DbSet<VFichaProyectoBusquedaProyectoTabla> VFichaProyectoBusquedaProyectoTabla { get; set; }
         public virtual DbSet<VFichaProyectoContratacionProcesoSeleccion> VFichaProyectoContratacionProcesoSeleccion { get; set; }
@@ -9945,6 +9946,13 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
+            });
+
+            modelBuilder.Entity<VFichaContratoTieneProcesosSeleccion>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaContrato_TieneProcesosSeleccion");
             });
 
             modelBuilder.Entity<VFichaProyectoBusquedaProyecto>(entity =>
