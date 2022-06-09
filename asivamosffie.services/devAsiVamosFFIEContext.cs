@@ -300,6 +300,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VFechasValidacionAjusteProgramacion> VFechasValidacionAjusteProgramacion { get; set; }
         public virtual DbSet<VFichaContratoBusquedaContratista> VFichaContratoBusquedaContratista { get; set; }
         public virtual DbSet<VFichaContratoBusquedaContrato> VFichaContratoBusquedaContrato { get; set; }
+        public virtual DbSet<VFichaContratoDefensaJudicial> VFichaContratoDefensaJudicial { get; set; }
         public virtual DbSet<VFichaContratoPolizasYactualizaciones> VFichaContratoPolizasYactualizaciones { get; set; }
         public virtual DbSet<VFichaContratoProyectoDrp> VFichaContratoProyectoDrp { get; set; }
         public virtual DbSet<VFichaContratoTieneProcesosSeleccion> VFichaContratoTieneProcesosSeleccion { get; set; }
@@ -9859,6 +9860,37 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.TipoContratacion)
                     .IsRequired()
                     .HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<VFichaContratoDefensaJudicial>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_FichaContrato_DefensaJudicial");
+
+                entity.Property(e => e.EstadoProceso)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.Legitimacion)
+                    .IsRequired()
+                    .HasMaxLength(6)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroProceso)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoAccion)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.UrlSoporteProceso)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VFichaContratoPolizasYactualizaciones>(entity =>

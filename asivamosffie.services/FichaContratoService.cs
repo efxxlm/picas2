@@ -26,6 +26,28 @@ namespace asivamosffie.services
 
 
 
+
+
+        #region Procesos defensa Judicial
+
+        public async Task<dynamic> GetInfoProcesosDefensaByContratoId(int pContratoId)
+        {
+            var Contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
+                                                   .Include(r => r.Contratacion)
+                                                   .ThenInclude(r => r.Contratista).FirstOrDefaultAsync();
+            var ListDefensa = await _context.VFichaContratoDefensaJudicial.Where(r => r.ContratoId == pContratoId).ToListAsync();
+
+            return new
+            {
+                NumeroContrato = Contrato.NumeroContrato,
+                Contratista = Contrato.Contratacion.Contratista.Nombre,
+                ListDefensaJudicial = ListDefensa
+            };
+
+        }
+         
+        #endregion
+
         #region Controversias 
 
         public async Task<dynamic> GetInfoControversiasByContratoId(int pContratoId)
@@ -64,9 +86,6 @@ namespace asivamosffie.services
         }
 
         #endregion
-
-
-
 
         #region Novedades
         public async Task<dynamic> GetInfoNovedadesByContratoId(int pContratoId)
@@ -175,7 +194,6 @@ namespace asivamosffie.services
 
 
         #endregion
-
 
         #region Contratacion
 
@@ -436,9 +454,9 @@ namespace asivamosffie.services
                 TieneContratacion = contrato.Contratacion.ContratacionId > 0,
                 TienePolizasSeguros = _context.VFichaContratoPolizasYactualizaciones.Any(r => r.ContratoId == pContratoId),
                 TieneEjecucionFinanciera = true,
-                TieneNovedades = true,
-                TieneControversias = true,
-                TieneProcesosDefenzaJudicial = true,
+                TieneNovedades = _context.NovedadContractual.Any(c => c.ContratoId == pContratoId),
+                TieneControversias = _context.ControversiaContractual.Any(c => c.ContratoId == pContratoId),
+                TieneProcesosDefenzaJudicial = _context.VFichaContratoDefensaJudicial.Any(r => r.ContratoId == pContratoId),
                 TieneLiquidacion = true,
             };
         }
