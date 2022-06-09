@@ -27,13 +27,20 @@ namespace asivamosffie.api.Controllers
         {
             _fichaContratoService = fichaContratoService;
         }
-   
+
+        [HttpGet]
+        [Route("GetInfoLiquidacionByContratoId")]
+        public async Task<ActionResult<dynamic>> GetInfoLiquidacionByContratoId(int pContratoId)
+        {
+            return await _fichaContratoService.GetInfoLiquidacionByContratoId(pContratoId);
+        }
         [HttpGet]
         [Route("GetInfoProcesosDefensaByContratoId")]
         public async Task<ActionResult<dynamic>> GetInfoProcesosDefensaByContratoId(int pContratoId)
         {
             return await _fichaContratoService.GetInfoProcesosDefensaByContratoId(pContratoId);
-        }   [HttpGet]
+        }
+        [HttpGet]
         [Route("GetInfoControversiasByContratoId")]
         public async Task<ActionResult<dynamic>> GetInfoControversiasByContratoId(int pContratoId)
         {

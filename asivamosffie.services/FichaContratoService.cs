@@ -24,6 +24,27 @@ namespace asivamosffie.services
 
         }
 
+        #region Liquidacion
+        public async Task<dynamic> GetInfoLiquidacionByContratoId(int pContratoId)
+        {
+            var Contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
+                                                   .Include(r => r.Contratacion).ThenInclude(r => r.Contratista)
+                                                   .FirstOrDefaultAsync();
+
+
+
+            var List = await _context.VRegistrarLiquidacionContrato.Where(r => r.ContratoId == pContratoId).ToListAsync();
+
+            return new
+            {
+                NumeroContrato = Contrato.NumeroContrato,
+                Contratista = Contrato.Contratacion.Contratista.Nombre,
+                ListLiquidacion = List
+            };
+
+        }
+
+        #endregion
 
 
 
