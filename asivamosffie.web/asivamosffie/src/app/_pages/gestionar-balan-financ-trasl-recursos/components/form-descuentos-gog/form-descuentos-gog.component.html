@@ -1,4 +1,4 @@
-<ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+<ng-container *ngIf="esVerDetalle !== true; else noEsVerDetalle">
   <form [formGroup]="addressForm">
       <mat-accordion *ngIf="descuentos.length > 0 && criteriosArray.length > 0">
           <mat-expansion-panel class="expansion-style sub-expansion-black" formArrayName="descuentos" *ngFor="let descuento of descuentos.controls; index as i">
