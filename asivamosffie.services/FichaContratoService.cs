@@ -478,7 +478,7 @@ namespace asivamosffie.services
                 TieneNovedades = _context.NovedadContractual.Any(c => c.ContratoId == pContratoId),
                 TieneControversias = _context.ControversiaContractual.Any(c => c.ContratoId == pContratoId),
                 TieneProcesosDefenzaJudicial = _context.VFichaContratoDefensaJudicial.Any(r => r.ContratoId == pContratoId),
-                TieneLiquidacion = true,
+                TieneLiquidacion = _context.VRegistrarLiquidacionContrato.Any(r => r.ContratoId == pContratoId),
             };
         }
         public async Task<dynamic> GetContratosByNumeroContrato(string pNumeroContrato)
