@@ -26,6 +26,48 @@ namespace asivamosffie.services
 
 
 
+        #region Controversias 
+
+        public async Task<dynamic> GetInfoControversiasByContratoId(int pContratoId)
+        {
+
+            var Contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
+                            .Include(r => r.Contratacion).ThenInclude(r => r.Contratista)
+                            .Include(n => n.ControversiaContractual)
+                            .FirstOrDefaultAsync();
+
+            List<Dominio> ListParametricas = _context.Dominio.Where(v => v.TipoDominioId == (int)EnumeratorTipoDominio.Tipos_Controversia
+                                                                      || v.TipoDominioId == (int)EnumeratorTipoDominio.Estado_controversia
+                                                                   )
+                                                             .ToList();
+
+            List<dynamic> ListControversias = new List<dynamic>();
+
+            foreach (var ControversiaContractual in Contrato.ControversiaContractual)
+            {
+                ListControversias.Add(new
+                {
+                    FechaSolicitud = ControversiaContractual.FechaSolicitud,
+                    NumeroSolicitud = ControversiaContractual.NumeroSolicitud,
+                    TipoControversia = ListParametricas.Find(c => c.Codigo == ControversiaContractual.TipoControversiaCodigo && c.TipoDominioId == (int)EnumeratorTipoDominio.Tipos_Controversia).Nombre,
+                    EstadoControversia = ListParametricas.Find(c => c.Codigo == ControversiaContractual.EstadoCodigo && c.TipoDominioId == (int)EnumeratorTipoDominio.Estado_controversia).Nombre,
+                    UrlSoporte = ControversiaContractual.RutaSoporte
+                });
+            }
+
+            return new
+            {
+                NumeroContrato = Contrato.NumeroContrato,
+                Contratista = Contrato.Contratacion.Contratista.Nombre,
+                ListControversias
+            };
+        }
+
+        #endregion
+
+
+
+
         #region Novedades
         public async Task<dynamic> GetInfoNovedadesByContratoId(int pContratoId)
         {
@@ -46,7 +88,7 @@ namespace asivamosffie.services
             foreach (var NovedadContractual in Contrato.NovedadContractual)
             {
                 foreach (var NovedadContractualDescripcion in NovedadContractual.NovedadContractualDescripcion)
-                { 
+                {
                     ListNovedades.Add(new
                     {
                         FechaSolicitud = NovedadContractual.FechaSolictud,

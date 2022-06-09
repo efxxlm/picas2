@@ -27,36 +27,42 @@ namespace asivamosffie.api.Controllers
         {
             _fichaContratoService = fichaContratoService;
         }
- 
+         
+        [HttpGet]
+        [Route("GetInfoControversiasByContratoId")]
+        public async Task<ActionResult<dynamic>> GetInfoControversiasByContratoId(int pContratoId)
+        {
+            return await _fichaContratoService.GetInfoControversiasByContratoId(pContratoId);
+        }
         [HttpGet]
         [Route("GetInfoNovedadesByContratoId")]
         public async Task<ActionResult<dynamic>> GetInfoNovedadesByContratoId(int pContratoId)
         {
             return await _fichaContratoService.GetInfoNovedadesByContratoId(pContratoId);
-        }  
-          [HttpGet]
+        }
+        [HttpGet]
         [Route("GetInfoPolizasSegurosByContratoId")]
         public async Task<ActionResult<dynamic>> GetInfoPolizasSegurosByContratoId(int pContratoId)
         {
             return await _fichaContratoService.GetInfoPolizasSegurosByContratoId(pContratoId);
-        }  
-        
+        }
+
 
         [HttpGet]
         [Route("GetInfoContratacionByContratoId")]
         public async Task<ActionResult<dynamic>> GetInfoContratacionByContratoId(int pContratoId)
         {
             return await _fichaContratoService.GetInfoContratacionByContratoId(pContratoId);
-        }   
-           
+        }
+
         [HttpGet]
         [Route("GetInfoProcesosSeleccionByContratoId")]
         public async Task<ActionResult<dynamic>> GetInfoProcesosSeleccionByContratoId(int pContratoId)
         {
             return await _fichaContratoService.GetInfoProcesosSeleccionByContratoId(pContratoId);
-        }   
-        
-        
+        }
+
+
         [HttpGet]
         [Route("GetInfoResumenByContratoId")]
         public async Task<ActionResult<dynamic>> GetInfoResumenByContratoId(int pContratoId)
