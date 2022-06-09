@@ -1,50 +1,36 @@
 <section class="container">
   <div class="container text-center">
-    <div class="text-right">
-      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
-        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    <div class="text-right print-d-none">
+      <a routerLink="../../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
       </a>
     </div>
-    <h1 class="title-menu--h1">
-      Ejecución financiera N801801
-    </h1>
-    <p class="info-sub-title">
-      Contratista <b>Construir futuro</b>
-    </p>
+    <h1 class="title-menu--h1">Ejecución financiera N801801</h1>
+    <p class="info-sub-title">Contratista <b>Construir futuro</b></p>
   </div>
 
-  <mat-accordion>
-    <mat-expansion-panel class="expansion-style">
+  <mat-accordion [multi]="openAcordeon">
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title">
-          DDP
-        </mat-panel-title>
+        <mat-panel-title class="expansion-style--title"> DDP </mat-panel-title>
       </mat-expansion-panel-header>
 
       <mat-card class="shipping-card var-main-gris">
         <mat-card-content>
           <p>
-            <strong>
-              Número de DDP:
-            </strong>
+            <strong> Número de DDP: </strong>
             DDP_0001
           </p>
           <p>
-            <strong>
-              Valor inicial DDP:
-            </strong>
+            <strong> Valor inicial DDP: </strong>
             $100.000.000
           </p>
           <p>
-            <strong>
-              Rubro por financiar:
-            </strong>
+            <strong> Rubro por financiar: </strong>
             Proyecto de infraestructura
           </p>
           <p>
-            <strong>
-              Objeto:
-            </strong>
+            <strong> Objeto: </strong>
             <span class="d-block">
               Contrato de obra que compromete el diagnóstico y/o actualización y/o complementación y/o elaboración de
               estudios y diseños y ejecución de las obras necesarias para la adecuación y mejoramiento de las
@@ -52,21 +38,15 @@
             </span>
           </p>
           <p>
-            <strong>
-              Número de comité técnico:
-            </strong>
+            <strong> Número de comité técnico: </strong>
             CT_003
           </p>
           <p>
-            <strong>
-              Fecha comité técnico:
-            </strong>
+            <strong> Fecha comité técnico: </strong>
             03/07/2020
           </p>
           <p>
-            <strong>
-              URL con sporte:
-            </strong>
+            <strong> URL con sporte: </strong>
             http://DDP_0001
           </p>
           <h2 class="card-subTitle">Modificaciones</h2>
@@ -108,21 +88,16 @@
           </div>
         </mat-card-content>
       </mat-card>
-
     </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title">
-          DRP
-        </mat-panel-title>
+        <mat-panel-title class="expansion-style--title"> DRP </mat-panel-title>
       </mat-expansion-panel-header>
 
       <mat-card class="shipping-card var-main-gris">
         <mat-card-content>
           <p>
-            <strong>
-              Objeto:
-            </strong>
+            <strong> Objeto: </strong>
             <span class="d-block">
               Contrato de obra que compromete el diagnóstico y/o actualización y/o complementación y/o elaboración de
               estudios y diseños y ejecución de las obras necesarias para la adecuación y mejoramiento de las
@@ -130,9 +105,7 @@
             </span>
           </p>
           <p>
-            <strong>
-              URL con sporte:
-            </strong>
+            <strong> URL con sporte: </strong>
             http://DRP_N801801
           </p>
           <div class="table-responsive mb-1em mt-1em w-talble">
@@ -161,88 +134,124 @@
           </div>
         </mat-card-content>
       </mat-card>
-
     </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title">
-          Ejecución presupuestal
-        </mat-panel-title>
+        <mat-panel-title class="expansion-style--title"> Ejecución presupuestal </mat-panel-title>
       </mat-expansion-panel-header>
-        <div class="table-responsive mb-1em mt-1em">
-          <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
-            <thead>
-              <tr class="mat-header-row cdk-header-row ng-star-inserted">
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Componente</th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Total comprometido</th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Facturado</th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Saldo</th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Porcentaje de ejecución presupuestal</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let element of listaejEcucionPresupuestal">
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  <b> {{ element.componente }} </b>
-                </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ element.totalComprometido }}
-                </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ element.facturadoAntesImpuestos }}
-                </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ element.saldo }}
-                </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ element.porcentajeEjecucionPresupuestal }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <div class="table-responsive mb-1em mt-1em">
+        <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+          <thead>
+            <tr class="mat-header-row cdk-header-row ng-star-inserted">
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Componente</th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Total comprometido</th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Facturado</th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Saldo</th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Porcentaje de ejecución presupuestal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let element of dataTableEjpresupuestal">
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                <b> {{ element.nombre }} </b>
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.totalComprometido | currency: 'COP':'symbol-narrow':'.0-0' }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.facturadoAntesImpuestos | currency: 'COP':'symbol-narrow':'.0-0' }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.saldo | currency: 'COP':'symbol-narrow':'.0-0' }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.porcentajeEjecucionPresupuestal | number: '.0-2' }} %
+              </td>
+            </tr>
+            <tr role="row" class="mat-footer-row cdk-footer-row ng-star-inserted">
+              <td align="center" class="auxiliarTd ng-star-inserted">
+                <b>Valor total</b>
+              </td>
+              <td align="center" style="border-right: 1px solid; border-bottom: 1px solid" class="ng-star-inserted">
+                {{ totalEjpresupuestal.totalComprometido | currency: 'COP':'symbol-narrow':'.0-0' }}
+              </td>
+              <td align="center" style="border-right: 1px solid; border-bottom: 1px solid" class="ng-star-inserted">
+                {{ totalEjpresupuestal.facturadoAntesImpuestos | currency: 'COP':'symbol-narrow':'.0-0' }}
+              </td>
+              <td align="center" style="border-right: 1px solid; border-bottom: 1px solid" class="ng-star-inserted">
+                {{ totalEjpresupuestal.saldo | currency: 'COP':'symbol-narrow':'.0-0' }}
+              </td>
+              <td align="center" style="border-right: 1px solid; border-bottom: 1px solid" class="ng-star-inserted">
+                {{ totalEjpresupuestal.porcentajeEjecucionPresupuestal | number: '.0-2' }}%
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
     </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title">
-          Ejecución financiera
-        </mat-panel-title>
+        <mat-panel-title class="expansion-style--title"> Ejecución financiera </mat-panel-title>
       </mat-expansion-panel-header>
-        <div class="table-responsive mb-1em mt-1em">
-          <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
-            <thead>
-              <tr class="mat-header-row cdk-header-row ng-star-inserted">
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Componente</th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Total comprometido</th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Ordenado a girar antes de impuestos</th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Saldo</th>
-                <th class="mat-header-cell cdk-header-cell ng-star-inserted">Porcentaje de ejecución presupuestal</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let element of listaEjecucionFinanciera">
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  <b> {{ element.componente }} </b>
-                </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ element.totalComprometido }}
-                </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ element.ordenadoGirarAntesImpuestos }}
-                </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ element.saldo }}
-                </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  {{ element.porcentajeEjecucionPresupuestal }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <div class="table-responsive mb-1em mt-1em">
+        <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+          <thead>
+            <tr class="mat-header-row cdk-header-row ng-star-inserted">
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Componente</th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Total comprometido</th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Ordenado a girar antes de impuestos</th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Saldo</th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">Porcentaje de ejecución presupuestal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let element of dataTableEjfinanciera">
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                <b> {{ element.nombre }} </b>
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.totalComprometido | currency: 'COP':'symbol-narrow':'.0-0' }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.ordenadoGirarAntesImpuestos | currency: 'COP':'symbol-narrow':'.0-0' }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ element.saldo | currency: 'COP':'symbol-narrow':'.0-0' }}
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{
+                  element.porcentajeEjecucionFinanciera ? (element.porcentajeEjecucionFinanciera | number: '.0-2') : 0
+                }}%
+              </td>
+            </tr>
+            <tr role="row" class="mat-footer-row cdk-footer-row ng-star-inserted">
+              <td align="center" class="auxiliarTd ng-star-inserted">
+                <b>Valor total</b>
+              </td>
+              <td align="center" style="border-right: 1px solid; border-bottom: 1px solid" class="ng-star-inserted">
+                {{ totalEjfinanciera.totalComprometido | currency: 'COP':'symbol-narrow':'.0-0' }}
+              </td>
+              <td align="center" style="border-right: 1px solid; border-bottom: 1px solid" class="ng-star-inserted">
+                {{ totalEjfinanciera.ordenadoGirarAntesImpuestos | currency: 'COP':'symbol-narrow':'.0-0' }}
+              </td>
+              <td align="center" style="border-right: 1px solid; border-bottom: 1px solid" class="ng-star-inserted">
+                {{ totalEjfinanciera.saldo | currency: 'COP':'symbol-narrow':'.0-0' }}
+              </td>
+              <td align="center" style="border-right: 1px solid; border-bottom: 1px solid" class="ng-star-inserted">
+                {{
+                  totalEjfinanciera.porcentajeEjecucionFinanciera
+                    ? (totalEjfinanciera.porcentajeEjecucionFinanciera | number: '.0-2')
+                    : 0
+                }}%
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
     </mat-expansion-panel>
   </mat-accordion>
-  
 </section>
+
+<div class="text-center mt-2em mb-2em print-d-none">
+  <button mat-raised-button color="accent" (click)="downloadPDF()">Descargar</button>
+</div>

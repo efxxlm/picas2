@@ -6,8 +6,7 @@
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Selección
-      <span *ngIf="contrato">{{ contrato.numeroContrato }}</span>
+      Selección <span *ngIf="contrato">{{ contrato.numeroContrato }}</span>
     </h1>
     <p class="info-sub-title">
       Contratista <b *ngIf="contrato"> {{ contrato.contratista }} </b>
@@ -17,119 +16,78 @@
   <mat-card class="shipping-card var-main-gris" *ngIf="contrato">
     <mat-card-content>
       <p>
-        <strong>
-          Número de proceso:
-        </strong>
+        <strong> Número de proceso: </strong>
         {{ contrato.numeroProceso }}
       </p>
       <p>
-        <strong>
-          Fecha de solicitud:
-        </strong>
+        <strong> Fecha de solicitud: </strong>
         {{ contrato.fechaSolicitud | date: 'dd/MM/yyyy' }}
       </p>
       <p>
-        <strong>
-          Tipo de proceso de selección:
-        </strong>
+        <strong> Tipo de proceso de selección: </strong>
         {{ contrato.tipoProceso }}
       </p>
       <div class="mb-6px">
-        <strong>
-          Objeto:
-        </strong>
-        <div [innerHTML]="contrato.objeto">
-        </div>
+        <strong> Objeto: </strong>
+        <div [innerHTML]="contrato.objeto"></div>
       </div>
       <div class="mb-6px">
-        <strong>
-          Alcance particular:
-        </strong>
-        <div [innerHTML]="contrato.alcanceParticular">
-        </div>
+        <strong> Alcance particular: </strong>
+        <div [innerHTML]="contrato.alcanceParticular"></div>
       </div>
       <p>
-        <strong>
-          Fecha de apertura:
-        </strong>
+        <strong> Fecha de apertura: </strong>
         {{ contrato.fechaApertura | date: 'dd/MM/yyyy' }}
       </p>
       <p>
-        <strong>
-          Fecha de evaluación:
-        </strong>
+        <strong> Fecha de evaluación: </strong>
         {{ contrato.fechaEvaluacion | date: 'dd/MM/yyyy' }}
       </p>
       <p>
-        <strong>
-          Fecha de adjudicación:
-        </strong>
+        <strong> Fecha de adjudicación: </strong>
         {{ contrato.fechaAdjudicacion | date: 'dd/MM/yyyy' }}
       </p>
       <p>
-        <strong>
-          Fecha de cierre:
-        </strong>
+        <strong> Fecha de cierre: </strong>
         {{ contrato.fechaCierre | date: 'dd/MM/yyyy' }}
       </p>
       <p>
-        <strong>
-          ¿Este proceso de selección se realiza distribución del territorio en grupos?:
-        </strong>
-        <span *ngIf="contrato.tieneDistribucionTerritorioGrupo">
-          Sí
-        </span>
-        <span *ngIf="!contrato.tieneDistribucionTerritorioGrupo">
-          No
-        </span>
+        <strong> ¿Este proceso de selección se realiza distribución del territorio en grupos?: </strong>
+        <span *ngIf="contrato.tieneDistribucionTerritorioGrupo"> Sí </span>
+        <span *ngIf="!contrato.tieneDistribucionTerritorioGrupo"> No </span>
       </p>
       <p>
-        <strong>
-          ¿Cuántos grupos?:
-        </strong>
+        <strong> ¿Cuántos grupos?: </strong>
         {{ contrato.cuantosGrupos }}
       </p>
       <p *ngIf="contrato.urlSoporte">
-        <strong>
-          URL con soporte:
-        </strong>
+        <strong> URL con soporte: </strong>
         <a class="ruta-url max-width-none" [href]="contrato.urlSoporte" target="_blank">
           {{ contrato.urlSoporte }}
         </a>
       </p>
       <h2 class="card-subTitle">Grupos</h2>
       <div *ngFor="let grupo of contrato.gruposProcesoSeleccion; index as i">
-        <mat-card-title class="header-card--text sub-text"> 
-          Grupo {{ grupo.grupoNumero }}
-        </mat-card-title>
+        <mat-card-title class="header-card--text sub-text"> Grupo {{ grupo.grupoNumero }} </mat-card-title>
         <p>
-          <strong>
-            Nombre del grupo:
-          </strong>
+          <strong> Nombre del grupo: </strong>
           {{ grupo.nombreGrupo }}
         </p>
         <p>
-          <strong>
-            Tipo de presupuesto:
-          </strong>
+          <strong> Tipo de presupuesto: </strong>
           {{ grupo.tipoPresupuesto }}
         </p>
         <p>
-          <strong>
-            Valor:
-          </strong>
+          <strong> Valor: </strong>
           {{ grupo.valor | currency: 'COP':'symbol-narrow':'.0-0' }}
         </p>
         <p>
-          <strong>
-            Plazo en meses:
-          </strong>
+          <strong> Plazo en meses: </strong>
           {{ grupo.plazoMeses }}
         </p>
       </div>
     </mat-card-content>
   </mat-card>
-
 </section>
 
 <div class="text-center mt-2em mb-2em print-d-none">

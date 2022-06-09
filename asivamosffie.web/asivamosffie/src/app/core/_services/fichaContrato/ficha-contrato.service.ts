@@ -47,4 +47,28 @@ export class FichaContratoService {
       `${this.urlApi}/${this.ficha_contrato}/GetInfoPolizasSegurosByContratoId?pContratoId=${pContratoId}`
     );
   }
+
+  getInfoNovedadesByContratoId(pContratoId: string) {
+    return this.http.get<any[]>(
+      `${this.urlApi}/${this.ficha_contrato}/GetInfoNovedadesByContratoId?pContratoId=${pContratoId}`
+    );
+  }
+
+  getInfoControversiasByContratoId(pContratoId: string) {
+    return this.http.get<any[]>(
+      `${this.urlApi}/${this.ficha_contrato}/GetInfoControversiasByContratoId?pContratoId=${pContratoId}`
+    );
+  }
+
+  getInfoProcesosDefensaByContratoId(pContratoId: string) {
+    return this.http.get<any[]>(
+      `${this.urlApi}/${this.ficha_contrato}/GetInfoProcesosDefensaByContratoId?pContratoId=${pContratoId}`
+    );
+  }
+
+  getInfoLiquidacionByContratoId(pContratoId: string) {
+    return this.http.get<any[]>(
+      `${this.urlApi}/${this.ficha_contrato}/GetInfoLiquidacionByContratoId?pContratoId=${pContratoId}`
+    );
+  }
 }

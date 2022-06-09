@@ -36,7 +36,7 @@ export class PolizasSegurosComponent implements OnInit {
   downloadPDF() {
     this.openAcordeon = true;
     setTimeout(() => {
-      document.title = 'Resumen ' + this.contrato.numeroContrato;
+      document.title = 'Pólizas y Seguros ' + this.contrato.numeroContrato;
       window.print();
     }, 300);
     setTimeout(() => (this.openAcordeon = true), 400);

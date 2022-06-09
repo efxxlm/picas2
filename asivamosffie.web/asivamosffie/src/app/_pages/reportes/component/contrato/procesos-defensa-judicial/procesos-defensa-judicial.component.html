@@ -1,19 +1,19 @@
 <section class="container">
   <div class="container text-center">
-    <div class="text-right">
-      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
-        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    <div class="text-right print-d-none">
+      <a routerLink="../../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Procesos de defensa judicial N801801
+      Procesos de defensa judicial <span *ngIf="contrato">{{ contrato.numeroContrato }}</span>
     </h1>
     <p class="info-sub-title">
-      Contratista <b>Construir futuro</b>
+      Contratista <b *ngIf="contrato"> {{ contrato.contratista }} </b>
     </p>
   </div>
 
-  <div class="table-responsive mb-1em mt-1em">
+  <div class="table-responsive mb-1em mt-1em" *ngIf="contrato">
     <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
       <thead>
         <tr class="mat-header-row cdk-header-row ng-star-inserted">
@@ -26,9 +26,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let element of listaProcesosDefensaJudicial">
+        <tr *ngFor="let element of contrato.listDefensaJudicial">
           <td class="mat-cell cdk-cell ng-star-inserted">
-            <b> {{ element.fechaRegistroProceso }} </b>
+            <b> {{ element.fechaCreacion | date: 'dd/MM/yyyy' }} </b>
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
             {{ element.legitimacion }}
@@ -43,11 +43,13 @@
             {{ element.estadoProceso }}
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ element.urlSoporte }}
+            <a *ngIf="element.urlSoporteProceso" class="ruta-url" [href]="element.urlSoporteProceso" target="_blank">
+              {{ element.urlSoporteProceso }}
+            </a>
+            <span *ngIf="!element.urlSoporteProceso"> N/A </span>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-  
 </section>

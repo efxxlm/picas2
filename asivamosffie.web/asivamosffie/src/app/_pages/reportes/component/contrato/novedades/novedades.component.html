@@ -1,19 +1,19 @@
 <section class="container">
   <div class="container text-center">
-    <div class="text-right">
-      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
-        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    <div class="text-right print-d-none">
+      <a routerLink="../../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Novedades N801801
+      Novedades <span *ngIf="contrato">{{ contrato.numeroContrato }}</span>
     </h1>
     <p class="info-sub-title">
-      Contratista <b>Construir futuro</b>
+      Contratista <b *ngIf="contrato"> {{ contrato.contratista }} </b>
     </p>
   </div>
 
-  <div class="table-responsive mb-1em mt-1em">
+  <div class="table-responsive mb-1em mt-1em" *ngIf="contrato">
     <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
       <thead>
         <tr class="mat-header-row cdk-header-row ng-star-inserted">
@@ -25,9 +25,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let element of listaNovedades">
+        <tr *ngFor="let element of contrato.listNovedades">
           <td class="mat-cell cdk-cell ng-star-inserted">
-            <b> {{ element.fechaSolicitudNovedad }} </b>
+            <b> {{ element.fechaSolicitud | date: 'dd/MM/yyyy' }} </b>
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
             {{ element.numeroSolicitud }}
@@ -39,11 +39,17 @@
             {{ element.estadoNovedad }}
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ element.urlSoporte }}
+            <a *ngIf="element.urlSoporte" class="ruta-url" [href]="element.urlSoporte" target="_blank">
+              {{ element.urlSoporte }}
+            </a>
+            <span *ngIf="!element.urlSoporte"> N/A </span>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-  
 </section>
+
+<div class="text-center mt-2em mb-2em print-d-none">
+  <button mat-raised-button color="accent" (click)="downloadPDF()">Descargar</button>
+</div>

@@ -29,7 +29,7 @@ export class ContratacionComponent implements OnInit {
   downloadPDF() {
     this.openAcordeon = true;
     setTimeout(() => {
-      document.title = 'Resumen ' + this.contrato.numeroContrato;
+      document.title = 'Contratación ' + this.contrato.numeroContrato;
       window.print();
     }, 300);
     setTimeout(() => (this.openAcordeon = true), 400);
