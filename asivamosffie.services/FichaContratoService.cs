@@ -25,6 +25,50 @@ namespace asivamosffie.services
         }
 
 
+
+        #region Novedades
+        public async Task<dynamic> GetInfoNovedadesByContratoId(int pContratoId)
+        {
+
+            var Contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId)
+                                        .Include(r => r.Contratacion).ThenInclude(r => r.Contratista)
+                                        .Include(n => n.NovedadContractual).ThenInclude(c => c.NovedadContractualDescripcion)
+                                        .FirstOrDefault();
+
+            List<Dominio> ListParametricas = _context.Dominio.Where(v => v.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual
+                                                                      || v.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Novedad_Contractual
+                                                                   )
+                                                             .ToList();
+
+            List<dynamic> ListNovedades = new List<dynamic>();
+
+
+            foreach (var NovedadContractual in Contrato.NovedadContractual)
+            {
+                foreach (var NovedadContractualDescripcion in NovedadContractual.NovedadContractualDescripcion)
+                { 
+                    ListNovedades.Add(new
+                    {
+                        FechaSolicitud = NovedadContractual.FechaSolictud,
+                        NumeroSolicitud = NovedadContractual.NumeroSolicitud,
+                        TipoNovedad = ListParametricas.Find(c => c.Codigo == NovedadContractualDescripcion.TipoNovedadCodigo && c.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual).Nombre,
+                        EstadoNovedad = ListParametricas.Find(c => c.Codigo == NovedadContractual.EstadoCodigo && c.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Novedad_Contractual).Nombre,
+                        UrlSoporte = NovedadContractual.UrlSoporte
+                    });
+                }
+            }
+
+            return new
+            {
+                NumeroContrato = Contrato.NumeroContrato,
+                Contratista = Contrato.Contratacion.Contratista.Nombre,
+                ListNovedades
+            };
+
+        }
+
+        #endregion
+
         #region Polizas y Seguros 
 
         public async Task<dynamic> GetInfoPolizasSegurosByContratoId(int pContratoId)
@@ -57,7 +101,7 @@ namespace asivamosffie.services
             foreach (var PolizasACT in ListPolizasACT)
             {
                 VFichaContratoPolizasYactualizaciones Original = ListPolizasOriginal.Find(r => r.PolizasSeguros == PolizasACT.PolizasSeguros);
-                 
+
                 dyListPolizasACT.Add(new
                 {
                     NombrePoliza = PolizasACT.PolizasSeguros,
@@ -70,10 +114,10 @@ namespace asivamosffie.services
 
                     ValorAmparo = Original.ValorAmparo,
                     ValorAmparoActualizada = PolizasACT.ValorAmparo,
-                }); 
+                });
             }
 
-            return new 
+            return new
             {
                 Primera.NumeroContrato,
                 Primera.NombreContratista,
@@ -346,9 +390,9 @@ namespace asivamosffie.services
             {
                 Informacion = infoContrato,
                 TieneResumen = _context.VFichaContratoProyectoDrp.Any(c => c.ContratoId == pContratoId),
-                TieneSeleccion = _context.VFichaContratoTieneProcesosSeleccion.Any(r=> r.ContratoId == pContratoId),
+                TieneSeleccion = _context.VFichaContratoTieneProcesosSeleccion.Any(r => r.ContratoId == pContratoId),
                 TieneContratacion = contrato.Contratacion.ContratacionId > 0,
-                TienePolizasSeguros = _context.VFichaContratoPolizasYactualizaciones.Any(r=> r.ContratoId == pContratoId),
+                TienePolizasSeguros = _context.VFichaContratoPolizasYactualizaciones.Any(r => r.ContratoId == pContratoId),
                 TieneEjecucionFinanciera = true,
                 TieneNovedades = true,
                 TieneControversias = true,
