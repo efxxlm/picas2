@@ -9,9 +9,11 @@ export class ExpansionPanelComponent implements OnInit {
 
   @Input() ajusteProgramacion: any;
   @Input() esVerDetalle: boolean;
+  estadoSemaforoProgramacion: string;
+  estadoSemaforoFlujo: string;
+
   constructor() { }
 
   ngOnInit(): void {
   }
-
 }

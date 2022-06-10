@@ -11,6 +11,7 @@ namespace asivamosffie.model.Models
         public string TipoSolicitudCodigo { get; set; }
         public DateTime? FechaInicioProyecto { get; set; }
         public DateTime? FechaEstimadaFinProyecto { get; set; }
+        public DateTime? FechaEstimadaFinProyectoRep { get; set; }
         public DateTime? FechaFinProyecto { get; set; }
         public DateTime? FechaFinContrato { get; set; }
         public DateTime? FechaEstimadaFinContrato { get; set; }

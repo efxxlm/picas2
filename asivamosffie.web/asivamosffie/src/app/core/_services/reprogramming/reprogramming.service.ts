@@ -16,27 +16,27 @@ export class ReprogrammingService {
       return this.http.get<any[]>( `${ this.urlApi }/GetAjusteProgramacionGrid` );
     };
 
-    getAjusteProgramacionById( id ){
+    getAjusteProgramacionById( id: number ){
       return this.http.get<any>( `${ this.urlApi }/GetAjusteProgramacionById?pAjusteProgramacionId=${id}`);
     }
 
-    aprobarAjusteProgramacion( id ){
+    aprobarAjusteProgramacion( id : number ){
       return this.http.post<Respuesta>( `${ this.urlApi }/AprobarAjusteProgramacion?pAjusteProgramacionId=${ id }`, null );
     }
 
-    enviarAlSupervisorAjusteProgramacion( id ){
+    enviarAlSupervisorAjusteProgramacion( id: number ){
       return this.http.post<Respuesta>( `${ this.urlApi }/EnviarAlSupervisorAjusteProgramacion?pAjusteProgramacionId=${ id }`, null );
     }
 
-    enviarAlInterventor( id ){
+    enviarAlInterventor( id: number ){
       return this.http.post<Respuesta>( `${ this.urlApi }/EnviarAlInterventor?pAjusteProgramacionId=${ id }`, null );
     }
 
-    createEditObservacionAjusteProgramacion( ajusteProgramacion, esObra ){
+    createEditObservacionAjusteProgramacion( ajusteProgramacion: any, esObra: boolean ){
       return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditObservacionAjusteProgramacion?esObra=${esObra}`, ajusteProgramacion );
     }
 
-    createEditObservacionFile( ajusteProgramacion, esObra ){
+    createEditObservacionFile( ajusteProgramacion: any, esObra : boolean ){
       return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditObservacionFile?esObra=${esObra}`, ajusteProgramacion );
     }
 
@@ -46,8 +46,8 @@ export class ReprogrammingService {
       return this.http.post( `${ this.urlApi }/uploadFileToValidateAdjustmentProgramming?pAjusteProgramacionId=${ pAjusteProgramacionId }&pContratacionProyectId=${ pContratacionProyectId }&pNovedadContractualId=${ pNovedadContractualId }&pContratoId=${pContratoId}&pProyectoId=${pProyectoId}`, formData )
     };
 
-    transferMassiveLoadAdjustmentProgramming ( pIdDocument: string, pProyectoId, pContratoId ) {
-      return this.http.post<Respuesta>( `${ this.urlApi }/transferMassiveLoadAdjustmentProgramming?pIdDocument=${ pIdDocument }&pProyectoId=${pProyectoId}&pContratoId=${pContratoId}`, '' )
+    validateReprogrammingFile ( pIdDocument: string, pAjusteProgramacionId: number ) {
+      return this.http.post<Respuesta>( `${ this.urlApi }/ValidateReprogrammingFile?pIdDocument=${ pIdDocument }&pAjusteProgramacionId=${pAjusteProgramacionId}`, '' )
     };
 
     uploadFileToValidateAdjustmentInvestmentFlow ( pAjusteProgramacionId: number, pContratacionProyectId: number, pNovedadContractualId: number, pContratoId: number, pProyectoId: number, documento: File ) {
@@ -56,8 +56,8 @@ export class ReprogrammingService {
       return this.http.post( `${ this.urlApi }/UploadFileToValidateAdjustmentInvestmentFlow?pAjusteProgramacionId=${ pAjusteProgramacionId }&pContratacionProyectId=${ pContratacionProyectId }&pNovedadContractualId=${ pNovedadContractualId }&pContratoId=${pContratoId}&pProyectoId=${pProyectoId}`, formData )
     };
 
-    transferMassiveLoadAdjustmentInvestmentFlow( pIdDocument: string, pProyectoId: number, pContratoId: number ) {
-      return this.http.post<Respuesta>( `${ this.urlApi }/TransferMassiveLoadAdjustmentInvestmentFlow?pIdDocument=${ pIdDocument }&pProyectoId=${pProyectoId}&pContratoId=${pContratoId}`, '' )
+    validateInvestmentFlowFile ( pIdDocument: string, pAjusteProgramacionId: number ) {
+      return this.http.post<Respuesta>( `${ this.urlApi }/ValidateInvestmentFlowFile?pIdDocument=${ pIdDocument }&pAjusteProgramacionId=${pAjusteProgramacionId}`, '' )
     };
 
     getLoadAdjustProgrammingGrid ( pAjusteProgramacionId: number ) {
@@ -68,7 +68,11 @@ export class ReprogrammingService {
       return this.http.get( `${ this.urlApi }/GetLoadAdjustInvestmentFlowGrid?pAjusteProgramacionId=${ pAjusteProgramacionId }` );
     };
 
-    deleteAdjustProgrammingOrInvestmentFlow( pArchivoCargueId, pAjusteProgramacionId ){
-      return this.http.post<Respuesta>( `${ this.urlApi }/DeleteAdjustProgrammingOrInvestmentFlow?pArchivoCargueId=${pArchivoCargueId}&pAjusteProgramacionId=${pAjusteProgramacionId}`, null );
+    deleteAdjustProgrammingOrInvestmentFlow( pArchivoCargueId: number, pAjusteProgramacionId: number, esProgramacionObra: boolean ){
+      return this.http.post<Respuesta>( `${ this.urlApi }/DeleteAdjustProgrammingOrInvestmentFlow?pArchivoCargueId=${pArchivoCargueId}&pAjusteProgramacionId=${pAjusteProgramacionId}&esProgramacionObra=${esProgramacionObra}`, null );
     }
+
+    getFileReturn ( pAjusteProgramacionId: number, esProgramacion: boolean ) {
+      return this.http.get<any>( `${ this.urlApi }/GetFileReturn?pAjusteProgramacionId=${pAjusteProgramacionId}&esProgramacion=${ esProgramacion }`);
+    };
 }

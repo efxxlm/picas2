@@ -342,7 +342,6 @@ namespace asivamosffie.services
             try
             {
                 pSeguimientoDiario.EstadoCodigo = ConstanCodigoEstadoSeguimientoDiario.EnProcesoDeRegistro;
-                SeguimientoSemanal NuevoSeguimiento = new SeguimientoSemanal();
                 SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal();
 
                 seguimientoSemanal = _context.SeguimientoSemanal
@@ -353,34 +352,12 @@ namespace asivamosffie.services
                                                                         )
                                                                 .FirstOrDefault();
 
-                if (seguimientoSemanal == null)
-                {
-                    int intNumeroSemana = _context.SeguimientoSemanal.Count(c => c.ContratacionProyectoId == pSeguimientoDiario.ContratacionProyectoId) + 1;
-
-                    DateTime? UltimaFechaFinRegistrada = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pSeguimientoDiario.ContratacionProyectoId)
-                                                                                   .OrderByDescending(r => r.NumeroSemana)
-                                                                                   .FirstOrDefault()
-                                                                                   .FechaFin;
-
-                    NuevoSeguimiento = new SeguimientoSemanal
-                    {
-                        ContratacionProyectoId = pSeguimientoDiario.ContratacionProyectoId,
-                        NumeroSemana = intNumeroSemana,
-                        FechaInicio = UltimaFechaFinRegistrada.Value.AddDays(1),
-                        FechaFin = UltimaFechaFinRegistrada.Value.AddDays(7),
-                        UsuarioCreacion = pSeguimientoDiario.UsuarioCreacion,
-                        RegistroCompleto = false
-                    };
-                    _context.SeguimientoSemanal.Add(NuevoSeguimiento); 
-                    _context.SaveChanges(); 
-                }
-
                 if (pSeguimientoDiario.SeguimientoDiarioId == 0)
                 {
                     CreateEdit = "CREAR SEGUIMIENTO DIARIO";
                     pSeguimientoDiario.FechaCreacion = DateTime.Now;
                     pSeguimientoDiario.Eliminado = false;
-                    pSeguimientoDiario.SeguimientoSemanalId = seguimientoSemanal?.SeguimientoSemanalId == null ? NuevoSeguimiento.SeguimientoSemanalId : seguimientoSemanal.SeguimientoSemanalId;
+                    pSeguimientoDiario.SeguimientoSemanalId = seguimientoSemanal.SeguimientoSemanalId;
                     pSeguimientoDiario.RegistroCompleto = VerificarRegistroCompleto(pSeguimientoDiario);
 
                     _context.SeguimientoDiario.Add(pSeguimientoDiario);
@@ -738,12 +715,9 @@ namespace asivamosffie.services
             Proyecto proyectoTemp = _technicalRequirementsConstructionPhaseService.CalcularFechaInicioContratoFase2(contratacion.Proyecto.ContratoConstruccion.FirstOrDefault().ContratoConstruccionId);
             VContratoProyectoFechaEstimadaFinalizacion datosFechas = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => r.ContratacionProyectoId == pId).FirstOrDefault();
 
-            // DateTime fechaInicial = contratacion.Contratacion.Contrato.FirstOrDefault().FechaActaInicioFase2.Value;
-            // DateTime fechaFin = fechaInicial.AddMonths(contratacion.Proyecto.PlazoMesesObra.Value);
-            // fechaFin = fechaFin.AddDays(contratacion.Proyecto.PlazoDiasObra.Value);
-
             DateTime fechaInicial = datosFechas != null ? datosFechas.FechaInicioProyecto ?? proyectoTemp.FechaInicioEtapaObra : proyectoTemp.FechaInicioEtapaObra;
-            DateTime fechaFin = datosFechas != null ? datosFechas.FechaEstimadaFinProyecto ?? datosFechas.FechaFinProyecto ?? proyectoTemp.FechaFinEtapaObra : proyectoTemp.FechaFinEtapaObra;
+            //SE TOMA FechaEstimadaFinProyectoRep, LAS NOVEDADES APROBADAS X REPROGRAMACIÓN -- NO NOVEDADES COMO EN LAS OTRAS PANTALLAS
+            DateTime fechaFin = datosFechas != null ? datosFechas.FechaEstimadaFinProyectoRep ?? datosFechas.FechaFinProyecto ?? proyectoTemp.FechaFinEtapaObra : proyectoTemp.FechaFinEtapaObra;
 
             while (fechaFin >= fechaInicial)
             {

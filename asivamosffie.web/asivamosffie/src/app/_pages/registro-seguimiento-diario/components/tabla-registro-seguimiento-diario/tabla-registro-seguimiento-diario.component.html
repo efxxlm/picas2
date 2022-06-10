@@ -61,7 +61,7 @@
                       class="btn-table"
                       type="button"
                       (click)="Enviar( element.seguimientoDiarioId )"
-                      *ngIf="(element.registroCompleto && element.estadoCodigo === '1') && element.cumpleCondicionesTai === false" >
+                      *ngIf="(element.registroCompleto && element.estadoCodigo === '1') && element.cumpleCondicionesTai === false && element.existeReprogramacionActiva === false" >
         Enviar seguimiento diario
         </a>
 
@@ -70,7 +70,7 @@
                       class="btn-table"
                       type="button"
                       (click)="RegistrarNuevo( element )"
-                      *ngIf="(element.estadoCodigo !== '1') && element.cumpleCondicionesTai === false" >
+                      *ngIf="(element.estadoCodigo !== '1') && element.cumpleCondicionesTai === false && element.existeReprogramacionActiva === false" >
         Registrar seguimiento diario
         </a>
 
@@ -85,7 +85,7 @@
                       type="button"
                       (click)="VerBitacora( element )"
                       [routerLink]="[ 'verBitacora', element.contratacionProyectoId ]"
-                      *ngIf="element.mostrarBitacora === true || element.cumpleCondicionesTai === true">
+                      *ngIf="element.mostrarBitacora === true || element.cumpleCondicionesTai === true || element.existeReprogramacionActiva === true">
         Ver bitácora
         </a>
 
@@ -94,7 +94,7 @@
                       class="btn-table"
                       type="button"
                       (click)="openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>',element.seguimientoDiarioId)"
-                      *ngIf="(element.seguimientoDiarioId > 0 && element.estadoCodigo === '1') && element.cumpleCondicionesTai === false" >
+                      *ngIf="(element.seguimientoDiarioId > 0 && element.estadoCodigo === '1') && element.cumpleCondicionesTai === false && element.existeReprogramacionActiva === false" >
         Eliminar registro
         </a>
 
@@ -103,8 +103,8 @@
                       class="btn-table"
                       type="button"
                       (click)="Editar( element )"
-                      *ngIf="(element.seguimientoDiarioId > 0 && element.estadoCodigo === '1') && element.cumpleCondicionesTai === false"
-                      > 
+                      *ngIf="(element.seguimientoDiarioId > 0 && element.estadoCodigo === '1') && element.cumpleCondicionesTai === false && element.existeReprogramacionActiva === false"
+                      >
         Ver detalle/Editar
         </a>
 

@@ -16,6 +16,7 @@ namespace asivamosffie.model.Models
         public int ContratoId { get; set; }
         public string FechaUltimoReporte { get; set; }
         public string EstadoObra { get; set; }
+        public string EstadoObraCodigo { get; set; }
         public bool? ActaCargada { get; set; }
         public bool? VerEditarBitacora { get; set; }
         public int? CantidadSemanas { get; set; }
@@ -26,5 +27,6 @@ namespace asivamosffie.model.Models
         public bool? EnviarVerificacion { get; set; }
         public DateTime? FechaModificacionAvalar { get; set; }
         public DateTime? FechaModificacionVerificar { get; set; }
+        public bool? ExisteReprogramacionActiva { get; set; }
     }
 }

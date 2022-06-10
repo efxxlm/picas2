@@ -1,18 +1,18 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Constants;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Z.EntityFramework.Plus;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using OfficeOpenXml;
-using asivamosffie.services.Helpers.Constants;
 
 namespace asivamosffie.services
 {
@@ -22,7 +22,7 @@ namespace asivamosffie.services
         private readonly ICommonService _commonService;
         private readonly ITechnicalRequirementsConstructionPhaseService _technicalRequirementsConstructionPhaseService;
 
-        public ReprogrammingService(devAsiVamosFFIEContext context,ICommonService commonService, ITechnicalRequirementsConstructionPhaseService technicalRequirementsConstructionPhaseService)
+        public ReprogrammingService(devAsiVamosFFIEContext context, ICommonService commonService, ITechnicalRequirementsConstructionPhaseService technicalRequirementsConstructionPhaseService)
         {
             _context = context;
             _commonService = commonService;
@@ -30,51 +30,74 @@ namespace asivamosffie.services
         }
 
         #region GET
-            public async Task<List<VAjusteProgramacion>> GetAjusteProgramacionGrid()
-            {
-                List<VAjusteProgramacion> ajustes = _context.VAjusteProgramacion.ToList();
+        /// <summary>
+        /// Novedades disponibles para hacer reprogramación
+        /// </summary>
+        /// <returns>vista VAjusteProgramacion, donde trae las novedades disponibles para hacer reprogramación</returns>
+        public async Task<List<VAjusteProgramacion>> GetAjusteProgramacionGrid()
+        {
+            List<VAjusteProgramacion> ajustes = _context.VAjusteProgramacion.ToList();
 
-                return ajustes.OrderBy(x => x.AjusteProgramacionId)
-                                .ToList();
+            return ajustes.OrderBy(x => x.AjusteProgramacionId)
+                            .ToList();
+        }
+
+        /// <summary>
+        ///  Traer un Objeto AjustePrgramación x id
+        /// </summary>
+        /// <param name="pAjusteProgramacionId"></param>
+        /// <returns>Objeto AjusteProgramacion</returns>
+        public async Task<AjusteProgramacion> GetAjusteProgramacionById(int pAjusteProgramacionId)
+        {
+            AjusteProgramacion ajusteProgramacion = await _context.AjusteProgramacion
+                                                                .Include(x => x.AjustePragramacionObservacion)
+                                                                .FirstOrDefaultAsync(x => x.AjusteProgramacionId == pAjusteProgramacionId);
+            if (ajusteProgramacion != null)
+            {
+                ajusteProgramacion.ObservacionObra = GetObservacion(ajusteProgramacion, true, true, ajusteProgramacion.ArchivoCargueIdProgramacionObra);
+                ajusteProgramacion.ObservacionObraHistorico = GetObservacionHistorico(ajusteProgramacion, true);
+                ajusteProgramacion.ObservacionObraInterventor = GetObservacion(ajusteProgramacion, true, false, ajusteProgramacion.ArchivoCargueIdProgramacionObra);
+                ajusteProgramacion.ObservacionFlujo = GetObservacion(ajusteProgramacion, false, true, ajusteProgramacion.ArchivoCargueIdFlujoInversion);
+                ajusteProgramacion.ObservacionFlujoHistorico = GetObservacionHistorico(ajusteProgramacion, false);
+                ajusteProgramacion.ObservacionFlujoInterventor = GetObservacion(ajusteProgramacion, false, false, ajusteProgramacion.ArchivoCargueIdFlujoInversion);
             }
-
-            public async Task<AjusteProgramacion> GetAjusteProgramacionById(int pAjusteProgramacionId)
-            {
-                AjusteProgramacion ajusteProgramacion = await _context.AjusteProgramacion
-                                                                    .Include(x => x.AjustePragramacionObservacion)
-                                                                    .FirstOrDefaultAsync(x => x.AjusteProgramacionId == pAjusteProgramacionId);
-                if (ajusteProgramacion != null)
-                {
-                    ajusteProgramacion.ObservacionObra = getObservacion(ajusteProgramacion, true, true, ajusteProgramacion.ArchivoCargueIdProgramacionObra);
-                    ajusteProgramacion.ObservacionObraHistorico = getObservacionHistorico(ajusteProgramacion, true);
-                    ajusteProgramacion.ObservacionObraInterventor = getObservacion(ajusteProgramacion, true, false, ajusteProgramacion.ArchivoCargueIdProgramacionObra);
-                    ajusteProgramacion.ObservacionFlujo = getObservacion(ajusteProgramacion, false, true, ajusteProgramacion.ArchivoCargueIdFlujoInversion);
-                    ajusteProgramacion.ObservacionFlujoHistorico = getObservacionHistorico(ajusteProgramacion, false);
-                    ajusteProgramacion.ObservacionFlujoInterventor = getObservacion(ajusteProgramacion, false, false, ajusteProgramacion.ArchivoCargueIdFlujoInversion);
-                }
 
             return ajusteProgramacion;
-            }
+        }
+        
+        /// <summary>
+        /// Obtener observaciones
+        /// </summary>
+        /// <param name="pAjusteProgramacion"></param>
+        /// <param name="pEsObra"></param>
+        /// <param name="pEsSupervisor"></param>
+        /// <param name="pArchivoCargueId"></param>
+        /// <returns></returns>
+        private AjustePragramacionObservacion GetObservacion(AjusteProgramacion pAjusteProgramacion, bool? pEsObra, bool? pEsSupervisor, int? pArchivoCargueId)
+        {
+            AjustePragramacionObservacion ajustePragramacionObservacion = pAjusteProgramacion.AjustePragramacionObservacion.ToList()
+                        .Where(r =>
+                                    r.Archivada != true &&
+                                    r.Eliminado != true &&
+                                    r.EsObra == pEsObra &&
+                                    r.EsSupervisor == pEsSupervisor &&
+                                    r.ArchivoCargueId == pArchivoCargueId
+                                )
+                        .OrderByDescending(r => r.AjustePragramacionObservacionId)
+                        .FirstOrDefault();
 
-            private AjustePragramacionObservacion getObservacion(AjusteProgramacion pAjusteProgramacion, bool? pEsObra, bool? pEsSupervisor, int? pArchivoCargueId)
-            {
-                AjustePragramacionObservacion ajustePragramacionObservacion = pAjusteProgramacion.AjustePragramacionObservacion.ToList()
-                            .Where(r =>
-                                        r.Archivada != true &&
-                                        r.Eliminado != true &&
-                                        r.EsObra == pEsObra &&
-                                        r.EsSupervisor == pEsSupervisor &&
-                                        r.ArchivoCargueId == pArchivoCargueId
-                                    )
-                            .OrderByDescending(r => r.AjustePragramacionObservacionId)
-                            .FirstOrDefault();
-
-                return ajustePragramacionObservacion;
-            }
-
-            private List<AjustePragramacionObservacion> getObservacionHistorico(AjusteProgramacion pAjusteProgramacion, bool? pEsObra)
-            {
-            List < AjustePragramacionObservacion> ajustePragramacionObservacion = pAjusteProgramacion.AjustePragramacionObservacion.ToList()
+            return ajustePragramacionObservacion;
+        }
+        
+        /// <summary>
+        /// Traer el histórico de las observaciones
+        /// </summary>
+        /// <param name="pAjusteProgramacion"></param>
+        /// <param name="pEsObra"></param>
+        /// <returns></returns>
+        private List<AjustePragramacionObservacion> GetObservacionHistorico(AjusteProgramacion pAjusteProgramacion, bool? pEsObra)
+        {
+            List<AjustePragramacionObservacion> ajustePragramacionObservacion = pAjusteProgramacion.AjustePragramacionObservacion.ToList()
                             .Where(r =>
                                         r.Archivada == true &&
                                         r.Eliminado != true &&
@@ -84,101 +107,258 @@ namespace asivamosffie.services
                             .OrderByDescending(r => r.AjustePragramacionObservacionId)
                             .ToList();
 
-                return ajustePragramacionObservacion;
-            }
+            return ajustePragramacionObservacion;
+        }
 
+        /// <summary>
+        /// Trae los archivos que se han cargado en registrar ajuste a la programación - Programación de obra
+        /// </summary>
+        /// <param name="pAjusteProgramacionId"></param>
+        /// <returns></returns>
         public async Task<List<ArchivoCargue>> GetLoadAdjustProgrammingGrid(int pAjusteProgramacionId)
+        {
+            List<ArchivoCargue> listaCargas = _context.ArchivoCargue
+                                                            .Where(a => a.ReferenciaId == pAjusteProgramacionId &&
+                                                                        a.Eliminado != true &&
+                                                                        a.OrigenId == int.Parse(OrigenArchivoCargue.AjusteProgramacionObra))
+                                                            .ToList();
+
+
+            listaCargas.ForEach(archivo =>
             {
-                List<ArchivoCargue> listaCargas = _context.ArchivoCargue
-                                                                .Where(a => a.ReferenciaId == pAjusteProgramacionId &&
-                                                                            a.Eliminado != true &&
-                                                                            a.OrigenId == int.Parse(OrigenArchivoCargue.AjusteProgramacionObra))
-                                                                .ToList();
+                archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos && archivo.Activo == true ? "Válido" : "Fallido";
+                archivo.TempAjustePragramacionObservacion = _context.AjustePragramacionObservacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsObra == true && r.ArchivoCargueId == archivo.ArchivoCargueId && r.Eliminado != true && r.EsSupervisor != true).FirstOrDefault();
+
+            });
+
+            return listaCargas;
+
+        }
+
+        /// <summary>
+        /// Trae los archivos que se han cargado en registrar ajuste a la programación - Flujo de inversión
+        /// </summary>
+        /// <param name="pAjusteProgramacionId"></param>
+        /// <returns></returns>
+        public async Task<List<ArchivoCargue>> GetLoadAdjustInvestmentFlowGrid(int pAjusteProgramacionId)
+        {
+            List<ArchivoCargue> listaCargas = _context.ArchivoCargue
+                                                            .Where(a => a.ReferenciaId == pAjusteProgramacionId &&
+                                                                   a.Eliminado != true &&
+                                                                   a.OrigenId == int.Parse(OrigenArchivoCargue.AjusteFlujoInversion))
+                                                            .ToList();
 
 
-                listaCargas.ForEach(archivo =>
-                {
-                    archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Válido" : "Fallido";
-                    archivo.TempAjustePragramacionObservacion = _context.AjustePragramacionObservacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsObra == true && r.ArchivoCargueId == archivo.ArchivoCargueId && r.Eliminado != true && r.EsSupervisor != true).FirstOrDefault();
-
-                });
-
-                return listaCargas;
-
-            }
-
-            public async Task<List<ArchivoCargue>> GetLoadAdjustInvestmentFlowGrid(int pAjusteProgramacionId)
+            listaCargas.ForEach(archivo =>
             {
-                List<ArchivoCargue> listaCargas = _context.ArchivoCargue
-                                                                .Where(a => a.ReferenciaId == pAjusteProgramacionId &&
-                                                                       a.Eliminado != true &&
-                                                                       a.OrigenId == int.Parse(OrigenArchivoCargue.AjusteFlujoInversion))
-                                                                .ToList();
+                archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos && archivo.Activo == true ? "Válido" : "Fallido";
+                archivo.TempAjustePragramacionObservacion = _context.AjustePragramacionObservacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsObra != true && r.ArchivoCargueId == archivo.ArchivoCargueId && r.Eliminado != true && r.EsSupervisor != true).FirstOrDefault();
+
+            });
+
+            return listaCargas;
 
 
-                listaCargas.ForEach(archivo =>
-                {
-                    archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Válido" : "Fallido";
-                    archivo.TempAjustePragramacionObservacion = _context.AjustePragramacionObservacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsObra != true && r.ArchivoCargueId == archivo.ArchivoCargueId && r.Eliminado != true && r.EsSupervisor != true).FirstOrDefault();
+        }
 
-                });
+        /// <summary>
+        /// Cuando se ha devuelto la reprogramación, busca el archivo que estaba antes de poner el valor del arxchivo en null, en la tabla AjusteProgramacion
+        /// </summary>
+        /// <param name="pAjusteProgramacionId"></param>
+        /// <param name="esProgramacion"></param>
+        /// <returns></returns>
+        public async Task<ArchivoCargue> GetFileReturn(int pAjusteProgramacionId, bool esProgramacion)
+        {
+            return _context.ArchivoCargue.Where(a => a.ReferenciaId == pAjusteProgramacionId &&
+                                                                                    a.Eliminado != true &&
+                                                                                    a.Activo == false &&
+                                                                                    a.CantidadRegistros == a.CantidadRegistrosValidos &&
+                                                                                    a.OrigenId == (esProgramacion ? int.Parse(OrigenArchivoCargue.AjusteProgramacionObra) : int.Parse(OrigenArchivoCargue.AjusteFlujoInversion)))
+                                                                        .OrderByDescending(r => r.ArchivoCargueId)
+                                                                        .FirstOrDefault();
 
-                return listaCargas;
 
-
-            }
+        }
 
         #endregion
 
         #region VALIDACIONES
+        /// <summary>
+        /// Valida el registro completo para la pantalla de validar reprogramación
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         private async Task<bool> ValidarRegistroCompletoValidacionAjusteProgramacion(int id)
+        {
+            bool esCompleto = true;
+
+            AjusteProgramacion ap = await _context.AjusteProgramacion
+                                                        .Include(cc => cc.AjustePragramacionObservacion)
+                                                        .FirstOrDefaultAsync(cc => cc.AjusteProgramacionId == id);
+
+
+            ap.ObservacionObra = GetObservacion(ap, true, true, ap.ArchivoCargueIdProgramacionObra);
+            ap.ObservacionFlujo = GetObservacion(ap, false, true, ap.ArchivoCargueIdFlujoInversion);
+
+            if (
+                 ap.TieneObservacionesProgramacionObra == null ||
+                 (ap.TieneObservacionesProgramacionObra == true && string.IsNullOrEmpty(ap.ObservacionObra != null ? ap.ObservacionObra.Observaciones : null)) ||
+                 ap.TieneObservacionesFlujoInversion == null ||
+                 (ap.TieneObservacionesFlujoInversion == true && string.IsNullOrEmpty(ap.ObservacionFlujo != null ? ap.ObservacionFlujo.Observaciones : null))
+               )
             {
-                bool esCompleto = true;
-
-                AjusteProgramacion ap = await _context.AjusteProgramacion
-                                                            .Include(cc => cc.AjustePragramacionObservacion)
-                                                            .FirstOrDefaultAsync(cc => cc.AjusteProgramacionId == id);
-
-
-                ap.ObservacionObra = getObservacion(ap, true, true, ap.ArchivoCargueIdProgramacionObra);
-                ap.ObservacionFlujo = getObservacion(ap, false, true, ap.ArchivoCargueIdFlujoInversion);
-
-                if (
-                     ap.TieneObservacionesProgramacionObra == null ||
-                     (ap.TieneObservacionesProgramacionObra == true && string.IsNullOrEmpty(ap.ObservacionObra != null ? ap.ObservacionObra.Observaciones : null)) ||
-                     ap.TieneObservacionesFlujoInversion == null ||
-                     (ap.TieneObservacionesFlujoInversion == true && string.IsNullOrEmpty(ap.ObservacionFlujo != null ? ap.ObservacionFlujo.Observaciones : null))
-
-                   )
-                {
-                    esCompleto = false;
-                }
-
-                return esCompleto;
+                esCompleto = false;
             }
 
-            private void VerificarRegistroCompletoAjusteProgramacion(int pAjusteProgramacionId)
+            return esCompleto;
+        }
+
+        /// <summary>
+        /// Valida registro completo para la pantalla de registrar reprogramación
+        /// </summary>
+        /// <param name="pAjusteProgramacionId"></param>
+        private void VerificarRegistroCompletoAjusteProgramacion(int pAjusteProgramacionId)
+        {
+            bool esCompleto = true;
+
+            AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
+
+            if (
+                    ajusteProgramacion.ArchivoCargueIdProgramacionObra == null ||
+                    ajusteProgramacion.ArchivoCargueIdFlujoInversion == null
+                )
             {
-                bool esCompleto = true;
+                esCompleto = false;
+            }
+
+            ajusteProgramacion.RegistroCompleto = esCompleto;
+
+            _context.SaveChanges();
+        }
+        /// <summary>
+        /// Validación cuando se carga un archivo de forma correcto, cambio de estado y validación de regitro completo -- Programación de obra
+        /// </summary>
+        /// <param name="pIdDocument"></param>
+        /// <param name="pUsuarioModifico"></param>
+        /// <param name="pAjusteProgramacionId"></param>
+        /// <returns></returns>
+        public async Task<Respuesta> ValidateReprogrammingFile(string pIdDocument, string pUsuarioModifico, int pAjusteProgramacionId)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Load_Data_Ajuste_Programacion_Obra, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = string.Empty;
+            try
+            {
+                int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.AjusteProgramacionObra, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
+
+                ArchivoCargue archivoCargue = _context.ArchivoCargue
+                                                .Where(r => r.OrigenId == int.Parse(OrigenArchivoCargue.AjusteProgramacionObra) &&
+                                                        r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())
+                                                      )
+                                                .FirstOrDefault();
+
+                AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
+                if (ajusteProgramacion != null)
+                {
+                    ajusteProgramacion.ArchivoCargueIdProgramacionObra = archivoCargue.ArchivoCargueId;
+                    ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion;
+
+                    VerificarRegistroCompletoAjusteProgramacion(pAjusteProgramacionId);
+                    _context.SaveChanges();
+                }
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModifico, CreateEdit)
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuarioModifico, ex.InnerException.ToString())
+                  };
+            }
+        }
+
+        /// <summary>
+        /// Validación cuando se carga un archivo de forma correcto, cambio de estado y validación de regitro completo -- Flujo de inversión
+        /// </summary>
+        /// <param name="pIdDocument"></param>
+        /// <param name="pUsuarioModifico"></param>
+        /// <param name="pAjusteProgramacionId"></param>
+        /// <returns></returns>
+        public async Task<Respuesta> ValidateInvestmentFlowFile(string pIdDocument, string pUsuarioModifico, int pAjusteProgramacionId)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Load_Data_Ajuste_Flujo_Inversion, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = string.Empty;
+            try
+            {
+                int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.AjusteFlujoInversion, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
+
+                ArchivoCargue archivoCargue = _context.ArchivoCargue
+                                                .Where(r => r.OrigenId == int.Parse(OrigenArchivoCargue.AjusteFlujoInversion) &&
+                                                        r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())
+                                                      )
+                                                .FirstOrDefault();
 
                 AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
 
-                if (
-                        ajusteProgramacion.ArchivoCargueIdProgramacionObra == null ||
-                        ajusteProgramacion.ArchivoCargueIdFlujoInversion == null
-                    )
+                if (ajusteProgramacion != null)
                 {
-                    esCompleto = false;
+                    List<dynamic> listaFechas = new List<dynamic>();
+
+                    ajusteProgramacion.ArchivoCargueIdFlujoInversion = archivoCargue.ArchivoCargueId;
+                    ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion;
+
+                    VerificarRegistroCompletoAjusteProgramacion(ajusteProgramacion.AjusteProgramacionId);
+                    _context.SaveChanges();
+
                 }
 
-                ajusteProgramacion.RegistroCompleto = esCompleto;
-
-                _context.SaveChanges();
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModifico, CreateEdit)
+                };
             }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuarioModifico, ex.InnerException.ToString())
+                  };
+            }
+        }
 
         #endregion
 
-        #region CRUD
+        #region OBSERVACIONES
+        /// <summary>
+        /// Crea observaciones para flujo de inversión y programación de obra 
+        /// </summary>
+        /// <param name="pObservacion"></param>
+        /// <param name="pUsuarioCreacion"></param>
+        /// <param name="esObra"></param>
+        /// <returns></returns>
         private async Task<Respuesta> CreateEditObservacionAjusteProgramacion(AjustePragramacionObservacion pObservacion, string pUsuarioCreacion, bool esObra)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Observacion_Ajuste_Programacion, (int)EnumeratorTipoDominio.Acciones);
@@ -223,6 +403,13 @@ namespace asivamosffie.services
             }
         }
 
+        /// <summary>
+        /// Actualiza o crea observaciones
+        /// </summary>
+        /// <param name="pAjusteProgramacion"></param>
+        /// <param name="esObra"></param>
+        /// <param name="pUsuario"></param>
+        /// <returns></returns>
         public async Task<Respuesta> CreateEditObservacionFile(AjusteProgramacion pAjusteProgramacion, bool esObra, string pUsuario)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Observacion_Ajuste_Programacion, (int)EnumeratorTipoDominio.Acciones);
@@ -238,7 +425,7 @@ namespace asivamosffie.services
 
                 AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacion.AjusteProgramacionId);
 
-                 await CreateEditObservacionAjusteProgramacion(pAjusteProgramacion.AjustePragramacionObservacion.FirstOrDefault(), pUsuario, esObra);
+                await CreateEditObservacionAjusteProgramacion(pAjusteProgramacion.AjustePragramacionObservacion.FirstOrDefault(), pUsuario, esObra);
 
                 _context.SaveChanges();
 
@@ -267,6 +454,13 @@ namespace asivamosffie.services
             }
         }
 
+        /// <summary>
+        /// Actualiza o crea observaciones
+        /// </summary>
+        /// <param name="pAjusteProgramacion"></param>
+        /// <param name="esObra"></param>
+        /// <param name="pUsuario"></param>
+        /// <returns></returns>
         public async Task<Respuesta> CreateEditObservacionAjusteProgramacion(AjusteProgramacion pAjusteProgramacion, bool esObra, string pUsuario)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Observacion_Ajuste_Programacion, (int)EnumeratorTipoDominio.Acciones);
@@ -351,535 +545,72 @@ namespace asivamosffie.services
                     };
             }
         }
-
-        public async Task<Respuesta> DeleteAdjustProgrammingOrInvestmentFlow(int pArchivoCargueId, int pAjusteProgramacionId,string pUsuario)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Archivo_Cargue, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                string strCrearEditar = string.Empty;
-
-                if (pArchivoCargueId > 0)
-                {
-                    strCrearEditar = "ELIMINAR ARCHIVO CARGE - AJUSTE PROGRAMACIÓN OBRA";
-
-                    await _context.Set<ArchivoCargue>().Where(r => r.ArchivoCargueId == pArchivoCargueId)
-                                               .UpdateAsync(r => new ArchivoCargue()
-                                               {
-                                                   FechaModificacion = DateTime.Now,
-                                                   UsuarioModificacion = pUsuario,
-                                                   Eliminado = true
-                                               });
-
-
-                    await _context.Set<AjustePragramacionObservacion>().Where(r => r.ArchivoCargueId == pArchivoCargueId)
-                                               .UpdateAsync(r => new AjustePragramacionObservacion()
-                                               {
-                                                   FechaModificacion = DateTime.Now,
-                                                   UsuarioModificacion = pUsuario,
-                                                   Eliminado = true,
-                                                   AjusteProgramacionId = pAjusteProgramacionId
-                                               });
-
-                    //se pueden borrar , no es necesario dejar el registro.
-
-                    List<AjusteProgramacionObra> listaAjusteProgramacionObra = _context.AjusteProgramacionObra.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
-                    _context.AjusteProgramacionObra.RemoveRange(listaAjusteProgramacionObra);
-
-                    List<TempProgramacion> listaTempAjusteProgramacionObra = _context.TempProgramacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
-                    _context.TempProgramacion.RemoveRange(listaTempAjusteProgramacionObra);
-
-                    List<AjusteProgramacionFlujo> listaAjusteProgramacionFlujo = _context.AjusteProgramacionFlujo.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
-                    _context.AjusteProgramacionFlujo.RemoveRange(listaAjusteProgramacionFlujo);
-
-                    List<TempFlujoInversion> listaTempFlujoInversion = _context.TempFlujoInversion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
-                    _context.TempFlujoInversion.RemoveRange(listaTempFlujoInversion);
-
-                    List<SeguimientoSemanalTemp> listaSeguimientoSemanalTemp = _context.SeguimientoSemanalTemp.Where(r => r.AjusteProgramaionId == pAjusteProgramacionId).ToList();
-                    _context.SeguimientoSemanalTemp.RemoveRange(listaSeguimientoSemanalTemp);
-                    
-
-                    bool state = await ValidarRegistroCompletoValidacionAjusteProgramacion(pAjusteProgramacionId);
-                    AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
-                    if (ajusteProgramacion != null)
-                    {
-                        ajusteProgramacion.FechaModificacion = DateTime.Now;
-                        ajusteProgramacion.UsuarioModificacion = pUsuario;
-                        ajusteProgramacion.RegistroCompletoValidacion = state;
-                        ajusteProgramacion.AjusteProgramacionId = pAjusteProgramacionId;
-
-                        if (ajusteProgramacion.ArchivoCargueIdFlujoInversion == pArchivoCargueId)
-                            ajusteProgramacion.ArchivoCargueIdFlujoInversion = null;
-
-                        if (ajusteProgramacion.ArchivoCargueIdProgramacionObra == pArchivoCargueId)
-                            ajusteProgramacion.ArchivoCargueIdProgramacionObra = null;
-
-                        _context.AjusteProgramacion.Update(ajusteProgramacion);
-                    }
-
-                }
-
-                _context.SaveChanges();
-
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuario, strCrearEditar)
-                    };
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
-                    };
-            }
-        }
-
-        public async Task<Respuesta> EnviarAlSupervisorAjusteProgramacion(int pAjusteProgramacionId, string pUsuarioCreacion)
-        {
-            string CreateEdit = string.Empty;
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.EnviarAlSupervisorAjusteProgramacion, (int)EnumeratorTipoDominio.Acciones);
-            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.EnviarReprogramacionASupervisor));
-            string strContenido = template.Contenido;
-
-            try
-            {
-                AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
-                if (ajusteProgramacion != null)
-                {
-                    ContratacionProyecto cp = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == ajusteProgramacion.ContratacionProyectoId).Include(r => r.Proyecto).FirstOrDefault();
-                    if (cp != null)
-                    {
-                        Contrato contrato = _context.Contrato.Where(r => r.ContratacionId == cp.ContratacionId).FirstOrDefault();
-                        strContenido = strContenido
-                                      .Replace("[LLAVE_MEN]", cp.Proyecto.LlaveMen)
-                                      .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
-                                      ;
-
-                    }
-                }
-
-                List<EnumeratorPerfil> perfilsEnviarCorreo = new List<EnumeratorPerfil>{EnumeratorPerfil.Supervisor};
-
-                _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
-
-                ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.Enviada_al_supervisor;
-                ajusteProgramacion.TieneObservacionesFlujoInversion = null;
-                ajusteProgramacion.TieneObservacionesProgramacionObra = null;
-
-                /**
-                 * Elimino los archivos fallidos y las observaciones del interventor al momento del envío
-                */
-                List<ArchivoCargue> listaCargas = _context.ArchivoCargue
-                                                .Where(a => a.ReferenciaId == pAjusteProgramacionId &&
-                                                       a.ArchivoCargueId != ajusteProgramacion.ArchivoCargueIdFlujoInversion &&
-                                                       a.ArchivoCargueId != ajusteProgramacion.ArchivoCargueIdProgramacionObra &&
-                                                       a.Eliminado != true &&
-                                                       a.OrigenId == int.Parse(OrigenArchivoCargue.AjusteFlujoInversion) || a.OrigenId == int.Parse(OrigenArchivoCargue.AjusteProgramacionObra))
-                                                .ToList();
-
-
-                listaCargas.ForEach(archivo =>
-                {
-                    if ((archivo.CantidadRegistros != archivo.CantidadRegistrosValidos) || archivo.Activo != true)
-                    {
-                        archivo.Eliminado = true;
-                        _context.Set<AjustePragramacionObservacion>()
-                                          .Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsSupervisor != true && r.ArchivoCargueId == archivo.ArchivoCargueId)
-                                                              .UpdateAsync(r => new AjustePragramacionObservacion()
-                                                              {
-                                                                  FechaModificacion = DateTime.Now,
-                                                                  UsuarioModificacion = pUsuarioCreacion,
-                                                                  Eliminado = true
-                                                              });
-                    }
-                });
-
-                _context.SaveChanges();
-
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
-                    };
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
-                    };
-            }
-        }
-
-        public async Task<Respuesta> EnviarAlInterventor(int pAjusteProgramacionId, string pUsuarioCreacion)
-        {
-            string CreateEdit = string.Empty;
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.EnviarAlSupervisorAjusteProgramacion, (int)EnumeratorTipoDominio.Acciones);
-            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.EnviarReprogramacionAInterventor));
-            string strContenido = template.Contenido;
-            try
-            {
-                AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
-                if (ajusteProgramacion != null)
-                {
-                    ContratacionProyecto cp = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == ajusteProgramacion.ContratacionProyectoId).Include(r => r.Proyecto).FirstOrDefault();
-                    if (cp != null)
-                    {
-                        Contrato contrato = _context.Contrato.Where(r => r.ContratacionId == cp.ContratacionId).FirstOrDefault();
-                        strContenido = strContenido
-                                      .Replace("[LLAVE_MEN]", cp.Proyecto.LlaveMen)
-                                      .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
-                                      ;
-
-                    }
-                }
-
-                List<EnumeratorPerfil> perfilsEnviarCorreo = new List<EnumeratorPerfil> { EnumeratorPerfil.Interventor };
-
-                _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
-                ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.Con_observaciones_del_supervisor;
-                ajusteProgramacion.RegistroCompleto = false;
-                ajusteProgramacion.RegistroCompletoValidacion = false;
-
-                //si se devuelve por flujo de inversion borro para que empiece nuevo ciclo
-                if (ajusteProgramacion.TieneObservacionesFlujoInversion == true)
-                {
-                    await _context.Set<ArchivoCargue>()
-                                  .Where(r => r.ArchivoCargueId == ajusteProgramacion.ArchivoCargueIdFlujoInversion)
-                                                      .UpdateAsync(r => new ArchivoCargue()
-                                                      {
-                                                          FechaModificacion = DateTime.Now,
-                                                          UsuarioModificacion = pUsuarioCreacion,
-                                                          Activo = false
-                                                      });
-                    ajusteProgramacion.ArchivoCargueIdFlujoInversion = null;
-
-                    //se pueden borrar , no es necesario dejar el registro.
-
-                    List<AjusteProgramacionFlujo> listaAjusteProgramacionFlujo = _context.AjusteProgramacionFlujo.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
-                    _context.AjusteProgramacionFlujo.RemoveRange(listaAjusteProgramacionFlujo);
-
-                    List<TempFlujoInversion> listaTempFlujoInversion = _context.TempFlujoInversion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
-                    _context.TempFlujoInversion.RemoveRange(listaTempFlujoInversion);
-
-                    List<SeguimientoSemanalTemp> listaSeguimientoSemanalTemp = _context.SeguimientoSemanalTemp.Where(r => r.AjusteProgramaionId == pAjusteProgramacionId).ToList();
-                    _context.SeguimientoSemanalTemp.RemoveRange(listaSeguimientoSemanalTemp);
-                }
-
-                //si se devuelve por programacion borro para que empiece nuevo ciclo
-
-                if (ajusteProgramacion.TieneObservacionesProgramacionObra == true)
-                {
-                    await _context.Set<ArchivoCargue>()
-                                  .Where(r => r.ArchivoCargueId == ajusteProgramacion.ArchivoCargueIdProgramacionObra)
-                                                      .UpdateAsync(r => new ArchivoCargue()
-                                                      {
-                                                          FechaModificacion = DateTime.Now,
-                                                          UsuarioModificacion = pUsuarioCreacion,
-                                                          Activo = false
-                                                      });
-                    ajusteProgramacion.ArchivoCargueIdProgramacionObra = null;
-
-                    //se pueden borrar , no es necesario dejar el registro.
-
-                    List<AjusteProgramacionObra> listaAjusteProgramacionObra = _context.AjusteProgramacionObra.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
-                    _context.AjusteProgramacionObra.RemoveRange(listaAjusteProgramacionObra);
-
-                    List<TempProgramacion> listaTempAjusteProgramacionObra = _context.TempProgramacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
-                    _context.TempProgramacion.RemoveRange(listaTempAjusteProgramacionObra);
-                }
-
-                await _context.Set<AjustePragramacionObservacion>()
-                                  .Where(r => r.AjusteProgramacionId == ajusteProgramacion.AjusteProgramacionId && r.EsSupervisor == true)
-                                                      .UpdateAsync(r => new AjustePragramacionObservacion()
-                                                      {
-                                                          FechaModificacion = DateTime.Now,
-                                                          UsuarioModificacion = pUsuarioCreacion,
-                                                          Archivada = true
-                                                      });
-
-                _context.SaveChanges();
-
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
-                    };
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
-                    };
-            }
-        }
-
-        public async Task<Respuesta> AprobarAjusteProgramacion(int pAjusteProgramacionId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
-        {
-            string CreateEdit = string.Empty;
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_Ajuste_Programacion, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                //Contrato contrato = _context.Contrato.Where(c => c.ContratoId == pContratoId).Include(x => x.Contratacion).FirstOrDefault();
-                AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion
-                                                                    .Include(x => x.NovedadContractual)
-                                                                        .ThenInclude(x => x.NovedadContractualDescripcion)
-                                                                    .Include(x => x.ContratacionProyecto)
-                                                                    .FirstOrDefault(x => x.AjusteProgramacionId == pAjusteProgramacionId);
-
-                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
-                                                                            .FirstOrDefault(x => x.ContratoId == ajusteProgramacion.NovedadContractual.ContratoId &&
-                                                                                             x.ProyectoId == ajusteProgramacion.ContratacionProyecto.ProyectoId);
-
-                Programacion[] programacions = _context.Programacion
-                                                            .Where(x => x.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId)
-                                                            .OrderBy(x => x.ProgramacionId)
-                                                            .ToArray();
-
-                FlujoInversion[] flujoInversions = _context.FlujoInversion
-                                                                .Where(x => x.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId)
-                                                                .OrderBy(x => x.FlujoInversionId)
-                                                                .ToArray();
-
-                AjusteProgramacionObra[] ajusteProgramacionObras = _context.AjusteProgramacionObra
-                                                                                .Where(x => x.AjusteProgramacionId == ajusteProgramacion.AjusteProgramacionId)
-                                                                                .OrderBy(x => x.AjusteProgramacionId)
-                                                                                .ToArray();
-
-                AjusteProgramacionFlujo[] ajusteProgramacionFlujos = _context.AjusteProgramacionFlujo
-                                                                                .Where(x => x.AjusteProgramacionId == ajusteProgramacion.AjusteProgramacionId)
-                                                                                .OrderBy(x => x.AjusteProgramacionId)
-                                                                                .ToArray();
-
-
-                //envio correo
-                //envio correo a supervisor
-                //Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AprobarRequisitosTecnicosFase2);
-
-                //string ncontrato = "";
-                //string fechaContrato = "";
-                //string template = TemplateRecoveryPassword.Contenido.
-                //    Replace("[NUMEROCONTRATO]", contrato.NumeroContrato).
-                //    Replace("_LinkF_", pDominioFront).
-                //    Replace("[FECHAVERIFICACION]", DateTime.Now.ToString("dd/MM/yyyy")).
-                //    Replace("[CANTIDADPROYECTOSASOCIADOS]", _context.ContratoConstruccion.Where(x => x.RegistroCompleto == true && x.ContratoId == contrato.ContratoId).Count().ToString()).
-                //    Replace("[CANTIDADPROYECTOSVERIFICADOS]", _context.ContratoConstruccion.Where(x => x.RegistroCompleto == true && x.ContratoId == contrato.ContratoId).Count().ToString()).
-                //    Replace("[TIPOCONTRATO]", contrato.Contratacion.TipoSolicitudCodigo == "1" ? "obra" : "interventoría");//OBRA O INTERVENTORIA
-
-
-                //var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Apoyo).Include(y => y.Usuario).ToList();
-                //foreach (var usuarioadmin in usuariosadmin)
-                //{
-                //    bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioadmin.Usuario.Email, "Aprobacion de requisitos técnicos de inicio para fase 2-construcción", template, pSender, pPassword, pMailServer, pMailPort);
-                //}
-
-                //Contrato contrato = _context.Contrato.Find(pContratoId);
-                //jflorez, este evento solo sucede cuando esta completo y se aprueban los requisitos, por ello seteo el dato 20201202
-                //contrato.FechaAprobacionRequisitosConstruccionInterventor = DateTime.Now;
-
-                //ajusteProgramacion.UsuarioModificacion = pUsuarioCreacion;
-                //ajusteProgramacion.FechaModificacion = DateTime.Now;
-
-                ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.Aprobada_por_supervisor;
-
-                foreach (NovedadContractualDescripcion novedad in ajusteProgramacion.NovedadContractual.NovedadContractualDescripcion)
-                {
-                    switch (novedad.TipoNovedadCodigo)
-                    {
-                        case ConstanTiposNovedades.Adición:
-                            {
-                                for (int i = 0; i < programacions.Length; i++)
-                                {
-                                    if (ajusteProgramacionObras.Length > i)
-                                    {
-                                        programacions[i].FechaInicio = ajusteProgramacionObras[i].FechaInicio;
-                                        programacions[i].FechaFin = ajusteProgramacionObras[i].FechaFin;
-                                        programacions[i].Duracion = ajusteProgramacionObras[i].Duracion;
-                                    }
-                                }
-
-                                for (int i = 0; i < flujoInversions.Length; i++)
-                                {
-                                    if (ajusteProgramacionFlujos.Length > i)
-                                    {
-                                        flujoInversions[i].Valor = ajusteProgramacionFlujos[i].Valor;
-                                    }
-                                }
-
-                                break;
-                            }
-                        case ConstanTiposNovedades.Prórroga:
-                            {
-                                for (int i = 0; i < programacions.Length; i++)
-                                {
-                                    if (ajusteProgramacionObras.Length > i)
-                                    {
-                                        programacions[i].FechaInicio = ajusteProgramacionObras[i].FechaInicio;
-                                        programacions[i].FechaFin = ajusteProgramacionObras[i].FechaFin;
-                                        programacions[i].Duracion = ajusteProgramacionObras[i].Duracion;
-                                    }
-                                }
-
-                                for (int i = 0; i < ajusteProgramacionFlujos.Length; i++)
-                                {
-                                    if (flujoInversions.Length > i)
-                                    {
-                                        flujoInversions[i].Valor = ajusteProgramacionFlujos[i].Valor;
-                                    }
-                                    else
-                                    {
-                                        FlujoInversion flujo = new FlujoInversion
-                                        {
-                                            ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId,
-                                            Semana = ajusteProgramacionFlujos[i].Semana,
-                                            Valor = ajusteProgramacionFlujos[i].Valor,
-                                            MesEjecucionId = ajusteProgramacionFlujos[i].MesEjecucionId,
-                                            ProgramacionId = ajusteProgramacionFlujos[i].ProgramacionId,
-                                            SeguimientoSemanalId = ajusteProgramacionFlujos[i].SeguimientoSemanalId,
-
-                                        };
-
-                                        _context.FlujoInversion.Add(flujo);
-                                    }
-                                }
-
-                                break;
-                            }
-                        case ConstanTiposNovedades.Reinicio:
-                            {
-                                for (int i = 0; i < programacions.Length; i++)
-                                {
-                                    if (ajusteProgramacionObras.Length > i)
-                                    {
-                                        programacions[i].FechaInicio = ajusteProgramacionObras[i].FechaInicio;
-                                        programacions[i].FechaFin = ajusteProgramacionObras[i].FechaFin;
-                                        programacions[i].Duracion = ajusteProgramacionObras[i].Duracion;
-                                    }
-                                }
-
-                                for (int i = 0; i < ajusteProgramacionFlujos.Length; i++)
-                                {
-                                    if (flujoInversions.Length > i)
-                                    {
-                                        flujoInversions[i].Valor = ajusteProgramacionFlujos[i].Valor;
-                                    }
-                                }
-                                break;
-                            }
-                    }
-
-                };
-
-                _context.SaveChanges();
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
-                    };
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
-                    };
-            }
-        }
         #endregion
 
         #region CARGUE ARCHIVOS
 
         #region Programación obra
-
+        /// <summary>
+        /// Validaciones del archivo de programación de obra
+        /// </summary>
+        /// <param name="pFile"></param>
+        /// <param name="pFilePatch"></param>
+        /// <param name="pUsuarioCreo"></param>
+        /// <param name="pAjusteProgramacionId"></param>
+        /// <param name="pContratacionProyectId"></param>
+        /// <param name="pNovedadContractualId"></param>
+        /// <param name="pContratoId"></param>
+        /// <param name="pProyectoId"></param>
+        /// <returns></returns>
         public async Task<Respuesta> UploadFileToValidateAdjustmentProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo,
                                                                         int pAjusteProgramacionId, int pContratacionProyectId, int pNovedadContractualId,
                                                                         int pContratoId, int pProyectoId)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Validar_Excel_Ajuste_Programacion_Obra, (int)EnumeratorTipoDominio.Acciones);
 
-            if (pAjusteProgramacionId == 0)
+            if (pAjusteProgramacionId > 0)
+            {
+                List<AjusteProgramacion> ajusteProgramacions = new List<AjusteProgramacion>();
+                ajusteProgramacions = _context.AjusteProgramacion.Where(r => r.ContratacionProyectoId == pContratacionProyectId
+                                                                        && r.NovedadContractualId == pNovedadContractualId
+                                                                        && r.AjusteProgramacionId != pAjusteProgramacionId
+                                                                        && (r.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion
+                                                                            || r.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.Sin_ajustes
+                                                                            || string.IsNullOrEmpty(r.EstadoCodigo)
+                                                                            || r.EstadoCodigo == "0")).ToList();
+                foreach (var ajuste in ajusteProgramacions)
+                {
+                    List<AjusteProgramacionObra> ajusteProgramacionObras = _context.AjusteProgramacionObra.Where(r => r.AjusteProgramacionId == ajuste.AjusteProgramacionId).ToList(); 
+                    if(ajusteProgramacionObras.Count() > 0)
+                        _context.AjusteProgramacionObra.RemoveRange(ajusteProgramacionObras);
+                }
+                //eliminar los otros registros de ajuste a la programación, se estaban duplicando, de esta forma dejamos solo el que esta entrando
+                if (ajusteProgramacions.Count() > 0)
+                    _context.AjusteProgramacion.RemoveRange(ajusteProgramacions);
+            }
+            else
             {
                 AjusteProgramacion ajusteProgramacionTemp = new AjusteProgramacion();
+                ajusteProgramacionTemp = _context.AjusteProgramacion.Where(r => r.ContratacionProyectoId == pContratacionProyectId && r.NovedadContractualId == pNovedadContractualId).FirstOrDefault();
 
-                //ajusteProgramacion.UsuarioCreacion = pUsuarioCreo;
-                //ajusteProgramacion.FechaCreacion = DateTime.Now;
+                if (ajusteProgramacionTemp == null)
+                {
+                    ajusteProgramacionTemp.ContratacionProyectoId = pContratacionProyectId;
+                    ajusteProgramacionTemp.NovedadContractualId = pNovedadContractualId;
+                    ajusteProgramacionTemp.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion;
+                    ajusteProgramacionTemp.FechaCreacion = DateTime.Now;
+                    ajusteProgramacionTemp.UsuarioCreacion = pUsuarioCreo;
 
-                ajusteProgramacionTemp.ContratacionProyectoId = pContratacionProyectId;
-                ajusteProgramacionTemp.NovedadContractualId = pNovedadContractualId;
-                ajusteProgramacionTemp.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion;
-                ajusteProgramacionTemp.FechaCreacion = DateTime.Now;
-                ajusteProgramacionTemp.UsuarioCreacion = pUsuarioCreo;
-
-                _context.AjusteProgramacion.Add(ajusteProgramacionTemp);
-                _context.SaveChanges();
+                    _context.AjusteProgramacion.Add(ajusteProgramacionTemp);
+                    _context.SaveChanges();
+                }
 
                 pAjusteProgramacionId = ajusteProgramacionTemp.AjusteProgramacionId;
             }
 
-            ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
-                                                                        .Where(cc => cc.ContratoId == pContratoId && cc.ProyectoId == pProyectoId)
-                                                                        .Include(r => r.Contrato)
-                                                                            .ThenInclude(r => r.Contratacion)
-                                                                                .ThenInclude(r => r.DisponibilidadPresupuestal)
-                                                                        .Include(r => r.Contrato)
-                                                                            .ThenInclude(r => r.ContratoPoliza)
-                                                                        .Include(r => r.Proyecto)
-                                                                        .FirstOrDefault();
-
-            NovedadContractual novedadContractual = _context.NovedadContractual
-                                                                .Include(x => x.NovedadContractualDescripcion)
-                                                                .FirstOrDefault(x => x.NovedadContractualId == pNovedadContractualId);
-
-            Proyecto proyectoTemp = _technicalRequirementsConstructionPhaseService.CalcularFechasContrato(contratoConstruccion.ProyectoId, contratoConstruccion.FechaInicioObra, contratoConstruccion.ContratoId);
-
             AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
+            VContratoProyectoFechaEstimadaFinalizacion datosFechas = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => r.ContratacionProyectoId == pContratacionProyectId).FirstOrDefault();
 
-            //DateTime? fechaInicioContrato = proyectoTemp.FechaInicioEtapaObra;
-            //DateTime fechaFinalContrato = _commonService.GetFechaEstimadaFinalizacion(pContratoId) ?? proyectoTemp.FechaFinEtapaObra;
-            VContratoProyectoFechaEstimadaFinalizacion datosFechas = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => r.ProyectoId == contratoConstruccion.ProyectoId && r.ContratoId == contratoConstruccion.ContratoId).FirstOrDefault();
-
-            int CantidadRegistrosVacios = 0;
             int CantidadResgistrosValidos = 0;
             int CantidadRegistrosInvalidos = 0;
             int cantidadRutaCritica = 0;
@@ -889,6 +620,7 @@ namespace asivamosffie.services
             DocumentService _documentService = new DocumentService(_context, _commonService);
 
             ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.AjusteProgramacionObra), pAjusteProgramacionId);
+            List<VFechasValidacionAjusteProgramacion> vFechas = _context.VFechasValidacionAjusteProgramacion.Where(r => r.ContratacionProyectoId == pContratacionProyectId).ToList();
 
             if (archivoCarge != null)
             {
@@ -907,6 +639,17 @@ namespace asivamosffie.services
                     while (!string.IsNullOrEmpty(worksheet.Cells[posicion++, 1].Text))
                     {
                         cantidadActividades++;
+                    }
+
+                    if (string.IsNullOrEmpty(worksheet.Cells[1, 7].Text))
+                    {
+                        worksheet.Cells[1, 7].Value = "Avance Ejecutado Acumulado";
+                        worksheet.Cells[1, 7].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        worksheet.Cells[1, 7].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(242, 242, 242));
+                        worksheet.Cells[1, 7].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[1, 7].Style.TextRotation = 0;
+                        worksheet.Cells[1, 7].Style.WrapText = true;
+                        worksheet.Cells[1, 7].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
                     }
 
                     for (int i = 2; i <= cantidadActividades + 1; i++)
@@ -1042,7 +785,7 @@ namespace asivamosffie.services
                             }
 
                             // fechas contrato
-                            if (temp.FechaInicio.Date < datosFechas.FechaInicioProyecto)
+                            if (temp.FechaInicio.Date < datosFechas.FechaInicioProyecto.Value.Date)
                             {
                                 worksheet.Cells[i, 4].AddComment("La fecha Inicial de la actividad no puede ser inferior a la fecha inicial del proyecto", "Admin");
                                 worksheet.Cells[i, 4].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
@@ -1050,37 +793,11 @@ namespace asivamosffie.services
                                 tieneErrores = true;
                             }
 
-                            if (temp.FechaFin.Date > datosFechas.FechaEstimadaFinProyecto)
+                            if (temp.FechaFin.Date > datosFechas.FechaEstimadaFinProyecto.Value.Date)
                             {
                                 worksheet.Cells[i, 5].AddComment("La fecha final de la actividad no puede ser mayor a la fecha final del proyecto", "Admin");
                                 worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                                 worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
-                                tieneErrores = true;
-                            }
-                            // No se pueden programar actividades en fechas donde se ejecuto avance semanal o programacion v1.
-                            // temp = Fechas del registro que esta leyendo
-                            // fechaAct = Fecha de registros existentes
-
-                            bool validacionFecha = false;
-
-                            List<VFechasValidacionAjusteProgramacion> vFechas = _context.VFechasValidacionAjusteProgramacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
-                            foreach (var fechaAct in vFechas)
-                            {
-                                if (!((temp.FechaInicio.Date < fechaAct.FechaInicio && temp.FechaFin.Date < fechaAct.FechaInicio) || (temp.FechaInicio.Date > fechaAct.FechaFin)))
-                                {
-                                    validacionFecha = true;
-                                    break;
-                                }
-                            }
-
-                            if (validacionFecha)
-                            {
-                                worksheet.Cells[i, 4].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                worksheet.Cells[i, 4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
-
-                                worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
-                                worksheet.Cells[i, 5].AddComment("No se pueden programar nuevas actividades en fechas en que ya se ejecutaron actividades.", "Admin");
                                 tieneErrores = true;
                             }
 
@@ -1105,15 +822,39 @@ namespace asivamosffie.services
                             #endregion Duracion
 
 
-                            //Guarda Cambios en una tabla temporal
+                            #region Avance ejecutado acumulado
 
-                            if (!tieneErrores)
+                            //#7
+                            //Avance ejecutado acumulado
+                            bool validacionFecha = false;
+
+                            VFechasValidacionAjusteProgramacion vFechasTmp = vFechas.Where(r => !((temp.FechaInicio.Date < r.FechaInicio.Value.Date && temp.FechaFin.Date < r.FechaInicio.Value.Date) || (temp.FechaInicio.Date > r.FechaFin.Value.Date))).FirstOrDefault();
+                            worksheet.Cells[i, 7].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                            worksheet.Cells[i, 7].Style.WrapText = true;
+                            worksheet.Cells[i, 7].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Medium);
+
+                            if (vFechasTmp != null)
+                            {
+                                validacionFecha = true;
+                                worksheet.Cells[i, 7].Value = vFechasTmp.AvanceFisicoSemanal;
+                                worksheet.Cells[i, 7].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 7].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(226,239,218));
+                                worksheet.Cells[i, 7].AddComment("En estas fechas ya hay actividades ejecutadas, el registro es válido, pero tenga presente que no se podrá reprogramar actividades en estas fechas.", "Admin");
+                                worksheet.Cells[i, 7].Comment.AutoFit = true;
+                            }
+
+                            #endregion Avance ejecutado acumulado
+
+
+                            //Guarda Cambios en una tabla temporal solo si las fechas no tuvieron ejecución previamente 
+
+                            if (!tieneErrores && !validacionFecha)
                             {
                                 _context.TempProgramacion.Add(temp);
                                 _context.SaveChanges();
                             }
 
-                            if (temp.TempProgramacionId > 0)
+                            if (temp.TempProgramacionId > 0 || validacionFecha)
                             {
                                 CantidadResgistrosValidos++;
                             }
@@ -1172,11 +913,14 @@ namespace asivamosffie.services
 
                     //Actualizo el archivoCarge con la cantidad de registros validos , invalidos , y el total;
                     //-2 ya los registros comienzan desde esta fila
-                    archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
-                    archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
-                    archivoCarge.CantidadRegistros = cantidadActividades;
-                    _context.ArchivoCargue.Update(archivoCarge);
-
+                    _context.Set<ArchivoCargue>()
+                                  .Where(r => r.ArchivoCargueId == archivoCarge.ArchivoCargueId)
+                                                      .Update(r => new ArchivoCargue()
+                                                      {
+                                                          CantidadRegistrosInvalidos = CantidadRegistrosInvalidos,
+                                                          CantidadRegistrosValidos = CantidadResgistrosValidos,
+                                                          CantidadRegistros = cantidadActividades
+                                                      });
 
                     byte[] bin = package.GetAsByteArray();
                     string pathFile = archivoCarge.Ruta + "/" + archivoCarge.Nombre + ".xlsx";
@@ -1215,24 +959,60 @@ namespace asivamosffie.services
         #endregion
 
         #region Flujo de inversión
-
+        /// <summary>
+        /// Validaciones del archivo flujo de inversión
+        /// </summary>
+        /// <param name="pFile"></param>
+        /// <param name="pFilePatch"></param>
+        /// <param name="pUsuarioCreo"></param>
+        /// <param name="pAjusteProgramacionId"></param>
+        /// <param name="pContratacionProyectId"></param>
+        /// <param name="pNovedadContractualId"></param>
+        /// <param name="pContratoId"></param>
+        /// <param name="pProyectoId"></param>
+        /// <returns></returns>
         public async Task<Respuesta> UploadFileToValidateAdjustmentInvestmentFlow(IFormFile pFile, string pFilePatch, string pUsuarioCreo,
                                                                                 int pAjusteProgramacionId, int pContratacionProyectId, int pNovedadContractualId,
                                                                                 int pContratoId, int pProyectoId)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Validar_Excel_Ajuste_Flujo_Inversion, (int)EnumeratorTipoDominio.Acciones);
 
-            if (pAjusteProgramacionId == 0)
+            if (pAjusteProgramacionId > 0)
+            {
+                List<AjusteProgramacion> ajusteProgramacions = new List<AjusteProgramacion>();
+                ajusteProgramacions = _context.AjusteProgramacion.Where(r => r.ContratacionProyectoId == pContratacionProyectId
+                                                                        && r.NovedadContractualId == pNovedadContractualId
+                                                                        && r.AjusteProgramacionId != pAjusteProgramacionId
+                                                                        && (r.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion
+                                                                            || r.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.Sin_ajustes
+                                                                            || string.IsNullOrEmpty(r.EstadoCodigo)
+                                                                            || r.EstadoCodigo == "0")).ToList();
+                foreach (var ajuste in ajusteProgramacions)
+                {
+                    List<AjusteProgramacionObra> ajusteProgramacionObras = _context.AjusteProgramacionObra.Where(r => r.AjusteProgramacionId == ajuste.AjusteProgramacionId).ToList();
+                    if (ajusteProgramacionObras.Count() > 0)
+                        _context.AjusteProgramacionObra.RemoveRange(ajusteProgramacionObras);
+                }
+                //eliminar los otros registros de ajuste a la programación, se estaban duplicando, de esta forma dejamos solo el que esta entrando
+                if (ajusteProgramacions.Count() > 0)
+                    _context.AjusteProgramacion.RemoveRange(ajusteProgramacions);
+            }
+            else
             {
                 AjusteProgramacion ajusteProgramacionTemp = new AjusteProgramacion();
+                ajusteProgramacionTemp = _context.AjusteProgramacion.Where(r => r.ContratacionProyectoId == pContratacionProyectId && r.NovedadContractualId == pNovedadContractualId).FirstOrDefault();
 
-                ajusteProgramacionTemp.UsuarioCreacion = pUsuarioCreo;
-                ajusteProgramacionTemp.FechaCreacion = DateTime.Now;
-                ajusteProgramacionTemp.ContratacionProyectoId = pContratacionProyectId;
-                ajusteProgramacionTemp.NovedadContractualId = pNovedadContractualId;
+                if (ajusteProgramacionTemp == null)
+                {
+                    ajusteProgramacionTemp.ContratacionProyectoId = pContratacionProyectId;
+                    ajusteProgramacionTemp.NovedadContractualId = pNovedadContractualId;
+                    ajusteProgramacionTemp.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion;
+                    ajusteProgramacionTemp.FechaCreacion = DateTime.Now;
+                    ajusteProgramacionTemp.UsuarioCreacion = pUsuarioCreo;
 
-                _context.AjusteProgramacion.Add(ajusteProgramacionTemp);
-                _context.SaveChanges();
+                    _context.AjusteProgramacion.Add(ajusteProgramacionTemp);
+                    _context.SaveChanges();
+                }
 
                 pAjusteProgramacionId = ajusteProgramacionTemp.AjusteProgramacionId;
             }
@@ -1243,32 +1023,20 @@ namespace asivamosffie.services
 
             AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
 
-            // rango de fechas
-            ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
-                                                                        .Where(cc => cc.ContratoId == pContratoId && cc.ProyectoId == pProyectoId)
-                                                                        .FirstOrDefault();
-
-            Proyecto proyecto = _technicalRequirementsConstructionPhaseService.CalcularFechasContrato(pProyectoId, contratoConstruccion.FechaInicioObra, contratoConstruccion.ContratoId);
-            VContratoProyectoValorEstimado datosAdicion = _context.VContratoProyectoValorEstimado.Where(r => r.ProyectoId == contratoConstruccion.ProyectoId && r.ContratoId == contratoConstruccion.ContratoId).FirstOrDefault();
-            VContratoProyectoFechaEstimadaFinalizacion datosFechas = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => r.ProyectoId == contratoConstruccion.ProyectoId && r.ContratoId == contratoConstruccion.ContratoId).FirstOrDefault();
-
-            NovedadContractual novedadContractual = _context.NovedadContractual
-                                                                .Include(x => x.NovedadContractualDescripcion)
-                                                                .FirstOrDefault(x => x.NovedadContractualId == ajusteProgramacion.NovedadContractualId);
-
-            novedadContractual.NovedadContractualDescripcion.ToList().ForEach(ncd =>
-            {
-                if (ncd.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio && ajusteProgramacion.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion)
-                {
-                    double cantidadDiasAgregados = (ncd.FechaFinSuspension.Value - ncd.FechaInicioSuspension.Value).TotalDays;
-                    proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays(cantidadDiasAgregados);
-                }
-            });
-
-            //List<dynamic> listaFechas = CrearNuevasFecha(proyecto, novedadContractual, ajusteProgramacion); --> era de diego, se reemplaza por la vista
-
+            VContratoProyectoValorEstimado datosAdicion = _context.VContratoProyectoValorEstimado.Where(r => r.ProyectoId == pProyectoId && r.ContratoId == pContratoId).FirstOrDefault();
+            VContratoProyectoFechaEstimadaFinalizacion datosFechas = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => r.ProyectoId == pProyectoId && r.ContratoId == pContratoId).FirstOrDefault();
+            ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Where(r => r.ContratoId == pContratoId && r.ProyectoId == pProyectoId).FirstOrDefault();
             //Numero semanas
             int numberOfWeeks = datosFechas.SemanasEstimadasProyecto ?? datosFechas.SemanasProyecto ?? 0;
+
+            //Capitulos cargados
+            List<Programacion> listaProgramacion = _context.Programacion
+                                                                .Where(
+                                                                        p => p.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId &&
+                                                                        p.TipoActividadCodigo == "C")
+                                                                .ToList();
+            //CAPITULOS TEMPORALES
+            List<TempProgramacion> tempProgramacion = _context.TempProgramacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.TipoActividadCodigo == "C").ToList();
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -1316,6 +1084,17 @@ namespace asivamosffie.services
                         tieneErrores = true;
                         estructuraValidaValidacionGeneral = false;
                         mensajeRespuesta = "Numero de semanas no es igual al del proyecto";
+                    }
+
+                    //valida numero capitulos
+                    if ((listaProgramacion.Count() + tempProgramacion.Count()) != cantidadCapitulos)
+                    {
+                        worksheet.Cells[1, 1].AddComment("Numero de capitulos no es igual a la programacion", "Admin");
+                        worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                        tieneErrores = true;
+                        estructuraValidaValidacionGeneral = false;
+                        mensajeRespuesta = "Numero de capitulos no es igual a la programacion";
                     }
 
                     decimal sumaTotal = 0;
@@ -1398,7 +1177,7 @@ namespace asivamosffie.services
                             CantidadRegistrosInvalidos++;
                         }
 
-                        if (tieneErroresCapitulo == true)
+                        if (tieneErroresCapitulo == true || tieneErrores == true)
                         {
                             CantidadRegistrosInvalidos++;
                         }
@@ -1487,523 +1266,725 @@ namespace asivamosffie.services
         #endregion
         #endregion
 
-        #region Ajutes a la reprogramación
-        private List<dynamic> CrearNuevasFecha(Proyecto proyecto, NovedadContractual novedadContractual, AjusteProgramacion ajusteProgramacion)
+        #region ELIMINAR ARCHIVOS
+        /// <summary>
+        /// Elimina un archivo desde registrar reprogramación
+        /// </summary>
+        /// <param name="pArchivoCargueId"></param>
+        /// <param name="pAjusteProgramacionId"></param>
+        /// <param name="pUsuario"></param>
+        /// <returns></returns>
+        public async Task<Respuesta> DeleteAdjustProgrammingOrInvestmentFlow(int pArchivoCargueId, int pAjusteProgramacionId, string pUsuario, bool esProgramacionObra)
         {
-            List<dynamic> listaFechasTemp = new List<dynamic>();
-            List<dynamic> listaFechas = new List<dynamic>();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Archivo_Cargue, (int)EnumeratorTipoDominio.Acciones);
 
-            DateTime fechaTemp = proyecto.FechaInicioEtapaObra;
-
-            while (proyecto.FechaFinEtapaObra >= fechaTemp)
-            {
-                listaFechasTemp.Add(new { fechaInicio = fechaTemp, fechaFin = fechaTemp.AddDays(6) });
-                fechaTemp = fechaTemp.AddDays(7);
-            }
-
-            // agrega la cantidad de dias del reinicio
-            if (
-                novedadContractual.NovedadContractualDescripcion.Where(x => x.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio).Count() > 0 &&
-                ajusteProgramacion.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion)
-            {
-                NovedadContractualDescripcion novedadContractualDescripcion = novedadContractual.NovedadContractualDescripcion
-                                                                                                    .Where(x => x.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio)
-                                                                                                    .FirstOrDefault();
-
-                double cantidadDiasAgregados = (novedadContractualDescripcion.FechaFinSuspension.Value - novedadContractualDescripcion.FechaInicioSuspension.Value).TotalDays;
-
-                for (int j = 0; j < listaFechasTemp.Count(); j++)
-                {
-                    // busco el rango donde este la fecha de inicio de la novedad
-                    if (
-                            novedadContractualDescripcion.FechaInicioSuspension.Value >= listaFechasTemp[j].fechaInicio &&
-                            novedadContractualDescripcion.FechaInicioSuspension.Value <= listaFechasTemp[j].fechaFin
-                        )
-                    {
-                        // asigno la nueva fecha fin del rango
-                        listaFechasTemp[j].fechaFin = novedadContractualDescripcion.FechaInicioSuspension.Value;
-                        listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
-
-                        // busco el rango donde este la fecha de inicio de la novedad si estan en la misma semana
-                        if (
-                                novedadContractualDescripcion.FechaFinSuspension.Value >= listaFechasTemp[j].fechaInicio &&
-                                novedadContractualDescripcion.FechaFinSuspension.Value <= listaFechasTemp[j].fechaFin
-                            )
-                        {
-                            // asigno la nueva fecha Inicio del rango
-                            listaFechasTemp[j].fechaInicio = novedadContractualDescripcion.FechaFinSuspension.Value;
-                            listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
-                        }
-                    }
-                    else
-                    // busco el rango donde este la fecha de inicio de la novedad
-                    if (
-                            novedadContractualDescripcion.FechaFinSuspension.Value >= listaFechasTemp[j].fechaInicio &&
-                            novedadContractualDescripcion.FechaFinSuspension.Value <= listaFechasTemp[j].fechaFin
-                        )
-                    {
-                        // asigno la nueva fecha Inicio del rango
-                        listaFechasTemp[j].fechaInicio = novedadContractualDescripcion.FechaFinSuspension.Value;
-                        listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
-                    }
-                    // suma la cantidad de dias a los rangos despues del reinicio
-                    else if (novedadContractualDescripcion.FechaFinSuspension < listaFechasTemp[j].fechaInicio)
-                    {
-                        listaFechasTemp[j].fechaInicio = listaFechasTemp[j].fechaInicio.AddDays(cantidadDiasAgregados);
-                        listaFechasTemp[j].fechaFin = listaFechasTemp[j].fechaFin.AddDays(cantidadDiasAgregados);
-                        listaFechas.Add(new { fechaInicio = listaFechasTemp[j].fechaInicio, fechaFin = listaFechasTemp[j].fechaFin });
-                    }
-
-
-                }
-            }
-            else
-            {
-                listaFechas = listaFechasTemp.ToList();
-            }
-
-            return listaFechas;
-        }
-
-        public async Task<Respuesta> TransferMassiveLoadAdjustmentProgramming(string pIdDocument, string pUsuarioModifico, int pProyectoId, int pContratoId)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Load_Data_Ajuste_Programacion_Obra, (int)EnumeratorTipoDominio.Acciones);
-
-            Respuesta respuesta = new Respuesta();
-
-            int ajusteProgramacionId = 0;
-
-            if (string.IsNullOrEmpty(pIdDocument))
-            {
-                return respuesta =
-                 new Respuesta
-                 {
-                     IsSuccessful = false,
-                     IsException = false,
-                     IsValidation = true,
-                     Code = GeneralCodes.CamposVacios,
-                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.CamposVacios, idAccion, pUsuarioModifico, "")
-                 };
-            }
             try
             {
+                string strCrearEditar = string.Empty;
 
-
-                int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.AjusteProgramacionObra, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
-
-                ArchivoCargue archivoCargue = _context.ArchivoCargue
-                                                .Where(r => r.OrigenId == int.Parse(OrigenArchivoCargue.AjusteProgramacionObra) &&
-                                                        r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())
-                                                      )
-                                                .FirstOrDefault();
-
-                List<TempProgramacion> listTempProgramacion = await _context.TempProgramacion
-                                                                .Where(r => r.ArchivoCargueId == archivoCargue.ArchivoCargueId && !(bool)r.EstaValidado)
-                                                                .ToListAsync();
-
-
-
-                if (listTempProgramacion.Count() > 0)
+                if (pArchivoCargueId > 0)
                 {
+                    strCrearEditar = "ELIMINAR ARCHIVO CARGE - AJUSTE PROGRAMACIÓN OBRA";
 
-                    ajusteProgramacionId = listTempProgramacion.FirstOrDefault().AjusteProgramacionId.Value;
+                    await _context.Set<ArchivoCargue>().Where(r => r.ArchivoCargueId == pArchivoCargueId)
+                                               .UpdateAsync(r => new ArchivoCargue()
+                                               {
+                                                   FechaModificacion = DateTime.Now,
+                                                   UsuarioModificacion = pUsuario,
+                                                   Eliminado = true
+                                               });
 
-                    // Eliminar meses ya cargados
-                    //List<MesEjecucion> listaMeses = _context.MesEjecucion.Where(m => m.ContratoConstruccionId == contratoConstruccionId).ToList();
-                    //_context.MesEjecucion.RemoveRange(listaMeses);
 
-                    //eliminar Ajuste Programacion Obra
-                    List<AjusteProgramacionObra> listaProgramacion = _context.AjusteProgramacionObra
-                                                                                .Where(p => p.AjusteProgramacionId == ajusteProgramacionId)
-                                                                                .ToList();
-                    _context.AjusteProgramacionObra.RemoveRange(listaProgramacion);
+                    await _context.Set<AjustePragramacionObservacion>().Where(r => r.ArchivoCargueId == pArchivoCargueId)
+                                               .UpdateAsync(r => new AjustePragramacionObservacion()
+                                               {
+                                                   FechaModificacion = DateTime.Now,
+                                                   UsuarioModificacion = pUsuario,
+                                                   Eliminado = true,
+                                                   AjusteProgramacionId = pAjusteProgramacionId
+                                               });
 
-                    // copia la información
-                    foreach (TempProgramacion tempProgramacion in listTempProgramacion)
+                    //se pueden borrar , no es necesario dejar el registro.
+
+                    if (esProgramacionObra)
                     {
+                        List<AjusteProgramacionObra> listaAjusteProgramacionObra = _context.AjusteProgramacionObra.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                        _context.AjusteProgramacionObra.RemoveRange(listaAjusteProgramacionObra);
 
-                        AjusteProgramacionObra programacion = new AjusteProgramacionObra()
-                        {
-                            AjusteProgramacionId = tempProgramacion.AjusteProgramacionId.Value,
-                            TipoActividadCodigo = tempProgramacion.TipoActividadCodigo,
-                            Actividad = tempProgramacion.Actividad,
-                            EsRutaCritica = tempProgramacion.EsRutaCritica,
-                            FechaInicio = tempProgramacion.FechaInicio,
-                            FechaFin = tempProgramacion.FechaFin,
-                            Duracion = tempProgramacion.Duracion
-
-                        };
-
-                        _context.AjusteProgramacionObra.Add(programacion);
-                        _context.SaveChanges();
-
-
-
-                        //Temporal proyecto update
-                        tempProgramacion.EstaValidado = true;
-                        tempProgramacion.FechaModificacion = DateTime.Now;
-                        tempProgramacion.UsuarioModificacion = pUsuarioModifico;
-                        _context.TempProgramacion.Update(tempProgramacion);
-                        _context.SaveChanges();
+                        List<TempProgramacion> listaTempAjusteProgramacionObra = _context.TempProgramacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                        _context.TempProgramacion.RemoveRange(listaTempAjusteProgramacionObra);
                     }
-
-                    AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(ajusteProgramacionId);
-
-                    ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
-                                                                        .Where(cc => cc.ContratoId == pContratoId && cc.ProyectoId == pProyectoId)
-                                                                        .FirstOrDefault();
-
-                    Proyecto proyecto = _technicalRequirementsConstructionPhaseService.CalcularFechaInicioContrato(contratoConstruccion.ContratoConstruccionId);
-
-                    NovedadContractual novedadContractual = _context.NovedadContractual
-                                                                .Include(x => x.NovedadContractualDescripcion)
-                                                                .FirstOrDefault(x => x.NovedadContractualId == ajusteProgramacion.NovedadContractualId);
-
-                    DateTime fechaFinalContrato = _commonService.GetFechaEstimadaFinalizacion(pContratoId) ?? proyecto.FechaFinEtapaObra;
-                    proyecto.FechaFinEtapaObra = fechaFinalContrato;
-
-                    /*novedadContractual.NovedadContractualDescripcion.ToList().ForEach(ncd =>
+                    else
                     {
-                        if (ncd.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio && ajusteProgramacion.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion)
-                        {
-                            double cantidadDiasAgregados = (ncd.FechaFinSuspension.Value - ncd.FechaInicioSuspension.Value).TotalDays;
-                            proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays(cantidadDiasAgregados);
-                        }
-                    });*/
+                        List<AjusteProgramacionFlujo> listaAjusteProgramacionFlujo = _context.AjusteProgramacionFlujo.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                        _context.AjusteProgramacionFlujo.RemoveRange(listaAjusteProgramacionFlujo);
 
-                    MesEjecucion[] meses = _context.MesEjecucion.Where(x => x.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId).ToArray();
+                        List<TempFlujoInversion> listaTempFlujoInversion = _context.TempFlujoInversion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                        _context.TempFlujoInversion.RemoveRange(listaTempFlujoInversion);
 
-                    int numeroMes = 1;
-                    int idMes = 0;
-                    for (DateTime fecha = proyecto.FechaInicioEtapaObra; fecha <= proyecto.FechaFinEtapaObra; fecha = fecha.AddMonths(1))
-                    {
-                        if (meses.Length < numeroMes)
-                        {
-                            MesEjecucion mes = new MesEjecucion()
-                            {
-                                ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId,
-                                Numero = numeroMes,
-                                FechaInicio = fecha,
-                                FechaFin = fecha.AddMonths(1).AddDays(-1),
-
-                            };
-
-                            _context.MesEjecucion.Add(mes);
-                        }
-
-                        numeroMes++;
+                        List<SeguimientoSemanalTemp> listaSeguimientoSemanalTemp = _context.SeguimientoSemanalTemp.Where(r => r.AjusteProgramaionId == pAjusteProgramacionId).ToList();
+                        _context.SeguimientoSemanalTemp.RemoveRange(listaSeguimientoSemanalTemp);
                     }
 
 
-                    MesEjecucion ultimoMes = _context.MesEjecucion
-                                                            .Where(m => m.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId)
-                                                            .OrderByDescending(m => m.Numero)
-                                                            .FirstOrDefault();
-
-                    ultimoMes.FechaFin = proyecto.FechaFinEtapaObra;
-
-                    _context.SaveChanges();
-
+                    bool state = await ValidarRegistroCompletoValidacionAjusteProgramacion(pAjusteProgramacionId);
+                    AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
                     if (ajusteProgramacion != null)
                     {
-                        ajusteProgramacion.ArchivoCargueIdProgramacionObra = archivoCargue.ArchivoCargueId;
-                        ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion;
+                        ajusteProgramacion.FechaModificacion = DateTime.Now;
+                        ajusteProgramacion.UsuarioModificacion = pUsuario;
+                        ajusteProgramacion.RegistroCompletoValidacion = state;
+                        ajusteProgramacion.AjusteProgramacionId = pAjusteProgramacionId;
 
-                        VerificarRegistroCompletoAjusteProgramacion(ajusteProgramacionId);
-                        _context.SaveChanges();
+                        if (ajusteProgramacion.ArchivoCargueIdFlujoInversion == pArchivoCargueId)
+                            ajusteProgramacion.ArchivoCargueIdFlujoInversion = null;
+
+                        if (ajusteProgramacion.ArchivoCargueIdProgramacionObra == pArchivoCargueId)
+                            ajusteProgramacion.ArchivoCargueIdProgramacionObra = null;
+
+                        _context.AjusteProgramacion.Update(ajusteProgramacion);
+                        VerificarRegistroCompletoAjusteProgramacion(pAjusteProgramacionId);
                     }
 
+                }
 
+                _context.SaveChanges();
 
-                    return respuesta =
+                return
                     new Respuesta
                     {
                         IsSuccessful = true,
                         IsException = false,
-                        IsValidation = true,
+                        IsValidation = false,
                         Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModifico, "Cantidad de registros subidos : " + listTempProgramacion.Count())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuario, strCrearEditar)
                     };
-                }
-                else
-                {
-                    return respuesta =
-                        new Respuesta
-                        {
-                            IsSuccessful = false,
-                            IsException = false,
-                            IsValidation = true,
-                            Code = GeneralCodes.OperacionExitosa,
-                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.NoExitenArchivos, idAccion, pUsuarioModifico, "")
-                        };
-                }
             }
             catch (Exception ex)
             {
-                return respuesta =
+                return
                     new Respuesta
                     {
                         IsSuccessful = false,
-                        IsException = false,
-                        IsValidation = true,
-                        Code = ConstantMessagesCargueElegibilidad.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.CargueProyectosMasivos, pUsuarioModifico, ex.InnerException.ToString())
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
                     };
+            }
+        }
+        #endregion
+
+        #region CAMBIO DE ESTADOS
+        /// <summary>
+        ///  Envío al supervisor desde registrar reprogramación
+        /// </summary>
+        /// <param name="pAjusteProgramacionId"></param>
+        /// <param name="pUsuarioCreacion"></param>
+        /// <returns></returns>
+        public async Task<Respuesta> EnviarAlSupervisorAjusteProgramacion(int pAjusteProgramacionId, string pUsuarioCreacion)
+        {
+            string CreateEdit = string.Empty;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.EnviarAlSupervisorAjusteProgramacion, (int)EnumeratorTipoDominio.Acciones);
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.EnviarReprogramacionASupervisor));
+            string strContenido = template.Contenido;
+
+            try
+            {
+                AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
+                if (ajusteProgramacion != null)
+                {
+                    ContratacionProyecto cp = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == ajusteProgramacion.ContratacionProyectoId).Include(r => r.Proyecto).FirstOrDefault();
+                    if (cp != null)
+                    {
+                        Contrato contrato = _context.Contrato.Where(r => r.ContratacionId == cp.ContratacionId).FirstOrDefault();
+                        strContenido = strContenido
+                                      .Replace("[LLAVE_MEN]", cp.Proyecto.LlaveMen)
+                                      .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                                      ;
+
+                    }
+                }
+
+                List<EnumeratorPerfil> perfilsEnviarCorreo = new List<EnumeratorPerfil> { EnumeratorPerfil.Supervisor };
+
+                _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+
+                ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.Enviada_al_supervisor;
+                ajusteProgramacion.TieneObservacionesFlujoInversion = null;
+                ajusteProgramacion.TieneObservacionesProgramacionObra = null;
+
+                /**
+                 * Elimino los archivos fallidos y las observaciones del interventor al momento del envío
+                */
+                List<ArchivoCargue> listaCargas = _context.ArchivoCargue
+                                                .Where(a => a.ReferenciaId == pAjusteProgramacionId &&
+                                                       a.ArchivoCargueId != ajusteProgramacion.ArchivoCargueIdFlujoInversion &&
+                                                       a.ArchivoCargueId != ajusteProgramacion.ArchivoCargueIdProgramacionObra &&
+                                                       a.Eliminado != true &&
+                                                       a.OrigenId == int.Parse(OrigenArchivoCargue.AjusteFlujoInversion) || a.OrigenId == int.Parse(OrigenArchivoCargue.AjusteProgramacionObra))
+                                                .ToList();
+
+
+                listaCargas.ForEach(archivo =>
+                {
+                    if ((archivo.CantidadRegistros != archivo.CantidadRegistrosValidos) || archivo.Activo != true)
+                    {
+                        archivo.Eliminado = true;
+                        _context.Set<AjustePragramacionObservacion>()
+                                          .Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsSupervisor != true && r.ArchivoCargueId == archivo.ArchivoCargueId)
+                                                              .Update(r => new AjustePragramacionObservacion()
+                                                              {
+                                                                  FechaModificacion = DateTime.Now,
+                                                                  UsuarioModificacion = pUsuarioCreacion,
+                                                                  Eliminado = true
+                                                              });
+                    }
+                });
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        /// <summary>
+        /// Envío al interventor desde validar reprogramación
+        /// </summary>
+        /// <param name="pAjusteProgramacionId"></param>
+        /// <param name="pUsuarioCreacion"></param>
+        /// <returns></returns>
+        public async Task<Respuesta> EnviarAlInterventor(int pAjusteProgramacionId, string pUsuarioCreacion)
+        {
+            string CreateEdit = string.Empty;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.EnviarAlSupervisorAjusteProgramacion, (int)EnumeratorTipoDominio.Acciones);
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.EnviarReprogramacionAInterventor));
+            string strContenido = template.Contenido;
+            try
+            {
+                AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
+                if (ajusteProgramacion != null)
+                {
+                    ContratacionProyecto cp = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == ajusteProgramacion.ContratacionProyectoId).Include(r => r.Proyecto).FirstOrDefault();
+                    if (cp != null)
+                    {
+                        Contrato contrato = _context.Contrato.Where(r => r.ContratacionId == cp.ContratacionId).FirstOrDefault();
+                        strContenido = strContenido
+                                      .Replace("[LLAVE_MEN]", cp.Proyecto.LlaveMen)
+                                      .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                                      ;
+
+                    }
+                }
+
+                List<EnumeratorPerfil> perfilsEnviarCorreo = new List<EnumeratorPerfil> { EnumeratorPerfil.Interventor };
+
+                _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+                ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.Con_observaciones_del_supervisor;
+                ajusteProgramacion.RegistroCompleto = false;
+                ajusteProgramacion.RegistroCompletoValidacion = false;
+
+                //si se devuelve por flujo de inversion borro para que empiece nuevo ciclo
+                if (ajusteProgramacion.TieneObservacionesFlujoInversion == true)
+                {
+                    await _context.Set<ArchivoCargue>()
+                                  .Where(r => r.ArchivoCargueId == ajusteProgramacion.ArchivoCargueIdFlujoInversion)
+                                                      .UpdateAsync(r => new ArchivoCargue()
+                                                      {
+                                                          FechaModificacion = DateTime.Now,
+                                                          UsuarioModificacion = pUsuarioCreacion,
+                                                          Activo = false,
+                                                      });
+                    ajusteProgramacion.ArchivoCargueIdFlujoInversion = null;
+
+                    //se pueden borrar , no es necesario dejar el registro.
+
+                    List<AjusteProgramacionFlujo> listaAjusteProgramacionFlujo = _context.AjusteProgramacionFlujo.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                    _context.AjusteProgramacionFlujo.RemoveRange(listaAjusteProgramacionFlujo);
+
+                    List<TempFlujoInversion> listaTempFlujoInversion = _context.TempFlujoInversion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                    _context.TempFlujoInversion.RemoveRange(listaTempFlujoInversion);
+
+                    List<SeguimientoSemanalTemp> listaSeguimientoSemanalTemp = _context.SeguimientoSemanalTemp.Where(r => r.AjusteProgramaionId == pAjusteProgramacionId).ToList();
+                    _context.SeguimientoSemanalTemp.RemoveRange(listaSeguimientoSemanalTemp);
+                }
+
+                //si se devuelve por programacion borro para que empiece nuevo ciclo
+
+                if (ajusteProgramacion.TieneObservacionesProgramacionObra == true)
+                {
+                    await _context.Set<ArchivoCargue>()
+                                  .Where(r => r.ArchivoCargueId == ajusteProgramacion.ArchivoCargueIdProgramacionObra)
+                                                      .UpdateAsync(r => new ArchivoCargue()
+                                                      {
+                                                          FechaModificacion = DateTime.Now,
+                                                          UsuarioModificacion = pUsuarioCreacion,
+                                                          Activo = false
+                                                      });
+                    ajusteProgramacion.ArchivoCargueIdProgramacionObra = null;
+
+                    //se pueden borrar , no es necesario dejar el registro.
+
+                    List<AjusteProgramacionObra> listaAjusteProgramacionObra = _context.AjusteProgramacionObra.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                    _context.AjusteProgramacionObra.RemoveRange(listaAjusteProgramacionObra);
+
+                    List<TempProgramacion> listaTempAjusteProgramacionObra = _context.TempProgramacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId).ToList();
+                    _context.TempProgramacion.RemoveRange(listaTempAjusteProgramacionObra);
+                }
+
+                await _context.Set<AjustePragramacionObservacion>()
+                                  .Where(r => r.AjusteProgramacionId == ajusteProgramacion.AjusteProgramacionId && r.EsSupervisor == true)
+                                                      .UpdateAsync(r => new AjustePragramacionObservacion()
+                                                      {
+                                                          FechaModificacion = DateTime.Now,
+                                                          UsuarioModificacion = pUsuarioCreacion,
+                                                          Archivada = true
+                                                      });
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        #endregion
+
+        #region REPROGRAMACIÓN
+
+        /// <summary>
+        /// Aprobación de reprogramación x parte del supervisor
+        /// </summary>
+        /// <param name="pAjusteProgramacionId"></param>
+        /// <param name="pUsuarioCreacion"></param>
+        /// <returns></returns>
+        public async Task<Respuesta> AprobarAjusteProgramacion(int pAjusteProgramacionId, string pUsuarioCreacion)
+        {
+            string CreateEdit = string.Empty;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_Ajuste_Programacion, (int)EnumeratorTipoDominio.Acciones);
+            bool terminoProgramacion = false, terminoFlujo = false;
+            try
+            {
+                AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(pAjusteProgramacionId);
+                
+                if (ajusteProgramacion != null)
+                {
+                    ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == ajusteProgramacion.ContratacionProyectoId).FirstOrDefault();
+
+                    Contrato contrato = _context.Contrato.Where(r => r.ContratacionId == contratacionProyecto.ContratacionId).Include(r => r.Contratacion).FirstOrDefault();
+
+                    ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
+                                                    .Where(cc => cc.ContratoId == contrato.ContratoId && cc.ProyectoId == contratacionProyecto.ProyectoId)
+                                                    .FirstOrDefault();
+
+                    Proyecto proyecto = _technicalRequirementsConstructionPhaseService.CalcularFechaInicioContrato(contratoConstruccion.ContratoConstruccionId);
+                    VContratoProyectoFechaEstimadaFinalizacion datosFechas = _context.VContratoProyectoFechaEstimadaFinalizacion.Where(r => r.ContratacionProyectoId == ajusteProgramacion.ContratacionProyectoId).FirstOrDefault();
+
+                    DateTime fechaFinalContrato = datosFechas.FechaEstimadaFinContrato ?? proyecto.FechaFinEtapaObra;
+                    proyecto.FechaFinEtapaObra = fechaFinalContrato;
+                    proyecto.FechaInicioEtapaObra = datosFechas.FechaInicioProyecto ?? proyecto.FechaInicioEtapaObra;
+
+                    if (contratacionProyecto != null && contrato != null && contratoConstruccion != null)
+                    {
+                        terminoProgramacion = await TransferMassiveLoadAdjustmentProgramming(pUsuarioCreacion, ajusteProgramacion,contratoConstruccion.ContratoConstruccionId, proyecto);
+                        terminoFlujo =  await TransferMassiveLoadAdjustmentInvestmentFlow(pUsuarioCreacion, ajusteProgramacion, contratoConstruccion.ContratoConstruccionId, proyecto, contratacionProyecto.ContratacionProyectoId);
+                    }
+
+                    if(!terminoProgramacion || !terminoFlujo)
+                    {
+                        return
+                            new Respuesta
+                            {
+                                IsSuccessful = false,
+                                IsException = true,
+                                IsValidation = false,
+                                Code = GeneralCodes.Error,
+                                Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Validar_ajuste_a_la_programación, GeneralCodes.Error, idAccion, pUsuarioCreacion, "Ha ocurrido un error")
+                            };
+                    }
+
+                    //Cambiar el estado a aprobado
+                    await _context.Set<AjusteProgramacion>().Where(r => r.AjusteProgramacionId == pAjusteProgramacionId)
+                                       .UpdateAsync(r => new AjusteProgramacion()
+                                       {
+                                           FechaModificacion = DateTime.Now,
+                                           UsuarioModificacion = pUsuarioCreacion,
+                                           EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.Aprobada_por_supervisor
+                                       });
+                    //Registrar ajuste a la programación de personal de obra
+                    await _context.Set<Proyecto>().Where(r => r.ProyectoId == proyecto.ProyectoId)
+                   .UpdateAsync(r => new Proyecto()
+                   {
+                       FechaModificacion = DateTime.Now,
+                       UsuarioModificacion = pUsuarioCreacion,
+                       EstadoProgramacionCodigo = r.EstadoProgramacionCodigo != ConstanCodigoEstadoProgramacionInicial.Sin_Programacion_Personal && r.EstadoProgramacionCodigo != ConstanCodigoEstadoProgramacionInicial.En_registro_programacion ? ConstanCodigoEstadoProgramacionInicial.Sin_aprobacion_ajuste_programacion_obra : r.EstadoProgramacionCodigo
+                   });
+                    //Registrar avance semanal
+                    await _context.Set<ContratacionProyecto>().Where(r => r.ContratacionProyectoId == contratacionProyecto.ContratacionProyectoId)
+                        .UpdateAsync(r => new ContratacionProyecto()
+                        {
+                            FechaModificacion = DateTime.Now,
+                            UsuarioModificacion = pUsuarioCreacion,
+                            EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.Suspendida
+                        });
+                    await EnviarCorreoSupervisor(contrato);
+                }
+
+                _context.SaveChanges();
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Validar_ajuste_a_la_programación, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Validar_ajuste_a_la_programación, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+        
+
+        /// <summary>
+        /// Agrega y/o Modifica Programación de obra
+        /// </summary>
+        /// <param name="ajusteProgramacion"></param>
+        /// <param name="pUsuarioModifico"></param>
+        /// <returns></returns>
+        public async Task<bool> TransferMassiveLoadAdjustmentProgramming(string pUsuarioModifico, AjusteProgramacion ajusteProgramacion, int contratoConstruccionId, Proyecto proyecto)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Load_Data_Ajuste_Programacion_Obra, (int)EnumeratorTipoDominio.Acciones);
+
+            Respuesta respuesta = new Respuesta();
+            bool terminoCorrectamente = false;
+            try
+            {
+                int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.AjusteProgramacionObra, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
+                
+                if (ajusteProgramacion != null)
+                {
+
+                    List<TempProgramacion> listTempProgramacion = await _context.TempProgramacion
+                                                                    .Where(r => r.AjusteProgramacionId == ajusteProgramacion.AjusteProgramacionId && r.EstaValidado != true)
+                                                                    .ToListAsync();
+                    //ELIMINAR AJUSTE PROGRAMACION OBRA ANTERIORES
+                    List<AjusteProgramacionObra> listaProgramacion = _context.AjusteProgramacionObra
+                                                                                .Where(p => p.AjusteProgramacionId == ajusteProgramacion.AjusteProgramacionId)
+                                                                                .ToList();
+
+                    _context.AjusteProgramacionObra.RemoveRange(listaProgramacion);
+                    _context.SaveChanges();
+
+                    if (listTempProgramacion.Count() > 0)
+                    {
+                        //PASAR DE LA TABLA TEMPORAL A LA TABLA AJUSTE PROGRAMACION OBRA
+                        //COPIA LA INFORMACIÓN
+                        foreach (TempProgramacion tempProgramacion in listTempProgramacion)
+                        {
+                            AjusteProgramacionObra programacion = new AjusteProgramacionObra()
+                            {
+                                AjusteProgramacionId = tempProgramacion.AjusteProgramacionId.Value,
+                                TipoActividadCodigo = tempProgramacion.TipoActividadCodigo,
+                                Actividad = tempProgramacion.Actividad,
+                                EsRutaCritica = tempProgramacion.EsRutaCritica,
+                                FechaInicio = tempProgramacion.FechaInicio,
+                                FechaFin = tempProgramacion.FechaFin,
+                                Duracion = tempProgramacion.Duracion,
+                                ContratoConstruccionId = contratoConstruccionId
+                            };
+
+                            _context.AjusteProgramacionObra.Add(programacion);
+
+                            //Temporal proyecto update
+                            tempProgramacion.EstaValidado = true;
+                            tempProgramacion.FechaModificacion = DateTime.Now;
+                            tempProgramacion.UsuarioModificacion = pUsuarioModifico;
+                            _context.TempProgramacion.Update(tempProgramacion);
+                        }
+                        _context.SaveChanges();
+
+                        List<MesEjecucion> meses = _context.MesEjecucion.Where(x => x.ContratoConstruccionId == contratoConstruccionId).ToList();
+
+                        int numeroMes = 1;
+                        int idMes = 0;
+                        for (DateTime fecha = proyecto.FechaInicioEtapaObra.Date; fecha <= proyecto.FechaFinEtapaObra.Date; fecha = fecha.AddMonths(1))
+                        {
+                            DateTime fechaInicio = fecha;
+                            DateTime fechaFin = fechaInicio.AddMonths(1).AddDays(-1);
+                            MesEjecucion mesExistente = meses.Where(r => r.FechaInicio.Date == fechaInicio.Date && r.FechaFin.Date <= fechaFin.Date).FirstOrDefault();
+
+                            if (mesExistente != null)
+                            {
+                                if(mesExistente.FechaFin.Date < fechaFin.Date)
+                                {
+                                    _context.Set<MesEjecucion>()
+                                            .Where(r => r.MesEjecucionId == mesExistente.MesEjecucionId)
+                                                                .Update(r => new MesEjecucion()
+                                                                {
+                                                                    FechaFin = fechaFin.Date
+                                                                });
+                                }
+                                idMes = mesExistente.MesEjecucionId;
+                                numeroMes = mesExistente.Numero;
+                            }
+                            else
+                            {
+                                MesEjecucion mes = new MesEjecucion()
+                                {
+                                    ContratoConstruccionId = contratoConstruccionId,
+                                    Numero = numeroMes,
+                                    FechaInicio = fecha,
+                                    FechaFin = fecha.AddMonths(1).AddDays(-1),
+
+                                };
+
+                                _context.MesEjecucion.Add(mes);
+                            }
+                            numeroMes++;
+                        }
+                        _context.SaveChanges();
+
+                        terminoCorrectamente = true;
+                    }
+                }
+
+                return terminoCorrectamente;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
 
         }
 
-        public async Task<Respuesta> TransferMassiveLoadAdjustmentInvestmentFlow(string pIdDocument, string pUsuarioModifico, int pProyectoId, int pContratoId)
+        /// <summary>
+        /// Agrega y/o Modifica flujo de inversión
+        /// </summary>
+        /// <param name="ajusteProgramacion"></param>
+        /// <param name="pUsuarioModifico"></param>
+        /// <returns></returns>
+        public async Task<bool> TransferMassiveLoadAdjustmentInvestmentFlow(string pUsuarioModifico, AjusteProgramacion ajusteProgramacion, int contratoConstruccionId, Proyecto proyecto, int contratacionProyectoId)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Load_Data_Ajuste_Flujo_Inversion, (int)EnumeratorTipoDominio.Acciones);
 
             Respuesta respuesta = new Respuesta();
 
-            int ajusteProgramacionId = 0;
-
-            if (string.IsNullOrEmpty(pIdDocument))
-            {
-                return respuesta =
-                 new Respuesta
-                 {
-                     IsSuccessful = false,
-                     IsException = false,
-                     IsValidation = true,
-                     Code = GeneralCodes.CamposVacios,
-                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.CamposVacios, idAccion, pUsuarioModifico, "")
-                 };
-            }
             try
             {
-
-
                 int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.AjusteFlujoInversion, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
 
-                ArchivoCargue archivoCargue = _context.ArchivoCargue
-                                                .Where(r => r.OrigenId == int.Parse(OrigenArchivoCargue.AjusteFlujoInversion) &&
-                                                        r.Nombre.Trim().ToUpper().Equals(pIdDocument.ToUpper().Trim())
-                                                      )
-                                                .FirstOrDefault();
+                //ELIMINAR FLUJOS DE INVERSIÓN ANTERIORES
+                List<AjusteProgramacionFlujo> listaFlujo = _context.AjusteProgramacionFlujo
+                                        .Where(p => p.AjusteProgramacionId == ajusteProgramacion.AjusteProgramacionId)
+                                        .ToList();
+
+
+                List<SeguimientoSemanalTemp> listaSeguimientos = _context.SeguimientoSemanalTemp
+                                                            .Where(p => p.AjusteProgramaionId == ajusteProgramacion.AjusteProgramacionId)
+                                                            .ToList();
+                // elimina los existentes
+                _context.SeguimientoSemanalTemp.RemoveRange(listaSeguimientos);
+                _context.AjusteProgramacionFlujo.RemoveRange(listaFlujo);
 
                 List<TempFlujoInversion> listTempFlujoInversion = await _context.TempFlujoInversion
-                                                                .Where(r => r.ArchivoCargueId == archivoCargue.ArchivoCargueId && !(bool)r.EstaValidado)
-                                                                .ToListAsync();
+                                                .Where(r => r.AjusteProgramacionId == ajusteProgramacion.AjusteProgramacionId && r.EstaValidado != true)
+                                                .ToListAsync();
+                List<MesEjecucion> meses = _context.MesEjecucion.Where(x => x.ContratoConstruccionId == contratoConstruccionId).ToList();
+
 
                 if (listTempFlujoInversion.Count() > 0)
                 {
-                    ajusteProgramacionId = listTempFlujoInversion.FirstOrDefault().AjusteProgramacionId.Value;
+                    List<SeguimientoSemanal> seguimientoSemanals = _context.SeguimientoSemanal.Where(x => x.ContratacionProyectoId == contratacionProyectoId).ToList();
 
-                    List<AjusteProgramacionFlujo> listaFlujo = _context.AjusteProgramacionFlujo
-                                                            .Where(p => p.AjusteProgramacionId == ajusteProgramacionId)
-                                                            .ToList();
-                    _context.AjusteProgramacionFlujo.RemoveRange(listaFlujo);
-
-                    AjusteProgramacion ajusteProgramacion = _context.AjusteProgramacion.Find(ajusteProgramacionId);
-
-                    ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
-                                                                            .Where(r => r.ContratoId == pContratoId && r.ProyectoId == pProyectoId)
-                                                                            .Include(r => r.Contrato)
-                                                                                .ThenInclude(r => r.Contratacion)
-                                                                                    .ThenInclude(r => r.ContratacionProyecto)
-                                                                            .Include(r => r.Proyecto)
-
-                                                                            .FirstOrDefault();
-
-                    Proyecto proyecto = _technicalRequirementsConstructionPhaseService.CalcularFechaInicioContrato(contratoConstruccion.ContratoConstruccionId);
-
-
-
-                    // 
-                    ContratacionProyecto contratacionProyecto = contratoConstruccion.Contrato.Contratacion.ContratacionProyecto.Where(p => p.ProyectoId == contratoConstruccion.ProyectoId).FirstOrDefault();
-
-                    NovedadContractual novedadContractual = _context.NovedadContractual
-                                                                .Include(x => x.NovedadContractualDescripcion)
-                                                                .FirstOrDefault(x => x.NovedadContractualId == ajusteProgramacion.NovedadContractualId);
-
-                    if (contratacionProyecto != null)
+                    int numeroSemana = 1;
+                    int idSeguimiento = 0;
+                    for (DateTime fecha = proyecto.FechaInicioEtapaObra.Date; fecha <= proyecto.FechaFinEtapaObra.Date; fecha = fecha.AddDays(7))
                     {
-                        novedadContractual.NovedadContractualDescripcion.ToList().ForEach(ncd =>
+                        DateTime fechaInicio = fecha;
+                        DateTime fechaFin = fecha.AddDays(6);
+                        SeguimientoSemanal seguimientoSemanalExistente = seguimientoSemanals.Where(r => r.FechaInicio.Value.Date == fechaInicio.Date && r.FechaFin.Value.Date <= fechaFin.Date).FirstOrDefault();
+
+                        if (seguimientoSemanalExistente != null)
                         {
-                            if (ncd.TipoNovedadCodigo == ConstanTiposNovedades.Reinicio && ajusteProgramacion.EstadoCodigo == ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion)
+                            if (seguimientoSemanalExistente.FechaFin.Value.Date < fechaFin.Date)
                             {
-                                double cantidadDiasAgregados = (ncd.FechaFinSuspension.Value - ncd.FechaInicioSuspension.Value).TotalDays;
-                                proyecto.FechaFinEtapaObra = proyecto.FechaFinEtapaObra.AddDays(cantidadDiasAgregados);
+                                _context.Set<SeguimientoSemanal>()
+                                        .Where(r => r.SeguimientoSemanalId == seguimientoSemanalExistente.SeguimientoSemanalId)
+                                                            .Update(r => new SeguimientoSemanal()
+                                                            {
+                                                                FechaFin = fechaFin.Date
+                                                            });
                             }
-                        });
-
-                        // ajusta las nuevas fechas 
-                        List<dynamic> listaFechas = CrearNuevasFecha(proyecto, novedadContractual, ajusteProgramacion);
-
-                        int idContratacionproyecto = contratacionProyecto.ContratacionProyectoId;
-
-                        List<SeguimientoSemanalTemp> listaSeguimientos = _context.SeguimientoSemanalTemp
-                                                                    .Where(p => p.ContratacionProyectoId == idContratacionproyecto && p.AjusteProgramaionId == ajusteProgramacionId)
-                                                                    .ToList();
-
-                        // eliminar registros cargados
-                        List<AjusteProgramacionFlujo> listaFlujoOld = _context.AjusteProgramacionFlujo.Where(r => r.AjusteProgramacionId == ajusteProgramacionId).ToList();
-                        _context.AjusteProgramacionFlujo.RemoveRange(listaFlujoOld);
-
-                        // elimina los existentes
-                        _context.SeguimientoSemanalTemp.RemoveRange(listaSeguimientos);
-
-                        int i = 1;
-                        listaFechas.OrderBy(p => p.fechaInicio).ToList().ForEach(f =>
+                            idSeguimiento = seguimientoSemanalExistente.SeguimientoSemanalId;
+                            numeroSemana = seguimientoSemanalExistente.NumeroSemana;
+                        }
+                        else
                         {
-                            //    if ( listaSeguimientos.Where(x => x.NumeroSemana  )
-                            SeguimientoSemanalTemp seguimientoSemanal = new SeguimientoSemanalTemp()
+                            SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal()
                             {
-                                ContratacionProyectoId = idContratacionproyecto,
-                                AjusteProgramaionId = ajusteProgramacionId,
+                                ContratacionProyectoId = contratacionProyectoId,
                                 Eliminado = false,
                                 UsuarioCreacion = pUsuarioModifico,
                                 FechaCreacion = DateTime.Now,
-                                NumeroSemana = i,
-                                FechaInicio = f.fechaInicio,
-                                FechaFin = f.fechaFin,
+                                NumeroSemana = numeroSemana,
+                                FechaInicio = fechaInicio,
+                                FechaFin = fechaFin,
                                 RegistroCompleto = false,
                             };
 
-                            _context.SeguimientoSemanalTemp.Add(seguimientoSemanal);
-                            _context.SaveChanges();
+                            _context.SeguimientoSemanal.Add(seguimientoSemanal);
+                        }
 
-                            i++;
+                        //PARA DEJAR EL REGISTRO DE LO QUE SE CREÓ EN REPROGRAMACIÓN
+                        SeguimientoSemanalTemp seguimientoSemanalTmp = new SeguimientoSemanalTemp()
+                        {
+                            ContratacionProyectoId = contratacionProyectoId,
+                            AjusteProgramaionId = ajusteProgramacion.AjusteProgramacionId,
+                            Eliminado = false,
+                            UsuarioCreacion = pUsuarioModifico,
+                            FechaCreacion = DateTime.Now,
+                            NumeroSemana = numeroSemana,
+                            FechaInicio = fechaInicio,
+                            FechaFin = fechaFin,
+                            RegistroCompleto = false,
+                        };
+                        _context.SeguimientoSemanalTemp.Add(seguimientoSemanalTmp);
 
-                        });
-
-                        SeguimientoSemanalTemp seguimientoSemanal = _context.SeguimientoSemanalTemp
-                                                                            .Where(s => s.ContratacionProyectoId == idContratacionproyecto && s.AjusteProgramaionId == ajusteProgramacionId)
-                                                                            .OrderByDescending(s => s.NumeroSemana)
-                                                                            .FirstOrDefault();
-
-                        seguimientoSemanal.FechaFin = proyecto.FechaFinEtapaObra;
-                        _context.SaveChanges();
-
+                        numeroSemana++;
                     }
-
-                    SeguimientoSemanal[] listaSeguimientoSemanal = _context.SeguimientoSemanal
-                                                                                    .Where(s => s.ContratacionProyectoId == contratacionProyecto.ContratacionProyectoId)
-                                                                                    .OrderBy(s => s.NumeroSemana)
-                                                                                    .ToArray();
-
-                    MesEjecucion[] listaMeses = _context.MesEjecucion
-                                                            .Where(s => s.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId)
-                                                            .OrderBy(s => s.Numero)
-                                                            .ToArray();
-
-                    Programacion[] listaProgramacion = _context.Programacion
-                                                                .Where(
-                                                                        p => p.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId &&
-                                                                        p.TipoActividadCodigo == "C")
-                                                                .OrderBy(p => p.ProgramacionId)
-                                                                .ToArray();
-
-
-
                     _context.SaveChanges();
 
-                    listTempFlujoInversion.ForEach(tempFlujo =>
+                    List<SeguimientoSemanalTemp> listaSeguimientosTmp = _context.SeguimientoSemanalTemp
+                                            .Where(p => p.AjusteProgramaionId == ajusteProgramacion.AjusteProgramacionId)
+                                            .ToList();
+
+                    //PASAR DE LA TABLA TEMPORAL A LA TABLA FLUJO DE INVERSIÓN
+                    //COPIA LA INFORMACIÓN
+                    foreach (TempFlujoInversion tempFlujoInversion in listTempFlujoInversion)
                     {
+                        int idMes = 0;
 
-                        int? mesId = 0;
-                        bool semanaAdicional = tempFlujo.Posicion.Value < listaSeguimientoSemanal.Length ? true : false;
+                        MesEjecucion mesExistente = meses.Where(m => (listaSeguimientosTmp[tempFlujoInversion.Posicion.Value].FechaInicio.Value.Date >= m.FechaInicio.Date && listaSeguimientosTmp[tempFlujoInversion.Posicion.Value].FechaFin.Value.Date <= m.FechaFin.Date) || 
+                                                                     (listaSeguimientosTmp[tempFlujoInversion.Posicion.Value].FechaInicio.Value.Date <= m.FechaFin && listaSeguimientosTmp[tempFlujoInversion.Posicion.Value].FechaFin.Value.Date >= m.FechaFin))
+                                                                    .FirstOrDefault();
 
-                        if (semanaAdicional)
+                        if (mesExistente != null)
                         {
-                            listaMeses.ToList().ForEach(m =>
-                            {
-                                if (
-                                        listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaInicio.Value.Date >= m.FechaInicio.Date &&
-                                        listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaFin.Value.Date <= m.FechaFin.Date
-                                    )
-                                {
-                                    mesId = m.MesEjecucionId;
-                                }
-                                else if (
-                                           listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaInicio.Value.Date <= m.FechaFin &&
-                                           listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaFin.Value.Date >= m.FechaFin
-                                        )
-                                {
-                                    mesId = m.MesEjecucionId;
-                                }
-                            });
+                            idMes = mesExistente.MesEjecucionId;
                         }
 
                         AjusteProgramacionFlujo flujo = new AjusteProgramacionFlujo()
                         {
-                            AjusteProgramacionId = tempFlujo.AjusteProgramacionId.Value,
-                            Semana = tempFlujo.Semana,
-                            Valor = tempFlujo.Valor,
-                            SeguimientoSemanalId = semanaAdicional == true ? listaSeguimientoSemanal[tempFlujo.Posicion.Value].SeguimientoSemanalId : 0,
-                            MesEjecucionId = mesId.Value == 0 ? null : mesId,
-                            ProgramacionId = listaProgramacion[tempFlujo.PosicionCapitulo.Value].ProgramacionId,
-
+                            AjusteProgramacionId = tempFlujoInversion.AjusteProgramacionId.Value,
+                            Semana = tempFlujoInversion.Semana,
+                            Valor = tempFlujoInversion.Valor,
+                            SeguimientoSemanalId = listaSeguimientosTmp[tempFlujoInversion.Posicion.Value].SeguimientoSemanalTempId,
+                            MesEjecucionId = idMes
                         };
 
                         _context.AjusteProgramacionFlujo.Add(flujo);
-                        //_context.SaveChanges();
-
-
 
                         //Temporal proyecto update
-                        tempFlujo.EstaValidado = true;
-                        tempFlujo.FechaModificacion = DateTime.Now;
-                        tempFlujo.UsuarioModificacion = pUsuarioModifico;
-                        //_context.TempFlujoInversion.Update(tempFlujo);
-                        _context.SaveChanges();
-
-                    });
-
-
-
-                    if (ajusteProgramacion != null)
-                    {
-                        List<dynamic> listaFechas = new List<dynamic>();
-
-                        ajusteProgramacion.ArchivoCargueIdFlujoInversion = archivoCargue.ArchivoCargueId;
-                        ajusteProgramacion.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion;
-
-                        VerificarRegistroCompletoAjusteProgramacion(ajusteProgramacion.AjusteProgramacionId);
-
+                        tempFlujoInversion.EstaValidado = true;
+                        tempFlujoInversion.FechaModificacion = DateTime.Now;
+                        tempFlujoInversion.UsuarioModificacion = pUsuarioModifico;
+                        _context.TempFlujoInversion.Update(tempFlujoInversion);
 
                     }
+                    _context.SaveChanges();
 
-                    return respuesta =
-                    new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = true,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModifico, "Cantidad de registros subidos : " + listTempFlujoInversion.Count())
-                    };
+                    return true;
                 }
                 else
                 {
-                    return respuesta =
-                        new Respuesta
-                        {
-                            IsSuccessful = false,
-                            IsException = false,
-                            IsValidation = true,
-                            Code = GeneralCodes.OperacionExitosa,
-                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, GeneralCodes.NoExitenArchivos, idAccion, pUsuarioModifico, "")
-                        };
+                    return false;
                 }
             }
             catch (Exception ex)
             {
-                return respuesta =
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = false,
-                        IsValidation = true,
-                        Code = ConstantMessagesCargueElegibilidad.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_ajuste_a_la_programacion, ConstantMessagesCargueElegibilidad.Error, (int)enumeratorAccion.CargueProyectosMasivos, pUsuarioModifico, ex.InnerException.ToString())
-                    };
+                return false;
             }
 
+        }
+        #endregion
+
+        #region CORREOS
+        private async Task<bool> EnviarCorreoSupervisor(Contrato contrato)
+        {
+
+            Template template = await _commonService.GetTemplateById((int)(enumeratorTemplate.AprobarRequisitosTecnicosFase2));
+            string strContenido = await ReplaceVariables(template.Contenido, contrato);
+
+            List<EnumeratorPerfil> perfilsEnviarCorreo =
+                            new List<EnumeratorPerfil>
+                                                      {
+                                                          EnumeratorPerfil.Supervisor
+                                                      };
+            return _commonService.EnviarCorreo(perfilsEnviarCorreo, strContenido, template.Asunto);
+        }
+
+        private async Task<string> ReplaceVariables(string template, Contrato contrato)
+        {
+
+            template  = template.Replace("[NUMEROCONTRATO]", contrato.NumeroContrato).
+                                Replace("[FECHAVERIFICACION]", DateTime.Now.ToString("dd/MM/yyyy")).
+                                Replace("[CANTIDADPROYECTOSASOCIADOS]", _context.ContratoConstruccion.Where(x => x.RegistroCompleto == true && x.ContratoId == contrato.ContratoId).Count().ToString()).
+                                Replace("[CANTIDADPROYECTOSVERIFICADOS]", _context.ContratoConstruccion.Where(x => x.RegistroCompleto == true && x.ContratoId == contrato.ContratoId).Count().ToString()).
+                                Replace("[TIPOCONTRATO]", contrato.Contratacion.TipoSolicitudCodigo == "1" ? "obra" : "interventoría");//OBRA O INTERVENTORIA
+            //string 
+
+            return template;
         }
         #endregion
     }
