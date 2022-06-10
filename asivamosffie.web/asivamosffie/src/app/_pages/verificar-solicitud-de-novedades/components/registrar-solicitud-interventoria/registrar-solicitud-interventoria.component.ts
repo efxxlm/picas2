@@ -31,7 +31,7 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
   options: any[] = [];
 
   novedadesArray = [
-   /* { name: 'Contrato', value: true },*/
+    { name: 'Contrato', value: true },
     { name: 'Proyecto', value: false }
   ];
   estaEditando = false;
@@ -63,6 +63,7 @@ export class RegistrarSolicitudInterventoriaComponent implements OnInit {
        
           if (novedad.novedadContractualId !== 0) {
 
+            console.log( novedad )
             this.novedad = novedad;
             this.numeroContrato.setValue(novedad.contrato.numeroContrato);
             this.numeroContratoSeleccionado = novedad.contrato;

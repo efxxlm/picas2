@@ -159,7 +159,7 @@ namespace asivamosffie.services
 
             foreach (var c in VlistaContratos)
             {
-                c.NovedadContractual = novedades.Where(r=> r.ContratoId == c.ContratoId).ToList();
+                c.NovedadContractual = novedades.Where(r => r.ContratoId == c.ContratoId).ToList();
             }
             return VlistaContratos;
         }
@@ -315,356 +315,364 @@ namespace asivamosffie.services
 
         public async Task<NovedadContractual> GetNovedadContractualById(int pId)
         {
-            List<Dominio> LisDominios = _context.Dominio
-                                                .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento
-                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual
-                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Motivos_Novedad_contractual
-                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante
-
-                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Instancias_de_seguimiento_tecnico
-                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Componentes
-                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Fases
-
-                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Usos
-                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Novedad_Contractual
-                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Proceso_Novedades
-                                                         || r.TipoDominioId == (int)EnumeratorTipoDominio.Abogado_Revision_Novedades
-                                                         ).ToList();
-
-            List<Dominio> listDominioTipoDocumento = LisDominios
-                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento)
-                                                                .ToList();
-
-            List<Dominio> listDominioTipoNovedad = LisDominios
-                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual)
-                                                                .ToList();
-
-            List<Dominio> listDominioMotivos = LisDominios
-                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Motivos_Novedad_contractual)
-                                                                .ToList();
-
-            List<Dominio> listDominioTipoAportante = LisDominios
-                                                    .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante)
-                                                    .ToList();
-
-            List<Dominio> listDominioInstancias = LisDominios
-                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Instancias_de_seguimiento_tecnico)
-                                                                .ToList();
-
-            List<Dominio> listDominioComponente = LisDominios
-                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes)
-                                                                .ToList();
-
-            List<Dominio> listDominioFase = LisDominios
-                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Fases)
-                                                                .ToList();
-
-            List<Dominio> listDominioUso = LisDominios
-                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Usos)
-                                                                .ToList();
-
-            List<Dominio> listDominioEstado = LisDominios
-                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Novedad_Contractual)
-                                                                .ToList();
-
-            List<Dominio> listDominioEstadoProceso = LisDominios
-                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Proceso_Novedades)
-                                                                .ToList();
-
-            List<Dominio> listDominioAbogado = LisDominios
-                                                                .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Abogado_Revision_Novedades)
-                                                                .ToList();
-
-            List<NovedadContractual> listaNovedadesSuspension = _context.NovedadContractual
-                                                                        .Where(x => (
-                                                                                        x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente
-                                                                                    ) &&
-                                                                               x.Eliminado != true)
-                                                                        .Include(x => x.NovedadContractualDescripcion)
-                                                                        .ToList();
-
-
-
-            NovedadContractual novedadContractual = _context.NovedadContractual
-                                                                .Where(r => r.NovedadContractualId == pId)
-                                                                .Include(r => r.NovedadContractualObservaciones)
-                                                                .Include(r => r.Contrato)
-                                                                    .ThenInclude(r => r.Contratacion)
-                                                                        .ThenInclude(r => r.Contratista)
-                                                                .Include(r => r.Contrato)
-                                                                    .ThenInclude(r => r.Contratacion)
-                                                                        .ThenInclude(r => r.PlazoContratacion)
-                                                                .Include(r => r.NovedadContractualDescripcion)
-                                                                    .ThenInclude(r => r.NovedadContractualClausula)
-                                                                .Include(r => r.NovedadContractualDescripcion)
-                                                                    .ThenInclude(r => r.NovedadContractualDescripcionMotivo)
-                                                                .Include(r => r.NovedadContractualRegistroPresupuestal)
-                                                                .Include(r => r.Contrato)
-                                                                    .ThenInclude(r => r.Contratacion)
-                                                                        .ThenInclude(r => r.DisponibilidadPresupuestal)
-                                                                .Include(r => r.NovedadContractualAportante)
-                                                                .Include(x => x.Contrato)
-                                                                    .ThenInclude(x => x.ContratoPoliza)
-                                                                .Include(r => r.NovedadContractualAportante)
-                                                                    .ThenInclude(r => r.CofinanciacionAportante)
-                                                                .AsNoTracking().FirstOrDefault();
-            if (novedadContractual != null)
+            try
             {
-                if (novedadContractual.Contrato != null)
+                List<Dominio> LisDominios = _context.Dominio
+                                                       .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento
+                                                                || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual
+                                                                || r.TipoDominioId == (int)EnumeratorTipoDominio.Motivos_Novedad_contractual
+                                                                || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante
+
+                                                                || r.TipoDominioId == (int)EnumeratorTipoDominio.Instancias_de_seguimiento_tecnico
+                                                                || r.TipoDominioId == (int)EnumeratorTipoDominio.Componentes
+                                                                || r.TipoDominioId == (int)EnumeratorTipoDominio.Fases
+
+                                                                || r.TipoDominioId == (int)EnumeratorTipoDominio.Usos
+                                                                || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Novedad_Contractual
+                                                                || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Proceso_Novedades
+                                                                || r.TipoDominioId == (int)EnumeratorTipoDominio.Abogado_Revision_Novedades
+                                                                ).ToList();
+
+                List<Dominio> listDominioTipoDocumento = LisDominios
+                                                                    .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento)
+                                                                    .ToList();
+
+                List<Dominio> listDominioTipoNovedad = LisDominios
+                                                                    .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Novedad_Modificacion_Contractual)
+                                                                    .ToList();
+
+                List<Dominio> listDominioMotivos = LisDominios
+                                                                    .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Motivos_Novedad_contractual)
+                                                                    .ToList();
+
+                List<Dominio> listDominioTipoAportante = LisDominios
+                                                        .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante)
+                                                        .ToList();
+
+                List<Dominio> listDominioInstancias = LisDominios
+                                                                    .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Instancias_de_seguimiento_tecnico)
+                                                                    .ToList();
+
+                List<Dominio> listDominioComponente = LisDominios
+                                                                    .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes)
+                                                                    .ToList();
+
+                List<Dominio> listDominioFase = LisDominios
+                                                                    .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Fases)
+                                                                    .ToList();
+
+                List<Dominio> listDominioUso = LisDominios
+                                                                    .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Usos)
+                                                                    .ToList();
+
+                List<Dominio> listDominioEstado = LisDominios
+                                                                    .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Novedad_Contractual)
+                                                                    .ToList();
+
+                List<Dominio> listDominioEstadoProceso = LisDominios
+                                                                    .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Proceso_Novedades)
+                                                                    .ToList();
+
+                List<Dominio> listDominioAbogado = LisDominios
+                                                                    .Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Abogado_Revision_Novedades)
+                                                                    .ToList();
+
+                List<NovedadContractual> listaNovedadesSuspension = _context.NovedadContractual
+                                                                            .Where(x => (
+                                                                                            x.EstadoCodigo == ConstanCodigoEstadoNovedadContractual.Con_novedad_aprobada_tecnica_y_juridicamente
+                                                                                        ) &&
+                                                                                   x.Eliminado != true)
+                                                                            .Include(x => x.NovedadContractualDescripcion)
+                                                                            .ToList();
+
+
+
+                NovedadContractual novedadContractual = _context.NovedadContractual
+                                                                    .Where(r => r.NovedadContractualId == pId)
+                                                                    .Include(r => r.NovedadContractualObservaciones)
+                                                                    .Include(r => r.Contrato)
+                                                                        .ThenInclude(r => r.Contratacion)
+                                                                            .ThenInclude(r => r.Contratista)
+                                                                    .Include(r => r.Contrato)
+                                                                        .ThenInclude(r => r.Contratacion)
+                                                                            .ThenInclude(r => r.PlazoContratacion)
+                                                                    .Include(r => r.NovedadContractualDescripcion)
+                                                                        .ThenInclude(r => r.NovedadContractualClausula)
+                                                                    .Include(r => r.NovedadContractualDescripcion)
+                                                                        .ThenInclude(r => r.NovedadContractualDescripcionMotivo)
+                                                                    .Include(r => r.NovedadContractualRegistroPresupuestal)
+                                                                    .Include(r => r.Contrato)
+                                                                        .ThenInclude(r => r.Contratacion)
+                                                                            .ThenInclude(r => r.DisponibilidadPresupuestal)
+                                                                    .Include(r => r.NovedadContractualAportante)
+                                                                    .Include(x => x.Contrato)
+                                                                        .ThenInclude(x => x.ContratoPoliza)
+                                                                    .Include(r => r.NovedadContractualAportante)
+                                                                        .ThenInclude(r => r.CofinanciacionAportante)
+                                                                    .AsNoTracking().FirstOrDefault();
+                if (novedadContractual != null)
                 {
-                    //  novedadContractual.Contrato.FechaEstimadaFinalizacion = _commonService.GetFechaEstimadaFinalizacion((int)novedadContractual.ContratoId);
-                    novedadContractual.Contrato.FechaEstimadaFinalizacion = _commonService.GetFechaEstimadaFinalizacion(novedadContractual.Contrato.ContratoId);
-                    novedadContractual.Contrato.FechaTerminacionFase2 = DateTime.Now;
-                    novedadContractual.Contrato.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(novedadContractual.Contrato.ContratoId, true, false, 0);
+                    if (novedadContractual.Contrato != null)
+                    {
+                        //  novedadContractual.Contrato.FechaEstimadaFinalizacion = _commonService.GetFechaEstimadaFinalizacion((int)novedadContractual.ContratoId);
+                        novedadContractual.Contrato.FechaEstimadaFinalizacion = _commonService.GetFechaEstimadaFinalizacion(novedadContractual.Contrato.ContratoId);
+                        novedadContractual.Contrato.FechaTerminacionFase2 = DateTime.Now;
+                        novedadContractual.Contrato.CumpleCondicionesTai = _contractualControversy.ValidarCumpleTaiContratista(novedadContractual.Contrato.ContratoId, true, false, 0);
+                    }
+                    if (novedadContractual.ProyectoId != null)
+                        novedadContractual.DatosContratoProyectoModificadosXNovedad = await GetDatosContratoProyectoModificadosXNovedad((int)novedadContractual.ProyectoId, (int)novedadContractual.ContratoId);
                 }
 
-                novedadContractual.DatosContratoProyectoModificadosXNovedad = await GetDatosContratoProyectoModificadosXNovedad((int)novedadContractual.ProyectoId, (int)novedadContractual.ContratoId);
-            }
-
-            List<NovedadContractualAportante> novedadContractualAportantes = _context.NovedadContractualAportante
-                        .Where(r => r.NovedadContractualId == pId && (r.Eliminado == false || r.Eliminado == null))
-                        .ToList();
-
-            foreach (var apo in novedadContractualAportantes)
-            {
-                List<ComponenteAportanteNovedad> componenteAportanteNovedades = _context.ComponenteAportanteNovedad
-                            .Where(r => r.NovedadContractualAportanteId == apo.NovedadContractualAportanteId && (r.Eliminado == false | r.Eliminado == null))
+                List<NovedadContractualAportante> novedadContractualAportantes = _context.NovedadContractualAportante
+                            .Where(r => r.NovedadContractualId == pId && (r.Eliminado == false || r.Eliminado == null))
                             .ToList();
 
-                foreach (var cpa in componenteAportanteNovedades)
+                foreach (var apo in novedadContractualAportantes)
                 {
-                    List<ComponenteFuenteNovedad> componenteFuenteNovedades = _context.ComponenteFuenteNovedad
-                        .Where(r => r.ComponenteAportanteNovedadId == cpa.ComponenteAportanteNovedadId && (r.Eliminado == false | r.Eliminado == null))
-                        .ToList();
+                    List<ComponenteAportanteNovedad> componenteAportanteNovedades = _context.ComponenteAportanteNovedad
+                                .Where(r => r.NovedadContractualAportanteId == apo.NovedadContractualAportanteId && (r.Eliminado == false | r.Eliminado == null))
+                                .ToList();
 
-                    foreach (var cfn in componenteFuenteNovedades)
+                    foreach (var cpa in componenteAportanteNovedades)
                     {
-                        FuenteFinanciacion fuentesFinanciacion = _context.FuenteFinanciacion.Find(cfn.FuenteFinanciacionId);
+                        List<ComponenteFuenteNovedad> componenteFuenteNovedades = _context.ComponenteFuenteNovedad
+                            .Where(r => r.ComponenteAportanteNovedadId == cpa.ComponenteAportanteNovedadId && (r.Eliminado == false | r.Eliminado == null))
+                            .ToList();
 
-                        if (fuentesFinanciacion != null)
+                        foreach (var cfn in componenteFuenteNovedades)
                         {
-                            fuentesFinanciacion.NombreFuente = fuentesFinanciacion != null ? !string.IsNullOrEmpty(fuentesFinanciacion.FuenteRecursosCodigo) ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(fuentesFinanciacion.FuenteRecursosCodigo, (int)EnumeratorTipoDominio.Fuentes_de_financiacion) : "" : "";
-                            cfn.FuenteFinanciacion = fuentesFinanciacion;
+                            FuenteFinanciacion fuentesFinanciacion = _context.FuenteFinanciacion.Find(cfn.FuenteFinanciacionId);
+
+                            if (fuentesFinanciacion != null)
+                            {
+                                fuentesFinanciacion.NombreFuente = fuentesFinanciacion != null ? !string.IsNullOrEmpty(fuentesFinanciacion.FuenteRecursosCodigo) ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(fuentesFinanciacion.FuenteRecursosCodigo, (int)EnumeratorTipoDominio.Fuentes_de_financiacion) : "" : "";
+                                cfn.FuenteFinanciacion = fuentesFinanciacion;
+                            }
+
+                            List<ComponenteUsoNovedad> componenteUsoNovedades = _context.ComponenteUsoNovedad
+                            .Where(r => r.ComponenteFuenteNovedadId == cfn.ComponenteFuenteNovedadId && (r.Eliminado == false | r.Eliminado == null))
+                            .ToList();
+                            cfn.ComponenteUsoNovedad = componenteUsoNovedades;
+
                         }
 
-                        List<ComponenteUsoNovedad> componenteUsoNovedades = _context.ComponenteUsoNovedad
-                        .Where(r => r.ComponenteFuenteNovedadId == cfn.ComponenteFuenteNovedadId && (r.Eliminado == false | r.Eliminado == null))
-                        .ToList();
-                        cfn.ComponenteUsoNovedad = componenteUsoNovedades;
-
+                        cpa.ComponenteFuenteNovedad = componenteFuenteNovedades;
                     }
 
-                    cpa.ComponenteFuenteNovedad = componenteFuenteNovedades;
+                    apo.ComponenteAportanteNovedad = componenteAportanteNovedades;
                 }
 
-                apo.ComponenteAportanteNovedad = componenteAportanteNovedades;
-            }
+                if (novedadContractualAportantes.Count() > 0)
+                    novedadContractual.NovedadContractualAportante = novedadContractualAportantes;
 
-            if (novedadContractualAportantes.Count() > 0)
-                novedadContractual.NovedadContractualAportante = novedadContractualAportantes;
-
-            if (novedadContractual != null)
-            {
-                NovedadContractual novedadTemp = listaNovedadesSuspension.Where(x => x.ContratoId == novedadContractual.ContratoId).FirstOrDefault();
-
-                if (novedadTemp != null)
+                if (novedadContractual != null)
                 {
-                    novedadContractual.Contrato.TieneSuspensionAprobada = true;
-                    novedadContractual.Contrato.SuspensionAprobadaId = novedadTemp.NovedadContractualId;
-                }
-                else
-                    novedadContractual.Contrato.TieneSuspensionAprobada = false;
+                    NovedadContractual novedadTemp = listaNovedadesSuspension.Where(x => x.ContratoId == novedadContractual.ContratoId).FirstOrDefault();
 
-                novedadContractual.ProyectosContrato = _context.VProyectosXcontrato
-                                                                .Where(r => r.ContratoId == novedadContractual.ContratoId)
-                                                                .ToList();
+                    if (novedadTemp != null)
+                    {
+                        novedadContractual.Contrato.TieneSuspensionAprobada = true;
+                        novedadContractual.Contrato.SuspensionAprobadaId = novedadTemp.NovedadContractualId;
+                    }
+                    else
+                        novedadContractual.Contrato.TieneSuspensionAprobada = false;
 
-                novedadContractual.ProyectosSeleccionado = _context.VProyectosXcontrato
-                                                                        .Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId)
-                                                                        .FirstOrDefault();
+                    novedadContractual.ProyectosContrato = _context.VProyectosXcontrato
+                                                                    .Where(r => r.ContratoId == novedadContractual.ContratoId)
+                                                                    .ToList();
 
-                novedadContractual.InstanciaNombre = listDominioInstancias
-                                                            .Where(r => r.Codigo == novedadContractual.InstanciaCodigo)
-                                                            ?.FirstOrDefault()
-                                                            ?.Nombre;
+                    novedadContractual.ProyectosSeleccionado = _context.VProyectosXcontrato
+                                                                            .Where(r => r.ProyectoId == novedadContractual.ProyectoId && r.ContratoId == novedadContractual.ContratoId)
+                                                                            .FirstOrDefault();
 
-                novedadContractual.EstadoNovedadNombre = listDominioEstado
-                                                            .Where(r => r.Codigo == novedadContractual.EstadoCodigo)
-                                                            ?.FirstOrDefault()
-                                                            ?.Nombre;
+                    novedadContractual.InstanciaNombre = listDominioInstancias
+                                                                .Where(r => r.Codigo == novedadContractual.InstanciaCodigo)
+                                                                ?.FirstOrDefault()
+                                                                ?.Nombre;
 
-                novedadContractual.EstadoProcesoNombre = listDominioEstadoProceso
-                                                            .Where(r => r.Codigo == novedadContractual.EstadoProcesoCodigo)
-                                                            ?.FirstOrDefault()
-                                                            ?.Nombre;
+                    novedadContractual.EstadoNovedadNombre = listDominioEstado
+                                                                .Where(r => r.Codigo == novedadContractual.EstadoCodigo)
+                                                                ?.FirstOrDefault()
+                                                                ?.Nombre;
 
-                novedadContractual.NombreAbogado = listDominioAbogado
-                                                            .Where(r => r.Codigo == novedadContractual.AbogadoRevisionId.ToString())
-                                                            ?.FirstOrDefault()
-                                                            ?.Nombre;
+                    novedadContractual.EstadoProcesoNombre = listDominioEstadoProceso
+                                                                .Where(r => r.Codigo == novedadContractual.EstadoProcesoCodigo)
+                                                                ?.FirstOrDefault()
+                                                                ?.Nombre;
 
-                novedadContractual.RegistroCompletoInformacionBasica = RegistroCompletoInformacionBasica(novedadContractual);
-                novedadContractual.RegistroCompletoSoporte = RegistroCompletoSoporte(novedadContractual);
-                novedadContractual.RegistroCompletoDescripcion = RegistroCompletoDescripcion(novedadContractual);
+                    novedadContractual.NombreAbogado = listDominioAbogado
+                                                                .Where(r => r.Codigo == novedadContractual.AbogadoRevisionId.ToString())
+                                                                ?.FirstOrDefault()
+                                                                ?.Nombre;
 
-                novedadContractual.RegistroCompletoRevisionJuridica = RegistrocompletoRevisionJuridica(novedadContractual);
-                novedadContractual.RegistroCompletoFirmas = RegistrocompletoFirmas(novedadContractual);
-                novedadContractual.RegistroCompletoDetallar = RegistrocompletoDetallar(novedadContractual);
+                    novedadContractual.RegistroCompletoInformacionBasica = RegistroCompletoInformacionBasica(novedadContractual);
+                    novedadContractual.RegistroCompletoSoporte = RegistroCompletoSoporte(novedadContractual);
+                    novedadContractual.RegistroCompletoDescripcion = RegistroCompletoDescripcion(novedadContractual);
 
-                novedadContractual.NovedadContractualDescripcion = novedadContractual.NovedadContractualDescripcion.Where(x => x.Eliminado != true).ToList();
+                    novedadContractual.RegistroCompletoRevisionJuridica = RegistrocompletoRevisionJuridica(novedadContractual);
+                    novedadContractual.RegistroCompletoFirmas = RegistrocompletoFirmas(novedadContractual);
+                    novedadContractual.RegistroCompletoDetallar = RegistrocompletoDetallar(novedadContractual);
 
-                if (novedadContractual.Contrato.FechaActaInicioFase1 == null)
-                {
-                    DateTime? fechaTemp = novedadContractual?.Contrato?.ContratoPoliza?
-                                                                            .OrderBy(x => x.FechaAprobacion)?
-                                                                            .FirstOrDefault()?
-                                                                            .FechaAprobacion
-                                                                            .Value;
-
-                    novedadContractual.Contrato.FechaActaInicioFase1 = fechaTemp;
-                }
-
-                if (novedadContractual.Contrato.FechaTerminacionFase2 == null)
-                {
+                    novedadContractual.NovedadContractualDescripcion = novedadContractual.NovedadContractualDescripcion.Where(x => x.Eliminado != true).ToList();
 
                     if (novedadContractual.Contrato.FechaActaInicioFase1 == null)
                     {
                         DateTime? fechaTemp = novedadContractual?.Contrato?.ContratoPoliza?
-                                                                            .OrderBy(x => x.FechaAprobacion)?
-                                                                            .FirstOrDefault()?
-                                                                            .FechaAprobacion
-                                                                            .Value;
+                                                                                .OrderBy(x => x.FechaAprobacion)?
+                                                                                .FirstOrDefault()?
+                                                                                .FechaAprobacion
+                                                                                .Value;
 
-                        novedadContractual.Contrato.FechaTerminacionFase2 = fechaTemp;
-
-                    }
-                    else
-                    {
-                        DateTime? fechaTemp = novedadContractual?.Contrato?.FechaActaInicioFase1.Value != null ? novedadContractual?.Contrato?.FechaActaInicioFase1.Value : DateTime.Now;
-
-                        fechaTemp = fechaTemp.Value.AddDays(novedadContractual.Contrato.Contratacion.PlazoContratacion.PlazoDias);
-                        fechaTemp = fechaTemp.Value.AddMonths(novedadContractual.Contrato.Contratacion.PlazoContratacion.PlazoMeses);
-
-                        novedadContractual.Contrato.FechaTerminacionFase2 = fechaTemp;
-                    }
-                }
-
-                if (novedadContractual.Contrato?.Contratacion?.DisponibilidadPresupuestal != null)
-                {
-                    decimal valorSolicitud = 0;
-                    DisponibilidadPresupuestal ddp = novedadContractual.Contrato?.Contratacion?.DisponibilidadPresupuestal.FirstOrDefault();
-                    valorSolicitud = _commonService.GetValorTotalDisponibilidad(ddp.DisponibilidadPresupuestalId, false);
-                    foreach (var disponibilidad in novedadContractual.Contrato?.Contratacion?.DisponibilidadPresupuestal)
-                    {
-                        disponibilidad.ValorTotalDisponibilidad = valorSolicitud;
-                    }
-                }
-
-                bool vaComite = false;
-
-                foreach (NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
-                {
-                    novedadContractualDescripcion.NombreTipoNovedad = listDominioTipoNovedad
-                                                                            .Where(r => r.Codigo == novedadContractualDescripcion.TipoNovedadCodigo)
-                                                                            ?.FirstOrDefault()
-                                                                            ?.Nombre;
-
-                    if (novedadContractualDescripcion.TipoNovedadCodigo == ConstanTiposNovedades.Adición ||
-                        novedadContractualDescripcion.TipoNovedadCodigo == ConstanTiposNovedades.Modificación_de_Condiciones_Contractuales ||
-                        novedadContractualDescripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga)
-                    {
-                        vaComite = true;
-                    }
-                    else
-                    {
-                        vaComite = false;
+                        novedadContractual.Contrato.FechaActaInicioFase1 = fechaTemp;
                     }
 
-                    foreach (NovedadContractualDescripcionMotivo motivo in novedadContractualDescripcion.NovedadContractualDescripcionMotivo)
+                    if (novedadContractual.Contrato.FechaTerminacionFase2 == null)
                     {
-                        motivo.NombreMotivo = listDominioMotivos.Where(r => r.Codigo == motivo.MotivoNovedadCodigo)?.FirstOrDefault()?.Nombre;
-                    }
 
-                    novedadContractualDescripcion.NovedadContractualClausula = novedadContractualDescripcion.NovedadContractualClausula
-                                                                                                                .Where(x => x.Eliminado != true)
-                                                                                                                .ToList();
-
-                }
-                novedadContractual.VaComite = vaComite;
-
-                foreach (NovedadContractualAportante novedadContractualAportante in novedadContractual.NovedadContractualAportante)
-                {
-                    CofinanciacionAportante cofinanciacion = _context.CofinanciacionAportante.Find(novedadContractualAportante.CofinanciacionAportanteId);
-                    if (cofinanciacion != null)
-                        novedadContractualAportante.NombreAportante = getNombreAportante(cofinanciacion);
-
-                    if (cofinanciacion != null)
-                        novedadContractualAportante.TipoAportante = listDominioTipoAportante
-                                    .Where(r => r.DominioId == cofinanciacion.TipoAportanteId)
-                                    ?.FirstOrDefault()
-                                    ?.Nombre;
-                    foreach (ComponenteAportanteNovedad componenteAportanteNovedad in novedadContractualAportante.ComponenteAportanteNovedad)
-                    {
-                        componenteAportanteNovedad.NombreTipoComponente = listDominioComponente
-                                                                                .Where(r => r.Codigo == componenteAportanteNovedad.TipoComponenteCodigo)
-                                                                                ?.FirstOrDefault()
-                                                                                ?.Nombre;
-
-                        componenteAportanteNovedad.Nombrefase = listDominioFase
-                                                                                .Where(r => r.Codigo == componenteAportanteNovedad.FaseCodigo)
-                                                                                ?.FirstOrDefault()
-                                                                                ?.Nombre;
-
-                        foreach (ComponenteFuenteNovedad componenteFuenteNovedad in componenteAportanteNovedad.ComponenteFuenteNovedad)
+                        if (novedadContractual.Contrato.FechaActaInicioFase1 == null)
                         {
-                            decimal valorFuentexUso = 0;
-                            foreach (ComponenteUsoNovedad componenteUsoNovedad in componenteFuenteNovedad.ComponenteUsoNovedad)
-                            {
-                                valorFuentexUso += componenteUsoNovedad.ValorUso;
-                                componenteUsoNovedad.NombreUso = listDominioUso
-                                                                            .Where(r => r.Codigo == componenteUsoNovedad.TipoUsoCodigo)
-                                                                            ?.FirstOrDefault()
-                                                                            ?.Nombre;
-                            }
-                            componenteFuenteNovedad.ValorFuente = valorFuentexUso;
+                            DateTime? fechaTemp = novedadContractual?.Contrato?.ContratoPoliza?
+                                                                                .OrderBy(x => x.FechaAprobacion)?
+                                                                                .FirstOrDefault()?
+                                                                                .FechaAprobacion
+                                                                                .Value;
+
+                            novedadContractual.Contrato.FechaTerminacionFase2 = fechaTemp;
+
+                        }
+                        else
+                        {
+                            DateTime? fechaTemp = novedadContractual?.Contrato?.FechaActaInicioFase1.Value != null ? novedadContractual?.Contrato?.FechaActaInicioFase1.Value : DateTime.Now;
+
+                            fechaTemp = fechaTemp.Value.AddDays(novedadContractual.Contrato.Contratacion.PlazoContratacion.PlazoDias);
+                            fechaTemp = fechaTemp.Value.AddMonths(novedadContractual.Contrato.Contratacion.PlazoContratacion.PlazoMeses);
+
+                            novedadContractual.Contrato.FechaTerminacionFase2 = fechaTemp;
+                        }
+                    }
+
+                    if (novedadContractual.Contrato?.Contratacion?.DisponibilidadPresupuestal != null)
+                    {
+                        decimal valorSolicitud = 0;
+                        DisponibilidadPresupuestal ddp = novedadContractual.Contrato?.Contratacion?.DisponibilidadPresupuestal.FirstOrDefault();
+                        valorSolicitud = _commonService.GetValorTotalDisponibilidad(ddp.DisponibilidadPresupuestalId, false);
+                        foreach (var disponibilidad in novedadContractual.Contrato?.Contratacion?.DisponibilidadPresupuestal)
+                        {
+                            disponibilidad.ValorTotalDisponibilidad = valorSolicitud;
+                        }
+                    }
+
+                    bool vaComite = false;
+
+                    foreach (NovedadContractualDescripcion novedadContractualDescripcion in novedadContractual.NovedadContractualDescripcion)
+                    {
+                        novedadContractualDescripcion.NombreTipoNovedad = listDominioTipoNovedad
+                                                                                .Where(r => r.Codigo == novedadContractualDescripcion.TipoNovedadCodigo)
+                                                                                ?.FirstOrDefault()
+                                                                                ?.Nombre;
+
+                        if (novedadContractualDescripcion.TipoNovedadCodigo == ConstanTiposNovedades.Adición ||
+                            novedadContractualDescripcion.TipoNovedadCodigo == ConstanTiposNovedades.Modificación_de_Condiciones_Contractuales ||
+                            novedadContractualDescripcion.TipoNovedadCodigo == ConstanTiposNovedades.Prórroga)
+                        {
+                            vaComite = true;
+                        }
+                        else
+                        {
+                            vaComite = false;
                         }
 
+                        foreach (NovedadContractualDescripcionMotivo motivo in novedadContractualDescripcion.NovedadContractualDescripcionMotivo)
+                        {
+                            motivo.NombreMotivo = listDominioMotivos.Where(r => r.Codigo == motivo.MotivoNovedadCodigo)?.FirstOrDefault()?.Nombre;
+                        }
+
+                        novedadContractualDescripcion.NovedadContractualClausula = novedadContractualDescripcion.NovedadContractualClausula
+                                                                                                                    .Where(x => x.Eliminado != true)
+                                                                                                                    .ToList();
 
                     }
-                }
+                    novedadContractual.VaComite = vaComite;
 
-                if (novedadContractual?.Contrato?.Contratacion?.Contratista != null)
-                {
-                    novedadContractual.Contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
-                    novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionNotMapped = novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionCodigo == null ? "" : listDominioTipoDocumento.Where(x => x.Codigo == novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionCodigo)?.FirstOrDefault()?.Nombre;
-                    //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?
-                }
-
-                novedadContractual.ObservacionApoyo = getObservacion(novedadContractual, false, null);
-                novedadContractual.ObservacionSupervisor = getObservacion(novedadContractual, true, null);
-                novedadContractual.ObservacionTramite = getObservacion(novedadContractual, null, true);
-
-                novedadContractual.ObservacionDevolucion = _context.NovedadContractualObservaciones.Find(novedadContractual.ObervacionSupervisorId);
-                novedadContractual.ObservacionDevolucionTramite = _context.NovedadContractualObservaciones.Find(novedadContractual.ObservacionesDevolucionId);
-
-                if (novedadContractual.EstadoProcesoCodigo == "3")
-                {
-                    novedadContractual.RegistroCompletoDevolucionTramite = true;
-                    if (
-                            novedadContractual.ObservacionTramite == null ||
-                            string.IsNullOrEmpty(novedadContractual?.ObservacionTramite.Observaciones)
-                        )
+                    foreach (NovedadContractualAportante novedadContractualAportante in novedadContractual.NovedadContractualAportante)
                     {
-                        novedadContractual.RegistroCompletoDevolucionTramite = false;
+                        CofinanciacionAportante cofinanciacion = _context.CofinanciacionAportante.Find(novedadContractualAportante.CofinanciacionAportanteId);
+                        if (cofinanciacion != null)
+                            novedadContractualAportante.NombreAportante = getNombreAportante(cofinanciacion);
+
+                        if (cofinanciacion != null)
+                            novedadContractualAportante.TipoAportante = listDominioTipoAportante
+                                        .Where(r => r.DominioId == cofinanciacion.TipoAportanteId)
+                                        ?.FirstOrDefault()
+                                        ?.Nombre;
+                        foreach (ComponenteAportanteNovedad componenteAportanteNovedad in novedadContractualAportante.ComponenteAportanteNovedad)
+                        {
+                            componenteAportanteNovedad.NombreTipoComponente = listDominioComponente
+                                                                                    .Where(r => r.Codigo == componenteAportanteNovedad.TipoComponenteCodigo)
+                                                                                    ?.FirstOrDefault()
+                                                                                    ?.Nombre;
+
+                            componenteAportanteNovedad.Nombrefase = listDominioFase
+                                                                                    .Where(r => r.Codigo == componenteAportanteNovedad.FaseCodigo)
+                                                                                    ?.FirstOrDefault()
+                                                                                    ?.Nombre;
+
+                            foreach (ComponenteFuenteNovedad componenteFuenteNovedad in componenteAportanteNovedad.ComponenteFuenteNovedad)
+                            {
+                                decimal valorFuentexUso = 0;
+                                foreach (ComponenteUsoNovedad componenteUsoNovedad in componenteFuenteNovedad.ComponenteUsoNovedad)
+                                {
+                                    valorFuentexUso += componenteUsoNovedad.ValorUso;
+                                    componenteUsoNovedad.NombreUso = listDominioUso
+                                                                                .Where(r => r.Codigo == componenteUsoNovedad.TipoUsoCodigo)
+                                                                                ?.FirstOrDefault()
+                                                                                ?.Nombre;
+                                }
+                                componenteFuenteNovedad.ValorFuente = valorFuentexUso;
+                            }
+
+
+                        }
+                    }
+
+                    if (novedadContractual?.Contrato?.Contratacion?.Contratista != null)
+                    {
+                        novedadContractual.Contrato.Contratacion.Contratista.Contratacion = null;//para bajar el peso del consumo
+                        novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionNotMapped = novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionCodigo == null ? "" : listDominioTipoDocumento.Where(x => x.Codigo == novedadContractual.Contrato.Contratacion.Contratista.TipoIdentificacionCodigo)?.FirstOrDefault()?.Nombre;
+                        //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?
+                    }
+
+                    novedadContractual.ObservacionApoyo = getObservacion(novedadContractual, false, null);
+                    novedadContractual.ObservacionSupervisor = getObservacion(novedadContractual, true, null);
+                    novedadContractual.ObservacionTramite = getObservacion(novedadContractual, null, true);
+
+                    novedadContractual.ObservacionDevolucion = _context.NovedadContractualObservaciones.Find(novedadContractual.ObervacionSupervisorId);
+                    novedadContractual.ObservacionDevolucionTramite = _context.NovedadContractualObservaciones.Find(novedadContractual.ObservacionesDevolucionId);
+
+                    if (novedadContractual.EstadoProcesoCodigo == "3")
+                    {
+                        novedadContractual.RegistroCompletoDevolucionTramite = true;
+                        if (
+                                novedadContractual.ObservacionTramite == null ||
+                                string.IsNullOrEmpty(novedadContractual?.ObservacionTramite.Observaciones)
+                            )
+                        {
+                            novedadContractual.RegistroCompletoDevolucionTramite = false;
+                        }
                     }
                 }
-            }
-            else
-            {
-                novedadContractual = new NovedadContractual();
-            }
+                else
+                {
+                    novedadContractual = new NovedadContractual();
+                }
 
-            return novedadContractual;
+                return novedadContractual;
+            }
+            catch (Exception ex)
+            {
+
+                return new NovedadContractual();
+            }
         }
         public async Task<List<CofinanciacionAportante>> GetAportanteByContratacion(int pId)
         {
@@ -775,7 +783,7 @@ namespace asivamosffie.services
             List<Localizacion> LocalizacionList = _context.Localizacion.AsNoTracking().ToList();
             List<Dominio> ListNombreAportante = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Nombre_Aportante_Aportante);
 
-            foreach (var ContratacionProyecto in novedadContractual?.Contrato?.Contratacion?.ContratacionProyecto.Where(r=> r.ProyectoId == novedadContractual.ProyectoId).ToList())
+            foreach (var ContratacionProyecto in novedadContractual?.Contrato?.Contratacion?.ContratacionProyecto.Where(r => r.ProyectoId == novedadContractual.ProyectoId).ToList())
             {
                 foreach (var ContratacionProyectoAportante in ContratacionProyecto?.ContratacionProyectoAportante)
                 {
@@ -797,17 +805,17 @@ namespace asivamosffie.services
                         }
                         else//solo departamento
                         {
-                            cofinanciacionAportante.NombreAportanteString = ContratacionProyectoAportante.CofinanciacionAportante.DepartamentoId == null ? String.Empty :  
-                            LocalizacionList.Find(r => r.LocalizacionId == ContratacionProyectoAportante.CofinanciacionAportante.DepartamentoId).Descripcion; 
+                            cofinanciacionAportante.NombreAportanteString = ContratacionProyectoAportante.CofinanciacionAportante.DepartamentoId == null ? String.Empty :
+                            LocalizacionList.Find(r => r.LocalizacionId == ContratacionProyectoAportante.CofinanciacionAportante.DepartamentoId).Descripcion;
                         }
                     }
                     else
                     {
-                        cofinanciacionAportante.NombreAportanteString = ListNombreAportante.Find(r=> r.DominioId ==ContratacionProyectoAportante.CofinanciacionAportante.NombreAportanteId).Nombre;
+                        cofinanciacionAportante.NombreAportanteString = ListNombreAportante.Find(r => r.DominioId == ContratacionProyectoAportante.CofinanciacionAportante.NombreAportanteId).Nombre;
                     }
-                    listaAportantes.Add(cofinanciacionAportante); 
+                    listaAportantes.Add(cofinanciacionAportante);
                 }
-            } 
+            }
             return listaAportantes;
         }
 

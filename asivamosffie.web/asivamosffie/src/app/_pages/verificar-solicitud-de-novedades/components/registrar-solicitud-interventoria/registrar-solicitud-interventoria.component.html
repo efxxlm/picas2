@@ -119,19 +119,19 @@
         <strong>
           Nombre del contratista:
         </strong>
-        {{ novedad?.contrato?.contratacion?.contratista?.nombre}}
+        {{ novedad?.contrato?.contratacion?.contratista?.nombre || contrato?.nombreContratista }}
       </p>
       <p>
         <strong>Tipo de identificación:</strong>
         <span>
-          {{   findTipoDocumentoById(novedad?.contrato?.contratacion?.contratista?.tipoIdentificacionCodigo)}}
+          {{ findTipoDocumentoById(novedad?.contrato?.contratacion?.contratista?.tipoIdentificacionCodigo) || contrato?.tipoIdentificacion }}
         </span>
       </p>
       <p>
         <strong>
           Número de identificación:
         </strong>
-        {{ novedad?.contrato?.contratacion?.contratista?.numeroIdentificacion}}
+        {{ novedad?.contrato?.contratacion?.contratista?.numeroIdentificacion || contrato?.numeroIdentificacion }}
       </p>
       <!-- <p>
         <strong>Tipo de intervención:</strong>
