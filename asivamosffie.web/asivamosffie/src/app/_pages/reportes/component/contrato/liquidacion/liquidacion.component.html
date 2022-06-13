@@ -1,56 +1,51 @@
 <section class="container">
   <div class="container text-center">
-    <div class="text-right">
-      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
-        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    <div class="text-right print-d-none">
+      <a routerLink="../../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Liquidación N801801
+      Liquidación <span *ngIf="contrato">{{ contrato.numeroContrato }}</span>
     </h1>
     <p class="info-sub-title">
-      Contratista <b>Construir futuro</b>
+      Contratista <b *ngIf="contrato"> {{ contrato.contratista }} </b>
     </p>
   </div>
 
-  <mat-card class="shipping-card var-main-gris">
-    <mat-card-header class="header-card header-card--margin">
-      <mat-card-title class="header-card--text">
-        Datos del contrato
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <p>
-        <strong>
-          Fecha de validación:
-        </strong>
-        12/01/2021
-      </p>
-      <p>
-        <strong>
-          Fecha de actualización de póliza:
-        </strong>
-        20/07/2021
-      </p>
-      <p>
-        <strong>
-          Número de solicitud:
-        </strong>
-        Liq_0009
-      </p>
-      <p>
-        <strong>
-          Estado de la liquidación:
-        </strong>
-        Liquidado
-      </p>
-      <p>
-        <strong>
-          URL con soporte:
-        </strong>
-        http//:Liquidacion.one.drive
-      </p>
-    </mat-card-content>
-  </mat-card>
-  
+  <div *ngIf="contrato">
+    <mat-card class="shipping-card var-main-gris" *ngFor="let element of contrato.listLiquidacion">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text"> Datos del contrato </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          <strong> Fecha de validación: </strong>
+          {{ element.fechaSolicitud | date: 'dd/MM/yyyy' }}
+        </p>
+        <p *ngIf="element.actualizacionPoliza">
+          <strong> Fecha de actualización de póliza: </strong>
+          {{ element.fechaActualizacionPoliza | date: 'dd/MM/yyyy' }}
+        </p>
+        <p>
+          <strong> Número de solicitud: </strong>
+          {{ element.numeroSolicitud }}
+        </p>
+        <p>
+          <strong> Estado de la liquidación: </strong>
+          {{ element.nombreEstado }}
+        </p>
+        <p *ngIf="element.urlSoporte">
+          <strong> URL con soporte: </strong>
+          <a class="ruta-url max-width-none" [href]="element.urlSoporte" target="_blank">
+            {{ element.urlSoporte }}
+          </a>
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </section>
+
+<div class="text-center mt-2em mb-2em print-d-none">
+  <button mat-raised-button color="accent" (click)="downloadPDF()">Descargar</button>
+</div>

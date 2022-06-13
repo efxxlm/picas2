@@ -1,49 +1,41 @@
 <section class="container">
   <div class="container text-center">
-    <div class="text-right">
-      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
-        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    <div class="text-right print-d-none">
+      <a routerLink="../../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Contratación N801801
+      Contratación <span *ngIf="contrato">{{ contrato.numeroContrato }}</span>
     </h1>
     <p class="info-sub-title">
-      Contratista <b>Construir futuro</b>
+      Contratista <b *ngIf="contrato"> {{ contrato.contratista }} </b>
     </p>
   </div>
 
-  <mat-card class="shipping-card var-main-gris">
+  <mat-card class="shipping-card var-main-gris" *ngIf="contrato">
     <mat-card-content>
       <p>
-        <strong>
-          Número de solicitud:
-        </strong>
-        P.I_0001
+        <strong> Número de solicitud: </strong>
+        {{ contrato.numeroSolicitud }}
       </p>
       <p>
-        <strong>
-          Fecha de solicitud:
-        </strong>
-        20/07/2020
+        <strong> Fecha de solicitud: </strong>
+        {{ contrato.fechaSolicitud | date: 'dd/MM/yyyy' }}
       </p>
       <p>
-        <strong>
-          Opción por contratar:
-        </strong>
-        Obra
+        <strong> Opción por contratar: </strong>
+        {{ contrato.opcionContratar }}
       </p>
       <p>
-        <strong>
-          Valor total de la solicitud:
-        </strong>
-        $105.000.000
+        <strong> Valor total de la solicitud: </strong>
+        {{ contrato.valorSolicitud | currency: 'COP':'symbol-narrow':'.0-0' }}
       </p>
       <p>
-        <strong>
-          URL con soporte:
-        </strong>
-        one.drive.contratación0007
+        <strong> URL con soporte: </strong>
+        <a class="ruta-url max-width-none" [href]="contrato.urlSoporte" target="_blank">
+          {{ contrato.urlSoporte }}
+        </a>
       </p>
       <h2 class="card-subTitle">Proyectos asociados</h2>
       <div class="table-responsive mb-1em mt-1em">
@@ -59,15 +51,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let element of listaProyectosAsociados">
+            <tr *ngFor="let element of contrato.vListaProyectos">
               <td class="mat-cell cdk-cell ng-star-inserted">
                 <b> {{ element.numeroContrato }} </b>
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
-                {{ element.llaveMEN }}
+                {{ element.llaveMen }}
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
-                {{ element.tipoIntervension }}
+                {{ element.tipoIntervencion }}
               </td>
               <td class="mat-cell cdk-cell ng-star-inserted">
                 {{ element.departamento }}
@@ -84,5 +76,8 @@
       </div>
     </mat-card-content>
   </mat-card>
-
 </section>
+
+<div class="text-center mt-2em mb-2em print-d-none">
+  <button mat-raised-button color="accent" (click)="downloadPDF()">Descargar</button>
+</div>

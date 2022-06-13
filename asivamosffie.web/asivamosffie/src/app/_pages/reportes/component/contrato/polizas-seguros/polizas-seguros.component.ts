@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { FichaContratoService } from 'src/app/core/_services/fichaContrato/ficha-contrato.service';
+
 
 @Component({
   selector: 'app-polizas-seguros',
@@ -6,24 +9,39 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./polizas-seguros.component.scss']
 })
 export class PolizasSegurosComponent implements OnInit {
-
-  listaPolizasSeguros = [
-    {
-      polizasSeguros: 'N801801',
-      vigenciaPoliza: 'LL457326',
-      vigenciaAmparo: 'Remodelación',
-      valorAmparo: 'Boyacá'
-    }
-  ];
-
   listaActualizacion = [
     'Buen manejo y correcta inversión del anticipo',
     'Garantía de estabilidad y calidad de la obra'
   ]
 
-  constructor() { }
+  pContratoId: string;
+  openAcordeon = false;
+  contrato: any;
+  listProyectos: [];
 
-  ngOnInit(): void {
+  constructor(private route: ActivatedRoute, private fichaContratoService: FichaContratoService) {
+    this.route.params.subscribe((params: Params) => (this.pContratoId = params.id));
   }
 
+  ngOnInit(): void {
+    this.getInfoPolizasSegurosByContratoId();
+  }
+
+  getInfoPolizasSegurosByContratoId() {
+    this.fichaContratoService.getInfoPolizasSegurosByContratoId(this.pContratoId).subscribe(response => {
+      this.contrato = response;
+    });
+  }
+
+  downloadPDF() {
+    this.openAcordeon = true;
+    setTimeout(() => {
+      document.title = 'Pólizas y Seguros ' + this.contrato.numeroContrato;
+      window.print();
+    }, 300);
+    setTimeout(() => (this.openAcordeon = true), 400);
+    // window.onafterprint = function () {
+    //   window.location.reload();
+    // };
+  }
 }
