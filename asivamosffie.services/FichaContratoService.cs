@@ -464,7 +464,7 @@ namespace asivamosffie.services
                 TipoContrato = contrato.Contratacion.TipoSolicitudCodigo ==
                 ConstanCodigoTipoContratacionString.Obra ? (CultureInfo.InvariantCulture.TextInfo.ToTitleCase(ConstanCodigoTipoContratacionSTRING.Obra))
                 : CultureInfo.InvariantCulture.TextInfo.ToTitleCase(ConstanCodigoTipoContratacionSTRING.Interventoria),
-                Vigencia = contrato.ContratoPoliza.FirstOrDefault().PolizaGarantia.FirstOrDefault().Vigencia
+                Vigencia = contrato?.ContratoPoliza?.FirstOrDefault()?.PolizaGarantia?.FirstOrDefault()?.Vigencia
             };
 
             return new
