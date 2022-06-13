@@ -359,7 +359,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 procesoSeleccionProponente.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
-                respuesta =  _selectionProcessService.CreateEditarProcesoSeleccionProponente(procesoSeleccionProponente);
+                respuesta =  _selectionProcessService.CreateEditarProcesoSeleccionProponente(procesoSeleccionProponente , procesoSeleccionProponente.ProcesoSeleccionId);
                 return Ok(respuesta);
             }
             catch (Exception ex)

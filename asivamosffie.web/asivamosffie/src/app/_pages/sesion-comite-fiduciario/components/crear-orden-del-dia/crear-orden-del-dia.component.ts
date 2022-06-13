@@ -264,20 +264,27 @@ export class CrearOrdenDelDiaComponent implements OnInit {
           }
 
           this.dataSolicitudContractual.forEach(sc => {
-
             if (sc['comiteTecnicoId'] == tf.comiteTecnicoId) {
+                const scIndex = sc.data.findIndex( s => s.idSolicitud === tf.sesionComiteSolicitudId )
 
-              sc.data.push({
-                fechaSolicitud: tf.fechaSolicitud,
-                id: 0,
-                numeroSolicitud: tf.numeroSolicitud,
-                sesionComiteSolicitudId: tf.sesionComiteSolicitudId,
-                idSolicitud: tf.sesionComiteSolicitudId,
-                tipoSolicitud: tf.tipoSolicitud,
-                tipoSolicitudCodigo: tf.tipoSolicitudCodigo,
-                tipoSolicitudNumeroTabla: tf.tipoSolicitudCodigo,
-                ['seleccionado']: true
-              })
+                if ( scIndex !== -1 ) {
+                    sc.data[ scIndex ].seleccionado = true
+                    sc.data[ scIndex ].numeroSolicitud = tf.numeroSolicitud
+                    sc.data[ scIndex ].sesionComiteSolicitudId = tf.sesionComiteSolicitudId
+                    sc.data[ scIndex ].tipoSolicitudCodigo = tf.tipoSolicitudCodigo
+                }
+
+                //   sc.data.push({
+                //     fechaSolicitud: tf.fechaSolicitud,
+                //     id: 0,
+                //     numeroSolicitud: tf.numeroSolicitud,
+                //     sesionComiteSolicitudId: tf.sesionComiteSolicitudId,
+                //     idSolicitud: tf.sesionComiteSolicitudId,
+                //     tipoSolicitud: tf.tipoSolicitud,
+                //     tipoSolicitudCodigo: tf.tipoSolicitudCodigo,
+                //     tipoSolicitudNumeroTabla: tf.tipoSolicitudCodigo,
+                //     ['seleccionado']: true
+                //   })
 
               existeComite = true;
             }

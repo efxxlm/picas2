@@ -23,6 +23,35 @@ namespace asivamosffie.services
         }
 
 
+        #region Entrega
+
+        public async Task<dynamic> GetInfoSeguimientoEntregaETCByProyectoId(int pProyectoId)
+        {
+
+            Proyecto proyecto = await _context.Proyecto.Where(p => p.ProyectoId == pProyectoId)
+                                                      .Include(r=> r.InstitucionEducativa)
+                                                      .Include(r => r.Sede)
+                                                      .Include(inf => inf.InformeFinal).ThenInclude(etc => etc.ProyectoEntregaEtc)
+                                                      .FirstOrDefaultAsync();
+
+            List<Dominio> ListTipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
+
+
+            return new
+            {
+                LlaveMen = proyecto.LlaveMen,
+                InstitucionEducativa = proyecto.InstitucionEducativa.Nombre,
+                Sede = proyecto.Sede.Nombre,
+                TipoIntervencion = ListTipoIntervencion.Where(r => r.Codigo == proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre, 
+                FechaRecorridoObra = proyecto.InformeFinal?.FirstOrDefault().ProyectoEntregaEtc?.FechaRecorridoObra,
+                FechaFirmaActaEntregaFisica = proyecto.InformeFinal?.FirstOrDefault().ProyectoEntregaEtc?.FechaFirmaActaEngregaFisica,
+                FechaFirmaActaEntregaBienesServicios = proyecto.InformeFinal?.FirstOrDefault().ProyectoEntregaEtc?.FechaFirmaActaBienesServicios,
+                NumeroRadicadoEntrega = proyecto.InformeFinal?.FirstOrDefault().ProyectoEntregaEtc?.NumRadicadoDocumentosEntregaEtc
+            };
+
+        }
+        #endregion
+
         #region Seguimiento Financiero 
 
         public async Task<dynamic> GetInfoSeguimientoFinancieroByProyectoId(int pProyectoId)
@@ -77,7 +106,7 @@ namespace asivamosffie.services
         #region seguimiento Tecnico
         public async Task<dynamic> GetInfoSeguimientoTecnicoByProyectoId(int pProyectoId)
         {
-            List<VProyectosXcontrato> ListContratosXProyecto = _context.VProyectosXcontrato.Where(v => v.ProyectoId == pProyectoId 
+            List<VProyectosXcontrato> ListContratosXProyecto = _context.VProyectosXcontrato.Where(v => v.ProyectoId == pProyectoId
                                                                                                     && v.TipoContratoCodigo == ConstanCodigoTipoContratacionString.Obra)
                                                                                            .ToList();
 
@@ -557,6 +586,6 @@ namespace asivamosffie.services
             return ListProyectos;
         }
 
-        #endregion
+        #endregion  
     }
 }

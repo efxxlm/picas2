@@ -90,6 +90,9 @@ namespace asivamosffie.services
                                             .FirstOrDefaultAsync(proceso => proceso.ProcesoSeleccionId == id);
                 procesoSeleccion.ListaContratistas = _context.Contratista.Where(x => x.NumeroInvitacion == procesoSeleccion.NumeroProceso).ToList();
                 procesoSeleccion.ProcesoSeleccionGrupo = procesoSeleccion.ProcesoSeleccionGrupo.Where(r => r.Eliminado != true).ToList();
+                 
+                if (procesoSeleccion.ProcesoSeleccionProponente.Count() > 0)
+                    procesoSeleccion.ProcesoSeleccionProponente = procesoSeleccion.ProcesoSeleccionProponente.Where(r => r.Eliminado != true).ToList();
 
                 foreach (var proces in procesoSeleccion.ProcesoSeleccionProponente)
                 {
@@ -171,6 +174,9 @@ namespace asivamosffie.services
                 }
                 else
                 {
+                    if (procesoSeleccion.ProcesoSeleccionProponente.Count() > 0)
+                        procesoSeleccion.ProcesoSeleccionProponente = procesoSeleccion.ProcesoSeleccionProponente.Where(r => r.Eliminado != true).Distinct().ToList();
+                    
                     strCrearEditar = "EDIT PROCESO SELECCION";
                     ProcesoSeleccionAntiguo = _context.ProcesoSeleccion.Find(procesoSeleccion.ProcesoSeleccionId);
                     //Auditoria
@@ -203,7 +209,7 @@ namespace asivamosffie.services
                     ProcesoSeleccionAntiguo.TipoOrdenEligibilidadCodigo = procesoSeleccion.TipoOrdenEligibilidadCodigo;
                     ProcesoSeleccionAntiguo.CantidadProponentesInvitados = procesoSeleccion.CantidadProponentesInvitados;
                     ProcesoSeleccionAntiguo.UrlSoporteProponentesSeleccionados = procesoSeleccion.UrlSoporteProponentesSeleccionados;
-                    ProcesoSeleccionAntiguo.RegistroCompletoProponentes = ValidarRegistroCompletoProponente(ProcesoSeleccionAntiguo.ProcesoSeleccionProponente.ToList());
+                    ProcesoSeleccionAntiguo.RegistroCompletoProponentes = ValidarRegistroCompletoProponente(procesoSeleccion.ProcesoSeleccionProponente.ToList());
                     ProcesoSeleccionAntiguo.EsCompleto = EsCompleto(procesoSeleccion);
                     ProcesoSeleccionAntiguo.Eliminado = false;
 
@@ -242,16 +248,28 @@ namespace asivamosffie.services
                     this.CreateEditarProcesoSeleccionCotizacion(cotizacion);
                 }
 
-                //si la cantidad que recibe de parametros no es la misma que tiene en datos, borro los anteriores
-                if (procesoSeleccion.ProcesoSeleccionProponente.Count() < _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccion.ProcesoSeleccionId && x.Eliminado != true).Count())
+                if (procesoSeleccion.ProcesoSeleccionProponente.Count() > 0)
                 {
-                    foreach (var procesoseleccionprop in _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccion.ProcesoSeleccionId && !(bool)x.Eliminado))
+                    //Eliminar las relaciones anteriores por si el front no envia los mismos proponentes
+
+                    _context.Set<ProcesoSeleccionProponente>()
+                            .Where(r => r.ProcesoSeleccionId == procesoSeleccion.ProcesoSeleccionId)
+                            .Update(r => new ProcesoSeleccionProponente
+                            {
+                                Eliminado = true
+                            });
+
+                    foreach (var ProcesoSeleccionProponente in procesoSeleccion.ProcesoSeleccionProponente.Where(r => r.Eliminado != true))
                     {
-                        procesoseleccionprop.Eliminado = true;
-                        _context.ProcesoSeleccionProponente.Update(procesoseleccionprop);
+
+                        CreateEditarProcesoSeleccionProponente(ProcesoSeleccionProponente, procesoSeleccion.ProcesoSeleccionId);
                     }
-                    _context.SaveChanges();
                 }
+
+
+
+
+
                 foreach (ProcesoSeleccionProponente proponente in procesoSeleccion.ProcesoSeleccionProponente)
                 {
                     proponente.UsuarioCreacion = procesoSeleccion.UsuarioCreacion;
@@ -261,7 +279,7 @@ namespace asivamosffie.services
                     proponente.EmailProponente = proponente.EmailProponente;
                     proponente.Eliminado = false;
                     proponente.ProcesoSeleccionId = procesoSeleccion.ProcesoSeleccionId;
-                    this.CreateEditarProcesoSeleccionProponente(proponente);
+                    this.CreateEditarProcesoSeleccionProponente(proponente, procesoSeleccion.ProcesoSeleccionId);
                 }
 
 
@@ -291,6 +309,17 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion, ConstantMessagesProcesoSeleccion.ErrorInterno, idAccionCrearProcesoSeleccion, procesoSeleccion.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
+        }
+
+        private void CrearEditarProcesoSeleccionProponente(ProcesoSeleccion procesoSeleccion)
+        {
+
+            foreach (var procesoseleccionprop in _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == procesoSeleccion.ProcesoSeleccionId && !(bool)x.Eliminado))
+            {
+                procesoseleccionprop.Eliminado = true;
+                _context.ProcesoSeleccionProponente.Update(procesoseleccionprop);
+            }
+            _context.SaveChanges();
         }
 
         public async Task<Respuesta> DeleteProcesoSeleccion(int pId, string pUsuarioModificacion)
@@ -733,6 +762,10 @@ namespace asivamosffie.services
                         proces.municipioString = municipio.Descripcion;
                         proces.departamentoString = departamento.Descripcion;
                     }
+                    else
+                    {
+
+                    }
                 }
             }
             return proceso;
@@ -771,13 +804,13 @@ namespace asivamosffie.services
             return ListGrillaProcesoSeleccionProponente;
         }
 
-        public Respuesta CreateEditarProcesoSeleccionProponente(ProcesoSeleccionProponente procesoSeleccionProponente)
+        public Respuesta CreateEditarProcesoSeleccionProponente(ProcesoSeleccionProponente procesoSeleccionProponente, int pProcesoSeleccionActual)
         {
             Respuesta respuesta = new Respuesta();
 
             try
             {
-                if (procesoSeleccionProponente.ProcesoSeleccionProponenteId == 0)
+                if (procesoSeleccionProponente.ProcesoSeleccionProponenteId == 0 || procesoSeleccionProponente.ProcesoSeleccionId != pProcesoSeleccionActual)
                 {
                     ProcesoSeleccionProponente procesoSeleccionProponente1 = new ProcesoSeleccionProponente
                     {
@@ -804,6 +837,8 @@ namespace asivamosffie.services
                 }
                 else
                 {
+                    bool blRegistroCompleto = (bool)ValidarRegistroCompletoProponente(procesoSeleccionProponente);
+
                     _context.Set<ProcesoSeleccionProponente>()
                             .Where(r => r.ProcesoSeleccionProponenteId == procesoSeleccionProponente.ProcesoSeleccionProponenteId)
                             .Update(r => new ProcesoSeleccionProponente
@@ -811,7 +846,7 @@ namespace asivamosffie.services
                                 FechaModificacion = DateTime.Now,
                                 Eliminado = false,
                                 UsuarioModificacion = procesoSeleccionProponente.UsuarioModificacion,
-                                RegistroCompleto = ValidarRegistroCompletoProponente(procesoSeleccionProponente),
+                                RegistroCompleto = blRegistroCompleto,
                                 TipoProponenteCodigo = procesoSeleccionProponente.TipoProponenteCodigo,
                                 NombreProponente = procesoSeleccionProponente.NombreProponente,
                                 TipoIdentificacionCodigo = procesoSeleccionProponente.TipoIdentificacionCodigo,
@@ -821,7 +856,8 @@ namespace asivamosffie.services
                                 LocalizacionIdMunicipio = procesoSeleccionProponente.LocalizacionIdMunicipio,
                                 DireccionProponente = procesoSeleccionProponente.DireccionProponente,
                                 TelefonoProponente = procesoSeleccionProponente.TelefonoProponente,
-                                EmailProponente = procesoSeleccionProponente.EmailProponente
+                                EmailProponente = procesoSeleccionProponente.EmailProponente,
+                                ProcesoSeleccionId = procesoSeleccionProponente.ProcesoSeleccionId
                             });
 
 
@@ -830,7 +866,7 @@ namespace asivamosffie.services
                     {
                         integrante.ProcesoSeleccionId = procesoSeleccionProponente.ProcesoSeleccionId;
                         integrante.ProcesoSeleccionProponenteId = procesoSeleccionProponente.ProcesoSeleccionProponenteId;
-                        integrante.UsuarioCreacion = procesoSeleccionProponente.UsuarioCreacion.ToUpper();
+                        integrante.UsuarioCreacion = procesoSeleccionProponente.UsuarioCreacion ?? String.Empty;
                         integrante.NombreIntegrante = integrante.NombreIntegrante;
                         this.CreateEditarProcesoSeleccionIntegrante(integrante);
                     }
@@ -854,14 +890,17 @@ namespace asivamosffie.services
 
         private bool? ValidarRegistroCompletoProponente(ProcesoSeleccionProponente procesoSeleccionProponente)
         {
-            return (
-                  !string.IsNullOrEmpty(procesoSeleccionProponente.NombreProponente)
-               || !string.IsNullOrEmpty(procesoSeleccionProponente.NumeroIdentificacion)
-               || !string.IsNullOrEmpty(procesoSeleccionProponente.LocalizacionIdMunicipio)
-               || !string.IsNullOrEmpty(procesoSeleccionProponente.DireccionProponente)
-               || !string.IsNullOrEmpty(procesoSeleccionProponente.TelefonoProponente)
-               || !string.IsNullOrEmpty(procesoSeleccionProponente.EmailProponente)
-                );
+            if (
+                  string.IsNullOrEmpty(procesoSeleccionProponente.NombreProponente)
+               || string.IsNullOrEmpty(procesoSeleccionProponente.NumeroIdentificacion)
+               || string.IsNullOrEmpty(procesoSeleccionProponente.LocalizacionIdMunicipio)
+               || string.IsNullOrEmpty(procesoSeleccionProponente.DireccionProponente)
+               || string.IsNullOrEmpty(procesoSeleccionProponente.TelefonoProponente)
+               || string.IsNullOrEmpty(procesoSeleccionProponente.EmailProponente)
+                )
+                return false;
+            else
+                return true;
         }
 
         private bool? ValidarRegistroCompletoProponente(List<ProcesoSeleccionProponente> ListProcesoSeleccionProponente)
@@ -1706,7 +1745,7 @@ namespace asivamosffie.services
                         return false;
                 }
 
-                foreach (var ProcesoSeleccionProponente in procesoSeleccion.ProcesoSeleccionProponente)
+                foreach (var ProcesoSeleccionProponente in procesoSeleccion.ProcesoSeleccionProponente.Where(r => r.Eliminado == false))
                 {
                     if (ValidarRegistroCompletoProponente(ProcesoSeleccionProponente) == false)
                         return false;

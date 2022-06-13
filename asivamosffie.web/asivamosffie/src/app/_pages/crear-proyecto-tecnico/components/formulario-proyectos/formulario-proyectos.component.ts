@@ -244,9 +244,12 @@ export class FormularioProyectosComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     const estado = this.route.snapshot.paramMap.get('estado');
+    console.log(estado);
     if(estado != "false"){
+      console.log("Entro a editar",id);
       this.bitPuedoEditar = true;
     }else{
+      console.error("tambien entro a no editar");
       this.bitPuedoEditar = false;
     }
     if (id) {
@@ -297,8 +300,8 @@ export class FormularioProyectosComponent implements OnInit {
           respuesta => {
             this.proyecto = respuesta;
             if (
-              (this.proyecto.estadoProyectoObraCodigo === '1' || this.proyecto.estadoProyectoObraCodigo === '9') &&
-              (this.proyecto.estadoProyectoInterventoriaCodigo === '1' || this.proyecto.estadoProyectoInterventoriaCodigo === '9')
+              (this.proyecto.estadoProyectoObraCodigo === '1' || this.proyecto.estadoProyectoObraCodigo === '9'|| this.proyecto.estadoProyectoObraCodigo === '5') &&
+              (this.proyecto.estadoProyectoInterventoriaCodigo === '1' || this.proyecto.estadoProyectoInterventoriaCodigo === '9'|| this.proyecto.estadoProyectoInterventoriaCodigo === '5')
             ) {
               this.bitPuedoEditar = true;
             }else{

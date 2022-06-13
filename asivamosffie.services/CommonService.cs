@@ -361,8 +361,10 @@ namespace asivamosffie.services
             .OrderByDescending(r => r.Menu.Posicion.HasValue)
                 .ThenBy(r => r.Menu.Posicion)
             .ToList();
-            menuPerfil = menuPerfil.Where(r => r.Menu.Eliminado != true && !string.IsNullOrEmpty(r.Menu.RutaFormulario)).ToList();
+            menuPerfil = menuPerfil.Where(r => r.Menu.Eliminado != true && !string.IsNullOrEmpty(r.Menu.RutaFormulario)).Distinct().ToList();
 
+            menuPerfil = menuPerfil.GroupBy(r => r.MenuId).Select(y => y.First()).ToList();
+             
             return menuPerfil;
             //return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).OrderBy(z => z.Menu.Posicion).ToList();
         }

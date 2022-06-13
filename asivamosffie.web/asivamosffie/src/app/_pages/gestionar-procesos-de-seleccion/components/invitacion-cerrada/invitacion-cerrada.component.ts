@@ -92,7 +92,7 @@ export class InvitacionCerradaComponent implements OnInit {
         this.datos_class = this.estaIncompletoDatos(this.procesoSeleccion);
         this.evaluacion_class = this.estaIncompletoEvaluacion(this.procesoSeleccion);
         this.proponentes_class = this.estaIncompletoProponentes(this.procesoSeleccion);
-        setTimeout(() => { resolve(); }, 1000)
+        setTimeout(() => { resolve( null ); }, 1000)
       });
     });
 

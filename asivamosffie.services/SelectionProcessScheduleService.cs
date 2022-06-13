@@ -26,6 +26,10 @@ namespace asivamosffie.services
 
         public async Task<List<ProcesoSeleccionCronograma>> GetListProcesoSeleccionCronogramaBypProcesoSeleccionId(int pProcesoSeleccionId)
         {
+
+            string asdsad = string.Empty;
+
+            asdsad.ToList().Reverse();
             return await _context.ProcesoSeleccionCronograma.Where(r => r.ProcesoSeleccionId == pProcesoSeleccionId).Include(x => x.CronogramaSeguimiento).ToListAsync();
         }
 

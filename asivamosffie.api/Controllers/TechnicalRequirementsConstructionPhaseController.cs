@@ -38,7 +38,8 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _technicalRequirementsConstructionPhaseService.GetContractsGrid(pUsuarioId);
+                int idUsuario = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
+                return await _technicalRequirementsConstructionPhaseService.GetContractsGrid(idUsuario);
             }
             catch (Exception ex)
             {

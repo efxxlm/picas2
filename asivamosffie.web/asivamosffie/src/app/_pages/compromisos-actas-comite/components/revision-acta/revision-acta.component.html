@@ -73,7 +73,13 @@
         <section *ngIf="acta.sesionComiteSolicitudComiteTecnico !== null">
           <mat-accordion *ngFor="let sesionComite of acta.sesionComiteSolicitudComiteTecnico">
             <mat-expansion-panel class="expansion-style sub-expansion">
-              <mat-expansion-panel-header class="expansion-style--header"
+              <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.numeroProceso }}</b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <!--<mat-expansion-panel-header class="expansion-style--header"
                 *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.procesoSeleccion">
                 <mat-panel-title class="expansion-style--title sub-expansion">
                   <b>Solicitud {{ sesionComite.procesoSeleccion.numeroProceso }}</b>
@@ -131,7 +137,7 @@
                     sesionComite.controversiaActuacion.controversiaContractual?.numeroSolicitud :
                     sesionComite?.numeroSolicitud }} </b>
                 </mat-panel-title>
-              </mat-expansion-panel-header>
+              </mat-expansion-panel-header> -->
 
               <app-form-solicitud [solicitudes]="sesionComite" [esComiteFiduciario]="false"></app-form-solicitud>
             </mat-expansion-panel>
@@ -182,11 +188,9 @@
               <mat-expansion-panel-header class="expansion-style--header"
                 *ngIf="sesionComite.tipoSolicitudCodigo === tipoSolicitudCodigo.ActuacionesControversias">
                 <mat-panel-title class="expansion-style--title sub-expansion">
-                  <b>Solicitud {{ sesionComite.controversiaActuacion !== undefined ?
-                    sesionComite.controversiaActuacion.controversiaContractual.numeroSolicitud :
-                    sesionComite.numeroSolicitud }} </b>
+                  <b>Solicitud {{ sesionComite.numeroSolicitud}} </b>
                 </mat-panel-title>
-              </mat-expansion-panel-header>
+              </mat-expansion-panel-header> 
 
               <app-form-solicitud [solicitudes]="sesionComite" [esComiteFiduciario]="true"></app-form-solicitud>
             </mat-expansion-panel>

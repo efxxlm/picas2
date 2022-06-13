@@ -13,6 +13,10 @@ export class FichaProyectoService {
 
     ficha_proyecto = 'FichaProyecto';
 
+    getInfoSeguimientoEntregaETCByProyectoId( pProyectoId: number ){
+      return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetInfoSeguimientoEntregaETCByProyectoId?pProyectoId=${ pProyectoId }`);
+    }
+ 
     getProyectoIdByLlaveMen( pLlaveMen: string ){
       return this.http.get<any[]>(`${ this.urlApi }/${this.ficha_proyecto}/GetProyectoIdByLlaveMen?pLlaveMen=${ pLlaveMen }`);
     }

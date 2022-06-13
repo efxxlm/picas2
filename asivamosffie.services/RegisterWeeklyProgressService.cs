@@ -250,10 +250,16 @@ namespace asivamosffie.services
             return GestionObraCalidadEnsayoLaboratorio;
         }
 
-        public async Task<List<VRegistrarAvanceSemanalNew>> GetVRegistrarAvanceSemanalNew()
+        public async Task<List<VRegistrarAvanceSemanalNew>> GetVRegistrarAvanceSemanalNew(int pUserId)
         {
 
-            List<VRegistrarAvanceSemanalNew> vRegistrarAvanceSemanal = await _context.VRegistrarAvanceSemanalNew.OrderByDescending(r => r.FechaUltimoReporte).ToListAsync();
+            List<VRegistrarAvanceSemanalNew> vRegistrarAvanceSemanal = await _context.VRegistrarAvanceSemanalNew
+                .Where(c=> c.ApoyoId == pUserId 
+                        || c.SupervisorId == pUserId
+                        || c.InterventorId == pUserId)
+                .OrderByDescending(r => r.FechaUltimoReporte)
+                .ToListAsync();
+
             return vRegistrarAvanceSemanal;
         }
 

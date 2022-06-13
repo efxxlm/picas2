@@ -1463,7 +1463,7 @@ namespace asivamosffie.services
                     controversiaActuacion.EsRequiereSupervisor == null ||
                     controversiaActuacion.EsRequiereFiduciaria == null ||
                     controversiaActuacion.EsRequiereComite == null ||
-                    string.IsNullOrEmpty(controversiaActuacion.Observaciones) ||
+                    //string.IsNullOrEmpty(controversiaActuacion.Observaciones) ||TICKET 2022060230000012
                     string.IsNullOrEmpty(controversiaActuacion.RutaSoporte)
                 )
             {

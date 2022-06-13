@@ -58,7 +58,12 @@ namespace asivamosffie.services
         {
             List<dynamic> listaContrats = new List<dynamic>();
 
-            List<VRequisitosTecnicosInicioConstruccion> lista = _context.VRequisitosTecnicosInicioConstruccion.ToList();
+            List<VRequisitosTecnicosInicioConstruccion> lista =
+                                                                _context.VRequisitosTecnicosInicioConstruccion
+                                                                .Where(u=> u.ApoyoId  == pUsuarioId
+                                                                        || u.InterventorId == pUsuarioId
+                                                                        || u.SupervisorId == pUsuarioId)
+                                                                .ToList();
 
             lista.Where(c => c.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra).ToList() // tipo contrato obra
                 .ForEach(c =>

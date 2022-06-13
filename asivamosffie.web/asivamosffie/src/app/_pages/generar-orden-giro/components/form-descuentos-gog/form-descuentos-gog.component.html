@@ -413,7 +413,7 @@
                                     class="btn-guardar"
                                     type="button"
                                     (click)="onSubmit( i )"
-                                    [disabled]="getCriterios( i ).dirty === false">
+                                    [disabled]="!getCriterios( i ).dirty && !addressForm.touched">
                                     <img src="assets/img/icon/guardar.svg" alt="Guardar">
                             </button>
                         </div>

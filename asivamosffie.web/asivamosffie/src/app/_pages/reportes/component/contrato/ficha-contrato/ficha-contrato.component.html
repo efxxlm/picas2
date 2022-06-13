@@ -10,25 +10,33 @@
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label
-                class="label-left"
-                for="numeroContrato"
-                [class.color-secondaryColor]="
+              <label class="label-left" for="numeroContrato" [class.color-secondaryColor]="
                   addressForm.get('numeroContrato').invalid && addressForm.get('numeroContrato').touched
-                "
-              >
+                ">
                 Número de contrato
               </label>
-            </div>
-            <div class="col">
-              <mat-form-field class="select-width">
-                <mat-select formControlName="numeroContrato">
-                  <mat-option *ngFor="let tipoFicha of listaTipoFicha" [value]="tipoFicha.value">
-                    {{ tipoFicha.name }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
+            </div> 
+               <div class="col d-flex">
+                    <mat-form-field
+                        class="full-width"
+                        [matTooltipPosition]="'above'"
+                        matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
+                        matTooltipClass="info-tooltip"
+                    >
+                        <input matInput #llaveMen="matAutocompleteTrigger" type="text" maxlength="100" required [matAutocomplete]="auto" formControlName="numeroContrato" (ngModelChange)="getContratos($event)">
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let contrato of contratosArray" [value]="contrato.numeroContrato" (click)="seleccionAutocomplete(contrato)">
+                                {{ contrato.numeroContrato }}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <input type="hidden" formControlName="numeroContrato">
+                    </mat-form-field>
+                    <button mat-button type="button" color="primary" class="busqueda--img" style="margin-bottom: 0 !important;padding-top: 0 !important;padding-bottom: 0 !important;">
+                        <img src="assets/img/icon/lupa.svg" alt="Buscar">
+                    </button>
+                </div>
+
+
           </div>
         </div>
       </div>
@@ -36,13 +44,9 @@
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label
-                class="label-left"
-                for="nombreContratista"
-                [class.color-secondaryColor]="
+              <label class="label-left" for="nombreContratista" [class.color-secondaryColor]="
                   addressForm.get('nombreContratista').invalid && addressForm.get('nombreContratista').touched
-                "
-              >
+                ">
                 Nombre del contratista
               </label>
             </div>
@@ -58,17 +62,13 @@
           </div>
         </div>
       </div>
-      <div class="row">
+   <!--   <div class="row">
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label
-                class="label-left"
-                for="departamento"
-                [class.color-secondaryColor]="
+              <label class="label-left" for="departamento" [class.color-secondaryColor]="
                   addressForm.get('departamento').invalid && addressForm.get('departamento').touched
-                "
-              >
+                ">
                 Departamento
               </label>
             </div>
@@ -83,18 +83,14 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> 
       <div class="row">
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label
-                class="label-left"
-                for="municipio"
-                [class.color-secondaryColor]="
+              <label class="label-left" for="municipio" [class.color-secondaryColor]="
                   addressForm.get('municipio').invalid && addressForm.get('municipio').touched
-                "
-              >
+                ">
                 Municipio
               </label>
             </div>
@@ -114,13 +110,9 @@
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label
-                class="label-left"
-                for="institucionEducativa"
-                [class.color-secondaryColor]="
+              <label class="label-left" for="institucionEducativa" [class.color-secondaryColor]="
                   addressForm.get('institucionEducativa').invalid && addressForm.get('institucionEducativa').touched
-                "
-              >
+                ">
                 Institución Educativa
               </label>
             </div>
@@ -140,13 +132,9 @@
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label
-                class="label-left"
-                for="dede"
-                [class.color-secondaryColor]="
+              <label class="label-left" for="dede" [class.color-secondaryColor]="
                   addressForm.get('dede').invalid && addressForm.get('dede').touched
-                "
-              >
+                ">
                 Sede
               </label>
             </div>
@@ -161,15 +149,12 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="row">
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label
-                class="label-left"
-                for="tipoContrato"
-                [class.color-secondaryColor]="
+              <label class="label-left" for="tipoContrato" [class.color-secondaryColor]="
                   addressForm.get('tipoContrato').invalid && addressForm.get('tipoContrato').touched
                 ">
                 Tipo de contrato
@@ -191,13 +176,9 @@
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label
-                class="label-left"
-                for="vigenciaContratación"
-                [class.color-secondaryColor]="
+              <label class="label-left" for="vigenciaContratación" [class.color-secondaryColor]="
                   addressForm.get('vigenciaContratación').invalid && addressForm.get('vigenciaContratación').touched
-                "
-              >
+                ">
                 Vigencia de la contratación
               </label>
             </div>
@@ -215,12 +196,7 @@
       </div>
     </mat-card-content>
     <mat-card-actions class="text-center">
-      <button
-        mat-button
-        color="primary"
-        class="btn-buscar btn-borrar"
-        type="button"
-        (click)="reiniciarFiltro()"
+      <button mat-button color="primary" class="btn-buscar btn-borrar" type="button" (click)="reiniciarFiltro()"
         [disabled]="
           !addressForm.get('numeroContrato').value &&
           !addressForm.get('nombreContratista').value &&
@@ -230,17 +206,11 @@
           !addressForm.get('dede').value &&
           !addressForm.get('tipoContrato').value &&
           !addressForm.get('vigenciaContratación').value
-        "
-      >
+        ">
         <img src="assets/img/icon/borrar.svg" alt="buscar" />
       </button>
 
-      <button
-        mat-button
-        color="primary"
-        class="btn-buscar"
-        type="submit"
-      >
+      <button mat-button color="primary" class="btn-buscar" type="submit">
         <img src="assets/img/icon/lupa.svg" alt="buscar" />
         Buscar
       </button>

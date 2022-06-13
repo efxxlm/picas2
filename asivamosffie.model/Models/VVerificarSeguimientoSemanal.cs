@@ -10,6 +10,9 @@ namespace asivamosffie.model.Models
         public int NumeroSemana { get; set; }
         public string LlaveMen { get; set; }
         public string NumeroContrato { get; set; }
+        public int? ApoyoId { get; set; }
+        public int? SupervisorId { get; set; }
+        public int? InterventorId { get; set; }
         public string TipoIntervencion { get; set; }
         public string InstitucionEducativa { get; set; }
         public string Sede { get; set; }

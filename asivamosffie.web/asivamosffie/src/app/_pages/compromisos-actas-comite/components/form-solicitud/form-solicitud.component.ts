@@ -39,7 +39,8 @@ export class FormSolicitudComponent implements OnInit {
     defensaJudicial: '5',
     actualizacionProcesoSeleccion: '6',
     evaluacionProceso: '7',
-    ActuacionesControversias: '8'
+    ActuacionesControversias: '8',
+    novedadContractual: '11'
   }
   listaTipoSolicitud: Dominio[] = [];
   listaEstadoSolicitud: Dominio[] = [];

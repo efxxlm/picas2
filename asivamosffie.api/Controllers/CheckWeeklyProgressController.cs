@@ -69,7 +69,7 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<List<VVerificarSeguimientoSemanal>> GetListReporteSemanalView([FromQuery] List<string> strListCodEstadoSeguimientoSemanal)
         {
-            return await _checkWeeklyProgressService.GetListReporteSemanalView(strListCodEstadoSeguimientoSemanal);
+            return await _checkWeeklyProgressService.GetListReporteSemanalView(strListCodEstadoSeguimientoSemanal, Int32.Parse(HttpContext.User.FindFirst("UserId").Value));
         }
     }
 }

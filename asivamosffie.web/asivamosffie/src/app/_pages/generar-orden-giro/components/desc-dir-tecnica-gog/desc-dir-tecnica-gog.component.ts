@@ -65,16 +65,22 @@ export class DescDirTecnicaGogComponent implements OnInit {
             get listaCriterios para lista desplegable
             Se reutilizan los servicios del CU 4.1.7 "Solicitud de pago"
         */
-        this.listaCriterios = await this.registrarPagosSvc.getCriterioByFormaPagoCodigo( this.solicitudPagoFase.esPreconstruccion === true ? this.fasePreConstruccionFormaPagoCodigo.fasePreConstruccionFormaPagoCodigo : this.fasePreConstruccionFormaPagoCodigo.faseConstruccionFormaPagoCodigo ).toPromise()
+        const listaCriteriosTemp = await this.registrarPagosSvc.getCriterioByFormaPagoCodigo( this.solicitudPagoFase.esPreconstruccion === true ? this.fasePreConstruccionFormaPagoCodigo.fasePreConstruccionFormaPagoCodigo : this.fasePreConstruccionFormaPagoCodigo.faseConstruccionFormaPagoCodigo ).toPromise()
+        const listaCriteriosFinal = []
 
-        console.log( this.listaCriterios )
-        this.listaCriterios.forEach( value => {
-            const CRITERIO_INDEX = this.solicitudPagoFaseCriterio.findIndex( criterio => value.codigo === criterio.tipoCriterioCodigo )
+        this.solicitudPagoFaseCriterio.forEach( fc => {
+            const CRITERIO = listaCriteriosTemp.find( c => c.codigo === fc.tipoCriterioCodigo )
 
-            if ( CRITERIO_INDEX === -1 ) {
-                this.listaCriterios.splice( CRITERIO_INDEX, 1 )
-            }
+            if ( CRITERIO !== undefined ) listaCriteriosFinal.push( CRITERIO )
         } )
+        this.listaCriterios = listaCriteriosFinal
+        // this.listaCriterios.forEach( value => {
+        //     const CRITERIO_INDEX = this.solicitudPagoFaseCriterio.findIndex( criterio => value.codigo === criterio.tipoCriterioCodigo )
+
+        //     if ( CRITERIO_INDEX === -1 ) {
+        //         this.listaCriterios.splice( CRITERIO_INDEX, 1 )
+        //     }
+        // } )
 
         // Get data de la tabla descuentos
         this.solicitudPagoFaseCriterio.forEach( criterio => this.listData.valorNetoGiro += criterio.valorFacturado );

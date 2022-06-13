@@ -34,7 +34,10 @@ namespace asivamosffie.services
             return await _context.VRegistrarFase1
                 .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()
                     && r.TieneFasePreconstruccion.Value > 0
-                    && r.InterventorId == pAuthor
+                    && (  r.InterventorId == pAuthor
+                       || r.ApoyoId == pAuthor
+                       || r.SupervisorId == pAuthor 
+                    )
                     )
                 .OrderByDescending(r => r.FechaAprobacion)
                 .ToListAsync();

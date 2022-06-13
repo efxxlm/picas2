@@ -22,14 +22,17 @@ export class EntregaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.fichaProyectoService.getInfoSeguimientoEntregaETCByProyectoId(this.proyectoId).subscribe(response => {
+      this.dataEntrega = response; 
+    });
   }
 
   downloadPDF() {
     setTimeout(() => {
-      document.title='Entrega '+this.dataEntrega?.infoProyecto?.llaveMen;
+      document.title = 'Entrega ' + this.dataEntrega?.infoProyecto?.llaveMen;
       window.print();
     }, 300);
-    window.onafterprint = function(){
+    window.onafterprint = function () {
       window.location.reload();
     }
   }
