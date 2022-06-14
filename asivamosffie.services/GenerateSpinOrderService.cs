@@ -118,32 +118,40 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetListOrdenGiro(int pMenuId)
         {
-            return pMenuId switch
+            try
             {
-                (int)enumeratorMenu.Generar_Orden_de_giro => await _context.VOrdenGiro.Where(s =>
-                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_A_Order_Giro)
-                                                                   .OrderByDescending(r => r.FechaModificacion)
-                                                                   .ToListAsync(),
+                return pMenuId switch
+                {
+                    (int)enumeratorMenu.Generar_Orden_de_giro => await _context.VOrdenGiro.Where(s =>
+                                                 s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_A_Order_Giro)
+                                                                       .OrderByDescending(r => r.FechaModificacion)
+                                                                       .ToListAsync(),
 
-                (int)enumeratorMenu.Verificar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
-                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Verificacion_Orden_Giro
-                                              //&& s.FechaRegistroCompletoAprobar.HasValue
-                                              )
-                                                                   .OrderByDescending(r => r.FechaModificacion)
-                                                                   .ToListAsync(),
+                    (int)enumeratorMenu.Verificar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
+                                                 s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Verificacion_Orden_Giro
+                                                  //&& s.FechaRegistroCompletoAprobar.HasValue
+                                                  )
+                                                                       .OrderByDescending(r => r.FechaModificacion)
+                                                                       .ToListAsync(),
 
-                (int)enumeratorMenu.Aprobar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
-                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Aprobacion_Orden_Giro)
-                                                                   .OrderByDescending(r => r.FechaModificacion)
-                                                                   .ToListAsync(),
+                    (int)enumeratorMenu.Aprobar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
+                                                 s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_Para_Aprobacion_Orden_Giro)
+                                                                       .OrderByDescending(r => r.FechaModificacion)
+                                                                       .ToListAsync(),
 
-                (int)enumeratorMenu.Tramitar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
-                                             s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_para_tramite_ante_fiduciaria)
-                                                                   .OrderByDescending(r => r.FechaModificacion)
-                                                                   .ToListAsync(),
+                    (int)enumeratorMenu.Tramitar_orden_de_giro => await _context.VOrdenGiro.Where(s =>
+                                                 s.IntEstadoCodigo >= (int)EnumEstadoOrdenGiro.Enviada_para_tramite_ante_fiduciaria)
+                                                                       .OrderByDescending(r => r.FechaModificacion)
+                                                                       .ToListAsync(),
 
-                _ => new { },
-            };
+                    _ => new { },
+                };
+            }
+            catch (Exception ex)
+            {
+
+                return new { };
+            }
         }
 
         public async Task<dynamic> GetListSolicitudPagoOLD()
