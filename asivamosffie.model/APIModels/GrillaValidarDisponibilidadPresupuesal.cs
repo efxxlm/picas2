@@ -26,7 +26,9 @@ namespace asivamosffie.model.APIModels
         public int Id { get; set; } // id Registro
         public string TipoSolicitudCodigo { get; set; }
         public string TipoSolicitudText { get; set; }
-        public string OpcionPorContratar { get; set; }
+        public string OpcionPorContratar { get; set; }  
+        public string PlazoMesesContrato { get; set; }       
+        public string PlazoDiasContrato { get; set; }
         public string NumeroSolicitud { get; set; }
         public string NumeroDDP { get; set; } // de proyectos
         public decimal ValorSolicitud { get; set; }

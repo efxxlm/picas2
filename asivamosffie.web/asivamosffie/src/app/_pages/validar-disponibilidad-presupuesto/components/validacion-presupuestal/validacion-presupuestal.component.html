@@ -5,7 +5,7 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Validación presupuestal solicitud   {{detailavailabilityBudget?.numeroSolicitud}}
+        Validación presupuestal solicitud    {{detailavailabilityBudget?.numeroSolicitud}}
     </h1>
     <p class="info-sub-title">
         <span>Fecha de la solicitud: <b> {{detailavailabilityBudget?.fechaSolicitud | date:'dd/MM/yyyy'}}</b></span>
@@ -30,13 +30,13 @@
             </p>
             <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
                 <strong>Plazo antes de la modificación:</strong>
-                {{ datosContratoProyectoModificadosXNovedad[0]?.plazoMesesContrato }} meses /
-                {{ datosContratoProyectoModificadosXNovedad[0]?.plazoDiasContrato }} dias
+                {{ detailavailabilityBudget?.plazoMesesContrato }} meses /
+                {{ detailavailabilityBudget?.plazoDiasContrato }} dias
             </p>
             <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
               <strong>Plazo  despues de la modificación:</strong>
-              {{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesContrato }} meses /
-              {{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoDiasContrato }} dias
+              {{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesContrato : 0  }} meses /
+              {{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoDiasContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoDiasContrato  :0 }} dias
             </p>
             <div>
                 <strong>Objeto:</strong>
