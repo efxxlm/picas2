@@ -59,25 +59,33 @@ namespace asivamosffie.services
 
         //todas las solicitudes que fueron aprobadas por el comite tecnico.
         //TipoDominioId = 38, Codigo = 2, Nombre = Convocada
-        public async Task<List<dynamic>> GetCommitteeSessionFiduciario()
+        public async Task<List<dynamic>> GetCommitteeSessionFiduciario(int? idComiteFiduciario)
         {
             List<dynamic> listaSolicitudesGrilla = new List<dynamic>();
             List<dynamic> listaComitesGrilla = new List<dynamic>();
 
             try
-            {
+            {  
                 List<ComiteTecnico> listaComites = await _context.ComiteTecnico.AsNoTracking()
-                                                                                .Where(ct => (ct.EsComiteFiduciario == null || ct.EsComiteFiduciario == false)
-                                                                                            && ct.EstadoActaCodigo == "3") // aprobada
                                                                                 .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                                                                                   .ThenInclude(r=> r.ComiteTecnicoFiduciario)
+                                                                                   .ThenInclude(r => r.ComiteTecnicoFiduciario)
+                                                                                .Where(ct => (
+                                                                                                  ct.EsComiteFiduciario == null 
+                                                                                               || ct.EsComiteFiduciario == false
+                                                                                             )
+                                                                                            && ct.EstadoActaCodigo == ConstanCodigoEstadoActaContrato.Con_acta_generada //Acta aprobada
+                                                                                            && (
+                                                                                                  ct.SesionComiteSolicitudComiteTecnico.Any(r => r.ComiteTecnicoFiduciarioId == null)
+                                                                                              ||  ct.SesionComiteSolicitudComiteTecnico.Any(r => r.ComiteTecnicoFiduciarioId == idComiteFiduciario)
+                                                                                               )
+                                                                                            )   
                                                                                 .Include(r => r.SesionComiteTema)
                                                                                 .ToListAsync();
 
                 List<Dominio> ListTipoSolicitud = _context.Dominio.AsNoTracking().Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
 
 
-
+                List<NovedadContractual> ListNovedadContractual = _context.NovedadContractual.ToList();
                 List<Dominio> listaResponsables = _context.Dominio.AsNoTracking()
                                                         .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Miembros_Comite_Tecnico)
                                                         .ToList();
@@ -114,7 +122,13 @@ namespace asivamosffie.services
 
                     foreach (var ss in c.SesionComiteSolicitudComiteTecnico)
                     { 
-                        if (ss.EstadoCodigo == "1" && (ss.ComiteTecnicoFiduciarioId == null || ss.ComiteTecnicoFiduciario.EstadoComiteCodigo == ConstanCodigoEstadoComite.Fallida))
+                        if (ss.EstadoCodigo == "1" && (
+                                                       ( 
+                                                            ss.ComiteTecnicoFiduciarioId == null
+                                                        || ss.ComiteTecnicoFiduciarioId == idComiteFiduciario
+                                                       ) 
+                                                      )
+                            )
                             switch (ss.TipoSolicitudCodigo)
                             {
                                 case ConstanCodigoTipoSolicitud.Contratacion:
@@ -291,7 +305,8 @@ namespace asivamosffie.services
                                     }
                                 case ConstanCodigoTipoSolicitud.Novedad_Contractual:
                                     {
-                                        NovedadContractual novedadContractual = _context.NovedadContractual.Find(ss.SolicitudId);
+                                        NovedadContractual novedadContractual = ListNovedadContractual.Where(r=> r.NovedadContractualId == ss.SolicitudId)
+                                                                                                      .FirstOrDefault();
 
                                         if (novedadContractual != null)
                                             comite.data.Add(new
@@ -693,6 +708,21 @@ namespace asivamosffie.services
                                     ss.FechaSolicitud = (DateTime?)(controversiaActuacion.FechaActuacion);
                                     ss.NumeroSolicitud = controversiaActuacion.ControversiaContractual.NumeroSolicitud;
                                     ss.TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales).FirstOrDefault().Nombre;
+                                }
+                                break;
+                            }
+
+                        case ConstanCodigoTipoSolicitud.Novedad_Contractual:
+                            {
+                                NovedadContractual novedadContractual = _context.NovedadContractual
+                                                                                        .Where(r => r.NovedadContractualId == ss.SolicitudId) 
+                                                                                        .FirstOrDefault();
+
+                                if (novedadContractual != null)
+                                {
+                                    ss.FechaSolicitud = novedadContractual.FechaSolictud;
+                                    ss.NumeroSolicitud = novedadContractual.NumeroSolicitud;
+                                    ss.TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Novedad_Contractual).FirstOrDefault().Nombre;
                                 }
                                 break;
                             }

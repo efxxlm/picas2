@@ -15,8 +15,8 @@ export class FiduciaryCommitteeSessionService {
   ) 
   { }
 
-  getCommitteeSessionFiduciario(){
-    return this.http.get<SolicitudesContractuales[]>(`${environment.apiUrl}/CommitteeSessionFiduciario/getCommitteeSessionFiduciario`);
+  getCommitteeSessionFiduciario(id: number){
+    return this.http.get<SolicitudesContractuales[]>(`${environment.apiUrl}/CommitteeSessionFiduciario/getCommitteeSessionFiduciario?idComiteFiduciario=${ id }`);
   }
 
   createEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud( comite: ComiteTecnico ){

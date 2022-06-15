@@ -34,11 +34,11 @@ namespace asivamosffie.api.Controllers
         #region "ORDEN DEL DIA";
         [AllowAnonymous]
         [Route("GetCommitteeSessionFiduciario")]
-        public async Task<IActionResult> GetCommitteeSessionFiduciario()
+        public async Task<IActionResult> GetCommitteeSessionFiduciario(int? idComiteFiduciario)
         {
             try
             {
-                var result = await _committeeSessionFiduciarioService.GetCommitteeSessionFiduciario();
+                var result = await _committeeSessionFiduciarioService.GetCommitteeSessionFiduciario(idComiteFiduciario);
                 return Ok(result);
             }
             catch (Exception ex)

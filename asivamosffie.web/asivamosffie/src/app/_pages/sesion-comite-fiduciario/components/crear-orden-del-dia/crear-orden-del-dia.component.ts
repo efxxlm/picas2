@@ -72,7 +72,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
     forkJoin([
       this.commonService.listaMiembrosComiteTecnico(),
-      this.fiduciaryCommitteeSessionService.getCommitteeSessionFiduciario(),
+      this.fiduciaryCommitteeSessionService.getCommitteeSessionFiduciario( this.idSesion ),
       this.commonService.listaTipoTema(),
 
     ]).subscribe(response => {
