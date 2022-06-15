@@ -170,6 +170,7 @@ namespace asivamosffie.services
                           .Where(o => o.OrdenGiroId == pOrdenGiro.OrdenGiroId)
                           .Update(o => new OrdenGiro
                           {
+                              RegistroCompletoAprobar = true,
                               UrlSoporteFirmadoAprobar = pOrdenGiro.UrlSoporteFirmadoAprobar,
                               FechaModificacion = DateTime.Now,
                               UsuarioModificacion = pOrdenGiro.UsuarioCreacion
@@ -340,7 +341,7 @@ namespace asivamosffie.services
                             EstadoCodigo = ((int)EnumEstadoSolicitudPago.En_Proceso_de_Aprobacion_Orden_Giro).ToString(),
                             FechaModificacion = DateTime.Now,
                             UsuarioModificacion = pUsuarioMod,
-                            RegistroCompletoAprobar = blRegistroCompleto,
+                            //,RegistroCompletoAprobar = blRegistroCompleto,
                             FechaRegistroCompletoAprobar = FechaRegistroCompleto
                         });
                         break;
