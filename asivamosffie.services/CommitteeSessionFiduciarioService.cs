@@ -2780,6 +2780,58 @@ namespace asivamosffie.services
                     if (EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
                     { 
                         contratacion.EstadoSolicitudCodigo = ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteFiduciario;
+
+                        //Si el proyecto esta libre sin otra solicitud de contrato, deja incompleto el proyecto para que se pueda editar
+                        if (contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacionString.Interventoria)
+                        {
+                            foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
+                            {
+                                bool blTieneOtroContratoElProyecto = _context.VContratosActivosXproyectoId
+                                                            .Count(r => r.ProyectoId == ContratacionProyecto.ProyectoId) > 0;
+
+                                if (!blTieneOtroContratoElProyecto)
+                                {
+                                    _context.Set<Proyecto>().Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)
+                                                            .Update(p => new Proyecto
+                                                            {
+                                                                RegistroCompleto = false
+                                                            });
+                                }
+                                _context.Set<Proyecto>()
+                                        .Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)
+                                        .Update(p => new Proyecto
+                                        {
+                                            EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario,
+                                            RegistroCompleto = false
+                                        });
+                            }
+                        }
+                        else
+                        {
+                            foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
+                            {
+                                bool blTieneOtroContratoElProyecto = _context.VContratosActivosXproyectoId
+                                                                   .Count(r => r.ProyectoId == ContratacionProyecto.ProyectoId) > 0;
+
+                                if (!blTieneOtroContratoElProyecto)
+                                {
+                                    _context.Set<Proyecto>().Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)
+                                                            .Update(p => new Proyecto
+                                                            {
+                                                                RegistroCompleto = false
+                                                            });
+                                }
+                                _context.Set<Proyecto>()
+                                        .Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)
+                                        .Update(p => new Proyecto
+                                        {
+                                            EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario
+                                        });
+                            }
+                        }
+
+
+
                     }
                 }
 

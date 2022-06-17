@@ -264,6 +264,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VContratoPagosRealizados> VContratoPagosRealizados { get; set; }
         public virtual DbSet<VContratoProyectoFechaEstimadaFinalizacion> VContratoProyectoFechaEstimadaFinalizacion { get; set; }
         public virtual DbSet<VContratoProyectoValorEstimado> VContratoProyectoValorEstimado { get; set; }
+        public virtual DbSet<VContratosActivosXproyectoId> VContratosActivosXproyectoId { get; set; }
         public virtual DbSet<VContratosDisponiblesNovedad> VContratosDisponiblesNovedad { get; set; }
         public virtual DbSet<VContratosXcontratacionProyecto> VContratosXcontratacionProyecto { get; set; }
         public virtual DbSet<VCuentaBancariaPago> VCuentaBancariaPago { get; set; }
@@ -9134,6 +9135,13 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorTotalObraInterventoria).HasColumnType("numeric(18, 2)");
 
                 entity.Property(e => e.ValorTotalProyecto).HasColumnType("numeric(38, 2)");
+            });
+
+            modelBuilder.Entity<VContratosActivosXproyectoId>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ContratosActivosXProyectoId");
             });
 
             modelBuilder.Entity<VContratosDisponiblesNovedad>(entity =>

@@ -2853,10 +2853,9 @@ namespace asivamosffie.services
                         { 
                             foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
                             {
-
-                                bool blTieneOtroContratoElProyecto = _context.ContratacionProyecto.Count(r => r.ProyectoId == ContratacionProyecto.ProyectoId
-                                                                         && r.ContratacionId != ContratacionProyecto.ContratacionId
-                                                                         && r.Eliminado != true) > 0;
+                                bool blTieneOtroContratoElProyecto = _context.VContratosActivosXproyectoId
+                                                                     .Count(r => r.ProyectoId == ContratacionProyecto.ProyectoId) > 0;
+                               
                                 if (!blTieneOtroContratoElProyecto)
                                 {
                                     _context.Set<Proyecto>().Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)
@@ -2878,9 +2877,9 @@ namespace asivamosffie.services
                         { 
                             foreach (var ContratacionProyecto in contratacion.ContratacionProyecto)
                             {
-                                bool blTieneOtroContratoElProyecto = _context.ContratacionProyecto.Count(r => r.ProyectoId == ContratacionProyecto.ProyectoId
-                                                                         && r.ContratacionId != ContratacionProyecto.ContratacionId
-                                                                         && r.Eliminado != true) > 0;
+                                bool blTieneOtroContratoElProyecto = _context.VContratosActivosXproyectoId
+                                                           .Count(r => r.ProyectoId == ContratacionProyecto.ProyectoId) > 0;
+
                                 if (!blTieneOtroContratoElProyecto)
                                 {
                                     _context.Set<Proyecto>().Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)

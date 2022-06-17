@@ -24,7 +24,7 @@ namespace asivamosffie.model.Models
         public int IntEstadoCodigo { get; set; }
         public bool RegistroCompleto { get; set; }
         public bool RegistroCompletoVerificar { get; set; }
-        public bool RegistroCompletoAprobar { get; set; }
+        public bool? RegistroCompletoAprobar { get; set; }
         public bool RegistroCompletoTramitar { get; set; }
         public DateTime? FechaRegistroCompletoTramitar { get; set; }
     }
