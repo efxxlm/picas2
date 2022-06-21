@@ -601,7 +601,7 @@ namespace asivamosffie.services
                         EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion,
                         FechaCreacion = DateTime.Now,
                         UsuarioCreacion = pUsuarioCreo
-                };
+                    };
                     _context.AjusteProgramacion.Add(ajusteProgramacionTemp);
                     _context.SaveChanges();
                 }
