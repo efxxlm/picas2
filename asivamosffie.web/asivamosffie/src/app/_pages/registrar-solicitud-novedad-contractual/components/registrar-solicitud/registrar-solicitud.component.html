@@ -103,17 +103,17 @@
       </p>
       <p>
         <strong>Nombre del contratista:</strong>
-        {{ contrato?.nombreContratista }}
+        {{ contrato.nombreContratista != null && contrato?.nombreContratista != undefined ? contrato?.nombreContratista : contrato?.contratacion?.contratista?.nombre }}
       </p>
       <p>
         <strong>Tipo de identificación:</strong>
         <span>
-          {{ contrato?.tipoIdentificacion }}
+          {{ contrato.tipoIdentificacion != null && contrato?.tipoIdentificacion != undefined ? contrato?.tipoIdentificacion : contrato?.contratacion?.contratista?.tipoIdentificacionNotMapped }}
         </span>
       </p>
       <p>
         <strong>Número de identificación</strong>
-        {{ contrato?.numeroIdentificacion }}
+        {{ contrato.numeroIdentificacion != null && contrato?.numeroIdentificacion != undefined ? contrato?.numeroIdentificacion : contrato?.contratacion?.contratista?.numeroIdentificacion }}
       </p>
       <!-- <p>
         <strong>Tipo de intervención:</strong>
@@ -142,13 +142,11 @@
       <p>
         <strong>Plazo:</strong>
         {{
-          contrato?.plazoMeses != null ?
-          (contrato?.plazoMeses) : 0
+          contrato.plazoMeses != null && contrato.plazoMeses != undefined ? contrato.plazoMeses : contrato?.datosContratoProyectoModificadosXNovedad[0]?.plazoMesesContrato
         }}
         meses /
         {{
-            contrato?.plazoDias != null ?
-            (contrato?.plazoDias) : 0
+          contrato.plazoDias != null && contrato.plazoDias != undefined ? contrato.plazoDias : contrato?.datosContratoProyectoModificadosXNovedad[0]?.plazoDiasContrato
         }}
         días
       </p>
