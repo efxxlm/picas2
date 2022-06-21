@@ -912,7 +912,7 @@ namespace asivamosffie.services
             }
 
             bool TieneOrdenGiro = proyecto?.ContratacionProyecto?.FirstOrDefault()?.Contratacion?.Contrato?.FirstOrDefault()?.SolicitudPago?.Any(r => r.OrdenGiro?.OrdenGiroId > 0) ?? false;
-
+             
             ProyectoAjustado.Add(new
             {
                 TieneOrdenGiro = TieneOrdenGiro,
