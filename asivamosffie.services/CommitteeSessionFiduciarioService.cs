@@ -4068,7 +4068,8 @@ namespace asivamosffie.services
                                     }
                                 }
                                 break;
-                            case ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales:
+                            case ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales: 
+                            case ConstanCodigoTipoSolicitud.ControversiasContractuales:
                                 ControversiaActuacion controversiaActuacion = ListControversiaActuacion.Where(c => c.ControversiaActuacionId == SesionComiteSolicitud.SolicitudId).FirstOrDefault();
 
                                 foreach (Dominio placeholderDominio in placeholders)
@@ -4077,12 +4078,12 @@ namespace asivamosffie.services
                                     {
                                         case ConstanCodigoVariablesPlaceHolders.NUMERO_SOLICITUD:
                                             RegistrosSolicitudesContractuales = RegistrosSolicitudesContractuales
-                                                .Replace(placeholderDominio.Nombre, controversiaActuacion?.ControversiaContractual?.NumeroSolicitud + " - " + controversiaActuacion.NumeroActuacion);
+                                                .Replace(placeholderDominio.Nombre, controversiaActuacion?.ControversiaContractual?.NumeroSolicitud + " - " + controversiaActuacion?.NumeroActuacion);
                                             break;
 
                                         case ConstanCodigoVariablesPlaceHolders.FECHA_SOLICITUD:
                                             string FechaSolicitud = string.Empty;
-                                            if (controversiaActuacion.FechaActuacion.HasValue)
+                                            if (controversiaActuacion != null && controversiaActuacion.FechaActuacion.HasValue)
                                             {
                                                 FechaSolicitud = ((DateTime)controversiaActuacion.FechaActuacion).ToString("dd-MM-yyy");
                                             }
