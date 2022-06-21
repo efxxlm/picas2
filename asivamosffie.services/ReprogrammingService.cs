@@ -595,12 +595,13 @@ namespace asivamosffie.services
 
                 if (ajusteProgramacionTemp == null)
                 {
-                    ajusteProgramacionTemp.ContratacionProyectoId = pContratacionProyectId;
-                    ajusteProgramacionTemp.NovedadContractualId = pNovedadContractualId;
-                    ajusteProgramacionTemp.EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion;
-                    ajusteProgramacionTemp.FechaCreacion = DateTime.Now;
-                    ajusteProgramacionTemp.UsuarioCreacion = pUsuarioCreo;
-
+                    ajusteProgramacionTemp = new AjusteProgramacion{
+                        ContratacionProyectoId = pContratacionProyectId,
+                        NovedadContractualId = pNovedadContractualId,
+                        EstadoCodigo = ConstanCodigoEstadoAjusteProgramacion.En_proceso_de_ajuste_a_la_programacion,
+                        FechaCreacion = DateTime.Now,
+                        UsuarioCreacion = pUsuarioCreo
+                };
                     _context.AjusteProgramacion.Add(ajusteProgramacionTemp);
                     _context.SaveChanges();
                 }
