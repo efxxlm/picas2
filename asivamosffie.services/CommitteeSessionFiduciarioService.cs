@@ -2791,14 +2791,14 @@ namespace asivamosffie.services
 
                                 if (!blTieneOtroContratoElProyecto)
                                 {
-                                    _context.Set<Proyecto>().Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)
+                                    _context.Set<Proyecto>().Where(x => x.ProyectoId == ContratacionProyecto.ProyectoId)
                                                             .Update(p => new Proyecto
                                                             {
                                                                 RegistroCompleto = false
                                                             });
                                 }
                                 _context.Set<Proyecto>()
-                                        .Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)
+                                        .Where(x => x.ProyectoId == ContratacionProyecto.ProyectoId)
                                         .Update(p => new Proyecto
                                         {
                                             EstadoProyectoInterventoriaCodigo = ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario,
@@ -2815,14 +2815,14 @@ namespace asivamosffie.services
 
                                 if (!blTieneOtroContratoElProyecto)
                                 {
-                                    _context.Set<Proyecto>().Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)
+                                    _context.Set<Proyecto>().Where(x => x.ProyectoId == ContratacionProyecto.ProyectoId)
                                                             .Update(p => new Proyecto
                                                             {
                                                                 RegistroCompleto = false
                                                             });
                                 }
                                 _context.Set<Proyecto>()
-                                        .Where(x => x.ProyectoId == ContratacionProyecto.Proyecto.ProyectoId)
+                                        .Where(x => x.ProyectoId == ContratacionProyecto.ProyectoId)
                                         .Update(p => new Proyecto
                                         {
                                             EstadoProyectoObraCodigo = ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario

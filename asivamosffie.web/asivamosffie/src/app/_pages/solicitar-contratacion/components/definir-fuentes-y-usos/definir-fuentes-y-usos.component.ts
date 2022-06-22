@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatSelectChange } from '@angular/material/select';
 import { FuenteFinanciacion } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-definir-fuentes-y-usos',
@@ -533,7 +534,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
       let valorTotal = 0;
       let valorSumado = 0;
-
+ 
       valorTotal = aportante.valorAporte;
 
       listaComponentes.controls.forEach(controlComponente => {
@@ -555,9 +556,12 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
             tipoUsoCodigo: controlUsos.get('usoDescripcion').value ? controlUsos.get('usoDescripcion').value.codigo : null,
             valorUso: controlUsos.get('valorUso').value,
           };
-
-          valorSumado = valorSumado + componenteUso.valorUso;
-          valorTotalUsos  = valorTotalUsos + valorSumado;
+          if(componenteUso.valorUso > 0)
+          {
+            valorSumado += componenteUso.valorUso;
+            valorTotalUsos   += componenteUso.valorUso;
+          }
+         
           componenteAportante.componenteUso.push(componenteUso);
         });
 
@@ -585,7 +589,10 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     };
     if (this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '2' && totalAportantes === this.aportantes.controls.length) {
       if (valorTotalUsos !== this.contratacionProyecto.proyecto.valorInterventoria) {
-        this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de interventoría.</b>');
+        
+        var ValorTotalUsosFormat = new Intl.NumberFormat().format(valorTotalUsos);
+        var valorInterventoriaFormat = new Intl.NumberFormat().format(this.contratacionProyecto.proyecto.valorInterventoria);
+        this.openDialog('', '<b>El valor del aporte $'+ ValorTotalUsosFormat +' no corresponde con el valor  $'+ valorInterventoriaFormat +' requerido en la solicitud de interventoría.</b>');
         return;
       };
     };
