@@ -130,7 +130,7 @@ export class TerceroCausacionGogComponent implements OnInit {
         if (this.balanceFinanciero.balanceFinancieroTraslado !== undefined) {
             if (this.balanceFinanciero.balanceFinancieroTraslado.length > 0) {
               const traslado = this.balanceFinanciero.balanceFinancieroTraslado.find( traslado => traslado.ordenGiroId === this.ordenGiroId )
-      
+
               if (traslado !== undefined) {
                 this.balanceFinancieroTraslado = traslado;
                 this.balanceFinancieroTrasladoId = this.balanceFinancieroTraslado.balanceFinancieroTrasladoId;
@@ -141,7 +141,6 @@ export class TerceroCausacionGogComponent implements OnInit {
 
         if ( this.balanceFinanciero ) {
             this.balanceFinancieroId = this.balanceFinanciero.balanceFinancieroId;
-            this.balanceFinancieroTrasladoValor = this.balanceFinanciero.balanceFinancieroTrasladoValor;
         }
 
         // Get Tablas
