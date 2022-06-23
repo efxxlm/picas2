@@ -156,9 +156,10 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
             )
         }
 
+        console.log( this.resultadoBusqueda.controls[ index ].get( 'check' ).value, this.ordenesGiro.controls, this.resultadoBusqueda )
         if ( this.resultadoBusqueda.controls[ index ].get( 'check' ).value === false ) {
             if ( this.ordenesGiro.length > 0 ) {
-                const ordenGiroIndex = this.ordenesGiro.controls.findIndex( control => control.get( 'contratacionProyectoId' ).value === this.resultadoBusqueda.controls[ index ].get( 'contratacionProyectoId' ).value );
+                const ordenGiroIndex = this.ordenesGiro.controls.findIndex( control => control.get( 'solicitudPagoId' ).value === this.resultadoBusqueda.controls[ index ].get( 'solicitudPagoId' ).value );
 
                 if ( ordenGiroIndex !== -1 ) {
                     this.ordenesGiro.removeAt( ordenGiroIndex );

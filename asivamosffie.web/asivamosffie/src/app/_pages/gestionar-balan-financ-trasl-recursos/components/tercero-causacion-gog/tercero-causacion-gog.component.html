@@ -301,7 +301,7 @@
                                                               #nuevoValorDescuento
                                                               min="0"
                                                               currencyMask
-                                                              maxlength="20"
+                                                              maxlength="28"
                                                               required
                                                               formControlName="nuevoValorDescuento"
                                                               (keypress)="validateNumberKeypress($event)"
@@ -316,7 +316,7 @@
                                                             [matTooltipPosition]="'above'"
                                                             matTooltip="Valor en ($) Pesos colombianos"
                                                             matTooltipClass="info-tooltip"
-                                                            >{{ 20 - nuevoValorDescuento.value.length }}
+                                                            >{{ 20 - aportante.get('nuevoValorDescuento').value?.toString().length }}
                                                           </span>
                                                     </div>
                                                     <span class="icon-incompleto">
@@ -548,7 +548,7 @@
                                                                                                 #nuevoValorDescuento
                                                                                                 min="0"
                                                                                                 currencyMask
-                                                                                                maxlength="20"
+                                                                                                maxlength="28"
                                                                                                 required
                                                                                                 formControlName="nuevoValorDescuento"
                                                                                                 (keypress)="validateNumberKeypress($event)"
@@ -559,7 +559,7 @@
                                                                                     <span   class="contador"
                                                                                             [matTooltipPosition]="'above'"
                                                                                             matTooltip="Valor en ($) Pesos colombianos"
-                                                                                            matTooltipClass="info-tooltip">{{20 - nuevoValorDescuento.value.length}}
+                                                                                            matTooltipClass="info-tooltip">{{20 - aportanteDescuento.get( 'nuevoValorDescuento' ).value?.toString().length}}
                                                                                     </span>
                                                                                 </div>
                                                                             </div>
