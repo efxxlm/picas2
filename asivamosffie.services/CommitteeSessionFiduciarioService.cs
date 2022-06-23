@@ -3922,9 +3922,7 @@ namespace asivamosffie.services
                 string registrosProcesosSelecccion = string.Empty;
 
                 //Tabla Responsables
-
-          
-
+                 
                 #region Orden del dia 
                 //Orden del dia 
 
