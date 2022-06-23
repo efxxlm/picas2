@@ -142,11 +142,11 @@
       <p>
         <strong>Plazo:</strong>
         {{
-          contrato.plazoMeses != null && contrato.plazoMeses != undefined ? contrato.plazoMeses : contrato?.datosContratoProyectoModificadosXNovedad[0]?.plazoMesesContrato
+          contrato.plazoMeses != null && contrato.plazoMeses != undefined ? contrato.plazoMeses : contrato.datosContratoProyectoModificadosXNovedad != undefined ? contrato?.datosContratoProyectoModificadosXNovedad[0]?.plazoMesesContrato : 0
         }}
         meses /
         {{
-          contrato.plazoDias != null && contrato.plazoDias != undefined ? contrato.plazoDias : contrato?.datosContratoProyectoModificadosXNovedad[0]?.plazoDiasContrato
+          contrato.plazoDias != null && contrato.plazoDias != undefined ? contrato.plazoDias : contrato.datosContratoProyectoModificadosXNovedad != undefined ? contrato?.datosContratoProyectoModificadosXNovedad[0]?.plazoDiasContrato : 0
         }}
         días
       </p>

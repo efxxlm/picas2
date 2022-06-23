@@ -29,23 +29,23 @@
         <strong>Valor de la solicitud:</strong>
         {{detailavailabilityBudget?.valorSolicitud | currency:'':'symbol':'3.0'}}
       </p>
-      <p *ngIf="detailavailabilityBudget?.novedadContractual">
+      <p *ngIf="detailavailabilityBudget?.novedadContractual && datosContratoProyectoModificadosXNovedad != undefined">
         <strong>Valor antes de la modificación:</strong>
-        <span *ngIf="!(detailavailabilityBudget?.estadoSolicitudCodigo == '5' || detailavailabilityBudget?.estadoSolicitudCodigo == '8')">{{detailavailabilityBudget?.valorTotalDisponibilidad + detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}</span>
-        <span *ngIf="(detailavailabilityBudget?.estadoSolicitudCodigo == '5' || detailavailabilityBudget?.estadoSolicitudCodigo == '8')">{{detailavailabilityBudget?.valorTotalDisponibilidad | currency:'':'symbol':'3.0'}}</span>
+        <span>{{ datosContratoProyectoModificadosXNovedad[0]?.valorContrato | currency:'':'symbol':'3.0'}}</span>
       </p>
-      <p *ngIf="detailavailabilityBudget?.novedadContractual">
+      <p *ngIf="detailavailabilityBudget?.novedadContractual && datosContratoProyectoModificadosXNovedad != undefined ">
         <strong>Valor después de la modificación:</strong>
-        <span *ngIf="!(detailavailabilityBudget?.estadoSolicitudCodigo == '5' || detailavailabilityBudget?.estadoSolicitudCodigo == '8')">{{detailavailabilityBudget?.valorTotalDisponibilidad + detailavailabilityBudget?.novedadContractual.novedadContractualDescripcion[0].presupuestoAdicionalSolicitado | currency:'':'symbol':'3.0'}}</span>
-        <span *ngIf="(detailavailabilityBudget?.estadoSolicitudCodigo == '5' || detailavailabilityBudget?.estadoSolicitudCodigo == '8')">{{detailavailabilityBudget?.valorTotalDisponibilidad | currency:'':'symbol':'3.0'}}</span>
+        <span>{{ datosContratoProyectoModificadosXNovedad[0]?.valorTotalContrato | currency:'':'symbol':'3.0' }}</span>
       </p>
       <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo == pTipoDDP.DDP_tradicional">
-        <strong>Plazo:</strong>
-        {{ detailavailabilityBudget?.plazo }}
+        <strong>Plazo antes de la modificación:</strong>
+        {{ detailavailabilityBudget?.plazoMesesContrato }} meses /
+        {{ detailavailabilityBudget?.plazoDiasContrato }} dias
       </p>
-      <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo == pTipoDDP.DDP_tradicional">
-        <strong>Plazo después de la modificación::</strong>
-        {{ detailavailabilityBudget?.plazo }}
+      <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo == pTipoDDP.DDP_tradicional && datosContratoProyectoModificadosXNovedad != undefined">
+        <strong>Plazo después de la modificación:</strong>
+        {{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesContrato : 0  }} meses /
+        {{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoDiasContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoDiasContrato  :0 }} dias
       </p>
       <div>
         <strong>Objeto:</strong>
