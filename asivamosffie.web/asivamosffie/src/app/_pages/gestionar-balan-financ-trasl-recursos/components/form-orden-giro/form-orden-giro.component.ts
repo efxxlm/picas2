@@ -117,6 +117,7 @@ export class FormOrdenGiroComponent implements OnInit, OnChanges {
     }
 
     async ngOnInit() {
+        console.log( this.esVerDetalle, this.esRegistroNuevo )
         this.listaModalidad = await this.commonSvc.modalidadesContrato().toPromise()
         this.listaTipoSolicitud = await this.commonSvc.listaTipoSolicitudContrato().toPromise()
     }

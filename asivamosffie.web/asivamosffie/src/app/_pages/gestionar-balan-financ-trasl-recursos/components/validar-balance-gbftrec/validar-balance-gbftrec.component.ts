@@ -50,6 +50,7 @@ export class ValidarBalanceGbftrecComponent implements OnInit {
                 .subscribe( getDataByProyectoId => {
                     if( getDataByProyectoId.length > 0 ){
                         this.data = getDataByProyectoId[0];
+                        console.log( this.data, getDataByProyectoId )
                         this.cumpleCondicionesTai = this.data?.cumpleCondicionesTai;
                     }
                 } );
