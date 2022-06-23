@@ -181,16 +181,16 @@ namespace asivamosffie.services
                 CreateEditBalanceFinancieroTrasladoValor(BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor, pAuthor);
 
 
-                BalanceFinancieroTraslado.OrdenGiro.ValorNetoGiroTraslado =
+                //BalanceFinancieroTraslado.OrdenGiro.ValorNetoGiroTraslado =
                 //     await CreateEditOrdenGiroTraslado(BalanceFinancieroTraslado.OrdenGiro);
 
-                _context.Set<OrdenGiro>()
-                             .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
-                             .Update(o => new OrdenGiro
-                             {
-                                 ValorNetoGiroTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado) ?? 0
-                                 // , TieneTraslado = true
-                             });
+                //_context.Set<OrdenGiro>()
+                //             .Where(o => o.OrdenGiroId == BalanceFinancieroTraslado.OrdenGiroId)
+                //             .Update(o => new OrdenGiro
+                //             {
+                //                 ValorNetoGiroTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado) ?? 0
+                //                 // , TieneTraslado = true
+                //             });
             }
         }
 
