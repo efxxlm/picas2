@@ -933,18 +933,14 @@ namespace asivamosffie.services
                      .ThenInclude(r => r.SesionTemaVoto)
                   .Include(r => r.SesionComiteTema)
                      .ThenInclude(r => r.TemaCompromiso)
+                  .Include(r=> r.SesionResponsable)
                  .AsNoTracking()
                  .FirstOrDefaultAsync();
 
 
-            //foreach (var SesionComiteTema in comiteTecnico.SesionComiteTema)
-            //{
-            //    if (SesionComiteTema.SesionTemaVoto.Count > 0)
-            //        SesionComiteTema.SesionTemaVoto = SesionComiteTema.SesionTemaVoto.Where(r => r.NoAplica != true).ToList();
-            //}
-
-
-            //    comiteTecnico.SesionParticipante = sesionParticipantes;
+            ///Eliminar Dependencias no activas
+            if (comiteTecnico.SesionResponsable.Count > 0)
+                comiteTecnico.SesionResponsable = comiteTecnico.SesionResponsable.Where(r => r.Eliminado != true).OrderByDescending(c=> c.SesionResponsableId).ToList();
 
             comiteTecnico.SesionInvitado = comiteTecnico.SesionInvitado.Where(r => !(bool)r.Eliminado).ToList();
 
@@ -2516,6 +2512,36 @@ namespace asivamosffie.services
                         SesionInvitadoOld.Entidad = SesionInvitado.Entidad;
                     }
                 }
+
+                //Control de cambios 
+                foreach (var SesionResponsable in pComiteTecnico.SesionResponsable)
+                {
+
+                    if (SesionResponsable.SesionResponsableId == 0)
+                    {
+                        _context.SesionResponsable.Add(new SesionResponsable
+                        {
+                            FechaCreacion = DateTime.Now,
+                            UsuarioCreacion = pComiteTecnico.UsuarioCreacion,
+                            Eliminado = false,
+                            Cargo = SesionResponsable.Cargo,
+                            ComiteTecnicoId = pComiteTecnico.ComiteTecnicoId,
+                            Entidad = SesionResponsable.Entidad,
+                            Nombre = SesionResponsable.Nombre,
+                            EsDelegado = SesionResponsable.EsDelegado
+                        });
+                    }
+                    else
+                    {
+                        SesionResponsable SesionInvitadoOld = _context.SesionResponsable.Find(SesionResponsable.SesionResponsableId);
+                        SesionInvitadoOld.FechaModificacion = DateTime.Now;
+                        SesionInvitadoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
+                        SesionInvitadoOld.Nombre = SesionResponsable.Nombre;
+                        SesionInvitadoOld.Cargo = SesionResponsable.Cargo;
+                        SesionInvitadoOld.Entidad = SesionResponsable.Entidad;
+                        SesionInvitadoOld.EsDelegado = SesionResponsable.EsDelegado;
+                    }
+                }
                 _context.SaveChanges();
                 return
                     new Respuesta
@@ -3719,8 +3745,7 @@ namespace asivamosffie.services
                  
                 List<Contratacion> ListContratacion = new List<Contratacion>();
                 List<ProcesoSeleccion> ListProcesoSeleccion = new List<ProcesoSeleccion>();
-
-                #region consulta Contratacion
+                 #region consulta Contratacion
 
 
                 ListContratacion = _context.Contratacion.AsNoTracking()
@@ -3895,6 +3920,10 @@ namespace asivamosffie.services
                 string RegistrosFirmas = string.Empty;
 
                 string registrosProcesosSelecccion = string.Empty;
+
+                //Tabla Responsables
+
+          
 
                 #region Orden del dia 
                 //Orden del dia 

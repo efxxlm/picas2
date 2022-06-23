@@ -6,8 +6,8 @@ import { forkJoin } from 'rxjs';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { ComiteTecnico, EstadosComite, SesionInvitado, SesionParticipante } from 'src/app/_interfaces/technicalCommitteSession';
-
+import { ComiteTecnico, EstadosComite, SesionInvitado, SesionParticipante, SesionResponsable } from 'src/app/_interfaces/technicalCommitteSession';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 @Component({
   selector: 'app-form-registrar-participantes',
   templateUrl: './form-registrar-participantes.component.html',
@@ -19,7 +19,8 @@ export class FormRegistrarParticipantesComponent {
 
   addressForm = this.fb.group({
     miembrosParticipantes: [null, Validators.required],
-    invitados: this.fb.array([])
+    invitados: this.fb.array([]),
+    responsables: this.fb.array([])
   });
 
   estadoFormulario = {
@@ -50,26 +51,71 @@ export class FormRegistrarParticipantesComponent {
     private fb: FormBuilder,
     private commonService: CommonService,
     private activatedRoute: ActivatedRoute,
+    private technicalCommitteSessionService: TechnicalCommitteSessionService,
     private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
     public dialog: MatDialog,
     private router: Router,
 
   ) {
-    this.activatedRoute.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
-      if ( urlSegment.path === 'registrarParticipantes' ) {
-          this.esVerDetalle = false;
-          this.esRegistroNuevo = true;
-          return;
+    this.activatedRoute.snapshot.url.forEach((urlSegment: UrlSegment) => {
+      if (urlSegment.path === 'registrarParticipantes') {
+        this.esVerDetalle = false;
+        this.esRegistroNuevo = true;
+        return;
       }
-      if ( urlSegment.path === 'verDetalleEditarParticipantes' ) {
-          this.esVerDetalle = false;
-          this.esRegistroNuevo = false;
-          return;
+      if (urlSegment.path === 'verDetalleEditarParticipantes') {
+        this.esVerDetalle = false;
+        this.esRegistroNuevo = false;
+        return;
       }
-      if ( urlSegment.path === 'verDetalleParticipantes' ) {
-          this.esVerDetalle = true;
-          return;
+      if (urlSegment.path === 'verDetalleParticipantes') {
+        this.esVerDetalle = true;
+        this.responsables.disable();
+        return;
       }
+    });
+  }
+
+  // Control de cambios Responsables
+
+  get responsables() {
+    return this.addressForm.get('responsables') as FormArray;
+  }
+
+  crearResponsable() {
+    return this.fb.group({
+      sesionResponsableId: [],
+      nombre: [null, Validators.compose([Validators.required, Validators.minLength(1), Validators.maxLength(300)])],
+      cargo: [null, Validators.compose([Validators.minLength(1), Validators.maxLength(50)])],
+      entidad: [null, Validators.compose([Validators.minLength(1), Validators.maxLength(100)])],
+      esDelegado: [null]
+    });
+  }
+  openDialogSiNoRes(modalTitle: string, modalText: string, e: number, esResponsable: boolean) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        if (esResponsable != true) {
+          this.onDelete(e);
+        } else {
+          this.onDeleteResponsable(e);
+        }
+      }
+    });
+  }
+  agregaResponsable() {
+    this.responsables.push(this.crearResponsable());
+  }
+
+  onDeleteResponsable(i: number) {
+    let grupo = this.responsables.controls[i] as FormGroup;
+    let idResponsable = grupo.get('sesionResponsableId').value ? grupo.get('sesionResponsableId').value : 0;
+    this.technicalCommitteSessionService.deleteSesionResponsable(idResponsable).subscribe(respuesta => {
+      this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
+      this.borrarArray(this.responsables, i);
     });
   }
 
@@ -97,6 +143,7 @@ export class FormRegistrarParticipantesComponent {
           this.fiduciaryCommitteeSessionService.getSesionParticipantesByIdComite(id),
 
         ]).subscribe(response => {
+
           response[0].sesionParticipante = response[1];
           this.objetoComiteTecnico = response[0];
 
@@ -136,7 +183,26 @@ export class FormRegistrarParticipantesComponent {
               this.invitados.push(grupoInvitado);
             })
           }
+          if (this.objetoComiteTecnico.sesionResponsable.length > 0) {
+            this.responsables.clear();
 
+            this.objetoComiteTecnico.sesionResponsable.forEach(i => {
+              let grupoResponsable = this.crearResponsable();
+
+              grupoResponsable.get('nombre').setValue(i.nombre);
+              grupoResponsable.get('cargo').setValue(i.cargo);
+              grupoResponsable.get('entidad').setValue(i.entidad);
+              grupoResponsable.get('sesionResponsableId').setValue(i.sesionResponsableId);
+              grupoResponsable.get('esDelegado').setValue(i.esDelegado);
+
+              this.responsables.push(grupoResponsable);
+            });
+
+            if(this.esVerDetalle)
+                   this.responsables.disable()
+          } else {
+            this.agregaResponsable();
+          }
         })
 
       })
@@ -183,8 +249,8 @@ export class FormRegistrarParticipantesComponent {
 
       this.estadoSolicitudes = this.estadoFormulario.completo;
 
-    return true;
-  }
+      return true;
+    }
 
     let cantidadSolicitudesCompletas = 0;
     let cantidadSolicitudes = 0;
@@ -380,7 +446,7 @@ export class FormRegistrarParticipantesComponent {
         comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
         sesionParticipante: [],
         sesionInvitado: [],
-
+        sesionResponsable: [],
       }
 
       let miembros = this.addressForm.get('miembrosParticipantes').value;
@@ -390,10 +456,8 @@ export class FormRegistrarParticipantesComponent {
           let sesionParticipante: SesionParticipante = {
             sesionParticipanteId: m.sesionParticipanteId,
             comiteTecnicoId: comite.comiteTecnicoId,
-            usuarioId: m.usuarioId,
-
-          }
-
+            usuarioId: m.usuarioId, 
+          } 
           comite.sesionParticipante.push(sesionParticipante);
         });
       }
@@ -404,15 +468,27 @@ export class FormRegistrarParticipantesComponent {
           sesionInvitadoId: control.get('sesionInvitadoId').value,
           nombre: control.get('nombre').value,
           cargo: control.get('cargo').value,
-          entidad: control.get('entidad').value,
-
-        }
-
+          entidad: control.get('entidad').value, 
+        } 
         comite.sesionInvitado.push(sesionInvitado);
-      })
+      }) 
+      //Control de Cambios
 
-      console.log(comite)
+      this.responsables.controls.forEach(control => {
+        let sesionResponsable: SesionResponsable = {
+          comiteTecnicoId: this.objetoComiteTecnico.comiteTecnicoId,
+          sesionResponsableId: control.get('sesionResponsableId').value,
+          nombre: control.get('nombre').value,
+          cargo: control.get('cargo').value,
+          entidad: control.get('entidad').value,
+          esDelegado: control.get('esDelegado').value
+        };  
+        comite.sesionResponsable.push(sesionResponsable); 
+      });
 
+          console.log(comite)
+
+      console.log(this.addressForm.get('miembrosParticipantes').value);
       this.fiduciaryCommitteeSessionService.createEditSesionInvitadoAndParticipante(comite)
         .subscribe(respuesta => {
           this.openDialog('', `<b>${respuesta.message}</b>`)
@@ -420,7 +496,7 @@ export class FormRegistrarParticipantesComponent {
             this.ngOnInit();
         })
 
-      console.log(this.addressForm.get('miembrosParticipantes').value);
+
     }
   }
 }
