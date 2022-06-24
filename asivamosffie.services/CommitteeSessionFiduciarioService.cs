@@ -2673,7 +2673,7 @@ namespace asivamosffie.services
 
                         sesionSolicitudVotoOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
                         sesionSolicitudVotoOld.FechaModificacion = DateTime.Now;
-
+                        sesionSolicitudVotoOld.NoAplica = sesionSolicitudVoto.NoAplica;
                         sesionSolicitudVotoOld.EsAprobado = sesionSolicitudVoto.EsAprobado;
                         sesionSolicitudVotoOld.Observacion = sesionSolicitudVoto.Observacion;
                     }
