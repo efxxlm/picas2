@@ -242,9 +242,8 @@ export interface SesionSolicitudVoto{
     usuarioModificacion?: string,
     fechaModificacion?: Date,
     comiteTecnicoFiduciarioId?: number,
-
+    noAplica?: boolean,
     nombreParticipante?: string,
-
     sesionComiteSolicitud?: SesionComiteSolicitud,
     sesionParticipante?: SesionParticipante,
 

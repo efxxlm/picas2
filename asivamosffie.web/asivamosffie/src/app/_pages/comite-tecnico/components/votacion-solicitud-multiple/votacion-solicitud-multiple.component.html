@@ -37,11 +37,13 @@
                 <div *ngIf="data.esVerDetalle === true">
                   <span *ngIf="aprobaciones.controls[i].get('aprobacion').value === true">Sí</span>
                   <span *ngIf="aprobaciones.controls[i].get('aprobacion').value !== true">No</span>
+                  <span *ngIf="addressForm.get('noAplica').value === true">No aplica</span>
                 </div>
                 <div *ngIf="data.esVerDetalle !== true">
                   <mat-radio-group class="radioInput" formControlName="aprobacion" required>
                     <mat-radio-button [value]="true">Sí</mat-radio-button>
                     <mat-radio-button [value]="false">No</mat-radio-button>
+                    <mat-radio-button value="noAplica">No aplica</mat-radio-button>
                   </mat-radio-group>
                   <span class="required-form-group">*</span>
                 </div>
