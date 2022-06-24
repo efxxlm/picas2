@@ -98,6 +98,7 @@
                                                               <p><b>Nombre del aportante: </b> {{ aportanteDescuento.get( 'nombreAportante' ).value ? aportanteDescuento.get( 'nombreAportante' ).value.nombreAportante : '' }} </p>
                                                               <p><b>Fuente de los recursos: </b> {{ firstLetterUpperCase( aportanteDescuento.get( 'fuente' ).value ? aportanteDescuento.get( 'fuente' ).value.nombre : '' ) }} </p>
                                                               <p><b>Valor del descuento: </b> {{ aportanteDescuento.get( 'valorDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                                                              <p><b>Nuevo valor por el concepto para el aportante: </b> {{ aportanteDescuento.get( 'nuevoValorDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
                                                           </div>
                                                       </div>
                                                   </div>

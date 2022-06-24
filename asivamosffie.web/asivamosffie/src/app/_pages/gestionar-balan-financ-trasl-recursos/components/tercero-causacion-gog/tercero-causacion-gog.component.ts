@@ -1089,6 +1089,30 @@ export class TerceroCausacionGogComponent implements OnInit {
             alert = false;
         }
 
+        this.getConceptos(index).controls.forEach( ( conceptoControl, conceptoIndex ) => {
+            let totalAportantes = 0
+            this.getAportantes( index, conceptoIndex ).controls.forEach( aportanteControl => {
+                if (    aportanteControl.get( 'nuevoValorDescuento' ).value !== null
+                        && typeof aportanteControl.get( 'nuevoValorDescuento' ).value === 'number'
+                        && aportanteControl.get( 'nuevoValorDescuento' ).value >= 0 )
+                {
+                    totalAportantes = totalAportantes + aportanteControl.get( 'nuevoValorDescuento' ).value
+                }
+            } )
+
+            if ( totalAportantes > conceptoControl.get( 'valorFacturadoConcepto' ).value ) alert2 = true
+            if ( totalAportantes < conceptoControl.get( 'valorFacturadoConcepto' ).value ) alert2 = true
+
+            if ( totalAportantes > conceptoControl.get( 'valorFacturadoConcepto' ).value || totalAportantes < conceptoControl.get( 'valorFacturadoConcepto' ).value ) {
+                this.getAportantes( index, conceptoIndex ).controls.forEach( aportanteControl => aportanteControl.get( 'nuevoValorDescuento' ).markAsTouched() )
+            }
+        } )
+
+        if ( alert2 ) {
+            this.openDialog('', `<b>Los nuevos valores registrados no coinciden con el valor total de la facturación original., es necesario revisar y ajustar estos valores</b>`);
+            return; 
+        }
+
         if (!alert) {
             this.openDialog('', `<b>Debe ingresar todos los valores facturados por aportante</b>`);
             return;
