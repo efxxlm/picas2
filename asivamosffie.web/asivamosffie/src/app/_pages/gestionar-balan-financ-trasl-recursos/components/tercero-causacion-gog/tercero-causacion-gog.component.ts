@@ -12,6 +12,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { ObservacionesOrdenGiroService } from 'src/app/core/_services/observacionesOrdenGiro/observaciones-orden-giro.service';
 import { TipoTrasladoCodigo } from 'src/app/_interfaces/balance-financiero.interface';
 import { FinancialBalanceService } from 'src/app/core/_services/financialBalance/financial-balance.service';
+import { ValidacionesLineaPagoService } from 'src/app/core/_services/validacionesLineaPago/validaciones-linea-pago.service';
 
 @Component({
     selector: 'app-tercero-causacion-gog',
@@ -33,6 +34,8 @@ export class TerceroCausacionGogComponent implements OnInit {
     balanceFinancieroTrasladoValor: any;
     balanceFinancieroTraslado: any;
     balanceFinancieroTrasladoId = 0;
+    usosDrp: any[];
+    usosFacturados: any[];
 
     listaMenu: ListaMenu = ListaMenuId;
     tipoObservaciones: TipoObservaciones = TipoObservacionesCodigo;
@@ -83,11 +86,15 @@ export class TerceroCausacionGogComponent implements OnInit {
         private ordenGiroSvc: OrdenPagoService,
         private obsOrdenGiro: ObservacionesOrdenGiroService,
         private _balanceSvc: FinancialBalanceService,
-        private _activatedRoute: ActivatedRoute )
-    {
+        private _activatedRoute: ActivatedRoute,
+        private validacionSvc: ValidacionesLineaPagoService,) {
         this.commonSvc.listaFuenteTipoFinanciacion()
             .subscribe(listaFuenteTipoFinanciacion => this.listaFuenteTipoFinanciacion = listaFuenteTipoFinanciacion);
         this.crearFormulario();
+        this.validacionSvc.validacionFacturadosODG().subscribe((response) => {
+            this.usosDrp = response?.usosDrp;
+            this.usosFacturados = response?.usosFacturados;
+        });
     }
 
     ngOnInit(): void {
@@ -105,7 +112,7 @@ export class TerceroCausacionGogComponent implements OnInit {
     async getTerceroCausacion() {
         this.tipoDescuentoArray = await this.commonSvc.listaDescuentosOrdenGiro().toPromise();
         this.listaTipoDescuento = await this.commonSvc.listaDescuentosOrdenGiro().toPromise();
-        this.balanceFinanciero = await this._balanceSvc.getBalanceFinanciero( Number( this._activatedRoute.snapshot.paramMap.get( 'id' ) ) ).toPromise();
+        this.balanceFinanciero = await this._balanceSvc.getBalanceFinanciero(Number(this._activatedRoute.snapshot.paramMap.get('id'))).toPromise();
         // Get IDs
         if (this.solicitudPago.ordenGiro !== undefined) {
             this.ordenGiroId = this.solicitudPago.ordenGiro.ordenGiroId;
@@ -129,17 +136,17 @@ export class TerceroCausacionGogComponent implements OnInit {
          */
         if (this.balanceFinanciero.balanceFinancieroTraslado !== undefined) {
             if (this.balanceFinanciero.balanceFinancieroTraslado.length > 0) {
-              const traslado = this.balanceFinanciero.balanceFinancieroTraslado.find( traslado => traslado.ordenGiroId === this.ordenGiroId )
+                const traslado = this.balanceFinanciero.balanceFinancieroTraslado.find(traslado => traslado.ordenGiroId === this.ordenGiroId)
 
-              if (traslado !== undefined) {
-                this.balanceFinancieroTraslado = traslado;
-                this.balanceFinancieroTrasladoId = this.balanceFinancieroTraslado.balanceFinancieroTrasladoId;
-                this.balanceFinancieroTrasladoValor = this.balanceFinancieroTraslado.balanceFinancieroTrasladoValor;
-              }
+                if (traslado !== undefined) {
+                    this.balanceFinancieroTraslado = traslado;
+                    this.balanceFinancieroTrasladoId = this.balanceFinancieroTraslado.balanceFinancieroTrasladoId;
+                    this.balanceFinancieroTrasladoValor = this.balanceFinancieroTraslado.balanceFinancieroTrasladoValor;
+                }
             }
         }
 
-        if ( this.balanceFinanciero ) {
+        if (this.balanceFinanciero) {
             this.balanceFinancieroId = this.balanceFinanciero.balanceFinancieroId;
         }
 
@@ -191,7 +198,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                             for (const conceptoValue of criterioValue.solicitudPagoFaseCriterioConceptoPago) {
                                 const conceptoFind = conceptosDePago.find(value => value.codigo === conceptoValue.conceptoPagoCriterio);
                                 if (conceptoFind !== undefined) {
-                                    listConceptos.push({ ...conceptoFind, valorFacturadoConcepto: conceptoValue.valorFacturadoConcepto });
+                                    listConceptos.push({ ...conceptoFind, valorFacturadoConcepto: conceptoValue.valorFacturadoConcepto, usoCodigo: conceptoValue?.usoCodigo });
                                 }
                             }
                             listCriterios.push(
@@ -205,6 +212,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                         }
                     }
 
+                    console.log(listCriterios)
                     //const dataAportantes = await this.ordenGiroSvc.getAportantes( this.solicitudPago );
                     const dataAportantes = await this.ordenGiroSvc.getAportantesNew(this.solicitudPago)
 
@@ -286,9 +294,9 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                         const balanceFinancieroTrasladoValor = this.balanceFinancieroTrasladoValor.find(
                                                             tv =>
                                                                 tv.ordenGiroDetalleTerceroCausacionDescuentoId === terceroCausacionDescuento.ordenGiroDetalleTerceroCausacionDescuentoId &&
-                                                                tv.tipoTrasladoCodigo === String( this.tipoTrasladoCodigo.direccionFinanciera )
+                                                                tv.tipoTrasladoCodigo === String(this.tipoTrasladoCodigo.direccionFinanciera)
                                                         )
-        
+
                                                         if (balanceFinancieroTrasladoValor !== undefined) {
                                                             valorTraslado = balanceFinancieroTrasladoValor.valorTraslado;
                                                             balanceFinancieroTrasladoValorId = balanceFinancieroTrasladoValor.balanceFinancieroTrasladoValorId;
@@ -400,7 +408,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                         tv.ordenGiroDetalleTerceroCausacionAportanteId === aportante.ordenGiroDetalleTerceroCausacionAportanteId &&
                                                         tv.tipoTrasladoCodigo === String(this.tipoTrasladoCodigo.aportante)
                                                 )
-    
+
                                                 if (balanceFinancieroTrasladoValor !== undefined) {
                                                     valorTraslado = balanceFinancieroTrasladoValor.valorTraslado;
                                                     balanceFinancieroTrasladoValorId = balanceFinancieroTrasladoValor.balanceFinancieroTrasladoValorId;
@@ -465,6 +473,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                         conceptoPagoCriterio: [{ value: concepto.codigo, disabled: true }],
                                         nombre: [{ value: concepto.nombre, disabled: true }],
                                         valorTotalUso: [{ value: valorTotalUso, disabled: true }],
+                                        usoCodigo: [concepto?.usoCodigo ?? usoByConcepto[0]?.tipoUsoCodigo],
                                         valorFacturadoConcepto: [{ value: concepto.valorFacturadoConcepto, disabled: true }],
                                         tipoDeAportantes: [{ value: dataAportantes.listaTipoAportante, disabled: true }],
                                         nombreDeAportantes: [dataAportantes.listaNombreAportante],
@@ -543,7 +552,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                         this.estadoSemaforo.emit('en-proceso')
                     }
 
-                    console.log( this.criterios )
+                    console.log(this.criterios)
                 }
             );
     }
@@ -591,52 +600,59 @@ export class TerceroCausacionGogComponent implements OnInit {
         }
     }
 
-    getCodigoDescuento(codigo: string, index: number, jIndex: number) {
-        const listaDescuento: Dominio[] = this.getConceptos(index).controls[jIndex].get('tipoDescuentoArray').value;
-        const descuentoIndex = listaDescuento.findIndex(descuento => descuento.codigo === codigo);
+    validateMaxSaldoActualAportante(value: number, index: number, jIndex: number, kIndex: number, aportante: any, fuenteFinanciacionId: any) {
+        if (value !== null) {
+            console.log(this.solicitudPago.tablaInformacionFuenteRecursos)
+            // console.log(aportante.cofinanciacionAportanteId)
 
-        /*if ( descuentoIndex !== -1 ) {
-            //listaDescuento.splice( descuentoIndex, 1 );
-        }*/
-        this.getConceptos(index).controls[jIndex].get('tipoDescuentoArray').setValue(listaDescuento);
+            if (this.solicitudPago.tablaInformacionFuenteRecursos) {
+                const saldoAport = this.solicitudPago.tablaInformacionFuenteRecursos.find(obs => {
+                    if (obs.cofinanciacionAportanteId === aportante.cofinanciacionAportanteId && obs.fuenteFinanciacionId == fuenteFinanciacionId) {
+                        return obs.saldoActual
+                    }
+                })
+                if (
+                    value > saldoAport
+                ) {
+                    this.getAportantes(index, jIndex).controls[kIndex].get('nuevoValorDescuento').setValue(null);
+                    this.openDialog('', `<b>El valor facturado por el concepto para el aportante no puede ser mayor al saldo que tiene el aportante para el uso.</b>`)
+                    return
+                }
+            }
+        }
     }
 
-    checkTotalValueAportantes(cb: { (totalValueAportantes: number): void }) {
-        let totalAportantes = 0;
-
-        this.criterios.controls.forEach((criterioControl, criterioIndex) => {
-
-            this.getConceptos(criterioIndex).controls.forEach((conceptoControl, conceptoIndex) => {
-
-                this.getAportantes(criterioIndex, conceptoIndex).controls.forEach(aportanteControl => totalAportantes += aportanteControl.get('valorDescuento').value);
-            })
-        })
-
-        cb(totalAportantes);
-    }
-    // Check valor del descuento del aportante
     validateDiscountAportanteValue(value: number, index: number, jIndex: number, kIndex: number) {
         if (value !== null) {
             if (value < 0) {
-                this.getAportantes(index, jIndex).controls[kIndex].get('valorDescuento').setValue(null)
+                this.getAportantes(index, jIndex).controls[kIndex].get('nuevoValorDescuento').setValue(null)
                 return
             }
             let totalValueAportante = 0;
             this.getAportantes(index, jIndex).controls.forEach(aportanteControl => {
-                if (aportanteControl.get('valorDescuento').value !== null) {
-                    totalValueAportante += aportanteControl.get('valorDescuento').value;
+                if (aportanteControl.get('nuevoValorDescuento').value !== null) {
+                    totalValueAportante += aportanteControl.get('nuevoValorDescuento').value;
                 }
             })
+            if (
+                value > this.getValorAportante(this.getConceptos(index).controls[jIndex].get('conceptoPagoCriterio').value, this.getAportantes(index, jIndex).controls[kIndex].get('nombreAportante').value.cofinanciacionAportanteId, this.getAportantes(index, jIndex).controls[kIndex].get('fuenteRecursos').value?.fuenteFinanciacionId, this.getConceptos(index).controls[jIndex].get('usoCodigo').value)
+            ) {
+                this.getAportantes(index, jIndex).controls[kIndex].get('nuevoValorDescuento').setValue(null);
+                this.openDialog('', `<b>El valor facturado por el concepto para el aportante no puede ser mayor al valor aportante para el concepto.</b>`)
+                return
+            }
             if (this.getAportantes(index, jIndex).controls[kIndex].get('nombreAportante').value !== null) {
-                if (value > this.getConceptos(index).controls[jIndex].get('valorTotalUso').value) {
-                    this.getAportantes(index, jIndex).controls[kIndex].get('valorDescuento').setValue(null);
+                if (
+                    value > this.getConceptos(index).controls[jIndex].get('valorTotalUso').value
+                ) {
+                    this.getAportantes(index, jIndex).controls[kIndex].get('nuevoValorDescuento').setValue(null);
                     this.openDialog('', `<b>El valor facturado por el concepto para el aportante no puede ser mayor al valor asignado por DRP al aportante.</b>`)
                     return
                 }
             }
 
             if (totalValueAportante > this.getConceptos(index).controls[jIndex].get('valorTotalUso').value) {
-                this.getAportantes(index, jIndex).controls[kIndex].get('valorDescuento').setValue(null);
+                this.getAportantes(index, jIndex).controls[kIndex].get('nuevoValorDescuento').setValue(null);
                 this.openDialog('', `<b>La suma total del valor facturado por el concepto para el aportante no puede ser mayor al valor del uso asociado al concepto.</b>`)
                 return
             }
@@ -675,11 +691,56 @@ export class TerceroCausacionGogComponent implements OnInit {
 
             this.getAportantes(index, jIndex).controls[kIndex].get('valorDescuentoTecnica').setValue(totalDescuentoAportante);
             if (totalValueAportante > this.getConceptos(index).controls[jIndex].get('valorFacturadoConcepto').value) {
-                this.getAportantes(index, jIndex).controls[kIndex].get('valorDescuento').setValue(null);
-                this.openDialog('', `<b>La suma total del valor facturado por el concepto para el aportante no puede ser mayor al valor facturado por concepto.</b>`)
+                this.getAportantes(index, jIndex).controls[kIndex].get('nuevoValorDescuento').setValue(null);
+                this.openDialog('', `<b>La suma total del valor facturado por el concepto para el aportante no puede ser mayor al valor facturado por concepto o al valor aportante para el concepto.</b>`)
             }
         }
     }
+
+    getValorAportante(codigo: string, aportanteId: any, fuenteFinanciacionId: any, usoCodigo: string) {
+        let usoDelConcepto = usoCodigo != null && usoCodigo != undefined ? usoCodigo : this.solicitudPago.vConceptosUsosXsolicitudPagoId.find(r => r.conceptoCodigo == codigo && r.contratacionProyectoId == this.contratacionProyectoId)?.usoCodigo;
+        let valorUsoTotal = 0;
+        let valorFacturadoTotal = 0;
+        if (aportanteId > 0 && codigo != null && fuenteFinanciacionId > 0 && usoDelConcepto != undefined && usoDelConcepto != null) {
+            let drpData = this.usosDrp?.find(r => r.contratacionProyectoId == this.contratacionProyectoId && r.cofinanciacionAportanteId == aportanteId && r.fuenteFinanciacionId == fuenteFinanciacionId && r.esPreConstruccion == this.esPreconstruccion && r.tipoUsoCodigo == usoDelConcepto);
+            let valoresFacturados = this.usosFacturados?.filter(r => r.contratacionProyectoId == this.contratacionProyectoId && r.aportanteId == aportanteId && r.fuenteFinanciacionId == fuenteFinanciacionId && r.usoCodigo == usoDelConcepto && r.esPreconstruccion == this.esPreconstruccion);
+            if (drpData != null)
+                valorUsoTotal = drpData?.valorUso ?? 0;
+
+            if (valoresFacturados != null && valoresFacturados != null) {
+                valoresFacturados.forEach(element => {
+                    valorFacturadoTotal += element.valorDescuento ?? 0;
+                });
+            }
+            if (valorUsoTotal > 0) return valorUsoTotal - valorFacturadoTotal;
+        }
+        return 0;
+    }
+
+    getCodigoDescuento(codigo: string, index: number, jIndex: number) {
+        const listaDescuento: Dominio[] = this.getConceptos(index).controls[jIndex].get('tipoDescuentoArray').value;
+        const descuentoIndex = listaDescuento.findIndex(descuento => descuento.codigo === codigo);
+
+        /*if ( descuentoIndex !== -1 ) {
+            //listaDescuento.splice( descuentoIndex, 1 );
+        }*/
+        this.getConceptos(index).controls[jIndex].get('tipoDescuentoArray').setValue(listaDescuento);
+    }
+
+    checkTotalValueAportantes(cb: { (totalValueAportantes: number): void }) {
+        let totalAportantes = 0;
+
+        this.criterios.controls.forEach((criterioControl, criterioIndex) => {
+
+            this.getConceptos(criterioIndex).controls.forEach((conceptoControl, conceptoIndex) => {
+
+                this.getAportantes(criterioIndex, conceptoIndex).controls.forEach(aportanteControl => totalAportantes += aportanteControl.get('valorDescuento').value);
+            })
+        })
+
+        cb(totalAportantes);
+    }
+
     // Check valor del descuento de los conceptos
     validateDiscountValue(value: number, index: number, jIndex: number, kIndex: number, lIndex: number) {
         let totalAportantePorConcepto = 0;
@@ -971,7 +1032,68 @@ export class TerceroCausacionGogComponent implements OnInit {
         return dialogRef.afterClosed();
     }
 
-    guardar() {
+    disableSave(index: number) {
+        const conceptos = this.getConceptos(index)?.value;
+        if (conceptos != null) {
+            if (conceptos.length > 0) {
+                conceptos.forEach(concepto => {
+                    if (concepto.aportantes != null) {
+                        if (concepto.aportantes.length > 0) {
+                            concepto.aportantes.forEach(aportante => {
+                                if (aportante.nuevoValorDescuento == null || aportante.nuevoValorDescuento == undefined || aportante.nuevoValorDescuento <= 0) {
+                                    return false;
+                                }
+                            });
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                });
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    guardar(index: number) {
+        let alert = true
+        let alert2 = false
+        const conceptos = this.getConceptos(index)?.value;
+        if (conceptos != null) {
+            if (conceptos.length > 0) {
+                conceptos.forEach(concepto => {
+                    console.log( concepto )
+                    if (concepto.aportantes != null) {
+                        if (concepto.aportantes.length > 0) {
+                            concepto.aportantes.forEach(aportante => {
+                                if (aportante.nuevoValorDescuento == null || aportante.nuevoValorDescuento == undefined || aportante.nuevoValorDescuento <= 0) {
+                                    alert = false;
+                                }
+                            });
+                        } else {
+                            alert = false;
+                        }
+                    } else {
+                        alert = false;
+                    }
+                });
+            } else {
+                alert = false;
+            }
+        } else {
+            alert = false;
+        }
+
+        if (!alert) {
+            this.openDialog('', `<b>Debe ingresar todos los valores facturados por aportante</b>`);
+            return;
+        }
+
         const getBalanceFinancieroTrasladoValor = () => {
             const balanceFinancieroTraslado = [];
 
@@ -982,7 +1104,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                             if (aportanteControl.dirty === true) {
                                 balanceFinancieroTraslado.push({
                                     balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
-                                    esPreconstruccion: this.ordenGiroDetalleTerceroCausacion && this.ordenGiroDetalleTerceroCausacion.length > 0 ? this.ordenGiroDetalleTerceroCausacion[ 0 ].esPreconstruccion : false,
+                                    esPreconstruccion: this.ordenGiroDetalleTerceroCausacion && this.ordenGiroDetalleTerceroCausacion.length > 0 ? this.ordenGiroDetalleTerceroCausacion[0].esPreconstruccion : false,
                                     balanceFinancieroTrasladoValorId: aportanteControl.get('balanceFinancieroTrasladoValorId').value,
                                     tipoTrasladoCodigo: aportanteControl.get('tipoTrasladoCodigo').value,
                                     ordenGiroDetalleTerceroCausacionAportanteId: aportanteControl.get('ordenGiroDetalleTerceroCausacionAportanteId').value,
@@ -992,13 +1114,13 @@ export class TerceroCausacionGogComponent implements OnInit {
 
                         });
 
-                        this.getDescuentos( indexCriterio, indexConcepto ).controls.forEach( ( descuentoControl, indexDescuento ) => {
-                            this.getAportanteDescuentos( indexCriterio, indexConcepto, indexDescuento ).controls.forEach(
+                        this.getDescuentos(indexCriterio, indexConcepto).controls.forEach((descuentoControl, indexDescuento) => {
+                            this.getAportanteDescuentos(indexCriterio, indexConcepto, indexDescuento).controls.forEach(
                                 aportanteDescControl => {
                                     if (aportanteDescControl.dirty === true) {
                                         balanceFinancieroTraslado.push({
                                             balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
-                                            esPreconstruccion: this.ordenGiroDetalleTerceroCausacion && this.ordenGiroDetalleTerceroCausacion.length > 0 ? this.ordenGiroDetalleTerceroCausacion[ 0 ].esPreconstruccion : false,
+                                            esPreconstruccion: this.ordenGiroDetalleTerceroCausacion && this.ordenGiroDetalleTerceroCausacion.length > 0 ? this.ordenGiroDetalleTerceroCausacion[0].esPreconstruccion : false,
                                             balanceFinancieroTrasladoValorId: aportanteDescControl.get('balanceFinancieroTrasladoValorId').value,
                                             tipoTrasladoCodigo: aportanteDescControl.get('tipoTrasladoCodigo').value,
                                             ordenGiroDetalleTerceroCausacionDescuentoId: aportanteDescControl.get('ordenGiroDetalleTerceroCausacionDescuentoId').value,
@@ -1007,7 +1129,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                     }
                                 }
                             )
-                        } )
+                        })
                     });
                 }
             });
@@ -1052,7 +1174,7 @@ export class TerceroCausacionGogComponent implements OnInit {
             ];
         }
 
-        console.log( this.balanceFinanciero )
+        console.log(this.balanceFinanciero)
 
         this._balanceSvc.createEditBalanceFinanciero(this.balanceFinanciero).subscribe(
             response => {
