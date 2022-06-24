@@ -213,7 +213,7 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
                 sesionSolicitudVotoId: control.get('sesionSolicitudVotoId').value,
                 sesionComiteSolicitudId: control.get('sesionComiteSolicitudId').value,
                 sesionParticipanteId: control.get('sesionParticipanteId').value,
-                esAprobado: noAplica ? null : control.get('aprobacion').value,
+                esAprobado: noAplica ? false : control.get('aprobacion').value,
                 noAplica: noAplica
                 //observacion: control.get('observaciones').value,
             }
