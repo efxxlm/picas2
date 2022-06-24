@@ -323,7 +323,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
         console.log(this.sesionComiteSolicitud)
 
-        let estados: string[] = ['2', '4', '6']
+        let estados: string[] = ['2', '4', '6' ,'8']
 
         this.commonService.listaEstadoSolicitud()
             .subscribe(response => {
