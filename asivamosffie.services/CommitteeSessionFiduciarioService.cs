@@ -4349,8 +4349,7 @@ namespace asivamosffie.services
                                             else if (cantidadAprobadas > cantidadNoAprobadas)
                                                 strRequiereVotacion = "Aprobada";
                                             else
-                                                strRequiereVotacion = "No Aprobada";
-
+                                                strRequiereVotacion = "No Aprobada"; 
                                         }
                                         else
                                         {

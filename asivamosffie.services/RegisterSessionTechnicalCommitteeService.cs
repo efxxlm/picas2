@@ -79,17 +79,13 @@ namespace asivamosffie.services
                     }
                     else
                     {
-                        CreateEdit = "EDITAR SOLICITUD VOTO";
-                        //SesionSolicitudVoto sesionSolicitudVotoOld = _context.SesionSolicitudVoto.Find(sesionSolicitudVoto.SesionSolicitudVotoId); 
-                        //sesionSolicitudVotoOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
-                        //sesionSolicitudVotoOld.FechaModificacion = DateTime.Now; 
-                        //sesionSolicitudVotoOld.EsAprobado = sesionSolicitudVoto.EsAprobado;
-                        //sesionSolicitudVotoOld.Observacion = sesionSolicitudVoto.Observacion;
+                        CreateEdit = "EDITAR SOLICITUD VOTO"; 
 
                         _context.Set<SesionSolicitudVoto>()
                                 .Where(s => s.SesionSolicitudVotoId == sesionSolicitudVoto.SesionSolicitudVotoId)
                                 .Update(s => new SesionSolicitudVoto
                                 {
+                                    NoAplica = sesionSolicitudVoto.NoAplica,
                                     UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion,
                                     FechaModificacion = DateTime.Now,
                                     EsAprobado = sesionSolicitudVoto.EsAprobado,
@@ -7017,17 +7013,22 @@ namespace asivamosffie.services
 
                             case ConstanCodigoVariablesPlaceHolders.DECISIONES_SOLICITUD:
 
+
                                 string strRequiereVotacion = string.Empty;
-                                int cantidadAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true && r.NoAplica != true).Count();
-                                int cantidadNoAprobadas = Tema.SesionTemaVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true && r.NoAplica != true).Count();
+                                int cantidadAprobadas = Tema.SesionTemaVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value == true && r.NoAplica != true);
+                                int cantidadNoAprobadas = Tema.SesionTemaVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value != true && r.NoAplica != true);
+                                 
+                                int CantidadNoAplica = Tema.SesionTemaVoto.Count(r => r.Eliminado != true && r.NoAplica == true);
+                                int CantidadVotos = Tema.SesionTemaVoto.Count(r => r.Eliminado != true);
+                                 
                                 if (Tema.RequiereVotacion == true)
                                 {
-                                    if (cantidadNoAprobadas == 0)
+                                    if (CantidadNoAplica == CantidadVotos)
+                                        strRequiereVotacion = "No Aplica";
+                                    else if (cantidadNoAprobadas == 0)
                                         strRequiereVotacion = "Aprobada";
-
                                     else
                                         strRequiereVotacion = "No Aprobada";
-
                                 }
                                 else
                                     strRequiereVotacion = "No fue requerida";
