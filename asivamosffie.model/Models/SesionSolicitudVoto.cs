@@ -16,7 +16,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public int? ComiteTecnicoFiduciarioId { get; set; }
-        public int? NoAplica { get; set; }
+        public bool? NoAplica { get; set; }
         public virtual SesionComiteSolicitud SesionComiteSolicitud { get; set; }
         public virtual SesionParticipante SesionParticipante { get; set; }
     }

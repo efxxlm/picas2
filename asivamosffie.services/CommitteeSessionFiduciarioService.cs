@@ -4335,11 +4335,18 @@ namespace asivamosffie.services
                                     case ConstanCodigoVariablesPlaceHolders.DECISIONES_SOLICITUD:
 
                                         string strRequiereVotacion = "";
-                                        int cantidadAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value == true && r.ComiteTecnicoFiduciarioId == null).Count();
-                                        int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId == null).Count();
+                                        int cantidadAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value == true && r.NoAplica != true);
+                                        int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value != true && r.NoAplica != true);
+
+                                        int CantidadNoAplica = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.NoAplica == true);
+                                        int CantidadVotos = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true);
+
+
                                         if (SesionComiteSolicitud.RequiereVotacionFiduciario == true)
                                         {
-                                            if (cantidadAprobadas > cantidadNoAprobadas)
+                                            if (CantidadNoAplica == CantidadVotos)
+                                                strRequiereVotacion = "No Aplica";
+                                            else if (cantidadAprobadas > cantidadNoAprobadas)
                                                 strRequiereVotacion = "Aprobada";
                                             else
                                                 strRequiereVotacion = "No Aprobada";
