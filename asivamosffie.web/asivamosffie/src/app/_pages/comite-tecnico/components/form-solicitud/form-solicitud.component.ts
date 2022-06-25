@@ -346,7 +346,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     }
 
     cargarRegistro() {
-        let estados: string[] = ['1', '3', '5' , '8'];
+        let estados: string[] = ['1', '3', '5'];
 
         this.commonService.listaEstadoSolicitud().subscribe(response => {
             this.estadosArray = response.filter(s => estados.includes(s.codigo));
