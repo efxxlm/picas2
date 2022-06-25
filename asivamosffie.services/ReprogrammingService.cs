@@ -126,7 +126,7 @@ namespace asivamosffie.services
 
             listaCargas.ForEach(archivo =>
             {
-                archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos && archivo.Activo == true ? "Válido" : "Fallido";
+                archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos && archivo.Activo == true && archivo.CantidadRegistrosValidos > 0 ? "Válido" : "Fallido";
                 archivo.TempAjustePragramacionObservacion = _context.AjustePragramacionObservacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsObra == true && r.ArchivoCargueId == archivo.ArchivoCargueId && r.Eliminado != true && r.EsSupervisor != true).FirstOrDefault();
 
             });
@@ -151,7 +151,7 @@ namespace asivamosffie.services
 
             listaCargas.ForEach(archivo =>
             {
-                archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos && archivo.Activo == true ? "Válido" : "Fallido";
+                archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos && archivo.Activo == true && archivo.CantidadRegistrosValidos > 0 ? "Válido" : "Fallido";
                 archivo.TempAjustePragramacionObservacion = _context.AjustePragramacionObservacion.Where(r => r.AjusteProgramacionId == pAjusteProgramacionId && r.EsObra != true && r.ArchivoCargueId == archivo.ArchivoCargueId && r.Eliminado != true && r.EsSupervisor != true).FirstOrDefault();
 
             });
@@ -672,16 +672,30 @@ namespace asivamosffie.services
                             //Tipo Actividad
                             if (string.IsNullOrEmpty(worksheet.Cells[i, 1].Text))
                             {
-                                worksheet.Cells[i, 1].AddComment("Dato Obligatorio", "Admin");
-                                worksheet.Cells[i, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                worksheet.Cells[i, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                if (worksheet.Cells[i, 1].Comment != null)
+                                {
+                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                }
+                                else
+                                {
+                                    worksheet.Cells[i, 1].AddComment("Dato Obligatorio", "Admin");
+                                    worksheet.Cells[i, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                    worksheet.Cells[i, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                }
                                 tieneErrores = true;
                             }
                             else if (new string[3] { "C", "SC", "I" }.Where(r => r == worksheet.Cells[i, 1].Text).Count() == 0)
                             {
-                                worksheet.Cells[i, 1].AddComment("Tipo de actividad invalido", "Admin");
-                                worksheet.Cells[i, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                worksheet.Cells[i, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                if (worksheet.Cells[i, 1].Comment != null)
+                                {
+                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                }
+                                else
+                                {
+                                    worksheet.Cells[i, 1].AddComment("Tipo de actividad invalido", "Admin");
+                                    worksheet.Cells[i, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                    worksheet.Cells[i, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                }
                                 tieneErrores = true;
                             }
                             else
@@ -701,9 +715,16 @@ namespace asivamosffie.services
                             }
                             else
                             {
-                                worksheet.Cells[i, 2].AddComment("Dato Obligatorio", "Admin");
-                                worksheet.Cells[i, 2].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                worksheet.Cells[i, 2].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                if (worksheet.Cells[i, 2].Comment != null)
+                                {
+                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                }
+                                else
+                                {
+                                    worksheet.Cells[i, 2].AddComment("Dato Obligatorio", "Admin");
+                                    worksheet.Cells[i, 2].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                    worksheet.Cells[i, 2].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                }
                                 tieneErrores = true;
                             }
 
@@ -726,9 +747,16 @@ namespace asivamosffie.services
                                 }
                                 else if (temp.TipoActividadCodigo != "I" && worksheet.Cells[i, 3].Text == "1")
                                 {
-                                    worksheet.Cells[i, 3].AddComment("No se puede asignar ruta critica a este tipo de actividad", "Admin");
-                                    worksheet.Cells[i, 3].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                    worksheet.Cells[i, 3].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                    if (worksheet.Cells[i, 3].Comment != null)
+                                    {
+                                        mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                    }
+                                    else
+                                    {
+                                        worksheet.Cells[i, 3].AddComment("No se puede asignar ruta critica a este tipo de actividad", "Admin");
+                                        worksheet.Cells[i, 3].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                        worksheet.Cells[i, 3].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                    }
                                     tieneErrores = true;
                                 }
 
@@ -743,9 +771,16 @@ namespace asivamosffie.services
                             DateTime fechaTemp;
                             if (string.IsNullOrEmpty(worksheet.Cells[i, 4].Text))
                             {
-                                worksheet.Cells[i, 4].AddComment("Dato Obligatorio", "Admin");
-                                worksheet.Cells[i, 4].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                worksheet.Cells[i, 4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                if (worksheet.Cells[i, 4].Comment != null)
+                                {
+                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                }
+                                else
+                                {
+                                    worksheet.Cells[i, 4].AddComment("Dato Obligatorio", "Admin");
+                                    worksheet.Cells[i, 4].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                    worksheet.Cells[i, 4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                }
                                 tieneErrores = true;
                             }
                             else
@@ -761,9 +796,16 @@ namespace asivamosffie.services
                             //Fecha final
                             if (string.IsNullOrEmpty(worksheet.Cells[i, 5].Text))
                             {
-                                worksheet.Cells[i, 5].AddComment("Dato Obligatorio", "Admin");
-                                worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                if (worksheet.Cells[i, 5].Comment != null)
+                                {
+                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                }
+                                else
+                                {
+                                    worksheet.Cells[i, 5].AddComment("Dato Obligatorio", "Admin");
+                                    worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                    worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                }
                                 tieneErrores = true;
                             }
                             else
@@ -778,9 +820,16 @@ namespace asivamosffie.services
                             // validacion fechas
                             if (temp.FechaInicio.Date > temp.FechaFin.Date)
                             {
-                                worksheet.Cells[i, 5].AddComment("La fecha no puede ser inferior a la fecha inicial", "Admin");
-                                worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                if (worksheet.Cells[i, 5].Comment != null)
+                                {
+                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                }
+                                else
+                                {
+                                    worksheet.Cells[i, 5].AddComment("La fecha no puede ser inferior a la fecha inicial", "Admin");
+                                    worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                    worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                }
                                 tieneErrores = true;
 
                             }
@@ -788,17 +837,31 @@ namespace asivamosffie.services
                             // fechas contrato
                             if (temp.FechaInicio.Date < datosFechas.FechaInicioProyecto.Value.Date)
                             {
-                                worksheet.Cells[i, 4].AddComment("La fecha Inicial de la actividad no puede ser inferior a la fecha inicial del proyecto", "Admin");
-                                worksheet.Cells[i, 4].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                worksheet.Cells[i, 4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                if (worksheet.Cells[i, 4].Comment != null)
+                                {
+                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                }
+                                else
+                                {
+                                    worksheet.Cells[i, 4].AddComment("La fecha Inicial de la actividad no puede ser inferior a la fecha inicial del proyecto", "Admin");
+                                    worksheet.Cells[i, 4].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                    worksheet.Cells[i, 4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                }
                                 tieneErrores = true;
                             }
 
                             if (temp.FechaFin.Date > datosFechas.FechaEstimadaFinProyecto.Value.Date)
                             {
-                                worksheet.Cells[i, 5].AddComment("La fecha final de la actividad no puede ser mayor a la fecha final del proyecto", "Admin");
-                                worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                if (worksheet.Cells[i, 5].Comment != null)
+                                {
+                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                }
+                                else
+                                {
+                                    worksheet.Cells[i, 5].AddComment("La fecha final de la actividad no puede ser mayor a la fecha final del proyecto", "Admin");
+                                    worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                    worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                }
                                 tieneErrores = true;
                             }
 
@@ -810,9 +873,16 @@ namespace asivamosffie.services
                             //Duracion
                             if (string.IsNullOrEmpty(worksheet.Cells[i, 6].Text))
                             {
-                                worksheet.Cells[i, 6].AddComment("Dato Obligatorio", "Admin");
-                                worksheet.Cells[i, 6].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                worksheet.Cells[i, 6].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                if (worksheet.Cells[i, 6].Comment != null)
+                                {
+                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                }
+                                else
+                                {
+                                    worksheet.Cells[i, 6].AddComment("Dato Obligatorio", "Admin");
+                                    worksheet.Cells[i, 6].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                    worksheet.Cells[i, 6].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                }
                                 tieneErrores = true;
                             }
                             else
@@ -836,12 +906,19 @@ namespace asivamosffie.services
 
                             if (vFechasTmp != null)
                             {
+                                if (worksheet.Cells[i, 7].Comment != null)
+                                {
+                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                }
+                                else
+                                {
+                                    worksheet.Cells[i, 7].Value = vFechasTmp.AvanceFisicoSemanal;
+                                    worksheet.Cells[i, 7].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                    worksheet.Cells[i, 7].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(226, 239, 218));
+                                    worksheet.Cells[i, 7].AddComment("En estas fechas ya hay actividades ejecutadas, el registro es válido, pero tenga presente que no se podrá reprogramar actividades en estas fechas.", "Admin");
+                                    worksheet.Cells[i, 7].Comment.AutoFit = true;
+                                }
                                 validacionFecha = true;
-                                worksheet.Cells[i, 7].Value = vFechasTmp.AvanceFisicoSemanal;
-                                worksheet.Cells[i, 7].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                worksheet.Cells[i, 7].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(226,239,218));
-                                worksheet.Cells[i, 7].AddComment("En estas fechas ya hay actividades ejecutadas, el registro es válido, pero tenga presente que no se podrá reprogramar actividades en estas fechas.", "Admin");
-                                worksheet.Cells[i, 7].Comment.AutoFit = true;
                             }
 
                             #endregion Avance ejecutado acumulado
@@ -873,13 +950,20 @@ namespace asivamosffie.services
 
                     if (cantidadRutaCritica == 0 && worksheet.Cells[1, 1].Comment == null)
                     {
-                        worksheet.Cells[1, 1].AddComment("Debe existir por lo menos una ruta critica", "Admin");
-                        worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                        worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                        if (worksheet.Cells[1, 1].Comment != null)
+                        {
+                            mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                        }
+                        else
+                        {
+                            worksheet.Cells[1, 1].AddComment("Debe existir por lo menos una ruta critica", "Admin");
+                            worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                            worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                            mensajeRespuesta = "Debe existir por lo menos una ruta critica";
+                        }
                         CantidadRegistrosInvalidos++;
                         CantidadResgistrosValidos--;
                         estructuraValidaValidacionGeneral = false;
-                        mensajeRespuesta = "Debe existir por lo menos una ruta critica";
                     }
 
                     ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta();
@@ -1079,122 +1163,153 @@ namespace asivamosffie.services
                     if (numberOfWeeks != cantidadSemnas)
                     {
                         validacionError = true;
-                        worksheet.Cells[1, 1].AddComment("Numero de semanas no es igual al del proyecto", "Admin");
-                        worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                        worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                        if (worksheet.Cells[1, 1].Comment != null)
+                        {
+                            mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                        }
+                        else
+                        {
+                            worksheet.Cells[1, 1].AddComment("Numero de semanas no es igual al del proyecto", "Admin");
+                            worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                            worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                            mensajeRespuesta = "Numero de semanas no es igual al del proyecto";
+                        }
                         tieneErrores = true;
                         estructuraValidaValidacionGeneral = false;
-                        mensajeRespuesta = "Numero de semanas no es igual al del proyecto";
                     }
 
                     //valida numero capitulos
                     if ((listaProgramacion.Count() + tempProgramacion.Count()) != cantidadCapitulos)
                     {
-                        worksheet.Cells[1, 1].AddComment("Numero de capitulos no es igual a la programacion", "Admin");
-                        worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                        worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                        if (worksheet.Cells[1, 1].Comment != null)
+                        {
+                            mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                        }
+                        else
+                        {
+                            worksheet.Cells[1, 1].AddComment("Numero de capitulos no es igual a la programacion", "Admin");
+                            worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                            worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                            mensajeRespuesta = "Numero de capitulos no es igual a la programacion";
+                        }
                         tieneErrores = true;
                         estructuraValidaValidacionGeneral = false;
-                        mensajeRespuesta = "Numero de capitulos no es igual a la programacion";
                     }
 
                     decimal sumaTotal = 0;
 
                     // Capitulos
                     //int i = 2;
-                    for (int i = 2; i <= cantidadCapitulos + 1; i++)
+                    if (estructuraValidaValidacionGeneral == true)
                     {
-                        bool tieneErroresCapitulo = false;
-
-                        try
+                        for (int i = 2; i <= cantidadCapitulos + 1; i++)
                         {
-                            // semanas
-                            //int k = 2;
-                            for (int k = 2; k < cantidadSemnas + 2; k++)
+                            bool tieneErroresCapitulo = false;
+
+                            try
                             {
-
-                                TempFlujoInversion temp = new TempFlujoInversion();
-                                //Auditoria
-                                temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
-                                temp.EstaValidado = false;
-                                temp.FechaCreacion = DateTime.Now;
-                                temp.UsuarioCreacion = pUsuarioCreo;
-                                temp.AjusteProgramacionId = pAjusteProgramacionId;
-                                temp.Posicion = k - 2;
-                                temp.PosicionCapitulo = i - 2;
-
-                                #region Mes
-
-                                // Mes
-                                if (string.IsNullOrEmpty(worksheet.Cells[1, k].Text))
+                                // semanas
+                                //int k = 2;
+                                for (int k = 2; k < cantidadSemnas + 2; k++)
                                 {
-                                    worksheet.Cells[1, k].AddComment("Dato Obligatorio", "Admin");
-                                    worksheet.Cells[1, k].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                    worksheet.Cells[1, k].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
-                                    tieneErrores = true;
-                                    tieneErroresCapitulo = true;
+
+                                    TempFlujoInversion temp = new TempFlujoInversion();
+                                    //Auditoria
+                                    temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
+                                    temp.EstaValidado = false;
+                                    temp.FechaCreacion = DateTime.Now;
+                                    temp.UsuarioCreacion = pUsuarioCreo;
+                                    temp.AjusteProgramacionId = pAjusteProgramacionId;
+                                    temp.Posicion = k - 2;
+                                    temp.PosicionCapitulo = i - 2;
+
+                                    #region Mes
+
+                                    // Mes
+                                    if (string.IsNullOrEmpty(worksheet.Cells[1, k].Text))
+                                    {
+                                        worksheet.Cells[1, k].AddComment("Dato Obligatorio", "Admin");
+                                        worksheet.Cells[1, k].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                        worksheet.Cells[1, k].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                        tieneErrores = true;
+                                        tieneErroresCapitulo = true;
+                                    }
+                                    else
+                                    {
+                                        temp.Semana = worksheet.Cells[1, k].Text;
+                                    }
+
+                                    #endregion Mes
+
+                                    #region Capitulo
+
+                                    //Capitulo
+                                    if (string.IsNullOrEmpty(worksheet.Cells[i, 1].Text))
+                                    {
+                                        if (worksheet.Cells[i, 1].Comment != null)
+                                        {
+                                            mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                        }
+                                        else
+                                        {
+                                            worksheet.Cells[i, 1].AddComment("Dato Obligatorio", "Admin");
+                                            worksheet.Cells[i, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                            worksheet.Cells[i, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                        }
+                                        tieneErrores = true;
+                                        tieneErroresCapitulo = true;
+                                    }
+
+                                    #endregion Capitulo
+
+                                    string valorTemp = worksheet.Cells[i, k].Text;
+
+                                    valorTemp = valorTemp.Replace("$", "").Replace(".", "").Replace(" ", "");
+
+                                    //Valor
+                                    temp.Valor = string.IsNullOrEmpty(valorTemp) ? 0 : decimal.Parse(valorTemp);
+                                    sumaTotal += temp.Valor.Value;
+
+                                    //Guarda Cambios en una tabla temporal
+
+                                    if (!tieneErrores)
+                                    {
+                                        _context.TempFlujoInversion.Add(temp);
+                                        _context.SaveChanges();
+                                    }
                                 }
-                                else
-                                {
-                                    temp.Semana = worksheet.Cells[1, k].Text;
-                                }
 
-                                #endregion Mes
-
-                                #region Capitulo
-
-                                //Capitulo
-                                if (string.IsNullOrEmpty(worksheet.Cells[i, 1].Text))
-                                {
-                                    worksheet.Cells[i, 1].AddComment("Dato Obligatorio", "Admin");
-                                    worksheet.Cells[i, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                                    worksheet.Cells[i, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
-                                    tieneErrores = true;
-                                    tieneErroresCapitulo = true;
-                                }
-
-                                #endregion Capitulo
-
-                                string valorTemp = worksheet.Cells[i, k].Text;
-
-                                valorTemp = valorTemp.Replace("$", "").Replace(".", "").Replace(" ", "");
-
-                                //Valor
-                                temp.Valor = string.IsNullOrEmpty(valorTemp) ? 0 : decimal.Parse(valorTemp);
-                                sumaTotal += temp.Valor.Value;
-
-                                //Guarda Cambios en una tabla temporal
-
-                                if (!tieneErrores)
-                                {
-                                    _context.TempFlujoInversion.Add(temp);
-                                    _context.SaveChanges();
-                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                CantidadRegistrosInvalidos++;
                             }
 
-                        }
-                        catch (Exception ex)
-                        {
-                            CantidadRegistrosInvalidos++;
-                        }
-
-                        if (tieneErroresCapitulo == true || tieneErrores == true)
-                        {
-                            CantidadRegistrosInvalidos++;
-                        }
-                        else
-                        {
-                            CantidadResgistrosValidos++;
+                            if (tieneErroresCapitulo == true || tieneErrores == true)
+                            {
+                                CantidadRegistrosInvalidos++;
+                            }
+                            else
+                            {
+                                CantidadResgistrosValidos++;
+                            }
                         }
                     }
 
                     if (datosAdicion.ValorTotalProyecto != sumaTotal && !validacionError)
                     {
-                        worksheet.Cells[1, 1].AddComment("La suma de los valores no es igual al valor total de obra del proyecto", "Admin");
-                        worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                        worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                        if (worksheet.Cells[1, 1].Comment != null)
+                        {
+                            mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                        }
+                        else
+                        {
+                            worksheet.Cells[1, 1].AddComment("La suma de los valores no es igual al valor total de obra del proyecto", "Admin");
+                            worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                            worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                            mensajeRespuesta = "La suma de los valores no es igual al valor total de obra del proyecto";
+                        }
                         estructuraValidaValidacionGeneral = false;
-                        mensajeRespuesta = "La suma de los valores no es igual al valor total de obra del proyecto";
                     }
 
                     ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta();
@@ -1209,7 +1324,6 @@ namespace asivamosffie.services
                             LlaveConsulta = archivoCarge.Nombre,
                             CargaValida = true,
                             Mensaje = mensajeRespuesta,
-
                         };
                     }
                     else if (estructuraValidaValidacionGeneral == false)
@@ -1224,7 +1338,6 @@ namespace asivamosffie.services
                             LlaveConsulta = archivoCarge.Nombre,
                             CargaValida = false,
                             Mensaje = mensajeRespuesta,
-
                         };
                     }
 

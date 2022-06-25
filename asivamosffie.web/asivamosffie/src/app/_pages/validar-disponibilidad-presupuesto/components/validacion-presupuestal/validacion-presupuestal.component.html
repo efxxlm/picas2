@@ -30,9 +30,9 @@
             </p>
             <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
                 <strong>Plazo antes de la modificación:</strong>
-                {{ detailavailabilityBudget?.plazoMesesContrato }} meses /
-                {{ detailavailabilityBudget?.plazoDiasContrato }} dias
-            </p>
+                {{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoMesesContrato : 0  }} meses /
+                {{ datosContratoProyectoModificadosXNovedad[0]?.plazoDiasContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoDiasContrato  :0 }} dias
+              </p>
             <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
               <strong>Plazo después de la modificación:</strong>
               {{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesContrato : 0  }} meses /
