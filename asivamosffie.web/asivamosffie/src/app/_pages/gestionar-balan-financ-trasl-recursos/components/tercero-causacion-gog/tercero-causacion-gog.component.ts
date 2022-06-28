@@ -253,6 +253,13 @@ export class TerceroCausacionGogComponent implements OnInit {
                             terceroCausacionxCriterio = this.ordenGiroDetalleTerceroCausacion.filter(tercero => tercero.conceptoPagoCriterio === criterio.tipoCriterioCodigo && tercero.esPreconstruccion === this.esPreconstruccion && tercero.contratacionProyectoId === this.solicitudPagoFase.contratacionProyectoId);
                         }
                         /**
+                         * Variables para validar el semaforo
+                         */
+                        let semaforoCriterio = 'sin-diligenciar';
+                        let cantidadRegistroCompletoAportante = 0;
+                        let cantidadRegistroCompletoDescuento = 0;
+                        let cantidadDescuentosAportantes = 0;
+                        /**
                          * Lista de FormGroup que se inyectara en el campo "conceptos" en el formulario del criterio
                          */
                         const conceptosDePago: FormGroup[] = [];
@@ -307,6 +314,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                 listaAportanteDescuentos.push(
                                                     this.fb.group(
                                                         {
+                                                            registroCompleto: [ valorTraslado !== undefined ? (valorTraslado < 0 ? false : true) : false ],
                                                             ordenGiroDetalleTerceroCausacionId: [{ value: terceroCausacion.ordenGiroDetalleTerceroCausacionId, disabled: true }],
                                                             balanceFinancieroTrasladoValorId: [balanceFinancieroTrasladoValorId],
                                                             tipoTrasladoCodigo: [String(this.tipoTrasladoCodigo.direccionFinanciera)],
@@ -327,6 +335,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                                 listaAportanteDescuentos.push(
                                                     this.fb.group(
                                                         {
+                                                            registroCompleto: [ false ],
                                                             ordenGiroDetalleTerceroCausacionId: [{ value: terceroCausacion.ordenGiroDetalleTerceroCausacionId, disabled: true }],
                                                             ordenGiroDetalleTerceroCausacionDescuentoId: [0],
                                                             nombreAportante: [{ value: null, disabled: true }, Validators.required],
@@ -421,6 +430,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                                         listaAportantes.push(
                                             this.fb.group(
                                                 {
+                                                    registroCompleto: [ valorTraslado !== undefined ? (valorTraslado < 0 ? false : true) : false ],
                                                     ordenGiroDetalleTerceroCausacionId: [{ value: terceroCausacion.ordenGiroDetalleTerceroCausacionId, disabled: true }],
                                                     balanceFinancieroTrasladoValorId: [balanceFinancieroTrasladoValorId],
                                                     tipoTrasladoCodigo: [String(this.tipoTrasladoCodigo.aportante)],
@@ -441,10 +451,10 @@ export class TerceroCausacionGogComponent implements OnInit {
                                             )
                                         )
                                     } else {
-
                                         listaAportantes.push(
                                             this.fb.group(
                                                 {
+                                                    registroCompleto: [ false ],
                                                     ordenGiroDetalleTerceroCausacionId: [terceroCausacion.ordenGiroDetalleTerceroCausacionId],
                                                     ordenGiroDetalleTerceroCausacionAportanteId: [0],
                                                     tipoAportante: [{ value: null, disabled: true }, Validators.required],
@@ -465,6 +475,81 @@ export class TerceroCausacionGogComponent implements OnInit {
                                 let valorTotalUso = 0;
                                 if (usoByConcepto.length > 0) {
                                     usoByConcepto.forEach(uso => valorTotalUso += uso.valorUso);
+                                }
+
+                                listaAportantes.forEach(aportante => {
+                                    if (aportante.get('registroCompleto').value === true) {
+                                        cantidadRegistroCompletoAportante++;
+                                    }
+                                });
+        
+                                if (terceroCausacion.tieneDescuento === true) {
+                                    listaDescuentos.forEach(descuento => {
+                                        const descuentoAportantes = descuento.get('aportantesDescuento') as FormArray;
+        
+                                        descuentoAportantes.controls.forEach(descuentoControl => {
+                                            if (descuentoControl.get('registroCompleto').value === true) {
+                                                cantidadRegistroCompletoDescuento++;
+                                            }
+        
+                                            cantidadDescuentosAportantes++;
+                                        });
+                                    });
+                                }
+        
+                                if (
+                                    cantidadRegistroCompletoAportante > 0 &&
+                                    cantidadRegistroCompletoAportante === listaAportantes.length &&
+                                    cantidadRegistroCompletoDescuento === 0 &&
+                                    cantidadRegistroCompletoDescuento < cantidadDescuentosAportantes
+                                ) {
+                                    semaforoCriterio = 'en-proceso';
+                                }
+                                if (
+                                    cantidadRegistroCompletoAportante > 0 &&
+                                    cantidadRegistroCompletoAportante === listaAportantes.length &&
+                                    cantidadRegistroCompletoDescuento > 0 &&
+                                    cantidadRegistroCompletoDescuento < cantidadDescuentosAportantes
+                                ) {
+                                    semaforoCriterio = 'en-proceso';
+                                }
+                                if (
+                                    cantidadRegistroCompletoAportante > 0 &&
+                                    cantidadRegistroCompletoDescuento > 0 &&
+                                    cantidadRegistroCompletoAportante < listaAportantes.length &&
+                                    cantidadRegistroCompletoDescuento < cantidadDescuentosAportantes
+                                ) {
+                                    semaforoCriterio = 'en-proceso';
+                                }
+                                if (
+                                    cantidadRegistroCompletoAportante === 0 &&
+                                    cantidadRegistroCompletoDescuento > 0 &&
+                                    cantidadRegistroCompletoDescuento < cantidadDescuentosAportantes
+                                ) {
+                                    semaforoCriterio = 'en-proceso';
+                                }
+                                if (
+                                    cantidadRegistroCompletoAportante > 0 &&
+                                    cantidadRegistroCompletoDescuento === 0 &&
+                                    cantidadRegistroCompletoAportante < listaAportantes.length
+                                ) {
+                                    semaforoCriterio = 'en-proceso';
+                                }
+                                if (
+                                    cantidadRegistroCompletoAportante > 0 &&
+                                    cantidadRegistroCompletoDescuento > 0 &&
+                                    cantidadRegistroCompletoAportante === listaAportantes.length &&
+                                    cantidadRegistroCompletoDescuento === cantidadDescuentosAportantes
+                                ) {
+                                    semaforoCriterio = 'completo';
+                                }
+                                if (
+                                    cantidadRegistroCompletoAportante > 0 &&
+                                    cantidadRegistroCompletoAportante === listaAportantes.length &&
+                                    cantidadRegistroCompletoDescuento === 0 &&
+                                    cantidadRegistroCompletoDescuento === cantidadDescuentosAportantes
+                                ) {
+                                    semaforoCriterio = 'completo';
                                 }
 
                                 conceptosDePago.push(this.fb.group(
@@ -494,27 +579,9 @@ export class TerceroCausacionGogComponent implements OnInit {
                         }
 
                         if (terceroCausacionxCriterio?.length > 0) {
-                            const totalTerceroCriterio = terceroCausacionxCriterio?.length;
-                            terceroCausacionxCriterio.forEach(element => {
-                                if (element.registroCompleto === true) {
-                                    totalCompleto++;
-                                } else {
-                                    totalIncompleto++;
-                                }
-                            });
-                            let estadoSemaforo = 'en-proceso';
-
-                            if (totalCompleto == totalTerceroCriterio) {
-                                estadoSemaforo = 'completo';
-                            } else if (totalIncompleto == totalTerceroCriterio) {
-                                estadoSemaforo = 'sin-diligenciar';
-                            } else {
-                                estadoSemaforo = 'en-proceso';
-                            }
-
                             this.criterios.push(this.fb.group(
                                 {
-                                    estadoSemaforo,
+                                    estadoSemaforo: [ semaforoCriterio ],
                                     tipoCriterioCodigo: [criterio.tipoCriterioCodigo],
                                     nombre: [criterio.nombre],
                                     tipoPagoCodigo: [criterio.tipoPagoCodigo],
@@ -551,8 +618,6 @@ export class TerceroCausacionGogComponent implements OnInit {
                     if (totalRegistrosEnProceso > 0 && totalRegistrosEnProceso === this.criterios.length) {
                         this.estadoSemaforo.emit('en-proceso')
                     }
-
-                    console.log(this.criterios)
                 }
             );
     }
