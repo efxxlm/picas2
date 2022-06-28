@@ -22,8 +22,8 @@
             <p><strong>Número DDP: </strong>{{detailavailabilityBudget?.numeroDDP}}</p>
             <p><strong>Tipo de contrato: </strong>{{detailavailabilityBudget?.tipoSolicitudText}}</p>
             <p><strong>Valor del contrato: </strong>{{ datosContratoProyectoModificadosXNovedad[0]?.valorContrato | currency:'':'symbol':'3.0'}}</p>
-            <p><strong>Plazo: </strong>{{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoMesesContrato : 0  }} meses /
-              {{ datosContratoProyectoModificadosXNovedad[0]?.plazoDiasContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoDiasContrato  :0 }} dias</p>
+            <p><strong>Plazo: </strong>{{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoMesesContrato : detailavailabilityBudget?.plazoMesesContrato != null ? detailavailabilityBudget?.plazoMesesContrato : 0  }} meses /
+              {{ datosContratoProyectoModificadosXNovedad[0]?.plazoDiasContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoDiasContrato  : detailavailabilityBudget?.plazoDiasContrato != null ? detailavailabilityBudget?.plazoDiasContrato : 0 }} dias</p>
             <p><strong>Objeto:</strong></p>
             <div [innerHtml]="detailavailabilityBudget?.objeto"></div>
             <p *ngIf="detailavailabilityBudget?.novedadContractual">

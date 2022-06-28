@@ -39,10 +39,10 @@
       </p>
       <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo == pTipoDDP.DDP_tradicional">
         <strong>Plazo antes de la modificación:</strong>
-        {{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoMesesContrato : 0  }} meses /
-        {{ datosContratoProyectoModificadosXNovedad[0]?.plazoDiasContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoDiasContrato  :0 }} dias
+        {{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoMesesContrato : detailavailabilityBudget?.plazoMesesContrato != null ? detailavailabilityBudget?.plazoMesesContrato : 0  }} meses /
+        {{ datosContratoProyectoModificadosXNovedad[0]?.plazoDiasContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoDiasContrato : detailavailabilityBudget?.plazoDiasContrato != null ? detailavailabilityBudget?.plazoDiasContrato : 0 }} dias
       </p>
-      <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo == pTipoDDP.DDP_tradicional && datosContratoProyectoModificadosXNovedad != undefined">
+      <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo == pTipoDDP.DDP_tradicional && datosContratoProyectoModificadosXNovedad[0] != undefined">
         <strong>Plazo después de la modificación:</strong>
         {{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoMesesContrato : 0  }} meses /
         {{ datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoDiasContrato != null ? datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoDiasContrato  :0 }} dias
