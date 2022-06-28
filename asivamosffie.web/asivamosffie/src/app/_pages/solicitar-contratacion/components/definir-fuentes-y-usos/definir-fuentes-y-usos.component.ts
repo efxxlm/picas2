@@ -513,6 +513,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     let valorTotalSumado = 0;
     let totalAportantes = 0;
     let valorTotalUsos =0;
+    let valorTotal = 0;
     this.contratacionProyecto.contratacionProyectoAportante = [];
 
     this.aportantes.controls.forEach(controlAportante => {
@@ -532,10 +533,9 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
         componenteAportante: []
       };
 
-      let valorTotal = 0;
       let valorSumado = 0;
  
-      valorTotal = aportante.valorAporte;
+      valorTotal = valorTotal + aportante.valorAporte;
 
       listaComponentes.controls.forEach(controlComponente => {
         const listaUsos = controlComponente.get('usos') as FormArray;
@@ -569,15 +569,10 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
       });
 
-      if (valorTotalUsos != valorTotal) {
-
-        console.error('valorTotalUsos',valorTotalUsos);
-        console.error('valorTotal',valorTotal);
-        valoresCorrectos = false;
-      };
-
       this.contratacionProyecto.contratacionProyectoAportante.push(aportante);
     });
+
+    if (valorTotalUsos != valorTotal) valoresCorrectos = false;
 
     if (this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '1' && this.aportantes.controls[0].get('valorAportanteProyecto').value === this.contratacionProyecto.proyecto.valorObra && totalAportantes !== this.aportantes.controls.length) {
       this.openDialog('', '<b>Debe distribuir el valor total del proyecto entre todo los aportantes.</b>');
