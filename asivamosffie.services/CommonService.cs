@@ -364,7 +364,7 @@ namespace asivamosffie.services
             menuPerfil = menuPerfil.Where(r => r.Menu.Eliminado != true && !string.IsNullOrEmpty(r.Menu.RutaFormulario)).Distinct().ToList();
 
             menuPerfil = menuPerfil.GroupBy(r => r.MenuId).Select(y => y.First()).ToList();
-             
+
             return menuPerfil;
             //return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).OrderBy(z => z.Menu.Posicion).ToList();
         }
@@ -391,9 +391,20 @@ namespace asivamosffie.services
 
         public async Task<List<Usuario>> GetUsuariosByPerfil(int pIdPerfil)
         {
-            return await _context.UsuarioPerfil.Where(u => u.PerfilId == pIdPerfil)
+            List<Usuario> ListUsuario = await _context.UsuarioPerfil.Where(u => u.PerfilId == pIdPerfil)
                                                 .Include(u => u.Usuario)
                                                 .Select(s => s.Usuario).ToListAsync();
+
+
+            foreach (var Usuario in ListUsuario)
+            {
+                if (string.IsNullOrEmpty(Usuario.SegundoNombre))
+                    Usuario.SegundoNombre = string.Empty;
+                if (string.IsNullOrEmpty(Usuario.SegundoApellido))
+                    Usuario.SegundoApellido = string.Empty;
+            }
+
+            return   ListUsuario;
         }
 
         public async Task<Template> GetTemplateById(int pId)
