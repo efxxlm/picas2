@@ -353,28 +353,31 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
             if (this.sesionComiteSolicitud.requiereVotacion) {
                 this.sesionComiteSolicitud.sesionSolicitudVoto.forEach(sv => {
-                    if (sv.noAplica) this.cantidadNoAplica = this.cantidadNoAplica + 1
                     if (sv.esAprobado) this.cantidadAprobado++
-                    else this.cantidadNoAprobado++;
+                    if ( !sv.esAprobado && !sv.noAplica ) this.cantidadNoAprobado++;
+                    if ( !sv.esAprobado && sv.noAplica ) this.cantidadNoAplica = this.cantidadNoAplica + 1
                 });
 
                 if ( this.sesionComiteSolicitud.sesionSolicitudVoto.length === this.cantidadNoAplica ) {
+                    /**
+                     * Logica de votaciones para solicitudes con el escenario no aplica
+                     */
                     this.resultadoVotacion = 'No aplica'
                     this.cantidadAprobado = 0
                     this.cantidadNoAprobado = 0
                 } else {
-                    if (this.cantidadNoAprobado == 0) {
+                    if ( this.cantidadAprobado > 0 && this.cantidadAprobado > this.cantidadNoAprobado ) {
+                        /**
+                         * Logica de votaciones para solicitudes aprobadas
+                         */
                         this.resultadoVotacion = 'Aprobó';
                         this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico);
-                    } else if (this.cantidadAprobado == 0) {
+                    } else if ( this.cantidadNoAprobado > 0 && this.cantidadNoAprobado > this.cantidadAprobado ) {
+                        /**
+                         * Logica de votaciones para solicitudes no aprobadas
+                         */
                         this.resultadoVotacion = 'No Aprobó';
-                        this.estadosArray = this.estadosArray.filter(e =>
-                            [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes(e.codigo)
-                        );
-                    } else if (this.cantidadAprobado > this.cantidadNoAprobado) {
-                        this.resultadoVotacion = 'Aprobó';
-                    } else if (this.cantidadAprobado <= this.cantidadNoAprobado) {
-                        this.resultadoVotacion = 'No Aprobó';
+                        this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes(e.codigo));
                     }
                 }
 
