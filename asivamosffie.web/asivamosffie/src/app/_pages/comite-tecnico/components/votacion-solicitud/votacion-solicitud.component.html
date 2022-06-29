@@ -126,7 +126,8 @@
             </td>
             <td class="mat-cell cdk-cell ng-star-inserted">
                 <span *ngIf="addressForm.controls[i].get('aprobacion').value === true">Sí</span>
-                <span *ngIf="addressForm.controls[i].get('aprobacion').value !== true">No</span>
+                <span *ngIf="addressForm.controls[i].get('aprobacion').value !== true && addressForm.controls[i].get('aprobacion').value !== 'noAplica'">No</span>
+                <span *ngIf="addressForm.controls[i].get('aprobacion').value === 'noAplica'">No aplica</span>
             </td>
             <td class="mat-cell cdk-cell ng-star-inserted">
               <p [innerHTML]="addressForm.controls[i].get('observaciones').value">
