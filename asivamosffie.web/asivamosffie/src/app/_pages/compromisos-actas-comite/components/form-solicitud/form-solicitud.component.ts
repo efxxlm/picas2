@@ -115,7 +115,9 @@ export class FormSolicitudComponent implements OnInit {
         } )
     }
 
-    if ( solicitudVotoCf.length === this.cantidadNoAplica || solicitudVotoCt.length === this.cantidadNoAplica ) {
+    if (    ( solicitudVotoCf.length > 0 && solicitudVotoCf.length === this.cantidadNoAplica )
+            || ( solicitudVotoCt.length > 0 && solicitudVotoCt.length === this.cantidadNoAplica ) )
+    {
         /**
          * Logica de votaciones para solicitudes con el escenario no aplica
          */
