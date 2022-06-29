@@ -674,7 +674,8 @@ namespace asivamosffie.services
                             {
                                 if (worksheet.Cells[i, 1].Comment != null)
                                 {
-                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                    if(string.IsNullOrEmpty(mensajeRespuesta))
+                                        mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                                 }
                                 else
                                 {
@@ -688,7 +689,8 @@ namespace asivamosffie.services
                             {
                                 if (worksheet.Cells[i, 1].Comment != null)
                                 {
-                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                    if (string.IsNullOrEmpty(mensajeRespuesta))
+                                        mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                                 }
                                 else
                                 {
@@ -717,7 +719,8 @@ namespace asivamosffie.services
                             {
                                 if (worksheet.Cells[i, 2].Comment != null)
                                 {
-                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                    if (string.IsNullOrEmpty(mensajeRespuesta))
+                                        mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                                 }
                                 else
                                 {
@@ -749,7 +752,8 @@ namespace asivamosffie.services
                                 {
                                     if (worksheet.Cells[i, 3].Comment != null)
                                     {
-                                        mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                        if (string.IsNullOrEmpty(mensajeRespuesta))
+                                            mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                                     }
                                     else
                                     {
@@ -773,7 +777,8 @@ namespace asivamosffie.services
                             {
                                 if (worksheet.Cells[i, 4].Comment != null)
                                 {
-                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                    if (string.IsNullOrEmpty(mensajeRespuesta))
+                                        mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                                 }
                                 else
                                 {
@@ -798,7 +803,8 @@ namespace asivamosffie.services
                             {
                                 if (worksheet.Cells[i, 5].Comment != null)
                                 {
-                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                    if (string.IsNullOrEmpty(mensajeRespuesta))
+                                        mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                                 }
                                 else
                                 {
@@ -822,7 +828,8 @@ namespace asivamosffie.services
                             {
                                 if (worksheet.Cells[i, 5].Comment != null)
                                 {
-                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                    if (string.IsNullOrEmpty(mensajeRespuesta))
+                                        mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                                 }
                                 else
                                 {
@@ -839,7 +846,8 @@ namespace asivamosffie.services
                             {
                                 if (worksheet.Cells[i, 4].Comment != null)
                                 {
-                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                    if (string.IsNullOrEmpty(mensajeRespuesta))
+                                        mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                                 }
                                 else
                                 {
@@ -854,7 +862,8 @@ namespace asivamosffie.services
                             {
                                 if (worksheet.Cells[i, 5].Comment != null)
                                 {
-                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                    if (string.IsNullOrEmpty(mensajeRespuesta))
+                                        mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                                 }
                                 else
                                 {
@@ -875,7 +884,8 @@ namespace asivamosffie.services
                             {
                                 if (worksheet.Cells[i, 6].Comment != null)
                                 {
-                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                    if (string.IsNullOrEmpty(mensajeRespuesta))
+                                        mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                                 }
                                 else
                                 {
@@ -908,7 +918,8 @@ namespace asivamosffie.services
                             {
                                 if (worksheet.Cells[i, 7].Comment != null)
                                 {
-                                    mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                    if (string.IsNullOrEmpty(mensajeRespuesta))
+                                        mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                                 }
                                 else
                                 {
@@ -952,7 +963,8 @@ namespace asivamosffie.services
                     {
                         if (worksheet.Cells[1, 1].Comment != null)
                         {
-                            mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                            if (string.IsNullOrEmpty(mensajeRespuesta))
+                                mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                         }
                         else
                         {
@@ -1165,7 +1177,8 @@ namespace asivamosffie.services
                         validacionError = true;
                         if (worksheet.Cells[1, 1].Comment != null)
                         {
-                            mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                            if (string.IsNullOrEmpty(mensajeRespuesta))
+                                mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                         }
                         else
                         {
@@ -1183,7 +1196,8 @@ namespace asivamosffie.services
                     {
                         if (worksheet.Cells[1, 1].Comment != null)
                         {
-                            mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                            if (string.IsNullOrEmpty(mensajeRespuesta))
+                                mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                         }
                         else
                         {
@@ -1248,7 +1262,8 @@ namespace asivamosffie.services
                                     {
                                         if (worksheet.Cells[i, 1].Comment != null)
                                         {
-                                            mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                                            if (string.IsNullOrEmpty(mensajeRespuesta))
+                                                mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                                         }
                                         else
                                         {
@@ -1300,7 +1315,8 @@ namespace asivamosffie.services
                     {
                         if (worksheet.Cells[1, 1].Comment != null)
                         {
-                            mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
+                            if (string.IsNullOrEmpty(mensajeRespuesta))
+                                mensajeRespuesta = "El archivo cargado contiene comentarios, por favor cargue un archivo válido.";
                         }
                         else
                         {
