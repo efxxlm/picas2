@@ -32,39 +32,39 @@ const routes: Routes = [
     component: FichaContratosProyectosComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaContrato/resumen',
+    path: 'fichaContratosProyectos/fichaContrato/resumen/:id',
     component: ResumenComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaContrato/seleccion',
+    path: 'fichaContratosProyectos/fichaContrato/seleccion/:id',
     component: SeleccionComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaContrato/contratacion',
+    path: 'fichaContratosProyectos/fichaContrato/contratacion/:id',
     component: ContratacionComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaContrato/polizasSeguros',
+    path: 'fichaContratosProyectos/fichaContrato/polizasSeguros/:id',
     component: PolizasSegurosComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaContrato/ejecucionFinanciera',
+    path: 'fichaContratosProyectos/fichaContrato/ejecucionFinanciera/:id',
     component: EjecucionFinancieraComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaContrato/novedades',
+    path: 'fichaContratosProyectos/fichaContrato/novedades/:id',
     component: NovedadesComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaContrato/controversias',
+    path: 'fichaContratosProyectos/fichaContrato/controversias/:id',
     component: ControversiasComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaContrato/procesosDefensaJudicial',
+    path: 'fichaContratosProyectos/fichaContrato/procesosDefensaJudicial/:id',
     component: ProcesosDefensaJudicialComponent
   },
   {
-    path: 'fichaContratosProyectos/fichaContrato/liquidacion',
+    path: 'fichaContratosProyectos/fichaContrato/liquidacion/:id',
     component: LiquidacionComponent
   },
   {

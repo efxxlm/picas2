@@ -18,6 +18,7 @@ export interface EstadosProgramacion {
     enRegistroProgramacion: string;
     sinAprobacionProgramacionPersonal: string;
     conAprobacionProgramacionPersonal: string;
+    sinAprobacionAjusteProgramacionObra: string;
 };
 
 export interface DetalleProgramacionPersonal {

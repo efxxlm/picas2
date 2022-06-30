@@ -21,7 +21,8 @@ export class TablaRegistroProgramacionComponent implements OnInit {
     sinProgramacionPersonal: '0',
     enRegistroProgramacion: '1',
     sinAprobacionProgramacionPersonal: '2',
-    conAprobacionProgramacionPersonal: '3'
+    conAprobacionProgramacionPersonal: '3',
+    sinAprobacionAjusteProgramacionObra: '4'
   };
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort: MatSort;

@@ -154,6 +154,7 @@ namespace asivamosffie.services
 
             List<NovedadContractual> novedades = _context.NovedadContractual
                 .Where(r => r.Eliminado != true)
+                .Include(r => r.NovedadContractualDescripcion)
                 .ToList();
 
 

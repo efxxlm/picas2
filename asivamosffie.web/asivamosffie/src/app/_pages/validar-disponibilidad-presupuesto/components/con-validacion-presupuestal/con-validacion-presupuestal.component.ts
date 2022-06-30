@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { TipoDDP } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { FuenteFinanciacionService } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -26,7 +27,8 @@ export class ConValidacionPresupuestalComponent implements OnInit {
   constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
     private router: Router,private sanitized: DomSanitizer,
-    private fuenteFinanciacionService: FuenteFinanciacionService
+    private fuenteFinanciacionService: FuenteFinanciacionService,
+    private contractualNoveltyService: ContractualNoveltyService
     ) {
       this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
         if ( urlSegment.path === 'rechazada' ) {
@@ -45,6 +47,7 @@ export class ConValidacionPresupuestalComponent implements OnInit {
     } );
     }
     detailavailabilityBudget:any=null;
+    datosContratoProyectoModificadosXNovedad: any;
     esModificacion=false;
     pTipoDDP=TipoDDP;
 
@@ -72,6 +75,9 @@ export class ConValidacionPresupuestalComponent implements OnInit {
               });
               });
             }
+            this.contractualNoveltyService.getDatosContratoProyectoModificadosXNovedad(0, this.detailavailabilityBudget.contratoId).subscribe(respuesta => {
+              this.datosContratoProyectoModificadosXNovedad = respuesta;
+            });
           }
         });
       }else{
@@ -89,6 +95,9 @@ export class ConValidacionPresupuestalComponent implements OnInit {
               });
               });
             }
+            this.contractualNoveltyService.getDatosContratoProyectoModificadosXNovedad(0, this.detailavailabilityBudget.contratoId).subscribe(respuesta => {
+              this.datosContratoProyectoModificadosXNovedad = respuesta;
+            });
           }
       });
       }

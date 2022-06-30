@@ -1,54 +1,44 @@
 <section class="container">
   <div class="container text-center">
-    <div class="text-right">
-      <a routerLink="../.." mat-button color="primary" class="btn-regresar">
-        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    <div class="text-right print-d-none">
+      <a routerLink="../../.." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar" />
       </a>
     </div>
     <h1 class="title-menu--h1">
-      Pólizas y Seguros N801801
+      Pólizas y Seguros <span *ngIf="contrato">{{ contrato.numeroContrato }}</span>
     </h1>
     <p class="info-sub-title">
-      Contratista <b>Construir futuro</b>
+      Contratista <b *ngIf="contrato"> {{ contrato.nombreContratista }} </b>
     </p>
   </div>
 
-  <mat-card class="shipping-card var-main-gris">
+  <mat-card class="shipping-card var-main-gris" *ngIf="contrato">
     <mat-card-content>
       <p>
-        <strong>
-          Tipo de contrato:
-        </strong>
-        Obra
+        <strong> Tipo de contrato: </strong>
+        {{ contrato.tipoContrato }}
       </p>
       <p>
-        <strong>
-          Número de la póliza:
-        </strong>
-        0000-9868
+        <strong> Número de la póliza: </strong>
+        {{ contrato.numeroPoliza }}
       </p>
       <p>
-        <strong>
-          Nombre de la aseguradora:
-        </strong>
-        Mapfre
+        <strong> Nombre de la aseguradora: </strong>
+        {{ contrato.nombreAseguradora }}
       </p>
       <p>
-        <strong>
-          Número de certificado:
-        </strong>
-        CER404040
+        <strong> Número de certificado: </strong>
+        {{ contrato.numeroCertificado }}
       </p>
       <p>
-        <strong>
-          Fecha de expedición de la póliza:
-        </strong>
-        25/06/2020
+        <strong> Fecha de expedición de la póliza: </strong>
+        {{ contrato.fechaExpedicion | date: 'dd/MM/yyyy' }}
       </p>
     </mat-card-content>
   </mat-card>
 
-  <div class="table-responsive mb-1em mt-1em">
+  <div class="table-responsive mb-1em mt-1em" *ngIf="contrato">
     <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
       <thead>
         <tr class="mat-header-row cdk-header-row ng-star-inserted">
@@ -59,162 +49,98 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let element of listaPolizasSeguros">
+        <tr *ngFor="let element of contrato.dyListPolizas">
           <td class="mat-cell cdk-cell ng-star-inserted">
-            <b> {{ element.polizasSeguros }} </b>
+            <b> {{ element.numeroPoliza }} </b>
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ element.vigenciaPoliza }}
+            {{ element.vigenciaPoliza | date: 'dd/MM/yyyy' }}
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ element.vigenciaAmparo }}
+            {{ element.vigenciaAmparo | date: 'dd/MM/yyyy' }}
           </td>
           <td class="mat-cell cdk-cell ng-star-inserted">
-            {{ element.valorAmparo }}
+            {{ element.valorAmparo | currency: 'COP':'symbol-narrow':'.0-0' }}
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <mat-accordion>
-    <mat-expansion-panel class="expansion-style">
+  <mat-accordion *ngIf="contrato && contrato.dyListPolizasACT.length > 0" [multi]="openAcordeon">
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title">
-          Actualizaciones
-        </mat-panel-title>
+        <mat-panel-title class="expansion-style--title"> Actualizaciones </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                  Actualización 1
-                </mat-panel-title>
-            </mat-expansion-panel-header>
+      <mat-accordion [multi]="openAcordeon">
+        <mat-expansion-panel
+          class="expansion-style sub-expansion"
+          *ngFor="let element of contrato.dyListPolizasACT; index as i"
+          [expanded]="openAcordeon"
+        >
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title"> Actualización {{ i + 1 }} </mat-panel-title>
+          </mat-expansion-panel-header>
 
-            <div class="table-responsive mb-1em mt-1em w-talble">
-              <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
-                <thead>
-                  <tr class="mat-header-row cdk-header-row ng-star-inserted">
-                    <th class="mat-header-cell cdk-header-cell ng-star-inserted">Polizas y seguros</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let element of listaActualizacion">
-                    <td class="mat-cell cdk-cell ng-star-inserted">
-                      <b> {{ element }} </b>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-    
-            <mat-card class="shipping-card var-main-gris">
-              <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text">
-                  Buen manejo y correcta inversión del anticipo
-                </mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                <div class="mb-2em">
-                  <p>
-                    <strong>
-                      Vigencia de la póliza:
-                    </strong>
-                    30/03/2021
-                  </p>
-                  <p>
-                    <strong>
-                      Vigencia actualizada de la póliza:
-                    </strong>
-                    30/03/2021
-                  </p>
-                </div>
-                <div class="mb-2em">
-                  <p>
-                    <strong>
-                      Vigencia del amparo:
-                    </strong>
-                    30/03/2021
-                  </p>
-                  <p>
-                    <strong>
-                      Vigencia actualizada del amparo:
-                    </strong>
-                    30/03/2021
-                  </p>
-                </div>
-                <div>
-                  <p>
-                    <strong>
-                      Valor del amparo:
-                    </strong>
-                    $60.000.000
-                  </p>
-                  <p>
-                    <strong>
-                      Valor actualizada del amparo:
-                    </strong>
-                    $60.000.000
-                  </p>
-                </div>
-              </mat-card-content>
-            </mat-card>
-    
-            <mat-card class="shipping-card var-main-gris">
-              <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text">
-                  Garantía de estabilidad y calidad de la obra
-                </mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
-                <div class="mb-2em">
-                  <p>
-                    <strong>
-                      Vigencia de la póliza:
-                    </strong>
-                    30/03/2021
-                  </p>
-                  <p>
-                    <strong>
-                      Vigencia actualizada de la póliza:
-                    </strong>
-                    30/03/2021
-                  </p>
-                </div>
-                <div class="mb-2em">
-                  <p>
-                    <strong>
-                      Vigencia del amparo:
-                    </strong>
-                    30/03/2021
-                  </p>
-                  <p>
-                    <strong>
-                      Vigencia actualizada del amparo:
-                    </strong>
-                    30/03/2021
-                  </p>
-                </div>
-                <div class="mb-2em">
-                  <p>
-                    <strong>
-                      Valor del amparo:
-                    </strong>
-                    $60.000.000
-                  </p>
-                  <p>
-                    <strong>
-                      Valor actualizada del amparo:
-                    </strong>
-                    $60.000.000
-                  </p>
-                </div>
-              </mat-card-content>
-            </mat-card>
-    
-            <mat-card class="shipping-card var-main-gris">
+          <div class="table-responsive mb-1em mt-1em w-talble">
+            <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
+              <thead>
+                <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">Polizas y seguros</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <b> {{ element.nombrePoliza }} </b>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card header-card--margin">
+              <mat-card-title class="header-card--text">
+                {{ element.nombrePoliza }}
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="mb-2em">
+                <p>
+                  <strong> Vigencia de la póliza: </strong>
+                  {{ element.vigenciaPoliza | date: 'dd/MM/yyyy' }}
+                </p>
+                <p *ngIf="element.vigenciaPolizaActualizada">
+                  <strong> Vigencia actualizada de la póliza: </strong>
+                  {{ element.vigenciaPolizaActualizada | date: 'dd/MM/yyyy' }}
+                </p>
+              </div>
+              <div class="mb-2em">
+                <p>
+                  <strong> Vigencia del amparo: </strong>
+                  {{ element.vigenciaAmparo | date: 'dd/MM/yyyy' }}
+                </p>
+                <p *ngIf="element.vigenciaAmparoActualizada">
+                  <strong> Vigencia actualizada del amparo: </strong>
+                  {{ element.vigenciaAmparoActualizada | date: 'dd/MM/yyyy' }}
+                </p>
+              </div>
+              <div>
+                <p>
+                  <strong> Valor del amparo: </strong>
+                  {{ element.valorAmparo | currency: 'COP':'symbol-narrow':'.0-0' }}
+                </p>
+                <p *ngIf="element.valorAmparoActualizada">
+                  <strong> Valor actualizada del amparo: </strong>
+                  {{ element.valorAmparoActualizada | currency: 'COP':'symbol-narrow':'.0-0' }}
+                </p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- <mat-card class="shipping-card var-main-gris">
               <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text">
                   URL con soporte
@@ -227,13 +153,13 @@
                   </strong>
                 </p>
               </mat-card-content>
-            </mat-card>
-            
+            </mat-card> -->
         </mat-expansion-panel>
-    </mat-accordion>
-      
-
+      </mat-accordion>
     </mat-expansion-panel>
   </mat-accordion>
-  
 </section>
+
+<div class="text-center mt-2em mb-2em print-d-none">
+  <button mat-raised-button color="accent" (click)="downloadPDF()">Descargar</button>
+</div>

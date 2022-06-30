@@ -1,5 +1,5 @@
 import { Route } from '@angular/compiler/src/core';
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, Validators, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -39,6 +39,7 @@ export class ProgramacionDeObraComponent implements OnInit, OnChanges {
   ajusteProgramacionId: number;
   @Input() ajusteProgramacion: any;
   @Input() esVerDetalle: boolean;
+  @Output() estadoSemaforo = new EventEmitter<string>();
 
   constructor(
     private fb: FormBuilder,
@@ -56,7 +57,16 @@ export class ProgramacionDeObraComponent implements OnInit, OnChanges {
         this.addressForm.get('observaciones').setValue( this.ajusteProgramacion?.observacionObra ? this.ajusteProgramacion?.observacionObra?.observaciones : '' )
         this.addressForm.get('ajustePragramacionObservacionId').setValue( this.ajusteProgramacion?.observacionObra ? this.ajusteProgramacion?.observacionObra?.ajustePragramacionObservacionId : 0 )
         this.addressForm.get('ajusteProgramacionId').setValue( this.ajusteProgramacionId)
-
+        //semaforo
+        if(this.esVerDetalle == true){
+          this.estadoSemaforo.emit('');
+        }else if((this.ajusteProgramacion.observacionObra != undefined && this.ajusteProgramacion.tieneObservacionesProgramacionObra != null && this.ajusteProgramacion.tieneObservacionesProgramacionObra != undefined) || this.ajusteProgramacion.tieneObservacionesProgramacionObra == false){
+          this.estadoSemaforo.emit( 'completo' );
+        }else if((this.ajusteProgramacion.tieneObservacionesProgramacionObra == true && (this.ajusteProgramacion.observacionObra?.observaciones == null || this.ajusteProgramacion.observacionObra?.observaciones == ''))){
+          this.estadoSemaforo.emit( 'en-proceso' );
+        }else{
+          this.estadoSemaforo.emit( 'sin-diligenciar' );
+        }
       }
   }
 
@@ -129,16 +139,28 @@ export class ProgramacionDeObraComponent implements OnInit, OnChanges {
   }
 
   descargar(element: any) {
-    this.commonSvc.getFileById(element.archivoCargueIdProgramacionObra)
-      .subscribe(respuesta => {
-        const documento = 'ProgramacionObra.xlsx';
-        const  blob = new Blob([respuesta], { type: 'application/octet-stream' });
-        const  anchor = document.createElement('a');
-        anchor.download = documento;
-        anchor.href = window.URL.createObjectURL(blob);
-        anchor.dataset.downloadurl = ['application/octet-stream', anchor.download, anchor.href].join(':');
-        anchor.click();
+    if(element.estadoCodigo == "4" && (element.archivoCargueIdProgramacionObra == null || element.archivoCargueIdProgramacionObra == undefined)){
+      this.reprogrammingsvc.getFileReturn(element.ajusteProgramacionId, true).subscribe(respuesta => {
+        console.log(respuesta);
+        if(respuesta != null)
+          this.downloadFile(respuesta.archivoCargueId);
       });
+    }else{
+      this.downloadFile(element.archivoCargueIdProgramacionObra);
+    }
+  }
+
+  downloadFile(idFile:  number){
+    this.commonSvc.getFileById(idFile)
+    .subscribe(respuesta => {
+      const documento = 'ProgramacionObra.xlsx';
+      const  blob = new Blob([respuesta], { type: 'application/octet-stream' });
+      const  anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/octet-stream', anchor.download, anchor.href].join(':');
+      anchor.click();
+    });
   }
 
   openObservaciones(dataFile: any) {

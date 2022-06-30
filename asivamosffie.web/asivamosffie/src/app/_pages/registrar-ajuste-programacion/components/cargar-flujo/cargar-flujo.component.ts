@@ -78,10 +78,7 @@ export class CargarFlujoComponent {
      confirmarDialog.afterClosed()
      .subscribe( response => {
        if ( response === true ) {
-           this.reprogrammingSvc.transferMassiveLoadAdjustmentInvestmentFlow( this.idProject,
-                                                                                    this.data.ajusteProgramacionInfo.proyectoId,
-                                                                                    this.data.ajusteProgramacionInfo.contratoId
-                                                                                  )
+           this.reprogrammingSvc.validateInvestmentFlowFile( this.idProject,this.data.ajusteProgramacionInfo.ajusteProgramacionId)
              .subscribe(
                response => {
                  this.openDialogResponse( '', response.message );

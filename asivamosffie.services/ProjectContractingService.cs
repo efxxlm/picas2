@@ -726,8 +726,11 @@ namespace asivamosffie.services
                     proyecto.ContratacionProyecto = proyecto.ContratacionProyecto.Where(r => r.Eliminado != true).ToList();
 
 
-                    //Quitar las contrataciones que estan rechazadas por comite tecnico
-                    List<int> idsContratacionProyecto = proyecto.ContratacionProyecto.Where(r => r.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteTecnico)
+                    //Quitar las contrataciones que estan rechazadas por comite tecnico o comite fiduciario
+                    List<int> idsContratacionProyecto = proyecto.ContratacionProyecto.Where(r =>
+                                                                                                 r.Contratacion.EstadoSolicitudCodigo ==  ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteTecnico 
+                                                                                              || r.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.RechazadoComiteFiduciario
+                                                                                           )
                                                                                      .Select(r => r.ContratacionProyectoId)
                                                                                      .ToList();
         
@@ -768,13 +771,18 @@ namespace asivamosffie.services
                     cumpleCondicionTai = ValidarCumpleTaiContratistaxProyectoId(proyecto.ProyectoId);
 
 
-                    if (proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.Disponible && proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
+                    if (proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.Disponible 
+                     && proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.RechazadoComiteTecnico
+                     && proyecto.EstadoProyectoObraCodigo != ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario
+                        )
                         proyectoGrilla.TieneObra = true;
 
-                    if (proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.Disponible && proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.RechazadoComiteTecnico)
+                    if (proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.Disponible 
+                     && proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.RechazadoComiteTecnico  
+                     && proyecto.EstadoProyectoInterventoriaCodigo != ConstantCodigoEstadoProyecto.RechazadoComiteFiduciario 
+                     )
                         proyectoGrilla.TieneInterventoria = true;
-
-
+                     
                     if (cumpleCondicionTai)
                     {
                         proyectoGrilla.NumeroSolicitud = "No asignado";

@@ -80,7 +80,7 @@ export class TablaAjusteProgramacionComponent implements AfterViewInit {
     });
   }
 
-  Aprobar(id){
+  Aprobar(id: number){
     this.reprogrammingService.aprobarAjusteProgramacion( id )
       .subscribe( respuesta => {
         this.openDialog('', respuesta.message);

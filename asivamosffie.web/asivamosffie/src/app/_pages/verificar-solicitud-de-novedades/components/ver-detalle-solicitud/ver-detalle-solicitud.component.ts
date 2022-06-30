@@ -69,11 +69,10 @@ export class VerDetalleSolicitudComponent implements OnInit {
     const fechaFin = moment( new Date( pFechaFin ).setHours( 0, 0, 0, 0 ) );
     const duracionDias = fechaFin.diff( fechaInicio, 'days' );
     let rFecha;
-
     if(this.validaParaModificar == true){
       rFecha = moment(this.fechaEstimadaFinalizacion).add(duracionDias, 'days').toDate();
     }else{
-      this.fechaEstimadaFinalizacion;
+      rFecha = this.fechaEstimadaFinalizacion;
     }
     return rFecha;
   }

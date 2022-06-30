@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatSelectChange } from '@angular/material/select';
 import { FuenteFinanciacion } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-definir-fuentes-y-usos',
@@ -512,6 +513,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     let valorTotalSumado = 0;
     let totalAportantes = 0;
     let valorTotalUsos =0;
+    let valorTotal = 0;
     this.contratacionProyecto.contratacionProyectoAportante = [];
 
     this.aportantes.controls.forEach(controlAportante => {
@@ -531,10 +533,9 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
         componenteAportante: []
       };
 
-      let valorTotal = 0;
       let valorSumado = 0;
-
-      valorTotal = aportante.valorAporte;
+ 
+      valorTotal = valorTotal + aportante.valorAporte;
 
       listaComponentes.controls.forEach(controlComponente => {
         const listaUsos = controlComponente.get('usos') as FormArray;
@@ -555,9 +556,12 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
             tipoUsoCodigo: controlUsos.get('usoDescripcion').value ? controlUsos.get('usoDescripcion').value.codigo : null,
             valorUso: controlUsos.get('valorUso').value,
           };
-
-          valorSumado = valorSumado + componenteUso.valorUso;
-          valorTotalUsos  = valorTotalUsos + valorSumado;
+          if(componenteUso.valorUso > 0)
+          {
+            valorSumado += componenteUso.valorUso;
+            valorTotalUsos   += componenteUso.valorUso;
+          }
+         
           componenteAportante.componenteUso.push(componenteUso);
         });
 
@@ -565,15 +569,10 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
       });
 
-      if (valorTotalUsos != valorTotal) {
-
-        console.error('valorTotalUsos',valorTotalUsos);
-        console.error('valorTotal',valorTotal);
-        valoresCorrectos = false;
-      };
-
       this.contratacionProyecto.contratacionProyectoAportante.push(aportante);
     });
+
+    if (valorTotalUsos != valorTotal) valoresCorrectos = false;
 
     if (this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '1' && this.aportantes.controls[0].get('valorAportanteProyecto').value === this.contratacionProyecto.proyecto.valorObra && totalAportantes !== this.aportantes.controls.length) {
       this.openDialog('', '<b>Debe distribuir el valor total del proyecto entre todo los aportantes.</b>');
@@ -585,7 +584,10 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     };
     if (this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '2' && totalAportantes === this.aportantes.controls.length) {
       if (valorTotalUsos !== this.contratacionProyecto.proyecto.valorInterventoria) {
-        this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de interventoría.</b>');
+        
+        var ValorTotalUsosFormat = new Intl.NumberFormat().format(valorTotalUsos);
+        var valorInterventoriaFormat = new Intl.NumberFormat().format(this.contratacionProyecto.proyecto.valorInterventoria);
+        this.openDialog('', '<b>El valor del aporte $'+ ValorTotalUsosFormat +' no corresponde con el valor  $'+ valorInterventoriaFormat +' requerido en la solicitud de interventoría.</b>');
         return;
       };
     };

@@ -1,21 +1,7 @@
-import { Component, ViewChild, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
-const ELEMENT_DATA = [
-  {
-    id: '1',
-    numeroContrato: 'N801801',
-    contratista: 'Construir futuro',
-    departamento: 'Boyacá',
-    municipio: 'Susacón',
-    institucionEducativa: 'I.E Nuestra Señora Del Carmen',
-    sede: 'Única sede',
-    tipoContrato: 'Obra',
-    vigencia: '2021'
-  }
-];
 
 @Component({
   selector: 'app-tabla-resultados',
@@ -23,10 +9,10 @@ const ELEMENT_DATA = [
   styleUrls: ['./tabla-resultados.component.scss']
 })
 export class TablaResultadosComponent implements OnInit {
+  @Output() morstrarFicha = new EventEmitter<{ ficha: boolean; contratoId: number }>();
+  @Input() resultados: any;
 
-  @Output() morstrarFicha = new EventEmitter();
-
-  ELEMENT_DATA: any[];
+  ELEMENT_DATA: any[] = [];
   displayedColumns: string[] = [
     'numeroContrato',
     'contratista',
@@ -36,20 +22,22 @@ export class TablaResultadosComponent implements OnInit {
     'vigencia',
     'id'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
   @ViewChild(MatSort) sort: MatSort;
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
+    let infoDataTable = [];
+    infoDataTable[0] = this.resultados.informacion;
+    this.dataSource.data = infoDataTable;
   }
 
-  verFicha() {
-    this.morstrarFicha.emit( true );
+  verFicha(contratoId: number) {
+    this.morstrarFicha.emit({ ficha: true, contratoId: contratoId });
   }
 
   descargarFicha() {
     console.log('descargar Ficha');
   }
-
 }

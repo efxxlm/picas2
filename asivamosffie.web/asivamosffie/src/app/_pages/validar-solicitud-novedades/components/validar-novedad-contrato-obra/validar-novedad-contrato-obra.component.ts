@@ -157,7 +157,7 @@ export class ValidarNovedadContratoObraComponent implements OnInit {
     if(this.validaParaModificar == true){
       rFecha = moment(this.fechaEstimadaFinalizacion).add(duracionDias, 'days').toDate();
     }else{
-      this.fechaEstimadaFinalizacion;
+      rFecha = this.fechaEstimadaFinalizacion;
     }
     return rFecha;
   }

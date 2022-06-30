@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { MatSelectChange } from '@angular/material/select';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-formulario-proyectos',
@@ -299,15 +300,28 @@ export class FormularioProyectosComponent implements OnInit {
         this.projectServices.getProjectById(Number(id)).subscribe(
           respuesta => {
             this.proyecto = respuesta;
-            if (
-              (this.proyecto.estadoProyectoObraCodigo === '1' || this.proyecto.estadoProyectoObraCodigo === '9'|| this.proyecto.estadoProyectoObraCodigo === '5') &&
-              (this.proyecto.estadoProyectoInterventoriaCodigo === '1' || this.proyecto.estadoProyectoInterventoriaCodigo === '9'|| this.proyecto.estadoProyectoInterventoriaCodigo === '5')
+           /* */ if (
+              (
+                   this.proyecto.estadoProyectoObraCodigo === '1' 
+                || this.proyecto.estadoProyectoObraCodigo === '9'
+                || this.proyecto.estadoProyectoObraCodigo === '5'
+                || this.proyecto.estadoProyectoObraCodigo === '6'
+                || this.proyecto.estadoProyectoInterventoriaCodigo === '1' 
+                || this.proyecto.estadoProyectoInterventoriaCodigo === '9'
+                || this.proyecto.estadoProyectoInterventoriaCodigo === '5'
+                || this.proyecto.estadoProyectoInterventoriaCodigo === '6'
+              ) 
             ) {
               this.bitPuedoEditar = true;
-            }else{
-              this.bitPuedoEditar = false;
+              if(estado == "false")
+              { 
+                this.bitPuedoEditar = false;
+              }
+              
+            }else{ 
+              this.bitPuedoEditar = false; 
             }
-
+            console.log("EDITAR", this.bitPuedoEditar)
             this.valueVacioLatitud();
             this.valueVacioLongitud();
 

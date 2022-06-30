@@ -8,6 +8,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CurrencyPipe } from '@angular/common';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { ContractualNoveltyService } from 'src/app/core/_services/ContractualNovelty/contractual-novelty.service';
 
 export interface tablaEjemplo {
   componente: string;
@@ -44,10 +45,11 @@ export class GestionarDrpComponent implements OnInit {
   esNovedad: any;
   novedadId: any;
   esLiberacion: boolean = false;
+  datosContratoProyectoModificadosXNovedad: any;
 
   constructor(public dialog: MatDialog, private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute, private currencyPipe: CurrencyPipe,
-    private router: Router, private sanitized: DomSanitizer,) {
+    private router: Router, private sanitized: DomSanitizer,private contractualNoveltyService: ContractualNoveltyService) {
       this.route.snapshot.url.forEach( ( urlSegment: UrlSegment ) => {
         if ( urlSegment.path === 'conLiberacionSaldo' ){
           this.esLiberacion = true;
@@ -103,7 +105,11 @@ export class GestionarDrpComponent implements OnInit {
             });
             element['listaComponentesUsoAportante'] = listaComponentesUsoAportante;
           });
-
+          if(this.detailavailabilityBudget != null){
+            this.contractualNoveltyService.getDatosContratoProyectoModificadosXNovedad(0, this.detailavailabilityBudget.contratoId).subscribe(respuesta => {
+              this.datosContratoProyectoModificadosXNovedad = respuesta;
+            });
+          }
         }
         else {
           this.openDialog('', 'Error al intentar recuperar los datos de la solicitud, por favor intenta nuevamente.');
@@ -135,7 +141,11 @@ export class GestionarDrpComponent implements OnInit {
             });
             element['listaComponentesUsoAportante'] = listaComponentesUsoAportante;
           });
-
+          if(this.detailavailabilityBudget != null){
+            this.contractualNoveltyService.getDatosContratoProyectoModificadosXNovedad(0, this.detailavailabilityBudget.contratoId).subscribe(respuesta => {
+              this.datosContratoProyectoModificadosXNovedad = respuesta;
+            });
+          }
         }
         else {
           this.openDialog('', 'Error al intentar recuperar los datos de la solicitud, por favor intenta nuevamente.');

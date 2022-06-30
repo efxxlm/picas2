@@ -15,6 +15,7 @@ export class FormSolicitudComponent implements OnInit {
   totalAprobado: number = 0;
   totalNoAprobado: number = 0;
   resultadoVotacion: string;
+  cantidadNoAplica = 0
   estadoSolicitud: any[] = [];
   addressForm = this.fb.group({
     estadoSolicitud   : [null, Validators.required],
@@ -97,36 +98,44 @@ export class FormSolicitudComponent implements OnInit {
   }
 
   resultadosVotaciones ( solicitud: any ) {
-    if ( this.esComiteFiduciario === true ) {
-      solicitud.sesionSolicitudVoto.forEach( sv => {
-        if ( sv.comiteTecnicoFiduciarioId !== undefined ) {
-          if ( sv.esAprobado === true ) {
-            this.totalAprobado++;
-          }
-          if ( sv.esAprobado === false ) {
-            this.totalNoAprobado++;
-          }
-        }
-      });
-    }
+    const solicitudVotoCt: any[] = solicitud.sesionSolicitudVoto.filter( sv => !sv.comiteTecnicoFiduciarioId )
+    const solicitudVotoCf: any[] = solicitud.sesionSolicitudVoto.filter( sv => sv.comiteTecnicoFiduciarioId )
 
-    if ( this.esComiteFiduciario === false ) {
-      solicitud.sesionSolicitudVoto.forEach( sv => {
-        if ( sv.comiteTecnicoFiduciarioId === undefined ) {
-          if ( sv.esAprobado === true ) {
-            this.totalAprobado++;
-          }
-          if ( sv.esAprobado === false ) {
-            this.totalNoAprobado++;
-          }
-        }
-      });
-    }
-
-    if ( this.totalNoAprobado > 0 ) {
-      this.resultadoVotacion = 'No Aprobó';
+    if ( this.esComiteFiduciario ) {
+        solicitudVotoCf.forEach( sv => {
+            if (sv.esAprobado) this.totalAprobado++
+            if ( !sv.esAprobado && !sv.noAplica ) this.totalNoAprobado++;
+            if ( !sv.esAprobado && sv.noAplica ) this.cantidadNoAplica = this.cantidadNoAplica + 1
+        } )
     } else {
-      this.resultadoVotacion = 'Aprobó';
+        solicitudVotoCt.forEach( sv => {
+            if (sv.esAprobado) this.totalAprobado++
+            if ( !sv.esAprobado && !sv.noAplica ) this.totalNoAprobado++;
+            if ( !sv.esAprobado && sv.noAplica ) this.cantidadNoAplica = this.cantidadNoAplica + 1
+        } )
+    }
+
+    if (    ( solicitudVotoCf.length > 0 && solicitudVotoCf.length === this.cantidadNoAplica )
+            || ( solicitudVotoCt.length > 0 && solicitudVotoCt.length === this.cantidadNoAplica ) )
+    {
+        /**
+         * Logica de votaciones para solicitudes con el escenario no aplica
+         */
+        this.resultadoVotacion = 'No aplica'
+        this.totalAprobado = 0
+        this.totalNoAprobado = 0
+    } else {
+        if ( this.totalAprobado > 0 && this.totalAprobado > this.totalNoAprobado ) {
+            /**
+             * Logica de votaciones para solicitudes aprobadas
+             */
+            this.resultadoVotacion = 'Aprobó';
+        } else if ( this.totalNoAprobado > 0 && this.totalNoAprobado > this.totalAprobado ) {
+            /**
+             * Logica de votaciones para solicitudes no aprobadas
+             */
+            this.resultadoVotacion = 'No Aprobó';
+        }
     }
   };
 

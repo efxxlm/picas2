@@ -12,7 +12,7 @@ import { NovedadContractual } from 'src/app/_interfaces/novedadContractual';
 })
 export class ValidarAjusteComponent implements OnInit {
 
-  detalleId: string;
+  detalleId: number;
   ajusteProgramacion: any;
   ajusteProgramacionInfo: any;
   novedad: NovedadContractual;
@@ -61,26 +61,14 @@ export class ValidarAjusteComponent implements OnInit {
       this.detalleId = params.id;
       this.reprogrammingService.getAjusteProgramacionById( this.detalleId )
         .subscribe( ajuste => {
+          console.log(ajuste);
           this.ajusteProgramacion = ajuste;
           this.contractualNoveltyService.getNovedadContractualById(this.ajusteProgramacionInfo?.novedadContractualId)
           .subscribe(respuesta => {
             this.novedad = respuesta;
-            this.fechaFinalizacionContrato = (this.novedad?.contrato?.fechaEstimadaFinalizacion ? this.novedad?.contrato?.fechaEstimadaFinalizacion : this.novedad?.contrato?.fechaTerminacionFase2 ? this.novedad?.contrato?.fechaTerminacionFase2 : this.novedad?.contrato?.fechaTerminacion);
-            this.fechaFinalizacionContrato = moment( new Date( this.fechaFinalizacionContrato ).setHours( 0, 0, 0, 0 ) );
-            respuesta.novedadContractualDescripcion.forEach( d => {
-              if(d.tipoNovedadCodigo == '3')
-                this.esAdicion = true;
-              if(d.tipoNovedadCodigo == '1' || d.tipoNovedadCodigo == '2' || d.tipoNovedadCodigo == '4')
-                this.modificaFecha = true;
-              const fechaInicio = moment( new Date( d?.fechaInicioSuspension ).setHours( 0, 0, 0, 0 ) );
-              const fechaFin = moment( new Date( d?.fechaFinSuspension ).setHours( 0, 0, 0, 0 ) );
-              const duracionDias = fechaFin.diff( fechaInicio, 'days' );
-              this.presupuestoAdicionalSolicitado += d.presupuestoAdicionalSolicitado ?? 0;
-              d.fechaEstimadaFinalizacion = moment(this.fechaFinalizacionContrato).add(duracionDias, 'days').toDate();
-            });
           });
         });
     });
-    console.log(this.ajusteProgramacion);
   }
+
 }

@@ -64,8 +64,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _reprogrammingService.AprobarAjusteProgramacion(pAjusteProgramacionId, HttpContext.User.FindFirst("User").Value
-                    , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                respuesta = await _reprogrammingService.AprobarAjusteProgramacion(pAjusteProgramacionId, HttpContext.User.FindFirst("User").Value);
                 return respuesta;
             }
             catch (Exception ex)
@@ -162,24 +161,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [Route("TransferMassiveLoadAdjustmentProgramming")]
-        [HttpPost]
-        public async Task<IActionResult> TransferMassiveLoadAdjustmentProgramming([FromQuery] string pIdDocument, int pProyectoId, int pContratoId)
-        {
-            try
-            {
-                Respuesta respuesta = new Respuesta();
-                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _reprogrammingService.TransferMassiveLoadAdjustmentProgramming(pIdDocument, pUsuarioModifico, pProyectoId, pContratoId);
-
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
-        }
-
         [Route("UploadFileToValidateAdjustmentInvestmentFlow")]
         [HttpPost]
         public async Task<IActionResult> UploadFileToValidateAdjustmentInvestmentFlow(IFormFile file, [FromQuery] int pAjusteProgramacionId, int pContratacionProyectId, int pNovedadContractualId,
@@ -195,24 +176,6 @@ namespace asivamosffie.api.Controllers
                     string strUsuario = HttpContext.User.FindFirst("User").Value;
                     respuesta = await _reprogrammingService.UploadFileToValidateAdjustmentInvestmentFlow(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseAjusteProgramacionObra), strUsuario, pAjusteProgramacionId, pContratacionProyectId, pNovedadContractualId, pContratoId, pProyectoId);
                 }
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
-        }
-
-        [Route("TransferMassiveLoadAdjustmentInvestmentFlow")]
-        [HttpPost]
-        public async Task<IActionResult> TransferMassiveLoadAdjustmentInvestmentFlow([FromQuery] string pIdDocument, int pProyectoId, int pContratoId)
-        {
-            try
-            {
-                Respuesta respuesta = new Respuesta();
-                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _reprogrammingService.TransferMassiveLoadAdjustmentInvestmentFlow(pIdDocument, pUsuarioModifico, pProyectoId, pContratoId);
-
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -251,12 +214,62 @@ namespace asivamosffie.api.Controllers
 
         [Route("DeleteAdjustProgrammingOrInvestmentFlow")]
         [HttpPost]
-        public async Task<Respuesta> DeleteAdjustProgrammingOrInvestmentFlow([FromQuery] int pArchivoCargueId, [FromQuery] int pAjusteProgramacionId)
+        public async Task<Respuesta> DeleteAdjustProgrammingOrInvestmentFlow([FromQuery] int pArchivoCargueId, [FromQuery] int pAjusteProgramacionId,[FromQuery] bool esProgramacionObra)
         {
             try
             {
                 string usuario = HttpContext.User.FindFirst("User").Value;
-                return await _reprogrammingService.DeleteAdjustProgrammingOrInvestmentFlow(pArchivoCargueId, pAjusteProgramacionId, usuario);
+                return await _reprogrammingService.DeleteAdjustProgrammingOrInvestmentFlow(pArchivoCargueId, pAjusteProgramacionId, usuario, esProgramacionObra);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("ValidateReprogrammingFile")]
+        [HttpPost]
+        public async Task<IActionResult> ValidateReprogrammingFile([FromQuery] string pIdDocument, int pAjusteProgramacionId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _reprogrammingService.ValidateReprogrammingFile(pIdDocument, pUsuarioModifico, pAjusteProgramacionId);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [Route("ValidateInvestmentFlowFile")]
+        [HttpPost]
+        public async Task<IActionResult> ValidateInvestmentFlowFile([FromQuery] string pIdDocument, int pAjusteProgramacionId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _reprogrammingService.ValidateInvestmentFlowFile(pIdDocument, pUsuarioModifico, pAjusteProgramacionId);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [Route("GetFileReturn")]
+        [HttpGet]
+        public async Task<ArchivoCargue> GetFileReturn(int pAjusteProgramacionId,bool esProgramacion)
+        {
+            try
+            {
+                return await _reprogrammingService.GetFileReturn(pAjusteProgramacionId, esProgramacion);
             }
             catch (Exception ex)
             {

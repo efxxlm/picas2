@@ -42,7 +42,7 @@ namespace asivamosffie.services.Helpers
 
             string contenido = pPlantilla.Contenido ?? " ";
 
-                Margenes margenes = new Margenes
+            Margenes margenes = new Margenes
             {
                 Arriba = (float)pPlantilla.MargenArriba,
                 Abajo = (float)pPlantilla.MargenAbajo,
@@ -71,25 +71,26 @@ namespace asivamosffie.services.Helpers
             SelectPdf.PdfDocument pdfDocument = htmlToPdf.ConvertHtmlString(contenido);
             byte[] pdf = pdfDocument.Save();
             pdfDocument.Close();
-                 
+
             return pdf;
         }
         public static byte[] Convertir(Plantilla pPlantilla, bool? pEsHorizontal = false)
         {
-            string contenido = pPlantilla.Contenido ?? " ";
-            string encabezado = pPlantilla.Encabezado != null ? pPlantilla.Encabezado.Contenido : " ";
-            string pie = pPlantilla.PieDePagina != null ? pPlantilla.PieDePagina.Contenido : " ";
-
-            Margenes margenes = new Margenes
-            {
-                Arriba = (float)pPlantilla.MargenArriba,
-                Abajo = (float)pPlantilla.MargenAbajo,
-                Derecha = (float)pPlantilla.MargenDerecha,
-                Izquierda = (float)pPlantilla.MargenIzquierda
-            };
-
             try
             {
+                string contenido = pPlantilla.Contenido ?? " ";
+                string encabezado = pPlantilla.Encabezado != null ? pPlantilla.Encabezado.Contenido : " ";
+                string pie = pPlantilla.PieDePagina != null ? pPlantilla.PieDePagina.Contenido : " ";
+
+                Margenes margenes = new Margenes
+                {
+                    Arriba = (float)pPlantilla.MargenArriba,
+                    Abajo = (float)pPlantilla.MargenAbajo,
+                    Derecha = (float)pPlantilla.MargenDerecha,
+                    Izquierda = (float)pPlantilla.MargenIzquierda
+                };
+
+
                 contenido = contenido.Replace("\r\n", "");
                 contenido = contenido.Replace("\r\n", "");
                 contenido = contenido.Replace("\r\n", "");
@@ -103,7 +104,7 @@ namespace asivamosffie.services.Helpers
                 contenido = contenido.Replace("class=\"ql-align-left\"", "style=\"text-align:left;\"");
                 contenido = contenido.Replace("class=\"ql-align-center\"", "style=\"text-align:center;\"");
 
-                 
+
                 FontFactory.RegisterDirectories();
 
                 double margenIzquierdo = CentimetrosAMedidaPDF(margenes.Izquierda);

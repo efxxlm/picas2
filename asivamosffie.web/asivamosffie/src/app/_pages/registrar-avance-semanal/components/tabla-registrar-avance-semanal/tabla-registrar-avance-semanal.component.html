@@ -56,7 +56,7 @@
         <button mat-raised-button
                 color="accent"
                 class="btn-table"
-                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte === 'Sin registro' && element.fechaModificacion === undefined && element?.cumpleCondicionesTai === false"
+                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte === 'Sin registro' && element.fechaModificacion === undefined && element?.cumpleCondicionesTai === false && element.existeReprogramacionActiva === false"
                 [routerLink]="[ 'registroSeguimientoSemanal', element.contratacionProyectoId ]"
                 [disabled]="permisos.tienePermisoCrear === false">
                 Registrar avance semanal
@@ -64,7 +64,7 @@
         <button mat-raised-button
                 color="accent"
                 class="btn-table"
-                *ngIf="element.numeroSemana !== primeraSemana && element.verEditarBitacora === true && element?.cumpleCondicionesTai === false"
+                *ngIf="(element.numeroSemana !== primeraSemana && element.verEditarBitacora === true && element.existeReprogramacionActiva === false && element?.cumpleCondicionesTai === false) || element.estadoObraCodigo == '6'"
                 [routerLink]="[ 'consultarEditarBitacora', element.contratacionProyectoId ]"
                 [disabled]="permisos.tienePermisoEditar === false">
                 Consultar/Editar bitácora
@@ -73,14 +73,14 @@
                 color="accent"
                 class="btn-table"
                 (click)="enviarVerificacion( element.seguimientoSemanalId )"
-                *ngIf="element.enviarVerificacion === true && element?.cumpleCondicionesTai === false &&  element.numeroSemana  "
+                *ngIf="element.enviarVerificacion === true && element?.cumpleCondicionesTai === false && element.existeReprogramacionActiva === false &&  element.numeroSemana  "
                 [disabled]="permisos.tienePermisoEditar === false">
                 {{ element.numeroSemana !== element.cantidadSemanas && element.actaCargada === false ?'Enviar a verificación' : 'Enviar para registrar informe final' }}
         </button>
         <button mat-raised-button
                 color="accent"
                 class="btn-table"
-                *ngIf="element.verCargarActa === true && cumpleCondicionesTai === false"
+                *ngIf="element.verCargarActa === true && cumpleCondicionesTai === false && element.existeReprogramacionActiva === false"
                 (click)="openDialogCargarActa( element )"
                 [disabled]="permisos.tienePermisoCrear === false">
                 Cargar acta de terminación de contrato
@@ -88,7 +88,7 @@
         <button mat-raised-button
                 color="accent"
                 class="btn-table"
-                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte !== 'Sin registro' && element.fechaModificacion !== undefined && element?.cumpleCondicionesTai === false"
+                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte !== 'Sin registro' && element.fechaModificacion !== undefined && element?.cumpleCondicionesTai === false && element.existeReprogramacionActiva === false"
                 [routerLink]="[ 'verDetalleEditar', element.contratacionProyectoId ]"
                 [disabled]="permisos.tienePermisoEditar === false">
                 Ver detalle/Editar
@@ -96,7 +96,7 @@
         <button mat-raised-button
                 color="accent"
                 class="btn-table"
-                *ngIf="(element.numeroSemana !== primeraSemana && element.verEditarBitacora === false) || element?.cumpleCondicionesTai === true"
+                *ngIf="(element.numeroSemana !== primeraSemana && element.verEditarBitacora === false) || element?.cumpleCondicionesTai === true || element.existeReprogramacionActiva === true"
                 [routerLink]="[ 'consultarEditarBitacora', element.contratacionProyectoId ]"
                 [disabled]="permisos.tienePermisoLeer === false">
                 Consultar bitácora
@@ -104,7 +104,7 @@
         <!-- <a mat-raised-button
           color="accent"
           class="btn-table"
-          
+
           [routerLink]="[ 'informeSemanal', element.contratacionProyectoId, element.seguimientoSemanalId ]"
         >
           Informe Semanal

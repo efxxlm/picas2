@@ -78,9 +78,7 @@ export class CargarProgramacionComponent {
      confirmarDialog.afterClosed()
      .subscribe( response => {
        if ( response === true ) {
-           this.reprogramacionSvc.transferMassiveLoadAdjustmentProgramming( this.idProject,
-                                                                                this.data.ajusteProgramacionInfo.proyectoId,
-                                                                                this.data.ajusteProgramacionInfo.contratoId )
+           this.reprogramacionSvc.validateReprogrammingFile( this.idProject,this.data.ajusteProgramacionInfo.ajusteProgramacionId)
              .subscribe(
                response => {
                  this.openDialogResponse( '', response.message );

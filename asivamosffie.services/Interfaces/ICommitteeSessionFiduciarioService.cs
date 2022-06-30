@@ -13,7 +13,7 @@ namespace asivamosffie.services.Interfaces
 
         #region "ORDEN DEL DIA";
         public byte[] ConvertirPDF(Plantilla pPlantilla);
-        Task<List<dynamic>> GetCommitteeSessionFiduciario();
+        Task<List<dynamic>> GetCommitteeSessionFiduciario(int? idComiteFiduciario);
         Task<Respuesta> CreateEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud(ComiteTecnico pComiteTecnico);
         Task<List<ComiteGrilla>> GetCommitteeSession();
         Task<ComiteTecnico> GetRequestCommitteeSessionById(int comiteTecnicoId);

@@ -1,46 +1,62 @@
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="shipping-card">
     <mat-card-header class="header-card header-card--margin">
-      <mat-card-title class="header-card--text">
-        Ficha de contrato
-      </mat-card-title>
+      <mat-card-title class="header-card--text"> Ficha de contrato </mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="numeroContrato" [class.color-secondaryColor]="
+              <label
+                class="label-left"
+                for="numeroContrato"
+                [class.color-secondaryColor]="
                   addressForm.get('numeroContrato').invalid && addressForm.get('numeroContrato').touched
-                ">
+                "
+              >
                 Número de contrato
               </label>
-            </div> 
-               <div class="col d-flex">
-                    <mat-form-field
-                        class="full-width"
-                        [matTooltipPosition]="'above'"
-                        matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
-                        matTooltipClass="info-tooltip"
-                    >
-                        <input matInput #llaveMen="matAutocompleteTrigger" type="text" maxlength="100" required [matAutocomplete]="auto" formControlName="numeroContrato" (ngModelChange)="getContratos($event)">
-                        <mat-autocomplete #auto="matAutocomplete">
-                            <mat-option *ngFor="let contrato of contratosArray" [value]="contrato.numeroContrato" (click)="seleccionAutocomplete(contrato)">
-                                {{ contrato.numeroContrato }}
-                            </mat-option>
-                        </mat-autocomplete>
-                        <input type="hidden" formControlName="numeroContrato">
-                    </mat-form-field>
-                    <button mat-button type="button" color="primary" class="busqueda--img" style="margin-bottom: 0 !important;padding-top: 0 !important;padding-bottom: 0 !important;">
-                        <img src="assets/img/icon/lupa.svg" alt="Buscar">
-                    </button>
-                </div>
-
-
+            </div>
+            <div class="col d-flex">
+              <mat-form-field
+                class="full-width"
+                [matTooltipPosition]="'above'"
+                matTooltip="Búsqueda sugerida, ingrese al menos un carácter"
+                matTooltipClass="info-tooltip"
+              >
+                <!-- <input matInput #llaveMen="matAutocompleteTrigger" type="text" maxlength="100" required [matAutocomplete]="auto" formControlName="numeroContrato" (ngModelChange)="getContratos($event)"> -->
+                <input
+                  matInput
+                  #llaveMen="matAutocompleteTrigger"
+                  type="text"
+                  maxlength="100"
+                  required
+                  [matAutocomplete]="auto"
+                  formControlName="numeroContrato"
+                />
+                <mat-autocomplete #auto="matAutocomplete">
+                  <!-- (click)="seleccionAutocomplete(contrato)" -->
+                  <mat-option *ngFor="let contrato of filterContratosArray | async" [value]="contrato">
+                    {{ contrato }}
+                  </mat-option>
+                </mat-autocomplete>
+                <input type="hidden" formControlName="numeroContrato" />
+              </mat-form-field>
+              <button
+                mat-button
+                type="button"
+                color="primary"
+                class="busqueda--img"
+                style="margin-bottom: 0 !important; padding-top: 0 !important; padding-bottom: 0 !important"
+              >
+                <img src="assets/img/icon/lupa.svg" alt="Buscar" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
@@ -61,8 +77,8 @@
             </div>
           </div>
         </div>
-      </div>
-   <!--   <div class="row">
+      </div> -->
+      <!--   <div class="row">
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
@@ -150,7 +166,7 @@
           </div>
         </div>
       </div> -->
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
@@ -171,8 +187,8 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="row">
+      </div> -->
+      <!-- <div class="row">
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
@@ -193,20 +209,17 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </mat-card-content>
     <mat-card-actions class="text-center">
-      <button mat-button color="primary" class="btn-buscar btn-borrar" type="button" (click)="reiniciarFiltro()"
-        [disabled]="
-          !addressForm.get('numeroContrato').value &&
-          !addressForm.get('nombreContratista').value &&
-          !addressForm.get('departamento').value &&
-          !addressForm.get('municipio').value &&
-          !addressForm.get('institucionEducativa').value &&
-          !addressForm.get('dede').value &&
-          !addressForm.get('tipoContrato').value &&
-          !addressForm.get('vigenciaContratación').value
-        ">
+      <button
+        mat-button
+        color="primary"
+        class="btn-buscar btn-borrar"
+        type="button"
+        (click)="reiniciarFiltro()"
+        [disabled]="!addressForm.get('numeroContrato').value"
+      >
         <img src="assets/img/icon/borrar.svg" alt="buscar" />
       </button>
 
@@ -218,9 +231,9 @@
   </mat-card>
 </form>
 
-<div class="animatedDown" *ngIf="verResultados">
-  <app-tabla-resultados (morstrarFicha)="verFicha( $event )"></app-tabla-resultados>
+<div class="animatedDown" *ngIf="verResultados && resultados">
+  <app-tabla-resultados (morstrarFicha)="verFicha($event)" [resultados]="resultados"></app-tabla-resultados>
 </div>
-<div class="animatedDown" *ngIf="mostrarFicha">
-  <app-menu-ficha></app-menu-ficha>
+<div class="animatedDown" *ngIf="mostrarFicha && indicadores != null">
+  <app-menu-ficha [indicadores]="indicadores"></app-menu-ficha>
 </div>

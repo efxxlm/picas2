@@ -175,7 +175,7 @@ export class ProgramacionDeObraComponent implements AfterViewInit, OnInit  {
   eliminar(element: any) {
     this.openDialogTrueFalse('', '<b>¿Está seguro de eliminar esta información?</b>').subscribe(value => {
       if (value === true) {
-        this.reprogrammingService.deleteAdjustProgrammingOrInvestmentFlow(element.archivoCargueId, this.ajusteProgramacionInfo.ajusteProgramacionId)
+        this.reprogrammingService.deleteAdjustProgrammingOrInvestmentFlow(element.archivoCargueId, this.ajusteProgramacionInfo.ajusteProgramacionId,true)
         .subscribe((respuesta: Respuesta) => {
           this.onClose();
           this.openDialog('', respuesta.message);

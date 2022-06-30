@@ -86,6 +86,10 @@ export class FlujoIntervencionRecursosComponent implements AfterViewInit, OnInit
   }
 
   openCargarFlujo() {
+    if ( this.ajusteProgramacionInfo.archivoCargueIdProgramacionObra === undefined ||  this.ajusteProgramacionInfo.archivoCargueIdProgramacionObra === null ){
+      this.openDialog2( '', '<b> Se requiere cargar primero la programación de obra </b> ' )
+      return false;
+    }
     const dialogRef = this.dialog.open(CargarFlujoComponent, {
       width: '75em',
       data: { ajusteProgramacionInfo: this.ajusteProgramacionInfo }
@@ -129,6 +133,13 @@ export class FlujoIntervencionRecursosComponent implements AfterViewInit, OnInit
     });
 
     return dialogRef.afterClosed();
+  }
+
+  openDialog2(modalTitle: string, modalText: string) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -200,7 +211,7 @@ export class FlujoIntervencionRecursosComponent implements AfterViewInit, OnInit
   eliminar(element: any) {
     this.openDialogTrueFalse('', '<b>¿Está seguro de eliminar esta información?</b>').subscribe(value => {
       if (value === true) {
-        this.reprogrammingService.deleteAdjustProgrammingOrInvestmentFlow(element.archivoCargueId, this.ajusteProgramacionInfo.ajusteProgramacionId)
+        this.reprogrammingService.deleteAdjustProgrammingOrInvestmentFlow(element.archivoCargueId, this.ajusteProgramacionInfo.ajusteProgramacionId,false)
         .subscribe((respuesta: Respuesta) => {
           this.onClose();
           this.openDialog('', respuesta.message);

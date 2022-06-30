@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, Validators, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -38,6 +38,7 @@ export class FlujoIntervencionRecursosComponent implements OnInit , OnChanges {
   ajusteProgramacionId: number;
   @Input() ajusteProgramacion: any;
   @Input() esVerDetalle: boolean;
+  @Output() estadoSemaforo = new EventEmitter<string>();
 
   constructor(
     private fb: FormBuilder,
@@ -54,7 +55,17 @@ export class FlujoIntervencionRecursosComponent implements OnInit , OnChanges {
         this.addressForm.get('tieneObservaciones').setValue( this.ajusteProgramacion?.tieneObservacionesFlujoInversion )
         this.addressForm.get('observaciones').setValue( this.ajusteProgramacion?.observacionFlujo ? this.ajusteProgramacion?.observacionFlujo?.observaciones : '' )
         this.addressForm.get('ajustePragramacionObservacionId').setValue( this.ajusteProgramacion?.observacionFlujo ? this.ajusteProgramacion?.observacionFlujo?.ajustePragramacionObservacionId : 0 )
-        this.addressForm.get('ajusteProgramacionId').setValue( this.ajusteProgramacionId)
+        this.addressForm.get('ajusteProgramacionId').setValue( this.ajusteProgramacionId);
+        //semaforo
+        if(this.esVerDetalle == true){
+          this.estadoSemaforo.emit('');
+        }else if((this.ajusteProgramacion.observacionFlujo != undefined && this.ajusteProgramacion.tieneObservacionesFlujoInversion != null && this.ajusteProgramacion.tieneObservacionesFlujoInversion != undefined) || this.ajusteProgramacion.tieneObservacionesFlujoInversion == false){
+          this.estadoSemaforo.emit( 'completo' );
+        }else if((this.ajusteProgramacion.tieneObservacionesFlujoInversion == true && (this.ajusteProgramacion.observacionFlujo?.observaciones == null || this.ajusteProgramacion.observacionFlujo?.observaciones == ''))){
+          this.estadoSemaforo.emit( 'en-proceso' );
+        }else{
+          this.estadoSemaforo.emit( 'sin-diligenciar' );
+        }
       }
   }
 
@@ -130,7 +141,19 @@ export class FlujoIntervencionRecursosComponent implements OnInit , OnChanges {
   }
 
   descargar(element: any) {
-    this.commonSvc.getFileById(element.archivoCargueIdFlujoInversion)
+    if(element.estadoCodigo == "4" && (element.archivoCargueIdFlujoInversion == null || element.archivoCargueIdFlujoInversion == undefined)){
+      this.reprogrammingSvc.getFileReturn(element.ajusteProgramacionId, false).subscribe(respuesta => {
+        console.log(respuesta);
+        if(respuesta != null)
+          this.downloadFile(respuesta.archivoCargueId);
+      });
+    }else{
+      this.downloadFile(element.archivoCargueIdFlujoInversion);
+    }
+  }
+
+  downloadFile(idFile:  number){
+    this.commonSvc.getFileById(idFile)
       .subscribe(respuesta => {
         const documento = 'FlujoInversion.xlsx';
         const  blob = new Blob([respuesta], { type: 'application/octet-stream' });

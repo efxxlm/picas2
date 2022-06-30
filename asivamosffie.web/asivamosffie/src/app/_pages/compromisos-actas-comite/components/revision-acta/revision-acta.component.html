@@ -32,7 +32,7 @@
 
     <mat-card class="shipping-card mt-2em" *ngIf="responsables.length > 0">
       <mat-card-header class="header-card colorMainColor">
-        <mat-card-title class="header-card--text"> Responsables secretaría técnica </mat-card-title>
+        <mat-card-title class="header-card--text"> Responsable secretaría de comité </mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div *ngFor="let responsable of responsables; let i = index" style="margin-left: 1.5em">
@@ -75,7 +75,7 @@
             <mat-expansion-panel class="expansion-style sub-expansion">
               <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title sub-expansion">
-                  <b>Solicitud {{ sesionComite.numeroProceso }}</b>
+                  <b>Solicitud {{ sesionComite.numeroSolicitud }}</b>
                 </mat-panel-title>
               </mat-expansion-panel-header>
 
