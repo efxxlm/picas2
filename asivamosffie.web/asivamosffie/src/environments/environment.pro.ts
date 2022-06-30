@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://proasivamosffieback.ivolucion.com/api',
+  apiUrl: 'https://asivamosback.ffie.com.co/api',
   ruta: 'FrontendAsiVamosFFIE/'
 };
