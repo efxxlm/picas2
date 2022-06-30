@@ -5983,48 +5983,6 @@ namespace asivamosffie.services
             }
         }
 
-        public byte[] ConvertirPDF(Plantilla pPlantilla)
-        {
-            string strEncabezado = "";
-            if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
-            {
-                strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
-            }
-
-            var globalSettings = new GlobalSettings
-            {
-                ImageQuality = 1080,
-                PageOffset = 0,
-                ColorMode = ColorMode.Color,
-                Orientation = Orientation.Portrait,
-                PaperSize = PaperKind.A4,
-                Margins = new MarginSettings
-                {
-                    Top = pPlantilla.MargenArriba,
-                    Left = pPlantilla.MargenIzquierda,
-                    Right = pPlantilla.MargenDerecha,
-                    Bottom = pPlantilla.MargenAbajo
-                },
-                DocumentTitle = DateTime.Now.ToString(),
-            };
-
-            var objectSettings = new ObjectSettings
-            {
-                PagesCount = true,
-                HtmlContent = pPlantilla.Contenido,
-                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css") },
-                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18 },
-                FooterSettings = { FontName = "Ariel", FontSize = 10, Center = "[page]" },
-            };
-
-            var pdf = new HtmlToPdfDocument()
-            {
-                GlobalSettings = globalSettings,
-                Objects = { objectSettings },
-            };
-
-            return _converter.Convert(pdf);
-        }
 
         private async Task<byte[]> ReplacePlantillaFichaContratacion(int pContratacionId)
         {
@@ -6081,6 +6039,51 @@ namespace asivamosffie.services
 
             //return ConvertirPDF(plantilla);
             return PDF.Convertir(Plantilla);
+        }
+
+        public byte[] ConvertirPDF(Plantilla pPlantilla)
+        {
+            string strEncabezado = String.Empty;
+
+            if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
+            {
+                strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
+            }
+
+            var globalSettings = new GlobalSettings
+            {
+                ImageQuality = 1080,
+                PageOffset = 0,
+                ColorMode = ColorMode.Color,
+                Orientation = Orientation.Portrait,
+                PaperSize = PaperKind.A4,
+                Margins = new MarginSettings
+                {
+                    Left = pPlantilla.MargenIzquierda,
+                    Right = pPlantilla.MargenDerecha,
+                    Top = pPlantilla.MargenArriba,
+                    Bottom = pPlantilla.MargenAbajo
+                },
+                DocumentTitle = DateTime.Now.ToString(),
+            };
+
+            var objectSettings = new ObjectSettings
+            {
+                PagesCount = true,
+                HtmlContent = pPlantilla.Contenido,
+                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css") },
+                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18 },
+                FooterSettings = { FontName = "Ariel", FontSize = 10, Center = "[page]" },
+            };
+
+            var pdf = new HtmlToPdfDocument()
+            {
+                Objects = { objectSettings },
+                GlobalSettings = globalSettings,
+                
+            };
+
+            return _converter.Convert(pdf);
         }
     }
 }
