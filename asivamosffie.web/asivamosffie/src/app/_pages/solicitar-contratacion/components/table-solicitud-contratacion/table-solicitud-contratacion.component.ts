@@ -103,6 +103,8 @@ export class TableSolicitudContratacionComponent implements OnInit {
 
   enviarSolicitud(element: any) {
     if(element.esExpensa == true){
+      //Si el tipo de intervención de algun proyecto asociado al contrato es expensas no pasa por el comite tecnico
+      // 13 = Aprobado por el comite fiduciario
       this.projectContractingService.changeStateContratacionByIdContratacion(element.contratacionId, '13')
       .subscribe(respuesta => {
         this.openDialog('', `<b>${respuesta.message}</b>`);

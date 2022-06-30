@@ -330,12 +330,14 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
                 this.estadosArray = response.filter(s => estados.includes(s.codigo));
                 if (this.sesionComiteSolicitud.requiereVotacionFiduciario) {
+
                     this.sesionComiteSolicitud.sesionSolicitudVoto.filter(sv => sv.comiteTecnicoFiduciarioId == this.sesionComiteSolicitud.comiteTecnicoFiduciarioId).forEach(sv => {
-                        if (sv.noAplica) this.cantidadNoAplica = this.cantidadNoAplica + 1
-                        if (sv.esAprobado)
-                            this.cantidadAprobado++;
+                        if (sv.noAplica && !sv.esAprobado) 
+                            this.cantidadNoAplica = this.cantidadNoAplica + 1
+                        else if (!sv.esAprobado && !sv.noAplica)
+                           this.cantidadNoAprobado++; 
                         else
-                            this.cantidadNoAprobado++;
+                            this.cantidadAprobado++;
                     })
 
                     if (this.sesionComiteSolicitud.sesionSolicitudVoto.filter(sv => sv.comiteTecnicoFiduciarioId == this.sesionComiteSolicitud.comiteTecnicoFiduciarioId).length === this.cantidadNoAplica) {
@@ -351,13 +353,13 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
                              * Logica de votaciones para solicitudes aprobadas
                              */
                             this.resultadoVotacion = 'Aprobó';
-                            this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico);
+                            this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteFiduciario);
                         } else if ( this.cantidadNoAprobado > 0 && this.cantidadNoAprobado > this.cantidadAprobado ) {
                             /**
                              * Logica de votaciones para solicitudes no aprobadas
                              */
                             this.resultadoVotacion = 'No Aprobó';
-                            this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes(e.codigo));
+                            this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteFiduciario, EstadosSolicitud.DevueltaPorComiteFiduciario].includes(e.codigo));
                         }
                     }
                 }
