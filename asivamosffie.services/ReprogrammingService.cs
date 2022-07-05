@@ -978,8 +978,11 @@ namespace asivamosffie.services
                         estructuraValidaValidacionGeneral = false;
                     }
 
-                    ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta();
-
+                    ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta
+                    {
+                        AjusteProgramacionId = pAjusteProgramacionId
+                    };
+                     
                     if (estructuraValidaValidacionGeneral == true)
                     {
                         archivoCargueRespuesta = new ArchivoCargueRespuesta
@@ -1003,8 +1006,7 @@ namespace asivamosffie.services
                             CantidadDeRegistrosValidos = "0",
                             LlaveConsulta = archivoCarge.Nombre,
                             CargaValida = false,
-                            Mensaje = mensajeRespuesta,
-                            AjusteProgramacionId = pAjusteProgramacionId 
+                            Mensaje = mensajeRespuesta 
                         };
                     }
 
