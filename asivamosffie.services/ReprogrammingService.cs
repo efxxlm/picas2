@@ -978,11 +978,8 @@ namespace asivamosffie.services
                         estructuraValidaValidacionGeneral = false;
                     }
 
-                    ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta
-                    {
-                        AjusteProgramacionId = pAjusteProgramacionId
-                    };
-                     
+                    ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta();
+       
                     if (estructuraValidaValidacionGeneral == true)
                     {
                         archivoCargueRespuesta = new ArchivoCargueRespuesta
@@ -992,7 +989,7 @@ namespace asivamosffie.services
                             CantidadDeRegistrosValidos = CantidadResgistrosValidos.ToString(),
                             LlaveConsulta = archivoCarge.Nombre,
                             CargaValida = true,
-
+                            AjusteProgramacionId = pAjusteProgramacionId 
                         };
                     }
                     else if (estructuraValidaValidacionGeneral == false)
@@ -1006,7 +1003,8 @@ namespace asivamosffie.services
                             CantidadDeRegistrosValidos = "0",
                             LlaveConsulta = archivoCarge.Nombre,
                             CargaValida = false,
-                            Mensaje = mensajeRespuesta 
+                            Mensaje = mensajeRespuesta,
+                            AjusteProgramacionId = pAjusteProgramacionId 
                         };
                     }
 
