@@ -1004,7 +1004,7 @@ namespace asivamosffie.services
                             LlaveConsulta = archivoCarge.Nombre,
                             CargaValida = false,
                             Mensaje = mensajeRespuesta,
-
+                            AjusteProgramacionId = pAjusteProgramacionId 
                         };
                     }
 
