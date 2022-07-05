@@ -438,7 +438,10 @@ namespace asivamosffie.services
 
                 //pSeguimientoSemanalId = intSeguimientoSemanal ?? 0;
 
-                SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
+                SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal
+
+                      .Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
+                      .AsNoTracking()
                       .Include(r => r.SeguimientoDiario)
                               .ThenInclude(r => r.SeguimientoDiarioObservaciones)
                           //Financiero
@@ -491,11 +494,9 @@ namespace asivamosffie.services
                 GetInformacionGeneral(seguimientoSemanal);
 
                 //await GetAvanceFisico(seguimientoSemanal, pRutaGrafico);
-                //await GetSeguimientoFinanciero(seguimientoSemanal, pRutaGrafico);
-
-                // await GetRegistroAnticipo(seguimientoSemanal);
-
-                //   await GetAjusteProgramacion(seguimientoSemanal);
+                //await GetSeguimientoFinanciero(seguimientoSemanal, pRutaGrafico); 
+                // await GetRegistroAnticipo(seguimientoSemanal); 
+                // await GetAjusteProgramacion(seguimientoSemanal);
 
                 //si es tai -> cambiar fecha fin 
                 ContratacionProyecto cp = _context.ContratacionProyecto.Find(pContratacionProyectoId);

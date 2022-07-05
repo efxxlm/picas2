@@ -80,10 +80,13 @@ namespace asivamosffie.services
                     return RegistroCompleto;
             }
             //Validar Avance Fisico
-            RegistroCompleto = ValidateCompleteObservationAvanceFisico(seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pEsSupervisor);
-            if (!RegistroCompleto)
-                return RegistroCompleto;
-
+            //Validar si tiene avance fisico 
+            if (seguimientoSemanal?.SeguimientoSemanalAvanceFisico?.FirstOrDefault() != null)
+            {
+                RegistroCompleto = ValidateCompleteObservationAvanceFisico(seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pEsSupervisor);
+                if (!RegistroCompleto)
+                    return RegistroCompleto;
+            }
             //Validar Gestion Obra  Ambiental
             RegistroCompleto = ValidateCompleteObservationGestionObraGestionAmbiental(seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental, pEsSupervisor);
             if (!RegistroCompleto)
@@ -1582,28 +1585,31 @@ namespace asivamosffie.services
         {
             SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
 
-            seguimientoSemanalAvanceFisicoOld.FechaModificacion = DateTime.Now;
-            seguimientoSemanalAvanceFisicoOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
+            if (seguimientoSemanalAvanceFisicoOld != null)
+            { 
+                seguimientoSemanalAvanceFisicoOld.FechaModificacion = DateTime.Now;
+                seguimientoSemanalAvanceFisicoOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
 
-            if (pEliminarRegistrCompleto)
-            {
-                seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionApoyo = false;
-                seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionSupervisor = false;
-            }
+                if (pEliminarRegistrCompleto)
+                {
+                    seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionApoyo = false;
+                    seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionSupervisor = false;
+                }
 
-            if (pSeguimientoSemanalObservacion.EsSupervisor)
-            {
-                // seguimientoSemanalAvanceFisicoOld.RegistroCompleto = false;
-                seguimientoSemanalAvanceFisicoOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
-                seguimientoSemanalAvanceFisicoOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
-                seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
-            }
-            else
-            {
-                seguimientoSemanalAvanceFisicoOld.ObservacionSupervisorId = null;
-                seguimientoSemanalAvanceFisicoOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
-                seguimientoSemanalAvanceFisicoOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
-                seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+                if (pSeguimientoSemanalObservacion.EsSupervisor)
+                {
+                    // seguimientoSemanalAvanceFisicoOld.RegistroCompleto = false;
+                    seguimientoSemanalAvanceFisicoOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
+                    seguimientoSemanalAvanceFisicoOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                    seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+                }
+                else
+                {
+                    seguimientoSemanalAvanceFisicoOld.ObservacionSupervisorId = null;
+                    seguimientoSemanalAvanceFisicoOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
+                    seguimientoSemanalAvanceFisicoOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
+                    seguimientoSemanalAvanceFisicoOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+                } 
             }
         }
 
