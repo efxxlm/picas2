@@ -14,8 +14,8 @@ namespace asivamosffie.model.APIModels
         
         public bool? CargaValida { get; set; }
 
-        public string Mensaje { get; set; }
-
+        public string Mensaje { get; set; }  
+        public int? AjusteProgramacionId { get; set; } 
 
     }
 }
