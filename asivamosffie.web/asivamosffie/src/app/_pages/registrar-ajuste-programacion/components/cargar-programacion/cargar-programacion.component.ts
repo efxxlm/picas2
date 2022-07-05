@@ -69,7 +69,7 @@ export class CargarProgramacionComponent {
 
   };
 
-  openDialogConfirmar (modalTitle: string, modalText: string) {
+  openDialogConfirmar (modalTitle: string, modalText: string, ajusteProgramacionId?: number ) {
     const confirmarDialog = this.dialog.open(ModalDialogComponent, {
       width: '40em',
       data : { modalTitle, modalText, siNoBoton:true }
@@ -78,7 +78,9 @@ export class CargarProgramacionComponent {
      confirmarDialog.afterClosed()
      .subscribe( response => {
        if ( response === true ) {
-           this.reprogramacionSvc.validateReprogrammingFile( this.idProject,this.data.ajusteProgramacionInfo.ajusteProgramacionId)
+           this.reprogramacionSvc.validateReprogrammingFile(
+            this.idProject,
+            this.data.ajusteProgramacionInfo.ajusteProgramacionId ? this.data.ajusteProgramacionInfo.ajusteProgramacionId : ( ajusteProgramacionId ? ajusteProgramacionId : null ) )
              .subscribe(
                response => {
                  this.openDialogResponse( '', response.message );
@@ -115,7 +117,8 @@ export class CargarProgramacionComponent {
                 Número de registros válidos: <b>${ response.data.cantidadDeRegistrosValidos }</b><br>
                 Número de registros inválidos: <b>${ response.data.cantidadDeRegistrosInvalidos }</b><br><br>
                 <b>¿Desea realizar el cargue de la programación de obra?</b>
-                `
+                `,
+                response.data.ajusteProgramacionId ?? response.data.ajusteProgramacionId
               )
             } else if (response.data.cargaValida === true) {
               this.openDialog(
