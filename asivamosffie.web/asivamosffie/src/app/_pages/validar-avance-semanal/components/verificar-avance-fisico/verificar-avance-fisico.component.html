@@ -36,7 +36,7 @@
 
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title" [ngClass]="estadoSemaforo">
+                <mat-panel-title class="expansion-style--title" [ngClass]="seguimientoSemanal.flujoInversion.length > 0 ? estadoSemaforo : ''">
                     Avance físico
                 </mat-panel-title>
             </mat-expansion-panel-header>

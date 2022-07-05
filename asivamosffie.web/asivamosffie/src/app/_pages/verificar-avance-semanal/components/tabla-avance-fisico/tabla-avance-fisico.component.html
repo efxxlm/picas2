@@ -17,7 +17,7 @@
   </div>
 </section>
 
-<section class="text-center table-responsive size-table" style="margin-top: 2em;">
+<section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="tablaAvanceFisico.data.length > 0">
   <table mat-table [dataSource]="tablaAvanceFisico" matSort>
     <ng-container matColumnDef="semanaNumero">
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Semana número </th>
@@ -72,7 +72,7 @@
 </section>
 
 <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-    <mat-card class="shipping-card var-main-gris" align="left" *ngIf="formAvanceFisico.get( 'fechaCreacion' ).value !== null">
+    <mat-card class="shipping-card var-main-gris" align="left" *ngIf="formAvanceFisico.get( 'fechaCreacion' ).value !== null && tablaAvanceFisico.data.length > 0">
         <mat-card-header class="header-card">
           <mat-card-title class="header-card--text">
             Verificación del apoyo a la supervisión
@@ -87,7 +87,7 @@
     </mat-card>
 </ng-container>
 <ng-template #noEsVerDetalle>
-    <form [formGroup]="formAvanceFisico" novalidate (ngSubmit)="guardar()">
+    <form [formGroup]="formAvanceFisico" novalidate (ngSubmit)="guardar()" *ngIf="tablaAvanceFisico.data.length > 0">
         <div class="row justify-content-center align-items-center">
             <div class="col-md-12">
                 <div class="row justify-content-center align-items-center" style="width: 100%;">
@@ -143,7 +143,7 @@
         </div>
     </form>
 
-    <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0">
+    <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0 && tablaAvanceFisico.data.length > 0">
         <table mat-table [dataSource]="tablaHistorial" matSort>
       
             <ng-container matColumnDef="fechaRevision">
