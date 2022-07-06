@@ -4339,8 +4339,8 @@ namespace asivamosffie.services
                                         if (SesionComiteSolicitud.RequiereVotacionFiduciario == true)
                                         {
                                             int cantidadAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value == true && r.ComiteTecnicoFiduciarioId != null);
-                                            int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId != null && r.NoAplica.Value != true);
-                                            int cantidadNoAplica = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.NoAplica.Value == true && r.ComiteTecnicoFiduciarioId != null);
+                                            int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId != null && r.NoAplica != true);
+                                            int cantidadNoAplica = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.NoAplica != null && r.NoAplica != false && r.ComiteTecnicoFiduciarioId != null);
 
                                             if (cantidadAprobadas == 0 && cantidadNoAprobadas == 0 && cantidadNoAplica > 0)
                                                 strRequiereVotacion = "No Aplica";
@@ -4499,8 +4499,8 @@ namespace asivamosffie.services
                                         if (SesionComiteSolicitud.RequiereVotacion == true)
                                         {
                                             int cantidadAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value == true && r.ComiteTecnicoFiduciarioId != null);
-                                            int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId != null && r.NoAplica.Value != true);
-                                            int cantidadNoAplica = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.NoAplica.Value == true && r.ComiteTecnicoFiduciarioId != null);
+                                            int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId != null && r.NoAplica != true);
+                                            int cantidadNoAplica = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.NoAplica != null && r.NoAplica != false && r.ComiteTecnicoFiduciarioId != null);
 
                                             if (cantidadAprobadas == 0 && cantidadNoAprobadas == 0 && cantidadNoAplica > 0)
                                                 strRequiereVotacion = "No Aplica";
@@ -4764,8 +4764,8 @@ namespace asivamosffie.services
                                         if (SesionComiteSolicitud.RequiereVotacion == true)
                                         {
                                             int cantidadAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value == true && r.ComiteTecnicoFiduciarioId != null);
-                                            int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId != null && r.NoAplica.Value != true);
-                                            int cantidadNoAplica = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.NoAplica.Value == true && r.ComiteTecnicoFiduciarioId != null);
+                                            int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId != null && r.NoAplica != true);
+                                            int cantidadNoAplica = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.NoAplica != null && r.NoAplica != false && r.ComiteTecnicoFiduciarioId != null);
 
                                             if (cantidadAprobadas == 0 && cantidadNoAprobadas == 0 && cantidadNoAplica > 0)
                                                 strRequiereVotacion = "No Aplica";
@@ -4999,8 +4999,8 @@ namespace asivamosffie.services
                                         if (SesionComiteSolicitud.RequiereVotacion == true)
                                         {
                                             int cantidadAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value == true && r.ComiteTecnicoFiduciarioId != null);
-                                            int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId != null && r.NoAplica.Value != true);
-                                            int cantidadNoAplica = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.NoAplica.Value == true && r.ComiteTecnicoFiduciarioId != null);
+                                            int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId != null && r.NoAplica != true);
+                                            int cantidadNoAplica = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.NoAplica != null && r.NoAplica != false && r.ComiteTecnicoFiduciarioId != null);
 
                                             if (cantidadAprobadas == 0 && cantidadNoAprobadas == 0 && cantidadNoAplica > 0)
                                                 strRequiereVotacion = "No Aplica";
@@ -5267,8 +5267,8 @@ namespace asivamosffie.services
                                         if (SesionComiteSolicitud.RequiereVotacion == true)
                                         {
                                             int cantidadAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value == true && r.ComiteTecnicoFiduciarioId != null);
-                                            int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId != null && r.NoAplica.Value != true);
-                                            int cantidadNoAplica = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.NoAplica.Value == true && r.ComiteTecnicoFiduciarioId != null);
+                                            int cantidadNoAprobadas = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.EsAprobado.Value != true && r.ComiteTecnicoFiduciarioId != null && r.NoAplica != true);
+                                            int cantidadNoAplica = SesionComiteSolicitud.SesionSolicitudVoto.Count(r => r.Eliminado != true && r.NoAplica != null && r.NoAplica != false && r.ComiteTecnicoFiduciarioId != null);
 
                                             if (cantidadAprobadas == 0 && cantidadNoAprobadas == 0 && cantidadNoAplica > 0)
                                                 strRequiereVotacion = "No Aplica";
