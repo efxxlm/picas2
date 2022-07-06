@@ -826,22 +826,32 @@ namespace asivamosffie.services
             informeFinal.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == informeFinal.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
             informeFinal.Proyecto.Sede = Sede;
 
-            ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
+            List<ContratacionProyecto> contratacionProyecto = _context.ContratacionProyecto
                 .Where(r => r.ProyectoId == informeFinal.ProyectoId && r.Eliminado != true)
                 .Include(r => r.Contratacion)
                     .ThenInclude(r => r.Contrato)
-                .FirstOrDefault();
+                .ToList();
+
+            Contratacion contratacion = new Contratacion();
+            foreach (var item in contratacionProyecto)
+            {
+                if (item.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacionString.Obra && item.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados)
+                {
+                    contratacion = item.Contratacion; 
+                }
+            }
+
+
 
             template = template
                       .Replace("[LLAVE_MEN]", informeFinal.Proyecto.LlaveMen)
-                      .Replace("[NUMERO_CONTRATO]", contratacionProyecto.Contratacion.Contrato.FirstOrDefault().NumeroContrato)
+                      .Replace("[NUMERO_CONTRATO]", contratacion.Contrato.FirstOrDefault().NumeroContrato)
                       .Replace("[FECHA_TERMINACION_PROYECTO]", ((DateTime)informeFinal.FechaCreacion).ToString("dd-MMM-yy"))
                       .Replace("[FECHA_SUSCRIPCION]", informeFinal.FechaSuscripcion != null ? ((DateTime)informeFinal.FechaSuscripcion).ToString("dd-MMM-yy") : "")
                       .Replace("[INSTITUCION_EDUCATIVA]", informeFinal.Proyecto.InstitucionEducativa.Nombre)
                       .Replace("[SEDE]", informeFinal.Proyecto.Sede.Nombre)
                       .Replace("[TIPO_INTERVENCION]", informeFinal.Proyecto.tipoIntervencionString)
-                      .Replace("[FECHA_LIMITE]", date != null ? ((DateTime)date).ToString("dd-MMM-yy") : "")
-                      ;
+                      .Replace("[FECHA_LIMITE]", date != null ? ((DateTime)date).ToString("dd-MMM-yy") : "");
 
             return template;
         }
