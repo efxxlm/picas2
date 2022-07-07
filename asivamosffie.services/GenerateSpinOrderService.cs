@@ -227,7 +227,7 @@ namespace asivamosffie.services
         public async Task<SolicitudPago> GetSolicitudPagoBySolicitudPagoId(int SolicitudPagoId, bool esSolicitudPago)
         {
             SolicitudPago SolicitudPago = await _registerValidatePayment.GetSolicitudPago(SolicitudPagoId);
-
+             
             if (SolicitudPago.ContratoId > 0)
             {
                 SolicitudPago.VConceptosUsosXsolicitudPagoId = _context.VConceptosUsosXsolicitudPagoId.Where(r => r.SolicitudPagoId == SolicitudPagoId).ToList();

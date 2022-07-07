@@ -173,7 +173,7 @@ namespace asivamosffie.services
                 else
                 {
 
-
+                     
 
                     _context.Set<BalanceFinancieroTraslado>()
                           .Where(r => r.BalanceFinancieroTrasladoId == BalanceFinancieroTraslado.BalanceFinancieroTrasladoId)
