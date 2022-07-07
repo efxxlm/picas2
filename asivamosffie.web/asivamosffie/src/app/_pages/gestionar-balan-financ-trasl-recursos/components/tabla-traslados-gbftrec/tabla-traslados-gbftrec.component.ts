@@ -144,7 +144,7 @@ export class TablaTrasladosGbftrecComponent implements OnInit {
                                 `/gestionarBalanceFinancieroTrasladoRecursos/${ this.esVerDetalle ? 'verDetalleBalance' : 'verDetalleEditarBalance' }`, this.proyectoId
                             ]
                         )
-                    );
+                    )
                 },
                 err => this.openDialog( '', `${ err.message }` )
             )
