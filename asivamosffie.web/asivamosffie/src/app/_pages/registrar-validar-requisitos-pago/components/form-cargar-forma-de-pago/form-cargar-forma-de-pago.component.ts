@@ -48,9 +48,10 @@ export class FormCargarFormaDePagoComponent implements OnInit {
     async ngOnInit() {
         this.formaPagoArrayPreconstruccion = await this.registrarPagosSvc.getFormaPagoCodigoByFase( 'True', this.contrato.contratoId ).toPromise();
         this.formaPagoArrayConstruccion = await this.registrarPagosSvc.getFormaPagoCodigoByFase( 'False', this.contrato.contratoId ).toPromise();
-        if (this.contrato.plazoFase1PreDias !== undefined) {
-            this.tieneFase1 = true;
-        }
+        console.log( this.contrato )
+        if ( this.contrato.plazoFase1PreDias && this.contrato.plazoFase1PreDias )
+            if ( this.contrato.plazoFase1PreDias + this.contrato.plazoFase1PreDias > 0 )
+                this.tieneFase1 = true;
 
         if ( this.contrato.solicitudPago.length > 1 ) {
             const solicitudPago = this.contrato.solicitudPago[0];
