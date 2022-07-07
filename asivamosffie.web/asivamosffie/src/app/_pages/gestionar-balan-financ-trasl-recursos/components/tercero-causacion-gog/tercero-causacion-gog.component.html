@@ -65,6 +65,14 @@
                                           {{ aportante.get( 'valorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }}
                                       </span>
                                   </p>
+                                  <p>
+                                    <b>
+                                        Nuevo valor por el concepto para el aportante:
+                                    </b>
+                                    <span *ngIf="aportante.get( 'nuevoValorDescuento' ).value">
+                                        {{ aportante.get( 'nuevoValorDescuento' ).value | currency:'':'symbol-narrow': '.0-0' }}
+                                    </span>
+                                  </p>
                               </div>
 
                               <div>
@@ -90,6 +98,7 @@
                                                               <p><b>Nombre del aportante: </b> {{ aportanteDescuento.get( 'nombreAportante' ).value ? aportanteDescuento.get( 'nombreAportante' ).value.nombreAportante : '' }} </p>
                                                               <p><b>Fuente de los recursos: </b> {{ firstLetterUpperCase( aportanteDescuento.get( 'fuente' ).value ? aportanteDescuento.get( 'fuente' ).value.nombre : '' ) }} </p>
                                                               <p><b>Valor del descuento: </b> {{ aportanteDescuento.get( 'valorDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
+                                                              <p><b>Nuevo valor por el concepto para el aportante: </b> {{ aportanteDescuento.get( 'nuevoValorDescuento' ).value | currency:'':'symbol-narrow':'.0-0' }} </p>
                                                           </div>
                                                       </div>
                                                   </div>
@@ -109,7 +118,7 @@
           <mat-accordion formArrayName="criterios" *ngFor="let criterio of criterios.controls; index as i">
               <mat-expansion-panel class="expansion-style sub-expansion-black" [formGroup]="criterio">
                   <mat-expansion-panel-header class="expansion-style--header">
-                      <mat-panel-title class="expansion-style--title" [ngClass]="criterio.get( 'estadoSemaforo' ).value">
+                      <mat-panel-title class="expansion-style--title" [ngClass]="!esVerDetalle ? criterio.get( 'estadoSemaforo' ).value : ''">
                           {{ firstLetterUpperCase( criterio.get( 'nombre' ).value ) }}
                       </mat-panel-title>
                   </mat-expansion-panel-header>
@@ -276,8 +285,55 @@
                                                   </div>
                                               </div>
                                           </div>
+                                          <div class="row">
+                                            <div class="col-md-11">
+                                                <div class="row">
+                                                    <div class="pr-1">
+                                                        <label  class="label-left"
+                                                                for="nuevoValorDescuento"
+                                                                [ngClass]="{ 'color-secondaryColor': (aportante.get('nuevoValorDescuento').invalid && aportante.get('nuevoValorDescuento').touched) || (aportante.get('nuevoValorDescuento').invalid && estaEditando) }">
+                                                                Nuevo valor por el concepto para el aportante
+                                                        </label>
+                                                    </div>
+                                                    <div class="col d-flex" style="width: 20%;">
+                                                        <mat-form-field style="width: 90%">
+                                                            <input
+                                                              matInput
+                                                              #nuevoValorDescuento
+                                                              min="0"
+                                                              currencyMask
+                                                              maxlength="28"
+                                                              required
+                                                              formControlName="nuevoValorDescuento"
+                                                              (keypress)="validateNumberKeypress($event)"
+                                                              (ngModelChange)="validateDiscountAportanteValue( $event, i, j, k ); validateMaxSaldoActualAportante($event, i, j, k , aportante.get('nombreAportante').value, aportante.get( 'fuenteRecursos' ).value?.fuenteFinanciacionId);"
+                                                              onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
+                                                              oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                              [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                                                            />
+                                                          </mat-form-field>
+                                                          <span
+                                                            class="contador"
+                                                            [matTooltipPosition]="'above'"
+                                                            matTooltip="Valor en ($) Pesos colombianos"
+                                                            matTooltipClass="info-tooltip"
+                                                            >{{ 20 - aportante.get('nuevoValorDescuento').value?.toString().length }}
+                                                          </span>
+                                                    </div>
+                                                    <span class="icon-incompleto">
+                                                        <img    class="icon-incompleto--img"
+                                                                src="assets/img/icon/incompleto.svg"
+                                                                alt="este campo es requerido"
+                                                                [matTooltipPosition]="'above'"
+                                                                matTooltip="Debe ingresar la información en el campo para continuar"
+                                                                matTooltipClass="info-tooltip"
+                                                                *ngIf="(aportante.get('nuevoValorDescuento').invalid && aportante.get('nuevoValorDescuento').touched) || (aportante.get('nuevoValorDescuento').invalid && estaEditando)">
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                       </div>
-                                      <div class="col-md-3 text-right" style="padding-top: 7em;">
+                                      <!-- <div class="col-md-3 text-right" style="padding-top: 7em;">
                                           <button mat-button
                                                   color="warn"
                                                   type="button"
@@ -287,9 +343,9 @@
                                                   <img src="assets/img/icon/menos.svg" alt="Eliminar radicado">
                                                   Eliminar aportante
                                           </button>
-                                      </div>
+                                      </div> -->
                                   </div>
-                                  <div class="col-md-12 text-right">
+                                  <!-- <div class="col-md-12 text-right">
                                       <button mat-button
                                               color="warn"
                                               type="button"
@@ -299,7 +355,7 @@
                                               <img src="assets/img/icon/mas.svg" alt="Eliminar radicado">
                                               Agregar otro aportante
                                       </button>
-                                  </div>
+                                  </div> -->
                               </div>
 
                               <div>
@@ -376,13 +432,13 @@
                                                       </mat-card-title>
                                                       <div [formGroup]="discount">
                                                           <div class="row">
-                                                              <div class="col-md-6">
+                                                              <div class="col-md-7">
                                                                   <div class="row">
                                                                       <div class="pr-1">
                                                                           <label class="label-left" for="tipoDescuento">Tipo de descuento</label>
                                                                       </div>
                                                                       <div class="col">
-                                                                          <mat-form-field class="select-width w-75">
+                                                                          <mat-form-field class="select-width">
                                                                               <ng-container *ngIf="discount.get( 'tipoDescuento' ).value === null; else elseTemplate">
                                                                                   <mat-select formControlName="tipoDescuento" required (ngModelChange)="getCodigoDescuento( $event, i, j )">
                                                                                       <mat-option *ngFor="let descuento of getConceptos( i ).controls[ j ].get( 'tipoDescuentoArray' ).value" [value]="descuento.codigo">
@@ -404,7 +460,7 @@
                                                           </div>
                                                           <div formArrayName="aportantesDescuento" *ngIf="getAportanteDescuentos( i, j, k ).length > 0" >
                                                               <div *ngFor="let aportanteDescuento of getAportanteDescuentos( i, j, k ).controls; index as l" [formGroup]="aportanteDescuento" class="d-flex">
-                                                                  <div class="col-md-6">
+                                                                  <div class="col-md-7">
                                                                       <div class="row">
                                                                           <div class="col-md-12">
                                                                               <div class="row">
@@ -479,9 +535,40 @@
                                                                               </div>
                                                                           </div>
                                                                       </div>
+                                                                      <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="row">
+                                                                                <div class="pr-1">
+                                                                                    <label class="label-left" for="nuevoValorDescuento">
+                                                                                        Nuevo valor por el concepto para el aportante
+                                                                                    </label>
+                                                                                </div>
+                                                                                <div class="col d-flex">
+                                                                                    <mat-form-field class="full-width w-75">
+                                                                                        <input  matInput
+                                                                                                #nuevoValorDescuento
+                                                                                                min="0"
+                                                                                                currencyMask
+                                                                                                maxlength="28"
+                                                                                                required
+                                                                                                formControlName="nuevoValorDescuento"
+                                                                                                (keypress)="validateNumberKeypress($event)"
+                                                                                                onKeyPress="if(this.value.length>=this.maxLength) return false; if (event.key === '-') this.value = ''"
+                                                                                                oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                                                                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                                                                                    </mat-form-field>
+                                                                                    <span   class="contador"
+                                                                                            [matTooltipPosition]="'above'"
+                                                                                            matTooltip="Valor en ($) Pesos colombianos"
+                                                                                            matTooltipClass="info-tooltip">{{20 - aportanteDescuento.get( 'nuevoValorDescuento' ).value?.toString().length}}
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                   </div>
 
-                                                                  <div class="col-md-3 text-right" style="padding-top: 2em;">
+                                                                  <!-- <div class="col-md-3 text-right" style="padding-top: 2em;">
                                                                       <button mat-button
                                                                               color="warn"
                                                                               type="button"
@@ -491,9 +578,9 @@
                                                                               <img src="assets/img/icon/menos.svg" alt="Eliminar aportante">
                                                                               Eliminar aportante
                                                                       </button>
-                                                                  </div>
+                                                                  </div> -->
 
-                                                                  <div class="col-md-3 text-right" style="padding-top: 2em;">
+                                                                  <!-- <div class="col-md-3 text-right" style="padding-top: 2em;">
                                                                       <button mat-button
                                                                               color="warn"
                                                                               type="button"
@@ -503,83 +590,39 @@
                                                                               <img src="assets/img/icon/mas.svg" alt="Agregar otro aportante">
                                                                               Agregar otro aportante
                                                                       </button>
-                                                                  </div>
+                                                                  </div> -->
                                                               </div>
                                                           </div>
 
-                                                          <div class="text-right" *ngIf="getDescuentos( i, j ).length > 1">
+                                                          <!-- <div class="text-right" *ngIf="getDescuentos( i, j ).length > 1">
                                                               <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteDescuento( i, j, k )">
                                                                   <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
                                                                   Eliminar descuento
                                                               </button>
-                                                          </div>
+                                                          </div> -->
                                                       </div>
                                                   </div>
                                               </div>
                                           </div>
                                       </div>
                                   </div>
-                              </div>
-                          </mat-card-content>
-                      </mat-card>
-
-                      <div *ngIf="criterio.get( 'obsVerificar' ).value !== null || criterio.get( 'obsAprobar' ).value !== null || criterio.get( 'obsTramitar' ).value !== null">
-                          <mat-card class="shipping-card border" align="left" *ngIf="criterio.get( 'obsVerificar' ).value !== null">
-                              <mat-card-header class="header-card">
-                                  <mat-card-title class="header-card--text card-title-detalle">
-                                      Verificación de la coordinación financiera
-                                  </mat-card-title>
-                              </mat-card-header>
-                              <mat-card-content>
-                                  <p style="margin-left: 2em;"><b> {{ criterio.get( 'obsVerificar' ).value.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
-                                  <p style="margin-left: 2em;" *ngIf="criterio.get( 'obsVerificar' ).value.tieneObservacion === true"><b>¿Desde la coordinación financiera tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
-                                  <p style="margin-left: 2em;" *ngIf="criterio.get( 'obsVerificar' ).value.tieneObservacion === false"><b>¿Desde la coordinación financiera tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
-                                  <section [innerHTML]="criterio.get( 'obsVerificar' ).value.observacion" style="margin-left: 2em;" *ngIf="criterio.get( 'obsVerificar' ).value.tieneObservacion === true"></section>
-                              </mat-card-content>
-                          </mat-card>
-
-                          <mat-card class="shipping-card border" align="left" *ngIf="criterio.get( 'obsAprobar' ).value !== null">
-                              <mat-card-header class="header-card">
-                                  <mat-card-title class="header-card--text card-title-detalle">
-                                      Aprobación de la dirección financiera
-                                  </mat-card-title>
-                              </mat-card-header>
-                              <mat-card-content>
-                                  <p style="margin-left: 2em;"><b> {{ criterio.get( 'obsAprobar' ).value.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
-                                  <p style="margin-left: 2em;" *ngIf="criterio.get( 'obsAprobar' ).value.tieneObservacion === true"><b>¿Desde la dirección financiera tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
-                                  <p style="margin-left: 2em;" *ngIf="criterio.get( 'obsAprobar' ).value.tieneObservacion === false"><b>¿Desde la dirección financiera tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
-                                  <section [innerHTML]="criterio.get( 'obsAprobar' ).value.observacion" style="margin-left: 2em;" *ngIf="criterio.get( 'obsAprobar' ).value.tieneObservacion === true"></section>
-                              </mat-card-content>
-                          </mat-card>
-
-                          <mat-card class="shipping-card border" align="left" *ngIf="criterio.get( 'obsTramitar' ).value !== null">
-                              <mat-card-header class="header-card">
-                                  <mat-card-title class="header-card--text card-title-detalle">
-                                      Observaciones de fiduciaria
-                                  </mat-card-title>
-                              </mat-card-header>
-                              <mat-card-content>
-                                  <p style="margin-left: 2em;"><b> {{ criterio.get( 'obsTramitar' ).value.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
-                                  <p style="margin-left: 2em;" *ngIf="criterio.get( 'obsTramitar' ).value.tieneObservacion === true"><b>¿Desde la fiduciaria tiene observaciones al descuento {{ i + 1 }}?</b>: Si</p>
-                                  <p style="margin-left: 2em;" *ngIf="criterio.get( 'obsTramitar' ).value.tieneObservacion === false"><b>¿Desde la fiduciaria tiene observaciones al descuento {{ i + 1 }}?</b>: No</p>
-                                  <section [innerHTML]="criterio.get( 'obsTramitar' ).value.observacion" style="margin-left: 2em;" *ngIf="criterio.get( 'obsTramitar' ).value.tieneObservacion === true"></section>
-                              </mat-card-content>
-                          </mat-card>
-                      </div>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
 
                       <div class="text-center mb-2em">
                           <button mat-button
                                   color="warn"
                                   class="btn-guardar"
-                                  [disabled]="criterio.dirty === false"
+                                  [disabled]="criterio.dirty === false && !disableSave(i)"
                                   type="button"
-                                  (click)="onSubmit( i )">
+                                  (click)="guardar( i )">
                                   <img src="assets/img/icon/guardar.svg" alt="Regresar">
-                          </button>
-                      </div>
-              </mat-expansion-panel>
-          </mat-accordion>
-      </form>
-  </ng-template>
+                        </button>
+                    </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </form>
+</ng-template>
 
 </section>

@@ -11,7 +11,9 @@ export class AccordionDetalleGiroGogComponent implements OnInit {
     @Input() esVerDetalle: boolean;
     @Input() proyecto: any;
     @Input() contratacionProyectoId: number;
+    @Output() estadoSemaforo = new EventEmitter<string>()
     ordenGiro: any;
+    semaforoTerceroCausacion = 'sin-diligenciar'
     listaSemaforos = {
         semaforoEstrategiaPago: 'sin-diligenciar',
         semaforoDescuentosDireccionTecnica: 'sin-diligenciar',

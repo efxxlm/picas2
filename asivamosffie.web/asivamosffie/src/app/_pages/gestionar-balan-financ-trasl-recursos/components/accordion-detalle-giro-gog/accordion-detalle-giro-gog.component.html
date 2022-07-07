@@ -18,16 +18,17 @@
       <mat-accordion>
           <mat-expansion-panel class="expansion-style sub-expansion">
               <mat-expansion-panel-header class="expansion-style--header">
-                  <mat-panel-title class="expansion-style--title">
+                  <mat-panel-title class="expansion-style--title" [ngClass]="!esVerDetalle ? semaforoTerceroCausacion : ''">
                       Tercero de causación  - {{ solicitudPagoFase.esPreconstruccion === true ? 'Fase 1' : 'Fase 2' }}
                   </mat-panel-title>
               </mat-expansion-panel-header>
 
               <app-tercero-causacion-gog  [solicitudPago]="solicitudPago"
-                                          [esVerDetalle]="true"
+                                          [esVerDetalle]="esVerDetalle"
                                           [contratacionProyectoId]="contratacionProyectoId"
                                           [solicitudPagoFase]="solicitudPagoFase"
-                                          [esPreconstruccion]="solicitudPagoFase.esPreconstruccion">
+                                          [esPreconstruccion]="solicitudPagoFase.esPreconstruccion"
+                                          (estadoSemaforo)="semaforoTerceroCausacion = $event; estadoSemaforo.emit( $event )">
               </app-tercero-causacion-gog>
           </mat-expansion-panel>
       </mat-accordion>

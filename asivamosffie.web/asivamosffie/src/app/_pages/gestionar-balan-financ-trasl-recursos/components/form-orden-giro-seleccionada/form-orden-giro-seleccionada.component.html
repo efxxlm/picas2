@@ -201,15 +201,14 @@
     <!-- otro ajuste -->
     <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of listaDetalleGiro">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title"> Detalle del giro - {{ proyecto.llaveMen }} </mat-panel-title>
+        <mat-panel-title class="expansion-style--title" [ngClass]="!esVerDetalle ? semaforoDetalle : ''"> Detalle del giro - {{ proyecto.llaveMen }} </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <app-accordion-detalle-giro-gog
-        [solicitudPago]="solicitudPago"
-        [esVerDetalle]="true"
-        [proyecto]="proyecto"
-        [contratacionProyectoId]="proyecto.contratacionProyectoId"
-      >
+      <app-accordion-detalle-giro-gog   [solicitudPago]="solicitudPago"
+                                        [esVerDetalle]="esVerDetalle"
+                                        [proyecto]="proyecto"
+                                        [contratacionProyectoId]="proyecto.contratacionProyectoId"
+                                        (estadoSemaforo)="semaforoDetalle = $event">
       </app-accordion-detalle-giro-gog>
     </mat-expansion-panel>
 

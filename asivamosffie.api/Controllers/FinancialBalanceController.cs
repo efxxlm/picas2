@@ -192,7 +192,7 @@ namespace asivamosffie.api.Controllers
             }
 
         }
-
+        [AllowAnonymous]
         [HttpGet]
         [Route("GetDataByProyectoId")]
         public async Task<IActionResult> GetDataByProyectoId([FromQuery] int pProyectoId)
