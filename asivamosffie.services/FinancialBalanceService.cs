@@ -157,7 +157,7 @@ namespace asivamosffie.services
             {
                 //Valida que todas las dependencias de BalanceFinancieroTrasladoValor esten en true
                 bool RegistrosCompletosBalanceFinancieroTrasladoValor = !BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Any(r => r.ValorTraslado == null);
-
+                 
                 if (BalanceFinancieroTraslado.BalanceFinancieroTrasladoId == 0)
                 {
                     BalanceFinancieroTraslado.FechaCreacion = DateTime.Now;
@@ -697,7 +697,7 @@ namespace asivamosffie.services
                         {
                             FechaModificacion = DateTime.Now,
                             RegistroCompleto = true,
-                            EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_aprobado
+                            EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado
                         }); 
             } 
         }
