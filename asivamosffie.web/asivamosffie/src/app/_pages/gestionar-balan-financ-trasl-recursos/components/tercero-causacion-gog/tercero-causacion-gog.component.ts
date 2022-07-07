@@ -1190,7 +1190,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                 if (criterioControl.dirty === true) {
                     this.getConceptos(indexCriterio).controls.forEach((conceptoControl, indexConcepto) => {
                         this.getAportantes(indexCriterio, indexConcepto).controls.forEach(aportanteControl => {
-                            if (aportanteControl.dirty === true) {
+                            if (aportanteControl.get('nuevoValorDescuento').value) {
                                 balanceFinancieroTraslado.push({
                                     balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
                                     esPreconstruccion: this.ordenGiroDetalleTerceroCausacion && this.ordenGiroDetalleTerceroCausacion.length > 0 ? this.ordenGiroDetalleTerceroCausacion[0].esPreconstruccion : false,
@@ -1206,7 +1206,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                         this.getDescuentos(indexCriterio, indexConcepto).controls.forEach((descuentoControl, indexDescuento) => {
                             this.getAportanteDescuentos(indexCriterio, indexConcepto, indexDescuento).controls.forEach(
                                 aportanteDescControl => {
-                                    if (aportanteDescControl.dirty === true) {
+                                    if (aportanteDescControl.get('nuevoValorDescuento').value) {
                                         balanceFinancieroTraslado.push({
                                             balanceFinancieroTrasladoId: this.balanceFinancieroTrasladoId,
                                             esPreconstruccion: this.ordenGiroDetalleTerceroCausacion && this.ordenGiroDetalleTerceroCausacion.length > 0 ? this.ordenGiroDetalleTerceroCausacion[0].esPreconstruccion : false,

@@ -19,6 +19,7 @@ import { FinancialBalanceService } from 'src/app/core/_services/financialBalance
 export class TablaTrasladosGbftrecComponent implements OnInit {
 
     @Input() balanceFinancieroTraslado: any[];
+    @Input() esVerDetalle!: boolean;
     estadoTraslado = EstadoTraslado;
     proyectoId = 0;
     listaEstadoTraslado: Dominio[] = [];
@@ -140,7 +141,7 @@ export class TablaTrasladosGbftrecComponent implements OnInit {
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () => this.routes.navigate(
                             [
-                                '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarBalance', this.proyectoId
+                                `/gestionarBalanceFinancieroTrasladoRecursos/${ this.esVerDetalle ? 'verDetalleBalance' : 'verDetalleEditarBalance' }`, this.proyectoId
                             ]
                         )
                     );

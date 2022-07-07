@@ -39,42 +39,42 @@
                 <button mat-raised-button
                         color="accent"
                         class="btn-table"
-                        *ngIf="estadoTraslado.conRegistro === element.estadoCodigo && element.registroCompleto === true"
+                        *ngIf="estadoTraslado.conRegistro === element.estadoCodigo && element.registroCompleto === true && !esVerDetalle"
                         (click)="getAprobarTraslado( element )">
                         Aprobar traslado
                 </button>
                 <button mat-raised-button
                         color="accent"
                         class="btn-table"
-                        *ngIf="estadoTraslado.conRegistro === element.estadoCodigo"
+                        *ngIf="estadoTraslado.conRegistro === element.estadoCodigo && !esVerDetalle"
                         [routerLink]="[ '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarTraslado', this.proyectoId, element.numeroOrdenGiro, element.solicitudPagoId ]">
                         Ver detalle/Editar
                 </button>
                 <button mat-raised-button
                         color="accent"
                         class="btn-table"
-                        *ngIf="estadoTraslado.notificadoFiduciaria === element.estadoCodigo"
+                        *ngIf="estadoTraslado.notificadoFiduciaria === element.estadoCodigo && !esVerDetalle"
                         [routerLink]="[ '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarTraslado', this.proyectoId, element.numeroOrdenGiro, element.solicitudPagoId ]">
                         Modificar traslado
                 </button>
                 <button mat-raised-button
                         color="accent"
                         class="btn-table"
-                        *ngIf="estadoTraslado.anulado === element.estadoCodigo || estadoTraslado.trasladoAprobado === element.estadoCodigo"
+                        *ngIf="( estadoTraslado.anulado === element.estadoCodigo || estadoTraslado.trasladoAprobado === element.estadoCodigo ) || esVerDetalle"
                         [routerLink]="[ '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleTraslado', this.proyectoId, element.numeroOrdenGiro, element.solicitudPagoId ]">
                         Ver detalle
                 </button>
                 <button mat-raised-button
                         color="accent"
                         class="btn-table"
-                        *ngIf="estadoTraslado.trasladoAprobado === element.estadoCodigo"
+                        *ngIf="estadoTraslado.trasladoAprobado === element.estadoCodigo && !esVerDetalle"
                         (click)="getNotificarFiduciaria( element )">
                         Notificar a fiduciaria
                 </button>
                 <button mat-raised-button
                         color="accent"
                         class="btn-table"
-                        *ngIf="( estadoTraslado.conRegistro === element.estadoCodigo || estadoTraslado.notificadoFiduciaria === element.estadoCodigo ) && element.registroCompleto === true"
+                        *ngIf="( estadoTraslado.conRegistro === element.estadoCodigo || estadoTraslado.notificadoFiduciaria === element.estadoCodigo ) && element.registroCompleto === true && !esVerDetalle"
                         (click)="getAnularTraslado( element )">
                         Anular traslado
                 </button>
