@@ -164,7 +164,7 @@ namespace asivamosffie.services
                     BalanceFinancieroTraslado.UsuarioCreacion = pAuthor;
                     BalanceFinancieroTraslado.Eliminado = false;
                     BalanceFinancieroTraslado.EstadoCodigo = ConstanCodigoEstadoTraslado.Con_registro;
-                    BalanceFinancieroTraslado.ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado);
+                    BalanceFinancieroTraslado.ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Where(r=> r.OrdenGiroDetalleTerceroCausacionDescuentoId == null).Sum(r => r.ValorTraslado);
                     BalanceFinancieroTraslado.NumeroTraslado = _commonService.EnumeradorTrasladoBalanceFinanciero();
                     BalanceFinancieroTraslado.RegistroCompleto = RegistrosCompletosBalanceFinancieroTrasladoValor;
 
@@ -181,8 +181,8 @@ namespace asivamosffie.services
                           {
                               UsuarioModificacion = pAuthor,
                               FechaModificacion = DateTime.Now,
-                              ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Sum(r => r.ValorTraslado),
-                              RegistroCompleto = RegistrosCompletosBalanceFinancieroTrasladoValor
+                              ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Where(r => r.OrdenGiroDetalleTerceroCausacionDescuentoId == null).Sum(r => r.ValorTraslado),
+                    RegistroCompleto = RegistrosCompletosBalanceFinancieroTrasladoValor
                           });
                 }
 
