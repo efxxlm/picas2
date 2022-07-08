@@ -87,7 +87,8 @@ export class TerceroCausacionGogComponent implements OnInit {
         private obsOrdenGiro: ObservacionesOrdenGiroService,
         private _balanceSvc: FinancialBalanceService,
         private _activatedRoute: ActivatedRoute,
-        private validacionSvc: ValidacionesLineaPagoService,) {
+        private validacionSvc: ValidacionesLineaPagoService,)
+    {
         this.commonSvc.listaFuenteTipoFinanciacion()
             .subscribe(listaFuenteTipoFinanciacion => this.listaFuenteTipoFinanciacion = listaFuenteTipoFinanciacion);
         this.crearFormulario();
@@ -699,6 +700,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                     totalValueAportante += aportanteControl.get('nuevoValorDescuento').value;
                 }
             })
+
             if (
                 value > this.getValorAportante(this.getConceptos(index).controls[jIndex].get('conceptoPagoCriterio').value, this.getAportantes(index, jIndex).controls[kIndex].get('nombreAportante').value.cofinanciacionAportanteId, this.getAportantes(index, jIndex).controls[kIndex].get('fuenteRecursos').value?.fuenteFinanciacionId, this.getConceptos(index).controls[jIndex].get('usoCodigo').value)
             ) {
@@ -777,6 +779,7 @@ export class TerceroCausacionGogComponent implements OnInit {
                     valorFacturadoTotal += element.valorDescuento ?? 0;
                 });
             }
+            console.log( drpData, valoresFacturados, valorFacturadoTotal )
             if (valorUsoTotal > 0) return valorUsoTotal - valorFacturadoTotal;
         }
         return 0;
@@ -1269,13 +1272,13 @@ export class TerceroCausacionGogComponent implements OnInit {
             response => {
                 this.openDialog('', `<b>${response.message}</b>`);
 
-                // this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                //     () => this.routes.navigate(
-                //         [
-                //             '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarTraslado', this.activatedRoute.snapshot.params.id, this.solicitudPago.ordenGiro.numeroSolicitud
-                //         ]
-                //     )
-                // );
+                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                    () => this.routes.navigate(
+                        [
+                            '/gestionarBalanceFinancieroTrasladoRecursos/verDetalleEditarBalance', this._activatedRoute.snapshot.params.id
+                        ]
+                    )
+                );
                 // location.reload();
             },
             err => this.openDialog('', `<b>${err.message}</b>`)
