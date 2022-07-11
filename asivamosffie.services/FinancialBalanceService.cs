@@ -157,14 +157,14 @@ namespace asivamosffie.services
             {
                 //Valida que todas las dependencias de BalanceFinancieroTrasladoValor esten en true
                 bool RegistrosCompletosBalanceFinancieroTrasladoValor = !BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Any(r => r.ValorTraslado == null);
-                 
+
                 if (BalanceFinancieroTraslado.BalanceFinancieroTrasladoId == 0)
                 {
                     BalanceFinancieroTraslado.FechaCreacion = DateTime.Now;
                     BalanceFinancieroTraslado.UsuarioCreacion = pAuthor;
                     BalanceFinancieroTraslado.Eliminado = false;
                     BalanceFinancieroTraslado.EstadoCodigo = ConstanCodigoEstadoTraslado.Con_registro;
-                    BalanceFinancieroTraslado.ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Where(r=> r.OrdenGiroDetalleTerceroCausacionDescuentoId == null).Sum(r => r.ValorTraslado);
+                    BalanceFinancieroTraslado.ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Where(r => r.OrdenGiroDetalleTerceroCausacionDescuentoId == null).Sum(r => r.ValorTraslado);
                     BalanceFinancieroTraslado.NumeroTraslado = _commonService.EnumeradorTrasladoBalanceFinanciero();
                     BalanceFinancieroTraslado.RegistroCompleto = RegistrosCompletosBalanceFinancieroTrasladoValor;
 
@@ -172,23 +172,23 @@ namespace asivamosffie.services
                 }
                 else
                 {
-
-                     
+                    string strEstadoBalanceFinancieroTraslado = _context.BalanceFinancieroTraslado.Where(r=> r.BalanceFinancieroTrasladoId == BalanceFinancieroTraslado.BalanceFinancieroTrasladoId).FirstOrDefault().EstadoCodigo;
+                    if (BalanceFinancieroTraslado.EstadoCodigo == ConstanCodigoEstadoBalanceFinancieroTraslado.Anulado)
+                        strEstadoBalanceFinancieroTraslado = ConstanCodigoEstadoBalanceFinancieroTraslado.Con_registro;
 
                     _context.Set<BalanceFinancieroTraslado>()
                           .Where(r => r.BalanceFinancieroTrasladoId == BalanceFinancieroTraslado.BalanceFinancieroTrasladoId)
                           .Update(r => new BalanceFinancieroTraslado
                           {
+                              EstadoCodigo  = strEstadoBalanceFinancieroTraslado,
                               UsuarioModificacion = pAuthor,
                               FechaModificacion = DateTime.Now,
                               ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Where(r => r.OrdenGiroDetalleTerceroCausacionDescuentoId == null).Sum(r => r.ValorTraslado),
-                    RegistroCompleto = RegistrosCompletosBalanceFinancieroTrasladoValor
+                              RegistroCompleto = RegistrosCompletosBalanceFinancieroTrasladoValor
                           });
                 }
 
                 CreateEditBalanceFinancieroTrasladoValor(BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor, pAuthor);
-
-
             }
         }
 
@@ -647,7 +647,7 @@ namespace asivamosffie.services
                         await GetNotificarFiduciariaxTraslado(pBalanceFinancieroTraslado);
                         break;
                 }
-                 
+
                 ValidarTrasladosCompletos(pBalanceFinancieroTraslado.BalanceFinancieroTrasladoId);
 
 
@@ -698,8 +698,8 @@ namespace asivamosffie.services
                             FechaModificacion = DateTime.Now,
                             RegistroCompleto = true,
                             EstadoBalanceCodigo = ConstanCodigoEstadoBalanceFinanciero.Con_balance_validado
-                        }); 
-            } 
+                        });
+            }
         }
 
         private void ModificarOrdenGiro(BalanceFinancieroTraslado pBalanceFinancieroTraslado)
@@ -1021,23 +1021,23 @@ namespace asivamosffie.services
         {
             if (string.IsNullOrEmpty(pNumeroOrdenGiro))
             {
-                List<VOrdenGiroXproyecto> ListOrdenGiroId =
-                       _context.VOrdenGiroXproyecto
-                       .Where(r => r.LlaveMen == pLLaveMen
-                           && r.TipoSolicitudCodigo == pTipoSolicitudCodigo)
-                       .ToList();
+                List<VOrdenGiroXproyecto> ListOrdenGiroId = _context.VOrdenGiroXproyecto
+                                                           .Where(r => r.LlaveMen == pLLaveMen
+                                                               && r.TipoSolicitudCodigo == pTipoSolicitudCodigo)
+                                                           .ToList();
 
                 List<VOrdenGiroXproyecto> vOrdenGiroXproyectosNoRepetidos = new List<VOrdenGiroXproyecto>();
+
                 List<VOrdenGiro> VOrdenGiro = new List<VOrdenGiro>();
 
                 List<VOrdenGiro> ListOrdenGiro = await _context.VOrdenGiro.ToListAsync();
 
                 foreach (var item in ListOrdenGiroId)
                 {
-
                     if (!vOrdenGiroXproyectosNoRepetidos.Any(r => r.OrdenGiroId == item.OrdenGiroId))
                     {
                         vOrdenGiroXproyectosNoRepetidos.Add(item);
+
                         VOrdenGiro vOrdenGiro = (ListOrdenGiro.Where(o => o.OrdenGiroId == item.OrdenGiroId).FirstOrDefault());
 
                         VOrdenGiro.Add(vOrdenGiro);
