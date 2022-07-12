@@ -173,8 +173,17 @@ namespace asivamosffie.services
                 else
                 {
                     string strEstadoBalanceFinancieroTraslado = _context.BalanceFinancieroTraslado.Where(r=> r.BalanceFinancieroTrasladoId == BalanceFinancieroTraslado.BalanceFinancieroTrasladoId).FirstOrDefault().EstadoCodigo;
-                    if (BalanceFinancieroTraslado.EstadoCodigo == ConstanCodigoEstadoBalanceFinancieroTraslado.Anulado)
+                    if (strEstadoBalanceFinancieroTraslado == ConstanCodigoEstadoBalanceFinancieroTraslado.Anulado)
                         strEstadoBalanceFinancieroTraslado = ConstanCodigoEstadoBalanceFinancieroTraslado.Con_registro;
+                    
+                    if (ConstanCodigoEstadoBalanceFinancieroTraslado.Notificado_a_fiduciaria == strEstadoBalanceFinancieroTraslado)
+                    {
+                        strEstadoBalanceFinancieroTraslado = ConstanCodigoEstadoBalanceFinancieroTraslado.Traslado_Aprobado;
+                        //Se modifica la odg cuando la modifica despues de que la envia a fiduciaria
+                        ModificarOrdenGiro(BalanceFinancieroTraslado);
+                    }
+                    
+
 
                     _context.Set<BalanceFinancieroTraslado>()
                           .Where(r => r.BalanceFinancieroTrasladoId == BalanceFinancieroTraslado.BalanceFinancieroTrasladoId)
