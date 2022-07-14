@@ -68,9 +68,10 @@
                       </ng-container>
                       <ng-container matColumnDef="ProyectoLLaveMen">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre proyecto</th>
-                        <td mat-cell *matCellDef="let element" style="padding: 0 !important">
+                        <td mat-cell *matCellDef="let element" style="padding: 0 !important;">
                           <div
                             class="sub-item-table justify-content-center align-items-center text-center"
+                            style="overflow: auto;"
                             *ngFor="let el of element.listDyProyectos; let i = index"
                             [class.h-3]="el.listDyUsos.length === 1"
                             [class.h-6]="el.listDyUsos.length === 2"
@@ -88,7 +89,8 @@
                             *ngFor="let el of element.listDyProyectos; let i = index"
                           >
                             <div *ngFor="let el2 of el.listDyUsos; let j = index" class="borber-table">
-                              <div class="sub-item-table--element">
+                              <div class="sub-item-table--element text-center" style="overflow: auto;">
+                                
                                 {{ el2.nombre }}
                               </div>
                             </div>
@@ -96,14 +98,14 @@
                         </td>
                       </ng-container>
                       <ng-container matColumnDef="valor">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>   Valor   </th>
                         <td mat-cell *matCellDef="let element" style="padding: 0 !important">
                           <div
                             class="sub-item-table justify-content-center align-items-center"
                             *ngFor="let el of element.listDyProyectos; let i = index"
                           >
                             <div *ngFor="let el2 of el.listDyUsos; let j = index" class="borber-table">
-                              <div class="sub-item-table--element">${{ el2.valorUso }}</div>
+                              <div class="sub-item-table--element">   ${{ el2.valorUso }}   </div>
                             </div>
                           </div>
                         </td>
@@ -116,7 +118,7 @@
                             *ngFor="let el of element.listDyProyectos; let i = index"
                           >
                             <div *ngFor="let el2 of el.listDyUsos; let j = index" class="borber-table">
-                              <div class="sub-item-table--element">${{ el2.saldo }}</div>
+                              <div class="sub-item-table--element"> ${{ el2.saldo }} </div>
                             </div>
                           </div>
                         </td>
