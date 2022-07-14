@@ -31,20 +31,25 @@ namespace asivamosffie.services
         #region Get
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
         {
-            List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
-                .Where(r => !(bool)r.Eliminado
-                   &&
-                   ((r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
-                   || (r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Novedad_Contractual)
-                   )
-                ).ToListAsync();
+
+            List<VListaContratacionModificacionContractual> ListVListaContratacionModificacionContractual = _context.VListaContratacionModificacionContractual.ToList();
+
+            List<SesionComiteSolicitud> ListSesionComiteSolicitud = 
+                                                                await _context.SesionComiteSolicitud.Where(r => ListVListaContratacionModificacionContractual
+                                                                                                    .Select(r=> r.SesionComiteSolicitudId)
+                                                                                                               .Contains(r.SesionComiteSolicitudId))
+                                                                                                    .ToListAsync();
+
 
             List<Dominio> ListasParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
-            List<Contratacion> ListContratacionSesion = 
+
+            List<Contratacion> ListContratacionSesion =
                                                          _context.Contratacion
                                                          .Include(r => r.Contrato)
                                                          .Include(r => r.DisponibilidadPresupuestal)
-                                                         .Where(r =>   r.DisponibilidadPresupuestal.Count() > 0)
+                                                         .Where(r =>
+                                                         //Traer unicamente las contrataciones que se utilizan en la lista de sesion comite solicitud
+                                                         ListVListaContratacionModificacionContractual.Select(r => r.SolicitudId).Contains(r.ContratacionId))
                                                          .ToList();
 
 
@@ -58,6 +63,17 @@ namespace asivamosffie.services
 
                             Contratacion contratacion = ListContratacionSesion.Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId && r.DisponibilidadPresupuestal.Count() > 0)
                                                                               .FirstOrDefault();
+
+                            if(contratacion== null)
+                            {
+                                 contratacion = _context.Contratacion
+                                                             .Include(r => r.Contrato)
+                                                             .Include(r => r.DisponibilidadPresupuestal)
+                                                             .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId).FirstOrDefault();
+                            }
+
+
+
 
                             if (contratacion == null)
                                 break;
