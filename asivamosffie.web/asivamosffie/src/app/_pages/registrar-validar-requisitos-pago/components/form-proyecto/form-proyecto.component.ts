@@ -319,7 +319,9 @@ export class FormProyectoComponent implements OnInit {
 
         if (event) {
             this.boolAplicaDescuentos = false;
+     
             event.forEach(element => {
+                console.log(element.codigo);
                 if (element.codigo === "17") this.boolAplicaDescuentos = true;
             });
         }

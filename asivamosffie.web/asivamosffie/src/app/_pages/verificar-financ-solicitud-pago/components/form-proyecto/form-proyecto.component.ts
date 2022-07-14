@@ -16,7 +16,7 @@ export class FormProyectoComponent implements OnInit {
     @Input() registrarSolicitudPagoObs: any;
     @Input() esVerDetalle = false;
     @Input() idSolicitud: any;
-    @Input() ocultarAcordeonAmortizacionAnticipo: boolean = true;
+    @Input() ocultarAcordeonAmortizacionAnticipo: boolean = false;
     @Input() num: number;
     @Output() estadoSemaforoProyecto = new EventEmitter<boolean>();
     listaFases: Dominio[] = [];
@@ -47,15 +47,18 @@ export class FormProyectoComponent implements OnInit {
         console.log( this.proyecto )
         this.getDataProyecto();
 
-        if(this.contrato.solicitudPago) {
-            if(this.contrato.solicitudPago.length > 1 && this.contrato.solicitudPagoOnly.esFactura) {
-                let solicitudesId = this.contrato.solicitudPago.map(e => e.solicitudPagoId)
-                solicitudesId.forEach(element => {
-                    if (this.idSolicitud > element) {
-                        this.mostrarAmortizacion = true;
-                    }
+        if (this.contrato.solicitudPago) {
+            if (this.contrato.solicitudPago.length > 1 && this.contrato.solicitudPagoOnly.esFactura && !this.contrato.solicitudPagoOnly.esAnticipio) {
+                this.contrato.solicitudPago.forEach(sp => {
+                    sp.solicitudPagoRegistrarSolicitudPago?.forEach(spr => {
+                        if (spr.solicitudPagoFase.length > 0) {
+                            if (spr.solicitudPagoFase.find(r => r.contratacionProyectoId === this.proyecto.value.contratacionProyectoId && r.esAnticipio === true)) {
+                                this.mostrarAmortizacion = true;
+                            }
+                        }
+
+                    });
                 });
-                
             }
         }
     }
@@ -134,6 +137,19 @@ export class FormProyectoComponent implements OnInit {
         }
     }
 
+    ocultarAmortizacionAnticipo(event) {
+        // if (event.length === 1 && event[0].codigo === "17") this.ocultarAcordeonAmortizacionAnticipo = true;
+        // else this.ocultarAcordeonAmortizacionAnticipo = false;
+
+        if (event) {
+            this.ocultarAcordeonAmortizacionAnticipo = false;
+            event.forEach(element => {
+                console.log(element.codigo);
+                if (element.codigo === "17") 
+                this.ocultarAcordeonAmortizacionAnticipo = true;
+            });
+        }
+    }
     getValueFase( listFaseCodigo: Dominio[] ) {
         const listaFase = [ ...listFaseCodigo ];
 

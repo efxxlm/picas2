@@ -60,12 +60,22 @@
                             </app-obs-criterio-pagos>
                         </mat-expansion-panel>
 
-                        <mat-expansion-panel class="expansion-style sub-expansion-black" *ngIf="ocultarAcordeonAmortizacionAnticipo && mostrarAmortizacion &&fase.get( 'codigo' ).value === fasesContrato.construccion && manejoAnticipoRequiere === true && fase.get( 'tieneAnticipo' ).value === false && contrato.solicitudPago.length > 1">
-                            <mat-expansion-panel-header class="expansion-style--header">
-                                <mat-panel-title class="expansion-style--title font-size-09em">
-                                    Amortización del anticipo - {{ fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? 'Fase 1' : 'Fase 2' }}
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
+                        <mat-expansion-panel
+                        *ngIf="
+                            ocultarAcordeonAmortizacionAnticipo &&
+                            mostrarAmortizacion &&
+                            fase.get('codigo').value === fasesContrato.construccion &&
+                            manejoAnticipoRequiere === true &&
+                            fase.get('tieneAnticipo').value === false &&
+                            contrato.solicitudPago.length > 1
+                        "
+                            class="expansion-style sub-expansion-black"
+                        >
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title font-size-09em" [ngClass]="esVerDetalle === true || fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? '' : estadoSemaforoAmortizacion">
+                                Amortización del anticipo - {{ fase.get( 'codigo' ).value === fasesContrato.preConstruccion ? 'Fase 1' : 'Fase 2' }}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
 
                             <app-form-amortizacion  [solicitudPago]="contrato.solicitudPagoOnly" [contrato]="contrato" [contratacionProyectoId]="proyecto.get( 'contratacionProyectoId' ).value"></app-form-amortizacion>
                         </mat-expansion-panel>
