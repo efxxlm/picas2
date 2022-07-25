@@ -354,13 +354,37 @@ namespace asivamosffie.services
 
                 if (pSeguimientoDiario.SeguimientoDiarioId == 0)
                 {
+
+
                     CreateEdit = "CREAR SEGUIMIENTO DIARIO";
                     pSeguimientoDiario.FechaCreacion = DateTime.Now;
                     pSeguimientoDiario.Eliminado = false;
-                    pSeguimientoDiario.SeguimientoSemanalId = seguimientoSemanal.SeguimientoSemanalId;
+
                     pSeguimientoDiario.RegistroCompleto = VerificarRegistroCompleto(pSeguimientoDiario);
 
+                    //Cuando el seguimiento semanal llega nulo es por una reprogramación o una novedad
+                    //asi que se crea un seguimiento semanal y se asigna a ese seguimiento diario
+
+                    if (seguimientoSemanal == null)
+                    {
+                        SeguimientoSemanal seguimientoSemanalnew = new SeguimientoSemanal
+                        {
+                            ContratacionProyectoId = pSeguimientoDiario.ContratacionProyectoId,
+                            NumeroSemana = _context.SeguimientoSemanal.Count(r => r.ContratacionProyectoId == pSeguimientoDiario.ContratacionProyectoId) + 1,
+                            Eliminado = false,
+                            UsuarioModificacion = pSeguimientoDiario.UsuarioCreacion,
+                            FechaCreacion = DateTime.Now,
+                            FechaInicio = pSeguimientoDiario.FechaSeguimiento,
+                            FechaFin = await _commonService.CalculardiasLaborales(5, pSeguimientoDiario.FechaSeguimiento),
+                            RegistroCompleto = false
+                        };
+                        pSeguimientoDiario.SeguimientoSemanal = seguimientoSemanalnew;
+                    }
+                    else
+                        pSeguimientoDiario.SeguimientoSemanalId = seguimientoSemanal.SeguimientoSemanalId;
+
                     _context.SeguimientoDiario.Add(pSeguimientoDiario);
+
                 }
                 else
                 {
