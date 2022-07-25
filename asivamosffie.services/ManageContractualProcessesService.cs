@@ -657,41 +657,41 @@ namespace asivamosffie.services
                         {
                             case ConstanCodigoTipoSolicitud.Contratacion:
 
-                                //    Contratacion contratacion = await GetContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
                                 Contratacion contratacion = _context.Contratacion
                                     .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId)
                                     .Include(r => r.DisponibilidadPresupuestal).FirstOrDefault();
-                                if (contratacion?.DisponibilidadPresupuestal?.Count() == 0 || contratacion?.DisponibilidadPresupuestal?.Count() > 1 || contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().NumeroDdp == null || string.IsNullOrEmpty(contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().NumeroDdp))
-                                {
-                                    break;
-                                }
 
-                                //jflorez, peque�o ajsute porque toteaba                                    
-                                if (contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp == null || string.IsNullOrEmpty(contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp))
-                                {
+                                if (contratacion?.DisponibilidadPresupuestal?.Count() == 0
+                                    || contratacion?.DisponibilidadPresupuestal?.Count() > 1
+                                    || contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().NumeroDdp == null
+                                    || string.IsNullOrEmpty(contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().NumeroDdp)
+                                    )
                                     break;
-                                }
+                                //jflorez, peque�o ajsute porque toteaba                                    
+                                if (contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp == null
+                                    || string.IsNullOrEmpty(contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp)
+                                    )
+                                    break;
 
                                 // sesionComiteSolicitud.Contratacion = contratacion;
                                 sesionComiteSolicitud.EstadoCodigo = contratacion.EstadoSolicitudCodigo;
-
                                 sesionComiteSolicitud.EstaTramitado = false;
 
                                 if (!string.IsNullOrEmpty(contratacion.FechaEnvioDocumentacion.ToString()))
-                                {
                                     sesionComiteSolicitud.EstaTramitado = true;
-                                }
 
                                 sesionComiteSolicitud.FechaSolicitud = (DateTime)contratacion.FechaTramite;
-
                                 sesionComiteSolicitud.NumeroSolicitud = contratacion.NumeroSolicitud;
 
-                                sesionComiteSolicitud.TipoSolicitud = ListasParametricas
-                                    .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
-                                    && r.Codigo == ConstanCodigoTipoSolicitud.Contratacion
-                                    ).FirstOrDefault().Nombre;
+                                sesionComiteSolicitud.TipoSolicitud =
+                                                                ListasParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
+                                                                                        && r.Codigo == ConstanCodigoTipoSolicitud.Contratacion
+                                                                                        )
+                                                                                  .FirstOrDefault().Nombre;
 
-                                if (contratacion.RegistroCompleto1 == null || !(bool)contratacion.RegistroCompleto1)
+                                if (contratacion.RegistroCompleto1 == null
+                                    || !(bool)contratacion.RegistroCompleto1
+                                    )
                                 {
                                     sesionComiteSolicitud.EstadoRegistro = false;
                                     sesionComiteSolicitud.EstadoDelRegistro = "Incompleto";
@@ -715,13 +715,9 @@ namespace asivamosffie.services
 
                             default:
                                 break;
-                        }
-
-                    }
-
-                }
-
-
+                        } 
+                    } 
+                } 
                 return ListSesionComiteSolicitud.OrderByDescending(r => r.SesionComiteSolicitudId).ToList();
             }
             catch (Exception ex)
@@ -752,9 +748,9 @@ namespace asivamosffie.services
                                               .Include(r => r.Contrato)
                                               .Include(r => r.ContratacionProyecto)
                                                 .ThenInclude(r => r.Proyecto)
-                                                    //.ThenInclude(r => r.ProyectoAportante)
-                                                    //    .ThenInclude(r => r.Aportante)
-                                                    //        .ThenInclude(r => r.FuenteFinanciacion)
+                                                     //.ThenInclude(r => r.ProyectoAportante)
+                                                     //    .ThenInclude(r => r.Aportante)
+                                                     //        .ThenInclude(r => r.FuenteFinanciacion)
 
                                                      .Include(r => r.ContratacionProyecto)
                                                          .ThenInclude(r => r.Proyecto)
@@ -763,12 +759,12 @@ namespace asivamosffie.services
                                                          .ThenInclude(r => r.Proyecto)
                                                               .ThenInclude(r => r.Sede)
                                                 .FirstOrDefaultAsync();
- 
+
 
 
                 List<SesionComiteSolicitud> sesionComiteSolicitud = _context.SesionComiteSolicitud
                      .Where(r => r.SolicitudId == contratacion.ContratacionId
-                         && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion 
+                         && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
                          && !(bool)r.Eliminado
                          && r.ComiteTecnico.EstadoComiteCodigo != "7" //Fallida
                          )
@@ -863,13 +859,13 @@ namespace asivamosffie.services
                     //                                                        .Where(d => d.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && d.Eliminado != true) 
                     //                                                        .ToList();
 
-           
+
                     foreach (var GestionFuenteFinanciacion in DisponibilidadPresupuestal.GestionFuenteFinanciacion.Where(r => r.Eliminado != true).Distinct().ToList())
                     {
-                        if(GestionFuenteFinanciacion.NovedadContractualRegistroPresupuestalId > 0)
+                        if (GestionFuenteFinanciacion.NovedadContractualRegistroPresupuestalId > 0)
                         {
                             NovedadContractualRegistroPresupuestal novedadContractualRegistroPresupuestal = _context.NovedadContractualRegistroPresupuestal.Find(GestionFuenteFinanciacion.NovedadContractualRegistroPresupuestalId);
-                            if(novedadContractualRegistroPresupuestal != null)
+                            if (novedadContractualRegistroPresupuestal != null)
                             {
                                 if (novedadContractualRegistroPresupuestal.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Con_Disponibilidad_Presupuestal || novedadContractualRegistroPresupuestal.EstadoSolicitudCodigo == ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar)
                                 {
@@ -890,7 +886,7 @@ namespace asivamosffie.services
                     }
                 }
 
-     
+
 
                 foreach (var ContratacionProyecto in contratacion.ContratacionProyecto.Where(r => r.Eliminado != true).Distinct().ToList())
                 {
@@ -902,7 +898,7 @@ namespace asivamosffie.services
                             //ListGestionFuenteFinanciacion
                             //       .Where(d => d.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId && d.Eliminado != true) 
                             //                                   .ToList();
-                             
+
                             foreach (var GestionFuenteFinanciacion in DisponibilidadPresupuestal.GestionFuenteFinanciacion.Where(r => r.Eliminado != true).Distinct().ToList())
                             {
                                 GestionFuenteFinanciacion.FuenteNombre = GestionFuenteFinanciacion.FuenteFinanciacion.FuenteRecursosCodigo;
@@ -1192,7 +1188,8 @@ namespace asivamosffie.services
                 {
                     List<ProcesosContractualesObservacion> listprocesosContractualesObservacion = _context.ProcesosContractualesObservacion.Where(r => r.SolicitudId == procesosContractualesObservacion.SolicitudId && r.TipoSolicitudCodigo == procesosContractualesObservacion.TipoSolicitudCodigo && r.Eliminado != true && r.Archivado != true).ToList();
 
-                    listprocesosContractualesObservacion.ForEach(pco => {
+                    listprocesosContractualesObservacion.ForEach(pco =>
+                    {
                         pco.Archivado = true;
                     });
 
