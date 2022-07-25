@@ -372,7 +372,7 @@ namespace asivamosffie.services
                             ContratacionProyectoId = pSeguimientoDiario.ContratacionProyectoId,
                             NumeroSemana = _context.SeguimientoSemanal.Count(r => r.ContratacionProyectoId == pSeguimientoDiario.ContratacionProyectoId) + 1,
                             Eliminado = false,
-                            UsuarioModificacion = pSeguimientoDiario.UsuarioCreacion,
+                            UsuarioCreacion = pSeguimientoDiario.UsuarioCreacion,
                             FechaCreacion = DateTime.Now,
                             FechaInicio = pSeguimientoDiario.FechaSeguimiento,
                             FechaFin = await _commonService.CalculardiasLaborales(5, pSeguimientoDiario.FechaSeguimiento),
