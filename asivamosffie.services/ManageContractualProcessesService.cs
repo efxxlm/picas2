@@ -59,33 +59,33 @@ namespace asivamosffie.services
                     switch (sesionComiteSolicitudOld.TipoSolicitudCodigo)
                     {
                         case ConstanCodigoTipoSolicitud.Contratacion:
-                            {
-                                Contratacion contratacion = _context.Contratacion
-                                    .Where(r => r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
-                                    .Include(r => r.Contrato)
-                                    .Include(r => r.DisponibilidadPresupuestal)
-                                    .FirstOrDefault();
+                         
+                                Contratacion contratacion = _context.Contratacion.Where(r => r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
+                                                                                 .Include(r => r.Contrato)
+                                                                                 .Include(r => r.DisponibilidadPresupuestal)
+                                                                                 .FirstOrDefault();
 
                                 contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
                                 contratacion.FechaModificacion = DateTime.Now;
                                 contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
                                 sesionComiteSolicitudOld.Contratacion = contratacion;
                                 break;
-                            }
+                           
                         case ConstanCodigoTipoSolicitud.Novedad_Contractual:
-                            {
+                        
                                 NovedadContractual novedadContractual = _context.NovedadContractual
                                                         .Where(r => r.NovedadContractualId == pSesionComiteSolicitud.SolicitudId)
                                                         .Include(r => r.Contrato)
                                                             .ThenInclude(r => r.Contratacion)
                                                         .FirstOrDefault();
+
                                 if (novedadContractual != null)
                                     novedadContractual.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
+
                                 novedadContractual.FechaModificacion = DateTime.Now;
                                 novedadContractual.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
                                 sesionComiteSolicitudOld.Contratacion = novedadContractual.Contrato.Contratacion;
-                                break;
-                            }
+                                break; 
                     }
 
                     if (ConstanCodigoEstadoSolicitudContratacion.Enviadas_a_la_Fiduciaria == pSesionComiteSolicitud.EstadoCodigo)
@@ -97,9 +97,8 @@ namespace asivamosffie.services
                 else
                 {
                     //si entra por acá asumimos que es de liquidación
-                    Contratacion contratacion = _context.Contratacion
-                        .Where(r => r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
-                        .FirstOrDefault();
+                    Contratacion contratacion = _context.Contratacion.Where(r => r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
+                                                                     .FirstOrDefault();
                     if (contratacion != null)
                     {
                         contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
@@ -139,18 +138,18 @@ namespace asivamosffie.services
             SesionComiteSolicitud sesionComiteSolicitud = _context.SesionComiteSolicitud.Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitudID)
                .FirstOrDefault();
 
-            string TipoPlantilla = "";
+            string TipoPlantilla = String.Empty;
             Contratacion contratacion = await _ProjectContractingService.GetAllContratacionByContratacionId(sesionComiteSolicitud.SolicitudId);
 
-            if (contratacion.DisponibilidadPresupuestal.FirstOrDefault().TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo)
-            {
-                TipoPlantilla = ((int)ConstanCodigoPlantillas.DDP_Contratacion_Rubro_Administrativo).ToString();
-            }
-            else
-            {
+            if (contratacion.DisponibilidadPresupuestal.FirstOrDefault().TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo) 
+                TipoPlantilla = ((int)ConstanCodigoPlantillas.DDP_Contratacion_Rubro_Administrativo).ToString(); 
+            else 
                 TipoPlantilla = ((int)ConstanCodigoPlantillas.DDP_Contratacion_Rubro_Por_Financiar).ToString();
-            }
-            Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+           
+            Plantilla Plantilla = _context.Plantilla.Where(r => r.Codigo == TipoPlantilla)
+                                                    .Include(r => r.Encabezado)
+                                                    .Include(r => r.PieDePagina)
+                                                    .FirstOrDefault();
 
 
             Plantilla.Contenido = ReemplazarDatosPlantillaContratacion(Plantilla.Contenido, contratacion, sesionComiteSolicitud);
