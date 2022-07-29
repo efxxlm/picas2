@@ -394,12 +394,15 @@ namespace asivamosffie.services
 
         public async Task<List<Cofinanciacion>> GetListCofinancing()
         {
-            List<Cofinanciacion> Listcofinanciacion = await _context.Cofinanciacion.Where(r => !(bool)r.Eliminado).ToListAsync();
+            List<Cofinanciacion> Listcofinanciacion = await _context.Cofinanciacion.Where(r => !(bool)r.Eliminado)
+                                                                                   .Include(r => r.CofinanciacionAportante)
+                                                                                   .ThenInclude(r => r.CofinanciacionDocumento)
+                                                                                   .ToListAsync(); 
 
-            foreach (var item in Listcofinanciacion)
+            foreach (var cofinanciacion in Listcofinanciacion)
             {
-                item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
-                item.ValorTotal = _context.CofinanciacionDocumento.Where(x => !(bool)x.Eliminado && item.CofinanciacionAportante.Select(x => x.CofinanciacionAportanteId).ToList().Contains((int)x.CofinanciacionAportanteId)).Sum(x => x.ValorDocumento);
+                cofinanciacion.CofinanciacionAportante = cofinanciacion.CofinanciacionAportante.Where(r => !(bool)r.Eliminado).ToList();
+                cofinanciacion.ValorTotal = cofinanciacion.CofinanciacionAportante.Sum(r => r.CofinanciacionDocumento.Where(r => r.Eliminado != true).Sum(r => r.ValorDocumento));
             }
             return Listcofinanciacion.OrderByDescending(r => r.CofinanciacionId).ToList();
         }
