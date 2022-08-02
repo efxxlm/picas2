@@ -1,0 +1,88 @@
+SELECT 
+distinct
+cu.ValorUso,
+cu.TipoUsoCodigo,
+cu.ComponenteAportanteId,
+tp.Nombre as tipouso,
+CPA.ValorAporte,
+cp.TieneMonitoreoWeb,
+cp.EsAvanceobra,
+cp.EsReasignacion,
+cp.PorcentajeAvanceObra,
+cp.RequiereLicencia,
+cp.LicenciaVigente,
+cp.NumeroLicencia,
+cp.FechaVigencia,
+c.EsObligacionEspecial,
+c.ConsideracionDescripcion,
+do1.Nombre as TipoIntervencion,
+p.LlaveMEN,
+lr2.departamento as Departamento,
+lr.descripcion as Municipio,
+ie.Nombre as insteducativa,
+ie2.Nombre as SedeId,
+c.FechaCrModf as fechasolicitud,
+c.NumeroSolicitud,
+do.Nombre as tiposolicitud,
+do2.Nombre as tipoaportante,
+
+lr.region as Region,
+ct.Nombre,
+dom.Nombre as tipoproponente,
+
+do3.Nombre as fuenterecursos,
+d2.Nombre as NombreAportanteNuevo,
+coa.CofinanciacionAportanteId
+
+from CreationNew.CentralReportLast as fp			   
+
+		inner join dbo.Contratacion as C on C.ContratacionIdHist = FP.ReportIdHist and  fp.TableName='Contratacion'
+
+		inner join dbo.ContratacionProyecto as CP on CP.ContratacionId = C.ContratacionId
+		inner join CreationNew.CentralReportLast as lastL3 on lastL3.ReportIdHist=CP.ContratacionProyectoIdHist and lastL3.TableName='ContratacionProyecto'
+
+
+		left join dbo.ES_Dominio as do on do.Codigo=c.TipoSolicitudCodigo and do.TipoDominioId=12 
+
+		inner join dbo.Proyecto as p on p.ProyectoId = cp.ProyectoId
+		inner join CreationNew.CentralReportLast as lastL4 on lastL4.ReportIdHist=p.ProyectoIdHist and lastL4.TableName='Proyecto'
+
+		left join dbo.ES_Dominio as do1 on do1.Codigo=p.TipoIntervencionCodigo and do1.TipoDominioId=1
+
+		left join dbo.Contratista as ct on ct.ContratistaId = C.ContratistaId
+		inner join CreationNew.CentralReportLast as lastL5 on lastL5.ReportIdHist=ct.ContratistaIdHist and lastL5.TableName='Contratista'
+
+		left join dbo.ES_Dominio as dom on dom.Codigo=ct.TipoProponenteCodigo and dom.TipoDominioId=28
+				
+		inner join dbo.ContratacionProyectoAportante as CPA on cpa.ContratacionProyectoId = cp.ContratacionProyectoIdHist
+		inner join CreationNew.CentralReportLast as lastL6 on lastL6.ReportIdHist=CPA.ContratacionProyectoAportanteIdHist and lastL6.TableName='ContratacionProyectoAportante'
+		
+
+		inner join dbo.ComponenteAportante as ca on ca.ContratacionProyectoAportanteId=cpa.ContratacionProyectoAportanteIdHist
+		inner join CreationNew.CentralReportLast as lastL7 on lastL7.ReportIdHist=ca.ComponenteAportanteIdHist and lastL7.TableName='ComponenteAportante'
+
+		inner join dbo.ComponenteUso as cu on cu.ComponenteAportanteId=lastL7.ReportIdHist
+		inner join CreationNew.CentralReportLast as lastL8 on lastL8.ReportIdHist=cu.ComponenteUsoIdHist and lastL8.TableName='ComponenteUso'
+
+		left join dbo.ES_Dominio AS Tp ON CU.TipoUsoCodigo = Tp.Codigo and Tp.TipoDominioId = 13
+
+		left join dbo.V_InstitucionEducativaSedeLastRecords as ie on ie.InstitucionEducativaSedeIdHist=p.InstitucionEducativaId
+
+		left join dbo.V_InstitucionEducativaSedeLastRecords as ie2 on ie2.InstitucionEducativaSedeId=p.SedeId
+
+
+		inner join dbo.CofinanciacionAportante as coa on coa.CofinanciacionAportanteId=cpa.CofinanciacionAportanteId
+		inner join CreationNew.CentralReportLast as lastL15 on lastL15.ReportIdHist=coa.CofinanciacionAportanteIdHist and lastL15.TableName='CofinanciacionAportante'
+
+		inner join dbo.localizacionReporte as lr on lr.localizacionid = coa.MunicipioId
+		left join dbo.localizacionReporte as lr2 on lr2.idpadreDepartamento = coa.DepartamentoId
+
+		left join dbo.ES_Dominio as do2 on do2.DominioId=coa.TipoAportanteId
+		
+		left join dbo.FuenteFinanciacion as ff on ff.FuenteFinanciacionId=cu.FuenteFinanciacionId
+		inner join CreationNew.CentralReportLast as lastL16 on lastL16.ReportIdHist=ff.FuenteFinanciacionIdHist and lastL16.TableName='FuenteFinanciacion'
+
+		left join dbo.ES_Dominio as do3 on do3.Codigo=ff.FuenteRecursosCodigo and do3.TipoDominioId=8
+		left join dbo.ES_Dominio as d2 on d2.DominioId=coa.NombreAportanteId
+
+		where C.Eliminado!=1 or Cp.Eliminado!=1 or p.Eliminado!=1 or cpa.Eliminado!=1 or ca.Eliminado!=1 or cu.Eliminado!=1
