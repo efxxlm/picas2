@@ -1,0 +1,125 @@
+Select 
+distinct
+p.FechaSesionJunta,
+p.LlaveMEN,
+co.NumeroContrato,
+do.Nombre as modalidadcodigo,
+ie.Nombre instedu,
+ie2.Nombre as SedeId,
+ss.NumeroSemana,
+ss.FechaInicio,
+ss.FechaFin,
+sd.CantidadPersonalProgramado,
+sd.CantidadPersonalTrabajando,
+sd.NumeroHorasRetrasoPersonal,
+sd.DisponibilidadPersonalObservaciones,
+do1.nombre as IndisponibilidadMaterial,
+do2.nombre as IndisponibilidadEquipo,
+do3.nombre as IndisponibilidadProductividad,
+sd.DisponibilidadMaterialObservaciones,
+sd.DisponibilidadEquipoObservaciones,
+sd.ProductividadCodigo,
+sd.ProductividadObservaciones,
+pr.TipoActividadCodigo,
+sfp.ProgramacionId,
+sfp.AvanceFisicoCapitulo,
+fi.Valor,
+sa.SeEjecutoGestionAmbiental,
+sa.TieneManejoResiduosPeligrososEspeciales,
+me.Proveedor,
+me.RequierePermisosAmbientalesMineros,
+mm.EstanProtegidosDemarcadosMateriales,
+mm.Observacion as observacion41,
+md.EstaCuantificadoRCd,
+md.Observacion,
+mg.NombreGestorResiduos,
+mg.TienePermisoAmbiental,
+md.CantidadToneladas,
+ms.EstanClasificados,
+ms.RequiereObservacion,
+ms.Observacion as observacion48,
+ms.UrlRegistroFotografico,
+sc.SeRealizaronEnsayosLaboratorio,
+lab.TipoEnsayoCodigo,
+lab.NumeroMuestras,
+lab.FechaTomaMuestras,
+lab.FechaEntregaResultados,
+lab.RealizoControlMedicion,
+mue.FechaEntregaResultado,
+mue.NombreMuestra,
+acc.CausaAccidenteCodigo,
+sss.SeRealizoCapacitacion,
+sss.TemaCapacitacion,
+sss.SeRealizoRevisionElementosProteccion,
+sss.CumpleRevisionElementosProyeccion,
+sss.SeRealizoRevisionSenalizacion,
+sss.CumpleRevisionSenalizacion,
+sss.UrlSoporteGestion,
+soc.SeRealizaronReuniones,
+sss.CantidadAccidentes,
+soc.TemaComunidad,
+soc.Conclusion,
+soc.CantidadEmpleosDirectos,
+soc.CantidadEmpleosIndirectos,
+soc.CantidadTotalEmpleos,
+soc.UrlSoporteGestion urlsocial,
+ale.SeIdentificaronAlertas,
+ale.Alerta,
+act.RegistroCompletoActividad,
+act.ActividadTecnica,
+act.ActividadLegal,
+act.ActividadAdministrativaFinanciera,
+act.ActividadAdministrativaFinancieraSiguiente,
+act.ActividadTecnicaSiguiente,
+act.ActividadLegalSiguiente,
+act.ResumenEstadoContrato,
+foto.UrlSoporteFotografico,
+sobra.FechaComite,
+sobra.NumeroComite,
+sobra.UrlSoporteComite,
+act.RegistroCompletoActividadSiguiente,
+do4.Nombre as CausaAccidente,
+concat(do4.Nombre,' ',sss.CantidadAccidentes) as Accidentes
+
+from dbo.FactProyectos as fp
+
+inner join dbo.Proyecto as p on p.ProyectoIdHist=fp.ProyectoIdHist
+left join dbo.InstitucionEducativaSede as ie on ie.InstitucionEducativaSedeIdHist=p.InstitucionEducativaId
+left join dbo.InstitucionEducativaSede as ie2 on ie2.InstitucionEducativaSedeId=p.SedeId
+left join dbo.Contrato AS co on co.ContratoIdHist=fp.ContratoIdhist
+left join dbo.es_dominio as do on do.codigo=co.modalidadcodigo and do.TipoDominioId=132 
+left join dbo.ContratacionProyecto as cp on cp.ContratacionProyectoIdHist=fp.ContratacionProyectoIdhist
+left join dbo.SeguimientoSemanal as ss on ss.ContratacionProyectoId=cp.ContratacionProyectoIdHist
+left join dbo.SeguimientoDiario as sd on sd.SeguimientoSemanalId=ss.SeguimientoSemanalIdHist
+left join dbo.SeguimientoSemanalReporteActividad as act on act.SeguimientoSemanalId=ss.SeguimientoSemanalIdHist
+left join dbo.SeguimientoSemanalRegistroFotografico as foto on foto.SeguimientoSemanalId=ss.SeguimientoSemanalIdHist
+left join dbo.SeguimientoSemanalRegistrarComiteObra as sobra on sobra.SeguimientoSemanalId=ss.SeguimientoSemanalIdHist
+
+left join dbo.ES_Dominio as do1 on do1.Codigo=sd.CausaIndisponibilidadMaterialCodigo and do1.TipoDominioId=95
+left join dbo.ES_Dominio as do2 on do2.Codigo=sd.CausaIndisponibilidadEquipoCodigo and do2.TipoDominioId=96
+left join dbo.ES_Dominio as do3 on do3.Codigo=sd.CausaIndisponibilidadProductividadCodigo and do3.TipoDominioId=97
+
+left join dbo.ContratoConstruccion as cc on cc.ContratoId=co.ContratoIdHist
+left join dbo.Programacion as pr on pr.ContratoConstruccionId=cc.ContratoConstruccionIdHist and pr.TipoActividadCodigo = 'C'
+
+left join dbo.SeguimientoSemanalAvanceFisico as sf on sf.SeguimientoSemanalId=ss.SeguimientoSemanalIdHist
+left join dbo.SeguimientoSemanalAvanceFisicoProgramacion as sfp on sfp.SeguimientoSemanalAvanceFisicoId=sf.SeguimientoSemanalAvanceFisicoIdHist
+left join dbo.ES_FlujoInversion as fi on fi.SeguimientoSemanalId=ss.SeguimientoSemanalIdHist
+
+left join dbo.SeguimientoSemanalGestionObra as so on so.SeguimientoSemanalId=ss.SeguimientoSemanalIdHist
+left join dbo.SeguimientoSemanalGestionObraAmbiental as sa on sa.SeguimientoSemanalGestionObraId=so.SeguimientoSemanalGestionObraIdHist
+left join dbo.SeguimientoSemanalGestionObraCalidad as sc on sc.SeguimientoSemanalGestionObraId=so.SeguimientoSemanalGestionObraIdHist
+left join dbo.GestionObraCalidadEnsayoLaboratorio as lab on lab.SeguimientoSemanalGestionObraCalidadId=sc.SeguimientoSemanalGestionObraCalidadIdHist
+left join dbo.EnsayoLaboratorioMuestra as mue on mue.GestionObraCalidadEnsayoLaboratorioId=lab.GestionObraCalidadEnsayoLaboratorioIdHist
+left join dbo.SeguimientoSemanalGestionObraSeguridadSalud as sss on sss.SeguimientoSemanalGestionObraId=so.SeguimientoSemanalGestionObraIdHist
+left join dbo.SeguridadSaludCausaAccidente as acc on acc.SeguimientoSemanalGestionObraSeguridadSaludId=sss.SeguimientoSemanalGestionObraSeguridadSaludIdHist
+left join dbo.SeguimientoSemanalGestionObraSocial as soc on soc.SeguimientoSemanalGestionObraId=so.SeguimientoSemanalGestionObraIdHist
+left join dbo.SeguimientoSemanalGestionObraAlerta as ale on ale.SeguimientoSemanalGestionObraId=so.SeguimientoSemanalGestionObraIdHist
+
+left join dbo.ES_Dominio as do4 on do4.Codigo=acc.CausaAccidenteCodigo and do4.TipoDominioId=75
+
+left join dbo.ManejoMaterialesInsumos as mm on mm.ManejoMaterialesInsumosIdHist=sa.ManejoMaterialesInsumoId
+left join dbo.ManejoMaterialesInsumosProveedor as me on me.ManejoMaterialesInsumosId=mm.ManejoMaterialesInsumosIdHist
+left join dbo.ManejoResiduosConstruccionDemolicion as md on md.ManejoResiduosConstruccionDemolicionIdHist=sa.ManejoResiduosConstruccionDemolicionId
+left join dbo.ManejoResiduosConstruccionDemolicionGestor as mg on mg.ManejoResiduosConstruccionDemolicionId=md.ManejoResiduosConstruccionDemolicionIdHist
+left join dbo.ManejoResiduosPeligrososEspeciales as ms on ms.ManejoResiduosPeligrososEspecialesIdHist=sa.ManejoResiduosPeligrososEspecialesId
