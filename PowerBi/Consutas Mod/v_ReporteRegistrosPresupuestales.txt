@@ -1,0 +1,73 @@
+select distinct
+CASE  
+	WHEN dp.OpcionContratarCodigo = '1' THEN 'Obra'
+	ELSE 'Interventoria'
+END AS OpcionContratarCodigo,
+dp.EstadoSolicitudCodigo,
+DO1.Nombre as EstadoSolicitud,
+p.LlaveMEN,
+dp.NumeroDRP,
+ca.TipoAportanteId,
+d.Nombre as tipoAportante,
+lr.descripcion as Municipio,
+lr2.departamento as Departamento,
+d2.Nombre as NombreAportante,
+finan.FuenteRecursosCodigo,
+DO5.Nombre as FuenteFinanciacion,
+cta.FaseCodigo,
+DO4.Nombre as FaseC,
+cu.TipoUsoCodigo,
+DO3.Nombre as TipoUso,
+cu.ValorUso
+--lr3.descripcion as Municipio2,
+--lr4.departamento as Departamento2
+from CreationNew.CentralReportLast as fp
+
+		inner join DisponibilidadPresupuestal as dp on fp.ReportIdHist = dp.DisponibilidadPresupuestalIdHist and fp.TableName='DisponibilidadPresupuestal'
+			
+		left join Contratacion as c on c.ContratacionIdHist = dp.ContratacionId 
+		left join CreationNew.CentralReportLast  as lastL on lastL.ReportIdHist = c.ContratacionIdhist and lastL.TableName='Contratacion'
+
+		inner join FactProyectos as factP on factP.ContratacionIdHist=c.ContratacionIdHist
+
+		inner join dbo.ContratacionProyecto as CP on CP.ContratacionProyectoIdHist=factP.ContratacionProyectoIdhist
+
+
+		left join dbo.ContratacionProyectoAportante as cpo on cpo.ContratacionProyectoId=cp.ContratacionProyectoIdHist
+		left join CreationNew.CentralReportLast as lastL20 on lastL20.ReportIdHist=cpo.ContratacionProyectoAportanteIdHist and lastL20.TableName='ContratacionProyectoAportante'
+
+		left join dbo.ComponenteAportante as cta on cta.ContratacionProyectoAportanteId=cpo.ContratacionProyectoAportanteIdHist
+		left join CreationNew.CentralReportLast as lastL21 on lastL21.ReportIdHist=cta.ComponenteAportanteIdHist and lastL21.TableName='ComponenteAportante'
+
+		left join dbo.ComponenteUso as cu on cu.ComponenteAportanteId=cta.ComponenteAportanteIdHist
+		left join CreationNew.CentralReportLast as lastL22 on lastL22.ReportIdHist=cu.ComponenteUsoIdHist and lastL22.TableName='ComponenteUso'
+
+		left join dbo.FuenteFinanciacion as finan on finan.FuenteFinanciacionId=cu.FuenteFinanciacionId
+		left join CreationNew.CentralReportLast as lastL23 on lastL23.ReportIdHist=finan.FuenteFinanciacionIdHist and lastL23.TableName='FuenteFinanciacion'
+
+		inner join Proyecto as p on p.ProyectoIdHist = factP.ProyectoIdHist
+
+
+		left join CofinanciacionAportante as ca on ca.CofinanciacionAportanteId=cpo.CofinanciacionAportanteId
+		left join CreationNew.CentralReportLast as lastL6 on lastL6.ReportIdHist=ca.CofinanciacionAportanteIdHist and lastL6.TableName='CofinanciacionAportante'
+
+		--left join CofinanciacionAportante as ca2 on  ca2.CofinanciacionAportanteId=dp.AportanteId
+		--left join CreationNew.CentralReportLast  as lastZ on lastZ.ReportIdHist = ca2.CofinanciacionAportanteIdHist and lastZ.TableName='CofinanciacionAportante'
+
+
+		left join dbo.localizacionReporte as lr on lr.localizacionid = ca.MunicipioId
+	    left join dbo.localizacionReporte as lr2 on lr2.localizacionid = ca.DepartamentoId
+
+		--left join dbo.localizacionReporte as lr3 on lr3.localizacionid = ca2.MunicipioId
+		--left join dbo.localizacionReporte as lr4 on lr4.idpadreDepartamento = ca2.DepartamentoId
+
+		left join [ES_Dominio] as d on d.DominioId=ca.TipoAportanteId
+		left join dbo.ES_Dominio as d2 on d2.DominioId=ca.NombreAportanteId
+		left join [dbo].[ES_Dominio] as DO on DO.TipoDominioId=36  and DO.codigo=dp.TipoSolicitudCodigo 
+		left join [dbo].[ES_Dominio] as DO1 on DO1.TipoDominioId=33  and DO1.codigo=dp.EstadoSolicitudCodigo
+--		left join [dbo].[ES_Dominio] as DO2 on DO2.TipoDominioId=33  and DO2.codigo=dp.TipoSolicitudCodigo 
+		left join [dbo].[ES_Dominio] as DO3 on DO3.TipoDominioId=13  and DO3.codigo=cu.TipoUsoCodigo
+		left join [dbo].[ES_Dominio] as DO4 on DO4.TipoDominioId=16  and DO4.codigo=cta.FaseCodigo
+		left join [dbo].[ES_Dominio] as DO5 on DO5.TipoDominioId=8  and DO5.codigo=finan.FuenteRecursosCodigo
+
+		where DP.NumeroDDP IS NOT NULL OR dp.Eliminado!=1 or c.Eliminado!=1 or cp.Eliminado!=1 or p.Eliminado!=1 or  ca.Eliminado!=1
