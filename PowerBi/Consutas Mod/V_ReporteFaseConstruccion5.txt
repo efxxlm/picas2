@@ -1,0 +1,98 @@
+SELECT 
+distinct
+CO.NumeroContrato,
+cp.FechaAprobacion as fechaaprobacinpoliza,
+ce.ConstruccionPerfilId,
+co.ContratoId,
+dom.Nombre as PerfilCodigo,
+ce.CantidadHvAprobadas,
+ce.CantidadHvRecibidas,
+ce.CantidadHvRequeridas,
+ce.FechaAprobacion as fechaaprobacionhv,
+ce.RutaSoporte,
+ce.Observaciones as Observaciones,
+cpr.NumeroRadicado,
+ct.Nombre,
+ct.NumeroIdentificacion,
+p.LlaveMEN,
+ie.Nombre as InstitucionEducativa,
+ie2.Nombre as SedeId,
+do1.Nombre as tipointervencionnombre,
+lr.departamento,
+lr.descripcion as nombreMunicipio,
+p.ValorTotal,
+ctr.ContratacionProyectoId,
+ce1.ManejoAnticipoRequiere,
+ce1.ManejoAnticipoPlanInversion,
+ce1.ManejoAnticipoCronogramaAmortizacion,
+ce1.ManejoAnticipoRutaSoporte,
+ce1.CantidadHojasVidaContratistaObra,
+che.Nombre as lista_chequeo_Nombre,
+ce1.PlanLicenciaVigente,
+ce1.LicenciaFechaRadicado,
+ce1.LicenciaFechaAprobacion,
+ce1.LicenciaConObservaciones,
+ce1.LicenciaObservaciones,
+che.Nombre as PlanesProgramas
+
+FROM  CreationNew.CentralReportLast  as fp
+
+		 inner join dbo.Contrato as co on fp.ReportIdHist = co.ContratoIdHist and fp.TableName='Contrato'
+
+		 inner join dbo.ContratoPoliza as CP on CP.ContratoId = CO.ContratoIdHist
+		 inner join  CreationNew.CentralReportLast  as lastL on LastL.ReportIdHist=cp.ContratoPolizaIdHist and lastL.TableName='ContratoPoliza'
+
+		 inner join dbo.Contratacion as cnt on cnt.ContratacionId=co.ContratacionId
+		 inner join  CreationNew.CentralReportLast  as lastL4 on LastL4.ReportIdHist=cnt.ContratacionIdHist and lastL4.TableName='Contratacion'
+
+		 inner join dbo.ContratacionProyecto as ctr on ctr.ContratacionId=cnt.ContratacionId
+		 inner join  CreationNew.CentralReportLast  as lastL6 on LastL6.ReportIdHist=ctr.ContratacionProyectoIdHist and lastL6.TableName='ContratacionProyecto'
+
+		 left join(select * from  dbo.Contratista as ct2 
+		 inner join  CreationNew.CentralReportLast  as lastL5 on LastL5.ReportIdHist=ct2.ContratistaIdHist and lastL5.TableName='Contratista')as ct on ct.ContratistaId=cnt.ContratistaId
+
+		 inner join (select * from dbo.Proyecto as p2
+		 inner join  CreationNew.CentralReportLast  as lastM1 on lastM1.ReportIdHist=p2.ProyectoIdHist and lastM1.TableName='Proyecto')as p on p.ProyectoId = ctr.ProyectoId
+
+		 inner join dbo.ContratoConstruccion as ce1 on ce1.ContratoId=co.ContratoIdHist
+		 inner join  CreationNew.CentralReportLast  as lastM on lastM.ReportIdHist=ce1.ContratoConstruccionIdHist and lastM.TableName='ContratoConstruccion'
+
+		 inner join dbo.ConstruccionPerfil as ce on ce.ContratoConstruccionId = ce1.ContratoConstruccionIdHist
+		 inner join  CreationNew.CentralReportLast  as lastL1 on LastL1.ReportIdHist=ce.ConstruccionPerfilIdHist and lastL1.TableName='ConstruccionPerfil'
+
+		 left join dbo.ES_Dominio as dom on dom.Codigo=ce.PerfilCodigo and dom.TipoDominioId=11
+
+--		 left join dbo.ContratoPerfilObservacion as CPO on cpo.ContratoPerfilId = ce.ContratoPerfilIdHist
+--		 left join  CreationNew.CentralReportLast  as lastL2 on LastL2.ReportId=cpo.ContratoPerfilObservacionId and lastL2.TableName='ContratoPerfilObservacion'
+
+--		 left join dbo.ES_Dominio as do on do.Codigo=cpo.TipoObservacionCodigo and do.TipoDominioId=1
+
+		 left join (select * from dbo.ConstruccionPerfilNumeroRadicado as CPR2
+		 inner join  CreationNew.CentralReportLast  as lastL3 on LastL3.ReportIdHist=cpr2.ConstruccionPerfilNumeroRadicadoIdHist and lastL3.TableName='ConstruccionPerfilNumeroRadicado')as CPR on cpr.ConstruccionPerfilId = ce.ConstruccionPerfilIdHist
+		/*	
+		 left join (select * from dbo.SolicitudPago as sp2
+		 inner join CreationNew.CentralReportLast as lastL7 on lastL7.ReportIdHist=sp2.SolicitudPagoIdHist  and lastL7.TableName='SolicitudPago'		)as sp on sp.ContratoId=co.ContratoId
+		
+		left join (select * from dbo.SolicitudPagoListaChequeo as spche2 
+		inner join CreationNew.CentralReportLast as lastL8 on lastL8.ReportIdHist=spche2.SolicitudPagoListaChequeoIdHist  and lastL8.TableName='SolicitudPagoListaChequeo')as spche on spche.SolicitudPagoId=sp.SolicitudPagoIdHist
+		
+		 
+		 left join (select * from  dbo.ListaChequeo as listache2 
+		 inner join CreationNew.CentralReportLast as lastL13 on lastL13.ReportIdHist=listache2.ListaChequeoIdHist  and lastL13.TableName='ListaChequeo')as listache on listache.ListaChequeoIdHist = spche.ListaChequeoId	and listache.ListaChequeoId=20
+
+		 left join (select * from dbo.ListaChequeoListaChequeoItem as lista2
+		 inner join CreationNew.CentralReportLast as lastL14 on lastL14.ReportIdHist=lista2.ListaChequeoListaChequeoItemIdHist  and lastL14.TableName='ListaChequeoListaChequeoItem')as lista on lista.ListaChequeoId=listache.ListaChequeoIdHist
+		 */
+
+		 left join (select * from dbo.ListaChequeoItem as che2 
+		 inner join CreationNew.CentralReportLast as lastL15 on lastL15.ReportIdHist=che2.ListaChequeoItemIdHist  and lastL15.TableName='ListaChequeoItem')as che on che.ListaChequeoItemIdHist=257
+
+		 left join dbo.ES_Dominio as do1 on do1.Codigo=p.TipoIntervencionCodigo and do1.TipoDominioId=1
+
+		 left join dbo.InstitucionEducativaSede as ie on ie.InstitucionEducativaSedeIdHist=p.InstitucionEducativaId
+
+		 left join dbo.InstitucionEducativaSede as ie2 on ie2.InstitucionEducativaSedeId=p.SedeId
+
+		 left join dbo.localizacionReporte as lr on lr.localizacionid = p.LocalizacionIdMunicipio
+
+		 where co.Eliminado!=1 or cp.Eliminado!=1 or cnt.Eliminado!=1 or ctr.Eliminado!=1 or ce.Eliminado!=1 or /*sp.Eliminado!=1 or spche.Eliminado!=1 or listache.Eliminado!=1 or*/ che.Eliminado!=1
