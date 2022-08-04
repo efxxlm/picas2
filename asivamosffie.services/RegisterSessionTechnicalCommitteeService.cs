@@ -8531,7 +8531,7 @@ namespace asivamosffie.services
                                             {
                                                 strNombreAportante = "Gobernación de " + ListaLocalizaciones.Find(r => r.LocalizacionId == contratacionProyectoAportante.CofinanciacionAportante.DepartamentoId).Descripcion;
                                             }
-                                            else if (contratacionProyectoAportante.CofinanciacionAportante.Municipio != null)
+                                            else if (contratacionProyectoAportante.CofinanciacionAportante.MunicipioId != null)
                                             {
                                                 strNombreAportante = "Alcaldía de " + ListaLocalizaciones.Find(r => r.LocalizacionId == contratacionProyectoAportante.CofinanciacionAportante.MunicipioId).Descripcion;
                                             }

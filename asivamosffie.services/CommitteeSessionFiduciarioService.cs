@@ -985,7 +985,11 @@ namespace asivamosffie.services
                                                         _context.ProcesoSeleccion
                                                         .Where(r => !(bool)r.Eliminado).ToList();
 
-            List<Contratacion> ListContratacion = _context.Contratacion.ToList();
+            List<Contratacion> ListContratacion = _context.Contratacion.Include(r=> r.ContratacionProyecto)
+                                                                       .ThenInclude(r=> r.ContratacionProyectoAportante)
+                                                                       .ThenInclude(r=> r.ComponenteAportante)
+                                                                       .ThenInclude(r=> r.ComponenteUso)
+                                                                       .ToList();
 
             foreach (SesionComiteSolicitud sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
             {
@@ -3791,11 +3795,19 @@ namespace asivamosffie.services
 
                 ListContratacion = _context.Contratacion.AsNoTracking()
                                                                  .Where(c => ListContratacionId.Contains(c.ContratacionId))
+                                                                      .Include(r => r.ContratacionProyecto)
+                                                                       .ThenInclude(r => r.ContratacionProyectoAportante)
+                                                                       .ThenInclude(r=> r.CofinanciacionAportante)
+                                                                            .ThenInclude(r => r.ProyectoAportante)
                                                                  .Include(r => r.Contrato)           
                                                                  .Include(r => r.PlazoContratacion)
                                                                  .Include(r => r.Contratista)
                                                                  .Include(r => r.ContratacionProyecto)
                                                                    .ThenInclude(r => r.Proyecto)
+                                                                  .Include(r => r.ContratacionProyecto)
+                                                                       .ThenInclude(r => r.ContratacionProyectoAportante)
+                                                                       .ThenInclude(r => r.ComponenteAportante)
+                                                                       .ThenInclude(r => r.ComponenteUso)
                                                                  .ToList();
                 #endregion consulta Contratacion
 
@@ -6061,9 +6073,11 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.MIEMBROS_PARTICIPANTES:
                             string strUsuariosParticipantes = string.Empty;
+                            int i = 0;
                             ListSesionParticipante.ForEach(user =>
                             {
-                                strUsuariosParticipantes += user.Usuario.PrimerNombre + " " + user.Usuario.SegundoNombre + " " + user.Usuario.PrimerApellido + " " + user.Usuario.SegundoApellido;
+                                strUsuariosParticipantes += user.Usuario.GetNombreCompleto + (i != ListSesionParticipante.Count() - 1 && ListSesionParticipante.Count() > 0 ? ", " : "");
+                                i++;
                             });
                             strContenido = strContenido.Replace(placeholderDominio.Nombre, strUsuariosParticipantes);
                             break;
