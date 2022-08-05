@@ -103,7 +103,11 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
                 totalNoAprobado++;
               }
             });
-            if ( totalNoAprobado > 0 ) {
+            if(totalAprobado + totalAprobado == 0 )
+            {
+              tema.resultadoVotacion = 'No aplica';
+            }
+           else if ( totalNoAprobado > 0 ) {
               tema.resultadoVotacion = 'No Aprobó  ';
             } else {
               tema.resultadoVotacion = 'Aprobó ';
