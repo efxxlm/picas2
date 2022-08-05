@@ -4398,7 +4398,7 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.Observaciones);
+                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.ObservacionesFiduciario);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.DESARROLLO_SOLICITUD:
@@ -4594,7 +4594,7 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.Observaciones);
+                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.ObservacionesFiduciario);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.RESULTADO_VOTACION:
@@ -4876,7 +4876,7 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.Observaciones);
+                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.ObservacionesFiduciario);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.DESARROLLO_SOLICITUD:
@@ -5118,7 +5118,7 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.Observaciones);
+                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.ObservacionesFiduciario);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.DESARROLLO_SOLICITUD:
@@ -5388,7 +5388,7 @@ namespace asivamosffie.services
 
                                     case ConstanCodigoVariablesPlaceHolders.OBSERVACIONES_SOLICITUD:
                                         registrosContratacion = registrosContratacion
-                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.Observaciones);
+                                        .Replace(placeholderDominio.Nombre, SesionComiteSolicitud.ObservacionesFiduciario);
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.DESARROLLO_SOLICITUD:
