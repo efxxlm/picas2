@@ -784,6 +784,7 @@ namespace asivamosffie.services
             List<Localizacion> LocalizacionList = _context.Localizacion.AsNoTracking().ToList();
             List<Dominio> ListNombreAportante = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Nombre_Aportante_Aportante);
 
+
             foreach (var ContratacionProyecto in novedadContractual?.Contrato?.Contratacion?.ContratacionProyecto.Where(r => r.ProyectoId == novedadContractual.ProyectoId).ToList())
             {
                 foreach (var ContratacionProyectoAportante in ContratacionProyecto?.ContratacionProyectoAportante)
@@ -814,7 +815,12 @@ namespace asivamosffie.services
                     {
                         cofinanciacionAportante.NombreAportanteString = ListNombreAportante.Find(r => r.DominioId == ContratacionProyectoAportante.CofinanciacionAportante.NombreAportanteId).Nombre;
                     }
-                    listaAportantes.Add(cofinanciacionAportante);
+                    if (listaAportantes.Count(r => r.NombreAportanteString == ConstanStringTipoAportante.Ffie) > 0 && cofinanciacionAportante.NombreAportanteString == ConstanStringTipoAportante.Ffie)
+                    { 
+                    //No agrega otro aportante ffie si ya contiene alguno
+                    }
+                    else
+                        listaAportantes.Add(cofinanciacionAportante);
                 }
             }
             return listaAportantes;
