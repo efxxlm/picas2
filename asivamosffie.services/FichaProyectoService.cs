@@ -573,17 +573,13 @@ namespace asivamosffie.services
                                                                 .OrderByDescending(p => p.ProyectoId).ToListAsync();
         }
         public async Task<dynamic> GetTablaProyectosByProyectoIdTipoContratacionVigencia(int pProyectoId, string pTipoIntervencion, int pVigencia)
-        {
-
-            List<VFichaProyectoBusquedaProyectoTabla> ListProyectos = await _context.VFichaProyectoBusquedaProyectoTabla.Where(p => p.ProyectoId == pProyectoId).ToListAsync();
-
-            if (!string.IsNullOrEmpty(pTipoIntervencion))
-                ListProyectos = ListProyectos.Where(p => p.CodigoTipoIntervencion == pTipoIntervencion).ToList();
-
-            if (pVigencia > 0)
-                ListProyectos = ListProyectos.Where(p => p.Vigencia == pVigencia).ToList();
-
-            return ListProyectos;
+        { 
+            return await _context.VFichaProyectoBusquedaProyectoTabla
+                                                                    .Where
+                                                                    (p => p.ProyectoId == pProyectoId
+                                                                       && p.CodigoTipoIntervencion == (string.IsNullOrEmpty(pTipoIntervencion) ? p.CodigoTipoIntervencion : pTipoIntervencion)
+                                                                       && p.Vigencia == (pVigencia > 0 ? pVigencia :p.Vigencia)
+                                                                    ).ToListAsync(); 
         }
 
         #endregion  

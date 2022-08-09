@@ -3849,7 +3849,7 @@ namespace asivamosffie.services
 
 
                 List<SesionParticipante> ListSesionParticipante = _context.SesionParticipante.AsNoTracking()
-                    .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId)
+                    .Where(r => r.ComiteTecnicoId == pComiteTecnico.ComiteTecnicoId && r.Eliminado != true)
                     .Include(r => r.Usuario)
                     .ToList();
 
