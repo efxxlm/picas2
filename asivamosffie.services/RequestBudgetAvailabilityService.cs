@@ -600,7 +600,7 @@ namespace asivamosffie.services
                         EstadoSolicitudCodigo = ListDP.EstadoSolicitudCodigo,
                         Plazo = contratacionDP != null ? plazoContratacion?.PlazoMeses.ToString() + " meses / " + plazoContratacion?.PlazoDias.ToString() + " dias" : "",
                         PlazoMesesContrato = contratacionDP != null ? plazoContratacion?.PlazoMeses.ToString() : "0",
-                        PlazoDiasContrato = contratacionDP != null ? plazoContratacion?.PlazoDias.ToString() : "0", 
+                        PlazoDiasContrato = contratacionDP != null ? plazoContratacion?.PlazoDias.ToString() : "0",
                         CuentaCarta = ListDP.CuentaCartaAutorizacion,
                         TipoSolicitudEspecial = ListDP.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(ListDP.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
                         //si no viene el campo puede ser contratación
@@ -1073,16 +1073,16 @@ namespace asivamosffie.services
             try
             {
 
-               List<CofinanciacionAportante> listProyectoAportantes =await _context.ProyectoAportante
-                        .Where(r => r.ProyectoId == pProyectoId)
-                        .Include(r => r.Aportante)
-                        .ThenInclude(r => r.Departamento)
-                        .Include(r => r.Aportante)
-                        .ThenInclude(r => r.Municipio)
-                           .Include(r => r.Aportante)
-                        .ThenInclude(r => r.NombreAportante)
-                        .Select(r => r.Aportante)
-                     .ToListAsync();
+                List<CofinanciacionAportante> listProyectoAportantes = await _context.ProyectoAportante
+                         .Where(r => r.ProyectoId == pProyectoId)
+                         .Include(r => r.Aportante)
+                         .ThenInclude(r => r.Departamento)
+                         .Include(r => r.Aportante)
+                         .ThenInclude(r => r.Municipio)
+                            .Include(r => r.Aportante)
+                         .ThenInclude(r => r.NombreAportante)
+                         .Select(r => r.Aportante)
+                      .ToListAsync();
 
                 return listProyectoAportantes.FirstOrDefault();
             }
@@ -2100,7 +2100,7 @@ namespace asivamosffie.services
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             var response = new List<CustonReuestCommittee>();
             await sql.OpenAsync();
-
+            var responseNoReply = new List<CustonReuestCommittee>();
             using (var reader = await cmd.ExecuteReaderAsync())
             {
                 while (await reader.ReadAsync())
@@ -2109,6 +2109,12 @@ namespace asivamosffie.services
                 }
             }
 
+
+            //foreach (var item in response)
+            //{
+            //    if (responseNoReply.Count(r => r.NumeroSolicitud == item.NumeroSolicitud) == 0)
+            //        responseNoReply.Add(item);
+            //}
             return response;
         }
 

@@ -49,6 +49,8 @@ export class VerDetalleInterventoriaComponent implements OnInit {
           this.fechaFinalizacionContrato = this.novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaFinContrato;
 
           //si el estado es en proceso y no debe quitarse aun hay que quitar esto, falta por definir
+
+          console.log(this.novedad?.datosContratoProyectoModificadosXNovedad[0]);
           this.fechaEstimadaFinalizacion = this.novedad?.datosContratoProyectoModificadosXNovedad[0]?.fechaEstimadaFinProyecto;
           this.presupuestoModificado =  this.novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorTotalProyecto;
           this.plazoDiasModificado =  this.novedad?.datosContratoProyectoModificadosXNovedad[0]?.plazoEstimadoDiasProyecto;
