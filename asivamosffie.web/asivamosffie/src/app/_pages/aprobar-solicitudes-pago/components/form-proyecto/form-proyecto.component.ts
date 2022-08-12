@@ -49,14 +49,18 @@ export class FormProyectoComponent implements OnInit {
         this.getDataProyecto();
 
         if(this.contrato.solicitudPago) {
-            if(this.contrato.solicitudPago.length > 1 && this.contrato.solicitudPagoOnly.esFactura) {
-                let solicitudesId = this.contrato.solicitudPago.map(e => e.solicitudPagoId)
-                solicitudesId.forEach(element => {
-                    if (this.idSolicitud > element) {
-                        this.mostrarAmortizacion = true;
-                    }
-                });
-                
+            if( this.contrato.solicitudPago.length > 1
+                && this.contrato.solicitudPagoOnly.esFactura
+                && this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago
+                && this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago.length > 0 )
+            {
+                const sp = this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[ this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago.length - 1 ]
+
+                if ( sp && sp.solicitudPagoFase && sp.solicitudPagoFase.length > 0 ) {
+                    const spf = sp.solicitudPagoFase.find( f => !f.esPreconstruccion )
+
+                    if ( spf && spf.solicitudPagoFaseAmortizacion && spf.solicitudPagoFaseAmortizacion.length > 0 ) this.mostrarAmortizacion = true
+                }
             }
         }
     }

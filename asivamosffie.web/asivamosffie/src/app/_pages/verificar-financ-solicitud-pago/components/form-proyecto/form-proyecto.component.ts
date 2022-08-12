@@ -47,18 +47,19 @@ export class FormProyectoComponent implements OnInit {
         console.log( this.proyecto )
         this.getDataProyecto();
 
-        if (this.contrato.solicitudPago) {
-            if (this.contrato.solicitudPago.length > 1 && this.contrato.solicitudPagoOnly.esFactura && !this.contrato.solicitudPagoOnly.esAnticipio) {
-                this.contrato.solicitudPago.forEach(sp => {
-                    sp.solicitudPagoRegistrarSolicitudPago?.forEach(spr => {
-                        if (spr.solicitudPagoFase.length > 0) {
-                            if (spr.solicitudPagoFase.find(r => r.contratacionProyectoId === this.proyecto.value.contratacionProyectoId && r.esAnticipio === true)) {
-                                this.mostrarAmortizacion = true;
-                            }
-                        }
+        if(this.contrato.solicitudPago) {
+            if( this.contrato.solicitudPago.length > 1
+                && this.contrato.solicitudPagoOnly.esFactura
+                && this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago
+                && this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago.length > 0 )
+            {
+                const sp = this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago[ this.contrato.solicitudPagoOnly.solicitudPagoRegistrarSolicitudPago.length - 1 ]
 
-                    });
-                });
+                if ( sp && sp.solicitudPagoFase && sp.solicitudPagoFase.length > 0 ) {
+                    const spf = sp.solicitudPagoFase.find( f => !f.esPreconstruccion )
+
+                    if ( spf && spf.solicitudPagoFaseAmortizacion && spf.solicitudPagoFaseAmortizacion.length > 0 ) this.mostrarAmortizacion = true
+                }
             }
         }
     }
