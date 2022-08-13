@@ -55,6 +55,9 @@ export class FichaContratoComponent implements OnInit {
 
   _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
+  
+    this.verResultados = false;
+    this.mostrarFicha = false;
 
     return this.numeroContratosArray.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }

@@ -50,7 +50,7 @@
         <strong >
           Valor del proyecto
           <span *ngIf="novedad?.datosContratoProyectoModificadosXNovedad[0]?.tipoSolicitudCodigo == '1'">(Obra) </span>
-          <span *ngIf="novedad?.datosContratoProyectoModificadosXNovedad[0]?.tipoSolicitudCodigo == '2'">(Interventoría </span>:
+          <span *ngIf="novedad?.datosContratoProyectoModificadosXNovedad[0]?.tipoSolicitudCodigo == '2'">(Interventoría) </span>:
         </strong>
         {{ novedad?.datosContratoProyectoModificadosXNovedad[0]?.valorProyecto | currency: '':'symbol':'3.0' }}
       </p>
