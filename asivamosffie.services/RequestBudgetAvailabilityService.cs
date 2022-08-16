@@ -3094,13 +3094,13 @@ namespace asivamosffie.services
 
                 //busco comite técnico
                 DateTime fechaComitetecnico = DateTime.Now;
-
+                
                 string numerocomietetecnico = "";
-
+                
                 if (detailDP.NovedadContractual != null)
                 {
-                    var contratacion = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == detailDP.NovedadContractual.NovedadContractualId && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Novedad_Contractual).
-                        Include(x => x.ComiteTecnico).ToList();
+                    var contratacion = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == detailDP.NovedadContractual.NovedadContractualId && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Novedad_Contractual && x.Eliminado != true).
+                        Include(x => x.ComiteTecnico).Where(x=> x.Eliminado != true).ToList();
                     if (contratacion.Count() > 0)
                     {
                         numerocomietetecnico = contratacion.FirstOrDefault().ComiteTecnico.NumeroComite;
