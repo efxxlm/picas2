@@ -565,7 +565,7 @@ namespace asivamosffie.services
         {
             return await _context.Cofinanciacion.Select(c => c.VigenciaCofinanciacionId)
                                                 .OrderByDescending(c => c.Value)
-                                                .ToListAsync();
+                                                .Distinct().ToListAsync();
         }
         public async Task<dynamic> GetProyectoIdByLlaveMen(string pLlaveMen)
         {
