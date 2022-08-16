@@ -51,76 +51,76 @@
 
             <mat-card class="shipping-card var-main-gris" *ngFor="let ps of dataContratoObra?.listProcesoSeleccion">
               <mat-card-content>
-                  <p>
+                  <p *ngIf="ps.numeroProceso">
                     <strong>
                       Número de proceso:
                     </strong>
                     {{ ps?.numeroProceso }}
                   </p>
-                  <p>
+                  <p *ngIf="ps.fechaCreacion">
                     <strong>
                       Fecha de solicitud:
                     </strong>
                     {{ ps?.fechaCreacion | date: 'dd/MM/yyyy' }}
                   </p>
-                  <p>
+                  <p *ngIf="ps.tipoProceso">
                     <strong>
                       Tipo de proceso de selección:
                     </strong>
                     {{ ps?.tipoProceso }}
                   </p>
-                  <p>
+                  <p *ngIf="ps.objeto">
                     <strong>
                       Objeto:
                     </strong>
                     <span class="d-block" [innerHTML]="ps.objeto">
                     </span>
                   </p>
-                  <p>
+                  <p *ngIf="ps.alcanceParticular">
                     <strong>
                       Alcance particular:
                     </strong>
                     <span class="d-block" [innerHTML]="ps.alcanceParticular">
                     </span>
                   </p>
-                  <p *ngIf="ps?.fechaApertura != null">
+                  <p *ngIf="ps.fechaApertura">
                     <strong>
                       Fecha de apertura:
                     </strong>
                     {{ ps?.fechaApertura | date: 'dd/MM/yyyy' }}
                   </p>
-                  <p *ngIf="ps?.fechaEvaluacion != null">
+                  <p *ngIf="ps.fechaEvaluacion">
                     <strong>
                       Fecha de evaluación:
                     </strong>
                     {{ ps?.fechaEvaluacion | date: 'dd/MM/yyyy' }}
                   </p>
-                  <p *ngIf="ps?.fechaAdjudicacion != null">
+                  <p *ngIf="ps.fechaAdjudicacion">
                     <strong>
                       Fecha de adjudicación:
                     </strong>
                     {{ ps?.fechaAdjudicacion | date: 'dd/MM/yyyy' }}
                   </p>
-                  <p *ngIf="ps?.fechaCierre != null">
+                  <p *ngIf="ps.fechaCierre">
                     <strong>
                       Fecha de cierre:
                     </strong>
                     {{ ps?.fechaCierre | date: 'dd/MM/yyyy' }}
                   </p>
-                  <p>
+                  <p *ngIf="ps.esDistribucionGrupos !== null || ps.esDistribucionGrupos !== undefined">
                     <strong>
                       ¿Este proceso de selección se realiza distribución del territorio en grupos?:
                     </strong>
                     <span *ngIf="ps?.esDistribucionGrupos == true">Sí</span>
                     <span *ngIf="ps?.esDistribucionGrupos != true">No</span>
                   </p>
-                  <p>
+                  <p *ngIf="ps.cantidadGrupos">
                     <strong>
                       ¿Cuántos grupos?:
                     </strong>
                     {{ ps?.cantidadGrupos }}
                   </p>
-                  <p>
+                  <p *ngIf="ps.urlSoporte">
                     <strong>
                       URL con soporte:
                     </strong>
@@ -138,32 +138,32 @@
             </mat-expansion-panel-header>
 
             <mat-card class="shipping-card var-main-gris">
-              <mat-card-content>
-                  <p>
+              <mat-card-content *ngIf="dataContratoObra">
+                  <p *ngIf="dataContratoObra.numeroSolicitud">
                     <strong>
                       Número de solicitud:
                     </strong>
                     {{ dataContratoObra?.numeroSolicitud }}
                   </p>
-                  <p>
+                  <p *ngIf="dataContratoObra.fechaSolicitud">
                     <strong>
                       Fecha de solicitud:
                     </strong>
                     {{ dataContratoObra?.fechaSolicitud | date: 'dd/MM/yyyy' }}
                   </p>
-                  <p>
+                  <p *ngIf="dataContratoObra.nombreTipoContrato">
                     <strong>
                       Opción por contratar:
                     </strong>
                     {{ dataContratoObra?.nombreTipoContrato }}
                   </p>
-                  <p>
+                  <p *ngIf="dataContratoObra.valorTotal">
                     <strong>
                       Valor total de la solicitud:
                     </strong>
                    {{  dataContratoObra?.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}
                   </p>
-                  <p>
+                  <p *ngIf="dataContratoObra.urlSoporteGestionar">
                     <strong>
                       URL con soporte:
                     </strong>
@@ -219,26 +219,26 @@
             </mat-expansion-panel-header>
 
             <mat-card class="shipping-card var-main-gris">
-              <mat-card-content>
-                  <p>
+              <mat-card-content *ngIf="dataContratoObra">
+                  <p *ngIf="dataContratoObra.numeroContrato">
                     <strong>
                       Número de contrato:
                     </strong>
                     {{ dataContratoObra?.numeroContrato }}
                   </p>
-                  <p>
+                  <p *ngIf="dataContratoObra.fechaSuscripcion">
                     <strong>
                       Fecha de suscripción:
                     </strong>
                     {{ dataContratoObra?.fechaSuscripcion }}
                   </p>
-                  <p>
+                  <p *ngIf="dataContratoObra.contratoSuscrito">
                     <strong>
                       Contrato suscrito:
                     </strong>
-                    {{ dataContratoObra?.urlSoporteGestionar }}
+                    {{ dataContratoObra?.contratoSuscrito }}
                   </p>
-                  <p>
+                  <p *ngIf="dataContratoObra.numeroPoliza">
                     <strong>
                       Número de póliza:
                     </strong>
@@ -308,76 +308,76 @@
 
             <mat-card class="shipping-card var-main-gris" *ngFor="let ps of dataContratoInterventoria?.listProcesoSeleccion">
               <mat-card-content>
-                  <p>
+                  <p *ngIf="ps.numeroProceso">
                     <strong>
                       Número de proceso:
                     </strong>
                     {{ ps?.numeroProceso }}
                   </p>
-                  <p>
+                  <p *ngIf="ps.fechaCreacion">
                     <strong>
                       Fecha de solicitud:
                     </strong>
                     {{ ps?.fechaCreacion | date: 'dd/MM/yyyy' }}
                   </p>
-                  <p>
+                  <p *ngIf="ps.tipoProceso">
                     <strong>
                       Tipo de proceso de selección:
                     </strong>
                     {{ ps?.tipoProceso }}
                   </p>
-                  <p>
+                  <p *ngIf="ps.objeto">
                     <strong>
                       Objeto:
                     </strong>
                     <span class="d-block" [innerHTML]="ps.objeto">
                     </span>
                   </p>
-                  <p>
+                  <p *ngIf="ps.alcanceParticular">
                     <strong>
                       Alcance particular:
                     </strong>
                     <span class="d-block" [innerHTML]="ps.alcanceParticular">
                     </span>
                   </p>
-                  <p *ngIf="ps?.fechaApertura != null">
+                  <p *ngIf="ps.fechaApertura">
                     <strong>
                       Fecha de apertura:
                     </strong>
                     {{ ps?.fechaApertura | date: 'dd/MM/yyyy' }}
                   </p>
-                  <p *ngIf="ps?.fechaEvaluacion != null">
+                  <p *ngIf="ps.fechaEvaluacion">
                     <strong>
                       Fecha de evaluación:
                     </strong>
                     {{ ps?.fechaEvaluacion | date: 'dd/MM/yyyy' }}
                   </p>
-                  <p *ngIf="ps?.fechaAdjudicacion != null">
+                  <p *ngIf="ps.fechaAdjudicacion">
                     <strong>
                       Fecha de adjudicación:
                     </strong>
                     {{ ps?.fechaAdjudicacion | date: 'dd/MM/yyyy' }}
                   </p>
-                  <p *ngIf="ps?.fechaCierre != null">
+                  <p *ngIf="ps.fechaCierre">
                     <strong>
                       Fecha de cierre:
                     </strong>
                     {{ ps?.fechaCierre | date: 'dd/MM/yyyy' }}
                   </p>
-                  <p>
+                  <p *ngIf="ps.esDistribucionGrupos !== null || ps.esDistribucionGrupos !== undefined">
                     <strong>
                       ¿Este proceso de selección se realiza distribución del territorio en grupos?:
                     </strong>
                     <span *ngIf="ps?.esDistribucionGrupos == true">Sí</span>
                     <span *ngIf="ps?.esDistribucionGrupos != true">No</span>
                   </p>
-                  <p>
+                  <p *ngIf="ps.cantidadGrupos">
                     <strong>
                       ¿Cuántos grupos?:
                     </strong>
                     {{ ps?.cantidadGrupos }}
                   </p>
-                  <p>
+                  <p *ngIf="ps.urlSoporte">
                     <strong>
                       URL con soporte:
                     </strong>
@@ -395,32 +395,32 @@
             </mat-expansion-panel-header>
 
             <mat-card class="shipping-card var-main-gris">
-              <mat-card-content>
-                  <p>
+              <mat-card-content *ngIf="dataContratoInterventoria">
+                  <p *ngIf="dataContratoInterventoria.numeroSolicitud">
                     <strong>
                       Número de solicitud:
                     </strong>
                     {{ dataContratoInterventoria?.numeroSolicitud }}
                   </p>
-                  <p>
+                  <p *ngIf="dataContratoInterventoria.fechaSolicitud">
                     <strong>
                       Fecha de solicitud:
                     </strong>
                     {{ dataContratoInterventoria?.fechaSolicitud | date: 'dd/MM/yyyy' }}
                   </p>
-                  <p>
+                  <p *ngIf="dataContratoInterventoria.nombreTipoContrato">
                     <strong>
                       Opción por contratar:
                     </strong>
                     {{ dataContratoInterventoria?.nombreTipoContrato }}
                   </p>
-                  <p>
+                  <p *ngIf="dataContratoInterventoria.valorTotal">
                     <strong>
                       Valor total de la solicitud:
                     </strong>
                   {{  dataContratoInterventoria?.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}
                   </p>
-                  <p>
+                  <p *ngIf="dataContratoInterventoria.urlSoporteGestionar">
                     <strong>
                       URL con soporte:
                     </strong>
@@ -476,26 +476,26 @@
             </mat-expansion-panel-header>
 
             <mat-card class="shipping-card var-main-gris">
-              <mat-card-content>
-                  <p>
+              <mat-card-content *ngIf="dataContratoInterventoria">
+                  <p *ngIf="dataContratoInterventoria.numeroContrato">
                     <strong>
                       Número de contrato:
                     </strong>
                     {{ dataContratoInterventoria?.numeroContrato }}
                   </p>
-                  <p>
+                  <p *ngIf="dataContratoInterventoria.fechaSuscripcion">
                     <strong>
                       Fecha de suscripción:
                     </strong>
                     {{ dataContratoInterventoria?.fechaSuscripcion }}
                   </p>
-                  <p>
+                  <p *ngIf="dataContratoInterventoria.contratoSuscrito">
                     <strong>
                       Contrato suscrito:
                     </strong>
-                    {{ dataContratoInterventoria?.urlSoporteGestionar }}
+                    {{ dataContratoInterventoria?.contratoSuscrito }}
                   </p>
-                  <p>
+                  <p *ngIf="dataContratoInterventoria.numeroPoliza">
                     <strong>
                       Número de póliza:
                     </strong>
