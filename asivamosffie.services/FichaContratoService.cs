@@ -458,6 +458,7 @@ namespace asivamosffie.services
             var infoContrato = new
             {
                 ContratoId = pContratoId,
+                ContratacionId = contrato.Contratacion.ContratacionId,
                 NumeroContrato = contrato.NumeroContrato,
                 Contratista = contrato.Contratacion.Contratista.Nombre,
                 InfoProyectos = infoProyectos,
