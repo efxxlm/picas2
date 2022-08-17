@@ -10,7 +10,7 @@ namespace asivamosffie.model.Models
             GrupoMunicipios = new HashSet<GrupoMunicipios>();
         }
 
-        public int ProcesoSeleccionGrupoId { get; set; }
+        public int? ProcesoSeleccionGrupoId { get; set; }
         public int ProcesoSeleccionId { get; set; }
         public string NombreGrupo { get; set; }
         public string TipoPresupuestoCodigo { get; set; }
