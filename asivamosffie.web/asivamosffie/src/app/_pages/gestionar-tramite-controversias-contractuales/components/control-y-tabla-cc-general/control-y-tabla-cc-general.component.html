@@ -44,7 +44,7 @@
             <ng-container matColumnDef="estadoControversia">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Estado de la controversia </th>
                 <td mat-cell *matCellDef="let element" align="center">
-                    <div *ngIf="element.tipoControversiaCodigo=='1'">{{ element.estadoControversia }}</div>
+                    <div>{{ element.estadoControversia }}</div>
                     <!--<div *ngIf="element.estadoControversiaCodigo=='1' && element.tipoControversiaCodigo=='1'"></div>
                     <div *ngIf="element.estadoControversiaCodigo=='2' && element.tipoControversiaCodigo=='1'">Rechazada
                         en comité pre-tecnico</div>
@@ -66,7 +66,7 @@
                         tramite</div>
                     <div *ngIf="element.estadoControversiaCodigo=='11' && element.tipoControversiaCodigo=='1'">Cerrada
                     </div>-->
-                    <div *ngIf="element.estadoControversiaCodigo=='1' && element.tipoControversiaCodigo!='1'">En proceso
+                    <!-- <div *ngIf="element.estadoControversiaCodigo=='1' && element.tipoControversiaCodigo!='1'">En proceso
                         de registro</div>
                     <div *ngIf="element.estadoControversiaCodigo=='2' && element.tipoControversiaCodigo!='1'">En proceso
                         de registro</div>
@@ -75,7 +75,7 @@
                     <div *ngIf="element.estadoControversiaCodigo=='4' && element.tipoControversiaCodigo!='1'">En tramite
                     </div>
                     <div *ngIf="element.estadoControversiaCodigo=='5' && element.tipoControversiaCodigo!='1'">Cerrada
-                    </div>
+                    </div> -->
 
                 </td>
             </ng-container>

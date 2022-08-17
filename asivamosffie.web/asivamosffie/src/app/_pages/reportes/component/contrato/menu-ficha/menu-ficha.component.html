@@ -46,8 +46,8 @@
       <a
         *ngIf="indicadores.tieneEjecucionFinanciera"
         class="navegacion--button"
-        [routerLink]="['fichaContrato/ejecucionFinanciera', indicadores?.informacion?.contratoId]"
-      >
+        [routerLink]="['fichaContrato/ejecucionFinanciera', indicadores?.informacion?.contratoId ]"
+        [queryParams]="{contratacionId: indicadores?.informacion?.contratacionId}">
         <img src="assets/img/icon/Menu-contratos/5-Ejecucion-financiera.svg" alt="Ejecución financiera" />
         Ejecución financiera
       </a>

@@ -15,40 +15,36 @@
         <mat-panel-title class="expansion-style--title"> DDP </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <mat-card class="shipping-card var-main-gris">
+      <mat-card class="shipping-card var-main-gris" *ngIf="contratacion">
         <mat-card-content>
-          <p>
+          <p *ngIf="contratacion.disponibilidadPresupuestal && contratacion.disponibilidadPresupuestal.length > 0">
             <strong> Número de DDP: </strong>
-            DDP_0001
+            {{ contratacion.disponibilidadPresupuestal[ 0 ].numeroDdp }}
           </p>
-          <p>
+          <p *ngIf="contratacion.disponibilidadPresupuestal && contratacion.disponibilidadPresupuestal.length > 0">
             <strong> Valor inicial DDP: </strong>
-            $100.000.000
+            {{ contratacion.disponibilidadPresupuestal[ 0 ].valorSolicitud | currency: 'COP':'symbol-narrow':'.0-0' }}
           </p>
-          <p>
+          <!-- <p>
             <strong> Rubro por financiar: </strong>
             Proyecto de infraestructura
-          </p>
-          <p>
+          </p> -->
+          <p *ngIf="contratacion.disponibilidadPresupuestal && contratacion.disponibilidadPresupuestal.length > 0">
             <strong> Objeto: </strong>
-            <span class="d-block">
-              Contrato de obra que compromete el diagnóstico y/o actualización y/o complementación y/o elaboración de
-              estudios y diseños y ejecución de las obras necesarias para la adecuación y mejoramiento de las
-              instituciones rurales.
-            </span>
+            <span class="d-block" [innerHtml]="contratacion.disponibilidadPresupuestal[ 0 ].objeto"></span>
           </p>
-          <p>
+          <p *ngIf="contratacion.sesionComiteSolicitud && contratacion.sesionComiteSolicitud.length > 0">
             <strong> Número de comité técnico: </strong>
-            CT_003
+            {{ contratacion.sesionComiteSolicitud[ 0 ].comiteTecnico.numeroComite }}
           </p>
-          <p>
+          <p *ngIf="contratacion.sesionComiteSolicitud && contratacion.sesionComiteSolicitud.length > 0">
             <strong> Fecha comité técnico: </strong>
-            03/07/2020
+            {{ contratacion.sesionComiteSolicitud[ 0 ].comiteTecnico.fechaCreacion | date: 'dd/MM/yyyy' }}
           </p>
-          <p>
+          <!-- <p>
             <strong> URL con sporte: </strong>
             http://DDP_0001
-          </p>
+          </p> -->
           <h2 class="card-subTitle">Modificaciones</h2>
           <div class="table-responsive mb-1em mt-1em">
             <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
