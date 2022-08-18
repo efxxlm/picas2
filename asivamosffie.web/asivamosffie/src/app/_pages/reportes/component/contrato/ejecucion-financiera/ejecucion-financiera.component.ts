@@ -11,25 +11,9 @@ import { FinancialBalanceService } from 'src/app/core/_services/financialBalance
     styleUrls: ['./ejecucion-financiera.component.scss']
 })
 export class EjecucionFinancieraComponent implements OnInit, OnDestroy {
-    listaModificaciones = [
-        {
-            numeroActualizacion: 'ACT-DDP 0001',
-            tipoModificacion: 'Adición',
-            valorAdicional: '$5.000.000',
-            numeroComite: 'CT_0060',
-            fechaComite: '20/11/2020',
-            urlSoporte: 'http://AdicionDDP_0001.onedrive.com'
-        }
-    ];
 
-    listaDRP = [
-        {
-            drp: '1',
-            numero: 'IP_00090',
-            Valor: '$100.000.000'
-        }
-    ];
-
+    listaModificaciones = [];
+    listaDRP = [];
     pContratoId: string;
     contratacionId = 0
     openAcordeon = false;
@@ -96,22 +80,24 @@ export class EjecucionFinancieraComponent implements OnInit, OnDestroy {
                     this.ejecucionFinanciera = response.ejecucionFinanciera
                     console.log( this.contratacion, this.ejecucionFinanciera )
     
-                    this.ejecucionFinanciera[0].forEach(element => {
+                    this.listaModificaciones = this.ejecucionFinanciera[0]
+                    this.listaDRP = this.ejecucionFinanciera[1]
+                    this.ejecucionFinanciera[2].forEach(element => {
                         this.dataTableEjpresupuestal.push({
-                            facturadoAntesImpuestos: element.facturadoAntesImpuestos,
-                            nombre: element.nombre,
-                            porcentajeEjecucionPresupuestal: element.porcentajeEjecucionPresupuestal,
+                            facturadoAntesImpuestos: element.facturado,
+                            nombre: element.componente,
+                            porcentajeEjecucionPresupuestal: Math.round( element.porcentajeEjecucionPresupuestal / this.ejecucionFinanciera[ 2 ].length ),
                             proyectoId: element.proyectoId,
                             saldo: element.saldo,
                             tipoSolicitudCodigo: element.tipoSolicitudCodigo,
                             totalComprometido: element.totalComprometido
                         });
                     });
-                    this.ejecucionFinanciera[1].forEach(element => {
+                    this.ejecucionFinanciera[3].forEach(element => {
                         this.dataTableEjfinanciera.push({
-                            nombre: element.nombre,
-                            ordenadoGirarAntesImpuestos: element.ordenadoGirarAntesImpuestos,
-                            porcentajeEjecucionFinanciera: element.porcentajeEjecucionFinanciera,
+                            nombre: element.componente,
+                            ordenadoGirarAntesImpuestos: element.facturado,
+                            porcentajeEjecucionFinanciera: Math.round( element.porcentajeEjecucionPresupuestal / this.ejecucionFinanciera[ 3 ].length ),
                             proyectoId: element.proyectoId,
                             descuento: element.descuento,
                             saldo: element.saldo,
@@ -141,9 +127,9 @@ export class EjecucionFinancieraComponent implements OnInit, OnDestroy {
             this.totalEjpresupuestal.porcentajeEjecucionPresupuestal =
                 this.totalEjpresupuestal.porcentajeEjecucionPresupuestal + element.porcentajeEjecucionPresupuestal;
         });
-        if (this.totalEjpresupuestal.porcentajeEjecucionPresupuestal > 0)
-            this.totalEjpresupuestal.porcentajeEjecucionPresupuestal =
-                this.totalEjpresupuestal.porcentajeEjecucionPresupuestal / 2;
+        // if (this.totalEjpresupuestal.porcentajeEjecucionPresupuestal > 0)
+        //     this.totalEjpresupuestal.porcentajeEjecucionPresupuestal =
+        //         this.totalEjpresupuestal.porcentajeEjecucionPresupuestal / 2;
     }
 
     totalFinanciera() {
@@ -161,9 +147,9 @@ export class EjecucionFinancieraComponent implements OnInit, OnDestroy {
             this.totalEjfinanciera.porcentajeEjecucionFinanciera =
                 this.totalEjfinanciera.porcentajeEjecucionFinanciera + element.porcentajeEjecucionFinanciera;
         });
-        if (this.totalEjfinanciera.porcentajeEjecucionFinanciera > 0) {
-            this.totalEjfinanciera.porcentajeEjecucionFinanciera = this.totalEjfinanciera.porcentajeEjecucionFinanciera / 2;
-        }
+        // if (this.totalEjfinanciera.porcentajeEjecucionFinanciera > 0) {
+        //     this.totalEjfinanciera.porcentajeEjecucionFinanciera = this.totalEjfinanciera.porcentajeEjecucionFinanciera / 2;
+        // }
     }
 
     downloadPDF() {

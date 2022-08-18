@@ -1,12 +1,12 @@
-<section class="container">
+<section class="container" *ngIf="contratacion">
   <div class="container text-center">
     <div class="text-right print-d-none">
       <a routerLink="../../.." mat-button color="primary" class="btn-regresar">
         <img src="assets/img/icon/regresar.svg" alt="Regresar" />
       </a>
     </div>
-    <h1 class="title-menu--h1">Ejecución financiera N801801</h1>
-    <p class="info-sub-title">Contratista <b>Construir futuro</b></p>
+    <h1 class="title-menu--h1">Ejecución financiera {{ contratacion.contrato[ 0 ].numeroContrato }}</h1>
+    <p class="info-sub-title">Contratista <b>{{ contratacion.contratista.nombre }}</b></p>
   </div>
 
   <mat-accordion [multi]="openAcordeon">
@@ -15,7 +15,7 @@
         <mat-panel-title class="expansion-style--title"> DDP </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <mat-card class="shipping-card var-main-gris" *ngIf="contratacion">
+      <mat-card class="shipping-card var-main-gris">
         <mat-card-content>
           <p *ngIf="contratacion.disponibilidadPresupuestal && contratacion.disponibilidadPresupuestal.length > 0">
             <strong> Número de DDP: </strong>
@@ -45,8 +45,8 @@
             <strong> URL con sporte: </strong>
             http://DDP_0001
           </p> -->
-          <h2 class="card-subTitle">Modificaciones</h2>
-          <div class="table-responsive mb-1em mt-1em">
+          <h2 class="card-subTitle" *ngIf="listaModificaciones.length > 0">Modificaciones</h2>
+          <div class="table-responsive mb-1em mt-1em" *ngIf="listaModificaciones.length > 0">
             <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
               <thead>
                 <tr class="mat-header-row cdk-header-row ng-star-inserted">
@@ -67,13 +67,13 @@
                     {{ element.tipoModificacion }}
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
-                    {{ element.valorAdicional }}
+                    {{ element.valorAdicional ? ( element.valorAdicional | currency: 'COP':'symbol-narrow':'.0-0' ) : '---' }}
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
-                    {{ element.numeroComite }}
+                    {{ contratacion.sesionComiteSolicitud[ 0 ].comiteTecnico.numeroComite }}
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
-                    {{ element.fechaComite }}
+                    {{ contratacion.sesionComiteSolicitud[ 0 ].comiteTecnico.fechaCreacion | date: 'dd/MM/yyyy' }}
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
                     {{ element.urlSoporte }}
@@ -85,14 +85,14 @@
         </mat-card-content>
       </mat-card>
     </mat-expansion-panel>
-    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon">
+    <mat-expansion-panel class="expansion-style" [expanded]="openAcordeon" *ngIf="listaDRP.length > 0">
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title"> DRP </mat-panel-title>
       </mat-expansion-panel-header>
 
       <mat-card class="shipping-card var-main-gris">
         <mat-card-content>
-          <p>
+          <!-- <p>
             <strong> Objeto: </strong>
             <span class="d-block">
               Contrato de obra que compromete el diagnóstico y/o actualización y/o complementación y/o elaboración de
@@ -103,7 +103,7 @@
           <p>
             <strong> URL con sporte: </strong>
             http://DRP_N801801
-          </p>
+          </p> -->
           <div class="table-responsive mb-1em mt-1em w-talble">
             <table class="mat-table cdk-table mat-sort mat-table-style table-form table-gris">
               <thead>
@@ -114,15 +114,15 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let element of listaDRP">
+                <tr *ngFor="let element of listaDRP; index as i">
                   <td class="mat-cell cdk-cell ng-star-inserted">
-                    <b> {{ element.drp }} </b>
+                    <b> {{ i + 1 }} </b>
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
-                    {{ element.numero }}
+                    {{ element.numeroDRP }}
                   </td>
                   <td class="mat-cell cdk-cell ng-star-inserted">
-                    {{ element.Valor }}
+                    {{ element.valor | currency: 'COP':'symbol-narrow':'.0-0' }}
                   </td>
                 </tr>
               </tbody>
@@ -248,6 +248,6 @@
   </mat-accordion>
 </section>
 
-<div class="text-center mt-2em mb-2em print-d-none">
+<div class="text-center mt-2em mb-2em print-d-none" *ngIf="contratacion">
   <button mat-raised-button color="accent" (click)="downloadPDF()">Descargar</button>
 </div>
