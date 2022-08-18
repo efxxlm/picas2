@@ -1664,7 +1664,6 @@ namespace asivamosffie.services
                 Ejecucion ejecucion = new Ejecucion();
                 ejecucion.Facturado = itemPresupuestal.FacturadoAntesImpuestos;
                 ejecucion.Saldo = itemPresupuestal.Saldo;
-                //ejecucion.PorcentajeEjecucionPresupuestal = itemPresupuestal.PorcentajeEjecucionPresupuestal;
                 ejecucion.Componente = itemPresupuestal.Nombre;
                 ejecucion.ContratoId = itemPresupuestal.ContratoId;
                 ejecucion.ProyectoId = itemPresupuestal.ProyectoId;
@@ -1684,9 +1683,7 @@ namespace asivamosffie.services
                     Ejecucion ejecucionAux = new Ejecucion();
                     ejecucionAux = FindExistInList(ListEjecucionPresupuestal, ejecucion.TipoSolicitudCodigo);
                     if(ejecucionAux != null)
-                    {
-                        if(ejecucionAux.TipoSolicitudCodigo == "1")
-                            
+                    {                            
                         ListEjecucionPresupuestal.Find(r => r.TipoSolicitudCodigo == ejecucionAux.TipoSolicitudCodigo).Facturado += ejecucion.Facturado;
                         ListEjecucionPresupuestal.Find(r => r.TipoSolicitudCodigo == ejecucionAux.TipoSolicitudCodigo).Saldo += ejecucion.Saldo;
                         ListEjecucionPresupuestal.Find(r => r.TipoSolicitudCodigo == ejecucionAux.TipoSolicitudCodigo).PorcentajeEjecucionPresupuestal += ejecucion.PorcentajeEjecucionPresupuestal;
@@ -1704,7 +1701,6 @@ namespace asivamosffie.services
                 Ejecucion ejecucionFinanciera = new Ejecucion();
                 ejecucionFinanciera.Facturado = itemFinanciero.OrdenadoGirarAntesImpuestos;
                 ejecucionFinanciera.Saldo = itemFinanciero.Saldo;
-                //ejecucionFinanciera.PorcentajeEjecucionPresupuestal = itemFinanciero.PorcentajeEjecucionFinanciera;
                 ejecucionFinanciera.Componente = itemFinanciero.Nombre;
                 ejecucionFinanciera.ContratoId = itemFinanciero.ContratoId;
                 ejecucionFinanciera.ProyectoId = itemFinanciero.ProyectoId;
@@ -1738,9 +1734,76 @@ namespace asivamosffie.services
                     }
                 }
             }
+            List<NovedadContractual> listNovedadesContractuales = new List<NovedadContractual>();
+            List<ModificacionesDDP> ListmodificacionesDDP = new List<ModificacionesDDP>();
+
+            List<Dominio> listTiposNovedadContractual = await _context.Dominio.Where(x => x.TipoDominioId == 113).ToListAsync();
+
+            listNovedadesContractuales.AddRange(_context.NovedadContractual.Where(x => x.ContratoId == pContratoId && x.Eliminado != true).Include(x=> x.NovedadContractualDescripcion).ToList());
+
+            foreach (var novedadContractual in listNovedadesContractuales)
+            {
+                ModificacionesDDP objectDDp = new ModificacionesDDP();
+                if (novedadContractual.NovedadContractualDescripcion.Count > 0)
+                {
+                    foreach (var novedadContractualDescripción in novedadContractual.NovedadContractualDescripcion)
+                    {
+                        ModificacionesDDP objectDDpAux = new ModificacionesDDP();
+                        objectDDpAux.NumeroActualizacion = novedadContractual.NumeroSolicitud;
+                        objectDDpAux.TipoModificacion = listTiposNovedadContractual.Find(x => x.Codigo == novedadContractualDescripción.TipoNovedadCodigo).Nombre;
+                        objectDDpAux.ValorAdicional = novedadContractualDescripción.PresupuestoAdicionalSolicitado;
+                        objectDDpAux.UrlSoporte = novedadContractual.UrlSoporte;
+                        ListmodificacionesDDP.Add(objectDDpAux);
+                    }
+                }
+                else
+                {
+                    objectDDp.NumeroActualizacion = novedadContractual.NumeroSolicitud;
+                    objectDDp.TipoModificacion = listTiposNovedadContractual.Find(x => x.Codigo == novedadContractual.NovedadContractualDescripcion.FirstOrDefault().TipoNovedadCodigo).Nombre;
+                    objectDDp.ValorAdicional = novedadContractual.NovedadContractualDescripcion.FirstOrDefault().PresupuestoAdicionalSolicitado;
+                    objectDDp.UrlSoporte = novedadContractual.UrlSoporte;
+                    ListmodificacionesDDP.Add(objectDDp);
+                }
+            }
+            Contrato contrato = _context.Contrato.Where(x => x.ContratoId == pContratoId).FirstOrDefault();
+            List<VDrpXproyectoXusos> ListDrp = _context.VDrpXproyectoXusos.Where(r => r.ContratacionId == contrato.ContratacionId).OrderBy(r => r.FechaCreacion).ToList();
+
+
+            List<ModificacionesDDP> listModificacionesDDP = new List<ModificacionesDDP>();
+            VDrpXproyectoXusos drpAux = new VDrpXproyectoXusos();
+
+            List<objectDRP> listObjectDrp = new List<objectDRP>();
+            foreach (var ItemDrp in ListDrp)
+            {
+                objectDRP drpObject = new objectDRP();
+                drpObject.NumeroDRP = ItemDrp.NumeroDrp;
+                drpObject.Valor = ItemDrp.ValorUso;
+                
+                if (listObjectDrp.Count == 0)
+                {
+                    listObjectDrp.Add(drpObject);
+                }
+                else if (ListEjecucionPresupuestal.Count > 0)
+                {
+                    objectDRP drpObjectAux = new objectDRP();
+                    drpObjectAux = FindExistInListDRP(listObjectDrp, ItemDrp.NumeroDrp);
+                    if (drpObjectAux != null)
+                    {
+                        listObjectDrp.Find(r => r.NumeroDRP == drpObjectAux.NumeroDRP).Valor += drpObject.Valor;
+                    }
+                    else
+                    {
+                        listObjectDrp.Add(drpObject);
+                    }
+                }
+            }
+
+
 
             return new List<dynamic>
             {
+                ListmodificacionesDDP,
+                listObjectDrp,
                 ListEjecucionPresupuestal,
                 ListEjecucionFinanciera
             };
@@ -1750,6 +1813,11 @@ namespace asivamosffie.services
             Ejecucion ejecucion = ListEjecucionPresupuestal.Find(r => r.TipoSolicitudCodigo == tipoSolicitudCodigo);
             
             return ejecucion;
+        }
+        private objectDRP FindExistInListDRP(List<objectDRP> ListDrp, string numeroDRP)
+        {
+            objectDRP drp = ListDrp.Find(r => r.NumeroDRP == numeroDRP);
+            return drp;
         }
         //private List<VEjecucionFinancieraXproyecto> GetEjecucionFinanciera(int pProyectoId)
         //{
@@ -1882,7 +1950,7 @@ namespace asivamosffie.services
 
         #endregion
     }
-
+    //ESto no se debe hacer, pero por falta de tiempo y desconocimiento del codigo lo voy a poner aqui. Anderson Suarez 17/08/2022
     public partial class Ejecucion
     {
         public int ContratoId { get; set; }
@@ -1893,5 +1961,20 @@ namespace asivamosffie.services
         public decimal? Saldo  { get; set; }
         public decimal? PorcentajeEjecucionPresupuestal { get; set; }
         public string TipoSolicitudCodigo { get; set; }
+    }
+
+    //ESto no se debe hacer, pero por falta de tiempo y desconocimiento del codigo lo voy a poner aqui. Anderson Suarez 18/08/2022
+    public partial class ModificacionesDDP
+    {
+        public string NumeroActualizacion { get; set; }
+        public string TipoModificacion { get; set; }
+        public decimal? ValorAdicional { get; set; }
+        public string UrlSoporte { get; set; }
+    }
+    //ESto no se debe hacer, pero por falta de tiempo y desconocimiento del codigo lo voy a poner aqui. Anderson Suarez 18/08/2022
+    public partial class objectDRP
+    {
+        public string NumeroDRP { get; set; }
+        public decimal? Valor { get; set; }
     }
 }
