@@ -172,24 +172,24 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    string strEstadoBalanceFinancieroTraslado = _context.BalanceFinancieroTraslado.Where(r=> r.BalanceFinancieroTrasladoId == BalanceFinancieroTraslado.BalanceFinancieroTrasladoId).FirstOrDefault().EstadoCodigo;
+                    string strEstadoBalanceFinancieroTraslado = _context.BalanceFinancieroTraslado.Where(r => r.BalanceFinancieroTrasladoId == BalanceFinancieroTraslado.BalanceFinancieroTrasladoId).FirstOrDefault().EstadoCodigo;
                     if (strEstadoBalanceFinancieroTraslado == ConstanCodigoEstadoBalanceFinancieroTraslado.Anulado)
                         strEstadoBalanceFinancieroTraslado = ConstanCodigoEstadoBalanceFinancieroTraslado.Con_registro;
-                    
+
                     if (ConstanCodigoEstadoBalanceFinancieroTraslado.Notificado_a_fiduciaria == strEstadoBalanceFinancieroTraslado)
                     {
                         strEstadoBalanceFinancieroTraslado = ConstanCodigoEstadoBalanceFinancieroTraslado.Traslado_Aprobado;
                         //Se modifica la odg cuando la modifica despues de que la envia a fiduciaria
                         ModificarOrdenGiro(BalanceFinancieroTraslado);
                     }
-                    
+
 
 
                     _context.Set<BalanceFinancieroTraslado>()
                           .Where(r => r.BalanceFinancieroTrasladoId == BalanceFinancieroTraslado.BalanceFinancieroTrasladoId)
                           .Update(r => new BalanceFinancieroTraslado
                           {
-                              EstadoCodigo  = strEstadoBalanceFinancieroTraslado,
+                              EstadoCodigo = strEstadoBalanceFinancieroTraslado,
                               UsuarioModificacion = pAuthor,
                               FechaModificacion = DateTime.Now,
                               ValorTraslado = BalanceFinancieroTraslado.BalanceFinancieroTrasladoValor.Where(r => r.OrdenGiroDetalleTerceroCausacionDescuentoId == null).Sum(r => r.ValorTraslado),
@@ -1636,15 +1636,121 @@ namespace asivamosffie.services
             return string.Concat("$", String.Format("{0:n0}", pValue));
         }
 
-        public async Task<dynamic> GetEjecucionFinancieraXProyectoId(int pProyectoId)
+        public async Task<dynamic> GetEjecucionFinancieraXProyectoId(int pContratoId)
         {
+            List<VEjecucionPresupuestalXproyecto> TablaEjecucionPresupuestal = new List<VEjecucionPresupuestalXproyecto>();
+            List<VEjecucionFinancieraXproyecto> TablaEjecucionFinanciera = new List<VEjecucionFinancieraXproyecto>();
+            List<int?> idsProyectosPresupuestales = await _context.VEjecucionPresupuestalXproyecto.Where(r => r.ContratoId == pContratoId).Select(r=> r.ProyectoId).ToListAsync();
+            List<int> idsProyectosFinancieros = await _context.VEjecucionFinancieraXproyecto.Where(r => r.ContratoId == pContratoId).Select(r=> r.ProyectoId).ToListAsync();
+
+
+            foreach (var i in idsProyectosPresupuestales)
+            {
+                TablaEjecucionPresupuestal.AddRange(await _context.VEjecucionPresupuestalXproyecto.Where(r => r.ProyectoId == i).ToListAsync());
+            }
+            foreach (var j in idsProyectosFinancieros)
+            {
+                TablaEjecucionFinanciera.AddRange(await _context.VEjecucionFinancieraXproyecto.Where(r => r.ProyectoId == j).ToListAsync());
+            }
+            List<Ejecucion> ListEjecucionPresupuestal = new List<Ejecucion>();
+            List<Ejecucion> ListEjecucionFinanciera = new List<Ejecucion>();
+
+            int intCountItems1Presupuestal = TablaEjecucionPresupuestal.Count(x=> x.TipoSolicitudCodigo == "1");
+            int intCountItems2Presupuestal = TablaEjecucionPresupuestal.Count(x => x.TipoSolicitudCodigo == "2");
+
+            
+            foreach (var itemPresupuestal in TablaEjecucionPresupuestal)
+            {
+                Ejecucion ejecucion = new Ejecucion();
+                ejecucion.Facturado = itemPresupuestal.FacturadoAntesImpuestos;
+                ejecucion.Saldo = itemPresupuestal.Saldo;
+                //ejecucion.PorcentajeEjecucionPresupuestal = itemPresupuestal.PorcentajeEjecucionPresupuestal;
+                ejecucion.Componente = itemPresupuestal.Nombre;
+                ejecucion.ContratoId = itemPresupuestal.ContratoId;
+                ejecucion.ProyectoId = itemPresupuestal.ProyectoId;
+                ejecucion.TotalComprometido = itemPresupuestal.TotalComprometido;
+                ejecucion.TipoSolicitudCodigo = itemPresupuestal.TipoSolicitudCodigo;
+                if(ejecucion.TipoSolicitudCodigo == "1")
+                    ejecucion.PorcentajeEjecucionPresupuestal = itemPresupuestal.PorcentajeEjecucionPresupuestal / intCountItems1Presupuestal;
+                else if(ejecucion.TipoSolicitudCodigo == "2")
+                    ejecucion.PorcentajeEjecucionPresupuestal = itemPresupuestal.PorcentajeEjecucionPresupuestal / intCountItems2Presupuestal;
+
+                if (ListEjecucionPresupuestal.Count == 0)
+                {
+                    ListEjecucionPresupuestal.Add(ejecucion);
+                }
+                else if (ListEjecucionPresupuestal.Count > 0)
+                {
+                    Ejecucion ejecucionAux = new Ejecucion();
+                    ejecucionAux = FindExistInList(ListEjecucionPresupuestal, ejecucion.TipoSolicitudCodigo);
+                    if(ejecucionAux != null)
+                    {
+                        if(ejecucionAux.TipoSolicitudCodigo == "1")
+                            
+                        ListEjecucionPresupuestal.Find(r => r.TipoSolicitudCodigo == ejecucionAux.TipoSolicitudCodigo).Facturado += ejecucion.Facturado;
+                        ListEjecucionPresupuestal.Find(r => r.TipoSolicitudCodigo == ejecucionAux.TipoSolicitudCodigo).Saldo += ejecucion.Saldo;
+                        ListEjecucionPresupuestal.Find(r => r.TipoSolicitudCodigo == ejecucionAux.TipoSolicitudCodigo).PorcentajeEjecucionPresupuestal += ejecucion.PorcentajeEjecucionPresupuestal;
+                        ListEjecucionPresupuestal.Find(r => r.TipoSolicitudCodigo == ejecucionAux.TipoSolicitudCodigo).TotalComprometido += ejecucion.TotalComprometido;
+                    }else{
+                        ListEjecucionPresupuestal.Add(ejecucion);
+                    }
+                }
+            }
+            int intCountItems1Financiero = TablaEjecucionFinanciera.Count(x => x.TipoSolicitudCodigo == "1");
+            int intCountItems2Fianaciero = TablaEjecucionFinanciera.Count(x => x.TipoSolicitudCodigo == "2");
+
+            foreach (var itemFinanciero in TablaEjecucionFinanciera)
+            {
+                Ejecucion ejecucionFinanciera = new Ejecucion();
+                ejecucionFinanciera.Facturado = itemFinanciero.OrdenadoGirarAntesImpuestos;
+                ejecucionFinanciera.Saldo = itemFinanciero.Saldo;
+                //ejecucionFinanciera.PorcentajeEjecucionPresupuestal = itemFinanciero.PorcentajeEjecucionFinanciera;
+                ejecucionFinanciera.Componente = itemFinanciero.Nombre;
+                ejecucionFinanciera.ContratoId = itemFinanciero.ContratoId;
+                ejecucionFinanciera.ProyectoId = itemFinanciero.ProyectoId;
+                ejecucionFinanciera.TotalComprometido = itemFinanciero.TotalComprometido;
+                ejecucionFinanciera.TipoSolicitudCodigo = itemFinanciero.TipoSolicitudCodigo;
+                
+                if (ejecucionFinanciera.TipoSolicitudCodigo == "1")
+                    ejecucionFinanciera.PorcentajeEjecucionPresupuestal = itemFinanciero.PorcentajeEjecucionFinanciera / intCountItems1Financiero;
+                else if (ejecucionFinanciera.TipoSolicitudCodigo == "2")
+                    ejecucionFinanciera.PorcentajeEjecucionPresupuestal = itemFinanciero.PorcentajeEjecucionFinanciera / intCountItems2Fianaciero;
+
+
+                if (ListEjecucionFinanciera.Count == 0)
+                {
+                    ListEjecucionFinanciera.Add(ejecucionFinanciera);
+                }
+                else if (ListEjecucionFinanciera.Count > 0)
+                {
+                    Ejecucion ejecucionAux = new Ejecucion();
+                    ejecucionAux = FindExistInList(ListEjecucionFinanciera, ejecucionFinanciera.TipoSolicitudCodigo);
+                    if (ejecucionAux != null)
+                    {
+                        ListEjecucionFinanciera.Find(r => r.TipoSolicitudCodigo == ejecucionAux.TipoSolicitudCodigo).Facturado += ejecucionFinanciera.Facturado;
+                        ListEjecucionFinanciera.Find(r => r.TipoSolicitudCodigo == ejecucionAux.TipoSolicitudCodigo).Saldo += ejecucionFinanciera.Saldo;
+                        ListEjecucionFinanciera.Find(r => r.TipoSolicitudCodigo == ejecucionAux.TipoSolicitudCodigo).PorcentajeEjecucionPresupuestal += ejecucionFinanciera.PorcentajeEjecucionPresupuestal;
+                        ListEjecucionFinanciera.Find(r => r.TipoSolicitudCodigo == ejecucionAux.TipoSolicitudCodigo).TotalComprometido += ejecucionFinanciera.TotalComprometido;
+                    }
+                    else
+                    {
+                        ListEjecucionFinanciera.Add(ejecucionFinanciera);
+                    }
+                }
+            }
+
             return new List<dynamic>
             {
-              await  _context.VEjecucionPresupuestalXproyecto.Where(r => r.ProyectoId == pProyectoId).ToListAsync(),
-              await  _context.VEjecucionFinancieraXproyecto.Where(r => r.ProyectoId == pProyectoId).ToListAsync()
+                ListEjecucionPresupuestal,
+                ListEjecucionFinanciera
             };
         }
-
+        private Ejecucion FindExistInList(List<Ejecucion> ListEjecucionPresupuestal, string tipoSolicitudCodigo)
+        {
+            Ejecucion ejecucion = ListEjecucionPresupuestal.Find(r => r.TipoSolicitudCodigo == tipoSolicitudCodigo);
+            
+            return ejecucion;
+        }
         //private List<VEjecucionFinancieraXproyecto> GetEjecucionFinanciera(int pProyectoId)
         //{
         //    List<VEjecucionFinancieraXproyecto> list = _context.VEjecucionFinancieraXproyecto.Where(r => r.ProyectoId == pProyectoId).ToList();
@@ -1775,5 +1881,17 @@ namespace asivamosffie.services
 
 
         #endregion
+    }
+
+    public partial class Ejecucion
+    {
+        public int ContratoId { get; set; }
+        public int? ProyectoId { get; set; }
+        public string Componente { get; set; }
+        public decimal? TotalComprometido { get; set; }
+        public decimal? Facturado { get; set; }
+        public decimal? Saldo  { get; set; }
+        public decimal? PorcentajeEjecucionPresupuestal { get; set; }
+        public string TipoSolicitudCodigo { get; set; }
     }
 }
