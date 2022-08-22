@@ -12,7 +12,7 @@ namespace asivamosffie.model.Models
 
         public devAsiVamosFFIEContext(DbContextOptions<devAsiVamosFFIEContext> options)
             : base(options)
-        {
+        {  
         }
 
         public virtual DbSet<ActuacionSeguimiento> ActuacionSeguimiento { get; set; }
