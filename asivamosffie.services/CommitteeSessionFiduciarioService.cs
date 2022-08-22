@@ -74,10 +74,10 @@ namespace asivamosffie.services
                                                                                                || ct.EsComiteFiduciario == false
                                                                                              )
                                                                                             && ct.EstadoActaCodigo == ConstanCodigoEstadoActaContrato.Con_acta_generada //Acta aprobada
-                                                                                            && (
-                                                                                                  ct.SesionComiteSolicitudComiteTecnico.Any(r => r.ComiteTecnicoFiduciarioId == null)
-                                                                                              || ct.SesionComiteSolicitudComiteTecnico.Any(r => r.ComiteTecnicoFiduciarioId == idComiteFiduciario)
-                                                                                               )
+                                                                                            //&& (
+                                                                                            //      ct.SesionComiteSolicitudComiteTecnico.Any(r => r.ComiteTecnicoFiduciarioId == null)
+                                                                                            //  || ct.SesionComiteSolicitudComiteTecnico.Any(r => r.ComiteTecnicoFiduciarioId == idComiteFiduciario)
+                                                                                            //   )
                                                                                             )
                                                                                 .Include(r => r.SesionComiteTema)
                                                                                 .ToListAsync();

@@ -12,7 +12,7 @@ namespace asivamosffie.model.Models
 
         public devAsiVamosFFIEContext(DbContextOptions<devAsiVamosFFIEContext> options)
             : base(options)
-        {  
+        {
         }
 
         public virtual DbSet<ActuacionSeguimiento> ActuacionSeguimiento { get; set; }
@@ -416,7 +416,7 @@ namespace asivamosffie.model.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
+                optionsBuilder.UseSqlServer("Server=srv-db-asivamos.database.windows.net;Database=devAsiVamosFFIE;User ID=admindbasivamos;Password=4siv4mos2021*;MultipleActiveResultSets=False;Connection Timeout=30;");
             }
         }
 
@@ -6724,10 +6724,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.TemaCapacitacion).HasMaxLength(300);
-
-                entity.Property(e => e.UrlSoporteGestion).HasMaxLength(255);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(50)
