@@ -409,8 +409,12 @@ namespace asivamosffie.services
 
                     if (ListDP.ContratacionId != null)
                     {
-                        var contratacion = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == ListDP.ContratacionId && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).
-                            Include(x => x.ComiteTecnico).ToList();
+                        var contratacion = _context.SesionComiteSolicitud
+                                                                        .Where(x => x.SolicitudId == ListDP.ContratacionId 
+                                                                                 && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
+                                                                                 && x.Eliminado != true)
+                                                                        .Include(x => x.ComiteTecnico)
+                                                                        .ToList();
                         if (contratacion.Count() > 0)
                         {
                             sesionComiteSolicitud = contratacion;
