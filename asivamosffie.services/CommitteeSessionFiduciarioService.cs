@@ -74,13 +74,24 @@ namespace asivamosffie.services
                                                                                                || ct.EsComiteFiduciario == false
                                                                                              )
                                                                                             && ct.EstadoActaCodigo == ConstanCodigoEstadoActaContrato.Con_acta_generada //Acta aprobada
-                                                                                            //&& (
-                                                                                            //      ct.SesionComiteSolicitudComiteTecnico.Any(r => r.ComiteTecnicoFiduciarioId == null)
-                                                                                            //  || ct.SesionComiteSolicitudComiteTecnico.Any(r => r.ComiteTecnicoFiduciarioId == idComiteFiduciario)
-                                                                                            //   )
+                                                                                            && (
+                                                                                                  ct.SesionComiteSolicitudComiteTecnico.Any(r => r.ComiteTecnicoFiduciarioId == null)
+                                                                                               || ct.SesionComiteSolicitudComiteTecnico.Any(r => r.ComiteTecnicoFiduciarioId == idComiteFiduciario)
+                                                                                               )
                                                                                             )
-                                                                                .Include(r => r.SesionComiteTema)
                                                                                 .ToListAsync();
+
+
+                listaComites.AddRange(
+
+                    _context.ComiteTecnico.AsNoTracking()
+                                          .Include(r => r.SesionComiteTema)
+                                          .Where(ct => ct.EstadoActaCodigo == ConstanCodigoEstadoActaContrato.Con_acta_generada 
+                                                    && ct.Eliminado != true  
+                                                    && (ct.EsComiteFiduciario != true )
+                                                    )
+                                          .ToList() 
+                    );  
 
                 List<Dominio> ListTipoSolicitud = _context.Dominio.AsNoTracking().Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
 
@@ -985,10 +996,10 @@ namespace asivamosffie.services
                                                         _context.ProcesoSeleccion
                                                         .Where(r => !(bool)r.Eliminado).ToList();
 
-            List<Contratacion> ListContratacion = _context.Contratacion.Include(r=> r.ContratacionProyecto)
-                                                                       .ThenInclude(r=> r.ContratacionProyectoAportante)
-                                                                       .ThenInclude(r=> r.ComponenteAportante)
-                                                                       .ThenInclude(r=> r.ComponenteUso)
+            List<Contratacion> ListContratacion = _context.Contratacion.Include(r => r.ContratacionProyecto)
+                                                                       .ThenInclude(r => r.ContratacionProyectoAportante)
+                                                                       .ThenInclude(r => r.ComponenteAportante)
+                                                                       .ThenInclude(r => r.ComponenteUso)
                                                                        .ToList();
 
             foreach (SesionComiteSolicitud sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
@@ -3786,9 +3797,9 @@ namespace asivamosffie.services
                                                                       .ToList();
                 }
 
-                ListContratacionId.AddRange( 
+                ListContratacionId.AddRange(
                     ListContratacionNovedadContractual.Select(r => r.Contrato.Contratacion.ContratacionId).ToList()
-                 ); 
+                 );
 
 
 
@@ -3797,9 +3808,9 @@ namespace asivamosffie.services
                                                                  .Where(c => ListContratacionId.Contains(c.ContratacionId))
                                                                       .Include(r => r.ContratacionProyecto)
                                                                        .ThenInclude(r => r.ContratacionProyectoAportante)
-                                                                       .ThenInclude(r=> r.CofinanciacionAportante)
+                                                                       .ThenInclude(r => r.CofinanciacionAportante)
                                                                             .ThenInclude(r => r.ProyectoAportante)
-                                                                 .Include(r => r.Contrato)           
+                                                                 .Include(r => r.Contrato)
                                                                  .Include(r => r.PlazoContratacion)
                                                                  .Include(r => r.Contratista)
                                                                  .Include(r => r.ContratacionProyecto)
