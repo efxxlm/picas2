@@ -895,7 +895,7 @@ namespace asivamosffie.services
                 }
 
 
-                if (ComiteTecnicoOld.EstadoActaCodigo == ConstanCodigoEstadoComite.Fallida && ComiteTecnicoOld.EsComiteFiduciario == true)
+                if (pComiteTecnico.EstadoComiteCodigo == ConstanCodigoEstadoComite.Fallida && ComiteTecnicoOld.EsComiteFiduciario == true)
                 {
                     GetLiberarTemasComiteTecnico(ComiteTecnicoOld);
                 }
