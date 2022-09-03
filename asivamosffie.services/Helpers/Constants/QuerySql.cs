@@ -1,7 +1,22 @@
 ﻿namespace asivamosffie.services.Helpers.Constant
 {
     public static class QuerySql
-    { 
+    {
+        #region ControlRecursos
+
+        public const string GetResourceControlGridBySourceFunding = "SELECT cr.* FROM dbo.ControlRecurso AS cr " +
+            "LEFT JOIN dbo.FuenteFinanciacion AS ff ON cr.FuenteFinanciacionId = ff.FuenteFinanciacionId " +
+            "LEFT JOIN dbo.CofinanciacionAportante AS ca ON ff.AportanteId = ca.CofinanciacionAportanteId " +
+            "LEFT JOIN dbo.Cofinanciacion AS c ON ca.CofinanciacionId = c.CofinanciacionId	" +
+            "LEFT JOIN dbo.CuentaBancaria AS cb ON cr.CuentaBancariaId = cb.CuentaBancariaId " +
+            "LEFT JOIN dbo.RegistroPresupuestal AS rp ON cr.RegistroPresupuestalId = rp.RegistroPresupuestalId " +
+            "LEFT JOIN dbo.CofinanciacionDocumento AS cd ON rp.CofinanciacionDocumentoId = cd.CofinanciacionDocumentoId 	" +
+            "LEFT JOIN dbo.VigenciaAporte AS va ON cr.VigenciaAporteId = va.VigenciaAporteId " +
+            "WHERE 	ca.CofinanciacionAportanteId = ";
+         
+        #endregion
+
+
         #region Preconstruccion 
         //Preconstruccion Registrar
         //Lista Contratacion
@@ -50,7 +65,7 @@
         #endregion
 
         #region Compromisos y Actas
-        public const string GetManagementReport = 
+        public const string GetManagementReport =
                  "SELECT ComiteTecnico.*" +
                 " FROM  dbo.ComiteTecnico " +
                 "INNER JOIN dbo.SesionParticipante  ON   ComiteTecnico.ComiteTecnicoId = SesionParticipante.ComiteTecnicoId " +

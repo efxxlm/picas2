@@ -39,12 +39,11 @@ namespace asivamosffie.api.Controllers
         [AllowAnonymous]
         [HttpGet]
         [Route("GetResourceFundingBySourceFunding/{id}")]
-        public async Task<List<ControlRecurso>> GetSourceFundingBySourceFunding(int id)
+        public async Task<List<VControlRecursos>> GetSourceFundingBySourceFunding(int id)
         {
             try
             {
-                var result = await _resource.GetResourceControlGridBySourceFunding(id);
-                return result;
+                return await _resource.GetResourceControlGridBySourceFunding(id); 
             }
             catch (Exception ex)
             {

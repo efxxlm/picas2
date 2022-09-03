@@ -61,23 +61,14 @@ export class TableControlRecursosComponent implements OnInit, AfterViewInit {
       this.dataTable = [];
       this.fuenteFinanciacionServices.getSourceFundingBySourceFunding( this.idFuente ).subscribe( listaFuentes => {
         listaFuentes.forEach(element => {
-          let vigencia = '';
-          console.log(element.fuenteFinanciacion.aportante.tipoAportanteId);
-          if(this.isETOrThirdParty(element.fuenteFinanciacion.aportante.tipoAportanteId)){
-            //cofinanciacionDocumento
-            vigencia = element.cofinanciacionDocumento?.vigenciaAporte;
-          }else{
-            //VigenciaAporte
-            vigencia = element.vigenciaAporte?.tipoVigenciaCodigo;
-          }
           this.dataTable.push({
             fuenteFinanciacionId: element.fuenteFinanciacionId,
             fechaCreacion: element.fechaCreacion,
-            nombreCuentaBanco: element.cuentaBancaria.nombreCuentaBanco,
-            numeroCuentaBanco: element.cuentaBancaria.numeroCuentaBanco,
-            aportanteId: element.fuenteFinanciacion.aportanteId,
-            numeroRp: element.registroPresupuestal ? element.registroPresupuestal.numeroRp : 'No aplica',
-            vigenciaCofinanciacionId: vigencia,
+            nombreCuentaBanco: element.nombreCuentaBanco,
+            numeroCuentaBanco: element.numeroCuentaBanco,
+            aportanteId: element.cofinanacionAportanteId,
+            numeroRp: element.numeroRp,
+            vigenciaCofinanciacionId: element.vigencia,
             fechaConsignacion: element.fechaConsignacion,
             valorConsignacion: element.valorConsignacion,
             controlRecursoId: element.controlRecursoId

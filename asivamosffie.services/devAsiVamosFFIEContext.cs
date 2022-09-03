@@ -267,6 +267,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VContratosActivosXproyectoId> VContratosActivosXproyectoId { get; set; }
         public virtual DbSet<VContratosDisponiblesNovedad> VContratosDisponiblesNovedad { get; set; }
         public virtual DbSet<VContratosXcontratacionProyecto> VContratosXcontratacionProyecto { get; set; }
+        public virtual DbSet<VControlRecursos> VControlRecursos { get; set; }
         public virtual DbSet<VCuentaBancariaPago> VCuentaBancariaPago { get; set; }
         public virtual DbSet<VDefensaJudicialContratacionProyecto> VDefensaJudicialContratacionProyecto { get; set; }
         public virtual DbSet<VDescuentoTecnicaXordenGiro> VDescuentoTecnicaXordenGiro { get; set; }
@@ -9184,6 +9185,33 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(2)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VControlRecursos>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_Control_Recursos");
+
+                entity.Property(e => e.FechaConsignacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.NombreCuentaBanco)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroCuentaBanco)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroRp)
+                    .IsRequired()
+                    .HasColumnName("NumeroRP")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorConsignacion).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VCuentaBancariaPago>(entity =>

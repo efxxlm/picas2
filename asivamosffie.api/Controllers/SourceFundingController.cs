@@ -72,6 +72,7 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<FuenteFinanciacion> GetById(int id)
         {
             try
