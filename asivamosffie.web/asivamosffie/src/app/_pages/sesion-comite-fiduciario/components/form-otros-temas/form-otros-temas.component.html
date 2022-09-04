@@ -22,10 +22,11 @@
           </b>
         </div>
       </div>
-
       <div class="row">
         <div class="pr-1">
-          <label for="observaciones" class="label-left" [class.color-secondaryColor]="
+          <label 
+          class="label-left" 
+          [class.color-secondaryColor]="
               (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
               (addressForm.get('observaciones').invalid && estaEditando)
             ">
@@ -33,15 +34,22 @@
           </label>
         </div>
         <div class="col d-flex">
-          <quill-editor class="quill-editor-style card position-relative quill-editor-style--max-height"
-            [modules]="config" [formats]="formats" required (onContentChanged)="maxLength($event, 5000)"
-            formControlName="observaciones" [class.invalid]="
+          <quill-editor
+            class="quill-editor-style card position-relative quill-editor-style--max-height"
+            [modules]="config"
+            [formats]="formats"
+            required
+            (onContentChanged)="maxLength($event, 5000)"
+            formControlName="observaciones"
+            [class.invalid]="
               (addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched) ||
               (addressForm.get('observaciones').invalid && estaEditando)
-            " required>
+            "
+            required
+          >
           </quill-editor>
           <div class="d-flex align-items-center mt-3em">
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
+            <span class="contador miles mt-3em" *ngIf="addressForm.get('observaciones').value">
               {{
               5000 -
               (textoLimpio(addressForm.get('observaciones').value) > 5000
@@ -49,8 +57,8 @@
               : textoLimpio(addressForm.get('observaciones').value))
               }}
             </span>
-            <span class="contador miles" *ngIf="!addressForm.get('observaciones').value"> 5000 </span>
-            <span class="icon-incompleto">
+            <span class="contador miles mt-3em" *ngIf="!addressForm.get('observaciones').value"> 5000 </span>
+            <span class="icon-incompleto mt-3em">
               <img class="icon-incompleto--img" src="assets/img/icon/incompleto.svg" alt="este campo es requerido"
                 [matTooltipPosition]="'above'" matTooltip="Debe ingresar la información en el campo para continuar"
                 matTooltipClass="info-tooltip" *ngIf="
@@ -106,8 +114,7 @@
           </div>
         </div>
       </div>
-
-            <div class="row">
+      <div class="row">
         <div class="pr-1">
           <label
             class="label-left"
@@ -117,7 +124,7 @@
               (addressForm.get('observacionesDecision').invalid && estaEditando)
             "
           >
-          Descripción
+           Descripción
           </label>
         </div>
         <div class="col d-flex">
@@ -163,6 +170,9 @@
           </div>
         </div>
       </div>
+
+
+
       <h2 class="card-subTitle">Compromisos</h2>
       <div class="row">
         <div class="col-md-8">

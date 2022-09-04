@@ -25,7 +25,9 @@ export class FormOtrosTemasComponent implements OnInit {
   @Input() fechaComite: Date;
   @Input() esRegistroNuevo: boolean;
   @Output() validar: EventEmitter<boolean> = new EventEmitter();
-
+  formats = [
+    'link', 'blockquote', 'bold', 'italic', 'underline', 'list', 'strike', 'header', 'align', 'indent'
+  ]
   listaResponsables: Dominio[] = [];
   responsable: Dominio = {}
 
