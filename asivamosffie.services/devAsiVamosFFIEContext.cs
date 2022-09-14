@@ -327,6 +327,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VFuentesUsoXcontratoIdXproyecto> VFuentesUsoXcontratoIdXproyecto { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
         public virtual DbSet<VGetConceptoOrdenGiroUso> VGetConceptoOrdenGiroUso { get; set; }
+        public virtual DbSet<VGetListAportanteByTipoAportanteId> VGetListAportanteByTipoAportanteId { get; set; }
         public virtual DbSet<VListCompromisosComiteTecnico> VListCompromisosComiteTecnico { get; set; }
         public virtual DbSet<VListCompromisosTemas> VListCompromisosTemas { get; set; }
         public virtual DbSet<VListaContratacionModificacionContractual> VListaContratacionModificacionContractual { get; set; }
@@ -1185,7 +1186,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorUso).HasColumnType("numeric(18, 2)");
+                entity.Property(e => e.ValorUso).HasColumnType("numeric(38, 3)");
 
                 entity.HasOne(d => d.ComponenteFuenteNovedad)
                     .WithMany(p => p.ComponenteUsoNovedad)
@@ -4445,7 +4446,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorAporte).HasColumnType("numeric(18, 9)");
+                entity.Property(e => e.ValorAporte).HasColumnType("numeric(38, 3)");
 
                 entity.HasOne(d => d.CofinanciacionAportante)
                     .WithMany(p => p.NovedadContractualAportante)
@@ -10487,6 +10488,27 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.ValorAmortizacion).HasColumnType("decimal(25, 0)");
 
                 entity.Property(e => e.ValorFacturado).HasColumnType("decimal(38, 0)");
+            });
+
+            modelBuilder.Entity<VGetListAportanteByTipoAportanteId>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_GetListAportanteByTipoAportanteId");
+
+                entity.Property(e => e.DepartamentoId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.MunicipioId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nombre).IsUnicode(false);
+
+                entity.Property(e => e.TipoAportante).HasMaxLength(250);
             });
 
             modelBuilder.Entity<VListCompromisosComiteTecnico>(entity =>

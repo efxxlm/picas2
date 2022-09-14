@@ -397,7 +397,7 @@ namespace asivamosffie.services
             List<Cofinanciacion> Listcofinanciacion = await _context.Cofinanciacion.Where(r => !(bool)r.Eliminado)
                                                                                    .Include(r => r.CofinanciacionAportante)
                                                                                    .ThenInclude(r => r.CofinanciacionDocumento)
-                                                                                   .ToListAsync(); 
+                                                                                   .ToListAsync();
 
             foreach (var cofinanciacion in Listcofinanciacion)
             {
@@ -418,27 +418,35 @@ namespace asivamosffie.services
             return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado).ToListAsync();
         }
 
-        public async Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
+
+        public async Task<ActionResult<dynamic>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
+        {
+            return await _context.VGetListAportanteByTipoAportanteId.Where(r => r.TipoAportanteId == pTipoAportanteID).ToListAsync();
+        }
+
+ 
+        public async Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteIdOLD(int pTipoAportanteID)
         {
             List<CofinanicacionAportanteGrilla> ListCofinanicacionAportanteGrilla = new List<CofinanicacionAportanteGrilla>();
 
             try
             {
                 List<CofinanciacionAportante> ListCofinanciacionAportante =
-                await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado &&
-                    r.TipoAportanteId == pTipoAportanteID
-                    && !(bool)r.Cofinanciacion.Eliminado)
-                .Include(x => x.Cofinanciacion)
-                .Include(x => x.CofinanciacionDocumento)
-                .ToListAsync();
+                await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado
+                                                                    && r.TipoAportanteId == pTipoAportanteID
+                                                                    && !(bool)r.Cofinanciacion.Eliminado)
+                                                      .Include(x => x.Cofinanciacion)
+                                                      .Include(x => x.CofinanciacionDocumento)
+                                                      .Include(r => r.FuenteFinanciacion)
+                                                      .AsNoTracking()
+                                                      .ToListAsync();
 
 
                 foreach (var cofinanciacionAportante in ListCofinanciacionAportante)
                 {
                     var nombre = "";
 
-                    int fuentesNum = _context.FuenteFinanciacion.Where(x => x.AportanteId == cofinanciacionAportante.CofinanciacionAportanteId &&
-                                                                               x.Eliminado != true).Count();
+                    
 
                     if (cofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.Ffie)
                     {
@@ -482,7 +490,7 @@ namespace asivamosffie.services
                         MunicipioId = cofinanciacionAportante.MunicipioId,
                         DepartamentoId = cofinanciacionAportante.DepartamentoId,
                         RegistroCompleto = cofinanciacionAportante.Cofinanciacion.RegistroCompleto,
-                        TieneFuentes = fuentesNum > 0
+                        TieneFuentes = cofinanciacionAportante.FuenteFinanciacion.Count(r=> r.Eliminado != true) > 0
                     };
                     ListCofinanicacionAportanteGrilla.Add(cofinanicacionAportanteGrilla);
                 }

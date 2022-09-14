@@ -64,10 +64,10 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
+        [AllowAnonymous]
         [Route("GetListAportanteByTipoAportanteId")]
         [HttpGet]
-        public async Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
+        public async Task<ActionResult<dynamic>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
         {
             try
             {

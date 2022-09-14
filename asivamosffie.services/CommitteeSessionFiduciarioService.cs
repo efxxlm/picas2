@@ -932,9 +932,9 @@ namespace asivamosffie.services
                     .Update(u => new SesionComiteTema
                     {
                         SesionTemaComiteTecnicoId = null
-                    });   
+                    });
         }
-         
+
 
         public async Task<ComiteTecnico> GetComiteTecnicoByComiteTecnicoId(int pComiteTecnicoId)
         {
@@ -3849,10 +3849,10 @@ namespace asivamosffie.services
 
                 ListContratacion = _context.Contratacion.AsNoTracking()
                                                                  .Where(c => ListContratacionId.Contains(c.ContratacionId))
-                                                                      .Include(r => r.ContratacionProyecto)
-                                                                       .ThenInclude(r => r.ContratacionProyectoAportante)
-                                                                       .ThenInclude(r => r.CofinanciacionAportante)
-                                                                            .ThenInclude(r => r.ProyectoAportante)
+                                                                 .Include(r => r.ContratacionProyecto)
+                                                                    .ThenInclude(r => r.ContratacionProyectoAportante)
+                                                                 //       .ThenInclude(r => r.CofinanciacionAportante)
+                                                                 //           .ThenInclude(r => r.ProyectoAportante)
                                                                  .Include(r => r.Contrato)
                                                                  .Include(r => r.PlazoContratacion)
                                                                  .Include(r => r.Contratista)
@@ -6182,13 +6182,20 @@ namespace asivamosffie.services
                                                                                                 .ThenInclude(r => r.Usuario)
                                                                             .Include(r => r.SesionComiteTema)
                                                                                 .ThenInclude(r => r.SesionTemaVoto)
-                                                                            .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                                                                                .ThenInclude(r => r.SesionSolicitudCompromiso)
-                                                                                    .ThenInclude(r => r.ResponsableSesionParticipante)
-                                                                                        .ThenInclude(r => r.Usuario)
+
                                                                             //.Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
-                                                                            //    .ThenInclude(r => r.SesionSolicitudVoto)
+                                                                            //    .ThenInclude(r => r.SesionSolicitudCompromiso)
+                                                                            //        .ThenInclude(r => r.ResponsableSesionParticipante)
+                                                                            //            .ThenInclude(r => r.Usuario)
+
                                                                             .FirstOrDefaultAsync();
+
+            comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario = _context.SesionComiteSolicitud.Where(r => r.ComiteTecnicoFiduciarioId == ComiteId)
+                                                                                                        .Include(r => r.SesionSolicitudCompromiso)
+                                                                                                            .ThenInclude(r => r.ResponsableSesionParticipante)
+                                                                                                                .ThenInclude(r => r.Usuario)
+                                                                                                       .ToList();
+
 
             if (comiteTecnico == null)
             {
