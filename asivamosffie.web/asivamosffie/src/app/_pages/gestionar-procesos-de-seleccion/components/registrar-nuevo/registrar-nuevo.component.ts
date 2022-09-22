@@ -42,6 +42,9 @@ export class RegistrarNuevoComponent implements OnInit {
         case "3":
           this.router.navigate([`/seleccion/invitacionAbierta/0`]);
           break;
+          case "4":
+            this.router.navigate([`/seleccion/invitacionInterna/0`]);
+            break;
       }
     });
   }

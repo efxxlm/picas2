@@ -168,6 +168,12 @@ namespace asivamosffie.services.Helpers
                 return $"{"DJ"}-{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
             }
 
+            //Invitación Interna
+            if (input == "4")
+            {
+                return $"{"SI"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
+            }
+
             //Invitacion Abierta SA
             else
             {

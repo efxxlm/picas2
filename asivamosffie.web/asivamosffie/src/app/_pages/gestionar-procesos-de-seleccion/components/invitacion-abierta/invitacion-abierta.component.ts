@@ -72,8 +72,7 @@ export class InvitacionAbiertaComponent implements OnInit {
           
           setTimeout(() => { resolve(); },1000)
       });
-    });
-
+    }); 
   }
 
   openDialog(modalTitle: string, modalText: string,id:number) {

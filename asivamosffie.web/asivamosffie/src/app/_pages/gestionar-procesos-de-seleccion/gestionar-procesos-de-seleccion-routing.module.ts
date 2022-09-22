@@ -7,8 +7,9 @@ import { SeccionPrivadaComponent } from './components/seccion-privada/seccion-pr
 import { InvitacionCerradaComponent } from './components/invitacion-cerrada/invitacion-cerrada.component';
 import { InvitacionAbiertaComponent } from './components/invitacion-abierta/invitacion-abierta.component';
 import { MonitorearCronogramaComponent } from './components/monitorear-cronograma/monitorear-cronograma.component';
-import { CurrencyMaskInputMode, NgxCurrencyModule } from "ngx-currency";
- 
+import { CurrencyMaskInputMode, NgxCurrencyModule } from "ngx-currency"; 
+import { InvitacionInternaComponent } from './components/invitacion-interna/invitacion-interna.component';
+
 export const customCurrencyMaskConfig = {
     align: "right",
     allowNegative: true,
@@ -48,6 +49,10 @@ const routes: Routes = [
   {
     path: 'monitorearCronograma/:id',
     component: MonitorearCronogramaComponent
+  },
+  {
+    path: 'invitacionInterna/:id',
+    component: InvitacionInternaComponent
   }
 ];
 

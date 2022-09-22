@@ -37,6 +37,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FormDatosProponentesNuevoComponent } from './components/form-datos-proponentes-nuevo/form-datos-proponentes-nuevo.component';
 import { VerObservacionesComponent } from './components/ver-observaciones/ver-observaciones.component';
 import { DialogDevolucionComponent } from './components/dialog-devolucion/dialog-devolucion.component';
+import { InvitacionInternaComponent } from './components/invitacion-interna/invitacion-interna.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { DialogDevolucionComponent } from './components/dialog-devolucion/dialog
     TablaDetalleCronogramaComponent,
     RegistrarSeguimientoCronogramaComponent,
     FormDatosProponentesNuevoComponent,
-    DialogDevolucionComponent
+    DialogDevolucionComponent,
+    InvitacionInternaComponent
   ],
   imports: [
     CommonModule,

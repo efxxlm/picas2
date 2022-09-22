@@ -127,6 +127,7 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
       case "1": { this.router.navigate(['/seleccion/seccionPrivada', this.data.procesoSeleccionId ]); } break;
       case "2": { this.router.navigate(['/seleccion/invitacionCerrada', this.data.procesoSeleccionId ]); } break;
       case "3": { this.router.navigate(['/seleccion/invitacionAbierta', this.data.procesoSeleccionId ]); } break;
+      case "4": { this.router.navigate(['/seleccion/invitacionInterna', this.data.procesoSeleccionId ]); } break;
     }
 
     

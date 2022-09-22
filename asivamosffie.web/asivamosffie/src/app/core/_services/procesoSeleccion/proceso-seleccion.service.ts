@@ -262,12 +262,14 @@ interface TipoProcesoSeleccion{
   Privada: string;
   Cerrada: string;
   Abierta: string;
+  Interna: string;
 }
 
 export const TiposProcesoSeleccion: TipoProcesoSeleccion = {
   Privada:  "1",
   Cerrada:  "2",
-  Abierta:  "3"
+  Abierta:  "3",
+  Interna:  "4"
 }
 
 interface EstadoProcesoSeleccion{
