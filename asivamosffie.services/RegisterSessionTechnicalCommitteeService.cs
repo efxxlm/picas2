@@ -1698,7 +1698,36 @@ namespace asivamosffie.services
                 return ValidarRegistroCompletoSesionComiteSolicitud(sesionComiteSolicitud);
             }
         }
-
+        private string getNombreAportante(CofinanciacionAportante confinanciacion)
+        {
+            string nombreAportante;
+            if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
+            {
+                nombreAportante = ConstanStringTipoAportante.Ffie;
+            }
+            else if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
+            {
+                nombreAportante = confinanciacion.NombreAportanteId == null
+                    ? "Error" :
+                    _context.Dominio.Find(confinanciacion.NombreAportanteId).Nombre;
+            }
+            else
+            {
+                if (confinanciacion.MunicipioId == null)
+                {
+                    nombreAportante = confinanciacion.DepartamentoId == null
+                    ? "Error" :
+                    "Gobernación " + _context.Localizacion.Find(confinanciacion.DepartamentoId).Descripcion;
+                }
+                else
+                {
+                    nombreAportante = confinanciacion.MunicipioId == null
+                    ? "Error" :
+                    "Alcaldía " + _context.Localizacion.Find(confinanciacion.MunicipioId).Descripcion;
+                }
+            }
+            return nombreAportante;
+        }
         public async Task<Respuesta> CambiarEstadoComiteTecnico(ComiteTecnico pComiteTecnico)
         {
             int idAccionCambiarEstadoSesion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Comite_Sesion, (int)EnumeratorTipoDominio.Acciones);
@@ -8357,7 +8386,7 @@ namespace asivamosffie.services
 
                                     cpa.ComponenteFuenteNovedad = componenteFuenteNovedades;
                                 }
-                                strNombreAportante = aportante.NombreAportante ?? "";
+                                strNombreAportante =  getNombreAportante(aportante.CofinanciacionAportante);
                                 ValorAportante = aportante.ValorAporte != null ? "$" + String.Format("{0:n0}", aportante.ValorAporte) : "";
                                 strComponente = aportante.ComponenteAportanteNovedad.Count > 0 ? aportante.ComponenteAportanteNovedad.FirstOrDefault().NombreTipoComponente : "";
                                 strFase = aportante.ComponenteAportanteNovedad.Count > 0 ? aportante.ComponenteAportanteNovedad.FirstOrDefault().Nombrefase : "";
@@ -8872,7 +8901,7 @@ namespace asivamosffie.services
 
                                     }
 
-                                    strNombreAportante = aportante.NombreAportante != null ? aportante.NombreAportante : String.Empty;
+                                    strNombreAportante = getNombreAportante(aportante.CofinanciacionAportante);
                                     ValorAportante = aportante.ValorAporte != null ? "$" + String.Format("{0:n0}", aportante.ValorAporte) : String.Empty;
                                     strComponente = aportante.ComponenteAportanteNovedad.Count > 0 ? aportante.ComponenteAportanteNovedad.FirstOrDefault().NombreTipoComponente : String.Empty;
                                     strFase = aportante.ComponenteAportanteNovedad.Count > 0 ? aportante.ComponenteAportanteNovedad.FirstOrDefault().Nombrefase : String.Empty;
